@@ -1,3 +1,4 @@
+import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import { expect, type Page, test } from "@playwright/test";
 import { expectSignedOut } from "./link";
@@ -42,14 +43,16 @@ async function newAccount(page: Page, name: string): Promise<string> {
   await expectSignedOut(page);
   await page.getByRole("button", { name: "Create an account" }).click();
   await page.getByLabel("Your name").fill(name);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(PASSWORD);
+  await page.getByLabel("Email", { exact: true }).fill(email);
+  await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
+  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
   await page.getByRole("button", { name: "Create account" }).click();
   await page.getByLabel("Code").fill(await emailedCode(email, "verify"));
   await page.getByRole("button", { name: "Confirm" }).click();
   await page.getByRole("button", { name: "Set up encryption" }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq" }).click();
+  await finishWelcome(page);
   await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   return email;
 }
@@ -76,7 +79,7 @@ test("two-step sign-in: turn it on with an authenticator code, then a new browse
   await second.goto("/");
   await expectSignedOut(second);
   await second.getByRole("button", { name: "Continue with email", exact: true }).click();
-  await second.getByLabel("Email").fill(email);
+  await second.getByLabel("Email", { exact: true }).fill(email);
   await second.getByLabel("Password", { exact: true }).fill(PASSWORD);
   await second.getByRole("button", { name: "Sign in", exact: true }).click();
   const code = second.getByLabel("Authenticator or backup code");

@@ -1,0 +1,124 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 text (32) Yapin’
+		3 text Yapin’
+		4 container Servers
+			5 button Direct messages
+			6 container
+				7 button Meldiq Research - Private Test
+				8 button Meldiq
+				9 button Yapin' Headquarters
+				10 text 10
+				11 button MINECRAFT
+				12 text 22
+			13 button Create a server
+			14 button Discover servers
+				15 image
+		16 container
+			17 button Meldiq Research - Private Test Events
+				18 text Meldiq Research - Private Test
+				21 button Events
+			22 button Lobby OFF
+				23 image
+				24 text Lobby
+				273 text OFF
+			25 button Invite people
+				26 image
+				27 text Invite people
+			274 button (expanded) TEXT CHANNELS, Secondary Actions: Collapse
+				275 image
+				276 text TEXT CHANNELS
+			277 button Description: Create channel in this category, Help: Create channel here
+				278 image
+			279 pop up button Description: More options for Text channels, Help: More
+				280 image
+			281 container
+				282 button general
+					283 image
+					284 text general
+				285 button Edit channel
+					286 image
+				287 button Description: Delete channel, Help: Delete
+					288 image
+				289 button history-lab
+					290 image
+					291 text history-lab
+			292 button (expanded) VOICE CHANNELS, Secondary Actions: Collapse
+				293 image
+				294 text VOICE CHANNELS
+			295 button Description: Create channel in this category, Help: Create channel here
+				296 image
+			297 pop up button Description: More options for Voice channels, Help: More
+				298 image
+			299 button General
+				300 image
+				301 text General
+			302 button (expanded) RESEARCH, Secondary Actions: Collapse
+				303 image
+				304 text RESEARCH
+			305 button Description: Create channel in this category, Help: Create channel here
+				306 image
+			307 pop up button Description: More options for Research, Help: More
+				308 image
+			309 button Discussion ideas-lab
+				310 image Discussion
+				311 text ideas-lab
+			129 pop up button (collapsed) nahian Online, Help: Your account, Secondary Actions: Expand
+				130 text nahian
+				131 text Online
+			132 button (collapsed) Description: Inbox, Secondary Actions: Expand
+			133 button Settings
+				134 image
+			135 button Log out
+				136 image
+		137 container
+			312 image
+			313 button general
+			314 button Mute
+				315 image
+			316 button (collapsed) Description: Threads, Secondary Actions: Expand
+				317 image
+			318 button Pinned messages
+				319 image
+			320 button Media
+				321 image
+			322 button Members
+				323 image
+			324 button Search Meldiq Research - Private Test, Help: Search this server
+				325 image
+				326 text Search Meldiq Research - Private Test
+			341 image
+			342 heading Welcome to #general!, Value: 3
+				343 text Welcome to #general!
+			344 text This is the start of the  # general  channel.
+			345 container
+				346 text Nobody's said anything yet
+				347 button Say hi
+			328 container
+				329 button Send a file
+					330 image
+				331 text entry area (settable)
+				332 button Create a poll
+					333 image
+				334 button GIF
+				335 button Emoji
+					336 image
+				337 button Record a voice message
+					338 image
+				339 button (disabled) Send
+					340 image
+			348 content list Members
+				349 heading RESEARCH MEMBER - 1, Value: 3
+					350 text RESEARCH MEMBER - 1
+				351 button nahian Server owner
+					352 text nahian
+					353 container Server owner
+						354 image
+				355 heading BOTS - 1, Value: 3
+					356 text BOTS - 1
+				357 button Helper Yapin’ bot
+					358 text Helper
+					359 container Description: Yapin’ bot, Help: Made and run by Yapin’
+
+The focused UI element is 0 AXWebArea (32) Yapin’, URL: yapin.gg/

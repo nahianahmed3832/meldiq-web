@@ -1,0 +1,139 @@
+Browser tab: 2, Title: "Yapper is now Yapin’ · Yapin’", URL: "https://www.yapin.gg/announcement".
+1 AXWebArea Yapper is now Yapin’ · Yapin’, URL: yapin.gg/announcement
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text 23 OCTOBER 2026
+			14 heading Yapper is now Yapin’, Value: 1
+				15 text Yapper is now Yapin’
+			16 text Same app, same people, new name. Here’s the short version.
+			17 heading What happened, Value: 2
+				18 text What happened
+			19 text We renamed Yapper to Yapin’. The name Yapper ran into a trademark problem, so we picked one that is ours. The site now lives at 
+			20 link Description: yapin.gg, Value: yapin.gg/
+			21 text . yapper.website keeps working and takes you to the same place.
+			22 heading What changes for you, Value: 2
+				23 text What changes for you
+			24 text Nothing.  Your account, servers, friends, messages, roles, decorations, bots and Plus are all exactly where you left them. There is nothing to do and nothing to set up again. You may have to sign in once more on yapin.gg, that’s it. Still calling it Yapper? Go ahead. We will too for a while. The company behind the app is still  Yapper Media LLC , so the 
+			25 link Description: Terms, Value: yapin.gg/terms
+			26 text ,
+			27 link Description: Privacy Policy, Value: yapin.gg/privacy
+			28 text  and your receipts keep that name. Emails from us still come from @yapper.website. Invites and links you shared before still work.
+			29 heading Features shipped in the last week, Value: 2
+				30 text Features shipped in the last week
+			31 text While the name changed, we kept building. The biggest things since 16 October, all on for everyone:
+			32 heading Chat, Value: 3
+				33 text Chat
+			34 content list
+				35 text GIF picker: search, trending and categories, right in the message box
+				36 text Three rounds of chat polish: the "New" line at your first unread, your scroll spot kept per chat, a new-messages pill, Edit in the hover bar, recent emojis
+				37 text Copy message link, and such links show as a "Jump to message" chip
+				38 text Jump to any message from search, pins, replies and mentions, however old
+				39 text Search by person (from:name) and new search filters
+				40 text Emoji autocomplete: type :smile and pick
+				41 text Command menu: type / to see every bot command, with the bot’s picture
+				42 text Translate a message from its menu, and pick your language in Settings
+				43 text Link safety check: see where a link really goes, IP loggers blocked
+				44 text Our own video player, and 15 how-to videos at /tutorials
+				45 text Pin DMs to the top, mark a whole server as read
+				46 text @role mentions and fancy channel names
+				47 text Pictures load and send faster
+			48 heading Profiles, Value: 3
+				49 text Profiles
+			50 content list
+				51 text New profile card: side panel, mutual friends and servers, badges in a row
+				52 text Name styles: your own font, colour or gradient on your name
+				53 text Community decorations and profile effects made by artists, most worn first
+				54 text Steam on your profile: your games, hours and latest achievements
+				55 text Temporary profile pictures, notes on friend requests, Find people in DMs
+				56 text Bio up to 300 characters
+			57 heading Plus, Value: 3
+				58 text Plus
+			59 content list
+				60 text Yapin’ Plus: the public /plus page, 4000-character messages, Plus badge, 100 MB uploads
+				61 text Gift Plus to a friend: one, three or twelve months
+				62 text Supercharge: fans level up a server. Banners, animated icons and custom invites are free again
+			63 heading Voice and calls, Value: 3
+				64 text Voice and calls
+			65 content list
+				66 text Every voice channel has its own text chat, and you can join muted or deafened
+				67 text End-to-end encrypted calls and screen share (the app can’t show you a key check yet, see Terms 13)
+				68 text New stream view with a quality picker and fullscreen, and voice messages
+			69 heading Servers, Value: 3
+				70 text Servers
+			71 content list
+				72 text Server folders: drag servers onto each other
+				73 text Server themes, and a banner that folds away as you scroll
+				74 text Channel and category permission overrides
+				75 text Server onboarding: questions on join that hand out roles, then rules, then a starting channel
+				76 text Webhooks with rich embeds, an audit log, raid protection
+			77 heading Bots and apps, Value: 3
+				78 text Bots and apps
+			79 content list
+				80 text Public bot directory at /bots: verified bots, Add App, promoted bots and boosts
+				81 text Richer bot messages with buttons and containers, bot hosting, bots in voice, Login with Yapin’
+				82 text Desktop app updates: restart-to-update bar, a new screen picker, zoom, spelling menu
+				83 text New homepage and public pages
+				84 text Download your data, confirm before log out, ban appeals in the app
+			85 text And over 800 bug reports fixed this week. Thanks for sending them.
+			86 heading Coming soon, Value: 2
+				87 text Coming soon
+			88 content list
+				89 text A Yapin’ phone app with push notifications
+				90 text Creator Program: get rewarded for making videos about Yapin’
+				91 text Real ringtones for calls
+			92 heading Follow along, Value: 2
+				93 text Follow along
+			94 content list
+				95 container
+					96 text X: 
+					97 link Description: @yapin_gg, Value: x.com/yapin_gg
+				98 container
+					99 text Instagram: 
+					100 link Description: @yapinapp, Value: instagram.com/yapinapp
+			101 text Plenty more to come. Questions? Ask in the Yapin’ HQ server. See you there.
+			102 link Description: ← Back to Yapin’, Value: yapin.gg/
+			103 text  · 
+			104 link Description: Roadmap, Value: yapin.gg/roadmap
+		105 text Yapin’
+		106 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		107 heading PRODUCT, Value: 4
+			108 text PRODUCT
+		109 content list
+			110 link Description: Download, Value: yapin.gg/download
+			111 link Description: Developers, Value: yapin.gg/developers
+			112 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			113 link Description: Creator Program, Value: yapin.gg/creators
+			114 link Description: FanKit, Value: yapin.gg/fankit
+			115 link Description: Roadmap, Value: yapin.gg/roadmap
+			116 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			117 link Description: Bugs, Value: yapin.gg/bugs
+			118 link Description: Status, Value: yapin.gg/status
+		119 heading COMMUNITY, Value: 4
+			120 text COMMUNITY
+		121 content list
+			122 link Description: Guidelines, Value: yapin.gg/guidelines
+			123 link Description: Tutorials, Value: yapin.gg/tutorials
+			124 link Description: Bots, Value: yapin.gg/bots
+			125 link Description: Partners, Value: yapin.gg/partners
+		126 heading LEGAL, Value: 4
+			127 text LEGAL
+		128 content list
+			129 link Description: Terms, Value: yapin.gg/terms
+			130 link Description: Privacy, Value: yapin.gg/privacy
+			131 link Description: Copyright, Value: yapin.gg/copyright
+			132 link Description: Security, Value: yapin.gg/security
+			133 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			134 link Description: Contact, Value: mailto:hello@yapin.gg
+		135 text © 2026 Yapper Media LLC. Free to use.
+		136 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Yapper is now Yapin’ · Yapin’, URL: yapin.gg/announcement

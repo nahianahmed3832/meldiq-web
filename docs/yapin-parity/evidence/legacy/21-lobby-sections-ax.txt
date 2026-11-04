@@ -1,0 +1,230 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq
+								25 container
+									26 button Yapin' Headquarters
+									27 text 15
+								28 container
+									29 button MINECRAFT
+									30 text 13
+								31 button Create a server
+								32 button Discover servers
+							33 container
+								34 button Meldiq
+								35 button Lobby
+								36 button Invite people
+								37 text TEXT CHANNELS
+								38 button Create text channel, Help: Create channel
+								39 button general
+								40 text VOICE CHANNELS
+								41 button Create voice channel
+								42 button General
+								43 pop up button nahian Online, Help: Your account
+									44 text nahian
+									45 text Online
+								46 button Inbox
+								47 button Settings
+								48 button Log out
+							49 container
+								50 container
+									51 container
+										52 text Me
+										53 heading Meldiq, Value: 1
+											54 text Meldiq
+										55 text 1  member 1 online
+									56 heading ABOUT, Value: 2
+										57 text ABOUT
+									58 text Your intro goes here. Write it under About in Sections.
+									59 button Write it
+									60 heading JUMP IN, Value: 2
+										61 text JUMP IN
+									62 button (disabled) general
+									63 heading LIVE NOW, Value: 2
+										64 text LIVE NOW
+									65 text Shows up on its own when someone's in voice. Nothing to fill in.
+									66 heading GIVEAWAYS, Value: 2
+										67 text GIVEAWAYS
+									68 text Giveaways from the Giveaways bot show up here while they run. Nothing to fill in.
+									69 heading FEED, Value: 2
+										70 text FEED
+									71 text Posts from your YouTube, stream alerts or patch notes show up here. Make a feed URL in Sections and paste it into the app.
+									72 heading FAQ, Value: 2
+										73 text FAQ
+									74 text The questions newcomers always ask go here. Add them under FAQ in Sections.
+									75 button Add questions
+									76 container
+										77 heading LEADERBOARD, Value: 2
+											78 text LEADERBOARD
+										79 text The top 10 yappers go here, ranked by the Levels bot. Turn it on under Bots.
+										80 button Open Bots
+									81 container
+										82 heading PICK YOUR ROLES, Value: 2
+											83 text PICK YOUR ROLES
+										84 text A role picker goes here, built from your Onboarding questions.
+										85 button Set up Onboarding
+									86 container
+										87 heading RULES, Value: 2
+											88 text RULES
+										89 text A button to your rules channel goes here. Pick the channel in Server Profile.
+										90 button Pick a rules channel
+									91 container
+										92 heading WHO RUNS IT, Value: 2
+											93 text WHO RUNS IT
+										94 button nahian Owner
+									95 container
+										96 heading LINKS, Value: 2
+											97 text LINKS
+										98 text Your site, socials and store go here. Add them under Links in Server Profile.
+										99 button Add links
+								100 text Drag the cards to move them. Click one to edit it.
+								101 container Customize lobby
+									102 text Customize lobby
+									103 container Preview size
+										104 toggle button Desktop, Value: 1
+										105 toggle button Phone, Value: 0
+									106 button Preview
+									107 button Close editor, Help: Close
+									108 container
+										109 text Show the lobby to members On. Members see it and land on it the first time.
+										110 checkbox Show the lobby to members, Value: 1
+									111 tab group
+										112 tab (settable, integer) Templates, Value: 0
+										113 tab (settable, integer) Look, Value: 0
+										114 tab (selected) Sections, Value: 1
+									115 container
+										116 tab group Layout
+											117 tab (selected) Desktop, Value: 1
+											118 tab (settable, integer) Phone, Value: 0
+										119 text Top to bottom is the lobby's order: grab the handle and drag a block where you want it. Write in the cards, switch off what you don't need.  In Classic, the blocks marked Side sit in the right column: tap Side or Main to switch, or drag the cards on the page. Top of the page ALWAYS FIRST The tagline and buttons under the server name.
+										120 text TAGLINE
+										121 text field (settable) TAGLINE, Placeholder: One line under the name, e.g. The comfiest corner for cozy games
+										122 text BUTTONS
+										123 text Up to 4 under the name. The first one stands out. Link a site or a channel.
+										124 button Add button
+										125 button Drag About to reorder, or press the arrow keys, Help: Drag to reorder
+										126 text About
+										127 button About is in the main column. Move it to the side column, Help: In the main column. Tap to move it to the side.
+										128 text EMPTY A few lines on what the server is about.
+										129 container
+											130 text entry area (settable) About, Placeholder: What's this server about? Who's it for, what goes on here?
+											131 text 0/2000. Markdown works.
+										132 checkbox Show About, Value: 1
+										133 button Drag Main channels to reorder, or press the arrow keys, Help: Drag to reorder
+										134 text Main channels
+										135 button Main channels is in the main column. Move it to the side column, Help: In the main column. Tap to move it to the side.
+										136 text The channels you want people to open first.
+										137 container
+											138 text Pick up to 6, in the order you tap them. None picked: the busiest ones show.
+											139 toggle button general, Value: 0
+											140 toggle button General, Value: 0
+										141 checkbox Show Main channels, Value: 1
+										142 button Drag Live now to reorder, or press the arrow keys, Help: Drag to reorder
+										143 text Live now
+										144 button Live now is in the main column. Move it to the side column, Help: In the main column. Tap to move it to the side.
+										145 text NOTHING YET Voice channels with people in them right now. Nobody is in voice right now. Shows up as soon as someone is.
+										146 checkbox Show Live now, Value: 1
+										147 button Drag Giveaways to reorder, or press the arrow keys, Help: Drag to reorder
+										148 text Giveaways
+										149 button Giveaways is in the main column. Move it to the side column, Help: In the main column. Tap to move it to the side.
+										150 text NOTHING YET Giveaways from the Giveaways bot while they run. Shows up while a giveaway from the Giveaways bot runs.
+										151 checkbox Show Giveaways, Value: 1
+										152 button Drag Feed to reorder, or press the arrow keys, Help: Drag to reorder
+										153 text Feed
+										154 button Feed is in the main column. Move it to the side column, Help: In the main column. Tap to move it to the side.
+										155 text Posts from outside apps: YouTube uploads, stream alerts, patch notes. No posts yet. Make a feed below and paste its URL into your app.
+										156 container
+											157 text field (settable) New feed name, Placeholder: Feed name, e.g. YouTube uploads
+											158 button (disabled) Make feed
+											159 text Apps POST JSON to the URL: 
+											160 text {"title", "text", "url", "image"}
+											161 text . Discord webhook tools work too. Links need https, and pictures only show from hosts we allow (YouTube, Twitch, Imgur and a few more).
+										162 checkbox Show Feed, Value: 1
+										163 button Drag FAQ to reorder, or press the arrow keys, Help: Drag to reorder
+										164 text FAQ
+										165 button FAQ is in the main column. Move it to the side column, Help: In the main column. Tap to move it to the side.
+										166 text EMPTY The questions newcomers always ask.
+										167 button Add question
+										168 checkbox Show FAQ, Value: 1
+										169 button Drag Leaderboard to reorder, or press the arrow keys, Help: Drag to reorder
+										170 text Leaderboard
+										171 button Leaderboard is in the side column. Move it to the main column, Help: In the side column. Tap to move it to the main one.
+										172 text NOTHING YET Top 10 from the Levels bot. Turn on the Levels bot (Server settings, Bots) to rank who yaps the most.
+										173 container
+											174 container Leaderboards to show
+												175 toggle button Levels, Value: 1
+												176 toggle button Messages this week, Value: 0
+												177 toggle button Invites, Value: 0
+											178 text Pick one or more. With more than one, people switch between them with tabs, in the order you picked.
+										179 button Bots
+										180 checkbox Show Leaderboard, Value: 1
+										181 button Drag Pick your roles to reorder, or press the arrow keys, Help: Drag to reorder
+										182 text Pick your roles
+										183 button Pick your roles is in the side column. Move it to the main column, Help: In the side column. Tap to move it to the main one.
+										184 text NOTHING YET Lets people pick roles from your onboarding questions. Set up Onboarding questions in Server settings to let people pick roles here.
+										185 button Set up
+										186 checkbox Show Pick your roles, Value: 1
+										187 button Drag Rules to reorder, or press the arrow keys, Help: Drag to reorder
+										188 text Rules
+										189 button Rules is in the side column. Move it to the main column, Help: In the side column. Tap to move it to the main one.
+										190 text NOTHING YET A link to your rules channel. Pick a rules channel in Server settings, Overview.
+										191 button Pick a channel
+										192 checkbox Show Rules, Value: 1
+										193 button Drag Who runs it to reorder, or press the arrow keys, Help: Drag to reorder
+										194 text Who runs it
+										195 button Who runs it is in the side column. Move it to the main column, Help: In the side column. Tap to move it to the main one.
+										196 text The owner and the people with mod powers. nahian
+										197 checkbox Show Who runs it, Value: 1
+										198 button Drag Links to reorder, or press the arrow keys, Help: Drag to reorder
+										199 text Links
+										200 button Links is in the side column. Move it to the main column, Help: In the side column. Tap to move it to the main one.
+										201 text NOTHING YET Your site, socials and store, from Server Profile. Add links in Server settings, Server Profile.
+										202 button Add links
+										203 checkbox Show Links, Value: 1
+									204 text No changes yet
+									205 button Cancel
+									206 button (disabled) Save
+							207 button Getting started
+			208 container
+				209 tab group
+					210 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						211 button Close
+			212 button New Tab
+	213 close button
+	214 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	215 minimize button
+216 menu bar
+	217 Chrome
+	218 File
+	219 Edit
+	220 View
+	221 History
+	222 Bookmarks
+	223 Profiles
+	224 Tab
+	225 Window
+	226 Help
+
+The focused UI element is 114 tab (selected) Sections, Value: 1

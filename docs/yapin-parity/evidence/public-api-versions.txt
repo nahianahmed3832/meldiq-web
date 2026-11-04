@@ -1,0 +1,196 @@
+Browser tab: 2, Title: "Versions · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/versions".
+1 AXWebArea Versions · Bot API reference · Yapin’, URL: yapin.gg/developers/api/versions
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Versions, Value: 1
+				15 text Versions
+			16 text Which API and SDK versions are live, and what changed. No token needed.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-version
+				25 text GET
+				26 text /version
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/versions#get-version
+				28 text API version, build and the newest SDK versions (no token needed)
+				29 text Auth :  Bot token
+				30 heading RESPONSE200, Value: 4
+					31 text RESPONSE
+					32 text 200
+				33 text VersionInfo
+				34 table
+					35 row
+						36 cell
+							37 text FIELD
+						38 cell
+							39 text TYPE
+						40 cell
+							41 text DESCRIPTION
+					42 row
+						43 cell
+							44 text api
+						45 cell
+							46 text string
+						47 cell
+							48 text API version (semver), same as the X-Yapin-API-Version header  ( ^\d+\.\d+\.\d+$ )
+							49 container
+								50 text Example :  "1.3.0"
+					51 row
+						52 cell
+							53 text build
+						54 cell
+							55 text string
+						56 cell
+							57 text Short commit of the build that answered, same as the X-Yapin-Build header
+							58 container
+								59 text Example :  "a1b2c3d"
+					60 row
+						61 cell
+							62 text sdk
+						63 cell
+							64 text object
+						65 cell
+							66 text Newest SDK versions
+							67 button (collapsed) Fields, Secondary Actions: Expand
+								68 text Fields
+					69 row
+						70 cell
+							71 text packages
+						72 cell
+							73 text object
+						74 cell
+							75 text Where to install the SDKs from
+							76 button (collapsed) Fields, Secondary Actions: Expand
+								77 text Fields
+				78 button (collapsed) Example response, Secondary Actions: Expand
+					79 text Example response
+				80 heading ERRORS, Value: 4
+					81 text ERRORS
+				82 content list
+					83 container
+						84 AXListMarker • 
+						85 text 500 Something went wrong on our side
+			86 container get-changelog
+				87 text GET
+				88 text /changelog
+				89 link Description: Link to this endpoint, Value: yapin.gg/developers/api/versions#get-changelog
+				90 text The newest changelog entries, newest first (no token needed)
+				91 text Auth :  Bot token
+				92 heading PARAMETERS, Value: 4
+					93 text PARAMETERS
+				94 table
+					95 row
+						96 cell
+							97 text NAME
+						98 cell
+							99 text TYPE
+						100 cell
+							101 text DESCRIPTION
+					102 row
+						103 cell
+							104 text ?limit
+							105 text optional
+						106 cell
+							107 text integer
+						108 cell
+							109 text How many weeks  ( 1 to 50, default 10 )
+							110 container
+								111 text Example :  10
+				112 heading RESPONSE200, Value: 4
+					113 text RESPONSE
+					114 text 200
+				115 text object
+				116 table
+					117 row
+						118 cell
+							119 text FIELD
+						120 cell
+							121 text TYPE
+						122 cell
+							123 text DESCRIPTION
+					124 row
+						125 cell
+							126 text api
+						127 cell
+							128 text string
+						129 cell
+							130 text API version now  ( ^\d+\.\d+\.\d+$ )
+							131 container
+								132 text Example :  "1.3.0"
+					133 row
+						134 cell
+							135 text entries
+						136 cell
+							137 text ChangelogEntry[]
+						138 cell
+							139 text Entries, newest first
+							140 button (collapsed) Fields of ChangelogEntry, Secondary Actions: Expand
+								141 text Fields of ChangelogEntry
+				142 button (collapsed) Example response, Secondary Actions: Expand
+					143 text Example response
+				144 heading ERRORS, Value: 4
+					145 text ERRORS
+				146 content list
+					147 container
+						148 AXListMarker • 
+						149 text 400 Bad input: the error says what’s wrong
+					150 container
+						151 AXListMarker • 
+						152 text 500 Something went wrong on our side
+			153 link Description: ← Back to Yapin’, Value: yapin.gg/
+			154 text  · 
+			155 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		156 container On this page
+			157 text ON THIS PAGE
+			158 content list
+				159 link Description: Overview, Value: yapin.gg/developers/api/versions#top
+				160 link Description: GET /version, Value: yapin.gg/developers/api/versions#get-version
+				161 link Description: GET /changelog, Value: yapin.gg/developers/api/versions#get-changelog
+		162 text Yapin’
+		163 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		164 heading PRODUCT, Value: 4
+			165 text PRODUCT
+		166 content list
+			167 link Description: Download, Value: yapin.gg/download
+			168 link Description: Developers, Value: yapin.gg/developers
+			169 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			170 link Description: Creator Program, Value: yapin.gg/creators
+			171 link Description: FanKit, Value: yapin.gg/fankit
+			172 link Description: Roadmap, Value: yapin.gg/roadmap
+			173 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			174 link Description: Bugs, Value: yapin.gg/bugs
+			175 link Description: Status, Value: yapin.gg/status
+		176 heading COMMUNITY, Value: 4
+			177 text COMMUNITY
+		178 content list
+			179 link Description: Guidelines, Value: yapin.gg/guidelines
+			180 link Description: Tutorials, Value: yapin.gg/tutorials
+			181 link Description: Bots, Value: yapin.gg/bots
+			182 link Description: Partners, Value: yapin.gg/partners
+		183 heading LEGAL, Value: 4
+			184 text LEGAL
+		185 content list
+			186 link Description: Terms, Value: yapin.gg/terms
+			187 link Description: Privacy, Value: yapin.gg/privacy
+			188 link Description: Copyright, Value: yapin.gg/copyright
+			189 link Description: Security, Value: yapin.gg/security
+			190 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			191 link Description: Contact, Value: mailto:hello@yapin.gg
+		192 text © 2026 Yapper Media LLC. Free to use.
+		193 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Versions · Bot API reference · Yapin’, URL: yapin.gg/developers/api/versions

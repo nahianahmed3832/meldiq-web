@@ -1,0 +1,176 @@
+Window: "Creator Program · Yapin’", App: Google Chrome.
+0 standard window Creator Program · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/creators, Secondary Actions: Raise
+	1 container Creator Program · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/creators
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/creators, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Creator Program · Yapin’, URL: yapin.gg/creators
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 text YAPIN’ CREATOR PROGRAM
+								30 heading Make Yapin’ content. Get paid in Plus., Value: 1
+									31 text Make Yapin’ content. Get paid in Plus.
+								32 text Videos, shorts, streams, posts. If you make things about Yapin’, we want to say thanks: a badge, and Plus for every piece, by its views. Only for content about Yapin’. Videos or posts about something else don’t count, and false applications can cost you your verified badge.
+								33 link Open the Creator Center, Value: yapin.gg/creator
+							34 container
+								35 text WHAT YOU GET
+								36 heading Rewards for the work, not just a badge., Value: 2
+									37 text Rewards for the work, not just a badge.
+								38 container
+									39 text A Creator badge Creator, Pro Creator or Elite Creator next to your name, everywhere on Yapin’.
+								40 container
+									41 text Badges that grow Pro Creator at 100k video views or 500k short views, Elite at 500k or 2.5M with the Partner badge. They move up on their own and never down.
+								42 container
+									43 text Plus for every piece, by views A video with 10k views is a month of Plus, 1M is 8 months. Shorts and TikToks count too, on their own scale. Joining as Pro or Elite pays 3 or 6 months up front.
+								44 container
+									45 text An invite link that pays Your own yapin.gg link. 10 Shards for each real person who joins through it. Your dashboard is in the Creator Center and in Settings, Creator Program.
+								46 text TIERS
+								47 heading Three tiers, by views. How badges work, Value: 2
+									48 text Three tiers, by views.
+									49 button How badges work
+								50 table
+									51 row
+										52 column header
+											53 text TIER
+										54 column header
+											55 text HOW
+									56 row
+										57 row header
+											58 text Creator
+										59 cell
+											60 text Approved into the program
+									61 row
+										62 row header
+											63 text Pro Creator
+										64 cell
+											65 text 100k video views or 500k short views
+									66 row
+										67 row header
+											68 text Elite Creator
+										69 cell
+											70 text 500k video views or 2.5M short views , partner badge too
+								71 text Then Plus for every approved video or post, by its views, at every tier. Full table in the 
+								72 link Creator Center, Value: yapin.gg/creator
+								73 text . How to join
+								74 heading Three steps., Value: 2
+									75 text Three steps.
+								76 text 1. Get verified, so we know the channel is yours (1,000+ followers). 2. Apply in the 
+								77 link Creator Center, Value: yapin.gg/creator
+								78 text  with one button. 3. Make things about Yapin’ and paste each link as you publish. We read the title and views ourselves, check it, and the Plus lands on your account.
+								79 heading Questions, Value: 2
+									80 text Questions
+								81 content list
+									82 container
+										83 heading Who can join?, Value: 3
+											84 button Who can join?
+										85 text Anyone verified on Yapin’ with a public channel that is at least 30 days old, has 1,000+ followers or subscribers, 3 or more videos and posts in the last 60 days. Private accounts and channels that stopped posting are turned down. You don’t need any Yapin’ content yet: we look at your channel, and you send content in once you’re in.
+									86 container
+										87 heading Do I have to keep posting?, Value: 3
+											88 button Do I have to keep posting?
+										89 text Yes. Send in at least one piece about Yapin’ every 30 days. 30 days with nothing sent in and you’re out of the program (you can apply again, and Plus you already got stays).
+									90 container
+										91 heading What counts as content?, Value: 3
+											92 button What counts as content?
+										93 text A video, short, stream VOD or post where Yapin’ is the subject or a real part of it. A passing mention in a bio or a comment doesn’t count. Reuploads of other people’s videos don’t either.
+									94 container
+										95 heading How does the Plus reward work?, Value: 3
+											96 button How does the Plus reward work?
+										97 text Joining gives you the Creator badge (Pro or Elite also 3 or 6 months of Plus). Every video or post you send in after that pays by its views: long-form 10K views = 1 month, 50K views = 2 months, 200K views = 4 months, 1M views = 8 months; short-form (TikTok, Shorts, Reels) needs 25K / 125K / 500K / 2.5M. The Creator Center has the full table.
+									98 container
+										99 heading How long does review take?, Value: 3
+											100 button How long does review take?
+										101 text Usually a day or two. We open the link and watch or read it. You see the result in the Creator Center, and the app pings you.
+									102 container
+										103 heading How do invites count?, Value: 3
+											104 button How do invites count?
+										105 text Anyone who makes an account through your link within 30 days of clicking it is yours. It counts once the account is 7 days old and was active on 3 days, so only real people pay, 10 Shards each.
+									106 container
+										107 heading Is there a place to meet other creators?, Value: 3
+											108 button Is there a place to meet other creators?
+										109 text Every creator is added to the Official Yapin’ Creators server, to swap tips and hear news first.
+									110 container
+										111 heading Can I move up a tier?, Value: 3
+											112 button Can I move up a tier?
+										113 text Yes, on its own. Badges follow your total approved views: Pro Creator at 100k video views or 500k short views, Elite Creator at 500k or 2.5M. A mix of both adds up.
+									114 container
+										115 heading Can I lose it?, Value: 3
+											116 button Can I lose it?
+										117 text Breaking the Community Guidelines, faking numbers or sending in content that isn’t yours gets you removed from the program. Plus you already got stays until it runs out.
+								118 heading Already making videos?, Value: 2
+									119 text Already making videos?
+								120 text Then you’re most of the way there.
+								121 link Open the Creator Center, Value: yapin.gg/creator
+							122 text Yapin’
+							123 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							124 heading Product, Value: 4
+								125 text Product
+							126 content list
+								127 link Download, Value: yapin.gg/download
+								128 link Developers, Value: yapin.gg/developers
+								129 link Yapin’ Plus, Value: yapin.gg/plus
+								130 link Creator Program, Value: yapin.gg/creators
+								131 link Roadmap, Value: yapin.gg/roadmap
+								132 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								133 link Bugs, Value: yapin.gg/bugs
+								134 link Status, Value: yapin.gg/status
+							135 heading Community, Value: 4
+								136 text Community
+							137 content list
+								138 link Guidelines, Value: yapin.gg/guidelines
+								139 link Tutorials, Value: yapin.gg/tutorials
+								140 link Bots, Value: yapin.gg/bots
+							141 heading Legal, Value: 4
+								142 text Legal
+							143 content list
+								144 link Terms, Value: yapin.gg/terms
+								145 link Privacy, Value: yapin.gg/privacy
+								146 link Copyright, Value: yapin.gg/copyright
+								147 link Cancel a subscription, Value: yapin.gg/cancel
+								148 link Contact, Value: mailto:[email redacted]
+							149 text © 2026 Yapper Media LLC. Free to use.
+			150 container
+				151 tab group
+					152 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						153 button Close
+					154 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						155 button Close
+					156 tab (selected, settable, boolean) Creator Program · Yapin’, Value: on
+						157 button Close
+			158 button New Tab
+	159 close button
+	160 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	161 minimize button
+162 menu bar
+	163 Chrome
+	164 File
+	165 Edit
+	166 View
+	167 History
+	168 Bookmarks
+	169 Profiles
+	170 Tab
+	171 Window
+	172 Help
+
+The focused UI element is 19 HTML content Creator Program · Yapin’, URL: yapin.gg/creators

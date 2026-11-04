@@ -54,5 +54,15 @@
     "android": "Obține Meldiq pentru Android",
     "title": "Invitație de la Meldiq",
     "hint": "Nu sunteți autentificat încă? Autentificați-vă sau creați un cont mai întâi: veți reveni la această comunitate."
+  },
+  "foundation": {
+    "welcomeBody": "Câteva detalii fac acest spațiu al tău. Le poți schimba în Setări.",
+    "profileBody": "Alege cum te văd ceilalți. Adresa ta de e-mail rămâne privată.",
+    "preferencesBody": "Alege un aspect confortabil și limba ta.",
+    "startBody": "Găsește-ți prietenii, alătură-te unei comunități sau creează una.",
+    "ready": "Spațiul tău este gata.",
+    "finish": "Începe explorarea",
+    "onDevice": "Opțiunile de aspect se aplică acestui browser.",
+    "permissions": "Meldiq cere permisiunea pentru microfon, cameră sau notificări când folosești o funcție care are nevoie de ea."
   }
 }

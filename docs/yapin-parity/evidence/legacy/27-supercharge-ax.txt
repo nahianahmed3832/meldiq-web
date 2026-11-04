@@ -1,0 +1,102 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 container
+								44 text Me
+								45 heading Supercharge Meldiq, Value: 2
+									46 text Supercharge Meldiq
+								47 text Unlock perks for everyone here. Any member can chip in.
+								48 level indicator 0 supercharges, level 0, Value: 0
+								49 text 0 supercharges 2 more for Level 1
+							50 button Supercharge this server $2.99/month
+							51 container
+								52 text Renews every month at $2.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+								53 link yapin.gg/cancel
+								54 text .
+							55 button Plus comes with a free supercharge
+							56 container
+								57 text Level 1 2 supercharges
+								58 content list
+									59 text 100 emoji slots
+									60 text 25 MB uploads for everyone
+									61 text 128 kbps voice
+									62 text 720p60 streams
+							63 container
+								64 text Level 2 7 supercharges
+								65 content list
+									66 text 150 emoji slots
+									67 text 50 MB uploads for everyone
+									68 text 256 kbps voice
+									69 text 1080p60 streams
+									70 button Qualifies for Yapin’ Partner (with 1,000+ members)
+							71 container
+								72 text Level 3 14 supercharges
+								73 content list
+									74 text 250 emoji slots
+									75 text 100 MB uploads for everyone
+									76 text 384 kbps voice
+									77 text 1080p60 streams
+									78 button Qualifies for Yapin’ Partner (with 1,000+ members)
+							79 button Close
+			80 container
+				81 tab group
+					82 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						83 button Close
+			84 button New Tab
+	85 close button
+	86 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	87 minimize button
+88 menu bar
+	89 Chrome
+	90 File
+	91 Edit
+	92 View
+	93 History
+	94 Bookmarks
+	95 Profiles
+	96 Tab
+	97 Window
+	98 Help
+
+The focused UI element is 27 button Supercharge

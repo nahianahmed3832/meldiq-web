@@ -1,0 +1,42 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Chat, Value: 2
+			177 text Chat
+		178 heading Quick reactions, Value: 3
+			179 text Quick reactions
+		180 text Your go-to emojis, one click away on every message. Server emojis work too. Follows your account to every device.
+		181 button Description: Change quick reaction 1, Help: Change
+			182 image 👍
+		183 button Description: Change quick reaction 2, Help: Change
+			184 image ❤️
+		185 button Description: Change quick reaction 3, Help: Change
+			186 image 😂
+		187 button Description: Change quick reaction 4, Help: Change
+			188 image 🔥
+		189 button Add quick reaction
+			190 image
+		191 text Pick 3 to 5. They show when you hover a message and at the top of the message menu.
+		174 button Close
+			175 image
+
+The focused UI element is 14 button Chat

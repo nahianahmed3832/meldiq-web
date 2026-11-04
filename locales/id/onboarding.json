@@ -54,5 +54,15 @@
     "android": "Dapatkan Meldiq untuk Android",
     "title": "Meldiq undangan",
     "hint": "Belum mendaftar? Log in atau buat akun terlebih dahulu: Anda akan kembali ke komunitas ini."
+  },
+  "foundation": {
+    "welcomeBody": "Beberapa detail membuat ruang ini terasa milikmu. Kamu dapat mengubahnya di Pengaturan.",
+    "profileBody": "Pilih bagaimana orang melihatmu. Emailmu tetap pribadi.",
+    "preferencesBody": "Pilih tampilan yang nyaman dan bahasamu.",
+    "startBody": "Temukan teman, bergabung dengan komunitas, atau buat komunitas sendiri.",
+    "ready": "Ruangmu sudah siap.",
+    "finish": "Mulai menjelajah",
+    "onDevice": "Pilihan tampilan berlaku untuk peramban ini.",
+    "permissions": "Meldiq meminta izin mikrofon, kamera, atau notifikasi saat kamu memakai fitur yang memerlukannya."
   }
 }

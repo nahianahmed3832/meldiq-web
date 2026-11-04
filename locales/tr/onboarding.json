@@ -54,5 +54,15 @@
     "android": "Meldiq için Android al",
     "title": "Meldiq daveti",
     "hint": "Henüz kayıt olmadı mı? Önce giriş yapın veya bir hesap oluşturun: bu toplulukta tekrar görüneceksiniz."
+  },
+  "foundation": {
+    "welcomeBody": "Birkaç ayrıntıyla bu alanı kendine göre düzenle. Bunları Ayarlardan değiştirebilirsin.",
+    "profileBody": "İnsanların seni nasıl göreceğini seç. E-postan gizli kalır.",
+    "preferencesBody": "Rahat bir görünüm ve dilini seç.",
+    "startBody": "Arkadaşlarını bul, bir topluluğa katıl veya kendi topluluğunu oluştur.",
+    "ready": "Alanın hazır.",
+    "finish": "Keşfetmeye başla",
+    "onDevice": "Görünüm seçimleri bu tarayıcıya uygulanır.",
+    "permissions": "Meldiq mikrofon, kamera veya bildirim iznini yalnızca bunları gerektiren bir özelliği kullandığında ister."
   }
 }

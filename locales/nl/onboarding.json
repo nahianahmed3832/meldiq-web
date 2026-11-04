@@ -54,5 +54,15 @@
     "android": "Meldiq ophalen voor Android",
     "title": "Uitnodiging van Meldiq",
     "hint": "Nog niet ingelogd? Meld je aan of maak eerst een account aan: je komt terug naar deze community."
+  },
+  "foundation": {
+    "welcomeBody": "Met een paar details maak je deze plek van jou. Je kunt ze wijzigen in Instellingen.",
+    "profileBody": "Kies hoe anderen je zien. Je e-mailadres blijft privé.",
+    "preferencesBody": "Kies een prettige weergave en je taal.",
+    "startBody": "Vind je mensen, sluit je aan bij een community of maak je eigen community.",
+    "ready": "Je plek is klaar.",
+    "finish": "Begin met ontdekken",
+    "onDevice": "Weergavekeuzes gelden voor deze browser.",
+    "permissions": "Meldiq vraagt pas toestemming voor microfoon, camera of meldingen wanneer je een functie gebruikt die dat nodig heeft."
   }
 }

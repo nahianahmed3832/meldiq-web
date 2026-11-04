@@ -1,0 +1,72 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 heading Members - 1, Value: 2
+								44 text Members - 1
+							45 container
+								46 text nahian
+								47 container Server owner
+									48 image
+							49 button Close
+			50 container
+				51 tab group
+					52 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 151 MB, Value: on
+						53 button Close
+			54 button New Tab
+	55 close button
+	56 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	57 minimize button
+58 menu bar
+	59 Chrome
+	60 File
+	61 Edit
+	62 View
+	63 History
+	64 Bookmarks
+	65 Profiles
+	66 Tab
+	67 Window
+	68 Help
+
+The focused UI element is 35 button Members

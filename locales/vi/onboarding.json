@@ -54,5 +54,15 @@
     "android": "Lấy Meldiq cho Android",
     "title": "Mời Meldiq",
     "hint": "Chưa đăng nhập? Đầu tiên hãy đăng nhập hoặc tạo một tài khoản: bạn sẽ trở lại cộng đồng này."
+  },
+  "foundation": {
+    "welcomeBody": "Thêm vài thông tin để tạo nét riêng cho không gian này. Bạn có thể đổi trong Cài đặt.",
+    "profileBody": "Chọn cách mọi người nhìn thấy bạn. Email của bạn được giữ riêng tư.",
+    "preferencesBody": "Chọn giao diện thoải mái và ngôn ngữ của bạn.",
+    "startBody": "Tìm bạn bè, tham gia cộng đồng hoặc tạo cộng đồng của riêng bạn.",
+    "ready": "Không gian của bạn đã sẵn sàng.",
+    "finish": "Bắt đầu khám phá",
+    "onDevice": "Lựa chọn giao diện áp dụng cho trình duyệt này.",
+    "permissions": "Meldiq chỉ yêu cầu quyền micrô, máy ảnh hoặc thông báo khi bạn dùng tính năng cần đến chúng."
   }
 }

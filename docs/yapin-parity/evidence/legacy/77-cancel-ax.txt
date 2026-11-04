@@ -1,0 +1,101 @@
+Window: "Cancel a subscription · Yapin’", App: Google Chrome.
+0 standard window Cancel a subscription · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/cancel, Secondary Actions: Raise
+	1 container Cancel a subscription · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/cancel
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/cancel, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Cancel a subscription · Yapin’, URL: yapin.gg/cancel
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 heading Cancel a subscription, Value: 1
+									30 text Cancel a subscription
+								31 text LAST UPDATED  20 OCTOBER 2026 Verträge hier kündigen. Cancel anything you pay for monthly on Yapin’, without signing in. Signed in? Settings, Subscriptions does the same and shows each one.
+								32 text EMAIL OF YOUR YAPIN’ ACCOUNT
+								33 email (settable) EMAIL OF YOUR YAPIN’ ACCOUNT
+								34 text WHAT DO YOU WANT TO CANCEL?
+								35 pop up button WHAT DO YOU WANT TO CANCEL?, Value: Everything that renews
+									36 (selected) Everything that renews
+								37 text ANYTHING ELSE (OPTIONAL)
+								38 text entry area (settable) ANYTHING ELSE (OPTIONAL), Placeholder: For example the server or bot it’s for
+								39 text It stops renewing at the end of the period you paid for. Ending early with a refund is withdrawing (Terms 9.5).
+								40 button Cancel now (jetzt kündigen)
+								41 text Want your money back for the unused part instead? Within 14 days of buying you can withdraw (Settings, Subscriptions, Withdraw from contract). See 
+								42 link Terms 9.3 and 9.5, Value: yapin.gg/terms
+								43 text .
+								44 link ← Back to Yapin’, Value: yapin.gg/
+								45 text  · 
+								46 link Remove an intimate image, Value: yapin.gg/remove-image
+							47 text Yapin’
+							48 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							49 heading Product, Value: 4
+								50 text Product
+							51 content list
+								52 link Download, Value: yapin.gg/download
+								53 link Developers, Value: yapin.gg/developers
+								54 link Yapin’ Plus, Value: yapin.gg/plus
+								55 link Creator Program, Value: yapin.gg/creators
+								56 link Roadmap, Value: yapin.gg/roadmap
+								57 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								58 link Bugs, Value: yapin.gg/bugs
+								59 link Status, Value: yapin.gg/status
+							60 heading Community, Value: 4
+								61 text Community
+							62 content list
+								63 link Guidelines, Value: yapin.gg/guidelines
+								64 link Tutorials, Value: yapin.gg/tutorials
+								65 link Bots, Value: yapin.gg/bots
+							66 heading Legal, Value: 4
+								67 text Legal
+							68 content list
+								69 link Terms, Value: yapin.gg/terms
+								70 link Privacy, Value: yapin.gg/privacy
+								71 link Copyright, Value: yapin.gg/copyright
+								72 link Cancel a subscription, Value: yapin.gg/cancel
+								73 link Contact, Value: mailto:[email redacted]
+							74 text © 2026 Yapper Media LLC. Free to use.
+			75 container
+				76 tab group
+					77 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						78 button Close
+					79 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						80 button Close
+					81 tab (selected, settable, boolean) Cancel a subscription · Yapin’, Value: on
+						82 button Close
+			83 button New Tab
+	84 close button
+	85 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	86 minimize button
+87 menu bar
+	88 Chrome
+	89 File
+	90 Edit
+	91 View
+	92 History
+	93 Bookmarks
+	94 Profiles
+	95 Tab
+	96 Window
+	97 Help
+
+The focused UI element is 19 HTML content Cancel a subscription · Yapin’, URL: yapin.gg/cancel

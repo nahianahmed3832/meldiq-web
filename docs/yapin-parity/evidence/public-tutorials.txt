@@ -1,0 +1,238 @@
+Browser tab: 2, Title: "Yapin’ tutorials", URL: "https://www.yapin.gg/tutorials".
+1 AXWebArea Yapin’ tutorials, URL: yapin.gg/tutorials
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 container
+				14 text HOW TO
+				15 heading Yapin’ tutorials, Value: 1
+					16 text Yapin’ tutorials
+				17 text Quick videos, under a minute each. Find what you need and hit play.
+			18 search text field (settable) Search tutorials
+			19 heading Your profile, Value: 2
+				20 text Your profile
+			21 container custom-colour-theme
+				22 container Video player
+					23 button Play
+					24 container
+						25 slider Description: Seek, Value: 0
+						26 button Play
+						27 text 0:00  /  0:00
+						28 button Mute
+						29 slider (settable, integer) Description: Volume, Value: 1
+						30 button Fullscreen
+				31 text Custom colour theme
+				32 text Paint the whole app in your own colours.
+			33 container profile-colours-gradient
+				34 container Video player
+					35 button Play
+					36 container
+						37 slider Description: Seek, Value: 0
+						38 button Play
+						39 text 0:00  /  0:00
+						40 button Mute
+						41 slider (settable, integer) Description: Volume, Value: 1
+						42 button Fullscreen
+				43 text Profile colours
+				44 text Give your profile card a colour or a gradient.
+			45 container avatar-decoration-profile-effect
+				46 container Video player
+					47 button Play
+					48 container
+						49 slider Description: Seek, Value: 0
+						50 button Play
+						51 text 0:00  /  0:00
+						52 button Mute
+						53 slider (settable, integer) Description: Volume, Value: 1
+						54 button Fullscreen
+				55 text Avatar decoration
+				56 text Add a frame around your pfp: yours or one an artist made.
+			57 container temporary-profile-picture
+				58 container Video player
+					59 button Play
+					60 container
+						61 slider Description: Seek, Value: 0
+						62 button Play
+						63 text 0:00  /  0:00
+						64 button Mute
+						65 slider (settable, integer) Description: Volume, Value: 1
+						66 button Fullscreen
+				67 text Temporary profile picture
+				68 text Swap your pfp for a while, it changes back by itself.
+			69 container pick-your-badge
+				70 container Video player
+					71 button Play
+					72 container
+						73 slider Description: Seek, Value: 0
+						74 button Play
+						75 text 0:00  /  0:00
+						76 button Mute
+						77 slider (settable, integer) Description: Volume, Value: 1
+						78 button Fullscreen
+				79 text Pick your badge
+				80 text Choose which badge shows next to your name.
+			81 heading Your server, Value: 2
+				82 text Your server
+			83 container server-theme
+				84 container Video player
+					85 button Play
+					86 container
+						87 slider Description: Seek, Value: 0
+						88 button Play
+						89 text 0:00  /  0:00
+						90 button Mute
+						91 slider (settable, integer) Description: Volume, Value: 1
+						92 button Fullscreen
+				93 text Server theme
+				94 text Give your server its own look.
+			95 container server-tag
+				96 container Video player
+					97 button Play
+					98 container
+						99 slider Description: Seek, Value: 0
+						100 button Play
+						101 text 0:00  /  0:00
+						102 button Mute
+						103 slider (settable, integer) Description: Volume, Value: 1
+						104 button Fullscreen
+				105 text Server tag
+				106 text A short tag members can wear next to their name.
+			107 container custom-invite-link
+				108 container Video player
+					109 button Play
+					110 container
+						111 slider Description: Seek, Value: 0
+						112 button Play
+						113 text 0:00  /  0:00
+						114 button Mute
+						115 slider (settable, integer) Description: Volume, Value: 1
+						116 button Fullscreen
+				117 text Custom invite link
+				118 text yapin.gg/invite/yourname instead of random letters.
+			119 container import-from-discord
+				120 container Video player
+					121 button Play
+					122 container
+						123 slider Description: Seek, Value: 0
+						124 button Play
+						125 text 0:00  /  0:00
+						126 button Mute
+						127 slider (settable, integer) Description: Volume, Value: 1
+						128 button Fullscreen
+				129 text Import from Discord
+				130 text Bring your channels and roles over in one go.
+			131 container automatic-roles
+				132 container Video player
+					133 button Play
+					134 container
+						135 slider Description: Seek, Value: 0
+						136 button Play
+						137 text 0:00  /  0:00
+						138 button Mute
+						139 slider (settable, integer) Description: Volume, Value: 1
+						140 button Fullscreen
+				141 text Automatic roles
+				142 text Give new members a role the moment they join.
+			143 container channel-category-permissions
+				144 container Video player
+					145 button Play
+					146 container
+						147 slider Description: Seek, Value: 0
+						148 button Play
+						149 text 0:00  /  0:00
+						150 button Mute
+						151 slider (settable, integer) Description: Volume, Value: 1
+						152 button Fullscreen
+				153 text Channel and category permissions
+				154 text Decide who can see and talk where.
+			155 container raid-protection-server-lock
+				156 container Video player
+					157 button Play
+					158 container
+						159 slider Description: Seek, Value: 0
+						160 button Play
+						161 text 0:00  /  0:00
+						162 button Mute
+						163 slider (settable, integer) Description: Volume, Value: 1
+						164 button Fullscreen
+				165 text Raid protection
+				166 text Lock the server fast when a raid hits.
+			167 container server-folders
+				168 container Video player
+					169 button Play
+					170 container
+						171 slider Description: Seek, Value: 0
+						172 button Play
+						173 text 0:00  /  0:00
+						174 button Mute
+						175 slider (settable, integer) Description: Volume, Value: 1
+						176 button Fullscreen
+				177 text Server folders
+				178 text Group your servers in the sidebar.
+			179 container built-in-bots
+				180 container Video player
+					181 button Play
+					182 container
+						183 slider Description: Seek, Value: 0
+						184 button Play
+						185 text 0:00  /  0:00
+						186 button Mute
+						187 slider (settable, integer) Description: Volume, Value: 1
+						188 button Fullscreen
+				189 text Built-in bots
+				190 text Bots that come with Yapin’, nothing to host.
+			191 container reaction-roles
+				192 container Video player
+					193 button Play
+					194 container
+						195 slider Description: Seek, Value: 0
+						196 button Play
+						197 text 0:00  /  0:00
+						198 button Mute
+						199 slider (settable, integer) Description: Volume, Value: 1
+						200 button Fullscreen
+				201 text Reaction roles
+				202 text Let people pick roles by reacting to a message.
+			203 link Description: ← Back to Yapin’, Value: yapin.gg/
+		204 text Yapin’
+		205 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		206 heading PRODUCT, Value: 4
+			207 text PRODUCT
+		208 content list
+			209 link Description: Download, Value: yapin.gg/download
+			210 link Description: Developers, Value: yapin.gg/developers
+			211 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			212 link Description: Creator Program, Value: yapin.gg/creators
+			213 link Description: FanKit, Value: yapin.gg/fankit
+			214 link Description: Roadmap, Value: yapin.gg/roadmap
+			215 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			216 link Description: Bugs, Value: yapin.gg/bugs
+			217 link Description: Status, Value: yapin.gg/status
+		218 heading COMMUNITY, Value: 4
+			219 text COMMUNITY
+		220 content list
+			221 link Description: Guidelines, Value: yapin.gg/guidelines
+			222 link Description: Tutorials, Value: yapin.gg/tutorials
+			223 link Description: Bots, Value: yapin.gg/bots
+			224 link Description: Partners, Value: yapin.gg/partners
+		225 heading LEGAL, Value: 4
+			226 text LEGAL
+		227 content list
+			228 link Description: Terms, Value: yapin.gg/terms
+			229 link Description: Privacy, Value: yapin.gg/privacy
+			230 link Description: Copyright, Value: yapin.gg/copyright
+			231 link Description: Security, Value: yapin.gg/security
+			232 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			233 link Description: Contact, Value: mailto:hello@yapin.gg
+		234 text © 2026 Yapper Media LLC. Free to use.
+		235 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Yapin’ tutorials, URL: yapin.gg/tutorials

@@ -1,0 +1,282 @@
+[
+  {
+    "path": "/download",
+    "url": "https://www.yapin.gg/download",
+    "title": "Download Yapin’ for Windows and Linux",
+    "evidence": "public-download.txt",
+    "screenshot": "public-download.jpg"
+  },
+  {
+    "path": "/plus",
+    "url": "https://www.yapin.gg/plus",
+    "title": "Yapin’ Plus · Yapin’",
+    "evidence": "public-plus.txt",
+    "screenshot": "public-plus.jpg"
+  },
+  {
+    "path": "/roadmap",
+    "url": "https://www.yapin.gg/roadmap",
+    "title": "Roadmap: what’s new and what’s next · Yapin’",
+    "evidence": "public-roadmap.txt",
+    "screenshot": "public-roadmap.jpg"
+  },
+  {
+    "path": "/announcement",
+    "url": "https://www.yapin.gg/announcement",
+    "title": "Yapper is now Yapin’ · Yapin’",
+    "evidence": "public-announcement.txt",
+    "screenshot": "public-announcement.jpg"
+  },
+  {
+    "path": "/creators",
+    "url": "https://www.yapin.gg/creators",
+    "title": "Creator Program · Yapin’",
+    "evidence": "public-creators.txt",
+    "screenshot": "public-creators.jpg"
+  },
+  {
+    "path": "/fankit",
+    "url": "https://www.yapin.gg/fankit",
+    "title": "FanKit · Yapin’",
+    "evidence": "public-fankit.txt",
+    "screenshot": "public-fankit.jpg"
+  },
+  {
+    "path": "/partners",
+    "url": "https://www.yapin.gg/partners",
+    "title": "Yapin’ Partners · Yapin’",
+    "evidence": "public-partners.txt",
+    "screenshot": "public-partners.jpg"
+  },
+  {
+    "path": "/security",
+    "url": "https://www.yapin.gg/security",
+    "title": "Security · Yapin’",
+    "evidence": "public-security.txt",
+    "screenshot": "public-security.jpg"
+  },
+  {
+    "path": "/developers",
+    "url": "https://www.yapin.gg/developers",
+    "title": "Developers: make a bot · Yapin’",
+    "evidence": "public-developers.txt",
+    "screenshot": "public-developers.jpg"
+  },
+  {
+    "path": "/developers/api",
+    "url": "https://www.yapin.gg/developers/api",
+    "title": "Bot API reference · Yapin’",
+    "evidence": "public-developers-api.txt",
+    "screenshot": "public-developers-api.jpg"
+  },
+  {
+    "path": "/tutorials",
+    "url": "https://www.yapin.gg/tutorials",
+    "title": "Yapin’ tutorials",
+    "evidence": "public-tutorials.txt",
+    "screenshot": "public-tutorials.jpg"
+  },
+  {
+    "path": "/bots",
+    "url": "https://www.yapin.gg/bots",
+    "title": "Bots for your server · Yapin’",
+    "evidence": "public-bots.txt",
+    "screenshot": "public-bots.jpg"
+  },
+  {
+    "path": "/creator",
+    "url": "https://www.yapin.gg/creator",
+    "title": "Creator Center · Yapin’",
+    "evidence": "public-creator.txt",
+    "screenshot": "public-creator.jpg"
+  },
+  {
+    "path": "/bugs",
+    "url": "https://www.yapin.gg/bugs",
+    "title": "Bug Hunting · Yapin’",
+    "evidence": "public-bugs.txt",
+    "screenshot": "public-bugs.jpg"
+  },
+  {
+    "path": "/status",
+    "url": "https://www.yapin.gg/status",
+    "title": "Status · Yapin’",
+    "evidence": "public-status.txt",
+    "screenshot": "public-status.jpg"
+  },
+  {
+    "path": "/guidelines",
+    "url": "https://www.yapin.gg/guidelines",
+    "title": "Community Guidelines · Yapin’",
+    "evidence": "public-guidelines.txt",
+    "screenshot": "public-guidelines.jpg"
+  },
+  {
+    "path": "/privacy",
+    "url": "https://www.yapin.gg/privacy",
+    "title": "Privacy Policy · Yapin’",
+    "evidence": "public-privacy.txt",
+    "screenshot": "public-privacy.jpg"
+  },
+  {
+    "path": "/terms",
+    "url": "https://www.yapin.gg/terms",
+    "title": "Terms of Service · Yapin’",
+    "evidence": "public-terms.txt",
+    "screenshot": "public-terms.jpg"
+  },
+  {
+    "path": "/copyright",
+    "url": "https://www.yapin.gg/copyright",
+    "title": "Copyright and DMCA · Yapin’",
+    "evidence": "public-copyright.txt",
+    "screenshot": "public-copyright.jpg"
+  },
+  {
+    "path": "/cancel",
+    "url": "https://www.yapin.gg/cancel",
+    "title": "Cancel a subscription · Yapin’",
+    "evidence": "public-cancel.txt",
+    "screenshot": "public-cancel.jpg"
+  },
+  {
+    "path": "/remove-image",
+    "url": "https://www.yapin.gg/remove-image",
+    "title": "Remove an intimate image · Yapin’",
+    "evidence": "public-remove-image.txt",
+    "screenshot": "public-remove-image.jpg"
+  },
+  {
+    "path": "/developers/api/bot",
+    "url": "https://www.yapin.gg/developers/api/bot",
+    "title": "Bot · Bot API reference · Yapin’",
+    "evidence": "public-api-bot.txt",
+    "screenshot": "public-api-bot.jpg"
+  },
+  {
+    "path": "/developers/api/events",
+    "url": "https://www.yapin.gg/developers/api/events",
+    "title": "Bot events · Bot API reference · Yapin’",
+    "evidence": "public-api-events.txt",
+    "screenshot": "public-api-events.jpg"
+  },
+  {
+    "path": "/developers/api/servers",
+    "url": "https://www.yapin.gg/developers/api/servers",
+    "title": "Servers · Bot API reference · Yapin’",
+    "evidence": "public-api-servers.txt",
+    "screenshot": "public-api-servers.jpg"
+  },
+  {
+    "path": "/developers/api/channels",
+    "url": "https://www.yapin.gg/developers/api/channels",
+    "title": "Channels · Bot API reference · Yapin’",
+    "evidence": "public-api-channels.txt",
+    "screenshot": "public-api-channels.jpg"
+  },
+  {
+    "path": "/developers/api/messages",
+    "url": "https://www.yapin.gg/developers/api/messages",
+    "title": "Messages · Bot API reference · Yapin’",
+    "evidence": "public-api-messages.txt",
+    "screenshot": "public-api-messages.jpg"
+  },
+  {
+    "path": "/developers/api/roles",
+    "url": "https://www.yapin.gg/developers/api/roles",
+    "title": "Roles · Bot API reference · Yapin’",
+    "evidence": "public-api-roles.txt",
+    "screenshot": "public-api-roles.jpg"
+  },
+  {
+    "path": "/developers/api/moderation",
+    "url": "https://www.yapin.gg/developers/api/moderation",
+    "title": "Moderation · Bot API reference · Yapin’",
+    "evidence": "public-api-moderation.txt",
+    "screenshot": "public-api-moderation.jpg"
+  },
+  {
+    "path": "/developers/api/voice",
+    "url": "https://www.yapin.gg/developers/api/voice",
+    "title": "Voice · Bot API reference · Yapin’",
+    "evidence": "public-api-voice.txt",
+    "screenshot": "public-api-voice.jpg"
+  },
+  {
+    "path": "/developers/api/webhooks",
+    "url": "https://www.yapin.gg/developers/api/webhooks",
+    "title": "Webhooks · Bot API reference · Yapin’",
+    "evidence": "public-api-webhooks.txt",
+    "screenshot": "public-api-webhooks.jpg"
+  },
+  {
+    "path": "/developers/api/emojis",
+    "url": "https://www.yapin.gg/developers/api/emojis",
+    "title": "Emojis · Bot API reference · Yapin’",
+    "evidence": "public-api-emojis.txt",
+    "screenshot": "public-api-emojis.jpg"
+  },
+  {
+    "path": "/developers/api/interactions",
+    "url": "https://www.yapin.gg/developers/api/interactions",
+    "title": "Interactions · Bot API reference · Yapin’",
+    "evidence": "public-api-interactions.txt",
+    "screenshot": "public-api-interactions.jpg"
+  },
+  {
+    "path": "/developers/api/scheduled-events",
+    "url": "https://www.yapin.gg/developers/api/scheduled-events",
+    "title": "Scheduled events · Bot API reference · Yapin’",
+    "evidence": "public-api-scheduled-events.txt",
+    "screenshot": "public-api-scheduled-events.jpg"
+  },
+  {
+    "path": "/developers/api/users",
+    "url": "https://www.yapin.gg/developers/api/users",
+    "title": "Users · Bot API reference · Yapin’",
+    "evidence": "public-api-users.txt",
+    "screenshot": "public-api-users.jpg"
+  },
+  {
+    "path": "/developers/api/versions",
+    "url": "https://www.yapin.gg/developers/api/versions",
+    "title": "Versions · Bot API reference · Yapin’",
+    "evidence": "public-api-versions.txt",
+    "screenshot": "public-api-versions.jpg"
+  },
+  {
+    "path": "/developers/api/changelog",
+    "url": "https://www.yapin.gg/developers/api/changelog",
+    "title": "API changelog · Bot API reference · Yapin’",
+    "evidence": "public-api-changelog.txt",
+    "screenshot": "public-api-changelog.jpg"
+  },
+  {
+    "path": "/bot/2b71b8c3-a2b8-4dcc-96c9-47a89166e8c7",
+    "url": "https://www.yapin.gg/bot/2b71b8c3-a2b8-4dcc-96c9-47a89166e8c7",
+    "title": "Add a bot",
+    "evidence": "public-bot-profile.txt",
+    "screenshot": "public-bot-profile.jpg"
+  },
+  {
+    "path": "/openapi.json",
+    "url": "https://www.yapin.gg/openapi.json",
+    "title": "Published OpenAPI schema",
+    "evidence": "public-openapi.txt",
+    "screenshot": "public-openapi.jpg"
+  },
+  {
+    "path": "/security.json",
+    "url": "https://www.yapin.gg/security.json",
+    "title": "/security.json",
+    "evidence": "public-security-json.txt",
+    "screenshot": "public-security-json.jpg"
+  },
+  {
+    "path": "/.well-known/security.txt",
+    "url": "https://www.yapin.gg/.well-known/security.txt",
+    "title": "/.well-known/security.txt",
+    "evidence": "public-security-txt.txt",
+    "screenshot": "public-security-txt.jpg"
+  }
+]

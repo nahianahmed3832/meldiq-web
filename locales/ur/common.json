@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "خاموش"
+  },
+  "password": {
+    "show": "پاس ورڈ دکھائیں",
+    "hide": "پاس ورڈ چھپائیں"
+  },
+  "navigation": {
+    "skipToContent": "مرکزی مواد پر جائیں"
   }
 }

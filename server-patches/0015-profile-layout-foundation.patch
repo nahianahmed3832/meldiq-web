@@ -1,0 +1,203 @@
+diff --git a/server/src/app/server.ts b/server/src/app/server.ts
+index d0a5ab7f..27e0d140 100644
+--- a/server/src/app/server.ts
++++ b/server/src/app/server.ts
+@@ -956,6 +956,7 @@ export function serverFeatures(config: Config, directUploads = false): string[]
+     "community-branding",
+     // API 0.45.0: animated avatars, profile banners and profile style (docs/PROFILE_MEDIA.md).
+     "profile-media",
++    "profile-layout",
+     // API 0.45.0: GIF search through this server (GET /v1/gifs/status says whether a provider is set up; docs/GIFS.md).
+     "gif-search",
+     // API 0.46.0 (docs/PROFILE_MEDIA.md): name fonts, colours and effects; community tags worn by names; member lists
+diff --git a/server/src/modules/accounts/profile.ts b/server/src/modules/accounts/profile.ts
+index c172c9b4..1574b285 100644
+--- a/server/src/modules/accounts/profile.ts
++++ b/server/src/modules/accounts/profile.ts
+@@ -1,4 +1,4 @@
+-import { profileMediaView, wornTag } from "./profileMedia.js";
++import { profileMediaView, styleOf, wornTag } from "./profileMedia.js";
+ import { holdsBadge } from "./badges.js";
+ import type { AppContext } from "../../app/context.js";
+ import { Audience as AudienceEnum, PHONE, PresenceMode as PresenceModeEnum, validBirthday } from "../../shared/contracts/http/users.js";
+@@ -158,6 +158,7 @@ export function notificationsPaused(u: Pick<ProfileRow, "notifications_paused_un
+  */
+ export function profileView(u: ProfileRow, r: Relation, ctx?: AppContext) {
+   const p = privacyOf(u);
++  const hidden = r.self ? [] : (styleOf(u).layout?.hidden ?? []);
+   const show = (f: PrivacyField) => allows(p[f], r);
+   const view: Record<string, unknown> = {
+     id: u.id,
+@@ -174,8 +175,8 @@ export function profileView(u: ProfileRow, r: Relation, ctx?: AppContext) {
+   if (show("bio") && (status.text || status.emoji) && status.expiresAt) view.statusExpiresAt = status.expiresAt;
+   if (show("bio") && u.pronouns) view.pronouns = u.pronouns;
+   // API 0.46.0: About me and links, under the bio's setting.
+-  if (show("bio") && u.about_me) view.aboutMe = u.about_me;
+-  const links = show("bio") ? linksOf(u) : [];
++  if (show("bio") && !hidden.includes("about") && u.about_me) view.aboutMe = u.about_me;
++  const links = show("bio") && !hidden.includes("links") ? linksOf(u) : [];
+   if (links.length) view.links = links;
+   if (show("name")) {
+     if (u.first_name) view.firstName = u.first_name;
+diff --git a/server/src/modules/accounts/profileMedia.ts b/server/src/modules/accounts/profileMedia.ts
+index abb16e90..885e0478 100644
+--- a/server/src/modules/accounts/profileMedia.ts
++++ b/server/src/modules/accounts/profileMedia.ts
+@@ -2,12 +2,14 @@ import { CollectibleLook } from "../../shared/contracts/http/collectibles.js";
+ import { createHash } from "node:crypto";
+ import type { AppContext } from "../../app/context.js";
+ import { DECORATION_ID } from "../../shared/contracts/http/decorations.js";
+-import { NAME_EFFECTS, NAME_FONTS, PROFILE_DECORATIONS, PROFILE_EFFECTS, SHOWABLE_BADGES, type ShowableBadge } from "../../shared/contracts/http/users.js";
++import { NAME_EFFECTS, NAME_FONTS, PROFILE_DECORATIONS, PROFILE_EFFECTS, SHOWABLE_BADGES, ProfileLayout, type ShowableBadge } from "../../shared/contracts/http/users.js";
++import type { z } from "zod/v4";
+ 
+ /** Profile media and style as stored on a user row (API 0.45.0, docs/PROFILE_MEDIA.md); routes in profileMediaRoutes.ts. */
+ export type AvatarMedia = { kind: "gif" | "webp" | "video"; rev: number };
+ export type Banner = { kind: "jpeg" | "gif" | "webp"; rev: number };
+ export type Style = {
++  layout?: z.infer<typeof ProfileLayout> | null;
+   collectibles?: CollectibleLook[];
+   decoration: string | null;
+   effect: string | null;
+@@ -42,7 +44,9 @@ export const bannerOf = (u: { profile_banner?: string | null }) => parseJson<Ban
+ export function styleOf(u: { profile_style?: string | null }): Style {
+   const s = parseJson<Partial<Style>>(u.profile_style) ?? {};
+   const looks = CollectibleLook.array().max(8).safeParse(s.collectibles);
++  const layout = ProfileLayout.safeParse(s.layout);
+   return {
++    ...(layout.success ? { layout: layout.data } : {}),
+     ...(looks.success && looks.data.length ? { collectibles: looks.data } : {}),
+     // A classic frame, or (API 0.61.0) one of Meldiq's own or a community one; one taken down is cleared from its wearers.
+     decoration: typeof s.decoration === "string" && (PROFILE_DECORATIONS.includes(s.decoration as never) || DECORATION_ID.test(s.decoration)) ? s.decoration : null,
+diff --git a/server/src/modules/accounts/profileMediaRoutes.ts b/server/src/modules/accounts/profileMediaRoutes.ts
+index 4bc50db0..0e9ee5da 100644
+--- a/server/src/modules/accounts/profileMediaRoutes.ts
++++ b/server/src/modules/accounts/profileMediaRoutes.ts
+@@ -299,6 +299,7 @@ export default async function profileMediaRoutes(app: FastifyInstance, ctx: AppC
+       const keep = <T>(sent: T | undefined, was: T) => (sent === undefined ? was : sent);
+       const theme = themeOf(body, current);
+       const next: Style = {
++        ...(body.layout !== undefined ? { layout: body.layout } : current.layout ? { layout: current.layout } : {}),
+         ...(current.collectibles
+           ? {
+               collectibles: current.collectibles.filter(
+diff --git a/server/src/modules/accounts/usersRoutes.ts b/server/src/modules/accounts/usersRoutes.ts
+index 5896bf12..d6aef557 100644
+--- a/server/src/modules/accounts/usersRoutes.ts
++++ b/server/src/modules/accounts/usersRoutes.ts
+@@ -3,7 +3,7 @@ import type { FastifyInstance } from "fastify";
+ import { deleteBlobNow } from "../files/routes.js";
+ import { photoBlobId, readJpegBody, storePhoto } from "./photos.js";
+ import { type AppContext } from "../../app/context.js";
+-import { styleRevision, wornTag } from "./profileMedia.js";
++import { styleOf, styleRevision, wornTag } from "./profileMedia.js";
+ import { isBugHunter } from "./bugReports.js";
+ import type { ProfilePin } from "../../shared/contracts/http/pins.js";
+ import { me, requireAuth } from "../auth/index.js";
+@@ -379,7 +379,7 @@ export default async function userRoutes(app: FastifyInstance, ctx: AppContext)
+         // API 0.64.0: pins (Meldiq's for milestones, communities' own); someone they blocked sees none.
+         ...pinsField(r.blockedByTarget ? [] : ctx.pins.profilePins(u.id, viewer)),
+         // API 0.65.0 batch B: Steam, AniList, Last.fm and Trakt, the ones they show (none for someone they blocked).
+-        ...(await ctx.linkedAccounts.profileField(u.id, r.blockedByTarget)),
++        ...(await ctx.linkedAccounts.profileField(u.id, r.blockedByTarget || (!r.self && (styleOf(u).layout?.hidden.includes("connections") ?? false)))),
+       },
+     };
+   });
+diff --git a/server/src/shared/contracts/http/users.ts b/server/src/shared/contracts/http/users.ts
+index 15f40eaa..d3b537d6 100644
+--- a/server/src/shared/contracts/http/users.ts
++++ b/server/src/shared/contracts/http/users.ts
+@@ -141,7 +141,13 @@ export type ShowableBadge = (typeof SHOWABLE_BADGES)[number];
+  * one by id (docs/PROFILE_DECORATIONS.md, GET /v2/decorations). Older apps show only the classic ones.
+  */
+ const zWornDecoration = z.string().regex(/^(?:[a-z0-9-]{2,32}|c_[a-z0-9]{16})$/, "Not a decoration id");
++export const PROFILE_SECTIONS = ["about", "links", "connections"] as const;
++export const ProfileLayout = z.strictObject({
++  order: z.array(z.enum(PROFILE_SECTIONS)).length(3).refine((items) => new Set(items).size === 3, "Each profile section must appear once"),
++  hidden: z.array(z.enum(PROFILE_SECTIONS)).max(3).refine((items) => new Set(items).size === items.length, "Hidden sections must be unique"),
++});
+ export const ProfileStyleBody = z.object({
++  layout: ProfileLayout.nullable().optional(),
+   baseStyleRevision: z
+     .string()
+     .regex(/^[a-f0-9]{64}$/)
+@@ -167,6 +173,7 @@ export const ProfileStyleBody = z.object({
+     .optional(),
+ });
+ export const ProfileStyle = z.strictObject({
++  layout: ProfileLayout.nullable().optional(),
+   collectibles: z.array(CollectibleLook).max(8).optional(),
+   decoration: zWornDecoration.nullable(),
+   effect: z.enum(PROFILE_EFFECTS).nullable(),
+diff --git a/server/test/profile_layout.test.ts b/server/test/profile_layout.test.ts
+new file mode 100644
+index 00000000..0fb2c7b3
+--- /dev/null
++++ b/server/test/profile_layout.test.ts
+@@ -0,0 +1,66 @@
++import { afterAll, beforeAll, describe, expect, it } from "vitest";
++import { ProfileLayout } from "../src/shared/contracts/http/users.js";
++import { styleOf } from "../src/modules/accounts/profileMedia.js";
++import type { GriipClient } from "./support/griipClient.js";
++import { expectStatus, type Harness, startServer } from "./support/harness.js";
++
++let h: Harness;
++let owner: GriipClient, viewer: GriipClient;
++const layout = { order: ["connections", "links", "about"], hidden: ["connections", "about"] };
++beforeAll(async () => {
++  h = await startServer();
++  [owner, viewer] = await Promise.all([h.client("layoutowner"), h.client("layoutviewer")]);
++  await owner.req("PATCH", "/v1/users/me", { aboutMe: "Private profile biography", links: [{ label: "Example", url: "https://example.test/profile" }] });
++  await h.ctx.linkedAccounts.accounts.put({ id: `${owner.userId}|steam`, userId: owner.userId, provider: "steam", externalId: "test", name: "Synthetic connection", url: "https://steamcommunity.com/id/synthetic", itemsKind: "recently-played", items: [], visible: true, tokens: null, connectedAt: Date.now(), updatedAt: Date.now(), checkedAt: Date.now() });
++});
++afterAll(async () => { await h.close(); });
++
++describe("profile section layout", () => {
++  it("requires a complete unique order and a unique supported hidden set", () => {
++    expect(ProfileLayout.safeParse(layout).success).toBe(true);
++    for (const invalid of [
++      { order: ["about", "about", "links"], hidden: [] },
++      { order: ["about", "links"], hidden: [] },
++      { order: ["about", "links", "admin"], hidden: [] },
++      { order: ["about", "links", "connections"], hidden: ["about", "about"] },
++    ]) expect(ProfileLayout.safeParse(invalid).success).toBe(false);
++    expect(styleOf({ profile_style: JSON.stringify({ layout: { order: ["unknown"], hidden: [] } }) }).layout).toBeUndefined();
++  });
++  it("round-trips independently of old-client style updates and rejects malformed saves", async () => {
++    expect((await owner.req("GET", "/v1/server-info")).features).toContain("profile-layout");
++    await owner.req("PUT", "/v1/users/me/profile-style", { layout });
++    await owner.req("PUT", "/v1/users/me/profile-style", { accent: "#123456" });
++    expect((await owner.req("GET", "/v1/users/me")).user.profileStyle.layout).toEqual(layout);
++    await expectStatus(owner.req("PUT", "/v1/users/me/profile-style", { layout: { order: ["about", "about", "links"], hidden: [] } }), 400);
++    expect((await owner.req("GET", "/v1/users/me")).user.profileStyle.layout).toEqual(layout);
++  });
++  it("withholds hidden biography and provider connections from other accounts while retaining owner editing data", async () => {
++    const mine = (await owner.req("GET", "/v1/users/me")).user;
++    expect(mine.aboutMe).toBe("Private profile biography");
++    const ownPublic = (await owner.req("GET", `/v1/users/${owner.userId}`)).user;
++    expect(ownPublic.connections).toHaveLength(1);
++    const other = (await viewer.req("GET", `/v1/users/${owner.userId}`)).user;
++    expect(other.aboutMe).toBeUndefined();
++    expect(other.connections).toBeUndefined();
++    expect(other.links).toHaveLength(1);
++  });
++  it("keeps audience restrictions authoritative when sections are shown and permits resetting the layout", async () => {
++    await owner.req("PUT", "/v1/users/me/profile-style", { layout: { order: ["about", "links", "connections"], hidden: ["links"] } });
++    await owner.req("PUT", "/v1/users/me/privacy", { bio: "nobody" });
++    const other = (await viewer.req("GET", `/v1/users/${owner.userId}`)).user;
++    expect(other.aboutMe).toBeUndefined();
++    expect(other.links).toBeUndefined();
++    await owner.req("PUT", "/v1/users/me/profile-style", { layout: null });
++    expect((await owner.req("GET", "/v1/users/me")).user.profileStyle.layout).toBeUndefined();
++    expect((await owner.req("GET", "/v1/users/me")).user.aboutMe).toBe("Private profile biography");
++  });
++  it("refuses a stale layout draft without overwriting another device's style", async () => {
++    const before = (await owner.req("GET", "/v1/users/me")).user;
++    expect(before.styleRevision).toBeTruthy();
++    await owner.req("PUT", "/v1/users/me/profile-style", { accent: "#654321" });
++    await expectStatus(owner.req("PUT", "/v1/users/me/profile-style", { baseStyleRevision: before.styleRevision, layout }), 409);
++    const after = (await owner.req("GET", "/v1/users/me")).user;
++    expect(after.profileStyle.accent).toBe("#654321");
++    expect(after.profileStyle.layout).toBeUndefined();
++  });
++});

@@ -26,7 +26,7 @@ export function HomeView({ orgId, onDialog }: { orgId: string | null; section: S
               : uiText("workspace.interface.your_people_and_communities_all_in_one_place_dc12128")}
         </p>
         {synced && (
-          <div className="row" style={{ gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+          <div className="home-actions">
             {org ? (
               <button className="btn btn-secondary" onClick={() => onDialog({ kind: "channels" })}>
                 <Localized k="workspace.interface.browse_channels_e0116db" slots={[<Compass size={16} />]} />

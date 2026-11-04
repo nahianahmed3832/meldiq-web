@@ -860,5 +860,11 @@
     "accountDescription": "E-Mail, Kontostatus, Datenexport und Kontolöschung.",
     "notificationsDescription": "Desktop-Hinweise, Töne, Benachrichtigungspausen und Verknüpfungen zu Unterhaltungseinstellungen.",
     "appearanceDescription": "Designs, Farben, Nachrichtenlayout, Medienvorschauen und Chatgesten."
+  },
+  "foundation": {
+    "profileSections": "Profilbereiche",
+    "profileSectionsDescription": "Wähle die sichtbaren Bereiche und ihre Reihenfolge. Deine Zielgruppeneinstellungen gelten weiterhin.",
+    "resetSections": "Bereichsänderungen zurücksetzen",
+    "saveSections": "Bereiche speichern"
   }
 }

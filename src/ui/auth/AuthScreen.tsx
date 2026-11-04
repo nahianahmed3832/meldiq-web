@@ -21,6 +21,8 @@ import { TEST_DEVICE_LINKING } from "../../auth/testLinking";
 import { AddDeviceView, CreateIdentityView, RecoveryKeyReveal } from "./DeviceSetupViews";
 import { authErrorText } from "./useSubmit";
 import { useT } from "../../i18n";
+import { SetupProgress } from "../components/SetupProgress";
+import { startWelcome } from "../../application/welcome";
 type Step =
   | {
       k: "signIn";
@@ -34,6 +36,8 @@ type Step =
       k: "verify";
       email: string;
       password: string;
+      sentAt?: number;
+      consentAccepted?: boolean;
     }
   | {
       k: "forgot";
@@ -57,6 +61,7 @@ type Step =
       creds: SetupCredentials;
       account: AccountView;
       password?: string;
+      consentAccepted?: boolean;
     }
   | {
       k: "addDevice";
@@ -103,20 +108,38 @@ export function AuthScreen(props: {
   const { savedAccounts, onUseSavedAccount } = props;
   const [step, setStep] = useState<Step>({ k: "signIn" });
   const [server, setServer] = useState<ServerInfo | null>(null);
+  const [serverError, setServerError] = useState(false);
+  const [checkingServer, setCheckingServer] = useState(true);
+  const [retryServer, setRetryServer] = useState(0);
   const t = useT();
   const ctx: FormContext = useMemo(() => ({ accounts: AccountApi.anonymous(base), deviceName: browserDeviceName() }), [base]);
   useEffect(() => {
+    let current = true;
+    setCheckingServer(true);
+    setServerError(false);
+    setServer(null);
     new ApiClient(base)
       .json("GET", "/v1/server-info", zServerInfo, { auth: false })
-      .then(setServer)
-      .catch(() => setServer(null));
-  }, [base]);
+      .then((value) => {
+        if (current) setServer(value);
+      })
+      .catch(() => {
+        if (current) setServerError(true);
+      })
+      .finally(() => {
+        if (current) setCheckingServer(false);
+      });
+    return () => {
+      current = false;
+    };
+    // Locale changes must not cause another capability request.
+  }, [base, retryServer]);
   /**
    * Signed in: set up encryption on this browser. [password] stays in memory for the key backup (unlocking it, or
    * making it once this browser has the keys).
    */
   const signedIn = useCallback(
-    (grant: AccountSessionGrant, password?: string) => {
+    (grant: AccountSessionGrant, password?: string, consentAccepted = false) => {
       // Ended from elsewhere before setup finished (e.g. removed in the phone's session list): sign in again, email kept.
       const creds = new SetupCredentials(base, grant, (why) => setStep({ k: "signIn", notice: SETUP_ENDED[why], email: grant.account.email }));
       const existing = savedAccounts?.find((a) => a.accountId === grant.account.id);
@@ -129,7 +152,7 @@ export function AuthScreen(props: {
         return;
       }
       const account = grant.account;
-      setStep(account.identity ? { k: "addDevice", creds, account, password } : { k: "create", creds, account, password });
+      setStep(account.identity ? { k: "addDevice", creds, account, password } : { k: "create", creds, account, password, consentAccepted });
     },
     [base, savedAccounts, onUseSavedAccount],
   );
@@ -156,10 +179,26 @@ export function AuthScreen(props: {
       );
       break;
     case "signUp":
-      body = <SignUpForm ctx={ctx} inviteRequired={server?.registration === "invite"} onSent={(email, password) => setStep({ k: "verify", email, password })} onBack={() => toSignIn()} />;
+      body = (
+        <SignUpForm
+          ctx={ctx}
+          inviteRequired={server?.registration === "invite"}
+          onSent={(email, password) => setStep({ k: "verify", email, password, sentAt: Date.now(), consentAccepted: true })}
+          onBack={() => toSignIn()}
+        />
+      );
       break;
     case "verify":
-      body = <VerifyEmailForm ctx={ctx} email={step.email} password={step.password} onVerified={(g) => signedIn(g, step.password)} onBack={() => toSignIn(undefined, step.email)} />;
+      body = (
+        <VerifyEmailForm
+          ctx={ctx}
+          email={step.email}
+          password={step.password}
+          sentAt={step.sentAt}
+          onVerified={(g) => signedIn(g, step.password, step.consentAccepted)}
+          onBack={() => toSignIn(undefined, step.email)}
+        />
+      );
       break;
     case "recover":
       body = (
@@ -198,8 +237,10 @@ export function AuthScreen(props: {
           account={step.account}
           deviceName={ctx.deviceName}
           password={step.password}
+          consentAccepted={step.consentAccepted}
           onCreated={(device, code) => {
             const grant = step.creds.grant;
+            startWelcome(step.account.id);
             void props
               .onSave(device, grant)
               .then(() => setStep({ k: "recoveryKey", device, grant, code }))
@@ -239,6 +280,22 @@ export function AuthScreen(props: {
   return (
     <AuthFrame>
       <GiftSignInNotice />
+      {checkingServer && (
+        <p className="hint" role="status">
+          {t("auth.foundation.checkingServer")}
+        </p>
+      )}
+      {serverError && (
+        <div className="banner danger" role="alert">
+          <span className="grow">{t("auth.foundation.serverUnavailable")}</span>
+          <button type="button" className="btn btn-secondary btn-sm" disabled={checkingServer} onClick={() => setRetryServer((value) => value + 1)}>
+            {t("common.actions.retry")}
+          </button>
+        </div>
+      )}
+      {["signUp", "verify", "create", "recoveryKey"].includes(step.k) && (
+        <SetupProgress labels={[t("signup_title"), t("verify_title"), t("create_title")]} current={step.k === "signUp" ? 0 : step.k === "verify" ? 1 : 2} />
+      )}
       {body}
       {step.k === "signIn" && server?.features.includes("platform-operations") && <AppealAccess base={base} />}
     </AuthFrame>

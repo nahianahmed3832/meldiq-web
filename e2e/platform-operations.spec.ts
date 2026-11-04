@@ -1,3 +1,4 @@
+import { finishWelcome } from "./welcome";
 import path from "node:path";
 import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -16,6 +17,7 @@ test("service inbox delivers notices, submits a real warning appeal and redeems 
   await page.getByLabel("Your name", { exact: true }).fill("Operations client");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill("a long enough password for local verification");
+  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
   await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));
@@ -24,6 +26,7 @@ test("service inbox delivers notices, submits a real warning appeal and redeems 
   await expect(page.getByRole("heading", { name: "Save your recovery key" })).toBeVisible();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+  await finishWelcome(page);
   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
   const dbPath = path.join(process.env.ORBIT_E2E_DATA!, "griip.sqlite");
   if (!dbPath.includes("orbit-e2e-")) throw new Error("Operations fixtures require a disposable local database");

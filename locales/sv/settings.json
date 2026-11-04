@@ -860,5 +860,11 @@
     "accountDescription": "E-post, kontostatus, dataexport och borttagning av konto.",
     "notificationsDescription": "Skrivbordsaviseringar, ljud, aviseringspauser och genvägar till samtalsinställningar.",
     "appearanceDescription": "Teman, färger, meddelandelayout, medieförhandsvisningar och chattgester."
+  },
+  "foundation": {
+    "profileSections": "Profilavsnitt",
+    "profileSectionsDescription": "Välj vilka avsnitt som visas och deras ordning. Dina målgruppsinställningar gäller fortfarande.",
+    "resetSections": "Återställ avsnittsändringar",
+    "saveSections": "Spara avsnitt"
   }
 }

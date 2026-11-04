@@ -1,0 +1,68 @@
+Browser tab: 4, Title: "Yapin’ · Free chat with servers, voice and screen sharing", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 text (32) Yapin’
+		3 container Servers
+			4 button Direct messages
+			5 container
+				6 button Meldiq Research - Private Test
+				7 button Meldiq
+				8 button Yapin' Headquarters
+				9 text 10
+				10 button MINECRAFT
+				11 text 22
+			12 button Create a server
+			13 button Discover servers
+				14 image
+		15 container
+			16 button Meldiq Research - Private Test Events Search
+				17 text Meldiq Research - Private Test
+				18 button Events
+				19 button Search
+			20 button Lobby OFF
+				21 image
+				22 text Lobby
+				23 text OFF
+			24 button Invite people
+				25 image
+				26 text Invite people
+			27 button (expanded) TEXT CHANNELS, Secondary Actions: Collapse
+				28 image
+				29 text TEXT CHANNELS
+			30 button Description: Create channel in this category, Help: Create channel here
+				31 image
+			32 container
+				33 button general
+					34 image
+					35 text general
+				36 button history-lab
+					37 image
+					38 text history-lab
+			39 button (expanded) VOICE CHANNELS, Secondary Actions: Collapse
+				40 image
+				41 text VOICE CHANNELS
+			42 button Description: Create channel in this category, Help: Create channel here
+				43 image
+			44 button General
+				45 image
+				46 text General
+			47 button (expanded) RESEARCH, Secondary Actions: Collapse
+				48 image
+				49 text RESEARCH
+			50 button Description: Create channel in this category, Help: Create channel here
+				51 image
+			52 button Discussion ideas-lab
+				53 image Discussion
+				54 text ideas-lab
+			55 pop up button (collapsed) nahian Online, Help: Your account, Secondary Actions: Expand
+				56 text nahian
+				57 text Online
+			58 button (collapsed) Description: Inbox, Secondary Actions: Expand
+			59 button Log out
+				60 image
+		61 container Sections
+			62 button Home
+			63 button Servers
+			64 button Settings
+
+The focused UI element is 0 AXWebArea (32) Yapin’, URL: yapin.gg/

@@ -1,0 +1,124 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading Voice & Audio, Value: 2
+								40 text Voice & Audio
+							41 text MICROPHONE
+							42 combo box (settable) MICROPHONE, Value: Default
+								43 text Default
+							44 text SPEAKERS
+							45 combo box (settable) SPEAKERS, Value: Default
+								46 text Default
+							47 container
+								48 text Device names show after you allow the microphone once. 
+								49 button Allow now
+							50 container
+								51 text OUTPUT VOLUME 100 %
+							52 slider OUTPUT VOLUME 100%, Value: 100, Secondary Actions: Increment, Decrement
+							53 container
+								54 text SOUNDBOARD VOLUME 100%
+							55 slider SOUNDBOARD VOLUME 100%, Value: 100, Secondary Actions: Increment, Decrement
+							56 text Sounds people play in calls. Slide to 0 to mute them.
+							57 text MIC TEST
+							58 button Test mic
+							59 container Mic level
+							60 text Say something: the bar moves and you hear yourself (use headphones). INPUT MODE
+							61 container
+								62 text Voice activity Your mic is on while you're not muted.
+							63 container
+								64 text Push to talk Hold a key to talk.
+							65 text VOICE PROCESSING
+							66 container
+								67 text AI noise suppression Removes keyboards, fans and people talking in the background before anyone hears you.
+								68 checkbox Value: 1, AI noise suppression Removes keyboards, fans and people talking in the background before anyone hears you.
+							69 container
+								70 text Standard noise suppression Your browser’s built-in filter. Used when AI noise suppression is off.
+								71 checkbox Standard noise suppression Your browser’s built-in filter. Used when AI noise suppression is off., Value: 1
+							72 container
+								73 text Echo cancellation Stops others hearing themselves through your speakers.
+								74 checkbox Echo cancellation Stops others hearing themselves through your speakers., Value: 1
+							75 container
+								76 text Automatic gain Keeps your volume even. Turn off for music or a good mic.
+								77 checkbox Automatic gain Keeps your volume even. Turn off for music or a good mic., Value: 1
+							78 text CALL SOUNDS
+							79 container
+								80 text Join sound A chime when someone joins your call.
+								81 checkbox Join sound A chime when someone joins your call., Value: 1
+							82 container
+								83 text Leave sound A chime when someone leaves your call (or you hang up).
+								84 checkbox Leave sound A chime when someone leaves your call (or you hang up)., Value: 1
+							85 text JOINING CALLS
+							86 container
+								87 text Join calls muted Your mic starts off in every call. Unmute when you're ready. Right-click (or hold) a voice channel to join muted or deafened just once.
+								88 checkbox Value: 0, Join calls muted Your mic starts off in every call. Unmute when you're ready. Right-click (or hold) a voice channel to join muted or deafened just once.
+							89 text CLIPS
+							90 container
+								91 text Keep clips ready In a call, your device keeps the last few seconds of what you hear (and the stream you watch) in memory, so Clip can save it. Nothing leaves your device until you post a clip. Starts with your next call.
+								92 checkbox Value: 1, Keep clips ready In a call, your device keeps the last few seconds of what you hear (and the stream you watch) in memory, so Clip can save it. Nothing leaves your device until you post a clip. Starts with your next call.
+							93 container
+								94 text Clip length How far back a clip goes.
+								95 combo box (settable) Clip length, Value: 30 seconds
+									96 text 30 seconds
+							97 container
+								98 text Let people clip me Off: other people’s clips leave out your voice and your stream. Saved on this device.
+								99 checkbox Value: 1, Let people clip me Off: other people’s clips leave out your voice and your stream. Saved on this device.
+							100 button Reset voice settings
+							101 button Close
+			102 container
+				103 tab group
+					104 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						105 button Close
+			106 button New Tab
+	107 close button
+	108 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	109 minimize button
+110 menu bar
+	111 Chrome
+	112 File
+	113 Edit
+	114 View
+	115 History
+	116 Bookmarks
+	117 Profiles
+	118 Tab
+	119 Window
+	120 Help
+
+The focused UI element is 30 button Voice & Audio

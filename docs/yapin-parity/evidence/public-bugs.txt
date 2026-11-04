@@ -1,0 +1,96 @@
+Browser tab: 2, Title: "Bug Hunting · Yapin’", URL: "https://www.yapin.gg/bugs".
+1 AXWebArea Bug Hunting · Yapin’, URL: yapin.gg/bugs
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text PRODUCT
+			14 heading Bug Hunting Program, Value: 1
+				15 text Bug Hunting Program
+			16 text LAST UPDATED  20 OCTOBER 2026 Found something broken, or a way to do something you shouldn’t be able to? Tell us. We fix it, you get credit.
+		17 container
+			18 heading What we want, Value: 2
+				19 text What we want
+			20 content list
+				21 container
+					22 AXListMarker • 
+					23 text Security holes:  seeing or changing things that aren’t yours, getting a badge, role, Plus or permission you shouldn’t have, getting around a ban or a filter.
+				24 container
+					25 AXListMarker • 
+					26 text Things that break:  crashes, pages that won’t load, messages that vanish, features that don’t do what they say.
+				27 container
+					28 AXListMarker • 
+					29 text Clear steps:  what you did, what happened, what you expected. A screenshot or video helps a lot.
+			30 heading The rules, Value: 2
+				31 text The rules
+			32 content list
+				33 container
+					34 AXListMarker • 
+					35 text Report it, don’t use it.  Finding a bug is great. Using it to give yourself Plus, a badge, admin, or to mess with other people turns it into a ban.
+				36 container
+					37 AXListMarker • 
+					38 text Keep it private until it’s fixed.  Don’t post exploits in chat or share them with friends.
+				39 container
+					40 AXListMarker • 
+					41 text Don’t touch other people’s accounts or data  to prove a point. Use your own test account.
+				42 container
+					43 AXListMarker • 
+					44 text No spam, no DDoS, no social engineering  of staff or users.
+			45 heading What you get, Value: 2
+				46 text What you get
+			47 content list
+				48 container
+					49 AXListMarker • 
+					50 text Bug Hunter badge  next to your name, for any confirmed bug.
+				51 container
+					52 AXListMarker • 
+					53 text A thank-you in the fixes announcement, if you want one.
+			54 heading How to report, Value: 2
+				55 text How to report
+			56 text In Yapin’:  Settings → My Account → Report a bug . It goes straight to the admins and you can see the status in the same place. Bugs sent by email don't get a badge or a status, so please use the app. Only for a real security hole (someone could get into other accounts or private data) and you can't log in: email
+			57 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg?subject=Security%20bug
+			58 text  with “Security bug” in the subject.
+			59 link Description: ← Back to Yapin’, Value: yapin.gg/
+			60 text  · 
+			61 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		62 text Yapin’
+		63 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		64 heading PRODUCT, Value: 4
+			65 text PRODUCT
+		66 content list
+			67 link Description: Download, Value: yapin.gg/download
+			68 link Description: Developers, Value: yapin.gg/developers
+			69 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			70 link Description: Creator Program, Value: yapin.gg/creators
+			71 link Description: FanKit, Value: yapin.gg/fankit
+			72 link Description: Roadmap, Value: yapin.gg/roadmap
+			73 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			74 link Description: Bugs, Value: yapin.gg/bugs
+			75 link Description: Status, Value: yapin.gg/status
+		76 heading COMMUNITY, Value: 4
+			77 text COMMUNITY
+		78 content list
+			79 link Description: Guidelines, Value: yapin.gg/guidelines
+			80 link Description: Tutorials, Value: yapin.gg/tutorials
+			81 link Description: Bots, Value: yapin.gg/bots
+			82 link Description: Partners, Value: yapin.gg/partners
+		83 heading LEGAL, Value: 4
+			84 text LEGAL
+		85 content list
+			86 link Description: Terms, Value: yapin.gg/terms
+			87 link Description: Privacy, Value: yapin.gg/privacy
+			88 link Description: Copyright, Value: yapin.gg/copyright
+			89 link Description: Security, Value: yapin.gg/security
+			90 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			91 link Description: Contact, Value: mailto:hello@yapin.gg
+		92 text © 2026 Yapper Media LLC. Free to use.
+		93 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Bug Hunting · Yapin’, URL: yapin.gg/bugs

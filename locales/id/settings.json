@@ -860,5 +860,11 @@
     "accountDescription": "Email, status akun, ekspor data, dan penghapusan akun.",
     "notificationsDescription": "Peringatan desktop, suara, jeda notifikasi, dan pintasan ke preferensi percakapan.",
     "appearanceDescription": "Tema, warna, tata letak pesan, pratinjau media, dan gestur chat."
+  },
+  "foundation": {
+    "profileSections": "Bagian profil",
+    "profileSectionsDescription": "Pilih bagian yang ditampilkan dan urutannya. Pengaturan audiens tetap berlaku.",
+    "resetSections": "Reset perubahan bagian",
+    "saveSections": "Simpan bagian"
   }
 }

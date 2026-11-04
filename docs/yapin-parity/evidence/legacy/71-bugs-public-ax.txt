@@ -1,0 +1,130 @@
+Window: "Bug Hunting · Yapin’", App: Google Chrome.
+0 standard window Bug Hunting · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/bugs, Secondary Actions: Raise
+	1 container Bug Hunting · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/bugs
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/bugs, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Bug Hunting · Yapin’, URL: yapin.gg/bugs
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 heading Bug Hunting Program, Value: 1
+									30 text Bug Hunting Program
+								31 text LAST UPDATED  20 OCTOBER 2026 Found something broken, or a way to do something you shouldn’t be able to? Tell us. We fix it, you get credit.
+								32 heading What we want, Value: 2
+									33 text What we want
+								34 content list
+									35 container
+										36 AXListMarker • 
+										37 text Security holes:  seeing or changing things that aren’t yours, getting a badge, role, Plus or permission you shouldn’t have, getting around a ban or a filter.
+									38 container
+										39 AXListMarker • 
+										40 text Things that break:  crashes, pages that won’t load, messages that vanish, features that don’t do what they say.
+									41 container
+										42 AXListMarker • 
+										43 text Clear steps:  what you did, what happened, what you expected. A screenshot or video helps a lot.
+								44 heading The rules, Value: 2
+									45 text The rules
+								46 content list
+									47 container
+										48 AXListMarker • 
+										49 text Report it, don’t use it.  Finding a bug is great. Using it to give yourself Plus, a badge, admin, or to mess with other people turns it into a ban.
+									50 container
+										51 AXListMarker • 
+										52 text Keep it private until it’s fixed.  Don’t post exploits in chat or share them with friends.
+									53 container
+										54 AXListMarker • 
+										55 text Don’t touch other people’s accounts or data  to prove a point. Use your own test account.
+									56 container
+										57 AXListMarker • 
+										58 text No spam, no DDoS, no social engineering  of staff or users.
+								59 heading What you get, Value: 2
+									60 text What you get
+								61 content list
+									62 container
+										63 AXListMarker • 
+										64 text Bug Hunter badge  next to your name, for any confirmed bug.
+									65 container
+										66 AXListMarker • 
+										67 text A thank-you in the fixes announcement, if you want one.
+								68 heading How to report, Value: 2
+									69 text How to report
+								70 text In Yapin’:  Settings → My Account → Report a bug . It goes straight to the admins and you can see the status in the same place. Bugs sent by email don't get a badge or a status, so please use the app. Only for a real security hole (someone could get into other accounts or private data) and you can't log in: email
+								71 link [email redacted], Value: mailto:[email redacted]?subject=Security%20bug
+								72 text  with “Security bug” in the subject.
+								73 link ← Back to Yapin’, Value: yapin.gg/
+								74 text  · 
+								75 link Remove an intimate image, Value: yapin.gg/remove-image
+							76 text Yapin’
+							77 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							78 heading Product, Value: 4
+								79 text Product
+							80 content list
+								81 link Download, Value: yapin.gg/download
+								82 link Developers, Value: yapin.gg/developers
+								83 link Yapin’ Plus, Value: yapin.gg/plus
+								84 link Creator Program, Value: yapin.gg/creators
+								85 link Roadmap, Value: yapin.gg/roadmap
+								86 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								87 link Bugs, Value: yapin.gg/bugs
+								88 link Status, Value: yapin.gg/status
+							89 heading Community, Value: 4
+								90 text Community
+							91 content list
+								92 link Guidelines, Value: yapin.gg/guidelines
+								93 link Tutorials, Value: yapin.gg/tutorials
+								94 link Bots, Value: yapin.gg/bots
+							95 heading Legal, Value: 4
+								96 text Legal
+							97 content list
+								98 link Terms, Value: yapin.gg/terms
+								99 link Privacy, Value: yapin.gg/privacy
+								100 link Copyright, Value: yapin.gg/copyright
+								101 link Cancel a subscription, Value: yapin.gg/cancel
+								102 link Contact, Value: mailto:[email redacted]
+							103 text © 2026 Yapper Media LLC. Free to use.
+			104 container
+				105 tab group
+					106 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						107 button Close
+					108 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						109 button Close
+					110 tab (selected, settable, boolean) Bug Hunting · Yapin’ - Memory usage - 344 MB, Value: on
+						111 button Close
+			112 button New Tab
+	113 close button
+	114 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	115 minimize button
+116 menu bar
+	117 Chrome
+	118 File
+	119 Edit
+	120 View
+	121 History
+	122 Bookmarks
+	123 Profiles
+	124 Tab
+	125 Window
+	126 Help
+
+The focused UI element is 19 HTML content Bug Hunting · Yapin’, URL: yapin.gg/bugs

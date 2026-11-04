@@ -1,0 +1,33 @@
+									24 heading Settings, Value: 2
+									48 heading Appearance, Value: 1
+									53 text Theme Light, dark, or whatever this computer uses.
+										55 toggle button System, Value: 0
+										56 toggle button Light, Value: 0
+										57 toggle button Dark, Value: 1
+										58 toggle button Black, Value: 0
+										69 toggle button Small, Value: 0
+										70 toggle button Default, Value: 1
+										71 toggle button Large, Value: 0
+										74 toggle button Stream, Value: 1
+										75 toggle button Bubbles, Value: 0
+										78 toggle button Automatic, Value: 1
+										79 toggle button 12-hour, Value: 0
+										80 toggle button 24-hour, Value: 0
+										83 toggle button All, Value: 1
+										84 toggle button Unread only, Value: 0
+										85 toggle button None, Value: 0
+										92 toggle button Standard, Value: 1
+										93 toggle button HD, Value: 0
+										94 toggle button Original, Value: 0
+										99 toggle button React with 👍, Value: 1
+										100 toggle button React with ❤️, Value: 0
+										101 toggle button React with ✅, Value: 0
+										102 toggle button React with 😂, Value: 0
+										103 toggle button React with 🔥, Value: 0
+										104 toggle button React with 🙏, Value: 0
+									114 heading COLOUR THEMES, Value: 2
+										115 text COLOUR THEMES
+									116 text Tint the whole app. Free, and only in this browser.
+									141 text Custom theme Two colours, or add a third. Then set how strong it is.
+									146 slider (disabled) Strength 60%, Value: 60, Secondary Actions: Increment, Decrement
+									149 text Show community themes Show a community's accent, background tint and banner while you're in it. Turn off to always keep yours.

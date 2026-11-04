@@ -1,0 +1,81 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Create a quiz
+							21 heading Create a quiz, Value: 2
+								22 text Create a quiz
+							23 container Poll type
+								24 toggle button Poll, Value: 0
+								25 toggle button Quiz, Value: 1
+							26 text Mark the right answer. People see it after they answer.
+							27 text QUESTION
+							28 text field (settable) QUESTION, Placeholder: What should we…?
+							29 text OPTIONS
+							30 text Tap the circle next to the right answer(s).
+							31 toggle button Right answer, Value: 0
+								32 image
+							33 text field (settable) Option 1
+							34 toggle button Right answer, Value: 0
+								35 image
+							36 text field (settable) Option 2
+							37 button + Add option
+							38 text SHOW THE ANSWER
+							39 button Right after they answer
+							40 button When the quiz ends
+							41 container
+								42 text Anonymous Nobody can see who voted for what.
+								43 checkbox Anonymous Nobody can see who voted for what., Value: 0
+							44 container
+								45 text Allow several answers
+								46 checkbox Allow several answers, Value: 0
+							47 text CLOSES AFTER
+							48 button 1 hour
+							49 button 1 day
+							50 button 3 days
+							51 button 1 week
+							52 button Never
+							53 button Cancel
+							54 button (disabled) Post quiz
+			55 container
+				56 tab group
+					57 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						58 button Close
+					59 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 239 MB, Value: on
+						60 button Close
+					61 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						62 button Close
+			63 button New Tab
+	64 close button
+	65 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	66 minimize button
+67 menu bar
+	68 Chrome
+	69 File
+	70 Edit
+	71 View
+	72 History
+	73 Bookmarks
+	74 Profiles
+	75 Tab
+	76 Window
+	77 Help
+
+The focused UI element is 25 toggle button Quiz, Value: 1

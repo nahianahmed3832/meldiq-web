@@ -1,0 +1,106 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq
+								25 container
+									26 button Yapin' Headquarters
+									27 text 15
+								28 container
+									29 button MINECRAFT
+									30 text 13
+								31 button Create a server
+								32 button Discover servers
+							33 container
+								34 button Meldiq
+								35 container
+									36 button Invite people
+									37 button Supercharge
+									38 button Server settings
+									39 button Promote Server
+									40 button Bots
+									41 button Create channel
+									42 button Create category
+									43 button Lock Server
+									44 button Notification settings
+									45 button Change Nickname
+									46 button Mute Server
+									47 button Delete server
+								48 button Lobby
+								49 button Invite people
+								50 text TEXT CHANNELS
+								51 button Create text channel, Help: Create channel
+								52 button general
+								53 text VOICE CHANNELS
+								54 button Create voice channel
+								55 button General
+								56 pop up button nahian Online, Help: Your account
+									57 text nahian
+									58 text Online
+								59 button Inbox
+								60 button Settings
+								61 button Log out
+							62 container
+								63 button Customize
+								64 container
+									65 text Me
+									66 heading Meldiq, Value: 1
+										67 text Meldiq
+									68 text 1  member 1 online
+								69 heading NOTHING HERE YET, Value: 2
+									70 text NOTHING HERE YET
+								71 text Your lobby is still bare. Three quick things make it feel like home:
+								72 button Write an intro
+								73 button Pick main channels
+								74 button Add a FAQ
+								75 text Looks, colours and the order of the cards are in Customize too.
+								76 heading JUMP IN, Value: 2
+									77 text JUMP IN
+								78 button general
+								79 container
+									80 heading WHO RUNS IT, Value: 2
+										81 text WHO RUNS IT
+									82 button nahian Owner
+							83 button Getting started
+			84 container
+				85 tab group
+					86 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						87 button Close
+			88 button New Tab
+	89 close button
+	90 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	91 minimize button
+92 menu bar
+	93 Chrome
+	94 File
+	95 Edit
+	96 View
+	97 History
+	98 Bookmarks
+	99 Profiles
+	100 Tab
+	101 Window
+	102 Help
+
+The focused UI element is 34 button Meldiq

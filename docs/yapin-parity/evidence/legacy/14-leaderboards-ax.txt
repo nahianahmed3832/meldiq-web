@@ -1,0 +1,131 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading Leaderboards, Value: 2
+								40 text Leaderboards
+							41 tab group
+								42 tab (selected) Level, Value: 1
+								43 tab (settable, integer) Messages, Value: 0
+								44 tab (settable, integer) Voice, Value: 0
+								45 tab (settable, integer) Shards, Value: 0
+								46 tab (settable, integer) Gifts, Value: 0
+								47 tab (settable, integer) Invites, Value: 0
+							48 text Highest account levels.
+							49 button 🥈 TruSnooze 19 2
+							50 button 🥇 !ts a Sylveon Head Art Manager 23 1
+							51 button 🥉 Jolli Moderator 14 3
+							52 content list
+								53 button 🥉 Confident - /user 14
+								54 button 5 Yuki Head Moderator 13
+								55 button 5 ! WilliamThe4rd Bug Hunter 13
+								56 button 7 greninja Yapin’ Management 12
+								57 button 7 Ben 12
+								58 button 7 Tripex Yapin’ Management 12
+								59 button 7 ⛓️𝑀𝒜𝐻𝒪𝑅𝒜𝒢𝒜☸️ Bug Hunter 12
+								60 button 7 Jakens Moderator 12
+								61 button 7 .Autumn🍂 Community Helper 12
+								62 button 7 Seth Nugent Community Helper 12
+								63 button 7 d4c Bug Hunter 12
+								64 button 15 vaporized 11
+								65 button 15 ﹺ !nicki Artist 11
+								66 button 15 ᴶᵒˣᵒ 11
+								67 button 15 ! Ascension Moderator 11
+								68 button 15 WNBA 11
+								69 button 15 gardevoir Bug Hunter 11
+								70 button 15 !Wo0zy 11
+								71 button 15 kdryx Pro Creator 11
+								72 button 23 Sk3Tchy OG 10
+								73 button 23 Moon Art Manager 10
+								74 button 23 Enigma Artist 10
+								75 button 23 wakfuonyt Community Helper 10
+								76 button 23 Firefox Head Moderator 10
+								77 button 23 frejablehhh OG 10
+								78 button 23 Omorfos78 10
+								79 button 23 Yapero Artist 10
+								80 button 23 怠竜 Tearyū Head Moderator 10
+								81 button 23 0K 10
+								82 button 23 Le Roi Du Monde Moderator 10
+								83 button 23 Belgium Artist 10
+								84 button 23 The999thUser 10
+								85 button 23 ♯┆ƙׁׅɑׁׅzׁׅυׁׅ .ᐟ ★ Artist 10
+								86 button 23 nana 10
+								87 button 23 SHY 𑣲. Head Moderator 10
+								88 button 23 B-Rice Creator 10
+								89 button 23 Shizu Community Helper 10
+								90 button 23 airyuz 10
+								91 button 23 Kari 10
+								92 button 23 JAYC Artist 10
+								93 button 23 ash Artist 10
+								94 button 23 Fizzly Artist 10
+								95 button 23 jyp Artist 10
+								96 button 23 Typo Moderator 10
+								97 button 23 ✦𝑬𝑺𝑻𝑹𝑬𝑳𝑳𝑨✦ Bug Hunter 10
+								98 button 23 Développeur (Reqeuss) Bug Hunter 10
+								99 button 23 Buddy Artist 10
+							100 text Level up once to get a spot on the board.
+							101 container
+								102 text Updates every 10 minutes.  Bots and banned accounts don’t count.
+							103 heading PRIVACY, Value: 3
+								104 text PRIVACY
+							105 container
+								106 text Hide me from leaderboards You won’t show up on any leaderboard.
+								107 checkbox Hide me from leaderboards You won’t show up on any leaderboard., Value: 0
+							108 button Close
+			109 container
+				110 tab group
+					111 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						112 button Close
+			113 button New Tab
+	114 close button
+	115 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	116 minimize button
+117 menu bar
+	118 Chrome
+	119 File
+	120 Edit
+	121 View
+	122 History
+	123 Bookmarks
+	124 Profiles
+	125 Tab
+	126 Window
+	127 Help
+
+The focused UI element is 36 button Leaderboards

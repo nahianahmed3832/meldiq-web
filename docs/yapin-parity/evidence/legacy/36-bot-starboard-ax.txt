@@ -1,0 +1,105 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 button Close
+							22 text Starboard BOT The hall of fame Off
+							23 checkbox Off, Value: 0
+							24 text Only speaks when the server agrees something is great. Never stars the same message twice.
+							25 content list
+								26 text ⭐ a message enough and it gets copied to your starboard
+								27 text You pick how many stars it takes
+								28 text Images come along
+								29 text Your own stars don’t count, private channels are skipped
+							30 text Starboard
+							31 text BOT
+							32 text ⭐  5  ·  #general  ·  nahian the funniest message of the week React with ⭐ or 🌟. Stars from the message’s author don’t count. Starboard+
+							33 text PLUS
+							34 table
+								35 row
+									36 column header
+										37 text FREE
+									38 column header
+										39 text STARBOARD+
+								40 row
+									41 cell
+										42 text Copies starred messages, images too
+									43 cell
+										44 image Yes
+									45 cell
+										46 image Yes
+								47 row
+									48 cell
+										49 text How many stars it takes
+									50 cell
+										51 image Yes
+									52 cell
+										53 image Yes
+								54 row
+									55 cell
+										56 text Your own emoji instead of ⭐ (💀, 🔥, 😂…)
+									57 cell
+										58 container No
+											59 text ✕
+									60 cell
+										61 image Yes
+								62 row
+									63 cell
+										64 text Let people star their own message
+									65 cell
+										66 container No
+											67 text ✕
+									68 cell
+										69 image Yes
+								70 row
+									71 cell
+										72 text Leave channels out
+									73 cell
+										74 container No
+											75 text ✕
+									76 cell
+										77 text up to 25
+							78 button Get Bots+ · $3.99/mo
+							79 text Renews every month at $3.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+							80 link yapin.gg/cancel
+							81 text . Bots+ is one subscription for this server: it unlocks the Plus extras of every Yapin’ bot together. Saved
+							82 button (disabled) Save
+			83 container
+				84 tab group
+					85 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 151 MB, Value: on
+						86 button Close
+			87 button New Tab
+	88 close button
+	89 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	90 minimize button
+91 menu bar
+	92 Chrome
+	93 File
+	94 Edit
+	95 View
+	96 History
+	97 Bookmarks
+	98 Profiles
+	99 Tab
+	100 Window
+	101 Help
+
+The focused UI element is 23 checkbox Off, Value: 0

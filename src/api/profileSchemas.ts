@@ -59,8 +59,22 @@ const zThemeColors = z
   .nullish()
   .catch(null)
   .transform((v) => (v ? v.map((c) => c.toLowerCase()) : null));
+export const PROFILE_SECTIONS = ["about", "links", "connections"] as const;
+export type ProfileSection = (typeof PROFILE_SECTIONS)[number];
+export const zProfileLayout = z.object({
+  order: z
+    .array(z.enum(PROFILE_SECTIONS))
+    .length(3)
+    .refine((items) => new Set(items).size === 3),
+  hidden: z
+    .array(z.enum(PROFILE_SECTIONS))
+    .max(3)
+    .refine((items) => new Set(items).size === items.length),
+});
+export type ProfileLayout = z.infer<typeof zProfileLayout>;
 export const zProfileStyle = z
   .object({
+    layout: zProfileLayout.nullish().catch(undefined),
     collectibles: z.array(zCollectibleLook).max(8).optional().catch(undefined),
     decoration: z.string().regex(DECORATION_ID).nullable().catch(null),
     effect: z.enum(PROFILE_EFFECTS).nullable().catch(null),

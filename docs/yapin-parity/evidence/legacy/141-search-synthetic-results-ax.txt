@@ -1,0 +1,142 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq Research - Private Test
+								25 button Meldiq
+								26 container
+									27 button Yapin' Headquarters
+									28 text 10
+								29 container
+									30 button MINECRAFT
+									31 text 13
+								32 button Create a server
+								33 button Discover servers
+							34 container
+								35 button Meldiq Research - Private Test
+								36 button Lobby OFF
+								37 button Invite people
+								38 button TEXT CHANNELS
+								39 button Create channel in this category, Help: Create channel here
+								40 pop up button More options for Text channels, Help: More
+									41 image
+								42 button general
+								43 button history-lab
+								44 button Edit channel
+								45 button Delete channel, Help: Delete
+								46 button VOICE CHANNELS
+								47 button Create channel in this category, Help: Create channel here
+								48 pop up button More options for Voice channels, Help: More
+									49 image
+								50 button General
+								51 button RESEARCH
+								52 button Create channel in this category, Help: Create channel here
+								53 pop up button More options for Research, Help: More
+									54 image
+								55 button Discussion ideas-lab
+								56 pop up button nahian Online, Help: Your account
+									57 text nahian
+									58 text Online
+								59 button Inbox
+								60 button Settings
+								61 button Log out
+							62 container
+								63 image
+								64 button Private synthetic thread
+								65 button Mute
+								66 button Pinned messages
+								67 button Media
+								68 button Members
+								69 button Search Meldiq Research - Private Test, Help: Search this server
+								70 button #history-lab
+								71 toggle button Unfollow, Value: 1
+									72 image
+									73 text Unfollow
+								74 button Edit
+								75 button More
+								76 image
+								77 heading Welcome to #Private synthetic thread!, Value: 3
+									78 text Welcome to #Private synthetic thread!
+								79 text This is the start of the  # Private synthetic thread  channel. Sunday, November 1, 2026
+								80 container
+									81 button nahian's profile
+									82 button nahian
+									83 text Today at 11:53 AM
+									84 text Synthetic thread reply for workflow verification.
+								85 container
+									86 button Send a file
+									87 text entry area (settable) Message #Private synthetic thread
+									88 button Create a poll
+									89 button GIF
+									90 button Emoji
+									91 button Record a voice message
+									92 button (disabled) Send
+								93 text Search
+								94 button Close
+								95 container
+									96 text field (settable) Search messages, Value: Research marker, Placeholder: Search… try mentions:name or has:image
+									97 button Go
+									98 button Whole server
+									99 button This channel
+									100 text field (settable) From, Placeholder: From someone…
+									101 button nahian 11/1/2026, 11:33:21 AM #history-lab Research marker F — final latest-message marker for the controlled unread and reload tests.
+									102 button nahian 11/1/2026, 11:33:12 AM #history-lab Research marker E — later synthetic history block. 01 · Later block for unread and reload observations. 02 · Later block for unread and reload observations. 03 · Later block for unread and reload observations. 04 · Later block for unread and reload observations. 05 · Later block for unread and reload observations. 06 · Later block for unread and reload observations. 07 · Later block for unread and reload observations. 08 · Later block for unread and reload observat
+									103 button nahian 11/1/2026, 11:33:05 AM #history-lab Research marker D — additional synthetic reading depth. 01 · Controlled history test, no real conversation data. 02 · Controlled history test, no real conversation data. 03 · Controlled history test, no real conversation data. 04 · Controlled history test, no real conversation data. 05 · Controlled history test, no real conversation data. 06 · Controlled history test, no real conversation data. 07 · Controlled history test, no real conversation data. 08 · Controlle
+									104 button nahian 11/1/2026, 11:31:43 AM #history-lab Research marker C — latest message. This is synthetic test content in the private research server.
+									105 button nahian 11/1/2026, 11:31:37 AM #history-lab Research marker B — synthetic scroll fixture. 01 · Reading anchor for the private scroll test. 02 · Reading anchor for the private scroll test. 03 · Reading anchor for the private scroll test. 04 · Reading anchor for the private scroll test. 05 · Reading anchor for the private scroll test. 06 · Reading anchor for the private scroll test. 07 · Reading anchor for the private scroll test. 08 · Reading anchor for the private scroll test. 09 · Reading anchor for the pri
+									106 button nahian 11/1/2026, 11:31:31 AM #history-lab Research marker A — start of synthetic history. Bold, italic, code, and [example](https://example.com).
+										107 text nahian
+										108 text 11/1/2026, 11:31:31 AM
+										109 text #
+										110 text history-lab
+										111 container
+											112 text Research marker A — start of synthetic history.  Bold ,  italic ,  code , and  [example](
+											113 link https://example.com, Value: example.com/
+											114 text ) .
+							115 button Getting started
+			116 container
+				117 tab group
+					118 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						119 button Close
+					120 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 243 MB, Value: on
+						121 button Close
+					122 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						123 button Close
+			124 button New Tab
+	125 close button
+	126 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	127 minimize button
+128 menu bar
+	129 Chrome
+	130 File
+	131 Edit
+	132 View
+	133 History
+	134 Bookmarks
+	135 Profiles
+	136 Tab
+	137 Window
+	138 Help
+
+The focused UI element is 96 text field (settable) Search messages, Value: Research marker, Placeholder: Search… try mentions:name or has:image

@@ -860,5 +860,11 @@
     "accountDescription": "Email, stato dell’account, esportazione dei dati ed eliminazione dell’account.",
     "notificationsDescription": "Avvisi desktop, suoni, pausa delle notifiche e collegamenti alle preferenze delle conversazioni.",
     "appearanceDescription": "Temi, colori, disposizione dei messaggi, anteprime multimediali e gesti della chat."
+  },
+  "foundation": {
+    "profileSections": "Sezioni del profilo",
+    "profileSectionsDescription": "Scegli le sezioni visibili e il loro ordine. Le impostazioni del pubblico restano valide.",
+    "resetSections": "Ripristina modifiche alle sezioni",
+    "saveSections": "Salva sezioni"
   }
 }

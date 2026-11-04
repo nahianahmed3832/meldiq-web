@@ -1,0 +1,74 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Promote, Value: 2
+				29 text Promote
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		87 text Get Meldiq Research - Private Test in front of more people on Discovery.
+		88 text DISCOVERY RANK
+		89 text Not listed
+		90 text Turn on
+		91 text Show in Discovery
+		92 text (Server Profile tab) first. Unlisted servers can't be promoted.
+		93 container
+			94 heading Boost, Value: 3
+				95 text Boost
+			96 text weekly  ·  climb the Discovery list
+			97 text BOOST
+			98 text None
+			99 text Boosted label
+			100 container
+				101 text $3.99  /  week
+			102 text SUPER BOOST
+			103 text None
+			104 text Boosted label
+			105 container
+				106 text $7.99  /  week
+			107 text MOST POPULAR
+			108 text MEGA BOOST
+			109 text None
+			110 text Gold Mega label
+			111 container
+				112 text $12.99  /  week
+			113 text Guaranteed top 100, top 50 or top 20 (bigger servers land even higher). Only your biggest boost counts; a boost renews every week until you cancel it in Settings > Subscriptions.
+		114 container
+			115 text PROMOTED
+			116 heading The top row of Discovery, Value: 3
+				117 text The top row of Discovery
+			118 text Above every boosted server, the first thing people see when they open Discovery.
+			119 content list
+				120 text Seen by everyone who opens Discovery
+				121 text Only 4 spots, all shown at once
+				122 text Live views, clicks and joins
+			123 text Limited spots $29.99  /  week
+		124 text Paid servers follow the same rules as everyone else. A server that's locked, renamed to something blocked, or removed for breaking the rules stops showing, with no refund.
+		85 button Close
+			86 image
+
+The focused UI element is 25 button Promote

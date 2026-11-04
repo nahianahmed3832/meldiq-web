@@ -1,0 +1,120 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 button Back
+							44 button Create role
+							45 button @everyone
+							46 text EDIT ROLE - @EVERYONE
+							47 text What every member can do by default. Roles can switch these back on for their holders.
+							48 text GENERAL SERVER PERMISSIONS
+							49 container
+								50 text Create Invite Invite people to the server.
+								51 checkbox Create Invite Invite people to the server., Value: 1
+							52 container
+								53 text Change Nickname Change their own nickname.
+								54 checkbox Change Nickname Change their own nickname., Value: 1
+							55 text TEXT CHANNEL PERMISSIONS
+							56 container
+								57 text Send Messages Post in text channels.
+								58 checkbox Send Messages Post in text channels., Value: 1
+							59 container
+								60 text Embed Links Post links.
+								61 checkbox Embed Links Post links., Value: 1
+							62 container
+								63 text Attach Files Upload pictures, videos and audio.
+								64 checkbox Attach Files Upload pictures, videos and audio., Value: 1
+							65 container
+								66 text Send Voice Messages Record and send voice messages.
+								67 checkbox Send Voice Messages Record and send voice messages., Value: 1
+							68 container
+								69 text Add Reactions Add new reactions. Without it people can still click ones already there.
+								70 checkbox Add Reactions Add new reactions. Without it people can still click ones already there., Value: 1
+							71 container
+								72 text Use External Emoji Use emojis from other servers.
+								73 checkbox Use External Emoji Use emojis from other servers., Value: 1
+							74 container
+								75 text Create Polls Start polls.
+								76 checkbox Create Polls Start polls., Value: 1
+							77 container
+								78 text Use Big Text Post headings (# text). Turn it off for @everyone to keep big text for the roles you pick.
+								79 checkbox Value: 1, Use Big Text Post headings (# text). Turn it off for @everyone to keep big text for the roles you pick.
+							80 container
+								81 text Create Threads Start threads in text channels. Turn it off for @everyone to keep threads to the roles you pick.
+								82 checkbox Value: 1, Create Threads Start threads in text channels. Turn it off for @everyone to keep threads to the roles you pick.
+							83 container
+								84 text Send Messages in Threads Reply in threads and forum posts.
+								85 checkbox Send Messages in Threads Reply in threads and forum posts., Value: 1
+							86 container
+								87 text Read Message History See messages sent before they were around.
+								88 checkbox Read Message History See messages sent before they were around., Value: 1
+							89 text VOICE CHANNEL PERMISSIONS
+							90 container
+								91 text Connect Join voice channels.
+								92 checkbox Connect Join voice channels., Value: 1
+							93 container
+								94 text Speak Talk in voice channels.
+								95 checkbox Speak Talk in voice channels., Value: 1
+							96 button (disabled) Save changes
+							97 button Close
+			98 container
+				99 tab group
+					100 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 151 MB, Value: on
+						101 button Close
+			102 button New Tab
+	103 close button
+	104 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	105 minimize button
+106 menu bar
+	107 Chrome
+	108 File
+	109 Edit
+	110 View
+	111 History
+	112 Bookmarks
+	113 Profiles
+	114 Tab
+	115 Window
+	116 Help
+
+The focused UI element is 19 HTML content (28) Yapin’, URL: yapin.gg/

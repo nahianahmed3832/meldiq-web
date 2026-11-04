@@ -54,5 +54,15 @@
     "android": "Meldiq für Android abrufen",
     "title": "Einladung von Meldiq",
     "hint": "Noch nicht angemeldet? Melden Sie sich an oder erstellen Sie zuerst ein Konto: Sie werden in diese Community zurückkehren."
+  },
+  "foundation": {
+    "welcomeBody": "Mit ein paar Details wird dieser Ort zu deinem. Du kannst sie in den Einstellungen ändern.",
+    "profileBody": "Wähle, wie andere dich sehen. Deine E-Mail-Adresse bleibt privat.",
+    "preferencesBody": "Wähle ein angenehmes Design und deine Sprache.",
+    "startBody": "Finde deine Leute, tritt einer Community bei oder gründe deine eigene.",
+    "ready": "Dein Bereich ist bereit.",
+    "finish": "Jetzt entdecken",
+    "onDevice": "Die Designauswahl gilt für diesen Browser.",
+    "permissions": "Meldiq fragt erst nach Zugriff auf Mikrofon, Kamera oder Benachrichtigungen, wenn du eine entsprechende Funktion nutzt."
   }
 }

@@ -1,3 +1,4 @@
+import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import { expect, type Page, test } from "@playwright/test";
 import { expectSignedOut } from "./link";
@@ -47,7 +48,8 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await page.getByRole("button", { name: "Create an account" }).click();
   await page.getByLabel("Your name").fill("Nadia Rahman");
   await page.getByLabel("Email", { exact: true }).fill(email);
-  await page.getByLabel("Password").fill(PASSWORD);
+  await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
+  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
   await page.getByLabel("Code").fill(await emailedCode(email, "verify"));
@@ -61,6 +63,8 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(page.getByRole("button", { name: "Open Meldiq" })).toBeDisabled();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq" }).click();
+  await expect(page.getByLabel("Display name", { exact: true })).toHaveValue("Nadia Rahman");
+  await finishWelcome(page);
   await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
 
   // Settings › My Account (2026-10-28, the reference's page): your card with name, username and the email hidden until

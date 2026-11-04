@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "Gedempt"
+  },
+  "password": {
+    "show": "Wachtwoord tonen",
+    "hide": "Wachtwoord verbergen"
+  },
+  "navigation": {
+    "skipToContent": "Naar hoofdinhoud gaan"
   }
 }

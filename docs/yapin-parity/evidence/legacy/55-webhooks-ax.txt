@@ -1,0 +1,57 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container Edit channel
+							21 heading Edit channel, Value: 2
+								22 text Edit channel
+							23 tab group
+								24 tab (settable, integer) Overview, Value: 0
+								25 tab (settable, integer) Permissions, Value: 0
+								26 tab (selected) Webhooks, Value: 1
+							27 text Webhooks let other apps post here. Paste the URL into any app or tool that posts to a webhook. Anyone with the URL can post, so keep it secret.
+							28 button New webhook
+							29 button Make a post
+							30 text 0 of 10
+							31 container
+								32 text No webhooks yet Make one and paste its URL into any app that posts to a webhook.
+								33 button New webhook
+							34 button Done
+			35 container
+				36 tab group
+					37 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 204 MB, Value: on
+						38 button Close
+			39 button New Tab
+	40 close button
+	41 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	42 minimize button
+43 menu bar
+	44 Chrome
+	45 File
+	46 Edit
+	47 View
+	48 History
+	49 Bookmarks
+	50 Profiles
+	51 Tab
+	52 Window
+	53 Help
+
+The focused UI element is 26 tab (selected) Webhooks, Value: 1

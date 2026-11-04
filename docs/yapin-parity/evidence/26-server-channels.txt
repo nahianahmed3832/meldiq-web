@@ -1,0 +1,85 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Channels, Value: 2
+				29 text Channels
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		87 text Drag to arrange. A channel can move into any category, and a category takes its channels along.
+		88 button (disabled) Undo, Help: Undo the last move
+		89 button Create category
+		90 outline Channel order
+			91 row (selectable, expanded) Description: No category, Secondary Actions: Collapse
+				92 button Collapse
+				93 text NO CATEGORY
+				94 text 0
+			95 text Nothing here. Channels dropped here show above the categories.
+			96 row (selectable, expanded) Description: Text channels, Secondary Actions: Collapse
+				97 button Collapse
+				98 text TEXT CHANNELS
+				99 text 2
+				100 button (disabled) Move up
+				101 button Move down
+				102 button Edit
+			103 row (selectable) #general
+				104 text general
+				105 button Move up
+				106 button Move down
+			107 row (selectable) #history-lab
+				108 text history-lab
+				109 button Move up
+				110 button Move down
+			111 row (selectable, expanded) Description: Voice channels, Secondary Actions: Collapse
+				112 button Collapse
+				113 text VOICE CHANNELS
+				114 text 1
+				115 button Move up
+				116 button Move down
+				117 button Edit
+			118 row (selectable) General
+				119 image Voice
+				120 text General
+				121 button Move up
+				122 button Move down
+			123 row (selectable, expanded) Description: Research, Secondary Actions: Collapse
+				124 button Collapse
+				125 text RESEARCH
+				126 text 1
+				127 button Move up
+				128 button (disabled) Move down
+				129 button Edit
+			130 row (selectable) #ideas-lab
+				131 image Forum
+				132 text ideas-lab
+				133 button Move up
+				134 button (disabled) Move down
+		135 text Keyboard: focus a row, space picks it up, arrows move it, space drops it, escape puts it back.
+		85 button Close
+			86 image
+
+The focused UI element is 7 button Channels

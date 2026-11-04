@@ -8,6 +8,7 @@ import { PHONE_LAYOUT, visibleViewport } from "../../application/viewport";
 import { ROUTE_EVENT } from "../../application/router";
 import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { isolateTopModal } from "./modalIsolation";
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 // Portalled children aren't DOM descendants of their parent dialog. Only the top trap answers Tab.
 const focusTraps: HTMLElement[] = [];
@@ -19,6 +20,7 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean
     const el = ref.current;
     if (!el) return;
     focusTraps.push(el);
+    isolateTopModal(el);
     const items = () => [...el.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((item) => item.tabIndex >= 0 && item.getClientRects().length && !item.closest("[inert]"));
     const first = items().find((item) => item.hasAttribute("data-autofocus")) ?? items()[0] ?? el;
     first?.focus({ preventScroll: true });
@@ -52,6 +54,7 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean
       const top = focusTraps.at(-1) === el;
       const index = focusTraps.lastIndexOf(el);
       if (index >= 0) focusTraps.splice(index, 1);
+      isolateTopModal(focusTraps.at(-1));
       if (top && before?.isConnected) before.focus({ preventScroll: true });
     };
   }, [ref, active, cycle]);
@@ -254,6 +257,12 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phone = window.matchMedia(PHONE_LAYOUT).matches;
   useFocusTrap(ref, phone && !open, true);
+  useEffect(() => {
+    const menu = ref.current;
+    return () => {
+      if (anchor.isConnected && (document.activeElement === document.body || menu?.contains(document.activeElement))) anchor.focus({ preventScroll: true });
+    };
+  }, [anchor]);
   useLayoutEffect(() => {
     const place = () => setPos(menuPosition(anchor, ref.current, align, point, beside));
     place();

@@ -1,0 +1,159 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text (23) Yapin’
+							22 text Yapin’
+							23 container Servers
+								24 button Direct messages
+								25 button Meldiq Research - Private Test
+								26 button Meldiq
+								27 container
+									28 button Yapin' Headquarters
+									29 text 10
+								30 container
+									31 button MINECRAFT
+									32 text 13
+								33 button Create a server
+								34 button Discover servers
+							35 container
+								36 button Meldiq Research - Private Test
+								37 button Lobby OFF
+								38 button Invite people
+								39 button TEXT CHANNELS
+								40 button Create channel in this category, Help: Create channel here
+								41 pop up button More options for Text channels, Help: More
+									42 image
+								43 button general
+								44 button history-lab
+								45 button Edit channel
+								46 button Delete channel, Help: Delete
+								47 button VOICE CHANNELS
+								48 button Create channel in this category, Help: Create channel here
+								49 pop up button More options for Voice channels, Help: More
+									50 image
+								51 button General
+								52 button RESEARCH
+								53 button Create channel in this category, Help: Create channel here
+								54 pop up button More options for Research, Help: More
+									55 image
+								56 button Discussion ideas-lab
+								57 pop up button nahian Online, Help: Your account
+									58 text nahian
+									59 text Online
+								60 button Inbox
+								61 button Settings
+								62 button Log out
+							63 container
+								64 image
+								65 button history-lab
+								66 button Mute
+								67 button Threads
+								68 button Pinned messages
+								69 button Media
+								70 button Members
+								71 button Search Meldiq Research - Private Test, Help: Search this server
+								72 container
+									73 image
+									74 heading Welcome to #history-lab!, Value: 3
+										75 text Welcome to #history-lab!
+									76 text This is the start of the  # history-lab  channel. Sunday, November 1, 2026
+									77 button nahian's profile
+									78 button nahian
+									79 text Today at 11:31 AM
+									80 container
+										81 text Research marker A — start of synthetic history.  Bold ,  italic ,  code , and 
+										82 link example, Help: https://example.com, Value: example.com/
+										83 text .
+									84 text Research marker E — later synthetic history block.
+01 · Later block for unread and reload observations.
+02 · Later block for unread and reload observations.
+03 · Later block for unread and reload observations.
+04 · Later block for unread and reload observations.
+05 · Later block for unread and reload observations.
+06 · Later block for unread and reload observations.
+07 · Later block for unread and reload observations.
+08 · Later block for unread and reload observations.
+09 · Later block for unread and reloa
+									85 button Show more
+									86 text Research marker F — final latest-message marker for the controlled unread and reload tests.
+									87 button Private synthetic thread 1 message · 7m
+									88 toggle button 👍 1 reaction, Value: 1
+										89 Unlabeled image 👍
+										90 text 1
+									91 button Add reaction
+									92 button nahian's profile
+									93 button nahian
+									94 text Today at 11:51 AM
+									95 image :research_dot:, Help: :research_dot: from Meldiq Research - Private Test
+									96 image :creeper:, Help: :creeper: from MINECRAFT
+									97 button Open picture
+									98 button nahian's profile
+									99 button nahian
+									100 text Today at 12:00 PM
+									101 text !help
+									102 button Helper's profile
+									103 button Helper
+									104 image Yapin’ bot, Help: Made and run by Yapin’
+									105 text Today at 12:00 PM
+									106 container
+										107 text Helper commands !8ball question  ·  !roll  or  !roll 2d6  ·  !flip  ·  !choose a | b | c  ·  !afk reason  ·  !rank  ·  !top
+								108 container
+									109 button Send a file
+									110 text entry area (settable) Message #history-lab
+									111 button Create a poll
+									112 button GIF
+									113 button Emoji
+									114 button Record a voice message
+									115 button (disabled) Send
+								116 content list Members
+									117 heading RESEARCH MEMBER - 1, Value: 3
+										118 text RESEARCH MEMBER - 1
+									119 button nahian Server owner
+									120 heading BOTS - 1, Value: 3
+										121 text BOTS - 1
+									122 button Helper Yapin’ bot
+							123 button Getting started
+			124 container
+				125 tab group
+					126 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						127 button Close
+					128 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 337 MB, Value: on
+						129 button Close
+					130 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						131 button Close
+			132 button New Tab
+	133 close button
+	134 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	135 minimize button
+136 menu bar
+	137 Chrome
+	138 File
+	139 Edit
+	140 View
+	141 History
+	142 Bookmarks
+	143 Profiles
+	144 Tab
+	145 Window
+	146 Help
+
+The focused UI element is 110 text entry area (settable) Message #history-lab

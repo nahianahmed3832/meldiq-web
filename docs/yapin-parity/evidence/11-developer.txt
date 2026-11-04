@@ -1,0 +1,47 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 text Developer Portal
+		177 text Your bots, tokens, the API reference and the OpenAPI file in one place.
+		178 button Open
+		179 heading Developer, Value: 2
+			180 text Developer
+		181 container
+			182 text Bots that chat in servers. Run them on your own computer, or host verified ones on Yapin’.
+			183 link Description: Docs, Value: yapin.gg/developers
+		184 button New bot
+		185 container
+			186 text Free accounts get  2 ; 
+			187 button Yapin’ Plus
+			188 text  gets  10 .
+		189 text Loading…
+		190 heading Login with Yapin’, Value: 2
+			191 text Login with Yapin’
+		192 container
+			193 text Let people log in to your site with their Yapin’ account. 
+			194 link Description: Docs, Value: yapin.gg/developers#login-with-yapper
+		195 button New app
+		196 container Loading…
+		174 button Close
+			175 image
+
+The focused UI element is 20 button Developer

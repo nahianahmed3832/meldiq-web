@@ -860,5 +860,11 @@
     "accountDescription": "Email, trạng thái tài khoản, xuất dữ liệu và xóa tài khoản.",
     "notificationsDescription": "Cảnh báo máy tính, âm thanh, tạm dừng thông báo và lối tắt đến tùy chọn hội thoại.",
     "appearanceDescription": "Chủ đề, màu sắc, bố cục tin nhắn, xem trước nội dung và thao tác trò chuyện."
+  },
+  "foundation": {
+    "profileSections": "Các mục hồ sơ",
+    "profileSectionsDescription": "Chọn mục hiển thị và thứ tự của chúng. Cài đặt đối tượng xem vẫn được áp dụng.",
+    "resetSections": "Đặt lại thay đổi các mục",
+    "saveSections": "Lưu các mục"
   }
 }

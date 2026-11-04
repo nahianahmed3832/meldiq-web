@@ -1,0 +1,95 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq Research - Private Test
+								25 button Meldiq
+								26 container
+									27 button Yapin' Headquarters
+									28 text 10
+								29 container
+									30 button MINECRAFT
+									31 text 13
+								32 button Create a server
+								33 button Discover servers
+							34 container
+								35 text Direct messages
+								36 button Friends
+								37 button Find people
+								38 button Create group
+								39 text DIRECT MESSAGES
+								40 button New message
+								41 text No chats yet
+								42 text Add a friend, then say hi.
+								43 button Add Friend
+								44 pop up button nahian Online, Help: Your account
+									45 text nahian
+									46 text Online
+								47 button Inbox
+								48 button Settings
+								49 button Log out
+							50 container
+								51 image
+								52 text Friends
+								53 button Online
+								54 button All
+								55 button Pending
+								56 button Blocked
+								57 button Suggested
+								58 button Add Friend
+								59 text field (settable) Search friends, Placeholder: Search
+								60 text ONLINE - 0
+								61 text Nobody’s online right now
+								62 text Your friends are taking a break. Say hi and they’ll see it later.
+								63 button Add Friend
+							64 button Getting started
+			65 container
+				66 tab group
+					67 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						68 button Close
+					69 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 215 MB, Value: on
+						70 button Close
+					71 tab (settable, boolean) (1) Meldiq - Memory usage - 213 MB, Value: off
+						72 button Close
+			73 button New Tab
+	74 close button
+	75 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	76 minimize button
+77 menu bar
+	78 Chrome
+	79 File
+	80 Edit
+	81 View
+	82 History
+	83 Bookmarks
+	84 Profiles
+	85 Tab
+	86 Window
+	87 Help
+
+Selected text: ```
+￼
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

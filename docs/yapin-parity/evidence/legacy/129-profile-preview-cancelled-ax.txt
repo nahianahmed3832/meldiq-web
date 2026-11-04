@@ -1,0 +1,139 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading My Profile, Value: 2
+								40 text My Profile
+							41 text Give your profile a fresh look
+							42 text A frame around your picture: built-in ones, or made by artists.
+							43 button Browse
+							44 text LOOK
+							45 text PROFILE PICTURE
+							46 text Upload picture
+							47 text GIFs work. They move. Obviously. On iPhone, pick GIFs from Files (the Photos picker turns them into stills).
+							48 button Upload picture: No file chosen
+							49 text BANNER
+							50 text Upload banner
+							51 text Crop and zoom it, or drag the banner in the preview.
+							52 button Upload banner: No file chosen
+							53 text SERVER TAG
+							54 toggle button None ✓, Value: 1
+								55 text None
+								56 text ✓
+							57 toggle button MC MINECRAFT, Value: 0
+							58 toggle button YAP Yapin' Headquarters, Value: 0
+							59 text BADGE
+							60 toggle button None ✓, Value: 1
+								61 text None
+								62 text ✓
+							63 text This one shows next to your name in chat and the member list. Your profile card shows all of them. None hides them everywhere.
+							64 pop up button Avatar decoration None
+							65 pop up button nahian Name style Default font · no colour
+							66 text PROFILE THEME
+							67 container Main colour
+								68 color well Main colour, Value: rgb 0.60784 0.34902 1.00000 1
+							69 button (disabled) + Second, Help: Pick a main colour first
+							70 button (disabled) None
+							71 button Sunset
+							72 button Ocean
+							73 button Grape
+							74 button Mint
+							75 button Midnight
+							76 button Cherry
+							77 button Gold
+							78 button Aurora
+							79 button Rose
+							80 button Forest
+							81 button Neon
+							82 button Candy
+							83 text Colours your profile card, its banner (when you have no picture) and your voice tile.
+							84 text IDENTITY
+							85 text USERNAME
+							86 text field (settable) USERNAME, Value: nahian
+							87 text Your old name stays yours for 7 days.
+							88 text DISPLAY NAME
+							89 text field (settable) DISPLAY NAME, Placeholder: nahian
+							90 text PRONOUNS
+							91 text field (settable) PRONOUNS, Placeholder: Add your pronouns
+							92 text ABOUT ME
+							93 container
+								94 text entry area (settable) ABOUT ME, Placeholder: Say something about yourself.
+								95 text 300 left
+							96 text LINKS
+							97 button + Add link
+							98 text CONNECTIONS
+							99 button Connect Steam Show your Steam name, games and achievements on your profile
+							100 text You sign in on Steam’s own page. We never see your Steam password.
+							101 button Connect AniList Show your favourite anime and what you’re watching
+							102 text You sign in on AniList’s own page. We never see your password.
+							103 button Connect Last.fm Show your top artists, tracks and what’s playing
+							104 text You sign in on Last.fm’s own page. We never see your password.
+							105 button Connect Trakt Show the movies and shows you watch and rate
+							106 text You sign in on Trakt’s own page. We never see your password.
+							107 container
+								108 text PREVIEW
+								109 container
+									110 text nahian @ nahian
+									111 button 0, Help: Level 0
+							112 button Close
+			113 container
+				114 tab group
+					115 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						116 button Close
+					117 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 375 MB, Value: on
+						118 button Close
+					119 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						120 button Close
+			121 button New Tab
+	122 close button
+	123 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	124 minimize button
+125 menu bar
+	126 Chrome
+	127 File
+	128 Edit
+	129 View
+	130 History
+	131 Bookmarks
+	132 Profiles
+	133 Tab
+	134 Window
+	135 Help
+
+The focused UI element is 65 pop up button nahian Name style Default font · no colour

@@ -1,3 +1,4 @@
+import { finishWelcome } from "./welcome";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import crypto from "node:crypto";
 import { emailedCode } from "./mail";
@@ -42,6 +43,7 @@ async function onboard(page: Page, context: BrowserContext) {
   await page.getByLabel("Your name", { exact: true }).fill("Zoya Rahman");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill("a long enough password for identity verification");
+  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
   await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));
@@ -49,6 +51,7 @@ async function onboard(page: Page, context: BrowserContext) {
   await page.getByRole("button", { name: "Set up encryption", exact: true }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+  await finishWelcome(page);
   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
   const req = async (method: string, path: string, data?: Record<string, unknown>) => {
     expect(authorization).toMatch(/^Bearer /);

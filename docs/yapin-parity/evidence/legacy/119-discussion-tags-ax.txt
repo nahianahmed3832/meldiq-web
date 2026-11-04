@@ -1,0 +1,72 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Discussion settings
+							21 heading Discussion settings, Value: 2
+								22 text Discussion settings
+							23 text POST GUIDELINES
+							24 text entry area (settable) POST GUIDELINES, Placeholder: Shown at the top and when someone writes a post
+							25 text DEFAULT SORT
+							26 combo box (settable) DEFAULT SORT, Value: Recent activity
+								27 text Recent activity
+							28 text DEFAULT LAYOUT
+							29 combo box (settable) DEFAULT LAYOUT, Value: List
+								30 text List
+							31 container
+								32 checkbox Posts need at least 1 tag, Value: 0
+								33 text Posts need at least 1 tag
+							34 container
+								35 text TAGS (UP TO 20; POSTS PICK UP TO 5; MOD-ONLY TAGS ARE SET BY MODS)
+							36 text field (settable) Emoji, Placeholder: 🙂
+							37 text field (settable) Tag name, Value: Research idea
+							38 checkbox MODS ONLY, Value: 0
+							39 button Remove Research idea
+							40 container
+								41 text field (settable) New tag emoji, Placeholder: 🙂
+								42 text field (settable) New tag, like Bug or Idea
+								43 button (disabled) Add
+							44 button Cancel
+							45 button Save
+			46 container
+				47 tab group
+					48 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						49 button Close
+					50 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 214 MB, Value: on
+						51 button Close
+					52 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						53 button Close
+			54 button New Tab
+	55 close button
+	56 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	57 minimize button
+58 menu bar
+	59 Chrome
+	60 File
+	61 Edit
+	62 View
+	63 History
+	64 Bookmarks
+	65 Profiles
+	66 Tab
+	67 Window
+	68 Help
+
+The focused UI element is 19 HTML content (23) Yapin’, URL: yapin.gg/

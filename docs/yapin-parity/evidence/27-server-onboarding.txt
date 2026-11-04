@@ -1,0 +1,50 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Onboarding, Value: 2
+				29 text Onboarding
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		87 text New members answer a few questions when they join. Answers can give them roles, so they only see the channels they care about. Then they read the rules and land in your starting channel.
+		88 container
+			89 text Turn on onboarding Only people who join from now on go through it. Everyone can redo it from the server menu.
+			90 checkbox (settable, integer) Value: 0, Description: Turn on onboarding Only people who join from now on go through it. Everyone can redo it from the server menu.
+		91 container
+			92 text Must finish before chatting New members can read but not send messages until they finish.
+			93 checkbox (settable, integer) Description: Must finish before chatting New members can read but not send messages until they finish., Value: 0
+		94 text STARTING CHANNEL
+		95 combo box (collapsed) Description: Starting channel, Value: Same as usual, Secondary Actions: Expand
+			96 text Same as usual
+		97 text Where people land when they finish.
+		98 text QUESTIONS
+		99 button Add question
+		100 button Save
+		85 button Close
+			86 image
+
+The focused UI element is 11 button Onboarding

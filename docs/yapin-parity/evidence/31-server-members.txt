@@ -1,0 +1,66 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Members 1, Value: 2
+				29 text Members 1
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		87 container
+			88 text Members Search, filter and sort the whole server. Tick rows to change roles or kick in one go.
+			89 search text field (settable) Search members
+			90 combo box (collapsed) Description: Role, Value: Any role, Secondary Actions: Expand
+				91 text Any role
+			92 combo box (collapsed) Description: Joined, Value: Joined any time, Secondary Actions: Expand
+				93 text Joined any time
+			94 combo box (collapsed) Description: Bots, Value: People and bots, Secondary Actions: Expand
+				95 text People and bots
+			96 combo box (collapsed) Description: Account, Value: Any account, Secondary Actions: Expand
+				97 text Any account
+			98 combo box (collapsed) Description: Sort, Value: Newest first, Secondary Actions: Expand
+				99 text Newest first
+			100 checkbox (settable, integer) Description: Select all loaded, Value: 0
+			101 text Showing 1 of 1
+			102 content list
+				103 content list Members
+					104 container
+						105 checkbox (settable, integer) Description: Select nahian, Value: 0
+						106 text nahian
+						107 image Server owner
+						108 text @ nahian YOU
+						109 container Research Member
+							110 text Research Member
+							111 button Remove Research Member
+						112 button Description: Add role, Help: Roles
+						113 text 3d ago
+						114 button More for nahian
+							115 image
+			116 text That's everyone.
+		85 button Close
+			86 image
+
+The focused UI element is 18 button Members

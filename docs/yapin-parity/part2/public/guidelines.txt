@@ -1,0 +1,116 @@
+Browser tab: 6, Title: "Acceptable Use Policy · Meldiq", URL: "https://meldiq.app/legal/acceptable-use".
+1 AXWebArea Acceptable Use Policy · Meldiq, URL: meldiq.app/legal/acceptable-use
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/legal/acceptable-use#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 text LEGAL
+				16 heading Acceptable Use Policy, Value: 1
+					17 text Acceptable Use Policy
+				18 text Last updated  2026-10-28 .
+			19 container On this page
+				20 content list
+					21 link Description: Not allowed, Value: meldiq.app/legal/acceptable-use#not-allowed
+					22 link Description: Community rules and moderation, Value: meldiq.app/legal/acceptable-use#communities
+					23 link Description: Reporting, Value: meldiq.app/legal/acceptable-use#report
+					24 link Description: What we do, Value: meldiq.app/legal/acceptable-use#enforcement
+				25 heading RELATED, Value: 2
+					26 text RELATED
+				27 content list
+					28 link Description: Terms of Service, Value: meldiq.app/legal/terms
+					29 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+					30 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+					31 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+					32 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			33 container
+				34 container
+					35 text Draft for review.  This page describes how Meldiq works today, but it hasn't been reviewed by a lawyer yet and isn't legal advice. Highlighted details are still to be confirmed.
+				36 text Meldiq is for talking with people you choose. These rules apply to everyone, in every community and conversation. They're part of the
+				37 link Description: Terms of Service, Value: meldiq.app/legal/terms
+				38 text .
+				39 container Not allowed
+					40 heading Not allowed, Value: 2, ID: not-allowed
+						41 text Not allowed
+					42 content list
+						43 container
+							44 AXListMarker • 
+							45 text Anything illegal where you or the people you send it to are, including sexual content involving minors, which we report to the authorities.
+						46 container
+							47 AXListMarker • 
+							48 text Threats, harassment, or encouraging violence or self-harm.
+						49 container
+							50 AXListMarker • 
+							51 text Spam, scams, phishing, and malware.
+						52 container
+							53 AXListMarker • 
+							54 text Pretending to be someone else, or misleading people about who you are in a harmful way.
+						55 container
+							56 AXListMarker • 
+							57 text Sharing someone's private information without their consent.
+						58 container
+							59 AXListMarker • 
+							60 text Infringing other people's copyright or other rights.
+						61 container
+							62 AXListMarker • 
+							63 text Attacking, overloading or probing Meldiq's systems, or getting around limits, bans or security.
+						64 container
+							65 AXListMarker • 
+							66 text Creating accounts in bulk or by automation outside an agreed program.
+				67 container Community rules and moderation
+					68 heading Community rules and moderation, Value: 2, ID: communities
+						69 text Community rules and moderation
+					70 text Community owners and moderators can add their own rules, remove messages, time people out, and remove or ban people from their community. They can't override this policy.
+				71 container Reporting
+					72 heading Reporting, Value: 2, ID: report
+						73 text Reporting
+					74 container
+						75 text Report a message or person from the app. Reports go to the community's moderators. Include the details you want moderators to review. For anything else, contact  [To be confirmed: support email address] .
+				76 container What we do
+					77 heading What we do, Value: 2, ID: enforcement
+						78 text What we do
+					79 text Depending on how serious a breach is, we may limit features, suspend or close an account, or remove a community, and we'll tell you why where the law and safety allow. If you think we got it wrong, contact us.
+		80 container
+			81 link Description: Meldiq home, Value: meldiq.app/
+			82 text Communities, direct messages and calls in one place.
+			83 link Description: Open Meldiq, Value: web.meldiq.app/
+			84 heading PRODUCT, Value: 2
+				85 text PRODUCT
+			86 link Description: Features, Value: meldiq.app/features
+			87 link Description: Pricing, Value: meldiq.app/pricing
+			88 link Description: Download, Value: meldiq.app/download
+			89 link Description: Developers, Value: meldiq.app/developers
+			90 link Description: Bots, Value: meldiq.app/bots
+			91 link Description: Roadmap, Value: meldiq.app/roadmap
+			92 link Description: Brand kit, Value: meldiq.app/brand
+			93 link Description: Service status, Value: status.meldiq.app/
+			94 heading COMMUNITY, Value: 2
+				95 text COMMUNITY
+			96 link Description: Find your community, Value: meldiq.app/community
+			97 link Description: Getting started, Value: meldiq.app/tutorials
+			98 link Description: Questions & answers, Value: meldiq.app/faq
+			99 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			100 link Description: Your account, Value: meldiq.app/account
+			101 link Description: Billing, Value: meldiq.app/account/billing
+			102 link Description: Contact support, Value: meldiq.app/support
+			103 heading LEGAL, Value: 2
+				104 text LEGAL
+			105 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			106 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			107 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			108 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			109 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			110 link Description: Security & encryption, Value: meldiq.app/security
+			111 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			112 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			113 link Description: Back to top ↑, Value: meldiq.app/legal/acceptable-use#top
+
+The focused UI element is 1 AXWebArea Acceptable Use Policy · Meldiq, URL: meldiq.app/legal/acceptable-use

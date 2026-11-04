@@ -1,0 +1,49 @@
+{
+  "total": 568,
+  "byPart": {
+    "PART 2": 118,
+    "PART 3": 212,
+    "PART 4": 238
+  },
+  "byYapinVerification": {
+    "OBSERVED_UI_CURRENT": 190,
+    "OBSERVED_UI_HISTORICAL": 101,
+    "UNVERIFIED_DOCS": 195,
+    "UNVERIFIED_NOT_FOUND": 1,
+    "UNVERIFIED_RESTRICTED": 23,
+    "VERIFIED_INTERACTION_CURRENT": 24,
+    "VERIFIED_WORKFLOW_HISTORICAL": 34
+  },
+  "byMeldiqStatus": {
+    "INTENTIONAL_DIFFERENCE": 8,
+    "MISSING_IN_INSPECTED_WEB": 7,
+    "OBSERVED_LIVE_UI": 2,
+    "PARTIAL": 51,
+    "PRESENT_SOURCE": 375,
+    "UNVERIFIED": 125
+  },
+  "byPriority": {
+    "P0": 106,
+    "P1": 218,
+    "P2": 202,
+    "P3": 42
+  },
+  "apiOperations": 76,
+  "explicitTestingApiOperations": 27,
+  "openApiReconciled": true,
+  "documentedBotEvents": 13,
+  "documentedGatewayFrames": 10,
+  "byImplementation": {
+    "ACCEPTED": 19,
+    "DEFERRED_DECISION": 13,
+    "IMPLEMENTED_NOT_ACCEPTED": 84,
+    "NOT_STARTED_IN_THIS_PROGRAM": 247,
+    "RESEARCH_REQUIRED": 205
+  },
+  "part2Implementation": {
+    "ACCEPTED": 19,
+    "DEFERRED_DECISION": 13,
+    "IMPLEMENTED_NOT_ACCEPTED": 84,
+    "RESEARCH_REQUIRED": 2
+  }
+}

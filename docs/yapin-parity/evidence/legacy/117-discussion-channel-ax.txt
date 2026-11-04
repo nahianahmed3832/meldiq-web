@@ -1,0 +1,107 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq Research - Private Test
+								25 button Meldiq
+								26 container
+									27 button Yapin' Headquarters
+									28 text 10
+								29 container
+									30 button MINECRAFT
+									31 text 13
+								32 button Create a server
+								33 button Discover servers
+							34 container
+								35 button Meldiq Research - Private Test
+								36 button Lobby OFF
+								37 button Invite people
+								38 button TEXT CHANNELS
+								39 button Create channel in this category, Help: Create channel here
+								40 pop up button More options for Text channels, Help: More
+									41 image
+								42 button general
+								43 button history-lab
+								44 button VOICE CHANNELS
+								45 button Create channel in this category, Help: Create channel here
+								46 pop up button More options for Voice channels, Help: More
+									47 image
+								48 button General
+								49 button RESEARCH
+								50 button Create channel in this category, Help: Create channel here
+								51 pop up button More options for Research, Help: More
+									52 image
+								53 button Discussion ideas-lab
+								54 button Edit channel
+								55 button Delete channel, Help: Delete
+								56 pop up button nahian Online, Help: Your account
+									57 text nahian
+									58 text Online
+								59 button Inbox
+								60 button Settings
+								61 button Log out
+							62 container
+								63 image
+								64 text ideas-lab Discussion
+								65 button Discussion settings
+								66 button New post
+								67 text field (settable) Search posts
+								68 combo box (settable) Sort posts, Value: Recent activity
+									69 text Recent activity
+								70 container Layout
+									71 toggle button List, Value: 1
+										72 image
+									73 toggle button Gallery, Value: 0
+										74 image
+								75 container Filter posts
+									76 toggle button Following, Value: 0
+								77 text No posts yet
+								78 text Start the first one and get people talking.
+								79 button New post
+							80 button Getting started
+			81 container
+				82 tab group
+					83 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						84 button Close
+					85 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 214 MB, Value: on
+						86 button Close
+					87 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						88 button Close
+			89 button New Tab
+	90 close button
+	91 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	92 minimize button
+93 menu bar
+	94 Chrome
+	95 File
+	96 Edit
+	97 View
+	98 History
+	99 Bookmarks
+	100 Profiles
+	101 Tab
+	102 Window
+	103 Help
+
+The focused UI element is 19 HTML content (23) Yapin’, URL: yapin.gg/

@@ -1,0 +1,186 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading My Account, Value: 2
+								40 text My Account
+							41 text nahian
+							42 container
+								43 text @ nahian
+							44 button Edit profile
+							45 text DISPLAY NAME
+							46 text You haven’t added a display name yet.
+							47 button Edit
+							48 text USERNAME
+							49 text nahian
+							50 button Edit
+							51 text EMAIL
+							52 container
+								53 text [personal email omitted]
+								54 button Reveal
+							55 button Edit
+							56 heading PASSWORD AND AUTHENTICATION, Value: 3
+								57 text PASSWORD AND AUTHENTICATION
+							58 button Change password
+							59 text Account standing
+							60 text Your account is all good
+							61 text Everything works normally.
+							62 image Standing: All good
+							63 content list
+								64 container
+									65 AXListMarker • 
+									66 text Warnings from Yapin’ staff count for 3 days.
+								67 container
+									68 AXListMarker • 
+									69 text 1 warning limits your account, 2 limit it more, 3 suspend it.
+							70 container
+								71 text Two-factor authentication  ·  Off
+							72 text Add a code from an authenticator app (Google Authenticator, Authy, 1Password…) to every sign-in.
+							73 button Turn on
+							74 text Passkeys
+							75 text Log in with your face, fingerprint or screen lock instead of your password.
+							76 button Add a passkey
+							77 heading PRIVACY, Value: 3
+								78 text PRIVACY
+							79 text WHO CAN MESSAGE YOU
+							80 combo box (settable) WHO CAN MESSAGE YOU, Value: People in my servers and friends
+								81 text People in my servers and friends
+							82 text Friends can always message you. Blocked people never can.
+							83 text WHO CAN ADD YOU TO GROUP CHATS
+							84 combo box (settable) WHO CAN ADD YOU TO GROUP CHATS, Value: Friends
+								85 text Friends
+							86 text With Nobody, no one can put you in a group chat, not even friends. You can still make your own.
+							87 text LEAVE SERVERS
+							88 button Leave several servers at once
+							89 text Pick servers one by one or a whole folder. Servers you own stay.
+							90 container
+								91 text Suggest me to people with similar interests Shows you under Friends, Suggested for people who share your games, anime, music, movies or servers. Hidden connections never count.
+								92 checkbox Value: 1, Suggest me to people with similar interests Shows you under Friends, Suggested for people who share your games, anime, music, movies or servers. Hidden connections never count.
+							93 container
+								94 text Hide me from leaderboards You won’t show up on any leaderboard.
+								95 checkbox Hide me from leaderboards You won’t show up on any leaderboard., Value: 0
+							96 text CHAT STREAK
+							97 text 0 days Best: 0 1 streak freeze left this week Today: 0 of 3 messages
+							98 text Send 3 messages a day to keep it going. Repeats, links and spam channels don’t count. A streak freeze covers a missed day.
+							99 container
+								100 text Show my streak on my profile Your 🔥 shows on your profile card. Streak badges stay yours either way.
+								101 checkbox Show my streak on my profile Your 🔥 shows on your profile card. Streak badges stay yours either way., Value: 1
+							102 heading VERIFICATION, Value: 3
+								103 text VERIFICATION
+							104 text Are you a YouTuber, streamer or creator? Get a badge so nobody can impersonate you. We need a link to your channel, a screenshot with your follower count, and a line in your channel bio that points back here.
+							105 text First, put this in your channel bio or description
+							106 container
+								107 text yapin:  nahian
+								108 button Copy
+							109 text That's how we know the channel is really yours. Anyone can copy a profile picture and a name, but only the owner can edit the bio. Leave it there until you get the badge. Applications without it are rejected.
+							110 container
+								111 text To qualify you need 1,000+ followers or subscribers  on the platform you're applying with. Your proof screenshot must show the follower count. Smaller channels are rejected, so apply once you're there.
+							112 container
+								113 text Your Yapin’ name has to match the channel.  Set your username or display name to the same name as your social media account before applying. Applications under a different name are rejected. Once you're verified you can change your display name whenever you want, but a new username that doesn't match removes the badge.
+							114 text PLATFORM
+							115 combo box (settable) PLATFORM, Value: YouTube
+								116 text YouTube
+							117 text CHANNEL / ACCOUNT NAME
+							118 text field (settable) CHANNEL / ACCOUNT NAME, Placeholder: e.g. Antic983 (without the @)
+							119 text LINK TO IT
+							120 text field (settable) LINK TO IT, Placeholder: https://youtube.com/@…
+							121 text ANYTHING ELSE WE SHOULD KNOW
+							122 text entry area (settable) ANYTHING ELSE WE SHOULD KNOW, Placeholder: Optional
+							123 text PROOF SCREENSHOT (MUST SHOW YOUR FOLLOWER COUNT)
+							124 container
+								125 text Add screenshot
+								126 button Add screenshot: No file chosen
+							127 container
+								128 text “yapin: nahian” is in my channel bio We open your channel and check before approving.
+								129 checkbox “yapin: nahian” is in my channel bio We open your channel and check before approving., Value: 0
+							130 button (disabled) Apply for verification
+							131 heading BUG HUNTING, Value: 3
+								132 text BUG HUNTING
+							133 container
+								134 text Found something broken or a way to do something you shouldn’t? Report it and get the Bug Hunter badge. 
+								135 link The rules, Value: yapin.gg/bugs
+								136 text .
+							137 button Report a bug
+							138 text No bug reports yet.
+							139 heading YOUR DATA, Value: 3
+								140 text YOUR DATA
+							141 text Download your data
+							142 text Get a copy of your account, messages, friends and more as one JSON file. Up to 3 times a day.
+							143 button Download
+							144 container
+								145 text Read our 
+								146 link Terms, Value: yapin.gg/terms
+								147 text , 
+								148 link Privacy Policy, Value: yapin.gg/privacy
+								149 text  and 
+								150 link Community Guidelines, Value: yapin.gg/guidelines
+								151 text . Found a bug? Use  Report a bug  above. To report a person or message, right-click it and pick  Report . For a copy of your data or legal questions, email 
+								152 link [email omitted], Value: mailto:[email omitted]
+								153 text .
+							154 heading ACCOUNT, Value: 3
+								155 text ACCOUNT
+							156 text Log out of all devices
+							157 text Signs this account out everywhere, including here. Use it if you think someone else has your login.
+							158 button Log out everywhere
+							159 text Delete account
+							160 container
+								161 text Permanently deletes your account, profile, messages, friends, uploads and the servers you own. This can’t be undone.  This is your right to be forgotten (GDPR): no need to email us, and we send a confirmation to your email.
+							162 button Delete Account
+							163 button Close
+			164 container
+				165 tab group
+					166 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						167 button Close
+			168 button New Tab
+	169 close button
+	170 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	171 minimize button
+172 menu bar
+	173 Chrome
+	174 File
+	175 Edit
+	176 View
+	177 History
+	178 Bookmarks
+	179 Profiles
+	180 Tab
+	181 Window
+	182 Help
+
+The focused UI element is 24 button My Account

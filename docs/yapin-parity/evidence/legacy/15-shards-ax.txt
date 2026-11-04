@@ -1,0 +1,82 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 container (showing 0-100 of 118 items)
+								40 heading Shards, Value: 2
+									41 text Shards
+								42 text YOUR SHARDS 5 +0 today  ·  5 earned in all 0 ACCOUNT LEVEL 95 more for level 1
+								43 button (disabled) Level up for 100
+								44 text Yapin’ Plus members earn  1.5x Shards  from everything: chatting, streaks, invites and quests.
+								45 button See Plus
+								46 heading QUESTS1 ready to claim, Value: 3
+									47 text QUESTS 1 ready to claim
+								48 text Today New ones every day at midnight UTC Talk in 3 chats Send a message in 3 different chats today 10 Not yet React to 3 messages React to 3 messages from other people today 5 Not yet Reply to someone Reply to someone else's message today 5 Not yet Getting started One time each Make your profile yours Add an avatar and an About me 25 Not yet Make a friend Have a friend request accepted, or accept one 25 Not yet Join 3 servers Be in 3 servers at once 25
+								49 button Claim
+								50 text Dress up your avatar Wear an avatar decoration 15 Not yet Link Steam Link your Steam account on your profile 50 Not yet Link AniList Link your AniList account on your profile 50 Not yet Link Trakt Link your Trakt account on your profile 50 Not yet Link Last.fm Sign in with Last.fm on your profile 50 Not yet Lock it down Turn on two-factor sign-in 50 Not yet
+								51 heading EARN SHARDS, Value: 3
+									52 text EARN SHARDS
+								53 text Show up +5 a day Send a message anywhere today. Chat +5 per 5 min 0 of 25 today · 5 more active minutes for +5 Keep a streak +30 every 7 days
+								54 image 0 of 7 days
+								55 text Be active today to start one. Invite friends +100 each Share any of your server invites with someone new. You get it once they’ve stuck around for 7 days. 0  paid 0  waiting up to 10 a month Your account needs to be a day old to earn. Lots of messages in one minute count once, so just chat normally.
+								56 heading SPEND SHARDS, Value: 3
+									57 text SPEND SHARDS
+								58 text Level up 100 Your level shows on your profile as a ring. The colour changes every 10 levels. 1 10 20 30 40 50 60 70 80
+							59 button Close
+			60 container
+				61 tab group
+					62 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						63 button Close
+			64 button New Tab
+	65 close button
+	66 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	67 minimize button
+68 menu bar
+	69 Chrome
+	70 File
+	71 Edit
+	72 View
+	73 History
+	74 Bookmarks
+	75 Profiles
+	76 Tab
+	77 Window
+	78 Help
+
+The focused UI element is 37 button Shards

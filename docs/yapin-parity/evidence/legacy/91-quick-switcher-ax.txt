@@ -1,0 +1,175 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Where do you want to go?
+							22 combo box (settable) Search channels, people and servers
+							23 text RECENT AND UNREAD
+							24 list box
+								25 text (selected) # staff-announcements 8 Yapin' Headquarters
+									26 text #
+									27 text staff-announcements
+									28 text 8
+									29 text Yapin' Headquarters
+								30 text # 📢『ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛꜱ』 7 MINECRAFT
+									31 text #
+									32 text 📢『ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛꜱ』
+									33 text 7
+									34 text MINECRAFT
+								35 text # giveaways 2 Yapin' Headquarters
+									36 text #
+									37 text giveaways
+									38 text 2
+									39 text Yapin' Headquarters
+								40 text # 📄『ᴍᴏᴅ・ᴀᴘᴘʟɪᴄᴀᴛɪᴏɴꜱ』 1 MINECRAFT
+									41 text #
+									42 text 📄『ᴍᴏᴅ・ᴀᴘᴘʟɪᴄᴀᴛɪᴏɴꜱ』
+									43 text 1
+									44 text MINECRAFT
+								45 text # 💚『ᴘᴀʀᴛɴᴇʀ・ꜱᴇʀᴠᴇʀꜱ』 2 MINECRAFT
+									46 text #
+									47 text 💚『ᴘᴀʀᴛɴᴇʀ・ꜱᴇʀᴠᴇʀꜱ』
+									48 text 2
+									49 text MINECRAFT
+								50 text # 🤫『ʟᴇᴀᴋꜱ』 3 MINECRAFT
+									51 text #
+									52 text 🤫『ʟᴇᴀᴋꜱ』
+									53 text 3
+									54 text MINECRAFT
+								55 text # general Yapin' Headquarters
+									56 text #
+									57 text general
+									58 text Yapin' Headquarters
+								59 text # yapin-fanart Yapin' Headquarters
+									60 text #
+									61 text yapin-fanart
+									62 text Yapin' Headquarters
+								63 text # promote-your-server Yapin' Headquarters
+									64 text #
+									65 text promote-your-server
+									66 text Yapin' Headquarters
+								67 text # memes Yapin' Headquarters
+									68 text #
+									69 text memes
+									70 text Yapin' Headquarters
+								71 text # suggestions-new Yapin' Headquarters
+									72 text #
+									73 text suggestions-new
+									74 text Yapin' Headquarters
+								75 text # 🗨️『ɢᴇɴᴇʀᴀʟ』 MINECRAFT
+									76 text #
+									77 text 🗨️『ɢᴇɴᴇʀᴀʟ』
+									78 text MINECRAFT
+								79 text # 🏠『ᴍɪɴᴇᴄʀᴀꜰᴛ・ʙᴜɪʟᴅꜱ』 MINECRAFT
+									80 text #
+									81 text 🏠『ᴍɪɴᴇᴄʀᴀꜰᴛ・ʙᴜɪʟᴅꜱ』
+									82 text MINECRAFT
+								83 text # 🧑‍💻『ᴍɪɴᴇᴄʀᴀꜰᴛ・ꜱᴇʀᴠᴇʀꜱ・ᴛᴏ・ᴊᴏɪɴ』 MINECRAFT
+									84 text #
+									85 text 🧑‍💻『ᴍɪɴᴇᴄʀᴀꜰᴛ・ꜱᴇʀᴠᴇʀꜱ・ᴛᴏ・ᴊᴏɪɴ』
+									86 text MINECRAFT
+								87 text # 🖥️『ᴍɪɴᴇᴄʀᴀꜰᴛ・ᴍᴏᴅꜱ』 MINECRAFT
+									88 text #
+									89 text 🖥️『ᴍɪɴᴇᴄʀᴀꜰᴛ・ᴍᴏᴅꜱ』
+									90 text MINECRAFT
+								91 text # media Yapin' Headquarters
+									92 text #
+									93 text media
+									94 text Yapin' Headquarters
+								95 text # 🌎『ᴍᴜʟᴛɪʟɪɴɢᴜᴀʟ・ᴄʜᴀᴛ』 MINECRAFT
+									96 text #
+									97 text 🌎『ᴍᴜʟᴛɪʟɪɴɢᴜᴀʟ・ᴄʜᴀᴛ』
+									98 text MINECRAFT
+								99 text # 🗨️『ᴍɪɴᴇᴄʀᴀꜰᴛ・ᴄʜᴀᴛ』 MINECRAFT
+									100 text #
+									101 text 🗨️『ᴍɪɴᴇᴄʀᴀꜰᴛ・ᴄʜᴀᴛ』
+									102 text MINECRAFT
+								103 text # international-chat Yapin' Headquarters
+									104 text #
+									105 text international-chat
+									106 text Yapin' Headquarters
+								107 text # 🎃『ᴄᴏꜱᴛᴜᴍᴇ・ᴄᴏɴᴛᴇꜱᴛ』 MINECRAFT
+									108 text #
+									109 text 🎃『ᴄᴏꜱᴛᴜᴍᴇ・ᴄᴏɴᴛᴇꜱᴛ』
+									110 text MINECRAFT
+								111 text # emoji-suggestions Yapin' Headquarters
+									112 text #
+									113 text emoji-suggestions
+									114 text Yapin' Headquarters
+								115 text # feedback Yapin' Headquarters
+									116 text #
+									117 text feedback
+									118 text Yapin' Headquarters
+								119 text # gaming Yapin' Headquarters
+									120 text #
+									121 text gaming
+									122 text Yapin' Headquarters
+								123 text # pets Yapin' Headquarters
+									124 text #
+									125 text pets
+									126 text Yapin' Headquarters
+								127 text # hall-of-shame Yapin' Headquarters
+									128 text #
+									129 text hall-of-shame
+									130 text Yapin' Headquarters
+								131 text # ➡️『ꜱᴛᴀꜰꜰ・ᴍᴏᴠᴇᴍᴇɴᴛ』 MINECRAFT
+									132 text #
+									133 text ➡️『ꜱᴛᴀꜰꜰ・ᴍᴏᴠᴇᴍᴇɴᴛ』
+									134 text MINECRAFT
+								135 text # 🤖『ʙᴏᴛꜱ』 MINECRAFT
+									136 text #
+									137 text 🤖『ʙᴏᴛꜱ』
+									138 text MINECRAFT
+								139 text # ⚔️『ᴘᴠᴘ・ᴄʜᴀᴛ』 MINECRAFT
+									140 text #
+									141 text ⚔️『ᴘᴠᴘ・ᴄʜᴀᴛ』
+									142 text MINECRAFT
+								143 text # ❔️『ꜱᴜɢɢᴇꜱᴛɪᴏɴꜱ』 MINECRAFT
+									144 text #
+									145 text ❔️『ꜱᴜɢɢᴇꜱᴛɪᴏɴꜱ』
+									146 text MINECRAFT
+								147 text MINECRAFT Server
+							148 text Start with  #  channels,  @  people or  *  servers ·  ↑ ↓  to move,  Enter  to go
+			149 container
+				150 tab group
+					151 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						152 button Close
+					153 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 252 MB, Value: on
+						154 button Close
+					155 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						156 button Close
+			157 button New Tab
+	158 close button
+	159 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	160 minimize button
+161 menu bar
+	162 Chrome
+	163 File
+	164 Edit
+	165 View
+	166 History
+	167 Bookmarks
+	168 Profiles
+	169 Tab
+	170 Window
+	171 Help
+
+The focused UI element is 25 text (selected) # staff-announcements 8 Yapin' Headquarters

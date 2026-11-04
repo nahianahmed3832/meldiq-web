@@ -1,0 +1,94 @@
+Browser tab: 6, Title: "Security · Meldiq", URL: "https://meldiq.app/security".
+1 AXWebArea Security · Meldiq, URL: meldiq.app/security
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/security#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Security, Value: meldiq.app/
+				16 text KNOW WHAT YOU’RE SHARING
+				17 heading Privacy, explained plainly., Value: 1
+					18 text Privacy, explained plainly.
+				19 text Understand how Meldiq protects your account, conversations and files, and where the current limits are.
+			20 container
+				21 text 01
+				22 heading Protect your account, Value: 2
+					23 text Protect your account
+				24 text Meldiq supports passkeys, authenticator-based two-step sign-in and recovery codes. You can review and end signed-in sessions from your account security settings.
+				25 content list
+					26 text Use a unique password
+					27 text Keep recovery codes private
+					28 text End sessions on devices you no longer use
+			29 container
+				30 text 02
+				31 heading Messages and attachments, Value: 2
+					32 text Messages and attachments
+				33 text Files are encrypted before upload. Current messages can include attachment keys that the Meldiq server can read, so attachment encryption does not prevent server access to those files. Only authorized conversation members can access them through the app.
+				34 link Description: Read the Privacy Policy, Value: meldiq.app/legal/privacy
+			35 container
+				36 text 03
+				37 heading Calls and screen sharing, Value: 2
+					38 text Calls and screen sharing
+				39 text Call-media encryption is enabled by default. Check the encryption indicator in your call. Share only the window or screen you intend to show and stop sharing when you’re finished.
+				40 link Description: Calling features, Value: meldiq.app/features#calls
+			41 container
+				42 text 04
+				43 heading What the server sees, Value: 2
+					44 text What the server sees
+				45 text Account details, community memberships and routing metadata remain visible to the server. Meldiq has not completed an independent security audit. These limits matter when deciding what to share.
+				46 link Description: Data handling and retention, Value: meldiq.app/legal/privacy
+			47 container
+				48 text 05
+				49 heading Something doesn’t look right?, Value: 2
+					50 text Something doesn’t look right?
+				51 text Use in-app reporting for unwanted messages and abuse. For account or security concerns, use the support page to check the currently published contact information. Never share passwords, recovery codes or payment credentials in a report.
+				52 link Description: Get help, Value: meldiq.app/support
+			53 container
+				54 heading Make yourself at home., Value: 2
+					55 text Make yourself at home.
+				56 text Your next conversation is only a tab away.
+				57 link Description: Open Meldiq, Value: web.meldiq.app/
+		58 container
+			59 link Description: Meldiq home, Value: meldiq.app/
+			60 text Communities, direct messages and calls in one place.
+			61 link Description: Open Meldiq, Value: web.meldiq.app/
+			62 heading PRODUCT, Value: 2
+				63 text PRODUCT
+			64 link Description: Features, Value: meldiq.app/features
+			65 link Description: Pricing, Value: meldiq.app/pricing
+			66 link Description: Download, Value: meldiq.app/download
+			67 link Description: Developers, Value: meldiq.app/developers
+			68 link Description: Bots, Value: meldiq.app/bots
+			69 link Description: Roadmap, Value: meldiq.app/roadmap
+			70 link Description: Brand kit, Value: meldiq.app/brand
+			71 link Description: Service status, Value: status.meldiq.app/
+			72 heading COMMUNITY, Value: 2
+				73 text COMMUNITY
+			74 link Description: Find your community, Value: meldiq.app/community
+			75 link Description: Getting started, Value: meldiq.app/tutorials
+			76 link Description: Questions & answers, Value: meldiq.app/faq
+			77 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			78 link Description: Your account, Value: meldiq.app/account
+			79 link Description: Billing, Value: meldiq.app/account/billing
+			80 link Description: Contact support, Value: meldiq.app/support
+			81 heading LEGAL, Value: 2
+				82 text LEGAL
+			83 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			84 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			85 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			86 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			87 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			88 link Description: Security & encryption, Value: meldiq.app/security
+			89 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			90 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			91 link Description: Back to top ↑, Value: meldiq.app/security#top
+
+The focused UI element is 1 AXWebArea Security · Meldiq, URL: meldiq.app/security

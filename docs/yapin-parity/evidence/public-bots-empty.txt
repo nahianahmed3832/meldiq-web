@@ -1,0 +1,69 @@
+Browser tab: 2, Title: "Bots for your server · Yapin’", URL: "https://www.yapin.gg/bots".
+1 AXWebArea Bots for your server · Yapin’, URL: yapin.gg/bots
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 heading Bots, Value: 1
+				14 text Bots
+			15 text Bots made by people on Yapin’ and checked by us before they show up here. Add one to a server you manage.
+			16 text field (settable) Description: Search bots, Value: meldiq-audit-no-result-20261104
+			17 pop up button (collapsed, settable) Description: Sort, Value: Most used, Secondary Actions: Expand
+				18 menu
+					19 (selected) Most used
+					20 Newest
+					21 A to Z
+			22 checkbox All, Value: 1
+			23 checkbox Moderation, Value: 0
+			24 checkbox Fun, Value: 0
+			25 checkbox Games, Value: 0
+			26 checkbox Utility, Value: 0
+			27 checkbox Music, Value: 0
+			28 checkbox Economy, Value: 0
+			29 checkbox Social, Value: 0
+			30 checkbox AI, Value: 0
+			31 checkbox Other, Value: 0
+			67 text No bots match Try another word or category. Bots only see and post in servers a manager adds them to, and follow the same rules as people. Make your own at 
+			33 link Description: /developers, Value: yapin.gg/developers
+			34 text .
+		35 text Yapin’
+		36 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		37 heading PRODUCT, Value: 4
+			38 text PRODUCT
+		39 content list
+			40 link Description: Download, Value: yapin.gg/download
+			41 link Description: Developers, Value: yapin.gg/developers
+			42 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			43 link Description: Creator Program, Value: yapin.gg/creators
+			44 link Description: FanKit, Value: yapin.gg/fankit
+			45 link Description: Roadmap, Value: yapin.gg/roadmap
+			46 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			47 link Description: Bugs, Value: yapin.gg/bugs
+			48 link Description: Status, Value: yapin.gg/status
+		49 heading COMMUNITY, Value: 4
+			50 text COMMUNITY
+		51 content list
+			52 link Description: Guidelines, Value: yapin.gg/guidelines
+			53 link Description: Tutorials, Value: yapin.gg/tutorials
+			54 link Description: Bots, Value: yapin.gg/bots
+			55 link Description: Partners, Value: yapin.gg/partners
+		56 heading LEGAL, Value: 4
+			57 text LEGAL
+		58 content list
+			59 link Description: Terms, Value: yapin.gg/terms
+			60 link Description: Privacy, Value: yapin.gg/privacy
+			61 link Description: Copyright, Value: yapin.gg/copyright
+			62 link Description: Security, Value: yapin.gg/security
+			63 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			64 link Description: Contact, Value: mailto:hello@yapin.gg
+		65 text © 2026 Yapper Media LLC. Free to use.
+		66 text Made for people who talk.
+
+The focused UI element is 16 text field (settable) Description: Search bots, Value: meldiq-audit-no-result-20261104

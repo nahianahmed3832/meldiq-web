@@ -1,0 +1,70 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading Subscriptions, Value: 2
+								40 text Subscriptions
+							41 text Everything that renews by itself, monthly or weekly. Cancelling stops the next charge, and you keep what you paid for until the end of the period.
+							42 text You don’t have any subscriptions.
+							43 container
+								44 text Can’t sign in, or bought with another email? Email 
+								45 link [email redacted], Value: mailto:[email redacted]
+								46 text  and we’ll cancel it for you.
+							47 button Close
+			48 container
+				49 tab group
+					50 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						51 button Close
+			52 button New Tab
+	53 close button
+	54 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	55 minimize button
+56 menu bar
+	57 Chrome
+	58 File
+	59 Edit
+	60 View
+	61 History
+	62 Bookmarks
+	63 Profiles
+	64 Tab
+	65 Window
+	66 Help
+
+The focused UI element is 34 button Subscriptions

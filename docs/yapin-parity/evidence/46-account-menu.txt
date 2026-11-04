@@ -1,0 +1,73 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 text (32) Yapin’
+		3 text Yapin’
+		4 container Servers
+			5 button Direct messages
+			6 container
+				7 button Meldiq Research - Private Test
+				8 button Meldiq
+				9 button Yapin' Headquarters
+				10 text 10
+				11 button MINECRAFT
+				12 text 22
+			13 button Create a server
+			14 button Discover servers
+				15 image
+		16 container
+			17 text Direct messages
+			18 button Friends
+				19 image
+				20 text Friends
+			21 button Find people
+				22 image
+				23 text Find people
+			24 button Create group
+				25 image
+				26 text Create group
+			27 text DIRECT MESSAGES
+			28 button New message
+				29 image
+			30 text No DMs yet
+			31 text Add a friend, then say hi.
+			32 button Find friends
+			33 pop up button (expanded) nahian Online, Help: Your account, Secondary Actions: Collapse
+				34 text nahian
+				35 text Online
+			55 menu
+				56 container
+					57 button Edit profile
+						58 image
+					59 text nahian @ nahian
+					60 button 0, Help: Level 0
+				61 pop up button (collapsed) Online ›, Secondary Actions: Expand
+				62 button Set a custom status
+				63 Notification sounds, Value: 1
+				64 button View my profile
+				65 button Leaderboards
+				66 button Keyboard shortcuts
+				67 container
+					68 pop up button (expanded) Switch accounts ›, Secondary Actions: Collapse
+					69 button Add another account
+			36 button (collapsed) Description: Inbox, Secondary Actions: Expand
+			37 button Settings
+				38 image
+			39 button Log out
+				40 image
+		41 container
+			42 image
+			43 text Friends
+			44 button Online
+			45 button All
+			46 button Pending
+			47 button Blocked
+			48 button Suggested
+			49 button Add Friend
+			50 text field (settable) Search friends
+			51 text PENDING - 0
+			52 text No pending requests
+			53 text Friend requests you send or get show up here.
+			54 button Add Friend
+
+The focused UI element is 68 pop up button (expanded) Switch accounts ›, Secondary Actions: Collapse

@@ -54,5 +54,15 @@
     "android": "Získat Meldiq pro Android",
     "title": "Pozvánka od Meldiq",
     "hint": "Ještě nejste přihlášeni? Nejprve se přihlaste nebo si vytvořte účet: vrátíte se do této komunity."
+  },
+  "foundation": {
+    "welcomeBody": "Pár údajů dodá tomuto místu váš styl. Můžete je změnit v Nastavení.",
+    "profileBody": "Vyberte, jak vás ostatní uvidí. Váš e-mail zůstane soukromý.",
+    "preferencesBody": "Vyberte příjemný vzhled a svůj jazyk.",
+    "startBody": "Najděte přátele, připojte se ke komunitě nebo si vytvořte vlastní.",
+    "ready": "Váš prostor je připraven.",
+    "finish": "Začít objevovat",
+    "onDevice": "Volby vzhledu platí pro tento prohlížeč.",
+    "permissions": "Meldiq požádá o přístup k mikrofonu, kameře nebo oznámením až při použití funkce, která ho potřebuje."
   }
 }

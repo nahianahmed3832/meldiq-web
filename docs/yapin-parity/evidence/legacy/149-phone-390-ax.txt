@@ -1,0 +1,204 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content DevTools, URL: devtools://devtools/bundled/devtools_app.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@93ce6b54af3fee27e384d1f30346e80db47a14da/&targetType=tab&can_dock=true
+						20 container
+							21 container
+								22 container
+									23 toolbar
+										24 text Dimensions:
+										25 pop up button Device type, Value: Responsive
+											26 (selected) Responsive
+										27 stepper (settable, float) Width, Value: 390
+										28 text ×
+										29 stepper (settable, float) Height (leave empty for full), Value: 844
+										30 pop up button Zoom, Value: Fit to window
+											31 (selected) Fit to window
+										32 pop up button Throttling, Value: Disabled: No throttling
+											33 (selected) Disabled: No throttling
+										34 pop up button 'Save-Data': default
+											35 (selected) 'Save-Data': default
+										36 button Rotate
+									37 toolbar
+										38 button More options
+									39 container
+								40 container
+									41 container Main toolbar
+										42 toolbar
+											43 container Select an element in the page to inspect it, Help: Select an element in the page to inspect it - ⌘ ⇧ C
+												44 toggle button Select an element in the page to inspect it - ⌘ ⇧ C, Value: 0
+											45 container Toggle device toolbar, Help: Toggle device toolbar - ⌘ ⇧ M
+												46 toggle button Toggle device toolbar - ⌘ ⇧ M, Value: 1
+										47 container
+											48 tab group Panels
+												49 tab (settable, integer) Elements, Value: 0
+												50 tab (settable, integer) Console, Value: 0
+												51 tab (settable, integer) Sources, Value: 0
+												52 tab (selected) Network, Value: 1
+											53 pop up button More tabs
+										54 toolbar
+											55 container Open Issues to view 3 issues: 3 possible improvements
+												56 button Open Issues to view 3 issues: 3 possible improvements
+											57 container Settings, Help: Settings - F1 - ⇧ ?
+												58 button Settings - F1 - ⇧ ?
+											59 pop up button Customize and control DevTools
+												60 button Customize and control DevTools
+											61 container Close
+												62 button Close
+									63 container Network panel
+										64 container network
+											65 container
+												66 toolbar
+													67 container Stop recording network log, Help: Stop recording network log - ⌘ E
+														68 toggle button Stop recording network log - ⌘ E, Value: 1
+													69 container Clear network log, Help: Clear network log - Ctrl L - ⌘ K
+														70 button Clear network log - Ctrl L - ⌘ K
+													71 container Filter
+														72 toggle button Filter, Value: 1
+													73 container Search
+														74 toggle button Search, Value: 0
+													75 container
+														76 checkbox Keep log, Value: 0
+														77 text Keep log
+													78 container
+														79 checkbox Disable cache, Value: 0
+														80 text Disable cache
+													81 pop up button Throttling, Value: Disabled: No throttling
+														82 (selected) Disabled: No throttling
+													83 container More network conditions…
+														84 button More network conditions…
+													85 container Import HAR file…
+														86 button Import HAR file…
+													87 container Export HAR (sanitized)…
+														88 button Export HAR (sanitized)…
+													89 container Network settings
+														90 toggle button Network settings, Value: 0
+												91 toolbar
+													92 container
+														93 text entry area (settable) Filter, Value: messages
+															94 text messages
+														95 container Clear
+															96 button Clear
+												97 container Inverts the search filter
+													98 checkbox Invert, Value: 0
+													99 text Invert
+												100 container Show only/hide requests dropdown
+													101 pop up button Show only/hide requests
+														102 text More filters
+												103 list box Request types to include, Help: ⌘ Click to select multiple types
+													104 text (selected) All Fetch/XHR Doc CSS JS Font Img Media Manifest Socket Wasm Other
+												105 container Overview grid window
+													106 container
+														107 container
+															108 text 0 ms
+															109 text 2,000 ms
+															110 text 4,000 ms
+															111 text 6,000 ms
+															112 text 8,000 ms
+															113 text 10,000 ms
+															114 text 12,000 ms
+															115 text 14,000 ms
+															116 text 16,000 ms
+													117 slider Left resizer, Value: 0, Details: 0 ms, Secondary Actions: Increment, Decrement
+													118 slider Right resizer, Value: 100, Details: 14,694 ms, Secondary Actions: Increment, Decrement
+												119 container
+													120 container
+														121 table
+															122 row
+																123 column header Name - Sortable column. Press enter to sort.
+																	124 text Name
+																125 column header Status - Sortable column. Press enter to sort.
+																	126 text Status
+																127 column header Type - Sortable column. Press enter to sort.
+																	128 text Type
+																129 column header Initiator - Sortable column. Press enter to sort.
+																	130 text Initiator
+																131 column header Size - Sortable column. Press enter to sort.
+																	132 text Size
+																133 column header Time - Sortable column. Press enter to sort.
+																	134 text Time
+													135 container 0 / 7 requests
+														136 text 0 / 7 requests
+													137 container 0 B / 27330 B transferred over network
+														138 text 0.0 kB / 27.3 kB transferred
+													139 container 0 B / 82206 B resources loaded by the page
+														140 text 0.0 kB / 82.2 kB resources
+							141 text Network data available 
+				142 scroll area
+					143 HTML content (23) Yapin’, URL: yapin.gg/
+						144 container
+							145 container Servers
+								146 button Direct messages
+								147 button Meldiq Research - Private Test
+								148 button Meldiq
+								149 container
+									150 button Yapin' Headquarters
+									151 text 10
+								152 container
+									153 button MINECRAFT
+									154 text 13
+								155 button Create a server
+								156 button Discover servers
+							157 container
+								158 text Direct messages
+								159 button Find a chat, server or friend
+								160 button Friends
+								161 button Find people
+								162 button Create group
+								163 text DIRECT MESSAGES
+								164 button New message
+								165 text No chats yet
+								166 text Add a friend, then say hi.
+								167 button Add Friend
+								168 pop up button nahian Online, Help: Your account
+									169 text nahian
+									170 text Online
+								171 button Inbox
+								172 button Log out
+							173 container Sections
+								174 button Home
+								175 button Servers
+								176 button Settings
+							177 button Getting started
+			178 container
+				179 tab group
+					180 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						181 button Close
+					182 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 243 MB, Value: on
+						183 button Close
+					184 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						185 button Close
+			186 button New Tab
+	187 close button
+	188 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	189 minimize button
+190 menu bar
+	191 Chrome
+	192 File
+	193 Edit
+	194 View
+	195 History
+	196 Bookmarks
+	197 Profiles
+	198 Tab
+	199 Window
+	200 Help
+
+The focused UI element is 27 stepper (settable, float) Width, Value: 390

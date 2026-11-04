@@ -1,0 +1,484 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq
+								25 container
+									26 button Yapin' Headquarters
+									27 text 15
+								28 container
+									29 button MINECRAFT
+									30 text 13
+								31 button Create a server
+								32 button Discover servers
+							33 container
+								34 text Direct messages
+								35 button Friends
+								36 button Find people
+								37 button Create group
+								38 text DIRECT MESSAGES
+								39 button New message
+								40 text No chats yet
+								41 text Add a friend, then say hi.
+								42 button Add Friend
+								43 pop up button nahian Online, Help: Your account
+									44 text nahian
+									45 text Online
+								46 button Inbox
+								47 button Settings
+								48 button Log out
+							49 container
+								50 image
+								51 text Discover
+								52 heading Find your people, Value: 2
+									53 text Find your people
+								54 text Public servers on Yapin’. Search by name, topic or tag.
+								55 text field (settable) Search servers, Value: Yapin, Placeholder: Search servers…
+								56 container
+									57 text Yapin' Headquarters
+									58 button Yapin’ Partner
+									59 text The Official Yapper Server 106,797 members
+									60 button Report server
+									61 button Open
+								62 container
+									63 text /user YAPIN' PLUS GIVEAWAY AT 3.5K MEMBERS!!, also promote your server! rare usernames user ogu og ogus
+									64 button #user
+									65 button #username
+									66 button #rare
+									67 button #ogu
+									68 button #og
+									69 text 3,269 members
+									70 button Report server
+									71 button Join
+								72 container
+									73 text Yap Central™ A chill Yapin' spot. JOIN BEFORE NOV 3RD FOR LIMITED HALLOWEEN ROLE
+									74 button #yap
+									75 button #chill
+									76 button #hangout
+									77 button #vibes
+									78 text 1,756 members
+									79 button Report server
+									80 button Join
+								81 container
+									82 text OG USERS [1.7K] #1 Giveaway at 2000 members! (Yapin' Plus) Got good usernames and want to show them off? Join OG user and show your usernames off today. 1,753 members
+									83 button Report server
+									84 button Join
+								85 container
+									86 text Official Yapper Artists Yapin's Official Art Server (Must need Artist Badge)
+									87 button #art
+									88 button #community
+									89 button #official yapin
+									90 text 791 members
+									91 button Report server
+									92 button Join
+								93 container
+									94 text @Saint #1 Server Hispano de Yapin - Semi Tox, Active
+									95 button #semitox
+									96 button #active
+									97 button #hispano
+									98 button #packing
+									99 button #voice
+									100 text 370 members
+									101 button Report server
+									102 button Join
+								103 container
+									104 text Official Yapin Debate Official Yapin Politics Server
+									105 button #debate
+									106 button #official
+									107 button #politics
+									108 button #religion
+									109 text 365 members
+									110 button Report server
+									111 button Join
+								112 container
+									113 text Beefydie Yapin's first BFDI and Object Show based server
+									114 button #fourse
+									115 button #xolotle
+									116 button #bfdi
+									117 button #ii
+									118 button #osc
+									119 text 174 members
+									120 button Report server
+									121 button Join
+								122 container
+									123 text BOOSTED
+									124 text The Badge Circle Collect badges, meet creators, and build your name on Yapin’. Whether you already have a badge or you’re chasing your first.
+									125 button #creators
+									126 button #verified
+									127 button #community
+									128 button #social
+									129 button #gaming
+									130 text 79 members
+									131 button Report server
+									132 button Join
+								133 container
+									134 text BOOSTED
+									135 text Yapscord | Active VC Server ⦁ VC ⦁ Social ⦁ Chill ⦁ Emojis ⦁ SFW ⦁ Active Voice Chat Active VC Yapin' Server with Chill Calls, Fun Chats, Memes, Anime & Tons of Emotes. Join the popular social community now!
+									136 button #socialize
+									137 button #vc
+									138 button #chat
+									139 button #yapin
+									140 button #memes
+									141 text 10 members
+									142 button Report server
+									143 button Join
+								144 container
+									145 text Official Yapin' Creators 107 members
+									146 button Report server
+									147 button Join
+								148 container
+									149 text Sonic Yapin' Community // Unoffical Yapper server for all of the sonic fans out there
+									150 button #sonic
+									151 button #sonicexe
+									152 button #sonicthehedgehog
+									153 button #yapper
+									154 button #sega
+									155 text 106 members
+									156 button Report server
+									157 button Join
+								158 container
+									159 text Genshin Impact ✦ Unofficial Welcome to Teyvat, Traveler! This is the Genshin Impact ✦ Unofficial Yapin' server.
+									160 button #genshin
+									161 button #gaming
+									162 button #gacha
+									163 button #community
+									164 button #genshinimpact
+									165 text 84 members
+									166 button Report server
+									167 button Join
+								168 container
+									169 text ABC's Ranking (.gg/abc) Fairest Ranking on Yapin'
+									170 button #rank
+									171 button #chat
+									172 button #gaming
+									173 text 65 members
+									174 button Report server
+									175 button Join
+								176 container
+									177 text BotCreator Welcome to the first bot creator for Yapin.gg! We offer an AI-powered bot creator as well as a visual programming editor!
+									178 button #bot
+									179 button #ai
+									180 button #creator
+									181 button #coding
+									182 text 52 members
+									183 button Report server
+									184 button Join
+								185 container
+									186 text polska community (yapper polska) Pierwszy polski serwer na yapper/yapin'
+									187 button # polska
+									188 text 45 members
+									189 button Report server
+									190 button Join
+								191 container
+									192 text Roasting Roasting the first ever Upcoming Packing Server on Yapin to meet new people and have fun.
+									193 button # packing
+									194 button # roasting
+									195 button # beef
+									196 button # social
+									197 button # com
+									198 text 45 members
+									199 button Report server
+									200 button Join
+								201 container
+									202 text ROBLOX Yapin' Yapin' but in ROBLOX!
+									203 button # gaming
+									204 button # community
+									205 button # fun
+									206 button # yap
+									207 button # chatting
+									208 text 42 members
+									209 button Report server
+									210 button Join
+								211 container
+									212 text Yapin Support Yapper Support is an unofficial community dedicated to helping Yapper users get the best possible experience. Whether you need technical support, have questions, want to report a bug, or simply need guidance, our community is here to help.
+									213 button # support
+									214 text 37 members
+									215 button Report server
+									216 button Join
+								217 container
+									218 text GJHS The Official Grimsley Junior High School Yapin' Server
+									219 button # chatter
+									220 button # interests
+									221 button # discussion
+									222 button # media
+									223 button # content
+									224 text 36 members
+									225 button Report server
+									226 button Join
+								227 container
+									228 text DogeBot 🎃 Build a free Yapin Bot with blocks, no coding required, join the best bot builder in the game!
+									229 button # bots
+									230 button # support
+									231 button # community
+									232 text 36 members
+									233 button Report server
+									234 button Join
+								235 container
+									236 text Discord Yap Come from discord, live in yapin' 24 members
+									237 button Report server
+									238 button Join
+								239 container
+									240 text dismiss yourself The best profile & username rating server on Yapin'.
+									241 button # users
+									242 button # ogu
+									243 button # profile
+									244 button # steeze
+									245 button # rating
+									246 text 22 members
+									247 button Report server
+									248 button Join
+								249 container
+									250 text Pixel Decorations Yapin's Official Pixel Art Server (Must need Artist Badge)
+									251 button # decorations
+									252 button # pixel arts
+									253 text 22 members
+									254 button Report server
+									255 button Join
+								256 container
+									257 text Programmers </> Programmers is an open, community-driven Yapin’ server where developers of all skill levels collaborate, share projects, and get hands-on help with coding, web development, and operating systems.
+									258 button # developers
+									259 button # code
+									260 button # development
+									261 button # skills
+									262 button # social and language
+									263 text 20 members
+									264 button Report server
+									265 button Join
+								266 container
+									267 text Steam The steam game library server on yapin.
+									268 button # steam
+									269 button # games
+									270 button # lfg
+									271 text 18 members
+									272 button Report server
+									273 button Join
+								274 container
+									275 text YapinShield Easy AutoMod and Moderation bot created for Yapper!
+									276 button # bot
+									277 button # automod
+									278 button # free
+									279 button # protection
+									280 button # moderation
+									281 text 17 members
+									282 button Report server
+									283 button Join
+								284 container
+									285 text the emoji wonderland Main server: https://yapin.gg/invite/EmojiServer
+									286 button # pepe
+									287 button # emojis
+									288 button # free
+									289 button # gifs
+									290 button # stickers
+									291 text 16 members
+									292 button Report server
+									293 button Join
+								294 container
+									295 text YapYur Yapper/Yapin modded client
+									296 button # client
+									297 button # modded client
+									298 button # yapyur
+									299 button # vencord
+									300 text 16 members
+									301 button Report server
+									302 button Join
+								303 container
+									304 text YapNap [unofficial] Second cutest yapin client out there :3
+									305 button # unofficial
+									306 button # second
+									307 button # cutest
+									308 button # client
+									309 button # yapin
+									310 text 16 members
+									311 button Report server
+									312 button Join
+								313 container
+									314 text Techtown Yapin' We are a Server about Tech like Windows 8.x and Wii/WiiU
+									315 button # tech
+									316 button # wii
+									317 button # wii u
+									318 text 15 members
+									319 button Report server
+									320 button Join
+								321 container
+									322 text hollow a server dedicated to the Yapin' bot "hollow". announcements and development updates.
+									323 button # bot
+									324 button # moderation
+									325 button # community
+									326 button # chat
+									327 button # social
+									328 text 15 members
+									329 button Report server
+									330 button Join
+								331 container
+									332 text 😮spare emoji server😮 Our Main Server: https://yapin.gg/invite/EmojiServer
+									333 button # emoji
+									334 button # gifs
+									335 button # emojis
+									336 button # free
+									337 text 14 members
+									338 button Report server
+									339 button Join
+								340 container
+									341 text Helldivers Unofficial Unofficial Helldivers II Yapin server!
+									342 button # helldivers ii
+									343 button # helldivers
+									344 button # gaming
+									345 button # hangout
+									346 text 13 members
+									347 button Report server
+									348 button Join
+								349 container
+									350 text Yapin Store 13 members
+									351 button Report server
+									352 button Join
+								353 container
+									354 text Yapper Safety Unofficial Yapper Safety Server, Not affiliated with antic nor yapin, I do not own any rights to the Yapper Mascot.
+									355 button # safety
+									356 button # yapper
+									357 text 11 members
+									358 button Report server
+									359 button Join
+								360 container
+									361 text glup [YAPIN' EDITION] 11 members
+									362 button Report server
+									363 button Join
+								364 container
+									365 text Clash Verse Unofficial Yapin' server dedicated to Clash Royale & Clash of Clans! first 1k joins role📜
+									366 button # clashroyale
+									367 button # clashofclans
+									368 button # strategy
+									369 button # emojis
+									370 text 11 members
+									371 button Report server
+									372 button Join
+								373 container
+									374 text Semi-Official Yapper OGs Semi-Official Yapin OGs server
+									375 button # yapin
+									376 button # og
+									377 button # semiofficial
+									378 text 10 members
+									379 button Report server
+									380 button Join
+								381 container
+									382 text Yapin’ beta testing 10 members
+									383 button Report server
+									384 button Join
+								385 container
+									386 text DiscoPost Automatically post Discord messages to Yapin' with DiscoPost
+									387 button # discord
+									388 button # follow
+									389 button # feed
+									390 button # messages
+									391 button # utility
+									392 text 9 members
+									393 button Report server
+									394 button Join
+								395 container
+									396 text Stray Pages /strays A personal page tied to your Yapin’ account. Your links, your games, your music, your look.
+									397 button # links
+									398 button # yapin
+									399 button # free
+									400 button # game
+									401 button # strays
+									402 text 9 members
+									403 button Report server
+									404 button Join
+								405 container
+									406 text Kitty Boys The first Yapin server about music! Any styles!
+									407 button # music
+									408 button # metal
+									409 button # rock
+									410 button # pop
+									411 button # jrock
+									412 text 9 members
+									413 button Report server
+									414 button Join
+								415 container
+									416 text ZRT First open Aiming Community on Yapin | Aim Training, Coaching & Gaming 🎯
+									417 button # kovaaks
+									418 button # aim
+									419 button # fps
+									420 button # aimlabs
+									421 text 9 members
+									422 button Report server
+									423 button Join
+								424 container
+									425 text Fatih Ibrahim Official Server The Official Fatih Ibrahim Yapin Server!
+									426 button # gaming
+									427 button # community
+									428 button # fun
+									429 text 9 members
+									430 button Report server
+									431 button Join
+								432 container
+									433 text Yapin' Tags Get free yapin' tags!
+									434 button # tags
+									435 button # yapin
+									436 button # yapper
+									437 button # free
+									438 button # customize
+									439 text 8 members
+									440 button Report server
+									441 button Join
+								442 container
+									443 text piku's emojis Main server: https://yapin.gg/invite/piku 8 members
+									444 button Report server
+									445 button Join
+								446 container
+									447 text 🎁 Emoji Land Offical🎁 Main Server: https://yapin.gg/invite/EmojiServer
+									448 button # emoji
+									449 button # meme
+									450 button # cats
+									451 button # dogs
+									452 button # gifs
+									453 text 8 members
+									454 button Report server
+									455 button Join
+								456 button Show more servers
+							457 button Getting started
+			458 container
+				459 tab group
+					460 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						461 button Close
+					462 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 173 MB, Value: on
+						463 button Close
+					464 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						465 button Close
+			466 button New Tab
+	467 close button
+	468 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	469 minimize button
+470 menu bar
+	471 Chrome
+	472 File
+	473 Edit
+	474 View
+	475 History
+	476 Bookmarks
+	477 Profiles
+	478 Tab
+	479 Window
+	480 Help
+
+The focused UI element is 55 text field (settable) Search servers, Value: Yapin, Placeholder: Search servers…

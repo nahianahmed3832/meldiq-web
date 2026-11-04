@@ -1,0 +1,183 @@
+Browser tab: 6, Title: "Features · Meldiq", URL: "https://meldiq.app/features".
+1 AXWebArea Features · Meldiq, URL: meldiq.app/features
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/features#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Features, Value: meldiq.app/
+				16 heading Everything you need to talk, together., Value: 1
+					17 text Everything you need
+					18 text to talk, together.
+				19 text Communities, messages and calls in one place. Every core messaging feature is free.
+				20 link Description: Find your people, Value: meldiq.app/signup
+			21 container communities
+				22 heading Communities & channels, Value: 2
+					23 text Communities & channels
+				24 text Create a public community or keep it invite-only. Organize conversations around the things your members share.
+				25 content list
+					26 container
+						27 AXListMarker • 
+						28 text Categories, text and announcement channels
+					29 container
+						30 AXListMarker • 
+						31 text Forums and threads
+					32 container
+						33 AXListMarker • 
+						34 text Community discovery and invitations
+					35 container
+						36 AXListMarker • 
+						37 text Owners, admins, moderators and custom roles
+					38 container
+						39 AXListMarker • 
+						40 text Permissions for channels and categories
+			41 container messaging
+				42 heading Messages & files, Value: 2
+					43 text Messages & files
+				44 text Talk with one person, a private group or your whole community. Share photos, videos, documents and voice messages.
+				45 content list
+					46 container
+						47 AXListMarker • 
+						48 text Direct messages and private groups
+					49 container
+						50 AXListMarker • 
+						51 text Replies, reactions, mentions and read receipts
+					52 container
+						53 AXListMarker • 
+						54 text Message editing and deletion
+					55 container
+						56 AXListMarker • 
+						57 text Encrypted attachments
+					58 container
+						59 AXListMarker • 
+						60 text Message requests from people you don’t know
+			61 container calls
+				62 heading Voice, video & screen sharing, Value: 2
+					63 text Voice, video & screen sharing
+				64 text Join a voice room or start a call. Screen sharing makes it easy to show what you’re working on or playing.
+				65 content list
+					66 container
+						67 AXListMarker • 
+						68 text One-to-one and group calls
+					69 container
+						70 AXListMarker • 
+						71 text Drop-in voice channels
+					72 container
+						73 AXListMarker • 
+						74 text Video calls and screen sharing
+					75 container
+						76 AXListMarker • 
+						77 text Call-media encryption on by default; check the indicator in the app
+			78 container privacy
+				79 heading Privacy & encryption, Value: 2
+					80 text Privacy & encryption
+				81 text Files are encrypted before upload. Current messages can include attachment keys that the Meldiq server can read.
+				82 link Description: Read the Privacy Policy →, Value: meldiq.app/legal/privacy
+				83 content list
+					84 container
+						85 AXListMarker • 
+						86 text Conversation history available to authorized members
+					87 container
+						88 AXListMarker • 
+						89 text Attachments encrypted before upload
+					90 container
+						91 AXListMarker • 
+						92 text Call media encrypted when call encryption is on
+					93 container
+						94 AXListMarker • 
+						95 text Account details, memberships and routing metadata remain visible to the server
+					96 container
+						97 AXListMarker • 
+						98 text No independent security audit has been completed
+			99 container security
+				100 heading Account security, Value: 2
+					101 text Account security
+				102 text Use the same account on the web and Android. Manage access and security settings in Meldiq.
+				103 content list
+					104 container
+						105 AXListMarker • 
+						106 text Passkeys
+					107 container
+						108 AXListMarker • 
+						109 text Authenticator-based two-step sign-in
+					110 container
+						111 AXListMarker • 
+						112 text Recovery codes
+					113 container
+						114 AXListMarker • 
+						115 text View and end signed-in sessions
+					116 container
+						117 AXListMarker • 
+						118 text Account subscription entitlements across supported devices
+			119 container moderation
+				120 heading Community moderation, Value: 2
+					121 text Community moderation
+				122 text Give your moderators the tools to keep the community welcoming and conversations manageable.
+				123 link Description: Community standards →, Value: meldiq.app/legal/acceptable-use
+				124 content list
+					125 container
+						126 AXListMarker • 
+						127 text Reports, bans and timeouts
+					128 container
+						129 AXListMarker • 
+						130 text Invitation controls
+					131 container
+						132 AXListMarker • 
+						133 text Slow mode
+					134 container
+						135 AXListMarker • 
+						136 text Member and role management
+					137 container
+						138 AXListMarker • 
+						139 text Community rules and channel permissions
+			140 container
+				141 heading Ready when you are., Value: 2
+					142 text Ready when you are.
+				143 text Create a free account or find the right app for your device. 
+				144 link Description: Explore optional Meldiq Plus benefits and community add-ons., Value: meldiq.app/pricing
+				145 link Description: Create a Free Account, Value: meldiq.app/signup
+				146 link Description: Get Meldiq, Value: meldiq.app/download
+		147 container
+			148 link Description: Meldiq home, Value: meldiq.app/
+			149 text Communities, direct messages and calls in one place.
+			150 link Description: Open Meldiq, Value: web.meldiq.app/
+			151 heading PRODUCT, Value: 2
+				152 text PRODUCT
+			153 link Description: Features, Value: meldiq.app/features
+			154 link Description: Pricing, Value: meldiq.app/pricing
+			155 link Description: Download, Value: meldiq.app/download
+			156 link Description: Developers, Value: meldiq.app/developers
+			157 link Description: Bots, Value: meldiq.app/bots
+			158 link Description: Roadmap, Value: meldiq.app/roadmap
+			159 link Description: Brand kit, Value: meldiq.app/brand
+			160 link Description: Service status, Value: status.meldiq.app/
+			161 heading COMMUNITY, Value: 2
+				162 text COMMUNITY
+			163 link Description: Find your community, Value: meldiq.app/community
+			164 link Description: Getting started, Value: meldiq.app/tutorials
+			165 link Description: Questions & answers, Value: meldiq.app/faq
+			166 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			167 link Description: Your account, Value: meldiq.app/account
+			168 link Description: Billing, Value: meldiq.app/account/billing
+			169 link Description: Contact support, Value: meldiq.app/support
+			170 heading LEGAL, Value: 2
+				171 text LEGAL
+			172 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			173 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			174 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			175 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			176 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			177 link Description: Security & encryption, Value: meldiq.app/security
+			178 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			179 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			180 link Description: Back to top ↑, Value: meldiq.app/features#top
+
+The focused UI element is 1 AXWebArea Features · Meldiq, URL: meldiq.app/features

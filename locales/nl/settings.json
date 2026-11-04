@@ -860,5 +860,11 @@
     "accountDescription": "E-mail, accountstatus, gegevensexport en accountverwijdering.",
     "notificationsDescription": "Desktopmeldingen, geluiden, meldingspauzes en snelkoppelingen naar gespreksvoorkeuren.",
     "appearanceDescription": "Thema’s, kleuren, berichtindeling, mediavoorbeelden en chatgebaren."
+  },
+  "foundation": {
+    "profileSections": "Profielonderdelen",
+    "profileSectionsDescription": "Kies welke onderdelen zichtbaar zijn en in welke volgorde. Je doelgroepinstellingen blijven gelden.",
+    "resetSections": "Onderdeelwijzigingen herstellen",
+    "saveSections": "Onderdelen opslaan"
   }
 }

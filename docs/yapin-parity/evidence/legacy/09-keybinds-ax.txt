@@ -1,0 +1,131 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading Keybinds, Value: 2
+								40 text Keybinds
+							41 container
+								42 text Click a shortcut and press the keys you want. Esc cancels. Saved on this device.  ⌘ /  shows them anywhere.
+							43 button See all shortcuts
+							44 text Quick switcher: jump to any channel, DM or server
+							45 button Change shortcut: Quick switcher: jump to any channel, DM or server
+							46 button Off, Help: Turn this shortcut off
+							47 text Previous channel
+							48 button Change shortcut: Previous channel
+							49 button Off, Help: Turn this shortcut off
+							50 text Next channel
+							51 button Change shortcut: Next channel
+							52 button Off, Help: Turn this shortcut off
+							53 text Previous unread channel
+							54 button Change shortcut: Previous unread channel
+							55 button Off, Help: Turn this shortcut off
+							56 text Next unread channel
+							57 button Change shortcut: Next unread channel
+							58 button Off, Help: Turn this shortcut off
+							59 text Edit your last message (when the message box is empty)
+							60 button Change shortcut: Edit your last message (when the message box is empty)
+							61 button Off, Help: Turn this shortcut off
+							62 text Mark this server as read
+							63 button Change shortcut: Mark this server as read
+							64 button Off, Help: Turn this shortcut off
+							65 text Mute / unmute in a call
+							66 button Change shortcut: Mute / unmute in a call
+							67 button Off, Help: Turn this shortcut off
+							68 text Deafen / undeafen in a call
+							69 button Change shortcut: Deafen / undeafen in a call
+							70 button Off, Help: Turn this shortcut off
+							71 text Clip the last few seconds of a call or stream
+							72 button Change shortcut: Clip the last few seconds of a call or stream
+							73 button Off, Help: Turn this shortcut off
+							74 text Show the list of shortcuts
+							75 button Change shortcut: Show the list of shortcuts
+							76 button Off, Help: Turn this shortcut off
+							77 text ALWAYS ON Reload (desktop app)
+							78 text ⌘
+							79 text R
+							80 text /
+							81 text F5
+							82 text Start typing anywhere and it goes into the message box
+							83 text Any letter
+							84 text New line
+							85 text Shift
+							86 text Enter
+							87 text Cancel a reply or an edit; then close the side panel; then mark the chat read and jump to the newest message
+							88 text Esc
+							89 text Scroll the chat, even while typing
+							90 text PageUp
+							91 text /
+							92 text PageDown
+							93 text Delete a message without the confirm
+							94 text Shift
+							95 text click Delete
+							96 text Bold (on selected text)
+							97 text ⌘
+							98 text B
+							99 text Italic
+							100 text ⌘
+							101 text I
+							102 text Underline
+							103 text ⌘
+							104 text U
+							105 text Code
+							106 text ⌘
+							107 text E
+							108 button Close
+			109 container
+				110 tab group
+					111 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						112 button Close
+			113 button New Tab
+	114 close button
+	115 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	116 minimize button
+117 menu bar
+	118 Chrome
+	119 File
+	120 Edit
+	121 View
+	122 History
+	123 Bookmarks
+	124 Profiles
+	125 Tab
+	126 Window
+	127 Help
+
+The focused UI element is 31 button Keybinds

@@ -1,0 +1,78 @@
+Window: "Yapin’", App: Google Chrome.
+0 standard window Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Yapin’, URL: yapin.gg/
+						20 container
+							21 pop up button English, Help: Language
+							22 container
+								23 button ‹ Back
+								24 text Yapin’
+								25 heading Welcome back, Value: 1
+									26 text Welcome back
+								27 text Good to see you yapping again.
+								28 container “使用 Google 账号登录”按钮
+									29 HTML content Sign In - Google Accounts, URL: accounts.google.com/gsi/button?[query redacted]
+										30 button Continue with Google. Opens in new tab
+								31 text OR
+								32 button Log in with a passkey
+								33 text OR EMAIL OR USERNAME
+								34 text field (settable) EMAIL OR USERNAME, Value: [personal email omitted]
+								35 button Forgot which email?
+								36 text PASSWORD
+								37 button Forgot password?
+								38 secure text field (settable) PASSWORD Forgot password?, Value: ••••••••••••••••
+								39 button Show password
+								40 button Log in
+								41 text New here? 
+								42 button Create an account
+								43 link Terms, Value: yapin.gg/terms
+								44 text  · 
+								45 link Privacy, Value: yapin.gg/privacy
+								46 text  ·
+								47 link Guidelines, Value: yapin.gg/guidelines
+								48 text  ·
+								49 link Bugs, Value: yapin.gg/bugs
+			50 container Infobar Container
+				51 container Infobar
+					52 container
+						53 text Google Chrome isn't your default browser
+						54 button Set as default
+					55 button Close
+			56 container
+				57 tab group
+					58 tab (selected, settable, boolean) Yapin’ - Memory usage - 74.0 MB, Value: on
+						59 button Close
+			60 button New Tab
+	61 close button
+	62 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	63 minimize button
+64 menu bar
+	65 Chrome
+	66 File
+	67 Edit
+	68 View
+	69 History
+	70 Bookmarks
+	71 Profiles
+	72 Tab
+	73 Window
+	74 Help
+
+The focused UI element is 38 secure text field (settable) PASSWORD Forgot password?, Value: ••••••••••••••••

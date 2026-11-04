@@ -1,0 +1,125 @@
+Window: "Remove an intimate image · Yapin’", App: Google Chrome.
+0 standard window Remove an intimate image · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/remove-image, Secondary Actions: Raise
+	1 container Remove an intimate image · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/remove-image
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/remove-image, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Remove an intimate image · Yapin’, URL: yapin.gg/remove-image
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 heading Remove an intimate image, Value: 1
+									30 text Remove an intimate image
+								31 text LAST UPDATED  20 OCTOBER 2026 Was a nude, sexual or intimate image or video of you shared on Yapin’ without your consent, real or AI-made? Tell us where it is and we’ll take it down within 48 hours.
+								32 content list
+									33 container
+										34 AXListMarker • 
+										35 text You don’t need a Yapin’ account, a police report or proof that you own the picture.
+									36 container
+										37 AXListMarker • 
+										38 text Don’t send us the image itself. Just tell us where it is: a message link, a profile, a server.
+									39 container
+										40 AXListMarker • 
+										41 text You can ask for yourself, or for someone else if you’re allowed to act for them (for example a parent or a lawyer).
+									42 container
+										43 AXListMarker • 
+										44 text We’ll remove the reported content and copies of it we can find on Yapin’, and email you when it’s done.
+								45 text If someone is threatening to share images of you, or a child is involved, contact the police too. In the US you can also use 
+								46 link Take It Down, Value: takeitdown.ncmec.org/
+								47 text  from NCMEC.
+								48 text WHO IS IN THE IMAGE?
+								49 radio button ME, Value: 1
+								50 radio button SOMEONE I’M ALLOWED TO ACT FOR, Value: 0
+								51 text YOUR NAME
+								52 text field (settable) YOUR NAME
+								53 text EMAIL WE CAN REACH YOU AT
+								54 email (settable) EMAIL WE CAN REACH YOU AT
+								55 text WHERE IS IT? (ONE PER LINE)
+								56 text entry area (settable) WHERE IS IT? (ONE PER LINE), Placeholder: The username who posted it, the server and channel, or a link to it
+								57 text ANYTHING THAT HELPS US FIND IT (OPTIONAL)
+								58 text entry area (settable) ANYTHING THAT HELPS US FIND IT (OPTIONAL), Placeholder: Who posted it, when, the username, how many copies…
+								59 container
+									60 checkbox Value: 0, I believe in good faith that this intimate image or video was shared without the consent of the person in it, and I am that person or allowed to act for them.
+									61 text I believe in good faith that this intimate image or video was shared without the consent of the person in it, and I am that person or allowed to act for them.
+								62 text SIGN BY TYPING YOUR FULL NAME
+								63 text field (settable) SIGN BY TYPING YOUR FULL NAME
+								64 button (disabled) Send removal request
+								65 text Trouble with the form? Email 
+								66 link [email redacted], Value: mailto:[email redacted]
+								67 text  with “Intimate image removal” in the subject.
+								68 link ← Back to Yapin’, Value: yapin.gg/
+								69 text  · 
+								70 link Remove an intimate image, Value: yapin.gg/remove-image
+							71 text Yapin’
+							72 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							73 heading Product, Value: 4
+								74 text Product
+							75 content list
+								76 link Download, Value: yapin.gg/download
+								77 link Developers, Value: yapin.gg/developers
+								78 link Yapin’ Plus, Value: yapin.gg/plus
+								79 link Creator Program, Value: yapin.gg/creators
+								80 link Roadmap, Value: yapin.gg/roadmap
+								81 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								82 link Bugs, Value: yapin.gg/bugs
+								83 link Status, Value: yapin.gg/status
+							84 heading Community, Value: 4
+								85 text Community
+							86 content list
+								87 link Guidelines, Value: yapin.gg/guidelines
+								88 link Tutorials, Value: yapin.gg/tutorials
+								89 link Bots, Value: yapin.gg/bots
+							90 heading Legal, Value: 4
+								91 text Legal
+							92 content list
+								93 link Terms, Value: yapin.gg/terms
+								94 link Privacy, Value: yapin.gg/privacy
+								95 link Copyright, Value: yapin.gg/copyright
+								96 link Cancel a subscription, Value: yapin.gg/cancel
+								97 link Contact, Value: mailto:[email redacted]
+							98 text © 2026 Yapper Media LLC. Free to use.
+			99 container
+				100 tab group
+					101 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						102 button Close
+					103 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						104 button Close
+					105 tab (selected, settable, boolean) Remove an intimate image · Yapin’, Value: on
+						106 button Close
+			107 button New Tab
+	108 close button
+	109 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	110 minimize button
+111 menu bar
+	112 Chrome
+	113 File
+	114 Edit
+	115 View
+	116 History
+	117 Bookmarks
+	118 Profiles
+	119 Tab
+	120 Window
+	121 Help
+
+The focused UI element is 19 HTML content Remove an intimate image · Yapin’, URL: yapin.gg/remove-image

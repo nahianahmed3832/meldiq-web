@@ -1,0 +1,473 @@
+Browser tab: 2, Title: "Bots for your server · Yapin’", URL: "https://www.yapin.gg/bots".
+1 AXWebArea Bots for your server · Yapin’, URL: yapin.gg/bots
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 heading Bots, Value: 1
+				14 text Bots
+			15 text Bots made by people on Yapin’ and checked by us before they show up here. Add one to a server you manage.
+			16 text field (settable) Search bots
+			17 pop up button (collapsed, settable) Description: Sort, Value: Most used, Secondary Actions: Expand
+				18 menu
+					19 (selected) Most used
+					20 Newest
+					21 A to Z
+			22 checkbox All, Value: 1
+			23 checkbox Moderation, Value: 0
+			24 checkbox Fun, Value: 0
+			25 checkbox Games, Value: 0
+			26 checkbox Utility, Value: 0
+			27 checkbox Music, Value: 0
+			28 checkbox Economy, Value: 0
+			29 checkbox Social, Value: 0
+			30 checkbox AI, Value: 0
+			31 checkbox Other, Value: 0
+			67 link Description: SapphireLite, Value: yapin.gg/bot/2b71b8c3-a2b8-4dcc-96c9-47a89166e8c7
+			68 text BOT
+			69 text by wakfuonyt
+			70 button Add
+			71 text All-in-one bot! Cutest bot ever made, add it now! :3 Moderation
+			72 text 412 servers
+			73 link Description: Support server, Value: yapin.gg/invite/sapphire
+			74 link Description: Arcane, Value: yapin.gg/bot/05c3484c-56ce-4f46-a6e6-7220f18f5995
+			75 text BOT
+			76 text by OfficialScarour
+			77 button Add
+			78 text LOTS OF COMMANDS! works flawlessly, Moderation, Utilities, Fun and more! I Dashboard: https://arcanebot.vercel.app Moderation
+			79 text 372 servers
+			80 link Description: Support server, Value: yapin.gg/invite/Arcane
+			81 link Description: Welcomerr, Value: yapin.gg/bot/0cda16dc-c00c-4453-89b2-fcbd8ee792f8
+			82 text BOT
+			83 text by ~ | 𝑯𝒆𝒂𝒍𝒆𝒓 〆 ??
+			84 button Add
+			85 text Welcomer is a fully customizable welcome and member management bot built for Yapper servers. It is designed to be universal, meaning it can be added to any server and configured independently by each server's owner without requiring any code changes. Moderation
+			86 text 278 servers
+			87 link Description: Support server, Value: yapin.gg/invite/welcomer
+			88 link Description: TextToYap, Value: yapin.gg/bot/e5911791-0e1c-42c4-a2df-fe2e2bf1c7ab
+			89 text MEGA BOOSTED
+			90 text BOT
+			91 text by ! WilliamThe4rd
+			92 button Add
+			93 text Text To Yap is Yappers first and best TTS Bot! Music
+			94 text 29 servers
+			95 link Description: Support server, Value: yapin.gg/invite/alts
+			96 link Description: Economy, Value: yapin.gg/bot/19ddf562-4c44-4b74-bfe2-f6fce443a76f
+			97 text BOT
+			98 text by Pacticle
+			99 button Add
+			100 text 💰 Economy Bot for your server. Commands like /gamble, /balance, and /deposit. 24/7 hosting with best plan. **Most fun in competitive and fun servers! ** Add now! Economy
+			101 text 213 servers
+			102 link Description: Support server, Value: yapin.gg/invite/rankednames
+			103 link Description: Yapboard, Value: yapin.gg/bot/e9d1c3bf-289c-43f7-b662-1e8d5401c002
+			104 text BOT
+			105 text by elixar
+			106 button Add
+			107 text Yapboard is the perfect bot to advertise your yapin server! Other
+			108 text 206 servers
+			109 link Description: Counter, Value: yapin.gg/bot/a2e2753a-b692-4bc6-9a8b-8c98b5e7ba15
+			110 text BOT
+			111 text by Loz
+			112 button Add
+			113 text A counting game for your server! Take turns posting the next number, avoid mistakes, and work together to beat your high score. Count together, beat your record, and don’t break the streak! ✅ Independent counting games in every channel ❤️ Custom chances and refill timers Fun
+			114 text 190 servers
+			115 link Description: Support server, Value: yapin.gg/invite/Counter
+			116 link Description: Altifier, Value: yapin.gg/bot/03af87a5-20e7-4902-944d-87e0952458b6
+			117 text BOT
+			118 text by ! WilliamThe4rd
+			119 button Add
+			120 text Catch Alts & Block VPN's with Altifier! Website: https://altifier.net/ Support: https://yapper.website/invite/alts Moderation
+			121 text 158 servers
+			122 link Description: Support server, Value: yapin.gg/invite/alts
+			123 link Description: NoPing, Value: yapin.gg/bot/4271c8f9-316f-44e5-963f-a45b384d01fb
+			124 text BOT
+			125 text by VrBlacklight
+			126 button Add
+			127 text NoPing is a simple ping protection bot that helps stop people from constantly pinging certain members. It warns users when they ping a non pingable member, with customizable warning messages and bypass options! Utility
+			128 text 124 servers
+			129 link Description: Vigil, Value: yapin.gg/bot/06f918f7-5ece-48ca-88e8-f3bf385a7df3
+			130 text BOOSTED
+			131 text BOT
+			132 text by Bot dev
+			133 button Add
+			134 text Its a Dev bot that has many commands to help your comunity safe Moderation
+			135 text 9 servers
+			136 link Description: Support server, Value: yapin.gg/invite/VIGIL
+			137 link Description: deadsec, Value: yapin.gg/bot/19334c15-33ac-4327-9591-306cb75d7a01
+			138 text BOT
+			139 text by seewounds
+			140 button Add
+			141 text NEEDS HIGH ROLES, @ICT for help Server-side peacekeeper. Kicks, mutes, purges spam, keeps automod sharp. 50 commands. /help Moderation
+			142 text 122 servers
+			143 link Description: Support server, Value: yapin.gg/invite/deadsec
+			144 link Description: Streak, Value: yapin.gg/bot/32500ede-92ee-4922-b3d5-c079fc5579ac
+			145 text BOT
+			146 text by ~ | 𝑯𝒆𝒂𝒍𝒆𝒓 〆 ??
+			147 button Add
+			148 text StreakBot keeps your server members engaged by tracking daily activity streaks. How it works: • Members post any message once a day in a designated "streak" channel. • Their streak count goes up by 1 each day they post. • Miss a day, and the streak resets back to 0 — simple and fair. Fun
+			149 text 119 servers
+			150 link Description: notgreed, Value: yapin.gg/bot/1b98c311-6050-470c-84e1-d794ab69f269
+			151 text BOT
+			152 text by @ yakazt
+			153 button Add
+			154 text An **all-in-one** multipurpose bot with 1400+ commands, completely free, with no strings attached. > https://notgreed.best/ > https://notgreed.best/docs Moderation
+			155 text 113 servers
+			156 link Description: Support server, Value: yapin.gg/invite/NotGreed
+			157 link Description: RoVerify, Value: yapin.gg/bot/1cd50e48-c54b-44cd-9818-c72346d64c8e
+			158 text BOT
+			159 text by Sk3Tchy
+			160 button Add
+			161 text allows users to verify there roblox account to a yapper server! Moderation
+			162 text 113 servers
+			163 link Description: pulsar, Value: yapin.gg/bot/68229ea4-8772-44a2-bc0d-0ba7113935c2
+			164 text BOT
+			165 text by Aragasu
+			166 button Add
+			167 text ⚡ All-in-one yapper bot featuring a web dashboard, moderation, honeypot, tickets, utilities, and fun features, with way more to come. Online 24/7. Developed by https://aragasu.xyz Get started with `p!dashboard` Other
+			168 text 101 servers
+			169 link Description: Support server, Value: yapin.gg/invite/hyperion
+			170 link Description: Meowl, Value: yapin.gg/bot/4be93398-3cdc-430b-becc-7e545816782e
+			171 text BOT
+			172 text by CAW
+			173 button Add
+			174 text it's there for boredom, like dice roll etc. Fun
+			175 text 92 servers
+			176 link Description: Applications, Value: yapin.gg/bot/923ee4a6-ef27-4043-bd64-ca9e68ae30ed
+			177 text BOT
+			178 text by ETD
+			179 button Add
+			180 text Applications Bot Make managing applications easier with Applications, your all-in-one bot for handling staff applications and building your community. Keep applications organized, simplify the review process, and help your staff accept or reject applicants efficiently. Features: - Easy app Other
+			181 text 88 servers
+			182 link Description: scrobblr, Value: yapin.gg/bot/6ca232fa-cfeb-4172-beca-28addf265a1d
+			183 text BOT
+			184 text by proxy
+			185 button Add
+			186 text Track the music you stream by connecting Last.fm to our bot within Yapper! (Port of last.fm and not official.) View your stats in real time, receive weekly reports, access your listening history and much more. ($help for command list.) Music
+			187 text 88 servers
+			188 link Description: Support server, Value: yapin.gg/invite/scrobblr
+			189 link Description: SwearJar, Value: yapin.gg/bot/3249b533-e2fd-4663-a9e1-4966637ad543
+			190 text BOT
+			191 text by Vezina
+			192 button Add
+			193 text counts EVERY swear with a global leaderboard Fun
+			194 text 88 servers
+			195 link Description: Support server, Value: yapin.gg/invite/SwearJar
+			196 link Description: YapTree, Value: yapin.gg/bot/284a020d-0f0c-4f2c-9060-dd29f0638fa6
+			197 text BOT
+			198 text by ! Ascension
+			199 button Add
+			200 text Grow a tree together with your server! Water it in turns, catch fruit and bugs, collect stickers and top the leaderboards. Use /about to learn how to play. Games
+			201 text 81 servers
+			202 link Description: Support server, Value: yapin.gg/invite/4FqdqMW5
+			203 link Description: KuttBot, Value: yapin.gg/bot/805c5a80-76e3-4973-bdf2-551e2034b44a
+			204 text BOT
+			205 text by KuttDifferent
+			206 button Add
+			207 text Fun commands and Server commands Utility
+			208 text 80 servers
+			209 link Description: johnny, Value: yapin.gg/bot/2dfc973b-8f43-4a1a-856c-26a3ddcd8ad8
+			210 text BOT
+			211 text by q6hxy
+			212 button Add
+			213 text An **all-in-one** aesthetic Discord bot that streamlines server management without sacrificing aesthetics. ㅤ > Website coming soon > Support server https://yapin.gg/invite/johnny Moderation
+			214 text 65 servers
+			215 link Description: Support server, Value: yapin.gg/invite/johnny
+			216 link Description: Meowdy, Value: yapin.gg/bot/f5beafa6-4f68-4a5e-b09f-7ee24a25736e
+			217 text BOT
+			218 text by nycolazsec
+			219 button Add
+			220 text 🎶 Meowdy plays music your whole server enjoys together. 🎤 Live lyrics, line by line 🎙️ Radio mode: a host introduces each track ❓ Blind tests on your own favourites 👍 Vote queue, playlists, autoplay with taste 🎛️ A web panel to configure everything YouTube, Spotify, Apple Music & SoundCloud l Music
+			221 text 62 servers
+			222 link Description: Support server, Value: yapin.gg/invite/meowdy
+			223 link Description: Xoriva, Value: yapin.gg/bot/9363af15-ebda-4136-acd9-90da55b54e5b
+			224 text BOT
+			225 text by VoidFlare
+			226 button Add
+			227 text Best Moderation Bot Support server:https://yapper.website/invite/VoidBot Make Sure To Give Me Administrator Moderation
+			228 text 61 servers
+			229 link Description: Support server, Value: yapin.gg/invite/Xoriva
+			230 link Description: Meowy, Value: yapin.gg/bot/9ed7fd79-7a11-4947-9297-6e8c0b3eb9f6
+			231 text BOT
+			232 text by Dexy
+			233 button Add
+			234 text Cute bot used for Moderation, Minigames, Autoroles, Dm's and sooo much more! Official Server: https://yapper.website/invite/meowy Utility
+			235 text 60 servers
+			236 link Description: Support server, Value: yapin.gg/invite/meowy
+			237 link Description: YappyModPro, Value: yapin.gg/bot/71ec26a7-c7f2-4f6c-a666-d7d26dacb830
+			238 text BOT
+			239 text by Le Roi Du Monde
+			240 button Add
+			241 text [NEEW TICKET UPDATE] All-in-one moderation bot : warn, timeout, kick, ban, anti-spam, welcome messages, suggestions & /config panel. Fully configurable per server. Moderation
+			242 text 59 servers
+			243 link Description: Support server, Value: yapin.gg/invite/YPYM
+			244 link Description: modbot, Value: yapin.gg/bot/9dc1bc62-37c3-4c85-9a17-565cc547bdfc
+			245 text BOT
+			246 text by Jake
+			247 button Add
+			248 text Moderation Bot. Like Carl.bot on discord but for Yapper Moderation
+			249 text 53 servers
+			250 link Description: Support server, Value: yapin.gg/invite/modbot
+			251 link Description: PVZ, Value: yapin.gg/bot/a2fa5e52-5e7b-4d5a-b8f3-0ebfd6e1f9e8
+			252 text BOT
+			253 text by What 'bout you? · /ogs
+			254 button Add
+			255 text This is a Plants vs Zombies Yapper bot, where you can play Plants vs Zombies on Yapper! Games
+			256 text 51 servers
+			257 link Description: Trex, Value: yapin.gg/bot/d086c659-37a1-49ee-82a8-517e36d62fb1
+			258 text BOT
+			259 text by Trex LLC
+			260 button Add
+			261 text Moderation, And support bot. Helps you set up the server ban people, kick people, mute people, and create banned words, and more! Utility
+			262 text 51 servers
+			263 link Description: Support server, Value: yapin.gg/invite/trex
+			264 link Description: Neko_, Value: yapin.gg/bot/ac37d7e5-4206-4724-9fae-c070d7c54f02
+			265 text BOT
+			266 text by destiny
+			267 button Add
+			268 text Wind is a social bot has commands like nekotina like /marry /express [emotions] /connect @user /gif /would you rather and /music etc Social
+			269 text 42 servers
+			270 link Description: GiveawayBot, Value: yapin.gg/bot/2ecf888b-44b9-4c7c-8f08-6e13c9f73458
+			271 text BOT
+			272 text by ₊˚⊹♥ Jasper!! ♥🍁₊˚
+			273 button Add
+			274 text 🎁 Run giveaways with reaction entry, custom requirements like role or account age, multi-winner picks, cross-channel posting, and auto-picked winners. Use /ghelp to learn more. Fun
+			275 text 41 servers
+			276 link Description: Music_Bot, Value: yapin.gg/bot/64eb8683-eb33-4678-a6ed-fc7f62cc66df
+			277 text BOT
+			278 text by Shahin
+			279 button Add
+			280 text Voice channel music bot for self-hosted audio files and licensed internet radio streams (SomaFM, Radio Paradise, KEXP, FIP). Features interactive Now Playing button cards, per-server queues, loop modes, shuffle and smooth volume control. Try /tracks or /play. Music
+			281 text 41 servers
+			282 link Description: Support server, Value: yapin.gg/invite/zqZpDqLu
+			283 link Description: Sentinel, Value: yapin.gg/bot/89f3f0e3-f135-46dc-a05d-2c355bc57052
+			284 text BOT
+			285 text by tadcnone
+			286 button Add
+			287 text A great moderator bot on Yapper called Sentinel! (and its complitely free) Moderation
+			288 text 40 servers
+			289 link Description: Support server, Value: yapin.gg/invite/sentinel
+			290 link Description: Tempo, Value: yapin.gg/bot/0cbb977d-8b6c-40e1-827f-77a224cd9e0c
+			291 text BOT
+			292 text by endcatchrrr
+			293 button Add
+			294 text type /musichelp for help it uses the last.fm api to track your currently playing music, last music played, top tracks, top artists, and more. 3:34 PM once the VC for bots comes out, it can play music. Music
+			295 text 38 servers
+			296 link Description: Support server, Value: yapin.gg/invite/frieren
+			297 link Description: destiny., Value: yapin.gg/bot/0f89ada5-b1a5-4811-b981-46496dbd026d
+			298 text BOT
+			299 text by destiny
+			300 button Add
+			301 text Destiny. is an anime Card Collector, Where u can collect anime characters, hunt rare serials numbers and shiny cards, trade with other collectors and you can compete on the leaderboard. Fun
+			302 text 37 servers
+			303 link Description: YwY, Value: yapin.gg/bot/948bb9e7-7eea-413c-bfae-a08f09125414
+			304 text BOT
+			305 text by Laven
+			306 button Add
+			307 text Simple Game Economy Bot Economy
+			308 text 33 servers
+			309 link Description: Deno, Value: yapin.gg/bot/fc57c6b5-d067-470d-846e-914ffe80c2cd
+			310 text BOT
+			311 text by Vewity
+			312 button Add
+			313 text Server management on steroids! https://deno.win - do /help to see all commands. Widely regarded as the top Dyno alternative, built to replace these discord bots - MEE6, Carl-bot, and ProBot on Yapin’. Does have a dashboard. Has a dashboard. Moderation
+			314 text 31 servers
+			315 link Description: Support server, Value: yapin.gg/invite/h3E7YcGRQi
+			316 link Description: Dyno, Value: yapin.gg/bot/3f77d944-7a9b-428e-a1ed-132e8071e4f1
+			317 text BOT
+			318 text by Itz_Taseen
+			319 button Add
+			320 text All-in-one server helper: moderation, automod, warnings, giveaways, reaction roles, welcome messages and logging. Custom prefix per server. Type /help to start. Utility
+			321 text 31 servers
+			322 link Description: assistant, Value: yapin.gg/bot/f250782b-a16b-4e46-9888-3a79367c25a5
+			323 text BOT
+			324 text by Développeur (Reqeuss)
+			325 button Add
+			326 text AI Assistant is an artificial intelligence bot designed to interact with users, answer questions, and provide engaging conversations. Our goal is to make AI accessible, helpful, and enjoyable for everyone. AI
+			327 text 26 servers
+			328 link Description: Support server, Value: yapin.gg/invite/AssistAI
+			329 link Description: WordHunt, Value: yapin.gg/bot/a2717c32-cc83-4dc6-8c24-2915da7c0dde
+			330 text BOT
+			331 text by APP
+			332 button Add
+			333 text Wordle is a simple and fun word game, where you try to guess the hidden word in a limited number of tries. Add it to your server and give it a try! If you need help or have any suggestions. Feel free to join our support server: https://yapper.website/invite/Wordle Games
+			334 text 25 servers
+			335 link Description: Ryugu, Value: yapin.gg/bot/7109aeea-593e-4815-a21a-c7c03e2630ca
+			336 text BOT
+			337 text by 怠竜 Tearyū
+			338 button Add
+			339 text RPG and economy bot with a full utility kit: pick a class, hunt monsters, fight world bosses, blackjack, poker, slots and duels, plus d20 rolls, advantage/disadvantage, coinflip, 8-ball and choose. Shared live leaderboard with discord users. Join /null for support or add @slept Games
+			340 text 24 servers
+			341 link Description: Support server, Value: yapin.gg/invite/null
+			342 link Description: Shizudayo, Value: yapin.gg/bot/5ccae54e-e8ac-4018-9e21-fbecc46988d3
+			343 text BOT
+			344 text by Shizu
+			345 button Add
+			346 text A bot that's useful in various way, includes all the necessity a server needs and entertainment for the members. Other
+			347 text 24 servers
+			348 link Description: Support server, Value: yapin.gg/invite/Ado
+			349 link Description: TicketBing, Value: yapin.gg/bot/ed3ca59c-0935-403e-84a8-79ca73eedb1f
+			350 text BOT
+			351 text by ste
+			352 button Add
+			353 text A Ticket Bot To Help You Manage Tickets And Help / Support Easier. Site: https://v0-ticketbing.vercel.app Support Server: https://yapin.gg/invite/TicketBing Utility
+			354 text 24 servers
+			355 link Description: Support server, Value: yapin.gg/invite/TicketBing
+			356 link Description: HawkSecurity, Value: yapin.gg/bot/26ae5b02-9096-4ff2-8bd5-cfa3d37dc1f5
+			357 text BOT
+			358 text by ! incuriosite
+			359 button Add
+			360 text Hello! I'm Hawk Security, I will help your server to detect alt accounts, vpn and compromised accounts! Use me now! Moderation
+			361 text 23 servers
+			362 link Description: Support server, Value: yapin.gg/invite/hawk
+			363 link Description: Bank, Value: yapin.gg/bot/9dafe480-f801-48e0-9d77-39ec62aba85d
+			364 text BOT
+			365 text by boujee
+			366 button Add
+			367 text Fun Economy/Currency Bot Creator - @boujee (Solo Developer) Still in Development/Beta Economy
+			368 text 22 servers
+			369 link Description: Support server, Value: yapin.gg/invite/bank
+			370 link Description: nullptr, Value: yapin.gg/bot/f4ba3537-b53c-4ccf-bd90-ad48dbcbcd0f
+			371 text BOT
+			372 text by 怠竜 Tearyū
+			373 button Add
+			374 text A full-featured moderation and leveling bot. Ban/kick/timeout with case logging, configurable AutoMod (anti-spam, anti-invite, anti-caps, word filters), an escalating offensive-language guard, RPG-style XP leveling, giveaways and more. rebranded as nullptr join /null for support or add @slept Moderation
+			375 text 22 servers
+			376 link Description: Support server, Value: yapin.gg/invite/null
+			377 link Description: MakeItAQuote, Value: yapin.gg/bot/385eaa14-b90e-4240-be95-d80888bd1c9a
+			378 text BOT
+			379 text by jade
+			380 button Add
+			381 text makes a quote like the make it a quote bot on twitter and discord! Utility
+			382 text 21 servers
+			383 link Description: essence_calc, Value: yapin.gg/bot/9f971af2-d9c0-46a0-ba6e-8c302a22b9dd
+			384 text BOT
+			385 text by daliscreator
+			386 button Add
+			387 text Calculate how rare your user is...automatically! Developed by @daliscreator Social
+			388 text 20 servers
+			389 link Description: plc, Value: yapin.gg/bot/059b0987-363a-4145-b593-5527a93ffaeb
+			390 text BOT
+			391 text by seewounds
+			392 button Add
+			393 text Fun commands Misc Useful Fun
+			394 text 20 servers
+			395 link Description: JoinToCreate, Value: yapin.gg/bot/9c45af53-e91c-443d-ba40-ec12254316b7
+			396 text BOT
+			397 text by !R
+			398 button Add
+			399 text Join the Join to Create voice channel and get your own VC instantly. Rename it, set a user limit, kick people or give it to a friend with /vc. Empty channels delete themselves. Set it up in one command: /setup Utility
+			400 text 19 servers
+			401 link Description: Support server, Value: yapin.gg/invite/XDNNWTMp
+			402 link Description: MeridianBot, Value: yapin.gg/bot/314f5fa5-d9b9-4941-8118-9a79fc3d5939
+			403 text BOT
+			404 text by Hmau
+			405 button Add
+			406 text The all-in-one bot for your community. 🎵 Play and add your own music, 🎮 play art games and mini-games, 🛡️ keep things clean with moderation, anti-spam, blocked words and mod logs, 🎖️ earn XP, levels and role rewards with profile cards and leaderboards, 💍 marry & adopt. Start with /help! Social
+			407 text 19 servers
+			408 link Description: Support server, Value: yapin.gg/invite/wite
+			409 link Description: O.A.S.I.S, Value: yapin.gg/bot/757d94fa-98a2-4317-a38b-f9fe870e8d6a
+			410 text BOT
+			411 text by laxx
+			412 button Add
+			413 text O.A.S.I.S is a lightweight, high-performance server management and utility assistant designed to keep your community safe, clean, and organized. Equipped with streamlined native slash commands for moderation—including fast kicks, bans, and dynamic user warnings—O.A.S.I.S provides the precise control Moderation
+			414 text 19 servers
+			415 link Description: Trex.Pro, Value: yapin.gg/bot/71142357-250f-40ff-b792-62293d63cb40
+			416 text BOT
+			417 text by Trex LLC
+			418 button Add
+			419 text A pro version of a Moderation, And support bot. Helps you set up the server ban people, kick people, mute people, and create banned words, and more! Other
+			420 text 19 servers
+			421 link Description: Support server, Value: yapin.gg/invite/trex
+			422 link Description: Yepmu, Value: yapin.gg/bot/8105e13d-c984-4027-9d4b-78ee55196a03
+			423 text BOT
+			424 text by murtesa
+			425 button Add
+			426 text Dashboard https://yepmu.xyz Yepmu keeps your Yapper server tidy. Greet new members with welcome messages, open private support tickets from one panel, and levels, and more features. Every module toggles on or off per server — add the bot, flip the switches you need, done. Moderation
+			427 text 19 servers
+			428 link Description: Support server, Value: yapin.gg/invite/PsYHxWHv
+			429 link Description: Argus, Value: yapin.gg/bot/58648feb-dd14-48fc-8fec-2e630e8d6c67
+			430 text BOT
+			431 text by Ahmed
+			432 button Add
+			433 text Security and incident response for Yapin. Detect threats, stop raids, investigate members, and manage moderation cases from one control panel. Moderation
+			434 text 18 servers
+			435 link Description: Support server, Value: yapin.gg/invite/Argus
+			436 link Description: DonutBot, Value: yapin.gg/bot/d4063a59-bf79-4c03-a77e-e57805f44211
+			437 text BOT
+			438 text by Jqhxnn
+			439 button Add
+			440 text DonutBot offers games such as blackjack or tictacdonut and its own economy system. Games
+			441 text 18 servers
+			442 link Description: Support server, Value: yapin.gg/invite/donutbot
+			443 link Description: Ycole, Value: yapin.gg/bot/b53c7846-0ddd-4878-bedd-ca5c0835d5b8
+			444 text BOT
+			445 text by KuttDifferent
+			446 button Add
+			447 text Manage your server with moderation tools, role management, and leveling features. Give members a reason to stay active with XP, work, fishing, stealing, and an economy system where they can earn and spend coins. Simple tools to help keep your server organized and fun. Economy
+			448 text 18 servers
+			449 link Description: Zeed, Value: yapin.gg/bot/1d7ae837-9f19-4fb4-9462-f67916790b00
+			450 text BOT
+			451 text by Zale
+			452 button Add
+			453 text Zeed is your all-in-one moderation bot for Yapper, packed with powerful tools to keep your community safe, organized, and under control. Moderation
+			454 text 18 servers
+			455 link Description: Support server, Value: yapin.gg/invite/zeed
+			456 link Description: yapchat, Value: yapin.gg/bot/f3ff0f4b-86f4-4f2b-91fe-59d2141f0adc
+			457 text BOT
+			458 text by cruz
+			459 button Add
+			460 text Your server’s ultimate local AI companion—unlimited chats, zero costs, and always online! AI
+			461 text 15 servers
+			462 link Description: Support server, Value: yapin.gg/invite/sXMyw7cYM9
+			463 link Description: Frieren, Value: yapin.gg/bot/1a523da6-400a-4921-9822-5a0e02b8024f
+			464 text BOT
+			465 text by endcatchrrr
+			466 button Add
+			467 text type /frierensetup to find out how to setup, type /frierenhelp to get commands, join the server /frieren to get help in the bot support place Utility
+			468 text 14 servers
+			469 link Description: Support server, Value: yapin.gg/invite/frieren
+			470 button Show more
+			471 text Bots only see and post in servers a manager adds them to, and follow the same rules as people. Make your own at 
+			33 link Description: /developers, Value: yapin.gg/developers
+			34 text .
+		35 text Yapin’
+		36 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		37 heading PRODUCT, Value: 4
+			38 text PRODUCT
+		39 content list
+			40 link Description: Download, Value: yapin.gg/download
+			41 link Description: Developers, Value: yapin.gg/developers
+			42 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			43 link Description: Creator Program, Value: …
+			44 link Description: FanKit, Value: …
+			45 link Description: Roadmap, Value: …
+			46 link Description: Yapper is now Yapin’, Value: …
+			47 link Description: Bugs, Value: …
+			48 link Description: Status, Value: …
+		49 heading COMMUNITY, Value: 4
+			50 text COMMUNITY
+		51 content list
+			52 link Description: Guidelines, Value: …
+			53 link Description: Tutorials, Value: …
+			54 link Description: Bots, Value: …
+			55 link Description: Partners, Value: …
+		56 heading LEGAL, Value: 4
+			57 text LEGAL
+		58 content list
+			59 link Description: Terms, Value: …
+			60 link Description: Privacy, Value: …
+			61 link Description: Copyright, Value: …
+			62 link Description: Security, Value: …
+			63 link Description: Cancel a subscription, Value: …
+			64 link Description: Contact, Value: …
+		65 text © 2026 Yapper Media LLC. Free to use.
+		66 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Bots for your server · Yapin’, URL: yapin.gg/bots

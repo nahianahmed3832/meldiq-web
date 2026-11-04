@@ -1,0 +1,1804 @@
+[
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/01-public-website/01-logged-out-home.jpg",
+    "saved": "screenshots/legacy/01-public-website/01-logged-out-home.jpg",
+    "sha256": "503fe2f1f0488d00e85b675379d4db9f32f49cc737f770ae422aacd340fd0732",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/03-dashboard/01-friends-empty-state.jpg",
+    "saved": "screenshots/legacy/03-dashboard/01-friends-empty-state.jpg",
+    "sha256": "eae93e3aaa209c84ff3c7e113decf588c4a37be11ea63774cd35b5d89041028a",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/04-community/01-empty-lobby.jpg",
+    "saved": "screenshots/legacy/04-community/01-empty-lobby.jpg",
+    "sha256": "f62afc6b4378a089765e33f5e895cbe6ed2560443defe62c37bba3bfe44bac79",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/04-community/02-lobby-editor-templates.jpg",
+    "saved": "screenshots/legacy/04-community/02-lobby-editor-templates.jpg",
+    "sha256": "da654868f4fd6422f8d9d32faf8cc97aab6d10f4b39957b861cc12234fba0245",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/04-community/03-server-profile-and-safety.jpg",
+    "saved": "screenshots/legacy/04-community/03-server-profile-and-safety.jpg",
+    "sha256": "fb62d7eb36cef3ed9b9bc7c21ccdabe2a56a81bca950a2761ed40a794666f9e7",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/04-community/04-discovery.jpg",
+    "saved": "screenshots/legacy/04-community/04-discovery.jpg",
+    "sha256": "941767e2ac6dca6ef8673ddb6bda3560ce40caa1a0b3569fc198cf68a57fbfe7",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/04-community/05-research-server-created-empty.jpg",
+    "saved": "screenshots/legacy/04-community/05-research-server-created-empty.jpg",
+    "sha256": "33adf379ed80e5626b19078089fa2c554250b9b64564704e178490938ca5019a",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/04-community/06-discussion-sort-options.jpg",
+    "saved": "screenshots/legacy/04-community/06-discussion-sort-options.jpg",
+    "sha256": "49d93127a7513a80e46a4aff5ac6374c4b33474de353686d0b253279434fa21e",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/05-messaging/02-synthetic-formatting-and-latest.jpg",
+    "saved": "screenshots/legacy/05-messaging/02-synthetic-formatting-and-latest.jpg",
+    "sha256": "45d64a5414ef022b07eed474e948a1f9b3780a9d1d3c8305ecb5dd4a77aba47f",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/05-messaging/03-discussion-empty-state.jpg",
+    "saved": "screenshots/legacy/05-messaging/03-discussion-empty-state.jpg",
+    "sha256": "86c9f690d7eff4bf2435aab76947bcf3fc7badf41463d3a826aa84e6818493d4",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/05-messaging/04-synthetic-discussion-post.jpg",
+    "saved": "screenshots/legacy/05-messaging/04-synthetic-discussion-post.jpg",
+    "sha256": "7566e67260bf26ca9efb241e8537582b6fe6bb02d611bb1bf706af6ba8d95c11",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/05-messaging/05-search-jump-synthetic.jpg",
+    "saved": "screenshots/legacy/05-messaging/05-search-jump-synthetic.jpg",
+    "sha256": "43d7822529d88b495291f81e3bd93c56c0f7464b2ddba0bc989de1965fdc1ce7",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/01-unread-announcements-open.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/01-unread-announcements-open.jpg",
+    "sha256": "bf66ed1102403f759685fcb2f9c9c6192d68d505269aece1c5ac91716421e3f1",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/02-announcements-latest-before-reload.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/02-announcements-latest-before-reload.jpg",
+    "sha256": "e266ff3e88f6014e7d46fbdd7579949f467e980037f71006ca7aa1f675130cd5",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/03-announcements-after-reload.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/03-announcements-after-reload.jpg",
+    "sha256": "fbc0ba165fba0b016526b1080864c4d6015dba2855654064826c4c6ea33c2d08",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/04-older-announcement-before-reload.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/04-older-announcement-before-reload.jpg",
+    "sha256": "e92fb23e6de0de3ce350c1b73c1728615fefd7bfb2b68cb4d4db05101792f662",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/05-older-announcement-after-reload.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/05-older-announcement-after-reload.jpg",
+    "sha256": "832e00907cf23932f98fe04a2e0565f9ce2ceca62ce673885cb8e9bbfbfcd099",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/06-busy-general-latest.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/06-busy-general-latest.jpg",
+    "sha256": "acbbe0bb64d9b6d011ee6a7c730d55a638fb5b2707bfd1053680ab7a1dc1e7f3",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/07-general-reading-history-incoming.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/07-general-reading-history-incoming.jpg",
+    "sha256": "c6420f14e4ae1d5a9a65793d69e3d3d308eb47c04e0cf5e1173373e6338bd8a7",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/10-general-older-controlled-before-switch.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/10-general-older-controlled-before-switch.jpg",
+    "sha256": "760f91175bf6e9af6df410fac5c8a31b9f18f9f96d833f0ce2ce570d12c225ff",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/11-general-controlled-return.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/11-general-controlled-return.jpg",
+    "sha256": "c739aa4b5d4d08453dea09ed034336da353bd79ad3540a762b0b5f27460693a5",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/12-network-older-history-payload.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/12-network-older-history-payload.jpg",
+    "sha256": "eaf8c03db226ad1d8322b9f869e5ab34192b6bcfede37ec84cf49a57572c501b",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/13-synthetic-hard-refresh-latest.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/13-synthetic-hard-refresh-latest.jpg",
+    "sha256": "800265434dcbe13d7b796672378bd31bd3d6d108bc3776d2c55cc9fd051b711b",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/14-synthetic-unread-divider.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/14-synthetic-unread-divider.jpg",
+    "sha256": "eb5927a39c48275c721d63a5c78c34d98050053e3dad6fe74bf72440113e4b77",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/15-synthetic-return-unread.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/15-synthetic-return-unread.jpg",
+    "sha256": "f9742ca811b4f535661c83cee392e4e235817de28b04408f72faa1a66d8d66be",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/16-longer-synthetic-unread-return.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/16-longer-synthetic-unread-return.jpg",
+    "sha256": "3b4d17d9838ed5ddfe3d34a49525f5ff0fb9d1c968f19b14bda7bd443a0a900a",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/17-second-tab-private-restore.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/17-second-tab-private-restore.jpg",
+    "sha256": "43481ff1dffaa4dcdeb6e9db5eec0f9ab97f3f07d1eea5c59d760d5a345d6797",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/18-post-login-history.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/18-post-login-history.jpg",
+    "sha256": "91a25caf930f297d2d32ab7d9dc9b325a11de542e630133f8653c9e771feb890",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/06-chat-loading/19-post-login-manual-bottom.jpg",
+    "saved": "screenshots/legacy/06-chat-loading/19-post-login-manual-bottom.jpg",
+    "sha256": "6868fc1566e5643438bccb9f3118be82a3c8201096205fd9397b8e316b32d69f",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/07-voice-video/01-clips-duration-and-consent.jpg",
+    "saved": "screenshots/legacy/07-voice-video/01-clips-duration-and-consent.jpg",
+    "sha256": "c49b8e80098b86d5bc523148bfb5eb3403554ef17781e192c3096b9094fd9dd8",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/07-voice-video/02-share-quality-choices.jpg",
+    "saved": "screenshots/legacy/07-voice-video/02-share-quality-choices.jpg",
+    "sha256": "e668fd9b1c9f4ba8623d34d75cd4b925b70ff126527938dbc4f8035c8f83d2db",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/07-voice-video/03-muted-call-controls.jpg",
+    "saved": "screenshots/legacy/07-voice-video/03-muted-call-controls.jpg",
+    "sha256": "8b5dc49814690b7ef0901753ede4ab0b5f113267dadc1d827c4dac6e78aee6b1",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/08-roles-permissions/01-default-permissions.jpg",
+    "saved": "screenshots/legacy/08-roles-permissions/01-default-permissions.jpg",
+    "sha256": "86a0b68fa2931d381a9853d51920fc5f378e982fcf2a6609df042b47ab676dd4",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/08-roles-permissions/02-role-gradient-editor.jpg",
+    "saved": "screenshots/legacy/08-roles-permissions/02-role-gradient-editor.jpg",
+    "sha256": "5ddba2b79e40b416d12f22a577aa2daab7c9e3289f093c2797740da69db54fc9",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/08-roles-permissions/03-category-inheritance.jpg",
+    "saved": "screenshots/legacy/08-roles-permissions/03-category-inheritance.jpg",
+    "sha256": "c75a0226a693d9cda9250e1544720404153ab01d0b787d107d60a5a8f95b4e4e",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/09-bots-integrations/01-built-in-bots.jpg",
+    "saved": "screenshots/legacy/09-bots-integrations/01-built-in-bots.jpg",
+    "sha256": "8926092eafc5cb126b8f6fbc8c1fcc1d7875b90b1073c6c2a73339538db714ac",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/09-bots-integrations/02-public-developer-docs.jpg",
+    "saved": "screenshots/legacy/09-bots-integrations/02-public-developer-docs.jpg",
+    "sha256": "576d70541a8aba7a19e46a43a5575a9bb2240607c85d271cf2f7b03b0c5f11cd",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/09-bots-integrations/03-directory-search-empty.jpg",
+    "saved": "screenshots/legacy/09-bots-integrations/03-directory-search-empty.jpg",
+    "sha256": "00382cd14d55fde5ff17157442b9d8da0bdc5e10891b42d63c04d2e709253c21",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/09-bots-integrations/04-helper-working-private.jpg",
+    "saved": "screenshots/legacy/09-bots-integrations/04-helper-working-private.jpg",
+    "sha256": "3f115189b4c46922b4c9f3dc3e590f8253f3c25423c35ad725989a09b46e63eb",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/01-profile-settings.jpg",
+    "saved": "screenshots/legacy/11-customization/01-profile-settings.jpg",
+    "sha256": "38f3700ae5ec93e74513fbce1f69db7e8c93f66a22cec831d9cae28c2f1d5b7e",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/02-appearance.jpg",
+    "saved": "screenshots/legacy/11-customization/02-appearance.jpg",
+    "sha256": "5f591d1a3b3a41f7a654497f8283edc9bf4f3527b94b20562d987a738be9408d",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/03-dm-privacy-choices.jpg",
+    "saved": "screenshots/legacy/11-customization/03-dm-privacy-choices.jpg",
+    "sha256": "4ecc7d47bc1e6ac2b95fd65f4f8d7d229b5e90c9704058d5c576fa06e113f08a",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/04-decoration-library.jpg",
+    "saved": "screenshots/legacy/11-customization/04-decoration-library.jpg",
+    "sha256": "7280a5aafa96546b8daf4e0ae4688545426c2d1f99734586e1cd872fd7fd0b1a",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/05-decoration-live-preview.jpg",
+    "saved": "screenshots/legacy/11-customization/05-decoration-live-preview.jpg",
+    "sha256": "73bb32ec86ac92b0bd0ce05a8ed49dbc5a1773f765b1f4085306d4a666d0f370",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/06-community-decoration-filters.jpg",
+    "saved": "screenshots/legacy/11-customization/06-community-decoration-filters.jpg",
+    "sha256": "a390d0c868cf689ceedace24f01137cb4c1db561e5fbcfe09c77a3dcf54ac2f6",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/07-decoration-shards-gate.jpg",
+    "saved": "screenshots/legacy/11-customization/07-decoration-shards-gate.jpg",
+    "sha256": "4d50d9289ed7ad4d1f11d79049467545c752077c963ad490ec9908af021450e6",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/08-decoration-creator-guidance.jpg",
+    "saved": "screenshots/legacy/11-customization/08-decoration-creator-guidance.jpg",
+    "sha256": "e0cee33061c548c52e6cc4b757d19f532447a21ac1bda12da7fe9b351e8d2a40",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/09-decoration-submission-fields.jpg",
+    "saved": "screenshots/legacy/11-customization/09-decoration-submission-fields.jpg",
+    "sha256": "c21e144e358459766b1a13e13f40b92cadab121be9521c08adf1af3d6ac5e9be",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/10-decoration-creator-price-range.jpg",
+    "saved": "screenshots/legacy/11-customization/10-decoration-creator-price-range.jpg",
+    "sha256": "d3973ff358e3125d37af57b4a028e34465ce5b5ca79174938bcded88ab373a96",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/11-name-font-gradient-preview.jpg",
+    "saved": "screenshots/legacy/11-customization/11-name-font-gradient-preview.jpg",
+    "sha256": "5de408b768fe12c8dffcfa3c87baea6a07f15ba631aa2b014fcd15a2045c39a2",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/12-custom-emoji-and-cross-server.jpg",
+    "saved": "screenshots/legacy/11-customization/12-custom-emoji-and-cross-server.jpg",
+    "sha256": "d05303f5d5dbb8d00b9e907119cf2416a8e4efcb20ccda531dfd67afa4a5f7e0",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/13-gif-private-chat.jpg",
+    "saved": "screenshots/legacy/11-customization/13-gif-private-chat.jpg",
+    "sha256": "7656996824233710da4e7f2c8de42892a4a2a07547848a432047c7250235fb83",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/14-custom-status-expiry.jpg",
+    "saved": "screenshots/legacy/11-customization/14-custom-status-expiry.jpg",
+    "sha256": "e1a985634e8552274397c3ca4e0d40509552a44ca310dde24bd3f1b2672764ed",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/11-customization/15-shards-selling-restrictions.jpg",
+    "saved": "screenshots/legacy/11-customization/15-shards-selling-restrictions.jpg",
+    "sha256": "797566bc0f0e3e926c22c1d227ef6e16c129a38fc4022476b56afaac3d29c82b",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/12-subscriptions/01-plus-plan.jpg",
+    "saved": "screenshots/legacy/12-subscriptions/01-plus-plan.jpg",
+    "sha256": "f9fddbd4258bd8a55821118647f0ea0f1e4cbd4f50b22291b28394117dbda969",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/13-mobile/01-lobby-phone-preview.jpg",
+    "saved": "screenshots/legacy/13-mobile/01-lobby-phone-preview.jpg",
+    "sha256": "a9d7fecf6710e0bfac4fa7fa41d3db07de2a99e39be87d479c6c3e7b5c8bfc14",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/13-mobile/02-phone-390-social-navigation.jpg",
+    "saved": "screenshots/legacy/13-mobile/02-phone-390-social-navigation.jpg",
+    "sha256": "b17b76e228844edd94e4c1cfd1be8d537861e74c3cdc1c7edadd6ec9408b86ef",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/13-mobile/03-phone-390-chat.jpg",
+    "saved": "screenshots/legacy/13-mobile/03-phone-390-chat.jpg",
+    "sha256": "892155a49fe3ade951724eed8afdf84e233371bf0b009400ff08e993448d445f",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/13-mobile/04-phone-composer-overflow.jpg",
+    "saved": "screenshots/legacy/13-mobile/04-phone-composer-overflow.jpg",
+    "sha256": "2f1ad28ed7694399b777934a3b1b84417eb472ad1532d0d412e7b04578bbdf9b",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/13-mobile/05-tablet-768-chat.jpg",
+    "saved": "screenshots/legacy/13-mobile/05-tablet-768-chat.jpg",
+    "sha256": "2ef41781005fba107aced4aa5955db6fff372443cb6f60b8fd4051d2d54dcbb0",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/13-mobile/06-laptop-1024-chat.jpg",
+    "saved": "screenshots/legacy/13-mobile/06-laptop-1024-chat.jpg",
+    "sha256": "a3746ec8bcba60b99d2a05ecd4f5a665f044f6abc87448b033a5231eda528c2b",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/screenshots/13-mobile/07-desktop-1440-chat.jpg",
+    "saved": "screenshots/legacy/13-mobile/07-desktop-1440-chat.jpg",
+    "sha256": "131dfa5ac8bf9b528f05a431c82d4d6633de980fb2d8033330dbb48326723666",
+    "date": "2026-11-01",
+    "kind": "historical screenshot; unchanged"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/01-home-ax.txt",
+    "saved": "evidence/legacy/01-home-ax.txt",
+    "sha256": "60ad802fd7b0383eda40768b4310e50ff9960b49edcba4b7ea12f1a55cc3fdf1",
+    "originalSha256": "0642ab240ae2605e6eb86942b77780213a93532cdab86a07e16008129b1d6be6",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/02-authenticated-navigation-ax.txt",
+    "saved": "evidence/legacy/02-authenticated-navigation-ax.txt",
+    "sha256": "bfc3ebe3e13519ecb82d264a1faf2b427a3565df2b0310e2853d2ca9eefaf4f0",
+    "originalSha256": "bfc3ebe3e13519ecb82d264a1faf2b427a3565df2b0310e2853d2ca9eefaf4f0",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/03-profile-settings-ax.txt",
+    "saved": "evidence/legacy/03-profile-settings-ax.txt",
+    "sha256": "63b95cc1ff1b820119a9fc60e1adc1b0c4be68738c5a74127e1cede27729c983",
+    "originalSha256": "63b95cc1ff1b820119a9fc60e1adc1b0c4be68738c5a74127e1cede27729c983",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/04-appearance-ax.txt",
+    "saved": "evidence/legacy/04-appearance-ax.txt",
+    "sha256": "8c29ed75a0d15119e2a57b2d439d77e43e684d88c4c9f6dfc558f180fcfbff07",
+    "originalSha256": "8c29ed75a0d15119e2a57b2d439d77e43e684d88c4c9f6dfc558f180fcfbff07",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/05-chat-settings-ax.txt",
+    "saved": "evidence/legacy/05-chat-settings-ax.txt",
+    "sha256": "7b1935f07aa754651c13cac371d862e163d2a63ce2464f4bd20585bb7b4d0d44",
+    "originalSha256": "7b1935f07aa754651c13cac371d862e163d2a63ce2464f4bd20585bb7b4d0d44",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/06-voice-settings-ax.txt",
+    "saved": "evidence/legacy/06-voice-settings-ax.txt",
+    "sha256": "f2b229fdab6ee0f44c94548f905cbccbd45f84209933c646b4b8947e1978e7ce",
+    "originalSha256": "f2b229fdab6ee0f44c94548f905cbccbd45f84209933c646b4b8947e1978e7ce",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/07-clip-options-ax.txt",
+    "saved": "evidence/legacy/07-clip-options-ax.txt",
+    "sha256": "78abe377c5b08d6b297b40f1004e97ec53ef8eccfdb9d871d3622a1f6598c8be",
+    "originalSha256": "78abe377c5b08d6b297b40f1004e97ec53ef8eccfdb9d871d3622a1f6598c8be",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/08-language-ax.txt",
+    "saved": "evidence/legacy/08-language-ax.txt",
+    "sha256": "9e6c4acc0c5e5819b2c350f3a46a596c0d3ae0cf5da53d288df89f8132735ce4",
+    "originalSha256": "9e6c4acc0c5e5819b2c350f3a46a596c0d3ae0cf5da53d288df89f8132735ce4",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/09-keybinds-ax.txt",
+    "saved": "evidence/legacy/09-keybinds-ax.txt",
+    "sha256": "88d27a917bfea5b4ff9b690d57a9c2db60fa9da4e68e27018a367ca7664e6845",
+    "originalSha256": "88d27a917bfea5b4ff9b690d57a9c2db60fa9da4e68e27018a367ca7664e6845",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/10-advanced-ax.txt",
+    "saved": "evidence/legacy/10-advanced-ax.txt",
+    "sha256": "bdce18ff91a585abb483cd27b48992b78834a2be64367e97772f82b2673f1a33",
+    "originalSha256": "bdce18ff91a585abb483cd27b48992b78834a2be64367e97772f82b2673f1a33",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/100-older-order-adjacent-timestamps.txt",
+    "saved": "evidence/legacy/100-older-order-adjacent-timestamps.txt",
+    "sha256": "8b492c414752624fd0b8cd30e3d984f577a41adada601eee27370e46365c85cf",
+    "originalSha256": "8b492c414752624fd0b8cd30e3d984f577a41adada601eee27370e46365c85cf",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/101-catchup-payload.txt",
+    "saved": "evidence/legacy/101-catchup-payload.txt",
+    "sha256": "43d1518fd1989e7c4af187cc11d33c8efcdd22412c86be574890882758ff0e06",
+    "originalSha256": "43d1518fd1989e7c4af187cc11d33c8efcdd22412c86be574890882758ff0e06",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/102-jump-to-latest-result.txt",
+    "saved": "evidence/legacy/102-jump-to-latest-result.txt",
+    "sha256": "ce684af1c4de24b68abb4a1bcffd0e9ab55fd7d71be523b2af43a43f835ad157",
+    "originalSha256": "ce684af1c4de24b68abb4a1bcffd0e9ab55fd7d71be523b2af43a43f835ad157",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/103-test-server-invite-only-ax.txt",
+    "saved": "evidence/legacy/103-test-server-invite-only-ax.txt",
+    "sha256": "ec49ad7f37a09dbdb1a06959de014f6585d4a1592e2b940a2b73ba9993ab5273",
+    "originalSha256": "ec49ad7f37a09dbdb1a06959de014f6585d4a1592e2b940a2b73ba9993ab5273",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/104-custom-role-editor-ax.txt",
+    "saved": "evidence/legacy/104-custom-role-editor-ax.txt",
+    "sha256": "9ca6a52da9cf5d367649fe9b78d78ea3dcc660d2ca82040ae6553a40195405fb",
+    "originalSha256": "9ca6a52da9cf5d367649fe9b78d78ea3dcc660d2ca82040ae6553a40195405fb",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/105-role-gradient-saved-ax.txt",
+    "saved": "evidence/legacy/105-role-gradient-saved-ax.txt",
+    "sha256": "f9821230b6b740ee4d4b3df348bbb9e4c79a6a0abdd0cccf5215c1f4cdc1021e",
+    "originalSha256": "f9821230b6b740ee4d4b3df348bbb9e4c79a6a0abdd0cccf5215c1f4cdc1021e",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/106-role-permissions-ax.txt",
+    "saved": "evidence/legacy/106-role-permissions-ax.txt",
+    "sha256": "af6c7ffabc16377a6bbbc546e841e5b01f0131ef62a2f1df57b89642d47900e9",
+    "originalSha256": "af6c7ffabc16377a6bbbc546e841e5b01f0131ef62a2f1df57b89642d47900e9",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/107-role-assignment-ax.txt",
+    "saved": "evidence/legacy/107-role-assignment-ax.txt",
+    "sha256": "4ed43dade540536463a49ea87d0d478e6f6fd2b8c9faa7f5a765e479a8c8f246",
+    "originalSha256": "4ed43dade540536463a49ea87d0d478e6f6fd2b8c9faa7f5a765e479a8c8f246",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/108-role-member-assignment-verified-ax.txt",
+    "saved": "evidence/legacy/108-role-member-assignment-verified-ax.txt",
+    "sha256": "381d719cbc6e99ee140431c7ac238fe82ebdf0ab7f4facba0846fdf822c882ee",
+    "originalSha256": "381d719cbc6e99ee140431c7ac238fe82ebdf0ab7f4facba0846fdf822c882ee",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/109-synthetic-messages-sent-ax.txt",
+    "saved": "evidence/legacy/109-synthetic-messages-sent-ax.txt",
+    "sha256": "81cacea34380a56ffbdeb1a235553a1bedcb9ccdc59bf91eceefa4a3f4d41db8",
+    "originalSha256": "81cacea34380a56ffbdeb1a235553a1bedcb9ccdc59bf91eceefa4a3f4d41db8",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/11-developer-ax.txt",
+    "saved": "evidence/legacy/11-developer-ax.txt",
+    "sha256": "ef7f4081a334d7e795f5bc4331d8c73df614b7eed76ca6030fba9dd389574acd",
+    "originalSha256": "ef7f4081a334d7e795f5bc4331d8c73df614b7eed76ca6030fba9dd389574acd",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/110-synthetic-hard-refresh-ax.txt",
+    "saved": "evidence/legacy/110-synthetic-hard-refresh-ax.txt",
+    "sha256": "12a1b1fc9302934e2bb15bd51dbc55ca890fd22f7122c383f6f1a50cbaddb0f7",
+    "originalSha256": "12a1b1fc9302934e2bb15bd51dbc55ca890fd22f7122c383f6f1a50cbaddb0f7",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/111-mark-synthetic-unread-ax.txt",
+    "saved": "evidence/legacy/111-mark-synthetic-unread-ax.txt",
+    "sha256": "c4aa43f7ae4e781a63a7f9ca88bc5b3f1b15a387be00590e54c83f698feebc7a",
+    "originalSha256": "c4aa43f7ae4e781a63a7f9ca88bc5b3f1b15a387be00590e54c83f698feebc7a",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/112-away-empty-general-ax.txt",
+    "saved": "evidence/legacy/112-away-empty-general-ax.txt",
+    "sha256": "2a2fe50c7c5fb925ce6b5c22c396b050d75aeb5b1bea965dca32406eb71f9898",
+    "originalSha256": "2a2fe50c7c5fb925ce6b5c22c396b050d75aeb5b1bea965dca32406eb71f9898",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/113-synthetic-return-unread-ax.txt",
+    "saved": "evidence/legacy/113-synthetic-return-unread-ax.txt",
+    "sha256": "9902b23954a8cf9a30a424c673053df4441077a801843ae13db37fe71345af79",
+    "originalSha256": "9902b23954a8cf9a30a424c673053df4441077a801843ae13db37fe71345af79",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/114-longer-synthetic-unread-return-ax.txt",
+    "saved": "evidence/legacy/114-longer-synthetic-unread-return-ax.txt",
+    "sha256": "0452ab394dc507f302105f617779cbb35147e92364f1b201874f9e48ee4ec967",
+    "originalSha256": "0452ab394dc507f302105f617779cbb35147e92364f1b201874f9e48ee4ec967",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/115-category-overview-ax.txt",
+    "saved": "evidence/legacy/115-category-overview-ax.txt",
+    "sha256": "f1b15be6593d4026dc6c20708e4f8dddc247829038430d6b062c317e3083c805",
+    "originalSha256": "f1b15be6593d4026dc6c20708e4f8dddc247829038430d6b062c317e3083c805",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/116-category-permissions-ax.txt",
+    "saved": "evidence/legacy/116-category-permissions-ax.txt",
+    "sha256": "1d8fc14b29d8a311f4b90ce595bcfb9408586d27daeb5c6f1f99bc3f702aec08",
+    "originalSha256": "1d8fc14b29d8a311f4b90ce595bcfb9408586d27daeb5c6f1f99bc3f702aec08",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/117-discussion-channel-ax.txt",
+    "saved": "evidence/legacy/117-discussion-channel-ax.txt",
+    "sha256": "e35d34c0604dff178ad3ab60506b22b4134aef93ff3890e4748d1a261741df5e",
+    "originalSha256": "e35d34c0604dff178ad3ab60506b22b4134aef93ff3890e4748d1a261741df5e",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/118-discussion-settings-ax.txt",
+    "saved": "evidence/legacy/118-discussion-settings-ax.txt",
+    "sha256": "64a0ff41f3c250dddfd47f4156f486c7c16635c271dff7aee61021745de789da",
+    "originalSha256": "64a0ff41f3c250dddfd47f4156f486c7c16635c271dff7aee61021745de789da",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/119-discussion-tags-ax.txt",
+    "saved": "evidence/legacy/119-discussion-tags-ax.txt",
+    "sha256": "a3236004b53c90d5a4474059ad694cec78b29d249d2b8b396a6d81891a716b5e",
+    "originalSha256": "a3236004b53c90d5a4474059ad694cec78b29d249d2b8b396a6d81891a716b5e",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/12-subscriptions-ax.txt",
+    "saved": "evidence/legacy/12-subscriptions-ax.txt",
+    "sha256": "34ac0d7b834ae951933cb70eb95ad1899d8997e116383a4dbbdb806303c39ed0",
+    "originalSha256": "0b717aad4541cb2de8d59186b78430acd8c4ab7e135adf0c09295856291c7a96",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/120-discussion-created-post-ax.txt",
+    "saved": "evidence/legacy/120-discussion-created-post-ax.txt",
+    "sha256": "175ab8ceca8d3659c3ea1798ba4a2f6da48c8502c14789af403b08837df4213e",
+    "originalSha256": "175ab8ceca8d3659c3ea1798ba4a2f6da48c8502c14789af403b08837df4213e",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/121-discussion-post-menu-ax.txt",
+    "saved": "evidence/legacy/121-discussion-post-menu-ax.txt",
+    "sha256": "976eb62c58bed2e2d2de2977b0f808d43ddc439f1e02b315157b274c37cbf7c8",
+    "originalSha256": "976eb62c58bed2e2d2de2977b0f808d43ddc439f1e02b315157b274c37cbf7c8",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/122-avatar-decoration-included-ax.txt",
+    "saved": "evidence/legacy/122-avatar-decoration-included-ax.txt",
+    "sha256": "fcc23448ecbe07feeb26eb7be631902a2b58d1e4664d924ad8875cfae4d55446",
+    "originalSha256": "fcc23448ecbe07feeb26eb7be631902a2b58d1e4664d924ad8875cfae4d55446",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/123-decoration-preview-ax.txt",
+    "saved": "evidence/legacy/123-decoration-preview-ax.txt",
+    "sha256": "5b604b617ae939ec7f1ee94daad7002455b167ffda8b5106ec3f94f6dd5895d0",
+    "originalSha256": "5b604b617ae939ec7f1ee94daad7002455b167ffda8b5106ec3f94f6dd5895d0",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/124-community-decorations-ax.txt",
+    "saved": "evidence/legacy/124-community-decorations-ax.txt",
+    "sha256": "b1be856ea7e67b3cd13a55ca97e3485ec909595ed705d9aecaa5c922b845596a",
+    "originalSha256": "b1be856ea7e67b3cd13a55ca97e3485ec909595ed705d9aecaa5c922b845596a",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/125-priced-decoration-preview-ax.txt",
+    "saved": "evidence/legacy/125-priced-decoration-preview-ax.txt",
+    "sha256": "0997a22211f02846ce41c196cf201076fe9bec4f5bae5d3f7a6e6eb8faf6e14a",
+    "originalSha256": "0997a22211f02846ce41c196cf201076fe9bec4f5bae5d3f7a6e6eb8faf6e14a",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/126-make-decoration-ax.txt",
+    "saved": "evidence/legacy/126-make-decoration-ax.txt",
+    "sha256": "fabcc21c479174110f1355a90e5f22be622f337e23d02e0b8f571d5d351e0478",
+    "originalSha256": "fabcc21c479174110f1355a90e5f22be622f337e23d02e0b8f571d5d351e0478",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/127-name-style-options-ax.txt",
+    "saved": "evidence/legacy/127-name-style-options-ax.txt",
+    "sha256": "aab61e6284a3d732651860c4d3dec35cd958eb0d93248d23cb38ad55698225ed",
+    "originalSha256": "aab61e6284a3d732651860c4d3dec35cd958eb0d93248d23cb38ad55698225ed",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/128-name-style-gradient-preview-ax.txt",
+    "saved": "evidence/legacy/128-name-style-gradient-preview-ax.txt",
+    "sha256": "2f19fd9764b080b4d4e8b9c14ae3382f22919fc77f4ed08fd73e565217513c8c",
+    "originalSha256": "2f19fd9764b080b4d4e8b9c14ae3382f22919fc77f4ed08fd73e565217513c8c",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/129-profile-preview-cancelled-ax.txt",
+    "saved": "evidence/legacy/129-profile-preview-cancelled-ax.txt",
+    "sha256": "59683632eaec0e7a1caf2e7ebd4f6b7f89212f22f1e076cb5c9071a0554b068c",
+    "originalSha256": "59683632eaec0e7a1caf2e7ebd4f6b7f89212f22f1e076cb5c9071a0554b068c",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/13-creators-ax.txt",
+    "saved": "evidence/legacy/13-creators-ax.txt",
+    "sha256": "6c4da3b571fe09f65692ee84584fb29d563eb073fd2cf058f27a7ba6ecf8029b",
+    "originalSha256": "6c4da3b571fe09f65692ee84584fb29d563eb073fd2cf058f27a7ba6ecf8029b",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/130-profile-links-ax.txt",
+    "saved": "evidence/legacy/130-profile-links-ax.txt",
+    "sha256": "d7f5f3bc900330894e52ebb46ac52988104b034f5f358c41a88aff4d1264dc35",
+    "originalSha256": "d7f5f3bc900330894e52ebb46ac52988104b034f5f358c41a88aff4d1264dc35",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/131-emoji-picker-ax.txt",
+    "saved": "evidence/legacy/131-emoji-picker-ax.txt",
+    "sha256": "b2b68f37b5671ed772dd79054faa288e0fdb15da5d9f8d4fef70a8830946dad0",
+    "originalSha256": "b2b68f37b5671ed772dd79054faa288e0fdb15da5d9f8d4fef70a8830946dad0",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/132-custom-emoji-created-ax.txt",
+    "saved": "evidence/legacy/132-custom-emoji-created-ax.txt",
+    "sha256": "c3036dcf76cd189bccf362e3bd2fd1324f20126d3f9aa6ea7baabdbfab364e94",
+    "originalSha256": "c3036dcf76cd189bccf362e3bd2fd1324f20126d3f9aa6ea7baabdbfab364e94",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/133-custom-emoji-sent-ax.txt",
+    "saved": "evidence/legacy/133-custom-emoji-sent-ax.txt",
+    "sha256": "14beac6db0dafb69c9e27ba45e7d126d135df339818461096af0f8715f7272b6",
+    "originalSha256": "14beac6db0dafb69c9e27ba45e7d126d135df339818461096af0f8715f7272b6",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/134-emoji-favorite-ax.txt",
+    "saved": "evidence/legacy/134-emoji-favorite-ax.txt",
+    "sha256": "2b0b2b341ca3f71f56ec20ca21ecfbe3dac7472ac76714be35e27e7dec88e653",
+    "originalSha256": "2b0b2b341ca3f71f56ec20ca21ecfbe3dac7472ac76714be35e27e7dec88e653",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/135-cross-server-emoji-sent-ax.txt",
+    "saved": "evidence/legacy/135-cross-server-emoji-sent-ax.txt",
+    "sha256": "1ed1b89f3368672f11ce7b8f80e2d40c7b8028096f2a3dde36a0ec1995a0d0a7",
+    "originalSha256": "1ed1b89f3368672f11ce7b8f80e2d40c7b8028096f2a3dde36a0ec1995a0d0a7",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/136-gif-search-ax.txt",
+    "saved": "evidence/legacy/136-gif-search-ax.txt",
+    "sha256": "d0714428dab800256ab1a2afc6228e097f3abccb15e1da691e061951f0fc05ab",
+    "originalSha256": "d0714428dab800256ab1a2afc6228e097f3abccb15e1da691e061951f0fc05ab",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/137-gif-selected-sent-ax.txt",
+    "saved": "evidence/legacy/137-gif-selected-sent-ax.txt",
+    "sha256": "1f7d972e36396fc3e7a00850e3388cfbb302273177b4ba40af4a4915966a6476",
+    "originalSha256": "1f7d972e36396fc3e7a00850e3388cfbb302273177b4ba40af4a4915966a6476",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/138-message-reaction-ax.txt",
+    "saved": "evidence/legacy/138-message-reaction-ax.txt",
+    "sha256": "91115d245c572d066d50493be94608de33345743fa2415334c0b3db6aecf28ef",
+    "originalSha256": "91115d245c572d066d50493be94608de33345743fa2415334c0b3db6aecf28ef",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/139-private-thread-ax.txt",
+    "saved": "evidence/legacy/139-private-thread-ax.txt",
+    "sha256": "704ddaeaaa768dcc4cb594677011bc22db03927b737a6e2ccbe46798d79681bc",
+    "originalSha256": "704ddaeaaa768dcc4cb594677011bc22db03927b737a6e2ccbe46798d79681bc",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/14-leaderboards-ax.txt",
+    "saved": "evidence/legacy/14-leaderboards-ax.txt",
+    "sha256": "6f7e07f7544aca2263b9509bfbaaffee1d73f3c845f321d42802168b6d6a7cca",
+    "originalSha256": "6f7e07f7544aca2263b9509bfbaaffee1d73f3c845f321d42802168b6d6a7cca",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/140-thread-menu-ax.txt",
+    "saved": "evidence/legacy/140-thread-menu-ax.txt",
+    "sha256": "7fded35967b465ac1b50a283c7852e2133a57b82003d2bb73bd5e0fcfd1a0abe",
+    "originalSha256": "7fded35967b465ac1b50a283c7852e2133a57b82003d2bb73bd5e0fcfd1a0abe",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/141-search-synthetic-results-ax.txt",
+    "saved": "evidence/legacy/141-search-synthetic-results-ax.txt",
+    "sha256": "a8cd4a9a5405b8cd9312ec3824f187d865c730bf0503416df19b49a088ac5b5f",
+    "originalSha256": "a8cd4a9a5405b8cd9312ec3824f187d865c730bf0503416df19b49a088ac5b5f",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/142-search-jump-confirmed-ax.txt",
+    "saved": "evidence/legacy/142-search-jump-confirmed-ax.txt",
+    "sha256": "c2a6a3924c8cd2afce3d706e77c12a9a3822bd02c8a7521bb6e49446a49de7aa",
+    "originalSha256": "c2a6a3924c8cd2afce3d706e77c12a9a3822bd02c8a7521bb6e49446a49de7aa",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/143-poll-quiz-options-ax.txt",
+    "saved": "evidence/legacy/143-poll-quiz-options-ax.txt",
+    "sha256": "7e30d2e594e00571ab3bb8628ef55dd77843f3e19832e640a5f13d714ddbce6a",
+    "originalSha256": "7e30d2e594e00571ab3bb8628ef55dd77843f3e19832e640a5f13d714ddbce6a",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/144-presence-modes-ax.txt",
+    "saved": "evidence/legacy/144-presence-modes-ax.txt",
+    "sha256": "6d90c260dc523735b692a2edb299e9b87f34418b956be7e7ae7ba2f22fd87704",
+    "originalSha256": "6d90c260dc523735b692a2edb299e9b87f34418b956be7e7ae7ba2f22fd87704",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/145-server-notifications-ax.txt",
+    "saved": "evidence/legacy/145-server-notifications-ax.txt",
+    "sha256": "4f7e21c1362844839c9e3816eb17fff7164cc86842bdbb8533f053ab1a644789",
+    "originalSha256": "4f7e21c1362844839c9e3816eb17fff7164cc86842bdbb8533f053ab1a644789",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/146-inbox-ax.txt",
+    "saved": "evidence/legacy/146-inbox-ax.txt",
+    "sha256": "725e676ba4e6cc6a86e2a2979b7fdc56781c211e389ee6ce409f660fa325b360",
+    "originalSha256": "725e676ba4e6cc6a86e2a2979b7fdc56781c211e389ee6ce409f660fa325b360",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/147-group-creation-ax.txt",
+    "saved": "evidence/legacy/147-group-creation-ax.txt",
+    "sha256": "c047f9accfeb1c27996dc5972e69461848350d8ce09ff5e02d8da2cbc52cbb7f",
+    "originalSha256": "c047f9accfeb1c27996dc5972e69461848350d8ce09ff5e02d8da2cbc52cbb7f",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/148-new-dm-prerequisite-ax.txt",
+    "saved": "evidence/legacy/148-new-dm-prerequisite-ax.txt",
+    "sha256": "137e498e532fc36a72df32cf5f20665ab3dbae77d4992d3bcba70ba00d352b00",
+    "originalSha256": "137e498e532fc36a72df32cf5f20665ab3dbae77d4992d3bcba70ba00d352b00",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/149-phone-390-ax.txt",
+    "saved": "evidence/legacy/149-phone-390-ax.txt",
+    "sha256": "61f68b0fac6b867592d6a7c1a432c5abcd8bb9ea45b3b0487efcec1a3beca926",
+    "originalSha256": "61f68b0fac6b867592d6a7c1a432c5abcd8bb9ea45b3b0487efcec1a3beca926",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/15-shards-ax.txt",
+    "saved": "evidence/legacy/15-shards-ax.txt",
+    "sha256": "0ac56d2e41f3d4f4312a6355acd3e981b464a80ee67a326a893420b85611e053",
+    "originalSha256": "0ac56d2e41f3d4f4312a6355acd3e981b464a80ee67a326a893420b85611e053",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/150-phone-composer-overflow-ax.txt",
+    "saved": "evidence/legacy/150-phone-composer-overflow-ax.txt",
+    "sha256": "ae5a724fe9c7ce677bdd404d15e41f8b3628870538806703a09f05b0d2916ee2",
+    "originalSha256": "ae5a724fe9c7ce677bdd404d15e41f8b3628870538806703a09f05b0d2916ee2",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/151-tablet-768-ax.txt",
+    "saved": "evidence/legacy/151-tablet-768-ax.txt",
+    "sha256": "d536e5d1775e1cc997c72f3c5b297ffb77769dbbdab8f8c1183900cf3e39feb0",
+    "originalSha256": "d536e5d1775e1cc997c72f3c5b297ffb77769dbbdab8f8c1183900cf3e39feb0",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/152-desktop-1440-ax.txt",
+    "saved": "evidence/legacy/152-desktop-1440-ax.txt",
+    "sha256": "2f0d9807d4a8631044a64ae9627a18891079cd05bd02a30fd603a1e928edfdb8",
+    "originalSha256": "2f0d9807d4a8631044a64ae9627a18891079cd05bd02a30fd603a1e928edfdb8",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/153-voice-stage-settings-ax.txt",
+    "saved": "evidence/legacy/153-voice-stage-settings-ax.txt",
+    "sha256": "145b51951bfb1daf22f80a8efbd1acd55c4137d211c2b26a683875a30f5e8ed0",
+    "originalSha256": "145b51951bfb1daf22f80a8efbd1acd55c4137d211c2b26a683875a30f5e8ed0",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/154-voice-muted-join-ax.txt",
+    "saved": "evidence/legacy/154-voice-muted-join-ax.txt",
+    "sha256": "c93c12dedb6e34647bae4d6b929c6d8a6f523800ebb8c344af02ea092edff495",
+    "originalSha256": "c93c12dedb6e34647bae4d6b929c6d8a6f523800ebb8c344af02ea092edff495",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/155-call-device-controls-ax.txt",
+    "saved": "evidence/legacy/155-call-device-controls-ax.txt",
+    "sha256": "633de61c677e025c448ac60f361b1a9da33d46695fa95646625565a2ca68b135",
+    "originalSha256": "633de61c677e025c448ac60f361b1a9da33d46695fa95646625565a2ca68b135",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/156-share-quality-gate-ax.txt",
+    "saved": "evidence/legacy/156-share-quality-gate-ax.txt",
+    "sha256": "4dbaac7b08e26086f0047d6607024fc86795f5da6c7625b421aac728cc33446a",
+    "originalSha256": "4dbaac7b08e26086f0047d6607024fc86795f5da6c7625b421aac728cc33446a",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/157-soundboard-ax.txt",
+    "saved": "evidence/legacy/157-soundboard-ax.txt",
+    "sha256": "0512b0529fad614fa19ea9e39d48c5ee028d2cd83e1d8572461ca4c5eb7d9f99",
+    "originalSha256": "0512b0529fad614fa19ea9e39d48c5ee028d2cd83e1d8572461ca4c5eb7d9f99",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/158-custom-sound-requirements-ax.txt",
+    "saved": "evidence/legacy/158-custom-sound-requirements-ax.txt",
+    "sha256": "51331c9fe259a98afc5933f01bd7f275a160248de64974c21db462d0ebfc7e26",
+    "originalSha256": "51331c9fe259a98afc5933f01bd7f275a160248de64974c21db462d0ebfc7e26",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/159-activities-menu-ax.txt",
+    "saved": "evidence/legacy/159-activities-menu-ax.txt",
+    "sha256": "d364aeb1147e7cba6c5b25ccc59a771b374d2fb36e9974b86fd55dbf5767e4df",
+    "originalSha256": "d364aeb1147e7cba6c5b25ccc59a771b374d2fb36e9974b86fd55dbf5767e4df",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/16-plus-ax.txt",
+    "saved": "evidence/legacy/16-plus-ax.txt",
+    "sha256": "4051a42c5e9709e093eb9c6bdbf084f1f1296e7b846ad7f22435036d4513ac77",
+    "originalSha256": "4051a42c5e9709e093eb9c6bdbf084f1f1296e7b846ad7f22435036d4513ac77",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/160-helper-enabled-ax.txt",
+    "saved": "evidence/legacy/160-helper-enabled-ax.txt",
+    "sha256": "497c7724f4255fda1fbd747dbdbbbcce4010a45ea04f6ab8b67a04e4c758c115",
+    "originalSha256": "497c7724f4255fda1fbd747dbdbbbcce4010a45ea04f6ab8b67a04e4c758c115",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/161-helper-help-response-ax.txt",
+    "saved": "evidence/legacy/161-helper-help-response-ax.txt",
+    "sha256": "542671164903bedb66b35586005e55f0b48b614c58dccb9c378bea696b5f6b12",
+    "originalSha256": "542671164903bedb66b35586005e55f0b48b614c58dccb9c378bea696b5f6b12",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/162-public-api-reference-ax.txt",
+    "saved": "evidence/legacy/162-public-api-reference-ax.txt",
+    "sha256": "fcc7c6c9b45bbc4b63a7ff0635abdd980a3bf0c5ebe46999844bbb8229849d9d",
+    "originalSha256": "00a8286edeee20e0cefa6facd5cbc047941a2e5590824e32f886a9d3a6141aea",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/163-terms-lower-ax.txt",
+    "saved": "evidence/legacy/163-terms-lower-ax.txt",
+    "sha256": "c62bbb7432ab33ab3234532dca547c93716ecd02342ea8039d8d4c8479874d62",
+    "originalSha256": "5accea9a5609b4482a5ae0396ce1d8ca4043a97ed50e6ee1fd58c18b0c5404ec",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/165-meldiq-profile-controls-sanitized.txt",
+    "saved": "evidence/legacy/165-meldiq-profile-controls-sanitized.txt",
+    "sha256": "afed17a3000b2ade129f59b8955f6a956609e4172986ccecce81ab2ca88a504e",
+    "originalSha256": "afed17a3000b2ade129f59b8955f6a956609e4172986ccecce81ab2ca88a504e",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/166-meldiq-appearance-controls.txt",
+    "saved": "evidence/legacy/166-meldiq-appearance-controls.txt",
+    "sha256": "d1c4086c687d505c25358a0d75df3168cd9e48a232742f2985a02ef03fb06b61",
+    "originalSha256": "d1c4086c687d505c25358a0d75df3168cd9e48a232742f2985a02ef03fb06b61",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/168-second-tab-restore-ax.txt",
+    "saved": "evidence/legacy/168-second-tab-restore-ax.txt",
+    "sha256": "42ce63a2982ded9bb4df3efd9fd4ae2e5c2e9aa02f4d33bc935e98b257c78561",
+    "originalSha256": "42ce63a2982ded9bb4df3efd9fd4ae2e5c2e9aa02f4d33bc935e98b257c78561",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/169-reopened-tab-restore-ax.txt",
+    "saved": "evidence/legacy/169-reopened-tab-restore-ax.txt",
+    "sha256": "8f32f291446073426a2564c14d161610c64b3afebdaf5ccfbbda5ab7d893332d",
+    "originalSha256": "8f32f291446073426a2564c14d161610c64b3afebdaf5ccfbbda5ab7d893332d",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/17-account-settings-redacted-ax.txt",
+    "saved": "evidence/legacy/17-account-settings-redacted-ax.txt",
+    "sha256": "543a4e40bb12ffd57c98b886c769056e724029b0ef37487331256b66c58384d6",
+    "originalSha256": "543a4e40bb12ffd57c98b886c769056e724029b0ef37487331256b66c58384d6",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/170-shards-lower-ax.txt",
+    "saved": "evidence/legacy/170-shards-lower-ax.txt",
+    "sha256": "c8520ef3ce4cdb3acbfb85d26437b70e6b64edef3779f27452da6b840aa668bb",
+    "originalSha256": "c8520ef3ce4cdb3acbfb85d26437b70e6b64edef3779f27452da6b840aa668bb",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/173-logged-out-home-ax.txt",
+    "saved": "evidence/legacy/173-logged-out-home-ax.txt",
+    "sha256": "e0fe4c5f0b47ff1bf6c9a51aecbf97f195293a6508e0f1bd64e8dc1585bb914a",
+    "originalSha256": "deb50b5e26397f390d0cd0e930e00bb50a9370fb7740057c75df25a02ac5b3ef",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/174-post-login-landing-ax.txt",
+    "saved": "evidence/legacy/174-post-login-landing-ax.txt",
+    "sha256": "d2c57e310794a0ee6e438117086b4ba8bd907475a684bbac7e01a648dc70a075",
+    "originalSha256": "d2c57e310794a0ee6e438117086b4ba8bd907475a684bbac7e01a648dc70a075",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/175-post-login-server-ax.txt",
+    "saved": "evidence/legacy/175-post-login-server-ax.txt",
+    "sha256": "2d747c53f8ff9d1dd92a64f4d162f13d907ace2845d114f82bb8a4f7654aa7ba",
+    "originalSha256": "2d747c53f8ff9d1dd92a64f4d162f13d907ace2845d114f82bb8a4f7654aa7ba",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/176-post-login-history-ax.txt",
+    "saved": "evidence/legacy/176-post-login-history-ax.txt",
+    "sha256": "7eaefa5f44b5972639715c2f1a587bc8d54e7dab1544821ee528df6efe73d073",
+    "originalSha256": "7eaefa5f44b5972639715c2f1a587bc8d54e7dab1544821ee528df6efe73d073",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/177-post-login-restoration-result.txt",
+    "saved": "evidence/legacy/177-post-login-restoration-result.txt",
+    "sha256": "891db1ca953706c283b8cd26da7b61d908596671a8a2f9495d5902cfa04f91ca",
+    "originalSha256": "891db1ca953706c283b8cd26da7b61d908596671a8a2f9495d5902cfa04f91ca",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/18-server-lobby-ax.txt",
+    "saved": "evidence/legacy/18-server-lobby-ax.txt",
+    "sha256": "800120689972fba462a144793c04b46fc74d6d2a4c4c003f614e0f9b3961f413",
+    "originalSha256": "800120689972fba462a144793c04b46fc74d6d2a4c4c003f614e0f9b3961f413",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/19-lobby-templates-ax.txt",
+    "saved": "evidence/legacy/19-lobby-templates-ax.txt",
+    "sha256": "3827bd6becdcee6c7f4e10037e168f7195c472a5058d5d880784f12a326f4f76",
+    "originalSha256": "3827bd6becdcee6c7f4e10037e168f7195c472a5058d5d880784f12a326f4f76",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/20-lobby-look-ax.txt",
+    "saved": "evidence/legacy/20-lobby-look-ax.txt",
+    "sha256": "d9879e5e062e98466732b11185cfc7499590124df3b472b220d01e4fcac6e919",
+    "originalSha256": "d9879e5e062e98466732b11185cfc7499590124df3b472b220d01e4fcac6e919",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/21-lobby-sections-ax.txt",
+    "saved": "evidence/legacy/21-lobby-sections-ax.txt",
+    "sha256": "9b7ec0c192f1bc371145c8fe14f2f0368fd0ea1eb3d959b2b3dcef90aef88bb3",
+    "originalSha256": "9b7ec0c192f1bc371145c8fe14f2f0368fd0ea1eb3d959b2b3dcef90aef88bb3",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/22-lobby-phone-preview-ax.txt",
+    "saved": "evidence/legacy/22-lobby-phone-preview-ax.txt",
+    "sha256": "3bd4869078579e073815fd5f75ac1a7878feaaf002502b2883b9299002cdc7f9",
+    "originalSha256": "3bd4869078579e073815fd5f75ac1a7878feaaf002502b2883b9299002cdc7f9",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/23-server-menu-ax.txt",
+    "saved": "evidence/legacy/23-server-menu-ax.txt",
+    "sha256": "15ffffec2bc189873b4ac3992c297d449b7f9723527d8d67ad830c81ccd44893",
+    "originalSha256": "15ffffec2bc189873b4ac3992c297d449b7f9723527d8d67ad830c81ccd44893",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/24-server-overview-ax.txt",
+    "saved": "evidence/legacy/24-server-overview-ax.txt",
+    "sha256": "8dbe743a541d42b071b91c558643c9837d7fefd265d0bdd7a898b0981d89684f",
+    "originalSha256": "8dbe743a541d42b071b91c558643c9837d7fefd265d0bdd7a898b0981d89684f",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/25-server-theme-ax.txt",
+    "saved": "evidence/legacy/25-server-theme-ax.txt",
+    "sha256": "4cd4b5daa19deddef81ca49c81209ed1dd9071b1eee9d03060f9283d96d017d1",
+    "originalSha256": "4cd4b5daa19deddef81ca49c81209ed1dd9071b1eee9d03060f9283d96d017d1",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/26-channel-order-ax.txt",
+    "saved": "evidence/legacy/26-channel-order-ax.txt",
+    "sha256": "5ce03a2bcb95937999471f16369ba427c97d9d999294b01ed27d6ec7ad0c747f",
+    "originalSha256": "5ce03a2bcb95937999471f16369ba427c97d9d999294b01ed27d6ec7ad0c747f",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/27-supercharge-ax.txt",
+    "saved": "evidence/legacy/27-supercharge-ax.txt",
+    "sha256": "4a8016c04fd76258fe558c4b1dfff3c45fda7614a0eb86fe2f90288e45f89c33",
+    "originalSha256": "4a8016c04fd76258fe558c4b1dfff3c45fda7614a0eb86fe2f90288e45f89c33",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/28-promote-ax.txt",
+    "saved": "evidence/legacy/28-promote-ax.txt",
+    "sha256": "0407628948f7257e30564220f786ca73dc7a0f78d06239a553c0359e95c94611",
+    "originalSha256": "0407628948f7257e30564220f786ca73dc7a0f78d06239a553c0359e95c94611",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/29-partner-ax.txt",
+    "saved": "evidence/legacy/29-partner-ax.txt",
+    "sha256": "475c5776eb5f12037ad81ea5d2a0b420f14ee683335f881650e1e38b13831179",
+    "originalSha256": "475c5776eb5f12037ad81ea5d2a0b420f14ee683335f881650e1e38b13831179",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/30-server-emoji-ax.txt",
+    "saved": "evidence/legacy/30-server-emoji-ax.txt",
+    "sha256": "b3169c069683fe394685629f4f52deb203a08521a349e72870987deeb606d1b9",
+    "originalSha256": "b3169c069683fe394685629f4f52deb203a08521a349e72870987deeb606d1b9",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/31-server-bots-ax.txt",
+    "saved": "evidence/legacy/31-server-bots-ax.txt",
+    "sha256": "77fbeb8c02f0b607d6ab185d51b1679ead888acd12bfea0bb33602dc8b50b1ba",
+    "originalSha256": "77fbeb8c02f0b607d6ab185d51b1679ead888acd12bfea0bb33602dc8b50b1ba",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/32-bot-welcomer-ax.txt",
+    "saved": "evidence/legacy/32-bot-welcomer-ax.txt",
+    "sha256": "261befd015d5269722691ec8e43f0046a7bf41131d12ef2071dde8b8c0b34ac9",
+    "originalSha256": "261befd015d5269722691ec8e43f0046a7bf41131d12ef2071dde8b8c0b34ac9",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/33-bot-helper-ax.txt",
+    "saved": "evidence/legacy/33-bot-helper-ax.txt",
+    "sha256": "c55db9d66f0c6961d588bbde4d52a0c78a7fbf36d3e39a5ef46235c299defc6a",
+    "originalSha256": "c55db9d66f0c6961d588bbde4d52a0c78a7fbf36d3e39a5ef46235c299defc6a",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/34-bot-levels-ax.txt",
+    "saved": "evidence/legacy/34-bot-levels-ax.txt",
+    "sha256": "e739824f7a5530396046d915ea0088cc9799a0b66e7e4eea2dd63b112a55cf53",
+    "originalSha256": "e739824f7a5530396046d915ea0088cc9799a0b66e7e4eea2dd63b112a55cf53",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/35-bot-logger-ax.txt",
+    "saved": "evidence/legacy/35-bot-logger-ax.txt",
+    "sha256": "4b279c9071718489d1c1fe99d79118ca8a36fd2405c670651b06d3836a39f0f8",
+    "originalSha256": "4b279c9071718489d1c1fe99d79118ca8a36fd2405c670651b06d3836a39f0f8",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/36-bot-starboard-ax.txt",
+    "saved": "evidence/legacy/36-bot-starboard-ax.txt",
+    "sha256": "09d8d51c3035517a406d27ec95ff006edbd91133046cf897c5cbfa53cba57902",
+    "originalSha256": "09d8d51c3035517a406d27ec95ff006edbd91133046cf897c5cbfa53cba57902",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/37-bot-giveaways-ax.txt",
+    "saved": "evidence/legacy/37-bot-giveaways-ax.txt",
+    "sha256": "03aecc4e77da70cf65c1b9f44e7bb06006deea03fff23dd6677bb456ee527db0",
+    "originalSha256": "03aecc4e77da70cf65c1b9f44e7bb06006deea03fff23dd6677bb456ee527db0",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/38-bot-tickets-ax.txt",
+    "saved": "evidence/legacy/38-bot-tickets-ax.txt",
+    "sha256": "2e4614f506b1ab0baab3510598bf55f0a061af366c340138b4be62e55d3b10cb",
+    "originalSha256": "2e4614f506b1ab0baab3510598bf55f0a061af366c340138b4be62e55d3b10cb",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/39-bot-alerts-ax.txt",
+    "saved": "evidence/legacy/39-bot-alerts-ax.txt",
+    "sha256": "5d5f766713f05696831b1bf2fea96c140a58142d8fa6bdefc476942b44e870b0",
+    "originalSha256": "5d5f766713f05696831b1bf2fea96c140a58142d8fa6bdefc476942b44e870b0",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/40-bot-wordy-ax.txt",
+    "saved": "evidence/legacy/40-bot-wordy-ax.txt",
+    "sha256": "c89e0826eb20927f7f74c8ee14de2c533898c2d7b31248cd3bbccd47c5fa8774",
+    "originalSha256": "c89e0826eb20927f7f74c8ee14de2c533898c2d7b31248cd3bbccd47c5fa8774",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/41-members-ax.txt",
+    "saved": "evidence/legacy/41-members-ax.txt",
+    "sha256": "3406f0406c3d1be62fb7a4282d3a2444d677b7bad7c0eb0bf0d99f28e89210ef",
+    "originalSha256": "3406f0406c3d1be62fb7a4282d3a2444d677b7bad7c0eb0bf0d99f28e89210ef",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/42-roles-ax.txt",
+    "saved": "evidence/legacy/42-roles-ax.txt",
+    "sha256": "81fe4da6e08c9bb082939949b005b8e3e591a233b57e926aae88cbac320d27be",
+    "originalSha256": "81fe4da6e08c9bb082939949b005b8e3e591a233b57e926aae88cbac320d27be",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/43-everyone-permissions-ax.txt",
+    "saved": "evidence/legacy/43-everyone-permissions-ax.txt",
+    "sha256": "37010d0ff684a773d2544a90e1f308385ebede8cb561b828a6bc19101bb2c691",
+    "originalSha256": "37010d0ff684a773d2544a90e1f308385ebede8cb561b828a6bc19101bb2c691",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/44-ping-roles-ax.txt",
+    "saved": "evidence/legacy/44-ping-roles-ax.txt",
+    "sha256": "ca0d00d81d19666f94716ca1613099fbb011016854135ee015e881fdec405e66",
+    "originalSha256": "ca0d00d81d19666f94716ca1613099fbb011016854135ee015e881fdec405e66",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/45-onboarding-ax.txt",
+    "saved": "evidence/legacy/45-onboarding-ax.txt",
+    "sha256": "41b9078f36348ab9600a8cfdf7252650c2ff5934297da1e1745c56d5f6db7798",
+    "originalSha256": "41b9078f36348ab9600a8cfdf7252650c2ff5934297da1e1745c56d5f6db7798",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/46-onboarding-question-fields-ax.txt",
+    "saved": "evidence/legacy/46-onboarding-question-fields-ax.txt",
+    "sha256": "6e52a355de70528c70dbde5bb01233e82b8544c6d7a6b864b4b6babdb7d8ba50",
+    "originalSha256": "6e52a355de70528c70dbde5bb01233e82b8544c6d7a6b864b4b6babdb7d8ba50",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/47-bans-ax.txt",
+    "saved": "evidence/legacy/47-bans-ax.txt",
+    "sha256": "56baa77317da5a2fdae68ad9aabfea0d4b6cad3623cf8b78b344b83b4953a1b1",
+    "originalSha256": "56baa77317da5a2fdae68ad9aabfea0d4b6cad3623cf8b78b344b83b4953a1b1",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/48-reports-ax.txt",
+    "saved": "evidence/legacy/48-reports-ax.txt",
+    "sha256": "ab4a46b256cb71cff54689d54f02020150d953eafc03508194c857da0a7ff4e5",
+    "originalSha256": "ab4a46b256cb71cff54689d54f02020150d953eafc03508194c857da0a7ff4e5",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/49-audit-log-ax.txt",
+    "saved": "evidence/legacy/49-audit-log-ax.txt",
+    "sha256": "de3035108dc81618aa8078cec3fa62903a5ca262790f01974935b470a8f83b7a",
+    "originalSha256": "de3035108dc81618aa8078cec3fa62903a5ca262790f01974935b470a8f83b7a",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/50-audit-filters-redacted-ax.txt",
+    "saved": "evidence/legacy/50-audit-filters-redacted-ax.txt",
+    "sha256": "d21a41a6efdb024567c8129736694f3cf6acb3596ea3dcd21e26b4d530bf1262",
+    "originalSha256": "d21a41a6efdb024567c8129736694f3cf6acb3596ea3dcd21e26b4d530bf1262",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/51-general-initial-ax.txt",
+    "saved": "evidence/legacy/51-general-initial-ax.txt",
+    "sha256": "6fdf9e9056dd53113dcaebc2004a2afe2a497e0dd3ef67fa0695779630ca7917",
+    "originalSha256": "6fdf9e9056dd53113dcaebc2004a2afe2a497e0dd3ef67fa0695779630ca7917",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/52-own-message-menu.txt",
+    "saved": "evidence/legacy/52-own-message-menu.txt",
+    "sha256": "2daae2352f6e13ddad9e39aad38d88552827de6085cf9125183c31fd193f12b8",
+    "originalSha256": "2daae2352f6e13ddad9e39aad38d88552827de6085cf9125183c31fd193f12b8",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/53-channel-overview-ax.txt",
+    "saved": "evidence/legacy/53-channel-overview-ax.txt",
+    "sha256": "d24fbf9bfcbe8f8f52bbe41c76796b3c1d8b3e57fd7c4d1c4e09b159e177233b",
+    "originalSha256": "d24fbf9bfcbe8f8f52bbe41c76796b3c1d8b3e57fd7c4d1c4e09b159e177233b",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/54-channel-permissions-ax.txt",
+    "saved": "evidence/legacy/54-channel-permissions-ax.txt",
+    "sha256": "13c1f3f7911326a915af179e08bc6225f18588b5a76a7c8a137e5cd207f59e9b",
+    "originalSha256": "13c1f3f7911326a915af179e08bc6225f18588b5a76a7c8a137e5cd207f59e9b",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/55-webhooks-ax.txt",
+    "saved": "evidence/legacy/55-webhooks-ax.txt",
+    "sha256": "de6b4bd2b33b08e6c326407a9cb37e2651d84218c23036c3ea08771536b3fe4e",
+    "originalSha256": "de6b4bd2b33b08e6c326407a9cb37e2651d84218c23036c3ea08771536b3fe4e",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/56-create-channel-ax.txt",
+    "saved": "evidence/legacy/56-create-channel-ax.txt",
+    "sha256": "342531a3b811bab90f11fd017567141a1aa9fa051e886bbf368cefaed476bdcd",
+    "originalSha256": "342531a3b811bab90f11fd017567141a1aa9fa051e886bbf368cefaed476bdcd",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/57-create-discussion-ax.txt",
+    "saved": "evidence/legacy/57-create-discussion-ax.txt",
+    "sha256": "33847b5d31d49694a8b37cfa6e69c673785d4e34ed438eda50444e799083da44",
+    "originalSha256": "33847b5d31d49694a8b37cfa6e69c673785d4e34ed438eda50444e799083da44",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/58-create-server-ax.txt",
+    "saved": "evidence/legacy/58-create-server-ax.txt",
+    "sha256": "c6a6cfd40080d709da43f5df67d233306bccfcc34253fdf503b2c48a1170296d",
+    "originalSha256": "c6a6cfd40080d709da43f5df67d233306bccfcc34253fdf503b2c48a1170296d",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/59-discord-import-ax.txt",
+    "saved": "evidence/legacy/59-discord-import-ax.txt",
+    "sha256": "586aed85f4f8fe0c4129f4ce05179ae4af09afd7779771b93c8e3cba891fb0ee",
+    "originalSha256": "586aed85f4f8fe0c4129f4ce05179ae4af09afd7779771b93c8e3cba891fb0ee",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/60-public-plus-ax.txt",
+    "saved": "evidence/legacy/60-public-plus-ax.txt",
+    "sha256": "40e120c6b8da513a9ec47908e096d859c9f94e8b9b5529cf804fec691f0577e5",
+    "originalSha256": "7727506c547e93f584b4b9cb9505e9f90513f9fbae2ddafa4be68479ea7684a9",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/61-developers-public-ax.txt",
+    "saved": "evidence/legacy/61-developers-public-ax.txt",
+    "sha256": "15decdabdbb403b5b3c34b2621e31c42e07ed6a7e774f36b13d049d8232b39e0",
+    "originalSha256": "378a0753c94b6cca593de86754cf0cd5d5b655a8c07dd4563dc7b5f47fbcfdd1",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/62-developer-hosting-oauth-limits-ax.txt",
+    "saved": "evidence/legacy/62-developer-hosting-oauth-limits-ax.txt",
+    "sha256": "1ac634117bbfee46d5d1cc70c08207a1b24e55f192b52feb7088b716dda0c8df",
+    "originalSha256": "e763b9ecfb7763ba5e031184cebcd2ebcecce5abd8191ac250b304dfc7e8548f",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/63-download-ax.txt",
+    "saved": "evidence/legacy/63-download-ax.txt",
+    "sha256": "9c9cb9786721da90cea797d61f8dbf9eece9e7221efd045a8c0f8c0101ae588d",
+    "originalSha256": "c92edabba9c99b15d606fe3078baecd3ec1452431b6e7d9407afa5f23b72cf46",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/64-tutorials-ax.txt",
+    "saved": "evidence/legacy/64-tutorials-ax.txt",
+    "sha256": "3609bd9e617a2761974b6c00c9645a44e3364fb8de6139caafdf4556136091a6",
+    "originalSha256": "1e15de34aa8158f671e7c68b387eea3b77edc5960044dd633d523c39dd35b5cd",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/65-roadmap-ax.txt",
+    "saved": "evidence/legacy/65-roadmap-ax.txt",
+    "sha256": "f5694109632d795778b570948c7895ac16fcbd5dddf5faacca185ada5cb7f41a",
+    "originalSha256": "1a6d1fea7d16201de786911e07ffcb19265355c3f07920bbb0683c9f291a6956",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/66-bot-directory-ax.txt",
+    "saved": "evidence/legacy/66-bot-directory-ax.txt",
+    "sha256": "6243dd3eca6b98efb02fc0c0fe733512978f5bf52840538d8007321fe5a503c1",
+    "originalSha256": "0964dfce0462c40f8863fd2dc6786f3dc2046a0b4924b3581cf07adc45ff22ee",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/67-bot-sorting-ax.txt",
+    "saved": "evidence/legacy/67-bot-sorting-ax.txt",
+    "sha256": "cd4ddc8960b0ee6101c3240618a4fd0e682b69515daa9b245d39e0fb13110d97",
+    "originalSha256": "8ac3bac2aef5db1a7f8cc3166031067d3dabc8f11711a46afff5bbab5b40c9ff",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/68-bot-search-empty-ax.txt",
+    "saved": "evidence/legacy/68-bot-search-empty-ax.txt",
+    "sha256": "4f4cf96948775ce3d65374098e08730dfd500fe4263b8a773ec66e32ddea1b5b",
+    "originalSha256": "ac8464caf0805a2e113c16c546014a667c3ffad62751d8a544f1b480627c9d7b",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/69-creators-public-ax.txt",
+    "saved": "evidence/legacy/69-creators-public-ax.txt",
+    "sha256": "d6e0155b16b567b88c1ebcbf464e23c1460af633b8e6c0c9af7a4d299a4c7983",
+    "originalSha256": "ef05c330a9d0f152452f008878848248f021b938c78580e7341cc4e44d7828bc",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/70-announcement-ax.txt",
+    "saved": "evidence/legacy/70-announcement-ax.txt",
+    "sha256": "fa84a2ef6e8757c7d55144fc2e6efee84fc6db49bfda3f0aa21a816c3087253a",
+    "originalSha256": "187208f9ceb465b2acf79378db129ad4ac52b5a44e0d4a3281d212b15c470a16",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/71-bugs-public-ax.txt",
+    "saved": "evidence/legacy/71-bugs-public-ax.txt",
+    "sha256": "f3557b7cd8faa123a7f6d9119dee3273f7482a163c11ecc327def53433eb3b19",
+    "originalSha256": "431a26c9b65c6ad0b427de3ebef06f44d1ffab97f5b490fc41db358a5f834ff0",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/72-status-ax.txt",
+    "saved": "evidence/legacy/72-status-ax.txt",
+    "sha256": "1167bc6226e91016efb088ddcef5713fcbc8e937eeeaff8a4bce784de7b93e5a",
+    "originalSha256": "7263f777e35c0873a2d89b0d92eefaf6651ea7f9244d579731f4819be286c892",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/73-guidelines-ax.txt",
+    "saved": "evidence/legacy/73-guidelines-ax.txt",
+    "sha256": "2b2f192d775dcc570c1a75672d1377a7e18bde080b13d1bf93c3da9cde5d6e34",
+    "originalSha256": "c33f3bd2b8964837037b1b9a98b280bf65c22235c16c1a1e569f8e2aa0ba9784",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/74-terms-ax.txt",
+    "saved": "evidence/legacy/74-terms-ax.txt",
+    "sha256": "189f4fe128d837dbe93651d612fd45e75eecc6960002675474a8d88dcb10bbf4",
+    "originalSha256": "f49b78db37f9cea34a9ba41f8519f7d12a618abf0ad1869972445eb3f0148d42",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/75-privacy-ax.txt",
+    "saved": "evidence/legacy/75-privacy-ax.txt",
+    "sha256": "401f8ca17f2463400e0244bf414fa6b196845701a85460c7c837deaad82226ac",
+    "originalSha256": "d97464e98cf36ac18350e79aa351ec7521a3feda1bda104b6a333f7cade1dbae",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/76-copyright-ax.txt",
+    "saved": "evidence/legacy/76-copyright-ax.txt",
+    "sha256": "0cb854598156176cac5858dec11e0d0d9be9a752780eaa7675b3836f4ec5a4bd",
+    "originalSha256": "2331a67770b0350055bb7d062ec2fc61dd9cbcc8a594d7f9c70bd3a9580d1d84",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/77-cancel-ax.txt",
+    "saved": "evidence/legacy/77-cancel-ax.txt",
+    "sha256": "59f9d3a72960971085ecaf5fe468fdad292a331bf58f8a981d1eca977fe82ed8",
+    "originalSha256": "eb232c369cb1e26a945853d4a8ddb6bc74f557868d1f72946df976597195bbbf",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/78-remove-image-ax.txt",
+    "saved": "evidence/legacy/78-remove-image-ax.txt",
+    "sha256": "76b114e1b45d3b20f688f6fd810a2575922bf6fc957e3e7fca123ef327b59979",
+    "originalSha256": "0d70f507b6965bf7913535768b35bb2172d743c290fa8072a517696336df1e0e",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/79-creator-center-ax.txt",
+    "saved": "evidence/legacy/79-creator-center-ax.txt",
+    "sha256": "fe05a50c40d8f4255be9668ae13fd2bd29160eb6fa3bd798b4dbc4f3d4f96832",
+    "originalSha256": "f673379d3a87b568839c2cba43f3ffe136011831913d76e9ed94a836bd519ca3",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/80-inactivity-plus-prompt.txt",
+    "saved": "evidence/legacy/80-inactivity-plus-prompt.txt",
+    "sha256": "7a5a1dad84259c75d1b11a62189ad91a19f9c94caea79b10aaa825265bfccdad",
+    "originalSha256": "7a5a1dad84259c75d1b11a62189ad91a19f9c94caea79b10aaa825265bfccdad",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/81-discovery-ax.txt",
+    "saved": "evidence/legacy/81-discovery-ax.txt",
+    "sha256": "9e7e6467359312c8a1d77287ea1c779f0ad142cc07f156293aa776f626b4adc1",
+    "originalSha256": "9e7e6467359312c8a1d77287ea1c779f0ad142cc07f156293aa776f626b4adc1",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/82-discovery-search-ax.txt",
+    "saved": "evidence/legacy/82-discovery-search-ax.txt",
+    "sha256": "932327e6e6d623b4beb1aadd803b7ef8ac35a33001b3c09824d15ea5658817f2",
+    "originalSha256": "932327e6e6d623b4beb1aadd803b7ef8ac35a33001b3c09824d15ea5658817f2",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/83-public-lobby-ax.txt",
+    "saved": "evidence/legacy/83-public-lobby-ax.txt",
+    "sha256": "fd3ab0c6e76c9621684a5aedda920c6555decea3d7b816604b21e0f225acd0fd",
+    "originalSha256": "fd3ab0c6e76c9621684a5aedda920c6555decea3d7b816604b21e0f225acd0fd",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/84-announcements-first-unread-ax.txt",
+    "saved": "evidence/legacy/84-announcements-first-unread-ax.txt",
+    "sha256": "e64104f954b6bc060caaf6c25233a295349a4e5ad74056a7bb28e523f47e0c69",
+    "originalSha256": "e64104f954b6bc060caaf6c25233a295349a4e5ad74056a7bb28e523f47e0c69",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/85-announcements-after-normal-reload-ax.txt",
+    "saved": "evidence/legacy/85-announcements-after-normal-reload-ax.txt",
+    "sha256": "4932efe5954f6839bd3f918f6532642c007df362840f520f493975dfb619fa0f",
+    "originalSha256": "4932efe5954f6839bd3f918f6532642c007df362840f520f493975dfb619fa0f",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/86-announcements-older-after-reload-ax.txt",
+    "saved": "evidence/legacy/86-announcements-older-after-reload-ax.txt",
+    "sha256": "9738db933e8d81a6da1ddb5d18fd1bf85b8e0f72f8afea06b0b8c8b17eb274d9",
+    "originalSha256": "9738db933e8d81a6da1ddb5d18fd1bf85b8e0f72f8afea06b0b8c8b17eb274d9",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/87-general-first-open-ax.txt",
+    "saved": "evidence/legacy/87-general-first-open-ax.txt",
+    "sha256": "c73b5fb2ecb084d8dd8efb79cb58df3131ae3b6c626c649c7ff9d12d1a59b610",
+    "originalSha256": "c73b5fb2ecb084d8dd8efb79cb58df3131ae3b6c626c649c7ff9d12d1a59b610",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/88-general-reading-history-ax.txt",
+    "saved": "evidence/legacy/88-general-reading-history-ax.txt",
+    "sha256": "a4703cb807685b6bac5d753dc3e77f49a937d803100e73a3e13cbe92a5d714ee",
+    "originalSha256": "a4703cb807685b6bac5d753dc3e77f49a937d803100e73a3e13cbe92a5d714ee",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/89-general-older-before-switch-ax.txt",
+    "saved": "evidence/legacy/89-general-older-before-switch-ax.txt",
+    "sha256": "c1e2508d48fc0b27594952900b8d2791adc4e2308aed951e8c1ee2afc3ad90a2",
+    "originalSha256": "c1e2508d48fc0b27594952900b8d2791adc4e2308aed951e8c1ee2afc3ad90a2",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/90-general-after-switch-return-ax.txt",
+    "saved": "evidence/legacy/90-general-after-switch-return-ax.txt",
+    "sha256": "e75d501f0fda5bc6f675bdc6b153682959312839a9b6ec75c285bd1c764a1bb4",
+    "originalSha256": "e75d501f0fda5bc6f675bdc6b153682959312839a9b6ec75c285bd1c764a1bb4",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/91-quick-switcher-ax.txt",
+    "saved": "evidence/legacy/91-quick-switcher-ax.txt",
+    "sha256": "79d18cc3dc9146abdb5ce6cd664073989a7c8d7895a2a56490098215d1e11820",
+    "originalSha256": "79d18cc3dc9146abdb5ce6cd664073989a7c8d7895a2a56490098215d1e11820",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/92-controlled-switch-announcements-ax.txt",
+    "saved": "evidence/legacy/92-controlled-switch-announcements-ax.txt",
+    "sha256": "7555d5b4b11376db90afe602c23c666f0dc01f6b51cdd64b0bd68266e85a44dd",
+    "originalSha256": "7555d5b4b11376db90afe602c23c666f0dc01f6b51cdd64b0bd68266e85a44dd",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/93-general-controlled-return-ax.txt",
+    "saved": "evidence/legacy/93-general-controlled-return-ax.txt",
+    "sha256": "bba2e4dac05d7780ff3fc4ae7ecc5072665d6937ba510741f4292d80449dca48",
+    "originalSha256": "bba2e4dac05d7780ff3fc4ae7ecc5072665d6937ba510741f4292d80449dca48",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/94-network-initial-message-requests.txt",
+    "saved": "evidence/legacy/94-network-initial-message-requests.txt",
+    "sha256": "456d5ce50bfdc1ed03e8ce00ab308893b3b2ba24968aa41542f3ee87955bde9b",
+    "originalSha256": "456d5ce50bfdc1ed03e8ce00ab308893b3b2ba24968aa41542f3ee87955bde9b",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/95-initial-message-payload.txt",
+    "saved": "evidence/legacy/95-initial-message-payload.txt",
+    "sha256": "7eeb8d7e470fcd80e9b1141927a48f81e2c4da8fac263fa818ff02c5bde2a49f",
+    "originalSha256": "7eeb8d7e470fcd80e9b1141927a48f81e2c4da8fac263fa818ff02c5bde2a49f",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/97-message-timestamp-format.txt",
+    "saved": "evidence/legacy/97-message-timestamp-format.txt",
+    "sha256": "f92758a5e52ee99ebdf890dbdd417816095e9004ec46ecc33b5b9a4e0e4a312b",
+    "originalSha256": "f92758a5e52ee99ebdf890dbdd417816095e9004ec46ecc33b5b9a4e0e4a312b",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  },
+  {
+    "source": "Meldiq-Yapin-Research/evidence/98-older-history-payload.txt",
+    "saved": "evidence/legacy/98-older-history-payload.txt",
+    "sha256": "438d227c627ca3a9fa55db83e2f1a19b777c488d0f748c9696dac1ef39af1afe",
+    "originalSha256": "438d227c627ca3a9fa55db83e2f1a19b777c488d0f748c9696dac1ef39af1afe",
+    "date": "2026-11-01",
+    "kind": "historical text; email and sign-in iframe query values redacted"
+  }
+]

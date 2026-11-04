@@ -1,0 +1,567 @@
+{
+  "url": "https://www.yapin.gg/openapi.json",
+  "openapi": "3.1.0",
+  "version": "1.3.0",
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/me",
+      "operationId": "getMe",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#get-me"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me",
+      "operationId": "patchMe",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#patch-me"
+    },
+    {
+      "method": "PUT",
+      "path": "/me/avatar",
+      "operationId": "putMeAvatar",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#put-me-avatar"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/avatar",
+      "operationId": "deleteMeAvatar",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#delete-me-avatar"
+    },
+    {
+      "method": "PUT",
+      "path": "/me/banner",
+      "operationId": "putMeBanner",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#put-me-banner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/banner",
+      "operationId": "deleteMeBanner",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#delete-me-banner"
+    },
+    {
+      "method": "PUT",
+      "path": "/me/status",
+      "operationId": "putMeStatus",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#put-me-status"
+    },
+    {
+      "method": "GET",
+      "path": "/commands",
+      "operationId": "getCommands",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#get-commands"
+    },
+    {
+      "method": "PUT",
+      "path": "/commands",
+      "operationId": "putCommands",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/bot#put-commands"
+    },
+    {
+      "method": "GET",
+      "path": "/events",
+      "operationId": "getEvents",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/events#get-events"
+    },
+    {
+      "method": "GET",
+      "path": "/servers",
+      "operationId": "getServers",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/servers#get-servers"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}",
+      "operationId": "getServersById",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/servers#get-servers-id"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/counts",
+      "operationId": "getServersByIdCounts",
+      "flag": "bot_online_count",
+      "url": "https://www.yapin.gg/developers/api/servers#get-servers-id-counts"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/members",
+      "operationId": "getServersByIdMembers",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/servers#get-servers-id-members"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/members/{uid}",
+      "operationId": "getServersByIdMembersByUid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/servers#get-servers-id-members-uid"
+    },
+    {
+      "method": "PATCH",
+      "path": "/servers/{id}/members/{uid}",
+      "operationId": "patchServersByIdMembersByUid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/moderation#patch-servers-id-members-uid"
+    },
+    {
+      "method": "GET",
+      "path": "/channels",
+      "operationId": "getChannels",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#get-channels"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/channels",
+      "operationId": "getServersByIdChannels",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#get-servers-id-channels"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/channels",
+      "operationId": "postServersByIdChannels",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#post-servers-id-channels"
+    },
+    {
+      "method": "GET",
+      "path": "/channels/{id}",
+      "operationId": "getChannelsById",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#get-channels-id"
+    },
+    {
+      "method": "PATCH",
+      "path": "/channels/{id}",
+      "operationId": "patchChannelsById",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#patch-channels-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/channels/{id}",
+      "operationId": "deleteChannelsById",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#delete-channels-id"
+    },
+    {
+      "method": "GET",
+      "path": "/channels/{id}/permissions",
+      "operationId": "getChannelsByIdPermissions",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/channels#get-channels-id-permissions"
+    },
+    {
+      "method": "PUT",
+      "path": "/channels/{id}/permissions/{role}",
+      "operationId": "putChannelsByIdPermissionsByRole",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/channels#put-channels-id-permissions-role"
+    },
+    {
+      "method": "DELETE",
+      "path": "/channels/{id}/permissions/{role}",
+      "operationId": "deleteChannelsByIdPermissionsByRole",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/channels#delete-channels-id-permissions-role"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/categories",
+      "operationId": "postServersByIdCategories",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#post-servers-id-categories"
+    },
+    {
+      "method": "PATCH",
+      "path": "/servers/{id}/categories/{cid}",
+      "operationId": "patchServersByIdCategoriesByCid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#patch-servers-id-categories-cid"
+    },
+    {
+      "method": "DELETE",
+      "path": "/servers/{id}/categories/{cid}",
+      "operationId": "deleteServersByIdCategoriesByCid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/channels#delete-servers-id-categories-cid"
+    },
+    {
+      "method": "PUT",
+      "path": "/servers/{id}/categories/{cid}/permissions/{role}",
+      "operationId": "putServersByIdCategoriesByCidPermissionsByRole",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/channels#put-servers-id-categories-cid-permissions-role"
+    },
+    {
+      "method": "DELETE",
+      "path": "/servers/{id}/categories/{cid}/permissions/{role}",
+      "operationId": "deleteServersByIdCategoriesByCidPermissionsByRole",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/channels#delete-servers-id-categories-cid-permissions-role"
+    },
+    {
+      "method": "GET",
+      "path": "/channels/{id}/messages",
+      "operationId": "getChannelsByIdMessages",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#get-channels-id-messages"
+    },
+    {
+      "method": "POST",
+      "path": "/channels/{id}/messages",
+      "operationId": "postChannelsByIdMessages",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#post-channels-id-messages"
+    },
+    {
+      "method": "GET",
+      "path": "/channels/{id}/messages/{mid}",
+      "operationId": "getChannelsByIdMessagesByMid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#get-channels-id-messages-mid"
+    },
+    {
+      "method": "PATCH",
+      "path": "/channels/{id}/messages/{mid}",
+      "operationId": "patchChannelsByIdMessagesByMid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#patch-channels-id-messages-mid"
+    },
+    {
+      "method": "DELETE",
+      "path": "/channels/{id}/messages/{mid}",
+      "operationId": "deleteChannelsByIdMessagesByMid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#delete-channels-id-messages-mid"
+    },
+    {
+      "method": "POST",
+      "path": "/channels/{id}/messages/bulk-delete",
+      "operationId": "postChannelsByIdMessagesBulkDelete",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#post-channels-id-messages-bulk-delete"
+    },
+    {
+      "method": "PUT",
+      "path": "/channels/{id}/messages/{mid}/pin",
+      "operationId": "putChannelsByIdMessagesByMidPin",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#put-channels-id-messages-mid-pin"
+    },
+    {
+      "method": "DELETE",
+      "path": "/channels/{id}/messages/{mid}/pin",
+      "operationId": "deleteChannelsByIdMessagesByMidPin",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#delete-channels-id-messages-mid-pin"
+    },
+    {
+      "method": "GET",
+      "path": "/channels/{id}/messages/{mid}/reactions",
+      "operationId": "getChannelsByIdMessagesByMidReactions",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#get-channels-id-messages-mid-reactions"
+    },
+    {
+      "method": "PUT",
+      "path": "/channels/{id}/messages/{mid}/reactions/{emoji}",
+      "operationId": "putChannelsByIdMessagesByMidReactionsByEmoji",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#put-channels-id-messages-mid-reactions-emoji"
+    },
+    {
+      "method": "DELETE",
+      "path": "/channels/{id}/messages/{mid}/reactions/{emoji}",
+      "operationId": "deleteChannelsByIdMessagesByMidReactionsByEmoji",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/messages#delete-channels-id-messages-mid-reactions-emoji"
+    },
+    {
+      "method": "GET",
+      "path": "/channels/{id}/messages/{mid}/emojis",
+      "operationId": "getChannelsByIdMessagesByMidEmojis",
+      "flag": "bot_emoji_lookup",
+      "url": "https://www.yapin.gg/developers/api/emojis#get-channels-id-messages-mid-emojis"
+    },
+    {
+      "method": "POST",
+      "path": "/interactions/{id}/{token}/callback",
+      "operationId": "postInteractionsByIdByTokenCallback",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/interactions#post-interactions-id-token-callback"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/roles",
+      "operationId": "getServersByIdRoles",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/roles#get-servers-id-roles"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/roles",
+      "operationId": "postServersByIdRoles",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/roles#post-servers-id-roles"
+    },
+    {
+      "method": "PATCH",
+      "path": "/servers/{id}/roles/everyone",
+      "operationId": "patchServersByIdRolesEveryone",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/roles#patch-servers-id-roles-everyone"
+    },
+    {
+      "method": "PATCH",
+      "path": "/servers/{id}/roles/{rid}",
+      "operationId": "patchServersByIdRolesByRid",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/roles#patch-servers-id-roles-rid"
+    },
+    {
+      "method": "DELETE",
+      "path": "/servers/{id}/roles/{rid}",
+      "operationId": "deleteServersByIdRolesByRid",
+      "flag": "bot_roles",
+      "url": "https://www.yapin.gg/developers/api/roles#delete-servers-id-roles-rid"
+    },
+    {
+      "method": "PUT",
+      "path": "/servers/{id}/members/{uid}/roles/{rid}",
+      "operationId": "putServersByIdMembersByUidRolesByRid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/roles#put-servers-id-members-uid-roles-rid"
+    },
+    {
+      "method": "DELETE",
+      "path": "/servers/{id}/members/{uid}/roles/{rid}",
+      "operationId": "deleteServersByIdMembersByUidRolesByRid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/roles#delete-servers-id-members-uid-roles-rid"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/kick",
+      "operationId": "postServersByIdKick",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/moderation#post-servers-id-kick"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/bans",
+      "operationId": "getServersByIdBans",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/moderation#get-servers-id-bans"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/bans",
+      "operationId": "postServersByIdBans",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/moderation#post-servers-id-bans"
+    },
+    {
+      "method": "DELETE",
+      "path": "/servers/{id}/bans/{uid}",
+      "operationId": "deleteServersByIdBansByUid",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/moderation#delete-servers-id-bans-uid"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/timeouts",
+      "operationId": "postServersByIdTimeouts",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/moderation#post-servers-id-timeouts"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/invites",
+      "operationId": "getServersByIdInvites",
+      "flag": "bot_invite_tracking",
+      "url": "https://www.yapin.gg/developers/api/moderation#get-servers-id-invites"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/voice",
+      "operationId": "getServersByIdVoice",
+      "flag": "bot_voice",
+      "url": "https://www.yapin.gg/developers/api/voice#get-servers-id-voice"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/voice/move",
+      "operationId": "postServersByIdVoiceMove",
+      "flag": "bot_voice",
+      "url": "https://www.yapin.gg/developers/api/voice#post-servers-id-voice-move"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/voice/disconnect",
+      "operationId": "postServersByIdVoiceDisconnect",
+      "flag": "bot_voice",
+      "url": "https://www.yapin.gg/developers/api/voice#post-servers-id-voice-disconnect"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/voice/join",
+      "operationId": "postServersByIdVoiceJoin",
+      "flag": "bot_voice_join",
+      "url": "https://www.yapin.gg/developers/api/voice#post-servers-id-voice-join"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/voice/leave",
+      "operationId": "postServersByIdVoiceLeave",
+      "flag": "bot_voice_join",
+      "url": "https://www.yapin.gg/developers/api/voice#post-servers-id-voice-leave"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/emojis",
+      "operationId": "getServersByIdEmojis",
+      "flag": "bot_emojis",
+      "url": "https://www.yapin.gg/developers/api/emojis#get-servers-id-emojis"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/emojis",
+      "operationId": "postServersByIdEmojis",
+      "flag": "bot_emojis",
+      "url": "https://www.yapin.gg/developers/api/emojis#post-servers-id-emojis"
+    },
+    {
+      "method": "PATCH",
+      "path": "/servers/{id}/emojis/{eid}",
+      "operationId": "patchServersByIdEmojisByEid",
+      "flag": "bot_emojis",
+      "url": "https://www.yapin.gg/developers/api/emojis#patch-servers-id-emojis-eid"
+    },
+    {
+      "method": "DELETE",
+      "path": "/servers/{id}/emojis/{eid}",
+      "operationId": "deleteServersByIdEmojisByEid",
+      "flag": "bot_emojis",
+      "url": "https://www.yapin.gg/developers/api/emojis#delete-servers-id-emojis-eid"
+    },
+    {
+      "method": "GET",
+      "path": "/channels/{id}/webhooks",
+      "operationId": "getChannelsByIdWebhooks",
+      "flag": "bot_webhooks",
+      "url": "https://www.yapin.gg/developers/api/webhooks#get-channels-id-webhooks"
+    },
+    {
+      "method": "POST",
+      "path": "/channels/{id}/webhooks",
+      "operationId": "postChannelsByIdWebhooks",
+      "flag": "bot_webhooks",
+      "url": "https://www.yapin.gg/developers/api/webhooks#post-channels-id-webhooks"
+    },
+    {
+      "method": "GET",
+      "path": "/webhooks",
+      "operationId": "getWebhooks",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/webhooks#get-webhooks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/webhooks/{id}",
+      "operationId": "deleteWebhooksById",
+      "flag": "bot_webhooks",
+      "url": "https://www.yapin.gg/developers/api/webhooks#delete-webhooks-id"
+    },
+    {
+      "method": "POST",
+      "path": "/webhooks/{id}",
+      "operationId": "postWebhooksById",
+      "flag": "bot_webhooks",
+      "url": "https://www.yapin.gg/developers/api/webhooks#post-webhooks-id"
+    },
+    {
+      "method": "GET",
+      "path": "/servers/{id}/events",
+      "operationId": "getServersByIdEvents",
+      "flag": "server_events",
+      "url": "https://www.yapin.gg/developers/api/scheduled-events#get-servers-id-events"
+    },
+    {
+      "method": "POST",
+      "path": "/servers/{id}/events",
+      "operationId": "postServersByIdEvents",
+      "flag": "server_events",
+      "url": "https://www.yapin.gg/developers/api/scheduled-events#post-servers-id-events"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{id}",
+      "operationId": "getUsersById",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/users#get-users-id"
+    },
+    {
+      "method": "GET",
+      "path": "/version",
+      "operationId": "getVersion",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/versions#get-version"
+    },
+    {
+      "method": "GET",
+      "path": "/changelog",
+      "operationId": "getChangelog",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/versions#get-changelog"
+    },
+    {
+      "method": "POST",
+      "path": "/users/{id}/dm",
+      "operationId": "postUsersByIdDm",
+      "flag": null,
+      "url": "https://www.yapin.gg/developers/api/users#post-users-id-dm"
+    }
+  ],
+  "eventTypes": [
+    "message",
+    "dm_message",
+    "member_join",
+    "member_leave",
+    "reaction_add",
+    "reaction_remove",
+    "voice_join",
+    "voice_leave",
+    "command",
+    "interaction",
+    "invite_create",
+    "invite_delete",
+    "test"
+  ],
+  "gatewayFrameNames": [
+    "hello",
+    "identify",
+    "resume",
+    "ready",
+    "event",
+    "heartbeat",
+    "heartbeat_ack",
+    "presence",
+    "request",
+    "response"
+  ],
+  "validation": "Full visible JSON parsed in bounded DOM text chunks; operations extracted; no endpoint execution or schema conformance test"
+}

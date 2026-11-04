@@ -1,0 +1,73 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Display name style
+							21 heading Display name style, Value: 2
+								22 text Display name style
+							23 text CHOOSE FONT
+							24 toggle button Default, Value: 1
+							25 toggle button Rounded, Value: 0
+							26 toggle button Serif, Value: 0
+							27 toggle button Mono, Value: 0
+							28 toggle button Handwritten, Value: 0
+							29 toggle button Pixel, Value: 0
+							30 toggle button Bold, Value: 0
+							31 toggle button Comic, Value: 0
+							32 text CHOOSE COLOUR
+							33 toggle button None, Value: 1
+							34 toggle button Solid, Value: 0
+							35 toggle button Gradient, Value: 0
+							36 container
+								37 text nahian
+								38 text @
+								39 text nahian
+								40 text nahian
+								41 text now
+								42 text does anyone read this?
+								43 text nahian
+								44 text In a server, a role colour beats yours, but your font stays. On a profile card with a theme colour, your name turns white (dark on a light theme) so it stays readable.
+							45 button Surprise me
+							46 button (disabled) Apply
+			47 container
+				48 tab group
+					49 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						50 button Close
+					51 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 396 MB, Value: on
+						52 button Close
+					53 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						54 button Close
+			55 button New Tab
+	56 close button
+	57 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	58 minimize button
+59 menu bar
+	60 Chrome
+	61 File
+	62 Edit
+	63 View
+	64 History
+	65 Bookmarks
+	66 Profiles
+	67 Tab
+	68 Window
+	69 Help
+
+The focused UI element is 24 toggle button Default, Value: 1

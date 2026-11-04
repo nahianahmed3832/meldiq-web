@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "मौन"
+  },
+  "password": {
+    "show": "पासवर्ड दिखाएँ",
+    "hide": "पासवर्ड छिपाएँ"
+  },
+  "navigation": {
+    "skipToContent": "मुख्य सामग्री पर जाएँ"
   }
 }

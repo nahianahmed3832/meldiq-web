@@ -1,0 +1,83 @@
+Window: "Yapin’ · Free chat with servers, voice and screen sharing", App: Google Chrome.
+0 standard window Yapin’ · Free chat with servers, voice and screen sharing - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container Yapin’ · Free chat with servers, voice and screen sharing - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ RESEARCH - PRIVATE TEST
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 button Back
+							44 button Create role
+							45 button Research Member
+							46 button @everyone
+							47 text EDIT ROLE - RESEARCH MEMBER
+							48 button Copy role ID, Help: d960fb24-0973-40c7-879a-c446a7212400
+							49 button Delete role
+							50 button Display
+							51 button Permissions
+							52 button Manage Members
+							53 text field (settable) Search members to add
+							54 button Done
+							55 text Everyone here has this role already.
+							56 button Close
+			57 container
+				58 tab group
+					59 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						60 button Close
+					61 tab (selected, settable, boolean) Yapin’ · Free chat with servers, voice and screen sharing - Memory usage - 225 MB, Value: on
+						62 button Close
+					63 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						64 button Close
+			65 button New Tab
+	66 close button
+	67 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	68 minimize button
+69 menu bar
+	70 Chrome
+	71 File
+	72 Edit
+	73 View
+	74 History
+	75 Bookmarks
+	76 Profiles
+	77 Tab
+	78 Window
+	79 Help
+
+The focused UI element is 19 HTML content (23) Yapin’, URL: yapin.gg/

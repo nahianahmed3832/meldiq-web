@@ -1,0 +1,88 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 text Developer Portal
+							40 text Your bots, tokens, the API reference and the OpenAPI file in one place.
+							41 button Open
+							42 heading Developer, Value: 2
+								43 text Developer
+							44 container
+								45 text Bots that chat in servers. Run them on your own computer, or host verified ones on Yapin’.
+								46 link Docs, Value: yapin.gg/developers
+							47 button New bot
+							48 container
+								49 text 0 of 2 bots.  Free accounts get  2 ; 
+								50 button Yapin’ Plus
+								51 text  gets  10 .
+							52 container
+								53 text No bots yet Make one, add it to a server and it can answer /commands in a few minutes.
+								54 button Make a bot
+							55 heading Login with Yapin’, Value: 2
+								56 text Login with Yapin’
+							57 container
+								58 text Let people log in to your site with their Yapin’ account. 
+								59 link Docs, Value: yapin.gg/developers#login-with-yapper
+							60 button New app
+							61 text 0 of 10 apps.
+							62 text No apps yet
+							63 text Make one to get a client ID and secret.
+							64 button Make an app
+							65 button Close
+			66 container
+				67 tab group
+					68 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						69 button Close
+			70 button New Tab
+	71 close button
+	72 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	73 minimize button
+74 menu bar
+	75 Chrome
+	76 File
+	77 Edit
+	78 View
+	79 History
+	80 Bookmarks
+	81 Profiles
+	82 Tab
+	83 Window
+	84 Help
+
+The focused UI element is 33 button Developer

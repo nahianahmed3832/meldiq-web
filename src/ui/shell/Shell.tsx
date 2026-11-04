@@ -1,4 +1,5 @@
 import { useLocaleRender } from "../../i18n/Localized";
+import { StatePanel } from "../components/StatePanel";
 import { text as uiText } from "../../i18n";
 import { useT as useLocalization } from "../../i18n";
 import { byActivity, markAllReadTargets, unreadOf } from "../selectors";
@@ -58,6 +59,9 @@ import { PHONE_LAYOUT } from "../../application/viewport";
 import { PlusRenewalNotice } from "../mojo/PlusRenewalNotice";
 import { PlusSupportNotice } from "../mojo/PlusSupportNotice";
 import { UserPanel } from "./UserPanel";
+import { useWelcomeStage } from "../../application/welcome";
+import { WelcomeFlow } from "../auth/WelcomeFlow";
+import { SkipToContent } from "./SkipToContent";
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
 const LobbyPage = lazy(() => import("../lobby/LobbyPage").then((m) => ({ default: m.LobbyPage })));
@@ -128,6 +132,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const engine = useEngine();
   const route = useRoute();
   const prefs = usePrefs();
+  const welcome = useWelcomeStage(engine.device.account?.id);
   const orgIds = useOrbit((s) => s.orgs.map((o) => o.id), shallowEqual);
   const communities = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
   const known = useOrbit((s) => (route.conversationId ? !!s.conversations[route.conversationId] : true));
@@ -316,11 +321,23 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const ctx = useMemo(() => ({ open: (d: ShellDialog) => setDialog(d) }), []);
   // "Log in with Meldiq" (API 0.65.0 batch B): the consent page stands alone, without the app around it.
   if (route.section === "oauth") return <ConsentPage />;
+  if (welcome !== null && welcome >= 0 && engine.device.account) return <WelcomeFlow accountId={engine.device.account.id} stage={welcome} onFinish={(section) => navigate({ section })} />;
   let full = null;
   if (route.section === "settings") full = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
   else if (route.section === "workspace") full = <WorkspaceView key={orgId} orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
   // Settings and administration load on first use, keeping the first page load small.
-  if (full) full = <Suspense fallback={<section className="main" aria-busy="true" />}>{full}</Suspense>;
+  if (full)
+    full = (
+      <Suspense
+        fallback={
+          <section className="main">
+            <StatePanel loading title={uiText("common.status.loading")} />
+          </section>
+        }
+      >
+        {full}
+      </Suspense>
+    );
   let main;
   if (settings) main = full;
   else if (view.conversationId && knownView) main = <ConversationView key={view.conversationId} id={view.conversationId} route={view} onDialog={ctx.open} />;
@@ -336,7 +353,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   else if (section === "discover") main = <DiscoverView />;
   else if (section === "lobby" && orgId && lobbies)
     main = (
-      <Suspense fallback={<section className="main" aria-busy="true" />}>
+      <Suspense
+        fallback={
+          <section className="main">
+            <StatePanel loading title={uiText("common.status.loading")} />
+          </section>
+        }
+      >
         <LobbyPage key={orgId} orgId={orgId} />
       </Suspense>
     );
@@ -345,6 +368,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
   return (
     <div className={`app${phoneFrame}`} data-connection={connection} onContextMenu={quietContextMenu}>
+      <SkipToContent />
       {/* Desktop: a slim brand bar across the window (the reference's title strip); everything else lives in the panels. */}
       <div className="brandbar" aria-hidden="true">
         <img src="/meldling-96.webp" width={18} height={18} alt="" draggable={false} />

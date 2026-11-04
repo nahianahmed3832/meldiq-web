@@ -1,0 +1,102 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 text (28) Yapin’
+							22 text Yapin’
+							23 container Servers
+								24 button Direct messages
+								25 button Meldiq
+								26 container
+									27 button Yapin' Headquarters
+									28 text 15
+								29 container
+									30 button MINECRAFT
+									31 text 13
+								32 button Create a server
+								33 button Discover servers
+							34 container
+								35 button Meldiq
+								36 button Lobby
+								37 button Invite people
+								38 text TEXT CHANNELS
+								39 button Create text channel, Help: Create channel
+								40 button general
+								41 button Edit channel
+								42 button Delete channel, Help: Delete
+								43 text VOICE CHANNELS
+								44 button Create voice channel
+								45 button General
+								46 pop up button nahian Online, Help: Your account
+									47 text nahian
+									48 text Online
+								49 button Inbox
+								50 button Settings
+								51 button Log out
+							52 container
+								53 image
+								54 button general
+								55 button Mute
+								56 button Threads
+								57 button Pinned messages
+								58 button Media
+								59 button Members
+								60 button Search Meldiq, Help: Search this server
+								61 image
+								62 heading Welcome to #general!, Value: 3
+									63 text Welcome to #general!
+								64 text This is the start of the  # general  channel. Friday, October 30, 2026
+[existing message contents omitted]
+
+								91 container
+									92 button Send a file
+									93 text entry area (settable) Message #general
+									94 button Create a poll
+									95 button GIF
+									96 button Emoji
+									97 button Record a voice message
+									98 button (disabled) Send
+								99 content list Members
+									100 heading ONLINE - 1, Value: 3
+										101 text ONLINE - 1
+									102 button nahian Server owner
+							103 button Getting started
+			104 container
+				105 tab group
+					106 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 204 MB, Value: on
+						107 button Close
+			108 button New Tab
+	109 close button
+	110 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	111 minimize button
+112 menu bar
+	113 Chrome
+	114 File
+	115 Edit
+	116 View
+	117 History
+	118 Bookmarks
+	119 Profiles
+	120 Tab
+	121 Window
+	122 Help
+
+The focused UI element is 93 text entry area (settable) Message #general

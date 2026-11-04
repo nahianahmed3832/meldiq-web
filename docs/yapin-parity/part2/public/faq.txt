@@ -1,0 +1,159 @@
+Browser tab: 6, Title: "FAQ — Questions, answered · Meldiq", URL: "https://meldiq.app/faq".
+1 AXWebArea FAQ — Questions, answered · Meldiq, URL: meldiq.app/faq
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/faq#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / FAQ, Value: meldiq.app/
+				16 heading Questions, answered., Value: 1
+					17 text Questions, answered.
+				18 text The things you want to know, in plain language.
+			19 container
+				20 search text field (settable) Description: Search questions and answers, ID: help-search
+				21 text LET’S FIND YOUR ANSWER
+				22 container Filter questions by category
+					23 checkbox All, Value: 1
+					24 checkbox General, Value: 0
+					25 checkbox Communities, Value: 0
+					26 checkbox Privacy, Value: 0
+					27 checkbox Platforms, Value: 0
+					28 checkbox Subscriptions, Value: 0
+					29 checkbox Sparks, Value: 0
+					30 checkbox Gifts, Value: 0
+					31 checkbox Account, Value: 0
+				32 text 31 answers
+				33 heading Need a little help?, Value: 2
+					34 text Need a little help?
+				35 image Meldling is here to help
+				36 text Start with Support for account, billing and community help.
+				37 link Description: Find support →, Value: meldiq.app/support
+				38 heading General, Value: 2
+					39 text General
+				40 button (collapsed) What is Meldiq?, Secondary Actions: Expand
+					41 text What is Meldiq?
+				42 button (collapsed) Is Meldiq free?, Secondary Actions: Expand
+					43 text Is Meldiq free?
+				44 button (collapsed) How do I create an account?, Secondary Actions: Expand
+					45 text How do I create an account?
+				46 button (collapsed) Is there a free Meldiq Plus trial?, Secondary Actions: Expand
+					47 text Is there a free Meldiq Plus trial?
+				48 heading Communities, Value: 2
+					49 text Communities
+				50 button (collapsed) Can I create a public or private community?, Secondary Actions: Expand
+					51 text Can I create a public or private community?
+				52 button (collapsed) How do invitations work?, Secondary Actions: Expand
+					53 text How do invitations work?
+				54 button (collapsed) What are roles and permissions?, Secondary Actions: Expand
+					55 text What are roles and permissions?
+				56 button (collapsed) How does moderation work?, Secondary Actions: Expand
+					57 text How does moderation work?
+				58 heading Privacy, Value: 2
+					59 text Privacy
+				60 button (collapsed) How does end-to-end encryption work?, Secondary Actions: Expand
+					61 text How does end-to-end encryption work?
+				62 button (collapsed) What information can the server see?, Secondary Actions: Expand
+					63 text What information can the server see?
+				64 button (collapsed) Are files and calls encrypted?, Secondary Actions: Expand
+					65 text Are files and calls encrypted?
+				66 button (collapsed) Has Meldiq had an independent security audit?, Secondary Actions: Expand
+					67 text Has Meldiq had an independent security audit?
+				68 heading Platforms, Value: 2
+					69 text Platforms
+				70 button (collapsed) Which devices are supported?, Secondary Actions: Expand
+					71 text Which devices are supported?
+				72 button (collapsed) Can I use Meldiq in a browser?, Secondary Actions: Expand
+					73 text Can I use Meldiq in a browser?
+				74 button (collapsed) Is there an official Android app?, Secondary Actions: Expand
+					75 text Is there an official Android app?
+				76 heading Subscriptions, Value: 2
+					77 text Subscriptions
+				78 button (collapsed) Can I buy Meldiq Plus now?, Secondary Actions: Expand
+					79 text Can I buy Meldiq Plus now?
+				80 button (collapsed) What does Meldiq Plus cost and include?, Secondary Actions: Expand
+					81 text What does Meldiq Plus cost and include?
+				82 button (collapsed) Does one subscription cover multiple devices?, Secondary Actions: Expand
+					83 text Does one subscription cover multiple devices?
+				84 button (collapsed) How do I cancel?, Secondary Actions: Expand
+					85 text How do I cancel?
+				86 button (collapsed) What happens if a payment fails?, Secondary Actions: Expand
+					87 text What happens if a payment fails?
+				88 button (collapsed) What happens when Meldiq Plus ends?, Secondary Actions: Expand
+					89 text What happens when Meldiq Plus ends?
+				90 button (collapsed) Does Meldiq store my card details?, Secondary Actions: Expand
+					91 text Does Meldiq store my card details?
+				92 heading Sparks, Value: 2
+					93 text Sparks
+				94 button (collapsed) What is Meldiq Spark?, Secondary Actions: Expand
+					95 text What is Meldiq Spark?
+				96 button (collapsed) Which plans include Sparks?, Secondary Actions: Expand
+					97 text Which plans include Sparks?
+				98 button (collapsed) Can communities receive multiple Sparks?, Secondary Actions: Expand
+					99 text Can communities receive multiple Sparks?
+				100 button (collapsed) Can Sparks be moved or removed?, Secondary Actions: Expand
+					101 text Can Sparks be moved or removed?
+				102 heading Gifts, Value: 2
+					103 text Gifts
+				104 button (collapsed) Can I gift Meldiq Plus to another user?, Secondary Actions: Expand
+					105 text Can I gift Meldiq Plus to another user?
+				106 heading Account, Value: 2
+					107 text Account
+				108 button (collapsed) How do I reset my password?, Secondary Actions: Expand
+					109 text How do I reset my password?
+				110 button (collapsed) How can I secure my account?, Secondary Actions: Expand
+					111 text How can I secure my account?
+				112 button (collapsed) How do I revoke a device session?, Secondary Actions: Expand
+					113 text How do I revoke a device session?
+				114 button (collapsed) How do I delete my account?, Secondary Actions: Expand
+					115 text How do I delete my account?
+				116 heading Useful next steps, Value: 2
+					117 text Useful next steps
+				118 link Description: Create an account ↗, Value: meldiq.app/signup
+				119 link Description: Manage billing ↗, Value: meldiq.app/account/billing
+				120 link Description: Find your platform →, Value: meldiq.app/download
+				121 link Description: Privacy Policy →, Value: meldiq.app/legal/privacy
+				122 link Description: Account deletion & data →, Value: meldiq.app/legal/account-deletion
+		123 container
+			124 link Description: Meldiq home, Value: meldiq.app/
+			125 text Communities, direct messages and calls in one place.
+			126 link Description: Open Meldiq, Value: web.meldiq.app/
+			127 heading PRODUCT, Value: 2
+				128 text PRODUCT
+			129 link Description: Features, Value: meldiq.app/features
+			130 link Description: Pricing, Value: meldiq.app/pricing
+			131 link Description: Download, Value: meldiq.app/download
+			132 link Description: Developers, Value: meldiq.app/developers
+			133 link Description: Bots, Value: meldiq.app/bots
+			134 link Description: Roadmap, Value: meldiq.app/roadmap
+			135 link Description: Brand kit, Value: meldiq.app/brand
+			136 link Description: Service status, Value: status.meldiq.app/
+			137 heading COMMUNITY, Value: 2
+				138 text COMMUNITY
+			139 link Description: Find your community, Value: meldiq.app/community
+			140 link Description: Getting started, Value: meldiq.app/tutorials
+			141 link Description: Questions & answers, Value: meldiq.app/faq
+			142 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			143 link Description: Your account, Value: meldiq.app/account
+			144 link Description: Billing, Value: meldiq.app/account/billing
+			145 link Description: Contact support, Value: meldiq.app/support
+			146 heading LEGAL, Value: 2
+				147 text LEGAL
+			148 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			149 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			150 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			151 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			152 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			153 link Description: Security & encryption, Value: meldiq.app/security
+			154 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			155 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			156 link Description: Back to top ↑, Value: meldiq.app/faq#top
+
+The focused UI element is 1 AXWebArea FAQ — Questions, answered · Meldiq, URL: meldiq.app/faq

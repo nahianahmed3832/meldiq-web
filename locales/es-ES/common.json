@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "Silencio"
+  },
+  "password": {
+    "show": "Mostrar contraseña",
+    "hide": "Ocultar contraseña"
+  },
+  "navigation": {
+    "skipToContent": "Ir al contenido principal"
   }
 }

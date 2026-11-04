@@ -1,0 +1,90 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Overview, Value: 2
+				29 text Overview
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		31 container
+			32 text Server profile How your server looks in invites and Discovery.
+			33 container Change icon
+				34 text MR-
+			35 text Server icon A square image works best. GIFs move here too. Upload image
+			36 button MR- Upload image
+			37 text Server banner A wide image at the top of the channel list. Drag and zoom to frame it. Upload banner
+			38 button Upload banner
+			39 text SERVER NAME
+			40 text field (settable) SERVER NAME, Value: Meldiq Research - Private Test, ID: sv-name
+			41 button (disabled) Save
+		42 container
+			43 text Server tag 2 to 4 letters or numbers. Members can wear it next to their name. TAG
+			44 text field (settable) Server tag
+			45 button (disabled) Save
+		46 container
+			47 text Discovery Public by default: anyone can find and join from the compass. Listed once you have 5 members (you have 1).
+			48 checkbox (settable, integer) Description: Show in Discovery, Value: 0
+			49 text DESCRIPTION
+			50 text field (settable) DESCRIPTION, ID: sv-disc-desc
+			51 text TAGS
+			52 text field (settable) TAGS, ID: sv-disc-tags
+			53 button (disabled) Save
+		54 text INVITES AND SHARING
+		55 container
+			56 text Custom invite link Unlocks at 5 members (you have 1). yapin.gg/invite/
+			57 text field (disabled) Description: Custom invite link, ID: sv-vanity
+			58 button (disabled) Save
+		59 container
+			60 text Server template A link to start a server with the same channels, roles and permissions. No messages or members.
+			61 button Create template link
+		62 container
+			63 text LINKS
+			64 button + Add link
+		65 text FEATURES
+		66 container
+			67 text Rules channel Gets a book icon, only managers can post in it, and new members get a nudge to read it. Saved
+			68 combo box (collapsed) Description: Rules channel, Value: No rules channel, Secondary Actions: Expand
+				69 text No rules channel
+			70 text Let members open tickets
+			71 text A private channel between one member and everyone who can manage messages.
+			72 text Saved
+			73 checkbox (settable, integer) Description: Let members open tickets A private channel between one member and everyone who can manage messages., Value: 0
+			74 text Allow clips in voice channels
+			75 text Members can save the last few seconds of a call or stream and post them.
+			76 text Saved
+			77 checkbox (settable, integer) Value: 1, Description: Allow clips in voice channels Members can save the last few seconds of a call or stream and post them.
+		78 container
+			79 text Delete server Everything in it goes too. No take-backs.
+			80 button Delete server
+		81 container
+			82 text MR- Meldiq Research - Private Test
+			83 text 1 online
+			84 text 1 Member Est. Nov 2026
+		85 button Close
+			86 image
+
+The focused UI element is 30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand

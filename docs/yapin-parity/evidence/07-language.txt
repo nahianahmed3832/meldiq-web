@@ -1,0 +1,40 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Language, Value: 2
+			177 text Language
+		178 text Pick the language Yapin’ shows in. It switches right away and follows your account to every device.
+		179 list Language
+			180 (selected) English
+			181 Español Spanish
+			182 Deutsch German
+			183 Français French
+			184 Português (Brasil) Portuguese (Brazil)
+			185 Italiano Italian
+			186 Polski Polish
+			187 Nederlands Dutch
+			188 Čeština Czech
+			189 Română Romanian
+		174 button Close
+			175 image
+
+The focused UI element is 15 button Language

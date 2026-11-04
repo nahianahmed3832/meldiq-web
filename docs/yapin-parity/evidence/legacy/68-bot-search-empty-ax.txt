@@ -1,0 +1,102 @@
+Window: "Bots for your server · Yapin’", App: Google Chrome.
+0 standard window Bots for your server · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/bots, Secondary Actions: Raise
+	1 container Bots for your server · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/bots
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/bots, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Bots for your server · Yapin’, URL: yapin.gg/bots
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 heading Bots, Value: 1
+									30 text Bots
+								31 text Bots made by people on Yapin’ and checked by us before they show up here. Add one to a server you manage.
+								32 text field (settable) Search bots, Value: research-no-such-bot-2026
+								33 pop up button Sort, Value: Most used
+									34 (selected) Most used
+								35 toggle button All, Value: 1
+								36 toggle button Moderation, Value: 0
+								37 toggle button Fun, Value: 0
+								38 toggle button Games, Value: 0
+								39 toggle button Utility, Value: 0
+								40 toggle button Music, Value: 0
+								41 toggle button Economy, Value: 0
+								42 toggle button Social, Value: 0
+								43 toggle button AI, Value: 0
+								44 toggle button Other, Value: 0
+								45 text No bots match Try another word or category. Bots only see and post in servers a manager adds them to, and follow the same rules as people. Make your own at 
+								46 link /developers, Value: yapin.gg/developers
+								47 text .
+							48 text Yapin’
+							49 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							50 heading Product, Value: 4
+								51 text Product
+							52 content list
+								53 link Download, Value: yapin.gg/download
+								54 link Developers, Value: yapin.gg/developers
+								55 link Yapin’ Plus, Value: yapin.gg/plus
+								56 link Creator Program, Value: yapin.gg/creators
+								57 link Roadmap, Value: yapin.gg/roadmap
+								58 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								59 link Bugs, Value: yapin.gg/bugs
+								60 link Status, Value: yapin.gg/status
+							61 heading Community, Value: 4
+								62 text Community
+							63 content list
+								64 link Guidelines, Value: yapin.gg/guidelines
+								65 link Tutorials, Value: yapin.gg/tutorials
+								66 link Bots, Value: yapin.gg/bots
+							67 heading Legal, Value: 4
+								68 text Legal
+							69 content list
+								70 link Terms, Value: yapin.gg/terms
+								71 link Privacy, Value: yapin.gg/privacy
+								72 link Copyright, Value: yapin.gg/copyright
+								73 link Cancel a subscription, Value: yapin.gg/cancel
+								74 link Contact, Value: mailto:[email redacted]
+							75 text © 2026 Yapper Media LLC. Free to use.
+			76 container
+				77 tab group
+					78 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						79 button Close
+					80 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						81 button Close
+					82 tab (selected, settable, boolean) Bots for your server · Yapin’ - Memory usage - 283 MB, Value: on
+						83 button Close
+			84 button New Tab
+	85 close button
+	86 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	87 minimize button
+88 menu bar
+	89 Chrome
+	90 File
+	91 Edit
+	92 View
+	93 History
+	94 Bookmarks
+	95 Profiles
+	96 Tab
+	97 Window
+	98 Help
+
+The focused UI element is 32 text field (settable) Search bots, Value: research-no-such-bot-2026

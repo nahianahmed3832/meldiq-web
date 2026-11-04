@@ -1,5 +1,5 @@
 import { text as uiText } from "../../i18n";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
 import { SetupError } from "../../auth/deviceSetup";
 import { PasskeyError } from "../../auth/passkeys";
@@ -25,7 +25,10 @@ export function useSubmit(): {
 } {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const pending = useRef(false);
   const run = useCallback(async (fn: () => Promise<void>) => {
+    if (pending.current) return;
+    pending.current = true;
     setBusy(true);
     setError(null);
     try {
@@ -33,6 +36,7 @@ export function useSubmit(): {
     } catch (e) {
       setError(authErrorText(e));
     } finally {
+      pending.current = false;
       setBusy(false);
     }
   }, []);

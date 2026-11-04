@@ -1,0 +1,44 @@
+Browser tab: 7, Title: "Meldiq", URL: "http://127.0.0.1:5193/".
+0 AXWebArea Meldiq, URL: 127.0.0.1:5193/
+	1 container root
+		2 container
+			3 image Meldiq
+			4 text Meldiq
+			5 pop up button (collapsed) Description: Language, Secondary Actions: Expand
+		6 container Meldiq: Your communities, all in one place.
+			7 heading Meldiq: Your communities, all in one place., Value: 1, ID: landing-title
+				8 text Meldiq: Your communities, all in one place.
+		9 container
+			21 content list 1 of 3
+				22 text Create your Meldiq account
+				23 text Check your email
+				24 text Set up your security keys
+			25 button Sign in instead
+			26 heading Create your Meldiq account, Value: 2
+				27 text Create your Meldiq account
+			28 text We'll email you a code to confirm the address.
+			29 text Your name
+			30 text field (settable) Your name, ID: su-name
+			31 text Shown to the people you talk to.
+			32 text Email
+			33 text field (settable) Email
+			34 text Password
+			35 container
+				36 text field (settable) Password
+				37 checkbox Description: Show password, Value: 0
+			38 text At least 10 characters. A few unrelated words make a strong one.
+			39 checkbox (settable, integer) Description: I am 13 or older. I agree to the Terms and acknowledge the Privacy., Value: 0, ID: su-terms
+			40 container
+				41 text I am 13 or older. I agree to the 
+				42 link Description: Terms, Value: meldiq.app/legal/terms
+				43 text  and acknowledge the 
+				44 link Description: Privacy, Value: meldiq.app/legal/privacy
+				45 text .
+			46 button Create account
+		16 container
+			17 text Meldiq by GriipBuddy
+			18 link Description: Service status, Value: status.meldiq.app/
+			19 link Description: Terms, Value: meldiq.app/legal/terms
+			20 link Description: Privacy, Value: meldiq.app/legal/privacy
+
+The focused UI element is 30 text field (settable) Your name, ID: su-name

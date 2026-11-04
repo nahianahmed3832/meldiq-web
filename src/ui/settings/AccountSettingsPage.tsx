@@ -1,3 +1,4 @@
+import { PasswordInput } from "../components/PasswordInput";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -130,7 +131,7 @@ function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => v
             <span>
               <Localized k="settings.interface.current_password_72ed2bd" />
             </span>
-            <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} />
+            <PasswordInput className="input" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} />
           </label>
           {problem && (
             <div className="banner danger ws-wide" role="alert">
@@ -183,11 +184,11 @@ function ChangePassword({ email }: { email: string }) {
           <span>
             <Localized k="settings.interface.current_password_72ed2bd" />
           </span>
-          <input className="input" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} />
+          <PasswordInput className="input" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} />
         </label>
         <label className="field">
           <span>{l10n("auth.reset_new_password")}</span>
-          <input className="input" type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />
+          <PasswordInput className="input" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />
         </label>
         <p className="faint ws-wide" style={{ margin: 0, fontSize: 12.5 }}>
           <Localized k="settings.interface.at_least_characters_04a49b7" slots={[PASSWORD_MIN_LENGTH]} />

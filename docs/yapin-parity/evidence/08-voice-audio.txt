@@ -1,0 +1,78 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Voice & Audio, Value: 2
+			177 text Voice & Audio
+		178 text MICROPHONE
+		179 combo box (collapsed) MICROPHONE, Value: Default, ID: aus-in, Secondary Actions: Expand
+			180 text Default
+		181 text SPEAKERS
+		182 combo box (collapsed) SPEAKERS, Value: Default, ID: aus-out, Secondary Actions: Expand
+			183 text Default
+		184 container
+			185 text OUTPUT VOLUME 100 %
+		186 slider (settable, integer) OUTPUT VOLUME 100%, Value: 100, ID: aus-vol
+		187 container
+			188 text SOUNDBOARD VOLUME 100%
+		189 slider (settable, integer) SOUNDBOARD VOLUME 100%, Value: 100, ID: aus-sb
+		190 text Sounds people play in calls. Slide to 0 to mute them.
+		191 text MIC TEST
+		192 button Test mic
+		193 container Mic level
+		194 text Say something: the bar moves and you hear yourself (use headphones). INPUT MODE
+		195 container
+			196 text Voice activity Your mic is on while you're not muted.
+		197 container
+			198 text Push to talk Hold a key to talk.
+		199 text VOICE PROCESSING
+		200 container
+			201 text AI noise suppression Removes keyboards, fans and people talking in the background before anyone hears you.
+			202 checkbox (settable, integer) Value: 1, Description: AI noise suppression Removes keyboards, fans and people talking in the background before anyone hears you.
+		203 container
+			204 text Standard noise suppression Your browser’s built-in filter. Used when AI noise suppression is off.
+			205 checkbox (settable, integer) Description: Standard noise suppression Your browser’s built-in filter. Used when AI noise suppression is off., Value: 1
+		206 container
+			207 text Echo cancellation Stops others hearing themselves through your speakers.
+			208 checkbox (settable, integer) Description: Echo cancellation Stops others hearing themselves through your speakers., Value: 1
+		209 container
+			210 text Automatic gain Keeps your volume even. Turn off for music or a good mic.
+			211 checkbox (settable, integer) Description: Automatic gain Keeps your volume even. Turn off for music or a good mic., Value: 1
+		212 text JOINING CALLS
+		213 container
+			214 text Join calls muted Your mic starts off in every call. Unmute when you're ready. Right-click (or hold) a voice channel to join muted or deafened just once.
+			215 checkbox (settable, integer) Value: 0, Description: Join calls muted Your mic starts off in every call. Unmute when you're ready. Right-click (or hold) a voice channel to join muted or deafened just once.
+		216 text CLIPS
+		217 container
+			218 text Keep clips ready In a call, your device keeps the last few seconds of what you hear (and the stream you watch) in memory, so Clip can save it. Nothing leaves your device until you post a clip. Starts with your next call.
+			219 checkbox (settable, integer) Value: 1, Description: Keep clips ready In a call, your device keeps the last few seconds of what you hear (and the stream you watch) in memory, so Clip can save it. Nothing leaves your device until you post a clip. Starts with your next call.
+		220 container
+			221 text Clip length How far back a clip goes.
+			222 combo box (collapsed) Description: Clip length, Value: 30 seconds, Secondary Actions: Expand
+				223 text 30 seconds
+		224 container
+			225 text Let people clip me Off: other people’s clips leave out your voice and your stream. Saved on this device.
+			226 checkbox (settable, integer) Value: 1, Description: Let people clip me Off: other people’s clips leave out your voice and your stream. Saved on this device.
+		227 button Reset voice settings
+		174 button Close
+			175 image
+
+The focused UI element is 16 button Voice & Audio

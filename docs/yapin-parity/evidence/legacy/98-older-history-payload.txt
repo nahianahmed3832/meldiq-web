@@ -1,0 +1,5 @@
+																179 row    {cid: "[channel id]", before: "2026-11-01T03:19:14.58436+00:00", lim: 50}
+																	180 text {cid: "[channel id]", before: "2026-11-01T03:19:14.58436+00:00", lim: 50}
+																181 row before : "2026-11-01T03:19:14.58436+00:00"
+																185 row cid : "[channel id]"
+																189 row lim : 50

@@ -860,5 +860,11 @@
     "accountDescription": "이메일, 계정 상태, 데이터 내보내기 및 계정 삭제.",
     "notificationsDescription": "데스크톱 알림, 소리, 알림 일시 중지 및 대화 환경설정 바로가기.",
     "appearanceDescription": "테마, 색상, 메시지 레이아웃, 미디어 미리보기 및 채팅 제스처."
+  },
+  "foundation": {
+    "profileSections": "프로필 항목",
+    "profileSectionsDescription": "표시할 항목과 순서를 선택하세요. 공개 대상 설정은 그대로 적용됩니다.",
+    "resetSections": "항목 변경 초기화",
+    "saveSections": "항목 저장"
   }
 }

@@ -1,0 +1,172 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq Research - Private Test
+								25 button Meldiq
+								26 container
+									27 button Yapin' Headquarters
+									28 text 10
+								29 container
+									30 button MINECRAFT
+									31 text 13
+								32 button Create a server
+								33 button Discover servers
+							34 container
+								35 button Meldiq Research - Private Test
+								36 button Lobby OFF
+								37 button Invite people
+								38 button TEXT CHANNELS
+								39 button Create channel in this category, Help: Create channel here
+								40 pop up button More options for Text channels, Help: More
+									41 image
+								42 button general
+								43 button history-lab
+								44 button Edit channel
+								45 button Delete channel, Help: Delete
+								46 button VOICE CHANNELS
+								47 button Create channel in this category, Help: Create channel here
+								48 pop up button More options for Voice channels, Help: More
+									49 image
+								50 button General
+								51 button RESEARCH
+								52 button Create channel in this category, Help: Create channel here
+								53 pop up button More options for Research, Help: More
+									54 image
+								55 button Discussion ideas-lab
+								56 pop up button nahian Online, Help: Your account
+									57 text nahian
+									58 text Online
+								59 button Inbox
+								60 button Settings
+								61 button Log out
+								62 menu Secondary Actions: Cancel
+									63 text Notifications for Meldiq Research - Private Test
+									64 All messages Ping me for every message, Value: 0
+									65 Only @mentions Pings for @you, your roles and replies, Value: 1
+										66 text Only @mentions
+										67 text Pings for @you, your roles and replies
+										68 image
+									69 Nothing No pings. A direct @you still shows a badge, Value: 0
+									70 text Mute server
+									71 For 15 minutes
+									72 For 1 hour
+									73 For 8 hours
+									74 For 24 hours
+									75 Until I turn it back on
+							76 container
+								77 image
+								78 button history-lab
+								79 button Mute
+								80 button Threads
+								81 button Pinned messages
+								82 button Media
+								83 button Members
+								84 button Search Meldiq Research - Private Test, Help: Search this server
+								85 container
+									86 image
+									87 heading Welcome to #history-lab!, Value: 3
+										88 text Welcome to #history-lab!
+									89 text This is the start of the  # history-lab  channel. Sunday, November 1, 2026
+									90 button nahian's profile
+									91 button nahian
+									92 text Today at 11:31 AM
+									93 container
+										94 text Research marker A — start of synthetic history.  Bold ,  italic ,  code , and 
+										95 link example, Help: https://example.com, Value: example.com/
+										96 text .
+									97 text Research marker B — synthetic scroll fixture.
+01 · Reading anchor for the private scroll test.
+02 · Reading anchor for the private scroll test.
+03 · Reading anchor for the private scroll test.
+04 · Reading anchor for the private scroll test.
+05 · Reading anchor for the private scroll test.
+06 · Reading anchor for the private scroll test.
+07 · Reading anchor for the private scroll test.
+08 · Reading anchor for the private scroll test.
+09 · Reading anchor for the private scroll test.
+10 · Reading anchor for t
+									98 button Show more
+									99 text Research marker C — latest message. This is synthetic test content in the private research server.
+									100 text Research marker D — additional synthetic reading depth.
+01 · Controlled history test, no real conversation data.
+02 · Controlled history test, no real conversation data.
+03 · Controlled history test, no real conversation data.
+04 · Controlled history test, no real conversation data.
+05 · Controlled history test, no real conversation data.
+06 · Controlled history test, no real conversation data.
+07 · Controlled history test, no real conversation data.
+08 · Controlled history test, no real conversation data.
+
+									101 button Show more
+									102 text Research marker E — later synthetic history block.
+01 · Later block for unread and reload observations.
+02 · Later block for unread and reload observations.
+03 · Later block for unread and reload observations.
+04 · Later block for unread and reload observations.
+05 · Later block for unread and reload observations.
+06 · Later block for unread and reload observations.
+07 · Later block for unread and reload observations.
+08 · Later block for unread and reload observations.
+09 · Later block for unread and reloa
+									103 button Show more
+									104 button Open picture
+								105 container
+									106 button Send a file
+									107 text entry area (settable) Message #history-lab
+									108 button Create a poll
+									109 button GIF
+									110 button Emoji
+									111 button Record a voice message
+									112 button (disabled) Send
+								113 content list Members
+									114 heading RESEARCH MEMBER - 1, Value: 3
+										115 text RESEARCH MEMBER - 1
+									116 button nahian Server owner
+							117 button Getting started
+			118 container
+				119 tab group
+					120 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						121 button Close
+					122 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 239 MB, Value: on
+						123 button Close
+					124 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						125 button Close
+			126 button New Tab
+	127 close button
+	128 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	129 minimize button
+130 menu bar
+	131 Chrome
+	132 File
+	133 Edit
+	134 View
+	135 History
+	136 Bookmarks
+	137 Profiles
+	138 Tab
+	139 Window
+	140 Help
+
+The focused UI element is 71 For 15 minutes

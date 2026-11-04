@@ -1,0 +1,174 @@
+Browser tab: 6, Title: "Privacy Policy · Meldiq", URL: "https://meldiq.app/legal/privacy".
+1 AXWebArea Privacy Policy · Meldiq, URL: meldiq.app/legal/privacy
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/legal/privacy#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 text LEGAL
+				16 heading Privacy Policy, Value: 1
+					17 text Privacy Policy
+				18 text Last updated  2026-10-28 .
+			19 container On this page
+				20 content list
+					21 link Description: Messages, files and calls, Value: meldiq.app/legal/privacy#encrypted
+					22 link Description: What we collect, Value: meldiq.app/legal/privacy#collect
+					23 link Description: Why we use it, Value: meldiq.app/legal/privacy#why
+					24 link Description: Who processes it for us, Value: meldiq.app/legal/privacy#processors
+					25 link Description: How long we keep it, Value: meldiq.app/legal/privacy#retention
+					26 link Description: Your rights, Value: meldiq.app/legal/privacy#rights
+					27 link Description: This website, Value: meldiq.app/legal/privacy#website
+					28 link Description: International transfers and changes, Value: meldiq.app/legal/privacy#transfers
+				29 heading RELATED, Value: 2
+					30 text RELATED
+				31 content list
+					32 link Description: Terms of Service, Value: meldiq.app/legal/terms
+					33 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+					34 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+					35 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+					36 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			37 container
+				38 container
+					39 text Draft for review.  This page describes how Meldiq works today, but it hasn't been reviewed by a lawyer yet and isn't legal advice. Highlighted details are still to be confirmed.
+				40 text This policy explains what personal data Meldiq handles and why. The controller is  GRIIPBUDDY LLC ,  [To be confirmed: GRIIPBUDDY LLC's registered address (USA)] . Privacy contact:  [To be confirmed: privacy contact email address] .  [To be confirmed: data protection contact or representative, where required]
+				41 container Messages, files and calls
+					42 heading Messages, files and calls, Value: 2, ID: encrypted
+						43 text Messages, files and calls
+					44 text Meldiq stores messages to deliver conversation history. Files are encrypted before upload. Current messages can include attachment keys that the Meldiq server can read. Call media is end-to-end encrypted when call encryption is on. Check the call indicator in the app.
+				45 container What we collect
+					46 heading What we collect, Value: 2, ID: collect
+						47 text What we collect
+					48 content list
+						49 container
+							50 AXListMarker • 
+							51 text Account:  your email address, name, a hash of your password, passkey public keys, two-step sign-in settings, and your signed-in sessions.
+						52 container
+							53 AXListMarker • 
+							54 text Profile:  username, display name and the profile details and photo you choose to add.
+						55 container
+							56 AXListMarker • 
+							57 text Communities:  the communities, channels and roles you're in, invitations, bans and reports. The server needs these to decide who may do what.
+						58 container
+							59 AXListMarker • 
+							60 text Routing metadata:  who sends to which conversation, when, and how large each message is; delivery receipts; IP addresses; online status.
+						61 container
+							62 AXListMarker • 
+							63 text Devices:  device public keys and, if you allow notifications, a push address for each device.
+						64 container
+							65 AXListMarker • 
+							66 text Billing:  if you buy a plan, references to your payment-provider account, subscription and transactions, the plan, its status and dates, and amounts. Never card numbers: the payment provider handles payment details on its own pages.
+						67 container
+							68 AXListMarker • 
+							69 text Operations:  counts and sizes for usage limits, security and audit logs without message content.
+				70 container Why we use it
+					71 heading Why we use it, Value: 2, ID: why
+						72 text Why we use it
+					73 container
+						74 text To provide Meldiq (your account, delivering messages and calls, enforcing community permissions), to keep it secure and stop abuse, to bill paid plans and meet accounting duties, and to answer you when you contact us. We don't sell your data or use it for advertising. The legal bases for each use, where the law requires them, are  [To be confirmed: legal bases per processing purpose and applicable jurisdictions] .
+				75 container Who processes it for us
+					76 heading Who processes it for us, Value: 2, ID: processors
+						77 text Who processes it for us
+					78 content list
+						79 container
+							80 AXListMarker • 
+							81 text Hostinger: the server that runs Meldiq's API.
+						82 container
+							83 AXListMarker • 
+							84 text Supabase: the PostgreSQL database used by Meldiq. MongoDB Atlas holds the prior database during recovery retention.
+						85 container
+							86 AXListMarker • 
+							87 text Amazon Web Services: encrypted file storage. Frankfurt, Germany, is the primary region for file storage. We retain historical copies in Singapore for recovery. New uploads, including from older Windows apps, are stored in Frankfurt.
+						88 container
+							89 AXListMarker • 
+							90 text Cloudflare: DNS, website delivery and authorized file delivery through its global network.
+						91 container
+							92 AXListMarker • 
+							93 text PayPal: payment authorization, subscriptions, receipts and payment verification for new website purchases.
+						94 container
+							95 AXListMarker • 
+							96 text Stripe: billing records and the customer portal for earlier Stripe subscriptions, where applicable.
+						97 container
+							98 AXListMarker • 
+							99 text Notification wake-ups run through Meldiq's own push server, which learns only a random device address and when it was woken, never content. If Google Firebase Cloud Messaging is switched on later, this list will say so first.
+				100 container How long we keep it
+					101 heading How long we keep it, Value: 2, ID: retention
+						102 text How long we keep it
+					103 content list
+						104 container
+							105 AXListMarker • 
+							106 text Encrypted messages waiting for a device: until delivered, at most 7 days.
+						107 container
+							108 AXListMarker • 
+							109 text Completed file uploads are kept until you request deletion. When a disappearing-message timer ends, the message disappears but its file stays stored. Files you have not sent are accessible only to you.
+						110 container
+							111 AXListMarker • 
+							112 text Encrypted history you keep: until you delete it or your account.
+						113 container
+							114 AXListMarker • 
+							115 text The current retention settings for call records and audit logs are 36,500 days.
+						116 container
+							117 AXListMarker • 
+							118 text Billing records: as long as tax and accounting law requires:  [To be confirmed: billing record retention period] .
+						119 container
+							120 AXListMarker • 
+							121 text Your account: until you delete it.
+				122 container Your rights
+					123 heading Your rights, Value: 2, ID: rights
+						124 text Your rights
+					125 container
+						126 text Depending on where you live, you can ask to access, correct, export or delete your data, object to or restrict some uses, and complain to a data protection authority. You can delete your account yourself (
+						127 link Description: how, Value: meldiq.app/legal/account-deletion
+						128 text ). For anything else, write to [To be confirmed: privacy contact email address] . We'll check it's you before acting on a request.
+				129 container This website
+					130 heading This website, Value: 2, ID: website
+						131 text This website
+					132 text The website uses no advertising or tracking cookies and loads no third-party scripts. When you sign in here, your session is kept in this browser tab only and ends when you close it or sign out. PayPal hosts new subscription payment pages under its own privacy policy. Earlier Stripe payment pages follow Stripe's privacy policy.
+				133 container International transfers and changes
+					134 heading International transfers and changes, Value: 2, ID: transfers
+						135 text International transfers and changes
+					136 container
+						137 text Your data may be processed in countries other than yours by the providers above.  [To be confirmed: transfer safeguards for the intended markets]  We'll tell you about material changes to this policy before they apply.
+		138 container
+			139 link Description: Meldiq home, Value: meldiq.app/
+			140 text Communities, direct messages and calls in one place.
+			141 link Description: Open Meldiq, Value: web.meldiq.app/
+			142 heading PRODUCT, Value: 2
+				143 text PRODUCT
+			144 link Description: Features, Value: meldiq.app/features
+			145 link Description: Pricing, Value: meldiq.app/pricing
+			146 link Description: Download, Value: meldiq.app/download
+			147 link Description: Developers, Value: meldiq.app/developers
+			148 link Description: Bots, Value: meldiq.app/bots
+			149 link Description: Roadmap, Value: meldiq.app/roadmap
+			150 link Description: Brand kit, Value: meldiq.app/brand
+			151 link Description: Service status, Value: status.meldiq.app/
+			152 heading COMMUNITY, Value: 2
+				153 text COMMUNITY
+			154 link Description: Find your community, Value: meldiq.app/community
+			155 link Description: Getting started, Value: meldiq.app/tutorials
+			156 link Description: Questions & answers, Value: meldiq.app/faq
+			157 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			158 link Description: Your account, Value: meldiq.app/account
+			159 link Description: Billing, Value: meldiq.app/account/billing
+			160 link Description: Contact support, Value: meldiq.app/support
+			161 heading LEGAL, Value: 2
+				162 text LEGAL
+			163 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			164 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			165 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			166 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			167 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			168 link Description: Security & encryption, Value: meldiq.app/security
+			169 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			170 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			171 link Description: Back to top ↑, Value: meldiq.app/legal/privacy#top
+
+The focused UI element is 1 AXWebArea Privacy Policy · Meldiq, URL: meldiq.app/legal/privacy

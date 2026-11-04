@@ -1,0 +1,505 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq
+								25 container
+									26 button Yapin' Headquarters
+									27 text 15
+								28 container
+									29 button MINECRAFT
+									30 text 13
+								31 button Create a server
+								32 button Discover servers
+							33 container
+								34 text Direct messages
+								35 button Friends
+								36 button Find people
+								37 button Create group
+								38 text DIRECT MESSAGES
+								39 button New message
+								40 text No chats yet
+								41 text Add a friend, then say hi.
+								42 button Add Friend
+								43 pop up button nahian Online, Help: Your account
+									44 text nahian
+									45 text Online
+								46 button Inbox
+								47 button Settings
+								48 button Log out
+							49 container
+								50 image
+								51 text Discover
+								52 heading Find your people, Value: 2
+									53 text Find your people
+								54 text Public servers on Yapin’. Search by name, topic or tag.
+								55 text field (settable) Search servers, Placeholder: Search servers…
+								56 text PROMOTED
+								57 container
+									58 text PROMOTED
+									59 text OG USERS [1.7K] #1 Giveaway at 2000 members! (Yapin' Plus) Got good usernames and want to show them off? Join OG user and show your usernames off today. 1,759 members
+									60 button Report server
+									61 button Join
+								62 container
+									63 text PROMOTED
+									64 text UserVault - Social Media Platform UserVault - Social Media Platform
+									65 button #social
+									66 text 255 members
+									67 button Report server
+									68 button Join
+								69 container
+									70 text PROMOTED
+									71 text Name Society Welcome to Name Society! Earn name-ranking roles, enter giveaways, and hang out in our active community chat!
+									72 button #names
+									73 button #name
+									74 button #ranking
+									75 button #giveaways
+									76 button #community
+									77 text 374 members
+									78 button Report server
+									79 button Join
+								80 container
+									81 text PROMOTED
+									82 text Yap World hello! we are a community dedicated to just having fun and talking! help us by joining!! | HALLOWEEN EVENT |
+									83 button #yap
+									84 button #talk
+									85 button #chill
+									86 button #cool
+									87 button #new
+									88 text 310 members
+									89 button Report server
+									90 button Join
+								91 text ALL SERVERS
+								92 container
+									93 text Yapin' Headquarters
+									94 button Yapin’ Partner
+									95 text The Official Yapper Server 106,797 members
+									96 button Report server
+									97 button Open
+								98 container
+									99 text MEGA BOOSTED
+									100 text Robloxian Community If you play Roblox and are looking for a safe, active and friendly Yapper server to hang out in, we are the community for you.
+									101 button #roblox
+									102 button #funny
+									103 button #tier
+									104 button #emojis
+									105 button #gaming
+									106 text 1,466 members
+									107 button Report server
+									108 button Join
+								109 container
+									110 text MINECRAFT Welcome to the unofficial-minecraft group in yapper!! :D 5,550 members
+									111 button Report server
+									112 button Open
+								113 container
+									114 text /user YAPIN' PLUS GIVEAWAY AT 3.5K MEMBERS!!, also promote your server! rare usernames user ogu og ogus
+									115 button #user
+									116 button #username
+									117 button #rare
+									118 button #ogu
+									119 button #og
+									120 text 3,269 members
+									121 button Report server
+									122 button Join
+								123 container
+									124 text ROBLOX This is a fun and safe space for all roblox users! (NOT OFFICIAL OR AFFILIATED WITH ROBLOX))
+									125 button #roblox
+									126 button #gaming
+									127 button #fun
+									128 text 3,078 members
+									129 button Report server
+									130 button Join
+								131 container
+									132 text 𝘳𝘢𝘯𝘬𝘦𝘥 Ranking your profiles, the right way.
+									133 button #rank
+									134 button #ranked
+									135 text 2,928 members
+									136 button Report server
+									137 button Join
+								138 container
+									139 text Yapper Developers The official place to build bots and apps for Yapper. API help, showcases, changelog and feature requests.
+									140 button #developers
+									141 button #bots
+									142 button #coding
+									143 button #api
+									144 button #programming
+									145 text 2,451 members
+									146 button Report server
+									147 button Join
+								148 container
+									149 text Name Hub™ - 💎 giveaways - 🏆 Exclusive OG or invite-only roles - 👑 Special badges to flex on your profile - 🔥 Recognition for people with the rarest usernames - 🎲 Random rewards for hitting invite milestones
+									150 button #rare names
+									151 button #gaveaway
+									152 button #usernames
+									153 text 2,135 members
+									154 button Report server
+									155 button Join
+								156 container
+									157 text Yap Central™ A chill Yapin' spot. JOIN BEFORE NOV 3RD FOR LIMITED HALLOWEEN ROLE
+									158 button #yap
+									159 button #chill
+									160 button #hangout
+									161 button #vibes
+									162 text 1,756 members
+									163 button Report server
+									164 button Join
+								165 container
+									166 text 𝐇𝐀𝐂𝐊 . . ♡ 𝐅𝐫𝐢𝐞𝐧𝐝𝐬 ◦ 𝐕𝐂𝐬 ◦ 𝐅𝐫𝐢𝐞𝐧𝐝𝐥𝐲 ◦ 𝐒𝐅𝐖 ◦ 𝐒𝐨𝐜𝐢𝐚𝐥 𓂃 ࣪˖ ִֶ♱ ྀིྀ /𝐢𝐧𝐯𝐢𝐭𝐞/𝐡𝐚𝐜𝐤 𝐢𝐬 𝐚 𝐜𝐡𝐢𝐥𝐥 𝐬𝐨𝐜𝐢𝐚𝐥 𝐬𝐞𝐫𝐯𝐞𝐫 𝐩𝐚𝐜𝐤𝐞𝐝 𝐰𝐢𝐭𝐡 𝐚 𝐡𝐮𝐠𝐞 𝐯𝐚𝐫𝐢𝐞𝐭𝐲 𝐨𝐟 𝐚𝐞𝐬𝐭𝐡𝐞𝐭𝐢𝐜 𝐞𝐦𝐨𝐣𝐢𝐬, 𝐜𝐮𝐬𝐭𝐨𝐦 𝐝𝐞𝐜𝐨𝐫, 𝐚𝐧𝐝 𝐚𝐜𝐭𝐢𝐯𝐞 𝐯𝐨𝐢𝐜𝐞 𝐜𝐡𝐚𝐧𝐧𝐞𝐥𝐬.
+									167 button #vc
+									168 button #social
+									169 button #friends
+									170 button #friendly
+									171 button #sfw
+									172 text 1,659 members
+									173 button Report server
+									174 button Join
+								175 container
+									176 text ɢʟɪᴛᴛᴇʀ ᴘᴀʀᴀᴅɪꜱᴇ >⩊<.ᐟ  • ᴀʀᴛ ⊹ ࣪ ˖  ꜰᴀɴᴅᴏᴍꜱ ⊹ ࣪ ˖ ᴄʜᴀᴛ ⊹ ࣪ ˖ ⊹ ࣪ ˖ glitter paradise offers vc, active and friendly channels, ask2dm, server promotion and an active vc !! Feel free to join <3
+									177 button # cute
+									178 button # neko
+									179 button # maid
+									180 button # chat
+									181 button # art
+									182 text 1,599 members
+									183 button Report server
+									184 button Join
+								185 container
+									186 text LGBTQ+ Community It‘s an LGBTQ+ Safespace :)
+									187 button # gay
+									188 button # safespace
+									189 button # hangout
+									190 button # chill
+									191 button # lesbian
+									192 text 1,385 members
+									193 button Report server
+									194 button Join
+								195 container
+									196 text son The fastest growing server on yapper, on our way to #1
+									197 button # son
+									198 button # im
+									199 button # crine
+									200 button # chill
+									201 button # hangout
+									202 text 1,358 members
+									203 button Report server
+									204 button Join
+								205 container
+									206 text Username Finders Welcome To The Offical UserName Finder There You Can Find OG Usernames To Use
+									207 button # word
+									208 button # 4c
+									209 button # 3c
+									210 button # 2c
+									211 button # rare
+									212 text 1,241 members
+									213 button Report server
+									214 button Join
+								215 container
+									216 text Emoji Server In this server we have 49+ Emojis that you can use anywhere on yapper by just joining this server. Join now for Emojis and there worth it. 1,151 members
+									217 button Report server
+									218 button Join
+								219 container
+									220 text Yap++ [UNNOFICIAL!] Cutest Client-Modification for Yapper!
+									221 button # clientmod
+									222 button # betteryapper
+									223 button # yapper
+									224 button # unnoficial
+									225 button # opensource
+									226 text 1,040 members
+									227 button Report server
+									228 button Join
+								229 container
+									230 text Geometry Dash The Original of Geometry Dash Yapper's Server!
+									231 button # geometry dash
+									232 button # gd
+									233 button # robtopgames
+									234 button # robtop
+									235 button # extreme
+									236 text 1,029 members
+									237 button Report server
+									238 button Join
+								239 container
+									240 text Lunar Haven Best server to hangout
+									241 button # chat
+									242 button # community
+									243 text 931 members
+									244 button Report server
+									245 button Join
+								246 container
+									247 container This server paid to rank higher
+										248 text Mega Boosted
+									249 text npd | banners |pfps | icons. Got a rare tag? Want to promote your server? Want to share your art or find gaming buddies? Join npd.
+									250 button # gaming
+									251 button # art
+									252 button # social
+									253 button # tags
+									254 button # rare names
+									255 text 97 members
+									256 button Report server
+									257 button Join
+								258 container
+									259 container This server paid to rank higher
+										260 text Mega Boosted
+									261 text GhØstVerse Music Making Server Feel free to Share some beats!!
+									262 button # music
+									263 button # any genre
+									264 button # hangout
+									265 text 44 members
+									266 button Report server
+									267 button Join
+								268 container
+									269 container This server paid to rank higher
+										270 text Mega Boosted
+									271 text [18+] 𑣲 Spinny’s Room | SFW | Social | Gaming | Ask2Dm ‹ ︎   ✦ 𓏻   spinny’s room has active channels, several cute emotes, ask2dm channels, and fandom spaces!
+									272 button # social
+									273 button # emojis
+									274 button # gaming
+									275 button # ask2dm
+									276 button # mdni
+									277 text 11 members
+									278 button Report server
+									279 button Join
+								280 container
+									281 text Son We will behave this time 930 members
+									282 button Report server
+									283 button Join
+								284 container
+									285 text Official Yapper Artists Yapin's Official Art Server (Must need Artist Badge)
+									286 button # art
+									287 button # community
+									288 button # official yapin
+									289 text 791 members
+									290 button Report server
+									291 button Join
+								292 container
+									293 text /OGS & Hangout This server is for ranking og usernames, and talking too
+									294 button # gaming
+									295 button # names
+									296 button # og
+									297 button # ranked
+									298 button # rankings
+									299 text 791 members
+									300 button Report server
+									301 button Join
+								302 container
+									303 text Yapper Tiers The fairest and fastest Tierlist for Yapper usernames.
+									304 button # tierlist
+									305 button # fair
+									306 button # usernames
+									307 button # fast
+									308 button # yapper
+									309 text 780 members
+									310 button Report server
+									311 button Join
+								312 container
+									313 text Verified Users ㆍnormal users allowed verified users
+									314 button # verified
+									315 button # users
+									316 button # chat
+									317 button # hangout
+									318 button # vc
+									319 text 753 members
+									320 button Report server
+									321 button Join
+								322 container
+									323 text The Network /network     iykyk 646 members
+									324 button Report server
+									325 button Join
+								326 container
+									327 text Roblox Community Hub The unofficial Roblox Yapper Community Server
+									328 button # roblox
+									329 button # unofficial
+									330 button # community
+									331 button # rolboxian
+									332 button # gaming
+									333 text 642 members
+									334 button Report server
+									335 button Join
+								336 container
+									337 text 🎃 Poor Sever Peace, Music, anime fandom, inacitivities, Emptysever and dumb. This sever is so poor gng 😭🥀
+									338 button # empty
+									339 button # otaku
+									340 button # art
+									341 button # peace
+									342 button # slice of life
+									343 text 642 members
+									344 button Report server
+									345 button Join
+								346 container
+									347 text PP4U  #1 𝙎𝙀𝙍𝙑𝙀𝙍 𝙁𝙊𝙍 GIFs • 𝙋𝙁𝙋𝙨 • 𝙀𝙈𝙊𝙅𝙄𝙎 • 𝘽𝘼𝙉𝙉𝙀𝙍𝙎 Looking for Staff! ♡ #1 Server for GIFs • Banners • PFPs • Icons • Emojis & more
+									348 button # gifs
+									349 button # pictures
+									350 button # banners
+									351 button # pfps
+									352 button # community
+									353 text 613 members
+									354 button Report server
+									355 button Join
+								356 container
+									357 text Blackhat Hub #1 Marketplace on Yapper | #1 OGU Hangout | #1 Escrow Services
+									358 button # advertisement
+									359 button # com
+									360 button # marketplace
+									361 button # ogu
+									362 button # blackhat
+									363 text 569 members
+									364 button Report server
+									365 button Join
+								366 container
+									367 text Pupska's Hangout We're pretty cool
+									368 button # gay
+									369 button # lgbtq
+									370 button # dawg
+									371 button # woof
+									372 text 544 members
+									373 button Report server
+									374 button Join
+								375 container
+									376 text Self Promote ★★ Promote/Advertise Ur Server ★★     Looking To Promote Or Advertise Your Own Server? 543 members
+									377 button Report server
+									378 button Join
+								379 container
+									380 text Deltarune The first and biggest unofficial server for Undertale and Deltarune for fans to come together! We are not affiliated with Toby Fox.
+									381 button # deltarune
+									382 button # undertale
+									383 button # gaming
+									384 text 506 members
+									385 button Report server
+									386 button Join
+								387 container
+									388 text Furry Server Hi! This is a server made for Furries. Every Furry is welcome here! Even if you're not a Furry but you support Furries you still can join.
+									389 button # furry
+									390 button # friendly
+									391 text 480 members
+									392 button Report server
+									393 button Join
+								394 container
+									395 text rxenni's ocean `🪼 Welcome to rxennis ocean! Please join if you have an interest in gaming, anime, and other related interests!! 🫧
+									396 button # gaming
+									397 button # anime
+									398 button # genshin
+									399 button # vodyanista
+									400 button # lgbtq
+									401 text 461 members
+									402 button Report server
+									403 button Join
+								404 container
+									405 text ♪VOCALOID/UTAU/VOCAL SYNTH♪ A server for Vocaloid, UTAU, and vocal synth fans
+									406 button # vocaloid
+									407 button # anime
+									408 button # utau
+									409 button # miku
+									410 button # gaming
+									411 text 436 members
+									412 button Report server
+									413 button Join
+								414 container
+									415 text Profiles Badges A community for collectors of rare and exclusive badges to connect, showcase their collections, and meet fellow badge holders. 435 members
+									416 button Report server
+									417 button Join
+								418 container
+									419 text Yapp (Community made App) An Unofficial Yapper app open source free to customise and use as you wish!
+									420 button # yapper
+									421 button # app
+									422 button # yap
+									423 button # mods
+									424 button # addons
+									425 text 429 members
+									426 button Report server
+									427 button Join
+								428 container
+									429 text BeluGang 414 members
+									430 button Report server
+									431 button Join
+								432 container
+									433 text /𝗙𝗰𝗸 ; 𝙃𝙖𝙣𝙙𝙡𝙚𝙨 /fck ; 𝗵𝗮𝗻𝗱𝗹𝗲𝘀  ⸝ 𝘢 𝘱𝘭𝘢𝘤𝘦 𝘣𝘦𝘺𝘰𝘯𝘥 𝘵𝘩𝘦 𝘰𝘳𝘥𝘪𝘯𝘢𝘳𝘺 ; ⌗ 𝘢 𝘥𝘪𝘧𝘧𝘦𝘳𝘦𝘯𝘵 𝘱𝘭𝘢𝘤𝘦, 𝘢 𝘥𝘪𝘧𝘧𝘦𝘳𝘦𝘯𝘵 𝘤𝘳𝘰𝘸𝘥.
+									434 button # fck
+									435 button # mystery
+									436 button # rare handles
+									437 text 407 members
+									438 button Report server
+									439 button Join
+								440 container
+									441 text Ranking Hub Ranking Hub - get your user validated/ranked by people who know what they're doing!
+									442 button # username
+									443 button # user
+									444 button # ranking
+									445 button # rank
+									446 button # active
+									447 text 380 members
+									448 button Report server
+									449 button Join
+								450 container
+									451 text The Minecraft Server The unofficial server for Minecraft players on any device. 373 members
+									452 button Report server
+									453 button Join
+								454 container
+									455 text @Saint #1 Server Hispano de Yapin - Semi Tox, Active
+									456 button # semitox
+									457 button # active
+									458 button # hispano
+									459 button # packing
+									460 button # voice
+									461 text 370 members
+									462 button Report server
+									463 button Join
+								464 container
+									465 text Forsaken Forsaken unofficial server! 367 members
+									466 button Report server
+									467 button Join
+								468 container
+									469 text Official Yapin Debate Official Yapin Politics Server
+									470 button # debate
+									471 button # official
+									472 button # politics
+									473 button # religion
+									474 text 365 members
+									475 button Report server
+									476 button Join
+								477 button Show more servers
+							478 button Getting started
+			479 container
+				480 tab group
+					481 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						482 button Close
+					483 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 173 MB, Value: on
+						484 button Close
+					485 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						486 button Close
+			487 button New Tab
+	488 close button
+	489 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	490 minimize button
+491 menu bar
+	492 Chrome
+	493 File
+	494 Edit
+	495 View
+	496 History
+	497 Bookmarks
+	498 Profiles
+	499 Tab
+	500 Window
+	501 Help
+
+The focused UI element is 55 text field (settable) Search servers, Placeholder: Search servers…

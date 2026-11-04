@@ -1,0 +1,68 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Theme, Value: 2
+				29 text Theme
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		87 text Give your server its own colours. Everyone sees them while they're here, unless they turned server themes off in their Appearance settings.
+		88 text ACCENT COLOUR
+		89 text Buttons, links and highlights. Very light or very dark picks get nudged so text stays readable.
+		90 Accent colour
+			91 button None
+			92 button #ff6b4a
+			93 button #3fcf82
+			94 button #2bb3a3
+			95 button #3a8dff
+			96 button #9b59ff
+			97 button #e5487f
+			98 button #f5b544
+			99 container Pick any colour
+				100 text +
+				101 color well (settable) Description: Custom accent colour, Value: #ff6b4a
+			102 text field (settable) Accent colour hex value
+		103 text BACKGROUND TINT
+		104 text A light wash of colour over the background.
+		105 Background tint
+			106 button None
+			107 button #ff6b4a
+			108 button #3fcf82
+			109 button #2bb3a3
+			110 button #3a8dff
+			111 button #9b59ff
+			112 button #e5487f
+			113 button #f5b544
+			114 container Pick any colour
+				115 text +
+				116 color well (settable) Description: Custom background tint, Value: #ff6b4a
+			117 text field (settable) Background tint hex value
+		118 button (disabled) Save
+		85 button Close
+			86 image
+
+The focused UI element is 6 button Theme

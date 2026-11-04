@@ -54,5 +54,15 @@
     "android": "獲取 Meldiq 用於 Android",
     "title": "Meldiq 邀請",
     "hint": "還沒有登入? 首先登入或建立一個帳戶:你會回到這個社群。"
+  },
+  "foundation": {
+    "welcomeBody": "填寫幾項資訊，讓這裡更有你的風格。你可以隨時在設定中修改。",
+    "profileBody": "選擇別人看到的你的形象。你的電子郵件會保持私密。",
+    "preferencesBody": "選擇舒適的外觀和你的語言。",
+    "startBody": "尋找同好、加入社群，或建立自己的社群。",
+    "ready": "你的空間已準備就緒。",
+    "finish": "開始探索",
+    "onDevice": "外觀選項僅適用於此瀏覽器。",
+    "permissions": "當你使用需要相關權限的功能時，Meldiq 才會要求麥克風、相機或通知權限。"
   }
 }

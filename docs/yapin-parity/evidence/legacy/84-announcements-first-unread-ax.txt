@@ -1,0 +1,779 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq
+								25 container
+									26 button Yapin' Headquarters
+									27 text 10
+								28 container
+									29 button MINECRAFT
+									30 text 13
+								31 button Create a server
+								32 button Discover servers
+							33 container
+								34 button Yapin' Headquarters Yapin’ Partner 3
+									35 text Yapin' Headquarters
+									36 button Yapin’ Partner
+									37 text 3
+								38 button Lobby
+								39 button Invite people
+								40 button New here? Read the rules
+								41 button Dismiss
+								42 container
+									43 button Rules rules
+									44 button announcements
+									45 button staff-announcements @8
+									46 button faq
+									47 button add-app-to-phone
+									48 button staff-application
+									49 button giveaways @2
+									50 button hall-of-shame
+									51 button general
+									52 button media
+									53 button yapin-fanart
+									54 button international-chat
+									55 button memes
+									56 button gaming
+									57 button promote-your-server
+									58 button pets
+									59 button suggestions-new
+									60 button emoji-suggestions
+									61 button feedback
+									62 button Stage QnA
+									63 button General
+									64 button wakfuonyt
+									65 button Sayori LIVE
+									66 button Cyn
+									67 button ✦︎buckmi✦︎ LIVE
+									68 button Eman
+									69 button jr
+									70 button 🌸Choccy🌸
+									71 button creatorofpi
+									72 button 𝚋𝚞𝚗𝚗𝚢 ^⌯ . ⌯^
+									73 button DivineArtist LIVE
+									74 button sosa. LIVE
+									75 button white.heat
+									76 button totakeke
+									77 button ___________________
+									78 button Guest616
+									79 button Gaming
+									80 button Yap
+									81 button yap 2
+									82 button yap 3
+								83 pop up button nahian Online, Help: Your account
+									84 text nahian
+									85 text Online
+								86 button Inbox
+								87 button Settings
+								88 button Log out
+							89 container
+								90 image
+								91 button announcements
+								92 button Mute
+								93 button Threads
+								94 button Pinned messages
+								95 button Media
+								96 button Members
+								97 button Search Yapin' Headquarters, Help: Search this server
+								98 container
+									99 button Load older messages
+									100 text Monday, October 19, 2026
+									101 button Antic's profile
+									102 button Antic
+									103 button YAP, Help: Yapin' Headquarters
+									104 button Yapin’ Plus
+									105 text Oct 19, 2026 9:14 PM
+									106 container
+										107 text 10K SUBS, TY YALL 
+										108 image :happy:, Help: :happy: from Yapin' Headquarters
+										109 text  !!! 
+										110 Unlabeled image 🎉. To get missing image descriptions, open the context menu.
+										111 Unlabeled image 🎉
+										112 Unlabeled image 🎉
+									113 button Open picture
+									114 toggle button :YEAH_BABY: 63 reactions, Value: 0
+										115 image :YEAH_BABY:
+										116 text 63
+									117 toggle button 🥳 242 reactions, Value: 0
+										118 Unlabeled image 🥳
+										119 text 242
+									120 toggle button :ok: 41 reactions, Value: 0
+										121 Unlabeled image :ok:, Help: :ok: from Yapin' Headquarters
+										122 text 41
+									123 toggle button 😎 74 reactions, Value: 0
+										124 Unlabeled image 😎
+										125 text 74
+									126 toggle button :yap: 62 reactions, Value: 0
+										127 image :yap:, Help: :yap: from Yapin' Headquarters
+										128 text 62
+									129 toggle button ❤️ 60 reactions, Value: 0
+										130 Unlabeled image ❤️
+										131 text 60
+									132 toggle button :Eno: 42 reactions, Value: 0
+										133 image :Eno:
+										134 text 42
+									135 toggle button :happy: 83 reactions, Value: 0
+										136 image :happy:, Help: :happy: from Yapin' Headquarters
+										137 text 83
+									138 toggle button :yappy: 33 reactions, Value: 0
+										139 image :yappy:, Help: :yappy: from Yapin' Headquarters
+										140 text 33
+									141 toggle button :shocked: 50 reactions, Value: 0
+										142 image :shocked:, Help: :shocked: from Yapin' Headquarters
+										143 text 50
+									144 toggle button :waddgg: 37 reactions, Value: 0
+										145 image :waddgg:, Help: :waddgg: from Yapin' Headquarters
+										146 text 37
+									147 toggle button :smiley: 35 reactions, Value: 0
+										148 image :smiley:, Help: :smiley: from Yapin' Headquarters
+										149 text 35
+									150 toggle button :Verified_Badge: 39 reactions, Value: 0
+										151 image :Verified_Badge:
+										152 text 39
+									153 toggle button :gappy: 49 reactions, Value: 0
+										154 image :gappy:, Help: :gappy: from Yapin' Headquarters
+										155 text 49
+									156 toggle button :France: 36 reactions, Value: 0
+										157 image :France:
+										158 text 36
+									159 toggle button :Clap: 44 reactions, Value: 0
+										160 image :Clap:
+										161 text 44
+									162 toggle button :joy: 36 reactions, Value: 0
+										163 image :joy:
+										164 text 36
+									165 toggle button :diamondblock: 39 reactions, Value: 0
+										166 image :diamondblock:
+										167 text 39
+									168 toggle button :Welcome: 39 reactions, Value: 0
+										169 image :Welcome:
+										170 text 39
+									171 toggle button :2212: 34 reactions, Value: 0
+										172 Unlabeled image :2212:
+										173 text 34
+									174 button Add reaction
+									175 button Antic's profile
+									176 button Antic
+									177 button YAP, Help: Yapin' Headquarters
+									178 button Yapin’ Plus
+									179 text Oct 30, 2026 7:39 PM
+									180 container
+										181 text update 
+										182 Unlabeled image 🎉
+										183 text @everyone calls just got a glow up
+										184 Unlabeled image 📞
+										185 Unlabeled image ✨
+										186 Unlabeled image 🎚️
+										187 text  pick your mic and speakers mid call. hit the 
+										188 Unlabeled image ⚙️
+										189 text  in the call, swap devices without leaving
+
+										190 Unlabeled image 🔇
+										191 text  input sensitivity. slide it up and your keyboard, fan and background noise stop getting sent
+
+										192 Unlabeled image 🧠
+										193 text  noise suppression + echo cancellation toggles right in the call
+
+										194 Unlabeled image 📶
+										195 text  connection bars. see when someone’s wifi is dying, plus a “reconnecting…” so a lag spike doesn’t look like they left
+
+										196 Unlabeled image 🎙️
+										197 text  clearer voice. higher quality audio, still smooth on bad connections
+
+										198 Unlabeled image ⚡
+										199 text  way faster joins. it starts connecting when you hover a vc, so clicking feels instant
+
+										200 Unlabeled image 🌙
+										201 text  do not disturb now mutes join/leave sounds too
+
+										202 Unlabeled image ⏯️
+										203 text  mute and hang up from your lock screen or media keys
+
+										204 Unlabeled image ⌨️
+										205 text  ctrl/cmd + shift + e shortcut yapin’ partner servers
+										206 Unlabeled image 🤝
+										207 text  Qualification requirements are in Server settings > Yapin' Partner. Partners get a badge and a slight boost on discover
+ quiz polls
+										208 Unlabeled image 🧠
+										209 text  make a poll with a right answer, people guess, see who got it
+ global leaderboards
+										210 Unlabeled image 🏆
+										211 text  see the top yappers across yapin’. don’t wanna be on it? turn it off in settings
+ search filters
+										212 Unlabeled image 🔍
+										213 text  search by from:, mentions:, has: and in:
+ ping roles
+										214 Unlabeled image 🔔
+										215 text  pick which pings you want in a server
+ folder colours
+										216 Unlabeled image 📁
+										217 text  name and colour your server folders
+ click a role mention
+										218 Unlabeled image 👥
+										219 text  to see who has it
+ language picker
+										220 Unlabeled image 🌍
+										221 text  español, deutsch, français, português, more soon...
+									222 button Show more
+									223 toggle button 🔥 76 reactions, Value: 0
+										224 Unlabeled image 🔥
+										225 text 76
+									226 toggle button 👀 39 reactions, Value: 0
+										227 Unlabeled image 👀
+										228 text 39
+									229 toggle button :Twerking_among: 18 reactions, Value: 0
+										230 image :Twerking_among:
+										231 text 18
+									232 toggle button :GAMBLING_BE_LIKE: 10 reactions, Value: 0
+										233 image :GAMBLING_BE_LIKE:
+										234 text 10
+									235 toggle button :yuta_scared: 18 reactions, Value: 0
+										236 image :yuta_scared:
+										237 text 18
+									238 toggle button :Clap: 12 reactions, Value: 0
+										239 image :Clap:
+										240 text 12
+									241 toggle button :bricesad: 7 reactions, Value: 0
+										242 image :bricesad:, Help: :bricesad: from Yapin' Headquarters
+										243 text 7
+									244 toggle button ✅ 24 reactions, Value: 0
+										245 Unlabeled image ✅
+										246 text 24
+									247 toggle button :happy: 9 reactions, Value: 0
+										248 image :happy:, Help: :happy: from Yapin' Headquarters
+										249 text 9
+									250 toggle button :kitty_bounce_blue_1: 4 reactions, Value: 0
+										251 image :kitty_bounce_blue_1:
+										252 text 4
+									253 toggle button :parrot2: 7 reactions, Value: 0
+										254 image :parrot2:, Help: :parrot2: from MINECRAFT
+										255 text 7
+									256 toggle button 🎉 6 reactions, Value: 0
+										257 Unlabeled image 🎉
+										258 text 6
+									259 toggle button :Sus_ing: 4 reactions, Value: 0
+										260 image :Sus_ing:
+										261 text 4
+									262 toggle button :pizza_cat: 2 reactions, Value: 0
+										263 image :pizza_cat:
+										264 text 2
+									265 toggle button 💩 8 reactions, Value: 0
+										266 Unlabeled image 💩
+										267 text 8
+									268 toggle button :Brilliant: 5 reactions, Value: 0
+										269 image :Brilliant:
+										270 text 5
+									271 toggle button :Ok: 5 reactions, Value: 0
+										272 Unlabeled image :Ok:
+										273 text 5
+									274 toggle button :green_flame: 6 reactions, Value: 0
+										275 image :green_flame:
+										276 text 6
+									277 toggle button :Put_your_hands_up: 6 reactions, Value: 0
+										278 image :Put_your_hands_up:
+										279 text 6
+									280 toggle button 🫡 6 reactions, Value: 0
+										281 Unlabeled image 🫡
+										282 text 6
+									283 button Add reaction
+									284 text Saturday, October 31, 2026
+									285 button Antic's profile
+									286 button Antic
+									287 button YAP, Help: Yapin' Headquarters
+									288 button Yapin’ Plus
+									289 text Yesterday at 5:20 AM
+									290 container
+										291 text polish update 
+										292 Unlabeled image 🎉
+										293 text @everyone
+										294 Unlabeled image ⚡
+										295 text  smoother everywhere - we did a big optimization pass. the app should load faster, feel smoother and use less data overall
+
+										296 Unlabeled image ⌨️
+										297 text  ctrl/cmd + k - quick switcher. type a few letters and jump to any server, channel or dm, recent ones show first
+
+										298 Unlabeled image 📶
+										299 text  never lose a message - send while your wifi is dead and it goes out by itself when you’re back. there’s a “reconnecting…” pill so you know
+
+										300 Unlabeled image 🔗
+										301 text  masked links - write [ click here ]( https://... ) . Without the spaces next to brackets, or paste a link over selected text. we warn you before it opens somewhere else
+
+										302 Unlabeled image 🪟
+										303 text  mini call - go browse other channels and your call stays in a little floating card
+
+										304 Unlabeled image 🖱️
+										305 text  mouse back/forward (or alt + ←/→) jumps between chats you opened
+
+										306 Unlabeled image 📱
+										307 text  phones - swipe from the left edge to open your servers, keyboard doesn’t cover the chat anymore, smoother taps
+
+										308 Unlabeled image 🛠️
+										309 text  plus a ton of small fixes (escape closes menus, light theme fixes, no more double gif sends, screen reader stuff)
+
+lots more coming soon 
+										310 Unlabeled image 👀
+										311 container Yesterday at 5:21 AM
+											312 text (edited)
+									313 button Show more
+									314 toggle button 🇵🇱 48 reactions, Value: 0
+										315 Unlabeled image 🇵🇱
+										316 text 48
+									317 toggle button 👀 23 reactions, Value: 0
+										318 Unlabeled image 👀
+										319 text 23
+									320 toggle button :angry: 77 reactions, Value: 0
+										321 image :angry:, Help: :angry: from Yapin' Headquarters
+										322 text 77
+									323 toggle button :happy: 44 reactions, Value: 0
+										324 image :happy:, Help: :happy: from Yapin' Headquarters
+										325 text 44
+									326 toggle button 👍 36 reactions, Value: 0
+										327 Unlabeled image 👍
+										328 text 36
+									329 toggle button 🔥 41 reactions, Value: 0
+										330 Unlabeled image 🔥
+										331 text 41
+									332 toggle button :GIGACHAD: 28 reactions, Value: 0
+										333 image :GIGACHAD:
+										334 text 28
+									335 toggle button ✌️ 12 reactions, Value: 0
+										336 Unlabeled image ✌️
+										337 text 12
+									338 toggle button :yap: 10 reactions, Value: 0
+										339 image :yap:, Help: :yap: from Yapin' Headquarters
+										340 text 10
+									341 toggle button 🫡 33 reactions, Value: 0
+										342 Unlabeled image 🫡
+										343 text 33
+									344 toggle button :thumbs_up: 11 reactions, Value: 0
+										345 image :thumbs_up:
+										346 text 11
+									347 toggle button :kennydance: 10 reactions, Value: 0
+										348 image :kennydance:
+										349 text 10
+									350 toggle button :ta: 9 reactions, Value: 0
+										351 Unlabeled image :ta:
+										352 text 9
+									353 toggle button :i_stole_yo_girl: 7 reactions, Value: 0
+										354 image :i_stole_yo_girl:
+										355 text 7
+									356 toggle button :emj1: 10 reactions, Value: 0
+										357 image :emj1:
+										358 text 10
+									359 toggle button :cashfly: 15 reactions, Value: 0
+										360 image :cashfly:
+										361 text 15
+									362 toggle button :Yoo: 12 reactions, Value: 0
+										363 image :Yoo:
+										364 text 12
+									365 toggle button 🤫 7 reactions, Value: 0
+										366 Unlabeled image 🤫
+										367 text 7
+									368 toggle button 😭 10 reactions, Value: 0
+										369 Unlabeled image 😭
+										370 text 10
+									371 toggle button :hi: 10 reactions, Value: 0
+										372 Unlabeled image :hi:
+										373 text 10
+									374 button Add reaction
+									375 text Sunday, November 1, 2026
+									376 button Antic's profile
+									377 button Antic
+									378 button YAP, Help: Yapin' Headquarters
+									379 button Yapin’ Plus
+									380 text Today at 2:53 AM
+									381 container
+										382 text @everyone  NEW VID JUST DROPPED!!! 
+										383 image :happy:, Help: :happy: from Yapin' Headquarters
+										384 image :happy:, Help: :happy: from Yapin' Headquarters
+										385 link https://youtu.be/A32KtZr09n4, Value: youtu.be/A32KtZr09n4
+									386 container
+										387 text YouTube
+										388 link Antic, Value: youtube.com/@Antic.youtube
+										389 link I Made a Better Discord and it Got 100,000 Users..., Value: youtu.be/A32KtZr09n4
+										390 button Play I Made a Better Discord and it Got 100,000 Users...
+									391 toggle button :happy: 93 reactions, Value: 0
+										392 image :happy:, Help: :happy: from Yapin' Headquarters
+										393 text 93
+									394 toggle button :bricesad: 23 reactions, Value: 0
+										395 image :bricesad:, Help: :bricesad: from Yapin' Headquarters
+										396 text 23
+									397 toggle button ✅ 37 reactions, Value: 0
+										398 Unlabeled image ✅
+										399 text 37
+									400 toggle button 🎉 31 reactions, Value: 0
+										401 Unlabeled image 🎉
+										402 text 31
+									403 toggle button :noai_: 25 reactions, Value: 0
+										404 image :noai_:
+										405 text 25
+									406 toggle button ❤️ 30 reactions, Value: 0
+										407 Unlabeled image ❤️
+										408 text 30
+									409 toggle button :Cat_Sticker_Cat_freaky: 18 reactions, Value: 0
+										410 image :Cat_Sticker_Cat_freaky:
+										411 text 18
+									412 toggle button 🫡 32 reactions, Value: 0
+										413 Unlabeled image 🫡
+										414 text 32
+									415 toggle button 👍 26 reactions, Value: 0
+										416 Unlabeled image 👍
+										417 text 26
+									418 toggle button :cathink: 15 reactions, Value: 0
+										419 image :cathink:
+										420 text 15
+									421 toggle button :happy_mizi: 14 reactions, Value: 0
+										422 image :happy_mizi:
+										423 text 14
+									424 toggle button :IMG_3290: 13 reactions, Value: 0
+										425 image :IMG_3290:
+										426 text 13
+									427 toggle button 💀 15 reactions, Value: 0
+										428 Unlabeled image 💀
+										429 text 15
+									430 toggle button :silly_milly_billy: 11 reactions, Value: 0
+										431 image :silly_milly_billy:
+										432 text 11
+									433 toggle button :catwave: 18 reactions, Value: 0
+										434 image :catwave:
+										435 text 18
+									436 toggle button 🔥 23 reactions, Value: 0
+										437 Unlabeled image 🔥
+										438 text 23
+									439 toggle button 🧡 15 reactions, Value: 0
+										440 Unlabeled image 🧡
+										441 text 15
+									442 toggle button :CRK1ThumbsUp: 15 reactions, Value: 0
+										443 image :CRK1ThumbsUp:
+										444 text 15
+									445 toggle button :GF_Hanging_Star: 13 reactions, Value: 0
+										446 image :GF_Hanging_Star:
+										447 text 13
+									448 toggle button :shocked: 15 reactions, Value: 0
+										449 image :shocked:, Help: :shocked: from Yapin' Headquarters
+										450 text 15
+									451 button Add reaction
+									452 button Antic's profile
+									453 button Antic
+									454 button YAP, Help: Yapin' Headquarters
+									455 button Yapin’ Plus
+									456 text Today at 4:39 AM
+									457 container
+										458 text huge update 
+										459 Unlabeled image 🎉
+										460 text @everyone
+										461 Unlabeled image 💎
+										462 text  2x shards for 3 hours: new video just dropped (
+										463 link https://youtu.be/A32KtZr09n4, Value: youtu.be/A32KtZr09n4
+										464 text ) and sorry for the messages getting eaten earlier tonight. Yap away and earn your shards 
+										465 image :happy:, Help: :happy: from Yapin' Headquarters
+										466 Unlabeled image 💬
+										467 text  chat
+
+										468 Unlabeled image 🔔
+										469 text  inbox: mentions, replies, friend requests and missed calls all in one place (bell icon)
+
+										470 Unlabeled image 📌
+										471 text  mark unread: right click a message > mark unread to come back to it later
+
+										472 Unlabeled image 🖼️
+										473 text  media tab: every pic, video and file in a channel or dm as a grid
+
+										474 Unlabeled image ⬆️
+										475 text  edit fast: press ↑ in an empty box to edit your last message
+
+										476 Unlabeled image 📏
+										477 text  chat density: cozy, compact or spacious, plus font size (settings > appearance)
+
+										478 Unlabeled image 🕐
+										479 text  status that clears itself: pick 30 min, 1h, today or this week
+
+										480 Unlabeled image ⚡
+										481 text  faster loading and smoother animations site-wide
+
+										482 Unlabeled image 📎
+										483 text  pictures get compressed before upload so they send way faster
+
+										484 Unlabeled image 🔥
+										485 text  chat streaks: chat every day and keep your streak going, it shows on your profile
+
+
+										486 Unlabeled image 🎮
+										487 text  calls
+
+										488 Unlabeled image 📺
+										489 text  watch together: paste a youtube link in a call and watch it in sync
+
+										490 Unlabeled image 🎬
+										491 text  clips: save the last 15/30/60 sec of a call or stream
+
+										492 Unlabeled image ✏️
+										493 text  whiteboard: draw together in a call
+
+										494 Unlabeled image 📶
+										495 text  connection bars in calls so you can see who’s lagging
+
+
+										496 Unlabeled image 🏠
+										497 text  servers
+
+										498 Unlabeled image 🏷️
+										499 text  tag icons: pick a little icon next to your server tag
+
+										500 Unlabeled image 🎭
+										501 text  click a role on someone’s profile to edit it, see who has it or mention it
+
+										502 Unlabeled image 🤖
+										503 text  give welcomer, levels and the other built-in bots roles
+
+
+										504 Unlabeled image ✨
+										505 text  the fun stuff
+
+										506 Unlabeled image 🎉
+										507 text  celebrations: buying or getting gifted plus, supercharging or buying a deco now gets a proper celebration animation
+
+										508 Unlabeled image 😌
+										509 text  calmer dm side panel, your profile colors only on the header
+
+
+										510 Unlabeled image 🤖
+										511 text  bots
+roblox images (rbxcdn) work in embeds, and bots can create and manage roles through the api
+
+
+										512 Unlabeled image 🛠️
+										513 text  plus a ton of fixes: swipe right anywhere on phone to get to your channels (swipe left to reply), menus don’t go off screen anymore, lobby faq empty lines work, creator cards show real views, and a bunch more from your bug reports 
+										514 Unlabeled image ❤️
+										515 image :yappy:, Help: :yappy: from Yapin' Headquarters
+										516 text  The app should feel way smoother and nicer now 
+
+nameplates, profile effects and new sounds soon... 
+										517 Unlabeled image 👀
+									518 button Show more
+									519 container
+										520 text YouTube
+										521 link Antic, Value: youtube.com/@Antic.youtube
+										522 link I Made a Better Discord and it Got 100,000 Users..., Value: youtu.be/A32KtZr09n4
+										523 button Play I Made a Better Discord and it Got 100,000 Users...
+									524 toggle button :happy: 57 reactions, Value: 0
+										525 image :happy:, Help: :happy: from Yapin' Headquarters
+										526 text 57
+									527 toggle button :DonLorenzo: 11 reactions, Value: 0
+										528 image :DonLorenzo:
+										529 text 11
+									530 toggle button :ypp: 18 reactions, Value: 0
+										531 image :ypp:
+										532 text 18
+									533 toggle button 🇳🇱 10 reactions, Value: 0
+										534 Unlabeled image 🇳🇱
+										535 text 10
+									536 toggle button :Cat1: 10 reactions, Value: 0
+										537 image :Cat1:
+										538 text 10
+									539 toggle button 🔥 24 reactions, Value: 0
+										540 Unlabeled image 🔥
+										541 text 24
+									542 toggle button :AdoSmooch: 8 reactions, Value: 0
+										543 image :AdoSmooch:
+										544 text 8
+									545 toggle button :ade: 7 reactions, Value: 0
+										546 image :ade:
+										547 text 7
+									548 toggle button 🫡 13 reactions, Value: 0
+										549 Unlabeled image 🫡
+										550 text 13
+									551 toggle button :Put_your_hands_up: 10 reactions, Value: 0
+										552 image :Put_your_hands_up:
+										553 text 10
+									554 toggle button :bricesad: 9 reactions, Value: 0
+										555 image :bricesad:, Help: :bricesad: from Yapin' Headquarters
+										556 text 9
+									557 toggle button :gappy: 30 reactions, Value: 0
+										558 image :gappy:, Help: :gappy: from Yapin' Headquarters
+										559 text 30
+									560 toggle button :AN_IQ_TOO_HIGH: 7 reactions, Value: 0
+										561 image :AN_IQ_TOO_HIGH:
+										562 text 7
+									563 toggle button :TungTungTung_Sahur: 7 reactions, Value: 0
+										564 image :TungTungTung_Sahur:
+										565 text 7
+									566 toggle button :GiorgiaMeloni: 8 reactions, Value: 0
+										567 image :GiorgiaMeloni:
+										568 text 8
+									569 toggle button :yap: 10 reactions, Value: 0
+										570 image :yap:, Help: :yap: from Yapin' Headquarters
+										571 text 10
+									572 toggle button 🎉 9 reactions, Value: 0
+										573 Unlabeled image 🎉
+										574 text 9
+									575 toggle button 🇮🇹 8 reactions, Value: 0
+										576 Unlabeled image 🇮🇹
+										577 text 8
+									578 toggle button 💀 9 reactions, Value: 0
+										579 Unlabeled image 💀
+										580 text 9
+									581 toggle button :BellCranel: 9 reactions, Value: 0
+										582 image :BellCranel:
+										583 text 9
+									584 button Add reaction
+								585 container
+									586 image
+									587 text Only certain roles can post in  # announcements . You can still read and react.
+								588 content list Members
+									589 heading YAPIN' MANAGEMENT - 1, Value: 3
+										590 text YAPIN' MANAGEMENT - 1
+									591 button Tripex Yapin’ Management
+									592 heading HEAD MODERATOR - 2, Value: 3
+										593 text HEAD MODERATOR - 2
+									594 button Professor PROF Yapin’ Plus Head Moderator Going insane
+										595 text Professor
+										596 text PROF
+										597 button Yapin’ Plus
+										598 image Head Moderator, Help: Leads Yapin’s mod team
+										599 text Going insane
+									600 button 怠竜 Tearyū NULL Head Moderator /null
+										601 text 怠竜 Tearyū
+										602 text NULL
+										603 image Head Moderator, Help: Leads Yapin’s mod team
+										604 text /null
+									605 heading MODERATOR - 5, Value: 3
+										606 text MODERATOR - 5
+									607 button Guita PROF Moderator It's Over...
+										608 text Guita
+										609 text PROF
+										610 image Moderator, Help: Yapin’ moderator
+										611 text It's Over...
+									612 button Jakens DEV Yapin’ Plus Moderator Prof is the best mod hands down
+										613 text Jakens
+										614 text DEV
+										615 button Yapin’ Plus
+										616 image Moderator, Help: Yapin’ moderator
+										617 text Prof is the best mod hands down
+									618 button Jolli RBLX Yapin’ Plus Moderator Probably developing... 🔨
+										619 text Jolli
+										620 text RBLX
+										621 button Yapin’ Plus
+										622 image Moderator, Help: Yapin’ moderator
+										623 text Probably developing... 🔨
+									624 button Tamsy MINA Moderator busy /ᐠ｡ꞈ｡ᐟ\
+										625 text Tamsy
+										626 text MINA
+										627 image Moderator, Help: Yapin’ moderator
+										628 text busy /ᐠ｡ꞈ｡ᐟ\
+									629 button Typo TYPO Yapin’ Plus Moderator Dm me if you have questions!
+										630 text Typo
+										631 text TYPO
+										632 button Yapin’ Plus
+										633 image Moderator, Help: Yapin’ moderator
+										634 text Dm me if you have questions!
+									635 heading COMMUNITY HELPER - 7, Value: 3
+										636 text COMMUNITY HELPER - 7
+									637 button .Autumn🍂 UWU Community Helper clash of clans or Royale? hop in #Clash Verse
+										638 text .Autumn🍂
+										639 text UWU
+										640 image Community Helper, Help: Helps people out in the community
+										641 text clash of clans or Royale? hop in #Clash Verse
+									642 button happy leo LEO Community Helper Throw myself inside of a pit, and rot inside of it
+										643 text happy leo
+										644 text LEO
+										645 image Community Helper, Help: Helps people out in the community
+										646 text Throw myself inside of a pit, and rot inside of it
+									647 button Nox FLUF Community Helper
+										648 text Nox
+										649 text FLUF
+										650 image Community Helper, Help: Helps people out in the community
+									651 button Nyu HELP Community Helper Just trying to help everyone 🥰 a bit tired though
+										652 text Nyu
+										653 text HELP
+										654 image Community Helper, Help: Helps people out in the community
+										655 text Just trying to help everyone 🥰 a bit tired though
+									656 button Seth | Best CH NTE Yapin’ Plus Community Helper Best Community Helper? | Ping/Dm for HQ Related Issues
+										657 text Seth | Best CH
+										658 text NTE
+										659 button Yapin’ Plus
+										660 image Community Helper, Help: Helps people out in the community
+										661 text Best Community Helper? | Ping/Dm for HQ Related Issues
+									662 button vexd 7321 Community Helper
+										663 text vexd
+										664 text 7321
+										665 image Community Helper, Help: Helps people out in the community
+									666 button wakfuonyt SAPH Yapin’ Plus Community Helper meow :3
+										667 text wakfuonyt
+										668 text SAPH
+										669 button Yapin’ Plus
+										670 image Community Helper, Help: Helps people out in the community
+										671 text meow :3
+									672 heading PLUS - 33, Value: 3
+										673 text PLUS - 33
+									674 button :3 GIP Yapin’ Plus /gip | :gip:
+										675 text :3
+										676 text GIP
+										677 button Yapin’ Plus
+										678 text /gip | :gip:
+									679 button !R Yapin’ Plus Bug Hunter Playing Roblox
+										680 text !R
+										681 button Yapin’ Plus
+										682 image Bug Hunter, Help: Found and reported a real bug. Legend.
+										683 container
+											684 text Playing  Roblox
+									685 button ꧁💛✰Łüxqüiə✰🩷꧂ LGBT Artist Playing Roblox
+										686 text ꧁💛✰Łüxqüiə✰🩷꧂
+										687 text LGBT
+										688 image Artist, Help: Makes decorations and profile effects people wear on Yapin’
+										689 container
+											690 text Playing  Roblox
+									691 button ✦𝑬𝑺𝑻𝑹𝑬𝑳𝑳𝑨✦ DEV Yapin’ Plus Bug Hunter ✦ Stars Shine With Gleam, But Sun's Shine With A Purpose. ✦
+										692 text ✦𝑬𝑺𝑻𝑹𝑬𝑳𝑳𝑨✦
+										693 text DEV
+										694 button Yapin’ Plus
+										695 image Bug Hunter, Help: Found and reported a real bug. Legend.
+										696 text ✦ Stars Shine With Gleam, But Sun's Shine With A Purpose. ✦
+							697 button Getting started
+			698 container
+				699 tab group
+					700 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						701 button Close
+					702 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 173 MB, Value: on
+						703 button Close
+					704 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						705 button Close
+			706 button New Tab
+	707 close button
+	708 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	709 minimize button
+710 menu bar
+	711 Chrome
+	712 File
+	713 Edit
+	714 View
+	715 History
+	716 Bookmarks
+	717 Profiles
+	718 Tab
+	719 Window
+	720 Help
+
+The focused UI element is 44 button announcements

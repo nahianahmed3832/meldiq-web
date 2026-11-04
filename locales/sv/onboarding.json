@@ -54,5 +54,15 @@
     "android": "Hämta Meldiq för Android",
     "title": "Meldiq inbjudan",
     "hint": "Inte inloggad ännu? Logga in eller skapa ett konto först: du kommer tillbaka till denna gemenskap."
+  },
+  "foundation": {
+    "welcomeBody": "Några detaljer gör den här platsen till din. Du kan ändra dem i Inställningar.",
+    "profileBody": "Välj hur andra ser dig. Din e-postadress förblir privat.",
+    "preferencesBody": "Välj ett behagligt utseende och ditt språk.",
+    "startBody": "Hitta dina vänner, gå med i en gemenskap eller skapa en egen.",
+    "ready": "Din plats är klar.",
+    "finish": "Börja utforska",
+    "onDevice": "Utseendevalen gäller för den här webbläsaren.",
+    "permissions": "Meldiq ber om tillgång till mikrofon, kamera eller aviseringar när du använder en funktion som behöver det."
   }
 }

@@ -1,0 +1,307 @@
+Browser tab: 2, Title: "Scheduled events · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/scheduled-events".
+1 AXWebArea Scheduled events · Bot API reference · Yapin’, URL: yapin.gg/developers/api/scheduled-events
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Scheduled events, Value: 1
+				15 text Scheduled events
+			16 text Server events with RSVP (in testing).
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-servers-id-events
+				25 text GET
+				26 text /servers/{id}/events
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/scheduled-events#get-servers-id-events
+				28 text Upcoming and live events
+				29 text Auth :  Bot token In testing : 
+				30 text server_events
+				31 text JS: 
+				32 text bot.events()
+				33 text Python: 
+				34 text bot.events()
+				35 heading PARAMETERS, Value: 4
+					36 text PARAMETERS
+				37 table
+					38 row
+						39 cell
+							40 text NAME
+						41 cell
+							42 text TYPE
+						43 cell
+							44 text DESCRIPTION
+					45 row
+						46 cell
+							47 text {id}
+						48 cell
+							49 text string (uuid)
+						50 cell
+							51 text Server id
+							52 container
+								53 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				54 heading RESPONSE200, Value: 4
+					55 text RESPONSE
+					56 text 200
+				57 text object
+				58 table
+					59 row
+						60 cell
+							61 text FIELD
+						62 cell
+							63 text TYPE
+						64 cell
+							65 text DESCRIPTION
+					66 row
+						67 cell
+							68 text events
+						69 cell
+							70 text ServerEvent[]
+						71 cell
+							72 text Live first, then by start
+							73 button (collapsed) Fields of ServerEvent, Secondary Actions: Expand
+								74 text Fields of ServerEvent
+				75 button (collapsed) Example response, Secondary Actions: Expand
+					76 text Example response
+				77 heading ERRORS, Value: 4
+					78 text ERRORS
+				79 content list
+					80 container
+						81 AXListMarker • 
+						82 text 401 Missing or wrong token
+					83 container
+						84 AXListMarker • 
+						85 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					86 container
+						87 AXListMarker • 
+						88 text 500 Something went wrong on our side
+					89 container
+						90 AXListMarker • 
+						91 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			92 container post-servers-id-events
+				93 text POST
+				94 text /servers/{id}/events
+				95 link Description: Link to this endpoint, Value: yapin.gg/developers/api/scheduled-events#post-servers-id-events
+				96 text Schedule an event
+				97 text Auth :  Bot token  +  Manage Events or Manage Server In testing : 
+				98 text server_events
+				99 text JS: 
+				100 text bot.createEvent()
+				101 text Python: 
+				102 text bot.create_event()
+				103 heading PARAMETERS, Value: 4
+					104 text PARAMETERS
+				105 table
+					106 row
+						107 cell
+							108 text NAME
+						109 cell
+							110 text TYPE
+						111 cell
+							112 text DESCRIPTION
+					113 row
+						114 cell
+							115 text {id}
+						116 cell
+							117 text string (uuid)
+						118 cell
+							119 text Server id
+							120 container
+								121 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				122 heading REQUEST BODY, Value: 4
+					123 text REQUEST BODY
+				124 text object
+				125 table
+					126 row
+						127 cell
+							128 text FIELD
+						129 cell
+							130 text TYPE
+						131 cell
+							132 text DESCRIPTION
+					133 row
+						134 cell
+							135 text title
+						136 cell
+							137 text string
+						138 cell
+							139 text Title  ( up to 100 characters )
+							140 container
+								141 text Example :  "Game night"
+					142 row
+						143 cell
+							144 text starts_at
+						145 cell
+							146 text string (date-time)
+						147 cell
+							148 text Start
+							149 container
+								150 text Example :  "2026-11-01T18:30:00.000Z"
+					151 row
+						152 cell
+							153 text description
+							154 text optional
+						155 cell
+							156 text string
+						157 cell
+							158 text Description  ( up to 1000 characters )
+							159 container
+								160 text Example :  "Bring snacks"
+					161 row
+						162 cell
+							163 text ends_at
+							164 text optional
+						165 cell
+							166 text string (date-time) | null
+						167 cell
+							168 text End
+					169 row
+						170 cell
+							171 text channel_id
+							172 text optional
+						173 cell
+							174 text string (uuid) | null
+						175 cell
+							176 text Voice channel it happens in
+							177 container
+								178 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+					179 row
+						180 cell
+							181 text location
+							182 text optional
+						183 cell
+							184 text string | null
+						185 cell
+							186 text Or somewhere else
+					187 row
+						188 cell
+							189 text announce_channel_id
+							190 text optional
+						191 cell
+							192 text string (uuid) | null
+						193 cell
+							194 text Announce it here
+					195 row
+						196 cell
+							197 text repeat
+							198 text optional
+						199 cell
+							200 text "none" | "weekly"
+						201 cell
+							202 text Repeats
+							203 container
+								204 text Example :  "none"
+					205 row
+						206 cell
+							207 text tz
+							208 text optional
+						209 cell
+							210 text string
+						211 cell
+							212 text Time zone  ( up to 64 characters )
+							213 container
+								214 text Example :  "Europe/Berlin"
+				215 button (collapsed) Example request, Secondary Actions: Expand
+					216 text Example request
+				217 heading RESPONSE201, Value: 4
+					218 text RESPONSE
+					219 text 201
+				220 text object
+				221 table
+					222 row
+						223 cell
+							224 text FIELD
+						225 cell
+							226 text TYPE
+						227 cell
+							228 text DESCRIPTION
+					229 row
+						230 cell
+							231 text event
+						232 cell
+							233 text ServerEvent
+						234 cell
+							235 text A scheduled server event
+							236 button (collapsed) Fields of ServerEvent, Secondary Actions: Expand
+								237 text Fields of ServerEvent
+				238 button (collapsed) Example response, Secondary Actions: Expand
+					239 text Example response
+				240 heading ERRORS, Value: 4
+					241 text ERRORS
+				242 content list
+					243 container
+						244 AXListMarker • 
+						245 text 400 Bad input: the error says what’s wrong
+					246 container
+						247 AXListMarker • 
+						248 text 401 Missing or wrong token
+					249 container
+						250 AXListMarker • 
+						251 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					252 container
+						253 AXListMarker • 
+						254 text 404 No such thing, or the bot can’t see it
+					255 container
+						256 AXListMarker • 
+						257 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					258 container
+						259 AXListMarker • 
+						260 text 500 Something went wrong on our side
+					261 container
+						262 AXListMarker • 
+						263 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			264 link Description: ← Back to Yapin’, Value: yapin.gg/
+			265 text  · 
+			266 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		267 container On this page
+			268 text ON THIS PAGE
+			269 content list
+				270 link Description: Overview, Value: yapin.gg/developers/api/scheduled-events#top
+				271 link Description: GET /servers/{id}/events, Value: yapin.gg/developers/api/scheduled-events#get-servers-id-events
+				272 link Description: POST /servers/{id}/events, Value: yapin.gg/developers/api/scheduled-events#post-servers-id-events
+		273 text Yapin’
+		274 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		275 heading PRODUCT, Value: 4
+			276 text PRODUCT
+		277 content list
+			278 link Description: Download, Value: yapin.gg/download
+			279 link Description: Developers, Value: yapin.gg/developers
+			280 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			281 link Description: Creator Program, Value: yapin.gg/creators
+			282 link Description: FanKit, Value: yapin.gg/fankit
+			283 link Description: Roadmap, Value: yapin.gg/roadmap
+			284 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			285 link Description: Bugs, Value: yapin.gg/bugs
+			286 link Description: Status, Value: yapin.gg/status
+		287 heading COMMUNITY, Value: 4
+			288 text COMMUNITY
+		289 content list
+			290 link Description: Guidelines, Value: yapin.gg/guidelines
+			291 link Description: Tutorials, Value: yapin.gg/tutorials
+			292 link Description: Bots, Value: yapin.gg/bots
+			293 link Description: Partners, Value: yapin.gg/partners
+		294 heading LEGAL, Value: 4
+			295 text LEGAL
+		296 content list
+			297 link Description: Terms, Value: yapin.gg/terms
+			298 link Description: Privacy, Value: yapin.gg/privacy
+			299 link Description: Copyright, Value: yapin.gg/copyright
+			300 link Description: Security, Value: yapin.gg/security
+			301 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			302 link Description: Contact, Value: mailto:hello@yapin.gg
+		303 text © 2026 Yapper Media LLC. Free to use.
+		304 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Scheduled events · Bot API reference · Yapin’, URL: yapin.gg/developers/api/scheduled-events

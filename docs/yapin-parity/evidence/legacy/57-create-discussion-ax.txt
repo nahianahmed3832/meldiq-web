@@ -1,0 +1,66 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container Create channel
+							21 heading Create channel, Value: 2
+								22 text Create channel
+							23 text in Text Channels
+							24 container
+								25 text TYPE
+								26 toggle button Text, Value: 0
+									27 image
+									28 text Text
+								29 toggle button Voice, Value: 0
+									30 image
+									31 text Voice
+								32 toggle button Discussion, Value: 1
+									33 image
+									34 text Discussion
+								35 text CHANNEL NAME
+								36 image
+								37 text field (settable) CHANNEL NAME, Placeholder: new-channel
+								38 text Private Channel
+								39 image Private channel
+								40 text Only the roles you pick (plus the owner and server managers) can see and use it.
+								41 checkbox Value: 0, Private Channel Private channel Only the roles you pick (plus the owner and server managers) can see and use it.
+							42 button Cancel
+							43 button (disabled) Create channel
+			44 container
+				45 tab group
+					46 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 204 MB, Value: on
+						47 button Close
+			48 button New Tab
+	49 close button
+	50 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	51 minimize button
+52 menu bar
+	53 Chrome
+	54 File
+	55 Edit
+	56 View
+	57 History
+	58 Bookmarks
+	59 Profiles
+	60 Tab
+	61 Window
+	62 Help
+
+The focused UI element is 32 toggle button Discussion, Value: 1

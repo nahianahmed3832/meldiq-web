@@ -1,0 +1,73 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading Chat, Value: 2
+								40 text Chat
+							41 heading Quick reactions, Value: 3
+								42 text Quick reactions
+							43 text Your go-to emojis, one click away on every message. Server emojis work too. Follows your account to every device.
+							44 button Change quick reaction 1, Help: Change
+							45 button Change quick reaction 2, Help: Change
+							46 button Change quick reaction 3, Help: Change
+							47 button Change quick reaction 4, Help: Change
+							48 button Add quick reaction
+							49 text Pick 3 to 5. They show when you hover a message and at the top of the message menu.
+							50 button Close
+			51 container
+				52 tab group
+					53 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						54 button Close
+			55 button New Tab
+	56 close button
+	57 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	58 minimize button
+59 menu bar
+	60 Chrome
+	61 File
+	62 Edit
+	63 View
+	64 History
+	65 Bookmarks
+	66 Profiles
+	67 Tab
+	68 Window
+	69 Help
+
+The focused UI element is 28 button Chat

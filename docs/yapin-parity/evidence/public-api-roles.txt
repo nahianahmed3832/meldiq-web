@@ -1,0 +1,774 @@
+Browser tab: 2, Title: "Roles · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/roles".
+1 AXWebArea Roles · Bot API reference · Yapin’, URL: yapin.gg/developers/api/roles
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Roles, Value: 1
+				15 text Roles
+			16 text Create and edit roles, hand them out (role management is in testing).
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-servers-id-roles
+				25 text GET
+				26 text /servers/{id}/roles
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/roles#get-servers-id-roles
+				28 text Roles, highest first
+				29 text Auth :  Bot token JS: 
+				30 text bot.roles()
+				31 text Python: 
+				32 text bot.roles()
+				33 heading PARAMETERS, Value: 4
+					34 text PARAMETERS
+				35 table
+					36 row
+						37 cell
+							38 text NAME
+						39 cell
+							40 text TYPE
+						41 cell
+							42 text DESCRIPTION
+					43 row
+						44 cell
+							45 text {id}
+						46 cell
+							47 text string (uuid)
+						48 cell
+							49 text Server id
+							50 container
+								51 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				52 heading RESPONSE200, Value: 4
+					53 text RESPONSE
+					54 text 200
+				55 text object
+				56 table
+					57 row
+						58 cell
+							59 text FIELD
+						60 cell
+							61 text TYPE
+						62 cell
+							63 text DESCRIPTION
+					64 row
+						65 cell
+							66 text roles
+						67 cell
+							68 text RoleListed[]
+						69 cell
+							70 text Roles
+							71 button (collapsed) Fields of RoleListed, Secondary Actions: Expand
+								72 text Fields of RoleListed
+				73 button (collapsed) Example response, Secondary Actions: Expand
+					74 text Example response
+				75 heading ERRORS, Value: 4
+					76 text ERRORS
+				77 content list
+					78 container
+						79 AXListMarker • 
+						80 text 401 Missing or wrong token
+					81 container
+						82 AXListMarker • 
+						83 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					84 container
+						85 AXListMarker • 
+						86 text 500 Something went wrong on our side
+					87 container
+						88 AXListMarker • 
+						89 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			90 container post-servers-id-roles
+				91 text POST
+				92 text /servers/{id}/roles
+				93 link Description: Link to this endpoint, Value: yapin.gg/developers/api/roles#post-servers-id-roles
+				94 text Create a role, just below the bot’s highest one
+				95 text Auth :  Bot token  +  Manage Roles In testing : 
+				96 text bot_roles
+				97 text Limit :  30 role and permission changes a minute JS: 
+				98 text bot.createRole()
+				99 text Python: 
+				100 text bot.create_role()
+				101 heading PARAMETERS, Value: 4
+					102 text PARAMETERS
+				103 table
+					104 row
+						105 cell
+							106 text NAME
+						107 cell
+							108 text TYPE
+						109 cell
+							110 text DESCRIPTION
+					111 row
+						112 cell
+							113 text {id}
+						114 cell
+							115 text string (uuid)
+						116 cell
+							117 text Server id
+							118 container
+								119 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				120 heading REQUEST BODY, Value: 4
+					121 text REQUEST BODY
+				122 text object
+				123 table
+					124 row
+						125 cell
+							126 text FIELD
+						127 cell
+							128 text TYPE
+						129 cell
+							130 text DESCRIPTION
+					131 row
+						132 cell
+							133 text name
+						134 cell
+							135 text string
+						136 cell
+							137 text 1 to 32 characters  ( up to 32 characters )
+							138 container
+								139 text Example :  "Mods"
+					140 row
+						141 cell
+							142 text color
+							143 text optional
+						144 cell
+							145 text string | integer | null
+						146 cell
+							147 text Colour
+							148 container
+								149 text Example :  "#5865f2"
+					150 row
+						151 cell
+							152 text mentionable
+							153 text optional
+						154 cell
+							155 text boolean
+						156 cell
+							157 text Anyone can @mention it
+							158 container
+								159 text Example :  false
+					160 row
+						161 cell
+							162 text permissions
+							163 text optional
+						164 cell
+							165 text { [key]: boolean }
+						166 cell
+							167 text Only ones the bot has itself. Keys: manage_channels, manage_roles, manage_emojis, manage_server, manage_webhooks, manage_events, view_audit_log, create_invite, change_nickname, manage_nicknames, kick_members, ban_members, timeout_members, send_messages, embed_links, attach_files, send_voice_messages, add_reactions, use_external_emojis, create_polls, use_headings, mention_everyone, manage_messages, create_threads, send_in_threads, manage_threads, read_history, connect, speak, mute_members, move_members, administrator
+				168 button (collapsed) Example request, Secondary Actions: Expand
+					169 text Example request
+				170 heading RESPONSE201, Value: 4
+					171 text RESPONSE
+					172 text 201
+				173 text object
+				174 table
+					175 row
+						176 cell
+							177 text FIELD
+						178 cell
+							179 text TYPE
+						180 cell
+							181 text DESCRIPTION
+					182 row
+						183 cell
+							184 text role
+						185 cell
+							186 text Role | null
+						187 cell
+							188 button (collapsed) Fields of Role, Secondary Actions: Expand
+								189 text Fields of Role
+				190 button (collapsed) Example response, Secondary Actions: Expand
+					191 text Example response
+				192 heading ERRORS, Value: 4
+					193 text ERRORS
+				194 content list
+					195 container
+						196 AXListMarker • 
+						197 text 400 Bad input: the error says what’s wrong
+					198 container
+						199 AXListMarker • 
+						200 text 401 Missing or wrong token
+					201 container
+						202 AXListMarker • 
+						203 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					204 container
+						205 AXListMarker • 
+						206 text 404 No such thing, or the bot can’t see it
+					207 container
+						208 AXListMarker • 
+						209 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					210 container
+						211 AXListMarker • 
+						212 text 500 Something went wrong on our side
+					213 container
+						214 AXListMarker • 
+						215 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			216 container patch-servers-id-roles-everyone
+				217 text PATCH
+				218 text /servers/{id}/roles/everyone
+				219 link Description: Link to this endpoint, Value: yapin.gg/developers/api/roles#patch-servers-id-roles-everyone
+				220 text Change @everyone’s permissions (only basic ones, and only ones the bot has)
+				221 text Auth :  Bot token  +  Manage Roles In testing : 
+				222 text bot_roles
+				223 text Limit :  30 role and permission changes a minute JS: 
+				224 text bot.setEveryonePerms()
+				225 text Python: 
+				226 text bot.set_everyone_perms()
+				227 heading PARAMETERS, Value: 4
+					228 text PARAMETERS
+				229 table
+					230 row
+						231 cell
+							232 text NAME
+						233 cell
+							234 text TYPE
+						235 cell
+							236 text DESCRIPTION
+					237 row
+						238 cell
+							239 text {id}
+						240 cell
+							241 text string (uuid)
+						242 cell
+							243 text Server id
+							244 container
+								245 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				246 heading REQUEST BODY, Value: 4
+					247 text REQUEST BODY
+				248 text object
+				249 table
+					250 row
+						251 cell
+							252 text FIELD
+						253 cell
+							254 text TYPE
+						255 cell
+							256 text DESCRIPTION
+					257 row
+						258 cell
+							259 text permissions
+						260 cell
+							261 text { [key]: boolean }
+						262 cell
+							263 text Keys left out stay as they are. Keys: send_messages, add_reactions, attach_files, embed_links, use_external_emojis, create_invite, change_nickname, connect, speak, create_polls, read_history, send_voice_messages, use_headings, create_threads, send_in_threads
+				264 button (collapsed) Example request, Secondary Actions: Expand
+					265 text Example request
+				266 heading RESPONSE200, Value: 4
+					267 text RESPONSE
+					268 text 200
+				269 text object
+				270 table
+					271 row
+						272 cell
+							273 text FIELD
+						274 cell
+							275 text TYPE
+						276 cell
+							277 text DESCRIPTION
+					278 row
+						279 cell
+							280 text everyone_perms
+						281 cell
+							282 text { [key]: boolean }
+						283 cell
+							284 text @everyone’s permissions now. Keys: send_messages, add_reactions, attach_files, embed_links, use_external_emojis, create_invite, change_nickname, connect, speak, create_polls, read_history, send_voice_messages, use_headings, create_threads, send_in_threads
+				285 button (collapsed) Example response, Secondary Actions: Expand
+					286 text Example response
+				287 heading ERRORS, Value: 4
+					288 text ERRORS
+				289 content list
+					290 container
+						291 AXListMarker • 
+						292 text 400 Bad input: the error says what’s wrong
+					293 container
+						294 AXListMarker • 
+						295 text 401 Missing or wrong token
+					296 container
+						297 AXListMarker • 
+						298 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					299 container
+						300 AXListMarker • 
+						301 text 404 No such thing, or the bot can’t see it
+					302 container
+						303 AXListMarker • 
+						304 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					305 container
+						306 AXListMarker • 
+						307 text 500 Something went wrong on our side
+					308 container
+						309 AXListMarker • 
+						310 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			311 container patch-servers-id-roles-rid
+				312 text PATCH
+				313 text /servers/{id}/roles/{rid}
+				314 link Description: Link to this endpoint, Value: yapin.gg/developers/api/roles#patch-servers-id-roles-rid
+				315 text Edit a role below the bot’s highest one
+				316 text Auth :  Bot token  +  Manage Roles In testing : 
+				317 text bot_roles
+				318 text Limit :  30 role and permission changes a minute JS: 
+				319 text bot.editRole()
+				320 text Python: 
+				321 text bot.edit_role()
+				322 heading PARAMETERS, Value: 4
+					323 text PARAMETERS
+				324 table
+					325 row
+						326 cell
+							327 text NAME
+						328 cell
+							329 text TYPE
+						330 cell
+							331 text DESCRIPTION
+					332 row
+						333 cell
+							334 text {id}
+						335 cell
+							336 text string (uuid)
+						337 cell
+							338 text Server id
+							339 container
+								340 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					341 row
+						342 cell
+							343 text {rid}
+						344 cell
+							345 text string (uuid)
+						346 cell
+							347 text Role id
+							348 container
+								349 text Example :  "18d2e6f3-4c1b-4a7d-8e9f-5b3c2d4a1f98"
+				350 heading REQUEST BODY, Value: 4
+					351 text REQUEST BODY
+				352 text object
+				353 table
+					354 row
+						355 cell
+							356 text FIELD
+						357 cell
+							358 text TYPE
+						359 cell
+							360 text DESCRIPTION
+					361 row
+						362 cell
+							363 text name
+							364 text optional
+						365 cell
+							366 text string
+						367 cell
+							368 text 1 to 32 characters
+							369 container
+								370 text Example :  "Mods"
+					371 row
+						372 cell
+							373 text color
+							374 text optional
+						375 cell
+							376 text string | integer | null
+						377 cell
+							378 text Colour
+							379 container
+								380 text Example :  "#5865f2"
+					381 row
+						382 cell
+							383 text mentionable
+							384 text optional
+						385 cell
+							386 text boolean
+						387 cell
+							388 text Anyone can @mention it
+							389 container
+								390 text Example :  false
+					391 row
+						392 cell
+							393 text permissions
+							394 text optional
+						395 cell
+							396 text { [key]: boolean }
+						397 cell
+							398 text Merged into the current ones. Keys: manage_channels, manage_roles, manage_emojis, manage_server, manage_webhooks, manage_events, view_audit_log, create_invite, change_nickname, manage_nicknames, kick_members, ban_members, timeout_members, send_messages, embed_links, attach_files, send_voice_messages, add_reactions, use_external_emojis, create_polls, use_headings, mention_everyone, manage_messages, create_threads, send_in_threads, manage_threads, read_history, connect, speak, mute_members, move_members, administrator
+					399 row
+						400 cell
+							401 text position
+							402 text optional
+						403 cell
+							404 text integer
+						405 cell
+							406 text New position (higher is more powerful)
+							407 container
+								408 text Example :  2
+				409 button (collapsed) Example request, Secondary Actions: Expand
+					410 text Example request
+				411 heading RESPONSE200, Value: 4
+					412 text RESPONSE
+					413 text 200
+				414 text object
+				415 table
+					416 row
+						417 cell
+							418 text FIELD
+						419 cell
+							420 text TYPE
+						421 cell
+							422 text DESCRIPTION
+					423 row
+						424 cell
+							425 text role
+						426 cell
+							427 text Role | null
+						428 cell
+							429 button (collapsed) Fields of Role, Secondary Actions: Expand
+								430 text Fields of Role
+				431 button (collapsed) Example response, Secondary Actions: Expand
+					432 text Example response
+				433 heading ERRORS, Value: 4
+					434 text ERRORS
+				435 content list
+					436 container
+						437 AXListMarker • 
+						438 text 400 Bad input: the error says what’s wrong
+					439 container
+						440 AXListMarker • 
+						441 text 401 Missing or wrong token
+					442 container
+						443 AXListMarker • 
+						444 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					445 container
+						446 AXListMarker • 
+						447 text 404 No such thing, or the bot can’t see it
+					448 container
+						449 AXListMarker • 
+						450 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					451 container
+						452 AXListMarker • 
+						453 text 500 Something went wrong on our side
+					454 container
+						455 AXListMarker • 
+						456 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			457 container delete-servers-id-roles-rid
+				458 text DELETE
+				459 text /servers/{id}/roles/{rid}
+				460 link Description: Link to this endpoint, Value: yapin.gg/developers/api/roles#delete-servers-id-roles-rid
+				461 text Delete a role below the bot’s highest one
+				462 text Auth :  Bot token  +  Manage Roles In testing : 
+				463 text bot_roles
+				464 text Limit :  30 role and permission changes a minute JS: 
+				465 text bot.deleteRole()
+				466 text Python: 
+				467 text bot.delete_role()
+				468 heading PARAMETERS, Value: 4
+					469 text PARAMETERS
+				470 table
+					471 row
+						472 cell
+							473 text NAME
+						474 cell
+							475 text TYPE
+						476 cell
+							477 text DESCRIPTION
+					478 row
+						479 cell
+							480 text {id}
+						481 cell
+							482 text string (uuid)
+						483 cell
+							484 text Server id
+							485 container
+								486 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					487 row
+						488 cell
+							489 text {rid}
+						490 cell
+							491 text string (uuid)
+						492 cell
+							493 text Role id
+							494 container
+								495 text Example :  "18d2e6f3-4c1b-4a7d-8e9f-5b3c2d4a1f98"
+				496 heading RESPONSE200, Value: 4
+					497 text RESPONSE
+					498 text 200
+				499 text Ok
+				500 table
+					501 row
+						502 cell
+							503 text FIELD
+						504 cell
+							505 text TYPE
+						506 cell
+							507 text DESCRIPTION
+					508 row
+						509 cell
+							510 text ok
+						511 cell
+							512 text true
+						513 cell
+							514 text Done
+							515 container
+								516 text Example :  true
+				517 button (collapsed) Example response, Secondary Actions: Expand
+					518 text Example response
+				519 heading ERRORS, Value: 4
+					520 text ERRORS
+				521 content list
+					522 container
+						523 AXListMarker • 
+						524 text 401 Missing or wrong token
+					525 container
+						526 AXListMarker • 
+						527 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					528 container
+						529 AXListMarker • 
+						530 text 404 No such thing, or the bot can’t see it
+					531 container
+						532 AXListMarker • 
+						533 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					534 container
+						535 AXListMarker • 
+						536 text 500 Something went wrong on our side
+					537 container
+						538 AXListMarker • 
+						539 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			540 container put-servers-id-members-uid-roles-rid
+				541 text PUT
+				542 text /servers/{id}/members/{uid}/roles/{rid}
+				543 link Description: Link to this endpoint, Value: yapin.gg/developers/api/roles#put-servers-id-members-uid-roles-rid
+				544 text Give someone a role
+				545 text Auth :  Bot token  +  Manage Roles JS: 
+				546 text bot.addRole()
+				547 text Python: 
+				548 text bot.add_role()
+				549 heading PARAMETERS, Value: 4
+					550 text PARAMETERS
+				551 table
+					552 row
+						553 cell
+							554 text NAME
+						555 cell
+							556 text TYPE
+						557 cell
+							558 text DESCRIPTION
+					559 row
+						560 cell
+							561 text {id}
+						562 cell
+							563 text string (uuid)
+						564 cell
+							565 text Server id
+							566 container
+								567 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					568 row
+						569 cell
+							570 text {uid}
+						571 cell
+							572 text string (uuid)
+						573 cell
+							574 text User id
+							575 container
+								576 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					577 row
+						578 cell
+							579 text {rid}
+						580 cell
+							581 text string (uuid)
+						582 cell
+							583 text Role id
+							584 container
+								585 text Example :  "18d2e6f3-4c1b-4a7d-8e9f-5b3c2d4a1f98"
+				586 heading RESPONSE200, Value: 4
+					587 text RESPONSE
+					588 text 200
+				589 text Ok
+				590 table
+					591 row
+						592 cell
+							593 text FIELD
+						594 cell
+							595 text TYPE
+						596 cell
+							597 text DESCRIPTION
+					598 row
+						599 cell
+							600 text ok
+						601 cell
+							602 text true
+						603 cell
+							604 text Done
+							605 container
+								606 text Example :  true
+				607 button (collapsed) Example response, Secondary Actions: Expand
+					608 text Example response
+				609 heading ERRORS, Value: 4
+					610 text ERRORS
+				611 content list
+					612 container
+						613 AXListMarker • 
+						614 text 400 Bad input: the error says what’s wrong
+					615 container
+						616 AXListMarker • 
+						617 text 401 Missing or wrong token
+					618 container
+						619 AXListMarker • 
+						620 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					621 container
+						622 AXListMarker • 
+						623 text 404 No such thing, or the bot can’t see it
+					624 container
+						625 AXListMarker • 
+						626 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					627 container
+						628 AXListMarker • 
+						629 text 500 Something went wrong on our side
+					630 container
+						631 AXListMarker • 
+						632 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			633 container delete-servers-id-members-uid-roles-rid
+				634 text DELETE
+				635 text /servers/{id}/members/{uid}/roles/{rid}
+				636 link Description: Link to this endpoint, Value: yapin.gg/developers/api/roles#delete-servers-id-members-uid-roles-rid
+				637 text Take a role away
+				638 text Auth :  Bot token  +  Manage Roles JS: 
+				639 text bot.removeRole()
+				640 text Python: 
+				641 text bot.remove_role()
+				642 heading PARAMETERS, Value: 4
+					643 text PARAMETERS
+				644 table
+					645 row
+						646 cell
+							647 text NAME
+						648 cell
+							649 text TYPE
+						650 cell
+							651 text DESCRIPTION
+					652 row
+						653 cell
+							654 text {id}
+						655 cell
+							656 text string (uuid)
+						657 cell
+							658 text Server id
+							659 container
+								660 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					661 row
+						662 cell
+							663 text {uid}
+						664 cell
+							665 text string (uuid)
+						666 cell
+							667 text User id
+							668 container
+								669 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					670 row
+						671 cell
+							672 text {rid}
+						673 cell
+							674 text string (uuid)
+						675 cell
+							676 text Role id
+							677 container
+								678 text Example :  "18d2e6f3-4c1b-4a7d-8e9f-5b3c2d4a1f98"
+				679 heading RESPONSE200, Value: 4
+					680 text RESPONSE
+					681 text 200
+				682 text Ok
+				683 table
+					684 row
+						685 cell
+							686 text FIELD
+						687 cell
+							688 text TYPE
+						689 cell
+							690 text DESCRIPTION
+					691 row
+						692 cell
+							693 text ok
+						694 cell
+							695 text true
+						696 cell
+							697 text Done
+							698 container
+								699 text Example :  true
+				700 button (collapsed) Example response, Secondary Actions: Expand
+					701 text Example response
+				702 heading ERRORS, Value: 4
+					703 text ERRORS
+				704 content list
+					705 container
+						706 AXListMarker • 
+						707 text 400 Bad input: the error says what’s wrong
+					708 container
+						709 AXListMarker • 
+						710 text 401 Missing or wrong token
+					711 container
+						712 AXListMarker • 
+						713 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					714 container
+						715 AXListMarker • 
+						716 text 404 No such thing, or the bot can’t see it
+					717 container
+						718 AXListMarker • 
+						719 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					720 container
+						721 AXListMarker • 
+						722 text 500 Something went wrong on our side
+					723 container
+						724 AXListMarker • 
+						725 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			726 link Description: ← Back to Yapin’, Value: yapin.gg/
+			727 text  · 
+			728 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		729 container On this page
+			730 text ON THIS PAGE
+			731 content list
+				732 link Description: Overview, Value: yapin.gg/developers/api/roles#top
+				733 link Description: GET /servers/{id}/roles, Value: yapin.gg/developers/api/roles#get-servers-id-roles
+				734 link Description: POST /servers/{id}/roles, Value: yapin.gg/developers/api/roles#post-servers-id-roles
+				735 link Description: PATCH /servers/{id}/roles/everyone, Value: yapin.gg/developers/api/roles#patch-servers-id-roles-everyone
+				736 link Description: PATCH /servers/{id}/roles/{rid}, Value: yapin.gg/developers/api/roles#patch-servers-id-roles-rid
+				737 link Description: DELETE /servers/{id}/roles/{rid}, Value: yapin.gg/developers/api/roles#delete-servers-id-roles-rid
+				738 link Description: PUT /servers/{id}/members/{uid}/roles/{rid}, Value: yapin.gg/developers/api/roles#put-servers-id-members-uid-roles-rid
+				739 link Description: DELETE /servers/{id}/members/{uid}/roles/{rid}, Value: yapin.gg/developers/api/roles#delete-servers-id-members-uid-roles-rid
+		740 text Yapin’
+		741 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		742 heading PRODUCT, Value: 4
+			743 text PRODUCT
+		744 content list
+			745 link Description: Download, Value: yapin.gg/download
+			746 link Description: Developers, Value: yapin.gg/developers
+			747 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			748 link Description: Creator Program, Value: yapin.gg/creators
+			749 link Description: FanKit, Value: yapin.gg/fankit
+			750 link Description: Roadmap, Value: yapin.gg/roadmap
+			751 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			752 link Description: Bugs, Value: yapin.gg/bugs
+			753 link Description: Status, Value: yapin.gg/status
+		754 heading COMMUNITY, Value: 4
+			755 text COMMUNITY
+		756 content list
+			757 link Description: Guidelines, Value: yapin.gg/guidelines
+			758 link Description: Tutorials, Value: yapin.gg/tutorials
+			759 link Description: Bots, Value: yapin.gg/bots
+			760 link Description: Partners, Value: yapin.gg/partners
+		761 heading LEGAL, Value: 4
+			762 text LEGAL
+		763 content list
+			764 link Description: Terms, Value: yapin.gg/terms
+			765 link Description: Privacy, Value: yapin.gg/privacy
+			766 link Description: Copyright, Value: yapin.gg/copyright
+			767 link Description: Security, Value: yapin.gg/security
+			768 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			769 link Description: Contact, Value: mailto:hello@yapin.gg
+		770 text © 2026 Yapper Media LLC. Free to use.
+		771 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Roles · Bot API reference · Yapin’, URL: yapin.gg/developers/api/roles

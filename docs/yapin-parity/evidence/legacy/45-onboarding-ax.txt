@@ -1,0 +1,83 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 heading Onboarding, Value: 2
+								44 text Onboarding
+							45 text New members answer a few questions when they join. Answers can give them roles, so they only see the channels they care about. Then they read the rules and land in your starting channel.
+							46 container
+								47 text Turn on onboarding Only people who join from now on go through it. Everyone can redo it from the server menu.
+								48 checkbox Value: 0, Turn on onboarding Only people who join from now on go through it. Everyone can redo it from the server menu.
+							49 container
+								50 text Must finish before chatting New members can read but not send messages until they finish.
+								51 checkbox Must finish before chatting New members can read but not send messages until they finish., Value: 0
+							52 text STARTING CHANNEL
+							53 combo box (settable) Starting channel, Value: Same as usual
+								54 text Same as usual
+							55 text Where people land when they finish.
+							56 text QUESTIONS
+							57 text Make some roles first (Roles tab) so answers can give them. Roles with mod powers, channel mod overrides or the Tickets support role can't be used here.
+							58 button Add question
+							59 button Save
+							60 button Close
+			61 container
+				62 tab group
+					63 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 204 MB, Value: on
+						64 button Close
+			65 button New Tab
+	66 close button
+	67 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	68 minimize button
+69 menu bar
+	70 Chrome
+	71 File
+	72 Edit
+	73 View
+	74 History
+	75 Bookmarks
+	76 Profiles
+	77 Tab
+	78 Window
+	79 Help
+
+The focused UI element is 38 button Onboarding

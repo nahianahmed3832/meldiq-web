@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "默认"
+  },
+  "password": {
+    "show": "显示密码",
+    "hide": "隐藏密码"
+  },
+  "navigation": {
+    "skipToContent": "跳到主要内容"
   }
 }

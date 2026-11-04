@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "Stäng av ljud"
+  },
+  "password": {
+    "show": "Visa lösenord",
+    "hide": "Dölj lösenord"
+  },
+  "navigation": {
+    "skipToContent": "Hoppa till huvudinnehållet"
   }
 }

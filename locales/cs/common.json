@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "Ztlumení"
+  },
+  "password": {
+    "show": "Zobrazit heslo",
+    "hide": "Skrýt heslo"
+  },
+  "navigation": {
+    "skipToContent": "Přejít na hlavní obsah"
   }
 }

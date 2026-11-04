@@ -1,0 +1,20 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container nahian's profile
+		2 button Close
+			3 image
+		4 container
+			5 button Edit profile
+			6 heading nahian, Value: 2
+				7 text nahian
+			8 container
+				9 text @ nahian
+			10 button 0, Help: Level 0
+			11 text Yapin’ since Oct 26, 2026 M in Meldiq Research - Private Test since Nov 1, 2026
+			12 heading ROLES IN MELDIQ RESEARCH - PRIVATE TEST, Value: 3
+				13 text ROLES IN MELDIQ RESEARCH - PRIVATE TEST
+			14 pop up button (collapsed) Research Member, Secondary Actions: Expand
+			15 button Remove Research Member
+			16 button Copy user ID
+
+The focused UI element is 2 button Close

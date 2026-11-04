@@ -1,0 +1,151 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading My Account, Value: 2
+			177 text My Account
+		178 text nahian
+		179 container
+			180 text @ nahian
+		181 button Edit profile
+		182 text DISPLAY NAME
+		183 text You haven’t added a display name yet.
+		184 button Edit
+		185 text USERNAME
+		186 text nahian
+		187 button Edit
+		188 text EMAIL
+		252 container
+			253 text n***@gmail.com
+			254 button Reveal
+		190 button Edit
+		191 heading PASSWORD AND AUTHENTICATION, Value: 3
+			192 text PASSWORD AND AUTHENTICATION
+		193 button Change password
+		255 text Account standing
+		256 text Your account is all good
+		257 text Everything works normally.
+		258 container Standing: All good
+		259 content list
+			260 container
+				261 AXListMarker • 
+				262 text Warnings from Yapin’ staff count for 3 days.
+			263 container
+				264 AXListMarker • 
+				265 text 1 warning limits your account, 2 limit it more, 3 suspend it.
+		194 container
+			195 text Two-factor authentication  ·  Off
+		196 text Add a code from an authenticator app (Google Authenticator, Authy, 1Password…) to every sign-in.
+		197 button Turn on
+		198 text Passkeys
+		199 text Log in with your face, fingerprint or screen lock instead of your password.
+		200 button Add a passkey
+		201 heading PRIVACY, Value: 3
+			202 text PRIVACY
+		203 text WHO CAN MESSAGE YOU
+		204 combo box (collapsed) WHO CAN MESSAGE YOU, Value: People in my servers and friends, ID: dms-from, Secondary Actions: Expand
+			205 text People in my servers and friends
+		206 text Friends can always message you. Blocked people never can.
+		207 text WHO CAN ADD YOU TO GROUP CHATS
+		208 combo box (collapsed) WHO CAN ADD YOU TO GROUP CHATS, Value: Friends, ID: group-adds, Secondary Actions: Expand
+			266 text Friends
+		209 text With Nobody, no one can put you in a group chat, not even friends. You can still make your own.
+		267 text WHO CAN COMMENT ON YOUR PROFILE
+		268 combo box (collapsed) WHO CAN COMMENT ON YOUR PROFILE, Value: Nobody, ID: comments-from, Secondary Actions: Expand
+			269 text Nobody
+		270 text You can delete any comment on your profile. Blocked people can never comment.
+		271 container
+			272 text Comment notifications Shows new comments on your profile in your inbox.
+			273 checkbox (settable, integer) Description: Comment notifications Shows new comments on your profile in your inbox., Value: 1
+		210 text LEAVE SERVERS
+		211 button Leave several servers at once
+		212 text Pick servers one by one or a whole folder. Servers you own stay.
+		213 text CHAT STREAK
+		274 text 1 day Best: 1 1 streak freeze left this week Today: 0 of 3 messages
+		214 text Send 3 messages a day to keep it going. Repeats, links and spam channels don’t count. A streak freeze covers a missed day.
+		215 container
+			216 text Show my streak on my profile Your 🔥 shows on your profile card. Streak badges stay yours either way.
+			217 checkbox (settable, integer) Description: Show my streak on my profile Your 🔥 shows on your profile card. Streak badges stay yours either way., Value: 1
+		218 heading VERIFICATION, Value: 3
+			219 text VERIFICATION
+		275 text Are you a YouTuber, streamer or creator? Get a badge so nobody can impersonate you. We need a link to your channel, a screenshot with your follower count, and a line in your channel bio that points back here.
+		276 text First, put this in your channel bio or description
+		277 container
+			278 text yapin:  nahian
+			279 button Copy
+		280 text That's how we know the channel is really yours. Anyone can copy a profile picture and a name, but only the owner can edit the bio. Leave it there until you get the badge. Applications without it are rejected.
+		281 container
+			282 text To qualify you need 1,000+ followers or subscribers  on the platform you're applying with. Your proof screenshot must show the follower count. Smaller channels are rejected, so apply once you're there.
+		283 container
+			284 text Your Yapin’ name has to match the channel.  Set your username or display name to the same name as your social media account before applying. Applications under a different name are rejected. Once you're verified you can change your display name whenever you want, but a new username that doesn't match removes the badge.
+		285 text PLATFORM
+		286 combo box (collapsed) PLATFORM, Value: YouTube, ID: ver-platform, Secondary Actions: Expand
+			287 text YouTube
+		288 text CHANNEL / ACCOUNT NAME
+		289 text field (settable) CHANNEL / ACCOUNT NAME, ID: ver-handle
+		290 text LINK TO IT
+		291 text field (settable) LINK TO IT, ID: ver-link
+		292 text ANYTHING ELSE WE SHOULD KNOW
+		293 text entry area (settable) ANYTHING ELSE WE SHOULD KNOW, ID: ver-note
+		294 text PROOF SCREENSHOT (MUST SHOW YOUR FOLLOWER COUNT)
+		295 container
+			296 text Add screenshot
+			297 button Add screenshot
+		298 container
+			299 text “yapin: nahian” is in my channel bio We open your channel and check before approving.
+			300 checkbox (settable, integer) Description: “yapin: nahian” is in my channel bio We open your channel and check before approving., Value: 0
+		301 button (disabled) Apply for verification
+		221 heading BUG HUNTING, Value: 3
+			222 text BUG HUNTING
+		223 container
+			224 text Found something broken or a way to do something you shouldn’t? Report it and get the Bug Hunter badge. 
+			225 link Description: The rules, Value: yapin.gg/bugs
+			226 text .
+		227 button Report a bug
+		302 text No bug reports yet.
+		228 heading YOUR DATA, Value: 3
+			229 text YOUR DATA
+		230 text Download your data
+		231 text Get a copy of your account, messages, friends and more as one JSON file. Up to 3 times a day.
+		232 button Download
+		233 container
+			234 text Read our 
+			235 link Description: Terms, Value: yapin.gg/terms
+			236 text , 
+			237 link Description: Privacy Policy, Value: yapin.gg/privacy
+			238 text  and 
+			239 link Description: Community Guidelines, Value: yapin.gg/guidelines
+			240 text . Found a bug? Use  Report a bug  above. To report a person or message, right-click it and pick  Report . For a copy of your data or legal questions, email 
+			241 link Description: [email redacted], Value: mailto:[email redacted]
+			242 text .
+		243 heading ACCOUNT, Value: 3
+			244 text ACCOUNT
+		245 text Log out of all devices
+		246 text Signs this account out everywhere, including here. Use it if you think someone else has your login.
+		247 button Log out everywhere
+		248 text Delete account
+		249 container
+			250 text Permanently deletes your account, profile, messages, friends, uploads and the servers you own. This can’t be undone.  This is your right to be forgotten (GDPR): no need to email us, and we send a confirmation to your email.
+		251 button Delete Account
+		174 button Close
+			175 image
+
+The focused UI element is 5 button My Account

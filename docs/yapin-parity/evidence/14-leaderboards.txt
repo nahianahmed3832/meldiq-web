@@ -1,0 +1,283 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		159 heading Leaderboards, Value: 2
+			160 text Leaderboards
+		161 tab group
+			162 tab (selected, settable, boolean) Level, Value: 1
+			163 tab (selectable, settable, boolean) Messages, Value: 0
+			164 tab (selectable, settable, boolean) Voice, Value: 0
+			165 tab (selectable, settable, boolean) Shards, Value: 0
+			166 tab (selectable, settable, boolean) Gifts, Value: 0
+			167 tab (selectable, settable, boolean) Invites, Value: 0
+		168 text Highest account levels.
+		169 button 🥇 TruSnooze 26 1
+			170 text 🥇
+			171 text TruSnooze
+			172 text 26
+			173 text 1
+		174 button 🥇 Syl 26 1
+			175 text 🥇
+			176 text Syl
+			177 text 26
+			178 text 1
+		179 button 🥈 Jolli Moderator 21 2
+			180 text 🥈
+			181 text Jolli
+			182 image Description: Moderator, Help: Yapin’ moderator
+			183 text 21
+			184 text 2
+		185 content list
+			186 button 🥉 Yuki Yapin’ Management 17
+				187 text 🥉
+				188 text Yuki
+				189 image Description: Yapin’ Management, Help: Runs Yapin’s staff team
+				190 text 17
+			191 button 4 Ben 16
+				192 text 4
+				193 text Ben
+				194 text 16
+			195 button 4 Confident - /user Yapin’ Partner 16
+				196 text 4
+				197 text Confident - /user
+				198 image Description: Yapin’ Partner, Help: Owns a Yapin’ Partner server: active, well moderated and Supercharged.
+				199 text 16
+			200 button 5 greninja Yapin’ Partner 15
+				201 text 5
+				202 text greninja
+				203 image Description: Yapin’ Partner, Help: Owns a Yapin’ Partner server: active, well moderated and Supercharged.
+				204 text 15
+			205 button 5 Tripex Yapin’ Management 15
+				206 text 5
+				207 text Tripex
+				208 image Description: Yapin’ Management, Help: Runs Yapin’s staff team
+				209 text 15
+			210 button 5 ⛓️𝑀𝒜𝐻𝒪𝑅𝒜𝒢𝒜☸️ Yapin’ Partner 15
+				211 text 5
+				212 text ⛓️𝑀𝒜𝐻𝒪𝑅𝒜𝒢𝒜☸️
+				213 image Description: Yapin’ Partner, Help: Owns a Yapin’ Partner server: active, well moderated and Supercharged.
+				214 text 15
+			215 button 6 ! WilliamThe4rd Bug Hunter 14
+				216 text 6
+				217 text ! WilliamThe4rd
+				218 image Description: Bug Hunter, Help: Found and reported a real bug. Legend.
+				219 text 14
+			220 button 6 Seth Nugent Community Helper 14
+				221 text 6
+				222 text Seth Nugent
+				223 image Description: Community Helper, Help: Helps people out in the community
+				224 text 14
+			225 button 7 db 13
+				226 text 7
+				227 text db
+				228 text 13
+			229 button 7 Typo Moderator 13
+				230 text 7
+				231 text Typo
+				232 image Description: Moderator, Help: Yapin’ moderator
+				233 text 13
+			234 button 7 ! Ascension Moderator 13
+				235 text 7
+				236 text ! Ascension
+				237 image Description: Moderator, Help: Yapin’ moderator
+				238 text 13
+			239 button 7 Jakens Moderator 13
+				240 text 7
+				241 text Jakens
+				242 image Description: Moderator, Help: Yapin’ moderator
+				243 text 13
+			244 button 7 .Autumn🍂 Moderator 13
+				245 text 7
+				246 text .Autumn🍂
+				247 image Description: Moderator, Help: Yapin’ moderator
+				248 text 13
+			249 button 7 d4c Bug Hunter 13
+				250 text 7
+				251 text d4c
+				252 image Description: Bug Hunter, Help: Found and reported a real bug. Legend.
+				253 text 13
+			254 button 8 Sk3Tchy OG 12
+				255 text 8
+				256 text Sk3Tchy
+				257 image Description: OG, Help: Here from the start
+				258 text 12
+			259 button 8 Moon Head Art Manager 12
+				260 text 8
+				261 text Moon
+				262 image Description: Head Art Manager, Help: Leads Yapin’s art staff
+				263 text 12
+			264 button 8 wakfuonyt Community Helper 12
+				265 text 8
+				266 text wakfuonyt
+				267 image Description: Community Helper, Help: Helps people out in the community
+				268 text 12
+			269 button 8 frejablehhh OG 12
+				270 text 8
+				271 text frejablehhh
+				272 image Description: OG, Help: Here from the start
+				273 text 12
+			274 button 8 Gold Artist 12
+				275 text 8
+				276 text Gold
+				277 image Description: Artist, Help: Makes decorations and profile effects people wear on Yapin’
+				278 text 12
+			279 button 8 怠竜 Tearyū Head Moderator 12
+				280 text 8
+				281 text 怠竜 Tearyū
+				282 image Description: Head Moderator, Help: Leads Yapin’s mod team
+				283 text 12
+			284 button 8 ﹺ !nicki Artist 12
+				285 text 8
+				286 text ﹺ !nicki
+				287 image Description: Artist, Help: Makes decorations and profile effects people wear on Yapin’
+				288 text 12
+			289 button 8 ᴶᵒˣᵒ 12
+				290 text 8
+				291 text ᴶᵒˣᵒ
+				292 text 12
+			293 button 8 WNBA 12
+				294 text 8
+				295 text WNBA
+				296 text 12
+			297 button 8 gardevoir Bug Hunter 12
+				298 text 8
+				299 text gardevoir
+				300 image Description: Bug Hunter, Help: Found and reported a real bug. Legend.
+				301 text 12
+			302 button 8 !Wo0zy 12
+				303 text 8
+				304 text !Wo0zy
+				305 text 12
+			306 button 8 Recon 12
+				307 text 8
+				308 text Recon
+				309 text 12
+			310 button 9 Fallen | Dev BOT DEV 11
+				311 text 9
+				312 text Fallen | Dev
+				313 image Description: BOT DEV, Help: Bot developer
+				314 text 11
+			315 button 9 Enigma Artist 11
+				316 text 9
+				317 text Enigma
+				318 image Description: Artist, Help: Makes decorations and profile effects people wear on Yapin’
+				319 text 11
+			320 button 9 huh 11
+				321 text 9
+				322 text huh
+				323 text 11
+			324 button 9 vaporized 11
+				325 text 9
+				326 text vaporized
+				327 text 11
+			328 button 9 𝚋𝚞𝚗𝚗𝚢 ^⌯ . ⌯^ Community Helper 11
+				329 text 9
+				330 text 𝚋𝚞𝚗𝚗𝚢 ^⌯ . ⌯^
+				331 image Description: Community Helper, Help: Helps people out in the community
+				332 text 11
+			333 button 9 Yapero Artist 11
+				334 text 9
+				335 text Yapero
+				336 image Description: Artist, Help: Makes decorations and profile effects people wear on Yapin’
+				337 text 11
+			338 button 9 Saint Aspen OG 11
+				339 text 9
+				340 text Saint Aspen
+				341 image Description: OG, Help: Here from the start
+				342 text 11
+			343 button 9 0K 11
+				344 text 9
+				345 text 0K
+				346 text 11
+			347 button 9 Anthony Bug Hunter 11
+				348 text 9
+				349 text Anthony
+				350 image Description: Bug Hunter, Help: Found and reported a real bug. Legend.
+				351 text 11
+			352 button 9 Finanzamt 11
+				353 text 9
+				354 text Finanzamt
+				355 text 11
+			356 button 9 Rei Bug Hunter 11
+				357 text 9
+				358 text Rei
+				359 image Description: Bug Hunter, Help: Found and reported a real bug. Legend.
+				360 text 11
+			361 button 9 SHY 𑣲. Head Moderator 11
+				362 text 9
+				363 text SHY 𑣲.
+				364 image Description: Head Moderator, Help: Leads Yapin’s mod team
+				365 text 11
+			366 button 9 ImproperHound 11
+				367 text 9
+				368 text ImproperHound
+				369 text 11
+			370 button 9 B-Rice Creator 11
+				371 text 9
+				372 text B-Rice
+				373 image Description: Creator, Help: Makes videos about Yapin’. In the Creator Program
+				374 text 11
+			375 button 9 JAYC Artist 11
+				376 text 9
+				377 text JAYC
+				378 image Description: Artist, Help: Makes decorations and profile effects people wear on Yapin’
+				379 text 11
+			380 button 9 ivy Artist 11
+				381 text 9
+				382 text ivy
+				383 image Description: Artist, Help: Makes decorations and profile effects people wear on Yapin’
+				384 text 11
+			385 button 9 jyp Artist 11
+				386 text 9
+				387 text jyp
+				388 image Description: Artist, Help: Makes decorations and profile effects people wear on Yapin’
+				389 text 11
+			390 button 9 … 11
+				391 text 9
+				392 text …
+				393 text 11
+			394 button 9 ✦𝑬𝑺𝑻𝑹𝑬𝑳𝑳𝑨✦ Bug Hunter 11
+				395 text 9
+				396 text ✦𝑬𝑺𝑻𝑹𝑬𝑳𝑳𝑨✦
+				397 image Description: Bug Hunter, Help: Found and reported a real bug. Legend.
+				398 text 11
+			399 button 9 dumpling 11
+				400 text 9
+				401 text dumpling
+				402 text 11
+			403 button 9 Développeur (Reqeuss) BOT DEV 11
+				404 text 9
+				405 text Développeur (Reqeuss)
+				406 image Description: BOT DEV, Help: Bot developer
+				407 text 11
+		408 text Level up once to get a spot on the board.
+		409 container
+			410 text Updates every 10 minutes.  Bots and banned accounts don’t count.
+		411 heading PRIVACY, Value: 3
+			412 text PRIVACY
+		413 container
+			414 text Hide me from leaderboards You won’t show up on any leaderboard.
+			415 checkbox (settable, integer) Description: Hide me from leaderboards You won’t show up on any leaderboard., Value: 0
+		157 button Close
+			158 image
+
+The focused UI element is 23 button Leaderboards

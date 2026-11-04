@@ -1,0 +1,106 @@
+Browser tab: 6, Title: "Download Meldiq — Windows, Web & Android · Meldiq", URL: "https://meldiq.app/download".
+1 AXWebArea Download Meldiq — Windows, Web & Android · Meldiq, URL: meldiq.app/download
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/download#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Download, Value: meldiq.app/
+				16 heading Download Meldiq., Value: 1
+					17 text Download Meldiq.
+				18 text Open a tab, download the Windows app or take Meldiq along on Android. One account keeps your communities and conversations together.
+			19 container
+				20 text ● AVAILABLE NOW web.meldiq.app
+				21 container
+					22 text A familiar place.
+					23 text Any open tab.
+				24 heading Meldiq for the web, Value: 2
+					25 text Meldiq for the web
+				26 text No installation. No waiting. Just you and your people.
+				27 link Description: Open Meldiq in your browser, Value: web.meldiq.app/
+				28 text Recent Chrome, Edge, Firefox and Safari versions. ● AVAILABLE NOW
+				29 container
+					30 text Good company.
+					31 text On the go.
+				32 heading Meldiq for Android, Value: 2
+					33 text Meldiq for Android
+				34 text Keep your community close, wherever the day takes you.
+				35 link Description: Get it on Google Play, Value: play.google.com/store/apps/details?id=com.meldiq.android
+				36 text Official listing · Availability may vary by region. WINDOWS
+				37 heading Meldiq for Windows, Value: 2
+					38 text Meldiq for Windows
+				39 text Your conversations, in a dedicated desktop app.
+				40 link Description: Download for Windows, Value: meldiq.app/downloads/windows/0.3.0/65537b02b6c2f722/Meldiq-Setup-0.3.0-x64.exe
+				41 container
+					42 text 64-bit · Version  0.3.0  ·  124.3 MB
+				43 button (collapsed) Release information, Secondary Actions: Expand
+					44 text Release information
+			45 container
+				46 text A FEW MORE PLACES TO CALL HOME.
+				47 heading Next on the horizon., Value: 2
+					48 text Next on the 
+					49 text horizon.
+				50 text Native apps are planned for these platforms. We’ll share more when they’re ready.
+				51 heading iPhone & iPad, Value: 3
+					52 text iPhone & iPad
+				53 text Coming soon
+				54 text Not available yet. No release date announced.
+				55 heading macOS, Value: 3
+					56 text macOS
+				57 text Coming soon
+				58 text Not available yet. No release date announced.
+				59 text Until then, your browser is an open door. 
+				60 link Description: Use Meldiq on the web ↗, Value: web.meldiq.app/
+			61 container
+				62 heading Your next community starts here., Value: 2
+					63 text Your next community
+					64 text starts 
+					65 text here.
+				66 text Create a free account, invite your friends,
+				67 text and bring your conversations together.
+				68 link Description: Create a Free Account, Value: meldiq.app/signup
+				69 link Description: Explore Meldiq, Value: meldiq.app/features
+		70 container
+			71 link Description: Meldiq home, Value: meldiq.app/
+			72 text Communities, direct messages and calls in one place.
+			73 link Description: Open Meldiq, Value: web.meldiq.app/
+			74 heading PRODUCT, Value: 2
+				75 text PRODUCT
+			76 link Description: Features, Value: meldiq.app/features
+			77 link Description: Pricing, Value: meldiq.app/pricing
+			78 link Description: Download, Value: meldiq.app/download
+			79 link Description: Developers, Value: meldiq.app/developers
+			80 link Description: Bots, Value: meldiq.app/bots
+			81 link Description: Roadmap, Value: meldiq.app/roadmap
+			82 link Description: Brand kit, Value: meldiq.app/brand
+			83 link Description: Service status, Value: status.meldiq.app/
+			84 heading COMMUNITY, Value: 2
+				85 text COMMUNITY
+			86 link Description: Find your community, Value: meldiq.app/community
+			87 link Description: Getting started, Value: meldiq.app/tutorials
+			88 link Description: Questions & answers, Value: meldiq.app/faq
+			89 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			90 link Description: Your account, Value: meldiq.app/account
+			91 link Description: Billing, Value: meldiq.app/account/billing
+			92 link Description: Contact support, Value: meldiq.app/support
+			93 heading LEGAL, Value: 2
+				94 text LEGAL
+			95 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			96 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			97 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			98 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			99 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			100 link Description: Security & encryption, Value: meldiq.app/security
+			101 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			102 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			103 link Description: Back to top ↑, Value: meldiq.app/download#top
+
+The focused UI element is 1 AXWebArea Download Meldiq — Windows, Web & Android · Meldiq, URL: meldiq.app/download

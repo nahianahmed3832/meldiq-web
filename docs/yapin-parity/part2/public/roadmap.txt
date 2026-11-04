@@ -1,0 +1,91 @@
+Browser tab: 6, Title: "Roadmap · Meldiq", URL: "https://meldiq.app/roadmap".
+1 AXWebArea Roadmap · Meldiq, URL: meldiq.app/roadmap
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/roadmap#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Roadmap, Value: meldiq.app/
+				16 text WHERE MELDIQ IS TODAY
+				17 heading More places to connect., Value: 1
+					18 text More places to connect.
+				19 text A straightforward look at supported platforms and what is planned. Planned apps have no announced release date.
+			20 container
+				21 text 01
+				22 heading Available: web, Value: 2
+					23 text Available: web
+				24 text Use Meldiq in a supported browser, with no installation required. Your account brings communities, messages and calls together.
+				25 link Description: Open the web app, Value: web.meldiq.app/
+			26 container
+				27 text 02
+				28 heading Available: Android, Value: 2
+					29 text Available: Android
+				30 text The official Meldiq Android listing is on Google Play. Availability can vary by region and device.
+				31 link Description: View on Google Play, Value: play.google.com/store/apps/details?id=com.meldiq.android
+			32 container
+				33 text 03
+				34 heading Available: Windows, Value: 2
+					35 text Available: Windows
+				36 text Meldiq has a dedicated 64-bit Windows app. The download page includes the current version, release information and checksum.
+				37 link Description: Get Meldiq for Windows, Value: meldiq.app/download
+			38 container
+				39 text 04
+				40 heading Planned: iPhone, iPad & macOS, Value: 2
+					41 text Planned: iPhone, iPad & macOS
+				42 text Native apps for Apple devices are planned. They are not available for download here, and no release date has been announced. You can use the web app in the meantime.
+				43 link Description: Current download options, Value: meldiq.app/download
+			44 container
+				45 text 05
+				46 heading Your feedback helps, Value: 2
+					47 text Your feedback helps
+				48 text Found a bug or a rough edge? Include the affected platform, what happened and the steps that reproduce it when contacting support. Keep private conversation content out of your report.
+				49 link Description: Report a problem, Value: meldiq.app/support
+			50 container
+				51 heading Make yourself at home., Value: 2
+					52 text Make yourself at home.
+				53 text Your next conversation is only a tab away.
+				54 link Description: Open Meldiq, Value: web.meldiq.app/
+		55 container
+			56 link Description: Meldiq home, Value: meldiq.app/
+			57 text Communities, direct messages and calls in one place.
+			58 link Description: Open Meldiq, Value: web.meldiq.app/
+			59 heading PRODUCT, Value: 2
+				60 text PRODUCT
+			61 link Description: Features, Value: meldiq.app/features
+			62 link Description: Pricing, Value: meldiq.app/pricing
+			63 link Description: Download, Value: meldiq.app/download
+			64 link Description: Developers, Value: meldiq.app/developers
+			65 link Description: Bots, Value: meldiq.app/bots
+			66 link Description: Roadmap, Value: meldiq.app/roadmap
+			67 link Description: Brand kit, Value: meldiq.app/brand
+			68 link Description: Service status, Value: status.meldiq.app/
+			69 heading COMMUNITY, Value: 2
+				70 text COMMUNITY
+			71 link Description: Find your community, Value: meldiq.app/community
+			72 link Description: Getting started, Value: meldiq.app/tutorials
+			73 link Description: Questions & answers, Value: meldiq.app/faq
+			74 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			75 link Description: Your account, Value: meldiq.app/account
+			76 link Description: Billing, Value: meldiq.app/account/billing
+			77 link Description: Contact support, Value: meldiq.app/support
+			78 heading LEGAL, Value: 2
+				79 text LEGAL
+			80 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			81 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			82 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			83 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			84 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			85 link Description: Security & encryption, Value: meldiq.app/security
+			86 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			87 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			88 link Description: Back to top ↑, Value: meldiq.app/roadmap#top
+
+The focused UI element is 1 AXWebArea Roadmap · Meldiq, URL: meldiq.app/roadmap

@@ -1,3 +1,4 @@
+import { PasswordInput } from "../components/PasswordInput";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { useT as useLocalization } from "../../i18n";
@@ -84,7 +85,7 @@ export function RecoverCompleteForm(props: { ctx: FormContext; ticket: string; n
         label={l10n("auth.reset_new_password")}
         hint={uiText("auth.interface.at_least_value0_characters_every_device_of_the_account_signs_out_78e692b", { value0: PASSWORD_MIN_LENGTH })}
       >
-        <input id="rc-password" className="input" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <PasswordInput id="rc-password" className="input" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       <button className="btn btn-primary btn-lg" disabled={busy}>
         {busy ? l10n("common.common_saving") : uiText("auth.interface.move_my_account_1fdc374")}

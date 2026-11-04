@@ -1,0 +1,347 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq
+								25 container
+									26 button Yapin' Headquarters
+									27 text 10
+								28 container
+									29 button MINECRAFT
+									30 text 13
+								31 button Create a server
+								32 button Discover servers
+							33 container
+								34 button Yapin' Headquarters Yapin’ Partner 3
+									35 text Yapin' Headquarters
+									36 button Yapin’ Partner
+									37 text 3
+								38 button Lobby
+								39 button Invite people
+								40 button New here? Read the rules
+								41 button Dismiss
+								42 container
+									43 button Rules rules
+									44 button announcements
+									45 button staff-announcements @8
+									46 button faq
+									47 button add-app-to-phone
+									48 button staff-application
+									49 button giveaways @2
+									50 button hall-of-shame
+									51 button general
+									52 button media
+									53 button yapin-fanart
+									54 button international-chat
+									55 button memes
+									56 button gaming
+									57 button promote-your-server
+									58 button pets
+									59 button suggestions-new
+									60 button emoji-suggestions
+									61 button feedback
+									62 button Stage QnA
+									63 button General
+									64 button wakfuonyt
+									65 button Sayori LIVE
+									66 button Cyn
+									67 button ✦︎buckmi✦︎ LIVE
+									68 button jr
+									69 button 🌸Choccy🌸
+									70 button creatorofpi
+									71 button 𝚋𝚞𝚗𝚗𝚢 ^⌯ . ⌯^
+									72 button DivineArtist LIVE
+									73 button sosa. LIVE
+									74 button white.heat
+									75 button totakeke
+									76 button ___________________
+									77 button Guest616
+									78 button Gaming
+									79 button Yap
+									80 button yap 2
+									81 button yap 3
+								82 pop up button nahian Online, Help: Your account
+									83 text nahian
+									84 text Online
+								85 button Inbox
+								86 button Settings
+								87 button Log out
+							88 container
+								89 image
+								90 button general
+								91 container Slowmode
+									92 image
+									93 text 10s
+								94 button Mute
+								95 button Threads
+								96 button Pinned messages
+								97 button Media
+								98 button Members
+								99 button Search Yapin' Headquarters, Help: Search this server
+								100 container
+									101 button Load older messages
+									102 text Sunday, November 1, 2026
+									103 splitter New messages
+									104 button yuki insert kanye4 staring gif here
+									105 button dxg's profile
+									106 button Crysis
+									107 container Verified Twitch · Tired_Crysis
+									108 button LARP, Help: Server tag. Click to see the server
+									109 text Today at 11:16 AM
+									110 text inserts
+									111 button ZLI ??? who the fuck are YOU
+									112 button griffin.1's profile
+									113 button griffin
+									114 text Today at 11:17 AM
+									115 container
+										116 text Answer my question first 
+										117 Unlabeled image 😒
+									118 button zeebers im so populoar and loved right guys put an X for the joke to work
+									119 button go_pekay.'s profile
+									120 button Pesh 💫
+									121 button MEME, Help: Server tag. Click to see the server
+									122 image Bug Hunter, Help: Found and reported a real bug. Legend.
+									123 text Today at 11:17 AM
+									124 text Yea
+									125 button griffin Answer my question first 😒
+									126 button ZLI's profile
+									127 button ZLI
+									128 text Today at 11:17 AM
+									129 text no u
+									130 button dxg's profile
+									131 button Crysis
+									132 container Verified Twitch · Tired_Crysis
+									133 button LARP, Help: Server tag. Click to see the server
+									134 text Today at 11:17 AM
+									135 text guys what is an orphans family photo called
+									136 button ✦𝑬𝑺𝑻𝑹𝑬𝑳𝑳𝑨✦ thanks
+									137 button LadyShark2026's profile
+									138 button 🎀🫧🦈💛 { LADY SHARK } 💛🦈🫧🎀
+									139 button GIRL, Help: Server tag. Click to see the server
+									140 image Artist, Help: Makes decorations and profile effects people wear on Yapin’
+									141 text Today at 11:17 AM
+									142 text No problem <3
+									143 button dull's profile
+									144 button utqi
+									145 button 90, Help: Server tag. Click to see the server
+									146 text Today at 11:17 AM
+									147 text Hi
+									148 button reflection makes sense 😭
+									149 button valleonz's profile
+									150 button valleonz
+									151 image Bug Hunter, Help: Found and reported a real bug. Legend.
+									152 text Today at 11:17 AM
+									153 text Yup
+									154 button bvd racism is classed by some as "dark humour" and yet i don't see people being racist in order to lighten the mood (usually they're the ones ruining it)
+									155 button yuki69's profile
+									156 button yuki
+									157 button YAP, Help: Yapin' Headquarters
+									158 image OG, Help: Here from the start
+									159 text Today at 11:17 AM
+									160 text who was being racist??
+									161 button zeebers's profile
+									162 button zeebers
+									163 button MARS, Help: Server tag. Click to see the server
+									164 text Today at 11:17 AM
+									165 text chat im popular
+
+
+
+
+(enrique normal)
+									166 toggle button 😭 2 reactions, Value: 0
+										167 Unlabeled image 😭
+										168 text 2
+									169 toggle button ✅ 1 reaction, Value: 0
+										170 Unlabeled image ✅
+										171 text 1
+									172 toggle button :josker: 1 reaction, Value: 0
+										173 container :josker:
+										174 text 1
+									175 button Add reaction
+									176 button ZLI no u
+									177 button griffin.1's profile
+									178 button griffin
+									179 text Today at 11:17 AM
+									180 text Noo
+									181 button yuki who was being racist??
+									182 button bvds's profile
+									183 button bvd
+									184 button DORK, Help: Server tag. Click to see the server
+									185 text Today at 11:17 AM
+									186 text it's an analogy buddy
+									187 button dxg's profile
+									188 button Crysis
+									189 container Verified Twitch · Tired_Crysis
+									190 button LARP, Help: Server tag. Click to see the server
+									191 text Today at 11:17 AM
+									192 text a selfie
+								193 container
+									194 container Slowmode: 10s
+										195 image
+									196 button Send a file
+									197 text entry area (settable) Message #general
+									198 container
+										199 button Create a poll
+										200 button GIF
+										201 button Emoji
+										202 button Record a voice message
+									203 button (disabled) Send
+								204 container
+									205 text Crysis ,  ⚞kati⚟ ,  yuki  and 2 more are yapping
+								206 content list Members
+									207 heading YAPIN' MANAGEMENT - 1, Value: 3
+										208 text YAPIN' MANAGEMENT - 1
+									209 button Tripex Yapin’ Management
+									210 heading HEAD MODERATOR - 2, Value: 3
+										211 text HEAD MODERATOR - 2
+									212 button Professor PROF Yapin’ Plus Head Moderator Going insane
+										213 text Professor
+										214 text PROF
+										215 button Yapin’ Plus
+										216 image Head Moderator, Help: Leads Yapin’s mod team
+										217 text Going insane
+									218 button 怠竜 Tearyū NULL Head Moderator /null
+										219 text 怠竜 Tearyū
+										220 text NULL
+										221 image Head Moderator, Help: Leads Yapin’s mod team
+										222 text /null
+									223 heading MODERATOR - 5, Value: 3
+										224 text MODERATOR - 5
+									225 button Guita PROF Moderator It's Over...
+										226 text Guita
+										227 text PROF
+										228 image Moderator, Help: Yapin’ moderator
+										229 text It's Over...
+									230 button Jakens DEV Yapin’ Plus Moderator Prof is the best mod hands down
+										231 text Jakens
+										232 text DEV
+										233 button Yapin’ Plus
+										234 image Moderator, Help: Yapin’ moderator
+										235 text Prof is the best mod hands down
+									236 button Jolli RBLX Yapin’ Plus Moderator Probably developing... 🔨
+										237 text Jolli
+										238 text RBLX
+										239 button Yapin’ Plus
+										240 image Moderator, Help: Yapin’ moderator
+										241 text Probably developing... 🔨
+									242 button Tamsy MINA Moderator busy /ᐠ｡ꞈ｡ᐟ\
+										243 text Tamsy
+										244 text MINA
+										245 image Moderator, Help: Yapin’ moderator
+										246 text busy /ᐠ｡ꞈ｡ᐟ\
+									247 button Typo TYPO Yapin’ Plus Moderator Dm me if you have questions!
+										248 text Typo
+										249 text TYPO
+										250 button Yapin’ Plus
+										251 image Moderator, Help: Yapin’ moderator
+										252 text Dm me if you have questions!
+									253 heading COMMUNITY HELPER - 7, Value: 3
+										254 text COMMUNITY HELPER - 7
+									255 button .Autumn🍂 UWU Community Helper clash of clans or Royale? hop in #Clash Verse
+										256 text .Autumn🍂
+										257 text UWU
+										258 image Community Helper, Help: Helps people out in the community
+										259 text clash of clans or Royale? hop in #Clash Verse
+									260 button happy leo LEO Community Helper Throw myself inside of a pit, and rot inside of it
+										261 text happy leo
+										262 text LEO
+										263 image Community Helper, Help: Helps people out in the community
+										264 text Throw myself inside of a pit, and rot inside of it
+									265 button Nox FLUF Community Helper
+										266 text Nox
+										267 text FLUF
+										268 image Community Helper, Help: Helps people out in the community
+									269 button Nyu HELP Community Helper Just trying to help everyone 🥰 a bit tired though
+										270 text Nyu
+										271 text HELP
+										272 image Community Helper, Help: Helps people out in the community
+										273 text Just trying to help everyone 🥰 a bit tired though
+									274 button Seth | Best CH NTE Yapin’ Plus Community Helper Best Community Helper? | Ping/Dm for HQ Related Issues
+										275 text Seth | Best CH
+										276 text NTE
+										277 button Yapin’ Plus
+										278 image Community Helper, Help: Helps people out in the community
+										279 text Best Community Helper? | Ping/Dm for HQ Related Issues
+									280 button vexd 7321 Community Helper
+										281 text vexd
+										282 text 7321
+										283 image Community Helper, Help: Helps people out in the community
+									284 button wakfuonyt SAPH Yapin’ Plus Community Helper meow :3
+										285 text wakfuonyt
+										286 text SAPH
+										287 button Yapin’ Plus
+										288 image Community Helper, Help: Helps people out in the community
+										289 text meow :3
+									290 heading PLUS - 33, Value: 3
+										291 text PLUS - 33
+									292 button :3 GIP Yapin’ Plus /gip | :gip:
+										293 text :3
+										294 text GIP
+										295 button Yapin’ Plus
+										296 text /gip | :gip:
+									297 button !R Yapin’ Plus Bug Hunter Playing Roblox
+										298 text !R
+										299 button Yapin’ Plus
+										300 image Bug Hunter, Help: Found and reported a real bug. Legend.
+										301 container
+											302 text Playing  Roblox
+									303 button ꧁💛✰Łüxqüiə✰🩷꧂ LGBT Artist Playing Roblox
+										304 text ꧁💛✰Łüxqüiə✰🩷꧂
+										305 text LGBT
+										306 image Artist, Help: Makes decorations and profile effects people wear on Yapin’
+										307 container
+											308 text Playing  Roblox
+									309 button ✦𝑬𝑺𝑻𝑹𝑬𝑳𝑳𝑨✦ DEV Yapin’ Plus Bug Hunter ✦ Stars Shine With Gleam, But Sun's Shine With A Purpose. ✦
+										310 text ✦𝑬𝑺𝑻𝑹𝑬𝑳𝑳𝑨✦
+										311 text DEV
+										312 button Yapin’ Plus
+										313 image Bug Hunter, Help: Found and reported a real bug. Legend.
+										314 text ✦ Stars Shine With Gleam, But Sun's Shine With A Purpose. ✦
+							315 button Getting started
+			316 container
+				317 tab group
+					318 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						319 button Close
+					320 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 302 MB, Value: on
+						321 button Close
+					322 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						323 button Close
+			324 button New Tab
+	325 close button
+	326 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	327 minimize button
+328 menu bar
+	329 Chrome
+	330 File
+	331 Edit
+	332 View
+	333 History
+	334 Bookmarks
+	335 Profiles
+	336 Tab
+	337 Window
+	338 Help
+
+The focused UI element is 197 text entry area (settable) Message #general

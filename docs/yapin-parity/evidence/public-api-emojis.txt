@@ -1,0 +1,542 @@
+Browser tab: 2, Title: "Emojis · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/emojis".
+1 AXWebArea Emojis · Bot API reference · Yapin’, URL: yapin.gg/developers/api/emojis
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Emojis, Value: 1
+				15 text Emojis
+			16 text A server’s custom emojis: list, add, rename, delete (in testing).
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-channels-id-messages-mid-emojis
+				25 text GET
+				26 text /channels/{id}/messages/{mid}/emojis
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/emojis#get-channels-id-messages-mid-emojis
+				28 text The custom emojis in one message (text, embeds, buttons, reactions), from any server, for steal emoji commands
+				29 text Auth :  Bot token  +  Read Message History In testing : 
+				30 text bot_emoji_lookup
+				31 text Limit :  60 lookups a minute JS: 
+				32 text bot.messageEmojis()
+				33 text Python: 
+				34 text bot.message_emojis()
+				35 text Only emojis already in this message: there’s no way to list another server’s emojis. To copy one into your server, download url and send it to POST /servers/{id}/emojis (Manage Emoji there). Emojis that were deleted are left out.
+				36 heading PARAMETERS, Value: 4
+					37 text PARAMETERS
+				38 table
+					39 row
+						40 cell
+							41 text NAME
+						42 cell
+							43 text TYPE
+						44 cell
+							45 text DESCRIPTION
+					46 row
+						47 cell
+							48 text {id}
+						49 cell
+							50 text string (uuid)
+						51 cell
+							52 text Channel id
+							53 container
+								54 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					55 row
+						56 cell
+							57 text {mid}
+						58 cell
+							59 text string (uuid)
+						60 cell
+							61 text Message id
+							62 container
+								63 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+				64 heading RESPONSE200, Value: 4
+					65 text RESPONSE
+					66 text 200
+				67 text object
+				68 table
+					69 row
+						70 cell
+							71 text FIELD
+						72 cell
+							73 text TYPE
+						74 cell
+							75 text DESCRIPTION
+					76 row
+						77 cell
+							78 text emojis
+						79 cell
+							80 text FoundEmoji[]
+						81 cell
+							82 text In the order they first show up
+							83 button (collapsed) Fields of FoundEmoji, Secondary Actions: Expand
+								84 text Fields of FoundEmoji
+				85 button (collapsed) Example response, Secondary Actions: Expand
+					86 text Example response
+				87 heading ERRORS, Value: 4
+					88 text ERRORS
+				89 content list
+					90 container
+						91 AXListMarker • 
+						92 text 401 Missing or wrong token
+					93 container
+						94 AXListMarker • 
+						95 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					96 container
+						97 AXListMarker • 
+						98 text 404 No such thing, or the bot can’t see it
+					99 container
+						100 AXListMarker • 
+						101 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					102 container
+						103 AXListMarker • 
+						104 text 500 Something went wrong on our side
+					105 container
+						106 AXListMarker • 
+						107 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			108 container get-servers-id-emojis
+				109 text GET
+				110 text /servers/{id}/emojis
+				111 link Description: Link to this endpoint, Value: yapin.gg/developers/api/emojis#get-servers-id-emojis
+				112 text The server’s custom emojis and how many it can have
+				113 text Auth :  Bot token In testing : 
+				114 text bot_emojis
+				115 text Limit :  60 lookups a minute JS: 
+				116 text bot.emojis()
+				117 text Python: 
+				118 text bot.emojis()
+				119 heading PARAMETERS, Value: 4
+					120 text PARAMETERS
+				121 table
+					122 row
+						123 cell
+							124 text NAME
+						125 cell
+							126 text TYPE
+						127 cell
+							128 text DESCRIPTION
+					129 row
+						130 cell
+							131 text {id}
+						132 cell
+							133 text string (uuid)
+						134 cell
+							135 text Server id
+							136 container
+								137 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				138 heading RESPONSE200, Value: 4
+					139 text RESPONSE
+					140 text 200
+				141 text object
+				142 table
+					143 row
+						144 cell
+							145 text FIELD
+						146 cell
+							147 text TYPE
+						148 cell
+							149 text DESCRIPTION
+					150 row
+						151 cell
+							152 text emojis
+						153 cell
+							154 text CustomEmoji[]
+						155 cell
+							156 text Oldest first
+							157 button (collapsed) Fields of CustomEmoji, Secondary Actions: Expand
+								158 text Fields of CustomEmoji
+					159 row
+						160 cell
+							161 text limit
+						162 cell
+							163 text integer
+						164 cell
+							165 text Emoji slots the server has (50, more with Supercharge)
+							166 container
+								167 text Example :  50
+				168 button (collapsed) Example response, Secondary Actions: Expand
+					169 text Example response
+				170 heading ERRORS, Value: 4
+					171 text ERRORS
+				172 content list
+					173 container
+						174 AXListMarker • 
+						175 text 401 Missing or wrong token
+					176 container
+						177 AXListMarker • 
+						178 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					179 container
+						180 AXListMarker • 
+						181 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					182 container
+						183 AXListMarker • 
+						184 text 500 Something went wrong on our side
+					185 container
+						186 AXListMarker • 
+						187 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			188 container post-servers-id-emojis
+				189 text POST
+				190 text /servers/{id}/emojis
+				191 link Description: Link to this endpoint, Value: yapin.gg/developers/api/emojis#post-servers-id-emojis
+				192 text Add a custom emoji (checked like every new emoji before it shows up)
+				193 text Auth :  Bot token  +  Manage Emoji In testing : 
+				194 text bot_emojis
+				195 text Limit :  30 emoji changes a minute JS: 
+				196 text bot.createEmoji()
+				197 text Python: 
+				198 text bot.create_emoji()
+				199 text PNG, GIF or WebP up to 1 MB; still pictures are shrunk to 128 px. Counts toward the server’s emoji slots. An emoji our check isn’t sure about waits for a moderator: then emoji is null and pending is true.
+				200 heading PARAMETERS, Value: 4
+					201 text PARAMETERS
+				202 table
+					203 row
+						204 cell
+							205 text NAME
+						206 cell
+							207 text TYPE
+						208 cell
+							209 text DESCRIPTION
+					210 row
+						211 cell
+							212 text {id}
+						213 cell
+							214 text string (uuid)
+						215 cell
+							216 text Server id
+							217 container
+								218 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				219 heading REQUEST BODY, Value: 4
+					220 text REQUEST BODY
+				221 text object
+				222 table
+					223 row
+						224 cell
+							225 text FIELD
+						226 cell
+							227 text TYPE
+						228 cell
+							229 text DESCRIPTION
+					230 row
+						231 cell
+							232 text name
+						233 cell
+							234 text string
+						235 cell
+							236 text 2 to 32 letters, numbers or _  ( up to 32 characters )
+							237 container
+								238 text Example :  "party_parrot"
+					239 row
+						240 cell
+							241 text image
+						242 cell
+							243 text string
+						244 cell
+							245 text The picture as base64 or a data: URL (multipart: send it as "file" instead)
+							246 container
+								247 text Example :  "iVBORw0KGgoAAAANSUhEUgAA…"
+				248 button (collapsed) Example request, Secondary Actions: Expand
+					249 text Example request
+				250 heading RESPONSE201, Value: 4
+					251 text RESPONSE
+					252 text 201
+				253 text object
+				254 table
+					255 row
+						256 cell
+							257 text FIELD
+						258 cell
+							259 text TYPE
+						260 cell
+							261 text DESCRIPTION
+					262 row
+						263 cell
+							264 text emoji
+						265 cell
+							266 text CustomEmoji | null
+						267 cell
+							268 button (collapsed) Fields of CustomEmoji, Secondary Actions: Expand
+								269 text Fields of CustomEmoji
+					270 row
+						271 cell
+							272 text pending
+						273 cell
+							274 text boolean
+						275 cell
+							276 text Waiting for a moderator; it shows up once approved
+							277 container
+								278 text Example :  false
+				279 button (collapsed) Example response, Secondary Actions: Expand
+					280 text Example response
+				281 heading ERRORS, Value: 4
+					282 text ERRORS
+				283 content list
+					284 container
+						285 AXListMarker • 
+						286 text 400 Bad input: the error says what’s wrong
+					287 container
+						288 AXListMarker • 
+						289 text 401 Missing or wrong token
+					290 container
+						291 AXListMarker • 
+						292 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					293 container
+						294 AXListMarker • 
+						295 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					296 container
+						297 AXListMarker • 
+						298 text 500 Something went wrong on our side
+					299 container
+						300 AXListMarker • 
+						301 text 501 Voice isn’t set up on this server
+					302 container
+						303 AXListMarker • 
+						304 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			305 container patch-servers-id-emojis-eid
+				306 text PATCH
+				307 text /servers/{id}/emojis/{eid}
+				308 link Description: Link to this endpoint, Value: yapin.gg/developers/api/emojis#patch-servers-id-emojis-eid
+				309 text Rename a custom emoji
+				310 text Auth :  Bot token  +  Manage Emoji In testing : 
+				311 text bot_emojis
+				312 text Limit :  30 emoji changes a minute JS: 
+				313 text bot.editEmoji()
+				314 text Python: 
+				315 text bot.edit_emoji()
+				316 heading PARAMETERS, Value: 4
+					317 text PARAMETERS
+				318 table
+					319 row
+						320 cell
+							321 text NAME
+						322 cell
+							323 text TYPE
+						324 cell
+							325 text DESCRIPTION
+					326 row
+						327 cell
+							328 text {id}
+						329 cell
+							330 text string (uuid)
+						331 cell
+							332 text Server id
+							333 container
+								334 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					335 row
+						336 cell
+							337 text {eid}
+						338 cell
+							339 text string (uuid)
+						340 cell
+							341 text Custom emoji id
+							342 container
+								343 text Example :  "4b05b926-7f4e-4dab-b1c2-8e6f5a7d4c2b"
+				344 heading REQUEST BODY, Value: 4
+					345 text REQUEST BODY
+				346 text object
+				347 table
+					348 row
+						349 cell
+							350 text FIELD
+						351 cell
+							352 text TYPE
+						353 cell
+							354 text DESCRIPTION
+					355 row
+						356 cell
+							357 text name
+						358 cell
+							359 text string
+						360 cell
+							361 text 2 to 32 letters, numbers or _  ( up to 32 characters )
+							362 container
+								363 text Example :  "party_parrot"
+				364 button (collapsed) Example request, Secondary Actions: Expand
+					365 text Example request
+				366 heading RESPONSE200, Value: 4
+					367 text RESPONSE
+					368 text 200
+				369 text object
+				370 table
+					371 row
+						372 cell
+							373 text FIELD
+						374 cell
+							375 text TYPE
+						376 cell
+							377 text DESCRIPTION
+					378 row
+						379 cell
+							380 text emoji
+						381 cell
+							382 text CustomEmoji
+						383 cell
+							384 text A server’s custom emoji
+							385 button (collapsed) Fields of CustomEmoji, Secondary Actions: Expand
+								386 text Fields of CustomEmoji
+				387 button (collapsed) Example response, Secondary Actions: Expand
+					388 text Example response
+				389 heading ERRORS, Value: 4
+					390 text ERRORS
+				391 content list
+					392 container
+						393 AXListMarker • 
+						394 text 400 Bad input: the error says what’s wrong
+					395 container
+						396 AXListMarker • 
+						397 text 401 Missing or wrong token
+					398 container
+						399 AXListMarker • 
+						400 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					401 container
+						402 AXListMarker • 
+						403 text 404 No such thing, or the bot can’t see it
+					404 container
+						405 AXListMarker • 
+						406 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					407 container
+						408 AXListMarker • 
+						409 text 500 Something went wrong on our side
+					410 container
+						411 AXListMarker • 
+						412 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			413 container delete-servers-id-emojis-eid
+				414 text DELETE
+				415 text /servers/{id}/emojis/{eid}
+				416 link Description: Link to this endpoint, Value: yapin.gg/developers/api/emojis#delete-servers-id-emojis-eid
+				417 text Delete a custom emoji
+				418 text Auth :  Bot token  +  Manage Emoji In testing : 
+				419 text bot_emojis
+				420 text Limit :  30 emoji changes a minute JS: 
+				421 text bot.deleteEmoji()
+				422 text Python: 
+				423 text bot.delete_emoji()
+				424 heading PARAMETERS, Value: 4
+					425 text PARAMETERS
+				426 table
+					427 row
+						428 cell
+							429 text NAME
+						430 cell
+							431 text TYPE
+						432 cell
+							433 text DESCRIPTION
+					434 row
+						435 cell
+							436 text {id}
+						437 cell
+							438 text string (uuid)
+						439 cell
+							440 text Server id
+							441 container
+								442 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					443 row
+						444 cell
+							445 text {eid}
+						446 cell
+							447 text string (uuid)
+						448 cell
+							449 text Custom emoji id
+							450 container
+								451 text Example :  "4b05b926-7f4e-4dab-b1c2-8e6f5a7d4c2b"
+				452 heading RESPONSE200, Value: 4
+					453 text RESPONSE
+					454 text 200
+				455 text Ok
+				456 table
+					457 row
+						458 cell
+							459 text FIELD
+						460 cell
+							461 text TYPE
+						462 cell
+							463 text DESCRIPTION
+					464 row
+						465 cell
+							466 text ok
+						467 cell
+							468 text true
+						469 cell
+							470 text Done
+							471 container
+								472 text Example :  true
+				473 button (collapsed) Example response, Secondary Actions: Expand
+					474 text Example response
+				475 heading ERRORS, Value: 4
+					476 text ERRORS
+				477 content list
+					478 container
+						479 AXListMarker • 
+						480 text 401 Missing or wrong token
+					481 container
+						482 AXListMarker • 
+						483 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					484 container
+						485 AXListMarker • 
+						486 text 404 No such thing, or the bot can’t see it
+					487 container
+						488 AXListMarker • 
+						489 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					490 container
+						491 AXListMarker • 
+						492 text 500 Something went wrong on our side
+					493 container
+						494 AXListMarker • 
+						495 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			496 link Description: ← Back to Yapin’, Value: yapin.gg/
+			497 text  · 
+			498 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		499 container On this page
+			500 text ON THIS PAGE
+			501 content list
+				502 link Description: Overview, Value: yapin.gg/developers/api/emojis#top
+				503 link Description: GET /channels/{id}/messages/{mid}/emojis, Value: yapin.gg/developers/api/emojis#get-channels-id-messages-mid-emojis
+				504 link Description: GET /servers/{id}/emojis, Value: yapin.gg/developers/api/emojis#get-servers-id-emojis
+				505 link Description: POST /servers/{id}/emojis, Value: yapin.gg/developers/api/emojis#post-servers-id-emojis
+				506 link Description: PATCH /servers/{id}/emojis/{eid}, Value: yapin.gg/developers/api/emojis#patch-servers-id-emojis-eid
+				507 link Description: DELETE /servers/{id}/emojis/{eid}, Value: yapin.gg/developers/api/emojis#delete-servers-id-emojis-eid
+		508 text Yapin’
+		509 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		510 heading PRODUCT, Value: 4
+			511 text PRODUCT
+		512 content list
+			513 link Description: Download, Value: yapin.gg/download
+			514 link Description: Developers, Value: yapin.gg/developers
+			515 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			516 link Description: Creator Program, Value: yapin.gg/creators
+			517 link Description: FanKit, Value: yapin.gg/fankit
+			518 link Description: Roadmap, Value: yapin.gg/roadmap
+			519 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			520 link Description: Bugs, Value: yapin.gg/bugs
+			521 link Description: Status, Value: yapin.gg/status
+		522 heading COMMUNITY, Value: 4
+			523 text COMMUNITY
+		524 content list
+			525 link Description: Guidelines, Value: yapin.gg/guidelines
+			526 link Description: Tutorials, Value: yapin.gg/tutorials
+			527 link Description: Bots, Value: yapin.gg/bots
+			528 link Description: Partners, Value: yapin.gg/partners
+		529 heading LEGAL, Value: 4
+			530 text LEGAL
+		531 content list
+			532 link Description: Terms, Value: yapin.gg/terms
+			533 link Description: Privacy, Value: yapin.gg/privacy
+			534 link Description: Copyright, Value: yapin.gg/copyright
+			535 link Description: Security, Value: yapin.gg/security
+			536 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			537 link Description: Contact, Value: mailto:hello@yapin.gg
+		538 text © 2026 Yapper Media LLC. Free to use.
+		539 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Emojis · Bot API reference · Yapin’, URL: yapin.gg/developers/api/emojis

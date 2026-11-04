@@ -1,0 +1,100 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 heading Theme, Value: 2
+								44 text Theme
+							45 text Give your server its own colours. Everyone sees them while they're here, unless they turned server themes off in their Appearance settings.
+							46 text ACCENT COLOUR
+							47 text Buttons, links and highlights. Very light or very dark picks get nudged so text stays readable.
+							48 Accent colour
+								49 button None
+								50 button #ff6b4a
+								51 button #3fcf82
+								52 button #2bb3a3
+								53 button #3a8dff
+								54 button #9b59ff
+								55 button #e5487f
+								56 button #f5b544
+								57 container Pick any colour
+									58 text +
+									59 color well Custom accent colour, Value: rgb 1.00000 0.41961 0.29020 1
+								60 text field (settable) Accent colour hex value, Placeholder: #rrggbb
+							61 text BACKGROUND TINT
+							62 text A light wash of colour over the background.
+							63 Background tint
+								64 button None
+								65 button #ff6b4a
+								66 button #3fcf82
+								67 button #2bb3a3
+								68 button #3a8dff
+								69 button #9b59ff
+								70 button #e5487f
+								71 button #f5b544
+								72 container Pick any colour
+									73 text +
+									74 color well Custom background tint, Value: rgb 1.00000 0.41961 0.29020 1
+								75 text field (settable) Background tint hex value, Placeholder: #rrggbb
+							76 button (disabled) Save
+							77 button Close
+			78 container
+				79 tab group
+					80 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						81 button Close
+			82 button New Tab
+	83 close button
+	84 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	85 minimize button
+86 menu bar
+	87 Chrome
+	88 File
+	89 Edit
+	90 View
+	91 History
+	92 Bookmarks
+	93 Profiles
+	94 Tab
+	95 Window
+	96 Help
+
+The focused UI element is 25 button Theme

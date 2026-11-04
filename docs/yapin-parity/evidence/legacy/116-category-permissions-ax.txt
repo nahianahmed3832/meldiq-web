@@ -1,0 +1,196 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Edit category
+							21 heading Edit category, Value: 2
+								22 text Edit category
+							23 tab group
+								24 tab (settable, integer) Overview, Value: 0
+								25 tab (selected) Permissions, Value: 1
+							26 text Channels in this category follow these, unless a channel sets its own. Private channels stay private.
+							27 list box Roles
+								28 text ROLES
+								29 text (selected) @everyone
+								30 combo box (settable) Add a role, Value: + Add a role
+									31 text + Add a role
+							32 text @everyone
+							33 text field (settable) Search permissions
+							34 text GENERAL
+							35 text View Channel
+							36 text See the channels in this category.
+							37 View Channel
+								38 radio button Deny, Value: 0
+									39 image
+								40 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									41 image
+								42 radio button Allow, Value: 0
+									43 image
+							44 text TEXT
+							45 text Send Messages
+							46 text Post here.
+							47 Send Messages
+								48 radio button Deny, Value: 0
+									49 image
+								50 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									51 image
+								52 radio button Allow, Value: 0
+									53 image
+							54 text Add Reactions
+							55 text Add new reactions. Without it people can still click ones already there.
+							56 Add Reactions
+								57 radio button Deny, Value: 0
+									58 image
+								59 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									60 image
+								61 radio button Allow, Value: 0
+									62 image
+							63 text Attach Files
+							64 text Upload pictures, videos and audio.
+							65 Attach Files
+								66 radio button Deny, Value: 0
+									67 image
+								68 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									69 image
+								70 radio button Allow, Value: 0
+									71 image
+							72 text Send Voice Messages
+							73 text Record and send voice messages here.
+							74 Send Voice Messages
+								75 radio button Deny, Value: 0
+									76 image
+								77 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									78 image
+								79 radio button Allow, Value: 0
+									80 image
+							81 text Embed Links
+							82 text Post links.
+							83 Embed Links
+								84 radio button Deny, Value: 0
+									85 image
+								86 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									87 image
+								88 radio button Allow, Value: 0
+									89 image
+							90 text Use Big Text
+							91 text Post headings (# text) here.
+							92 Use Big Text
+								93 radio button Deny, Value: 0
+									94 image
+								95 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									96 image
+								97 radio button Allow, Value: 0
+									98 image
+							99 text Mention @everyone
+							100 text Ping everyone who can see this channel.
+							101 Mention @everyone
+								102 radio button Deny, Value: 0
+									103 image
+								104 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									105 image
+								106 radio button Allow, Value: 0
+									107 image
+							108 text Manage Messages
+							109 text Delete and pin anyone’s messages here, and skip slowmode.
+							110 Manage Messages
+								111 radio button Deny, Value: 0
+									112 image
+								113 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									114 image
+								115 radio button Allow, Value: 0
+									116 image
+							117 text Create Threads
+							118 text Start threads from this channel.
+							119 Create Threads
+								120 radio button Deny, Value: 0
+									121 image
+								122 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									123 image
+								124 radio button Allow, Value: 0
+									125 image
+							126 text Send Messages in Threads
+							127 text Reply in this channel’s threads (or this forum’s posts).
+							128 Send Messages in Threads
+								129 radio button Deny, Value: 0
+									130 image
+								131 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									132 image
+								133 radio button Allow, Value: 0
+									134 image
+							135 text Manage Threads
+							136 text Close, lock, pin, rename, move and delete threads here.
+							137 Manage Threads
+								138 radio button Deny, Value: 0
+									139 image
+								140 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									141 image
+								142 radio button Allow, Value: 0
+									143 image
+							144 text VOICE
+							145 text Connect
+							146 text Join this voice channel.
+							147 Connect
+								148 radio button Deny, Value: 0
+									149 image
+								150 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									151 image
+								152 radio button Allow, Value: 0
+									153 image
+							154 text Speak
+							155 text Talk in here. Off means they join muted.
+							156 Speak
+								157 radio button Deny, Value: 0
+									158 image
+								159 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									160 image
+								161 radio button Allow, Value: 0
+									162 image
+							163 button Remove
+							164 button Cancel
+							165 button Save
+			166 container
+				167 tab group
+					168 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						169 button Close
+					170 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 214 MB, Value: on
+						171 button Close
+					172 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						173 button Close
+			174 button New Tab
+	175 close button
+	176 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	177 minimize button
+178 menu bar
+	179 Chrome
+	180 File
+	181 Edit
+	182 View
+	183 History
+	184 Bookmarks
+	185 Profiles
+	186 Tab
+	187 Window
+	188 Help
+
+Selected text: ```
+￼
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

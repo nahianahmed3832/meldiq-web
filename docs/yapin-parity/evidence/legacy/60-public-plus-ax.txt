@@ -1,0 +1,235 @@
+Window: "Yapin’ Plus · Yapin’", App: Google Chrome.
+0 standard window Yapin’ Plus · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/plus, Secondary Actions: Raise
+	1 container Yapin’ Plus · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/plus
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/plus, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Yapin’ Plus · Yapin’, URL: yapin.gg/plus
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 text YAPIN’ PLUS
+								30 heading More room. More reach. More Yapin’., Value: 1
+									31 text More room. More reach. More Yapin’.
+								32 text Yapin’ is free and stays free. Plus is for the people who want the big files, the sharp streams, the lounge and the badge, and who like keeping Yapin’ running. $4.99 /month Cancel any time. No tiers, no add-ons, one price.
+								33 button Get Plus for $4.99/month
+								34 link Gift Plus to a friend, Value: yapin.gg/plus#gift
+							35 container
+								36 text WHAT YOU GET
+								37 heading Every perk, nothing hidden., Value: 2
+									38 text Every perk, nothing hidden.
+								39 container
+									40 text 100 MB uploads Full clips, big GIFs, whole albums. Free is 10 MB.
+								41 container
+									42 text 1080p 60 fps screen share Crisp, smooth streams for everyone watching. Free is 720p 30 fps.
+								43 container
+									44 text 1 free supercharge Boost any server you love: more emoji slots, bigger uploads and better voice for everyone there.
+								45 container
+									46 text Plus badge A Plus tag next to your name that shows you keep the lights on. Hide it any time.
+								47 container
+									48 text 4000 character messages Twice the room for long stories, patch notes or a whole recipe. Edits too.
+								49 container
+									50 text The Plus lounge in Yapin’ HQ A pink Plus role and #plus-chat in Yapin’ HQ, where staff hang out and early looks drop first.
+								51 container
+									52 text 10 bots, reviewed first Up to 10 bots instead of 2, and directory reviews skip the queue.
+								53 container
+									54 text Post media anywhere in HQ Pics, videos and clips in any Yapin’ HQ channel, not just #media.
+								55 container
+									56 text Priority verification Your creator verification gets reviewed first. Same rules, just faster.
+								57 container
+									58 text Polls in Yapin’ HQ Start polls in HQ without being verified.
+								59 text Side by side
+								60 heading Free vs Plus, Value: 2
+									61 text Free vs Plus
+								62 table
+									63 row
+										64 column header
+											65 text Perk
+										66 column header
+											67 text Free
+										68 column header
+											69 text Plus
+									70 row
+										71 row header
+											72 text 100 MB uploads
+										73 cell
+											74 text 10 MB
+										75 cell
+											76 text 100 MB
+									77 row
+										78 row header
+											79 text 1080p 60 fps screen share
+										80 cell
+											81 text 720p 30 fps
+										82 cell
+											83 text 1080p 60 fps
+									84 row
+										85 row header
+											86 text 1 free supercharge
+										87 cell
+											88 text Paid
+										89 cell
+											90 text 1 included
+									91 row
+										92 row header
+											93 text Plus badge
+										94 cell
+											95 text No badge
+										96 cell
+											97 text Yes, hide it any time
+									98 row
+										99 row header
+											100 text 4000 character messages
+										101 cell
+											102 text 2000
+										103 cell
+											104 text 4000
+									105 row
+										106 row header
+											107 text The Plus lounge in Yapin’ HQ
+										108 cell
+											109 text No
+										110 cell
+											111 text Plus role and #plus-chat
+									112 row
+										113 row header
+											114 text 10 bots, reviewed first
+										115 cell
+											116 text 2 bots
+										117 cell
+											118 text 10 bots
+									119 row
+										120 row header
+											121 text Post media anywhere in HQ
+										122 cell
+											123 text #media only
+										124 cell
+											125 text Any channel
+									126 row
+										127 row header
+											128 text Priority verification
+										129 cell
+											130 text Normal queue
+										131 cell
+											132 text First in line
+									133 row
+										134 row header
+											135 text Polls in Yapin’ HQ
+										136 cell
+											137 text Verified only
+										138 cell
+											139 text Yes
+									140 row
+										141 row header
+											142 text Price
+										143 cell
+											144 text $0
+										145 cell
+											146 text $4.99/month
+								147 text Still free for everyone: Animated avatars and emojis, decorations and profile effects, your emojis in every server, themes, voice, screen share, polls, video uploads, verification, unlimited servers. Why charge at all
+								148 heading Paid for by Plus, not by investors., Value: 2
+									149 text Paid for by Plus, not by investors.
+								150 text Servers, storage, voice bandwidth and the moderation tooling are paid for out of pocket. Expression, meaning your emojis, animated avatars, decorations, themes, voice, screen share and polls, is free and stays free. Plus covers the things that scale with cost, file size and stream quality, and says thanks with the rest.
+								151 heading Gift Plus to a friend, Value: 3
+									152 text Gift Plus to a friend
+								153 text One, three or twelve months. Open their profile in Yapin’, the ... menu, Gift Plus. One payment, straight onto their account.
+								154 heading Questions, Value: 2
+									155 text Questions
+								156 content list
+									157 container
+										158 heading How much is it?, Value: 3
+											159 button How much is it?
+										160 text $4.99 a month. It renews monthly and you can cancel any time from Settings, Yapin’ Plus, Manage subscription. Cancelling keeps Plus until the month you paid for runs out.
+									161 container
+										162 heading What happens to my stuff if I cancel?, Value: 3
+											163 button What happens to my stuff if I cancel?
+										164 text Nothing is deleted. Files you uploaded stay up, your badge goes away, limits go back to the free ones and the HQ Plus role comes off. Get Plus again and it all comes back.
+									165 container
+										166 heading Can I gift it?, Value: 3
+											167 button Can I gift it?
+										168 text Yes. Open a friend’s profile, the ... menu, Gift Plus. One, three or twelve months, one payment, straight onto their account.
+									169 container
+										170 heading Is anything I need to chat behind Plus?, Value: 3
+											171 button Is anything I need to chat behind Plus?
+										172 text No. Animated avatars and emojis, decorations and profile effects, your emojis in every server, themes, voice, screen share, polls, video uploads, verification, unlimited servers. Plus only covers the things that cost real money to run, plus a few thank-yous.
+									173 container
+										174 heading Where does the money go?, Value: 3
+											175 button Where does the money go?
+										176 text Servers, storage, voice bandwidth and moderation tooling. Yapin’ has no investors, so Plus is what keeps it running.
+								177 heading Ready when you are., Value: 2
+									178 text Ready when you are.
+								179 text $4.99 a month keeps Yapin’ running and gives you the good stuff.
+								180 button Get Plus for $4.99/month
+							181 text Yapin’
+							182 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							183 heading Product, Value: 4
+								184 text Product
+							185 content list
+								186 link Download, Value: yapin.gg/download
+								187 link Developers, Value: yapin.gg/developers
+								188 link Yapin’ Plus, Value: yapin.gg/plus
+								189 link Creator Program, Value: yapin.gg/creators
+								190 link Roadmap, Value: yapin.gg/roadmap
+								191 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								192 link Bugs, Value: yapin.gg/bugs
+								193 link Status, Value: yapin.gg/status
+							194 heading Community, Value: 4
+								195 text Community
+							196 content list
+								197 link Guidelines, Value: yapin.gg/guidelines
+								198 link Tutorials, Value: yapin.gg/tutorials
+								199 link Bots, Value: yapin.gg/bots
+							200 heading Legal, Value: 4
+								201 text Legal
+							202 content list
+								203 link Terms, Value: yapin.gg/terms
+								204 link Privacy, Value: yapin.gg/privacy
+								205 link Copyright, Value: yapin.gg/copyright
+								206 link Cancel a subscription, Value: yapin.gg/cancel
+								207 link Contact, Value: mailto:[email redacted]
+							208 text © 2026 Yapper Media LLC. Free to use.
+			209 container
+				210 tab group
+					211 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						212 button Close
+					213 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						214 button Close
+					215 tab (selected, settable, boolean) Yapin’ Plus · Yapin’, Value: on
+						216 button Close
+			217 button New Tab
+	218 close button
+	219 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	220 minimize button
+221 menu bar
+	222 Chrome
+	223 File
+	224 Edit
+	225 View
+	226 History
+	227 Bookmarks
+	228 Profiles
+	229 Tab
+	230 Window
+	231 Help
+
+The focused UI element is 19 HTML content Yapin’ Plus · Yapin’, URL: yapin.gg/plus

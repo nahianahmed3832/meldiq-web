@@ -1,0 +1,80 @@
+Window: "Yapin’", App: Google Chrome.
+0 standard window Yapin’ - Google Chrome (Incognito), URL: yapin.gg/, Secondary Actions: Raise
+	1 container Yapin’ - Google Chrome (Incognito), URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Third-party cookies blocked
+					11 button Bookmark this tab
+				12 button Incognito
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+			15 container
+				16 scroll area
+					17 HTML content Yapin’, URL: yapin.gg/
+						18 container
+							19 container
+								20 pop up button English, Help: Language
+								21 button Switch to light mode, Help: Light mode
+							22 container
+								23 button ‹ Back
+								24 text Yapin’
+								25 heading Welcome back, Value: 1
+									26 text Welcome back
+								27 text Good to see you yapping again.
+								28 container “使用 Google 账号登录”按钮
+									29 HTML content Sign In - Google Accounts, URL: accounts.google.com/gsi/button?[query redacted]
+										30 button Continue with Google. Opens in new tab
+								31 text OR
+								32 button Log in with a passkey
+								33 text OR EMAIL OR USERNAME
+								34 text field (settable) EMAIL OR USERNAME
+								35 button Forgot which email?
+								36 text PASSWORD
+								37 button Forgot password?
+								38 secure text field (settable) PASSWORD Forgot password?
+								39 button Show password
+								40 container Widget containing a Cloudflare security challenge
+									41 HTML content Checking your Browser…, URL: challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/av0/rch/d5e4j/0x4AAAAAAFWfX7_m-mPSuire/auto/fbE/new/flexible?lang=auto
+										42 container
+											43 checkbox Verify you are human, Value: 0
+											44 link Cloudflare, opens in a new tab, Value: cloudflare.com/products/turnstile/?utm_source=turnstile&utm_campaign=widget
+											45 link Privacy, opens in a new tab, Value: cloudflare.com/privacypolicy/
+											46 text •
+											47 link Help, opens in a new tab, Value: challenges.cloudflare.com/cdn-cgi/challenge-platform/help
+								48 button Log in
+								49 text New here? 
+								50 button Create an account
+								51 link Terms, Value: yapin.gg/terms
+								52 text  · 
+								53 link Privacy, Value: yapin.gg/privacy
+								54 text  ·
+								55 link Guidelines, Value: yapin.gg/guidelines
+								56 text  ·
+								57 link Bugs, Value: yapin.gg/bugs
+			58 container
+				59 tab group
+					60 tab (selected, settable, boolean) Yapin’ - Memory usage - 366 MB, Value: on
+						61 button Close
+			62 button New Tab
+	63 close button
+	64 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	65 minimize button
+66 menu bar
+	67 Chrome
+	68 File
+	69 Edit
+	70 View
+	71 History
+	72 Bookmarks
+	73 Profiles
+	74 Tab
+	75 Window
+	76 Help
+
+The focused UI element is 17 HTML content Yapin’, URL: yapin.gg/

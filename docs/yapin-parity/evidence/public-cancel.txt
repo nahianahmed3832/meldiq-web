@@ -1,0 +1,72 @@
+Browser tab: 2, Title: "Cancel a subscription · Yapin’", URL: "https://www.yapin.gg/cancel".
+1 AXWebArea Cancel a subscription · Yapin’, URL: yapin.gg/cancel
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text LEGAL
+			14 heading Cancel a subscription, Value: 1
+				15 text Cancel a subscription
+			16 text LAST UPDATED  20 OCTOBER 2026 Verträge hier kündigen. Cancel anything you pay for monthly on Yapin’, without signing in. Signed in? Settings, Subscriptions does the same and shows each one.
+		17 container
+			18 text EMAIL OF YOUR YAPIN’ ACCOUNT
+			19 text field (settable) EMAIL OF YOUR YAPIN’ ACCOUNT
+			20 text WHAT DO YOU WANT TO CANCEL?
+			21 pop up button (collapsed, settable) WHAT DO YOU WANT TO CANCEL?, Value: Everything that renews, ID: cx-what, Secondary Actions: Expand
+				22 menu
+					23 (selected) Everything that renews
+					24 Yapin’ Plus
+					25 Bots+
+					26 Supercharge
+					27 Bot hosting
+			28 text ANYTHING ELSE (OPTIONAL)
+			29 text entry area (settable) ANYTHING ELSE (OPTIONAL), ID: cx-details
+			30 text It stops renewing at the end of the period you paid for. Ending early with a refund is withdrawing (Terms 9.5).
+			31 button Cancel now (jetzt kündigen)
+			32 text Want your money back for the unused part instead? Within 14 days of buying you can withdraw (Settings, Subscriptions, Withdraw from contract). See 
+			33 link Description: Terms 9.3 and 9.5, Value: yapin.gg/terms
+			34 text .
+			35 link Description: ← Back to Yapin’, Value: yapin.gg/
+			36 text  · 
+			37 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		38 text Yapin’
+		39 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		40 heading PRODUCT, Value: 4
+			41 text PRODUCT
+		42 content list
+			43 link Description: Download, Value: yapin.gg/download
+			44 link Description: Developers, Value: yapin.gg/developers
+			45 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			46 link Description: Creator Program, Value: yapin.gg/creators
+			47 link Description: FanKit, Value: yapin.gg/fankit
+			48 link Description: Roadmap, Value: yapin.gg/roadmap
+			49 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			50 link Description: Bugs, Value: yapin.gg/bugs
+			51 link Description: Status, Value: yapin.gg/status
+		52 heading COMMUNITY, Value: 4
+			53 text COMMUNITY
+		54 content list
+			55 link Description: Guidelines, Value: yapin.gg/guidelines
+			56 link Description: Tutorials, Value: yapin.gg/tutorials
+			57 link Description: Bots, Value: yapin.gg/bots
+			58 link Description: Partners, Value: yapin.gg/partners
+		59 heading LEGAL, Value: 4
+			60 text LEGAL
+		61 content list
+			62 link Description: Terms, Value: yapin.gg/terms
+			63 link Description: Privacy, Value: yapin.gg/privacy
+			64 link Description: Copyright, Value: yapin.gg/copyright
+			65 link Description: Security, Value: yapin.gg/security
+			66 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			67 link Description: Contact, Value: mailto:hello@yapin.gg
+		68 text © 2026 Yapper Media LLC. Free to use.
+		69 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Cancel a subscription · Yapin’, URL: yapin.gg/cancel

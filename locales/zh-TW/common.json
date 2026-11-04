@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "預設"
+  },
+  "password": {
+    "show": "顯示密碼",
+    "hide": "隱藏密碼"
+  },
+  "navigation": {
+    "skipToContent": "跳到主要內容"
   }
 }

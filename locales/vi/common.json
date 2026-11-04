@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "Đóng"
+  },
+  "password": {
+    "show": "Hiện mật khẩu",
+    "hide": "Ẩn mật khẩu"
+  },
+  "navigation": {
+    "skipToContent": "Chuyển đến nội dung chính"
   }
 }

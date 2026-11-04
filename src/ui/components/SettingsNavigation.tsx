@@ -87,6 +87,11 @@ export function SettingsNavigation<K extends string>({
               e.preventDefault();
               e.stopPropagation();
               onQuery("");
+            } else if (e.key === "ArrowDown" || (e.key === "Enter" && query.trim())) {
+              e.preventDefault();
+              const results = filtered.flatMap((group) => group.pages);
+              if (e.key === "Enter" && results.length === 1) onSelect(results[0].key);
+              else document.getElementById(id)?.querySelector<HTMLButtonElement>("button[data-settings-key]")?.focus();
             }
           }}
         />
@@ -96,7 +101,19 @@ export function SettingsNavigation<K extends string>({
           </button>
         )}
       </div>
-      <div id={id} className="settings-nav-pages">
+      <div
+        id={id}
+        className="settings-nav-pages"
+        onKeyDown={(event) => {
+          if (event.altKey || event.ctrlKey || event.metaKey || !["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+          const buttons = [...event.currentTarget.querySelectorAll<HTMLButtonElement>("button[data-settings-key]")];
+          const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
+          if (index < 0 || !buttons.length) return;
+          event.preventDefault();
+          const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + buttons.length) % buttons.length;
+          buttons[next].focus();
+        }}
+      >
         {query && !filtered.length && (
           <p className="faint settings-search-empty" role="status">
             <Localized k="settings.interface.no_settings_found_for_try_a_different_word_f3ce051" slots={[query]} />
@@ -106,7 +123,7 @@ export function SettingsNavigation<K extends string>({
           <div key={g.key} role="group" aria-label={g.title} className="settings-nav-group">
             <div className="settings-nav-title">{g.title}</div>
             {g.pages.map((p) => (
-              <button type="button" key={p.key} className="side-item" aria-current={current === p.key ? "page" : undefined} onClick={() => onSelect(p.key)}>
+              <button type="button" key={p.key} data-settings-key={p.key} className="side-item" aria-current={current === p.key ? "page" : undefined} onClick={() => onSelect(p.key)}>
                 <span className="glyph" aria-hidden="true">
                   {p.icon}
                 </span>

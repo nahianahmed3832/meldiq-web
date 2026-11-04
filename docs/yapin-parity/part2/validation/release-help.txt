@@ -1,0 +1,30 @@
+Browser tab: 7, Title: "Meldiq", URL: "http://127.0.0.1:5193/".
+0 AXWebArea Meldiq, URL: 127.0.0.1:5193/
+	1 container root
+		2 container
+			3 image Meldiq
+			4 text Meldiq
+			5 pop up button (collapsed) Description: Language, Secondary Actions: Expand
+		6 container Meldiq: Your communities, all in one place.
+			7 heading Meldiq: Your communities, all in one place., Value: 1, ID: landing-title
+				8 text Meldiq: Your communities, all in one place.
+		9 container
+			29 heading Having trouble signing in?, Value: 2
+				30 text Having trouble signing in?
+			31 text Choose what happened. What you typed stays here if you come back.
+			32 button I forgot my password We'll email you a code to set a new one.
+				33 text I forgot my password
+				34 text We'll email you a code to set a new one.
+			35 button I can't get into my email Use one of your saved recovery codes to move the account to a new address.
+				36 text I can't get into my email
+				37 text Use one of your saved recovery codes to move the account to a new address.
+			38 button Back to sign in
+			27 button (collapsed) Appeal an account restriction, Secondary Actions: Expand
+				28 text Appeal an account restriction
+		16 container
+			17 text Meldiq by GriipBuddy
+			18 link Description: Service status, Value: status.meldiq.app/
+			19 link Description: Terms, Value: meldiq.app/legal/terms
+			20 link Description: Privacy, Value: meldiq.app/legal/privacy
+
+The focused UI element is 0 AXWebArea Meldiq, URL: 127.0.0.1:5193/

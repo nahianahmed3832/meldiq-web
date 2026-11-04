@@ -1,0 +1,318 @@
+Browser tab: 2, Title: "Security · Yapin’", URL: "https://www.yapin.gg/security".
+1 AXWebArea Security · Yapin’, URL: yapin.gg/security
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text SECURITY
+			14 heading Security, Value: 1
+				15 text Security
+			16 text LAST UPDATED  2 NOVEMBER 2026 How we handle security, what people reported and what we changed, and what we know isn’t great yet. If you find a hole, tell us.
+		17 container
+			18 heading How it works, Value: 2
+				19 text How it works
+			20 text Who can read what is decided in the database, not just in the app. Those rules, every migration and the tests behind them are public at
+			21 link github.com/Yapper-Media-LLC/yapper-db
+			22 text . Run
+			23 text ./run-tests.sh
+			24 text  there (needs Docker) and it restores the live schema and checks, for example, that moderators and admins can’t read DMs they aren’t in. The app code itself isn’t public. When someone reports something, we fix it, then log it below with the date it was reported, what we changed and when it went live. Want to diff it? There’s a JSON copy at 
+			25 link Description: /security.json, Value: yapin.gg/security.json
+			26 text .
+			27 heading Report a hole, Value: 2, ID: report
+				28 text Report a hole
+			29 text Email 
+			30 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			31 text  (also in our
+			32 link Description: security.txt, Value: yapin.gg/.well-known/security.txt
+			33 text ). Say what you found and how to repeat it. Please test with your own accounts only, never other people’s, and give us a chance to fix it before posting it. Bug bounty: coming.  We plan to pay for real reports. It isn’t live yet, so nothing is paid out right now.
+			34 heading Reported and fixed, Value: 2, ID: log
+				35 text Reported and fixed
+			36 text Newest first. We only name people who said it’s OK.
+			37 container public-security-log
+				38 heading Fixes only showed up in a changelog, Value: 3
+					39 text Fixes only showed up in a changelog
+				40 content list
+					41 container
+						42 AXListMarker • 
+						43 text Reported: 2 November 2026 , by  a community member (Reddit)
+					44 container
+						45 AXListMarker • 
+						46 text What was reported: Fixes for things the community raised were only visible in a changelog. Reported issues should be written up publicly.
+					47 container
+						48 AXListMarker • 
+						49 text What we changed: This page. Every reported security or privacy issue gets an entry: what was reported, what we changed and when. There is a JSON copy too so you can diff it.
+					50 container
+						51 AXListMarker • 
+						52 text Live: with this page
+					53 container
+						54 AXListMarker • 
+						55 text Links:
+						56 link Description: security.json, Value: yapin.gg/security.json
+			57 container private-access-wording
+				58 heading Privacy policy now says who can read private messages, Value: 3
+					59 text Privacy policy now says who can read private messages
+				60 content list
+					61 container
+						62 AXListMarker • 
+						63 text Reported: 2 November 2026 , by  us
+					64 container
+						65 AXListMarker • 
+						66 text What was reported: The privacy policy didn’t say clearly that the owner has full database access, or that we use AI tools to run and fix Yapin’.
+					67 container
+						68 AXListMarker • 
+						69 text What we changed: New “Who can read private messages” section: moderators can’t read DMs they aren’t in (the database blocks it), the owner can, direct database reads aren’t logged, and Claude (through Anthropic’s API) can see data when we use it on a bug or incident. No code or database change.
+					70 container
+						71 AXListMarker • 
+						72 text Live: waiting for a release
+					73 container
+						74 AXListMarker • 
+						75 text Links:
+						76 link Description: Privacy Policy, Value: yapin.gg/privacy#private-access
+			77 container live-schema-dump
+				78 heading Tests against the real live schema, Value: 3
+					79 text Tests against the real live schema
+				80 content list
+					81 container
+						82 AXListMarker • 
+						83 text Reported: 28 October 2026 , by  follow-up to the Reddit thread
+					84 container
+						85 AXListMarker • 
+						86 text What was reported: The first public copy only replayed migrations with stand-ins, so it didn’t prove the live database behaves the same.
+					87 container
+						88 AXListMarker • 
+						89 text What we changed: Published a schema-only dump of the live database (no rows) and run-tests.sh, which restores it in Postgres 17 with Docker, checks every function body and policy matches live, and runs the DM privacy, private data, server privacy and report tests.
+					90 container
+						91 AXListMarker • 
+						92 text Live: 30 October 2026
+					93 container
+						94 AXListMarker • 
+						95 text Links:
+						96 link Description: yapper-db commit d7cb9ed, Value: github.com/Yapper-Media-LLC/yapper-db/commit/d7cb9ed6afdbcd8c09b460297a1f73a6e30278d8
+			97 container public-db-repo
+				98 heading Database access rules made public, Value: 3
+					99 text Database access rules made public
+				100 content list
+					101 container
+						102 AXListMarker • 
+						103 text Reported: 28 October 2026 , by  a community member (Reddit)
+					104 container
+						105 AXListMarker • 
+						106 text What was reported: Asked to see the rules that keep DMs and private channels private, instead of taking our word for it.
+					107 container
+						108 AXListMarker • 
+						109 text What we changed: Published every migration, every access policy, every security definer function and who may call it, and the SQL tests, at github.com/Yapper-Media-LLC/yapper-db. Linked from the privacy policy and security.txt.
+					110 container
+						111 AXListMarker • 
+						112 text Live: 28 October 2026
+					113 container
+						114 AXListMarker • 
+						115 text Links:
+						116 link Description: yapper-db commit ed6e440, Value: github.com/Yapper-Media-LLC/yapper-db/commit/ed6e440e081c7659df0f64070b1a689b6d6fa6fa
+			117 container yapper-exposed-copy
+				118 heading Marketing promised more than the terms backed up, Value: 3
+					119 text Marketing promised more than the terms backed up
+				120 content list
+					121 container
+						122 AXListMarker • 
+						123 text Reported: 28 October 2026 , by  an independent write-up (yapper.exposed)
+					124 container
+						125 AXListMarker • 
+						126 text What was reported: Our pages said things like “encrypted” without saying messages aren’t end to end encrypted, called everything free without naming Plus, mentioned GIF ads that were switched off and listed analytics we no longer use.
+					127 container
+						128 AXListMarker • 
+						129 text What we changed: Homepage and FAQ now say messages are not end to end encrypted, name Plus and its price, and the call encryption line mentions that key checks aren’t shown yet. Terms and privacy dropped the switched off GIF ads and the old analytics line.
+					130 container
+						131 AXListMarker • 
+						132 text Live: 28 October 2026
+			133 container privacy-policy-gdpr
+				134 heading Privacy policy didn’t match what the code does, Value: 3
+					135 text Privacy policy didn’t match what the code does
+				136 content list
+					137 container
+						138 AXListMarker • 
+						139 text Reported: 25 October 2026 , by  a user’s GDPR data request
+					140 container
+						141 AXListMarker • 
+						142 text What was reported: Answering a data request showed gaps: some automated checks, IP logs, a cookie and some retention periods weren’t in the policy, and the data export missed some of your data.
+					143 container
+						144 AXListMarker • 
+						145 text What we changed: Rewrote the privacy policy to list every automated check, IP log, the device cookie and how long each is kept. Download your data now includes linked accounts, interests, Shards, device and network hashes, sign-up IPs and AI image reviews. Old device rows and sign-up logs are deleted on a schedule. GIF share calls stopped sending a stable user hash.
+					146 container
+						147 AXListMarker • 
+						148 text Live: 25 October 2026
+					149 container
+						150 AXListMarker • 
+						151 text Links:
+						152 link Description: migration 525, Value: github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/525_safety_data_retention.sql
+			153 container security-review-2
+				154 heading Bot scope, OAuth revoke race, billing, suggestions privacy, Value: 3
+					155 text Bot scope, OAuth revoke race, billing, suggestions privacy
+				156 content list
+					157 container
+						158 AXListMarker • 
+						159 text Reported: 25 October 2026 , by  a second AI code review we ran (not an outside audit)
+					160 container
+						161 AXListMarker • 
+						162 text What was reported: Bots could react to, pin or edit messages by id outside the channel they were given. A revoked OAuth grant could race a token exchange. Payments could be booked twice or lost on a retry. Friend suggestions could keep showing someone after they made a connection private.
+					163 container
+						164 AXListMarker • 
+						165 text What we changed: Bot API checks the message is in the channel. OAuth exchange and revoke share a lock and old codes stop working after a revoke. The Stripe webhook books each payment once and retries failures. Suggestions forget people as soon as their privacy changes.
+					166 container
+						167 AXListMarker • 
+						168 text Live: 25 October 2026
+					169 container
+						170 AXListMarker • 
+						171 text Links:
+						172 link Description: migration 491, Value: github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/491_oauth_grant_lock.sql
+						173 text  · 
+						174 link Description: migration 493, Value: github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/493_billing_durable.sql
+						175 text  · 
+						176 link Description: migration 503, Value: github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/503_match_cache_privacy.sql
+			177 container security-review-1
+				178 heading Nine fixes from a source code review, Value: 3
+					179 text Nine fixes from a source code review
+				180 content list
+					181 container
+						182 AXListMarker • 
+						183 text Reported: 24 October 2026 , by  an AI code review we ran (not an outside audit)
+					184 container
+						185 AXListMarker • 
+						186 text What was reported: Read Message History off wasn’t enforced, admin routes didn’t ask for 2FA, a bad frame could crash the realtime server, uploads could be swapped after the scan, an image library had known bugs, plus smaller issues in the API box, bot runner and app links.
+					187 container
+						188 AXListMarker • 
+						189 text What we changed: Read Message History is enforced in the database and search. Admin routes need 2FA like the database does. Realtime checks every frame and logs people out when their token expires. Uploads are scanned in a staging spot and only the exact scanned file goes public. Library updated, file permissions tightened, app link handling stricter.
+					190 container
+						191 AXListMarker • 
+						192 text Live: 24 October 2026
+					193 container
+						194 AXListMarker • 
+						195 text Links:
+						196 link Description: migration 460, Value: github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/460_security_audit_oct24.sql
+			197 container steam-links-bulk
+				198 heading Linked Steam accounts readable in bulk, Value: 3
+					199 text Linked Steam accounts readable in bulk
+				200 content list
+					201 container
+						202 AXListMarker • 
+						203 text Reported: 24 October 2026 , by  a community member (via a moderator)
+					204 container
+						205 AXListMarker • 
+						206 text What was reported: Any signed in account could list every linked Steam account (Steam id, name, games and hours) in one request.
+					207 container
+						208 AXListMarker • 
+						209 text What we changed: You can now only read the linked accounts of people whose profile card you can open anyway (yourself, friends, people you share a DM or server with). Same fix for other linked sites.
+					210 container
+						211 AXListMarker • 
+						212 text Live: 24 October 2026
+					213 container
+						214 AXListMarker • 
+						215 text Links:
+						216 link Description: migration 458, Value: github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/458_links_rls_scope.sql
+			217 container flags-privacy
+				218 heading Feature flags leaked test group ids, Value: 3
+					219 text Feature flags leaked test group ids
+				220 content list
+					221 container
+						222 AXListMarker • 
+						223 text Reported: 19 October 2026 , by  a community member (Discord)
+					224 container
+						225 AXListMarker • 
+						226 text What was reported: The feature flag list was readable by anyone, signed out too, and handed every signed in user the user and server ids in each test group.
+					227 container
+						228 AXListMarker • 
+						229 text What we changed: You only get the flags that are on for you. The flag table is admin only and live updates only send the flag name.
+					230 container
+						231 AXListMarker • 
+						232 text Live: 19 October 2026
+					233 container
+						234 AXListMarker • 
+						235 text Links:
+						236 link Description: migration 269, Value: github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/269_flags_privacy.sql
+			237 heading Known limits, Value: 2, ID: limits
+				238 text Known limits
+			239 content list
+				240 container
+					241 AXListMarker • 
+					242 text Messages aren’t end to end encrypted . Messages are encrypted on the way and at rest, but not end to end. Calls and screen shares are.
+				243 container
+					244 AXListMarker • 
+					245 text The owner has database access . Moderators can’t read DMs they aren’t in, but the owner has full database access, DMs included. Direct database reads aren’t logged.  See 
+					246 link Description: Who can read private messages, Value: yapin.gg/privacy#private-access
+					247 text .
+				248 container
+					249 AXListMarker • 
+					250 text No call key check in the app yet . Calls are end to end encrypted, but the app doesn’t show a safety code yet, so you can’t check that nobody swapped keys on the way. It’s built and being tested.
+				251 container
+					252 AXListMarker • 
+					253 text The Android app is an APK for now . Until the store listing is live, the Android app is handed out as an APK outside the store. An audit of the APK is in progress.
+				254 container
+					255 AXListMarker • 
+					256 text No outside audit . Nobody outside Yapper has audited the code or the database yet. The database rules and tests are public so you can check them yourself.
+			257 heading What we check on every release, Value: 2, ID: checks
+				258 text What we check on every release
+			259 content list
+				260 container
+					261 AXListMarker • 
+					262 text SQL tests . Every database change runs its tests in a real Postgres (PGlite), and the public live schema tests run with run-tests.sh.
+				263 container
+					264 AXListMarker • 
+					265 text Typecheck . The whole app has to typecheck before anything is pushed.
+				266 container
+					267 AXListMarker • 
+					268 text Smoke test . A production build is started and loaded in a browser. It has to mount the app with no page errors.
+				269 container
+					270 AXListMarker • 
+					271 text Performance check . After a release we check database load and slow queries, since slow startup queries took the site down before.
+				272 container
+					273 AXListMarker • 
+					274 text Image scanning . Uploads are scanned before they go public, and only the exact file that was scanned is published.
+				275 container
+					276 AXListMarker • 
+					277 text Database review . Every change to the access rules gets a separate review for permission holes before it ships.
+			278 text Is something down right now? See the 
+			279 link Description: status page, Value: yapin.gg/status
+			280 text .
+			281 link Description: ← Back to Yapin’, Value: yapin.gg/
+			282 text  · 
+			283 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		284 text Yapin’
+		285 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		286 heading PRODUCT, Value: 4
+			287 text PRODUCT
+		288 content list
+			289 link Description: Download, Value: yapin.gg/download
+			290 link Description: Developers, Value: yapin.gg/developers
+			291 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			292 link Description: Creator Program, Value: yapin.gg/creators
+			293 link Description: FanKit, Value: yapin.gg/fankit
+			294 link Description: Roadmap, Value: yapin.gg/roadmap
+			295 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			296 link Description: Bugs, Value: yapin.gg/bugs
+			297 link Description: Status, Value: yapin.gg/status
+		298 heading COMMUNITY, Value: 4
+			299 text COMMUNITY
+		300 content list
+			301 link Description: Guidelines, Value: yapin.gg/guidelines
+			302 link Description: Tutorials, Value: yapin.gg/tutorials
+			303 link Description: Bots, Value: yapin.gg/bots
+			304 link Description: Partners, Value: yapin.gg/partners
+		305 heading LEGAL, Value: 4
+			306 text LEGAL
+		307 content list
+			308 link Description: Terms, Value: yapin.gg/terms
+			309 link Description: Privacy, Value: yapin.gg/privacy
+			310 link Description: Copyright, Value: yapin.gg/copyright
+			311 link Description: Security, Value: yapin.gg/security
+			312 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			313 link Description: Contact, Value: mailto:hello@yapin.gg
+		314 text © 2026 Yapper Media LLC. Free to use.
+		315 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Security · Yapin’, URL: yapin.gg/security

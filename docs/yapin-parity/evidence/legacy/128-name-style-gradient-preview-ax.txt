@@ -1,0 +1,87 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Display name style
+							21 heading Display name style, Value: 2
+								22 text Display name style
+							23 text CHOOSE FONT
+							24 toggle button Default, Value: 0
+							25 toggle button Rounded, Value: 0
+							26 toggle button Serif, Value: 0
+							27 toggle button Mono, Value: 0
+							28 toggle button Handwritten, Value: 0
+							29 toggle button Pixel, Value: 1
+							30 toggle button Bold, Value: 0
+							31 toggle button Comic, Value: 0
+							32 text CHOOSE COLOUR
+							33 toggle button None, Value: 0
+							34 toggle button Solid, Value: 0
+							35 toggle button Gradient, Value: 1
+							36 container First colour (left), second colour (right)
+								37 image
+								38 color well First name colour, Value: rgb 1.00000 0.41961 0.29020 1
+								39 image
+								40 color well Second name colour, Value: rgb 0.60784 0.34902 1.00000 1
+							41 toggle button ✓, Help: Ember, Value: 1
+								42 text ✓
+							43 toggle button Sunset, Value: 0
+							44 toggle button Ocean, Value: 0
+							45 toggle button Grape, Value: 0
+							46 toggle button Mint, Value: 0
+							47 toggle button Gold, Value: 0
+							48 text Too dark or too light? We tweak it a bit so it stays readable.
+							49 container
+								50 text nahian
+								51 text @
+								52 text nahian
+								53 text nahian
+								54 text now
+								55 text does anyone read this?
+								56 text nahian
+								57 text In a server, a role colour beats yours, but your font stays. On a profile card with a theme colour, your name turns white (dark on a light theme) so it stays readable.
+							58 button Surprise me
+							59 button Reset
+							60 button Apply
+			61 container
+				62 tab group
+					63 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						64 button Close
+					65 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 396 MB, Value: on
+						66 button Close
+					67 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						68 button Close
+			69 button New Tab
+	70 close button
+	71 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	72 minimize button
+73 menu bar
+	74 Chrome
+	75 File
+	76 Edit
+	77 View
+	78 History
+	79 Bookmarks
+	80 Profiles
+	81 Tab
+	82 Window
+	83 Help
+
+The focused UI element is 29 toggle button Pixel, Value: 1

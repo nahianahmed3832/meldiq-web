@@ -1,0 +1,99 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Make a decoration
+							21 heading Make a decoration, Value: 2
+								22 text Make a decoration
+							23 container
+								24 text Heads up: we already have 1,800+ decorations live. Only the best and highest quality ones get approved. Most get turned down. Before you send one in, make sure it has:
+								25 content list
+									26 container
+										27 AXListMarker • 
+										28 text Clean edges. No blur, no jagged outline, no leftover pixels around it.
+									29 container
+										30 AXListMarker • 
+										31 text A proper fit. It wraps the avatar without covering it, nothing cut off at the sides.
+									32 container
+										33 AXListMarker • 
+										34 text Your own art. No copied, traced or AI-looking pictures.
+									35 container
+										36 AXListMarker • 
+										37 text A look that works small. It should still read at member list size, not turn into a smudge.
+							38 text Shows around your avatar everywhere: chat, member lists, profiles. A GIF moves when people point at it, and always on your profile.
+							39 content list
+								40 container
+									41 AXListMarker • 
+									42 text Square, 512×512 works best, PNG, WebP or GIF with a see-through background.
+								43 container
+									44 AXListMarker • 
+									45 text Keep the middle circle empty: that’s where the avatar goes.
+									46 link Get the template, Value: yapin.gg/deco/template.png
+								47 container
+									48 AXListMarker • 
+									49 text Keep big pieces to the top and sides. The bottom strip sits right above the name, so keep it light.
+								50 container
+									51 AXListMarker • 
+									52 text Only your own original work. No stolen art, nothing saved from the internet or another app, no traced or edited copies of someone else’s work. Stolen ones get taken down and can cost you your Artist badge.
+								53 container
+									54 AXListMarker • 
+									55 text No nudity, gore, hate or other people's logos.
+								56 container
+									57 AXListMarker • 
+									58 text Approved ones show up for everyone with your name on them.
+							59 container
+								60 text Get your first one approved and you get the  Artist  badge, your creations on your profile for anyone to try on, room for 6 waiting at once (3 until then), and a count of how many people wear each one.
+							61 text Pick a picture
+							62 text field (settable) Name it
+							63 container
+								64 checkbox Sell it for Shards (free if you leave this off), Value: 1
+								65 text Sell it for Shards (free if you leave this off)
+							66 text field (settable) Price in Shards, Placeholder: 25 to 5000
+							67 text Pick 25 to 5000
+							68 container
+								69 checkbox I made this myself. It isn't taken from someone else or the internet., Value: 0
+								70 text I made this myself. It isn't taken from someone else or the internet.
+							71 button (disabled) Send it in
+							72 button Close
+			73 container
+				74 tab group
+					75 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						76 button Close
+					77 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 392 MB, Value: on
+						78 button Close
+					79 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						80 button Close
+			81 button New Tab
+	82 close button
+	83 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	84 minimize button
+85 menu bar
+	86 Chrome
+	87 File
+	88 Edit
+	89 View
+	90 History
+	91 Bookmarks
+	92 Profiles
+	93 Tab
+	94 Window
+	95 Help
+
+The focused UI element is 64 checkbox Sell it for Shards (free if you leave this off), Value: 1

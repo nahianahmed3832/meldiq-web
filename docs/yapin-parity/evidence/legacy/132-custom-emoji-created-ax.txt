@@ -1,0 +1,261 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq Research - Private Test
+								25 button Meldiq
+								26 container
+									27 button Yapin' Headquarters
+									28 text 10
+								29 container
+									30 button MINECRAFT
+									31 text 13
+								32 button Create a server
+								33 button Discover servers
+							34 container
+								35 button Meldiq Research - Private Test
+								36 button Lobby OFF
+								37 button Invite people
+								38 button TEXT CHANNELS
+								39 button Create channel in this category, Help: Create channel here
+								40 pop up button More options for Text channels, Help: More
+									41 image
+								42 button general
+								43 button history-lab
+								44 button Edit channel
+								45 button Delete channel, Help: Delete
+								46 button VOICE CHANNELS
+								47 button Create channel in this category, Help: Create channel here
+								48 pop up button More options for Voice channels, Help: More
+									49 image
+								50 button General
+								51 button RESEARCH
+								52 button Create channel in this category, Help: Create channel here
+								53 pop up button More options for Research, Help: More
+									54 image
+								55 button Discussion ideas-lab
+								56 pop up button nahian Online, Help: Your account
+									57 text nahian
+									58 text Online
+								59 button Inbox
+								60 button Settings
+								61 button Log out
+							62 container
+								63 image
+								64 button history-lab
+								65 button Mute
+								66 button Threads
+								67 button Pinned messages
+								68 button Media
+								69 button Members
+								70 button Search Meldiq Research - Private Test, Help: Search this server
+								71 container
+									72 image
+									73 heading Welcome to #history-lab!, Value: 3
+										74 text Welcome to #history-lab!
+									75 text This is the start of the  # history-lab  channel. Sunday, November 1, 2026
+									76 button nahian's profile
+									77 button nahian
+									78 text Today at 11:31 AM
+									79 container
+										80 text Research marker A — start of synthetic history.  Bold ,  italic ,  code , and 
+										81 link example, Help: https://example.com, Value: example.com/
+										82 text .
+									83 text Research marker B — synthetic scroll fixture.
+01 · Reading anchor for the private scroll test.
+02 · Reading anchor for the private scroll test.
+03 · Reading anchor for the private scroll test.
+04 · Reading anchor for the private scroll test.
+05 · Reading anchor for the private scroll test.
+06 · Reading anchor for the private scroll test.
+07 · Reading anchor for the private scroll test.
+08 · Reading anchor for the private scroll test.
+09 · Reading anchor for the private scroll test.
+10 · Reading anchor for t
+									84 button Show more
+									85 text Research marker C — latest message. This is synthetic test content in the private research server.
+									86 text Research marker D — additional synthetic reading depth.
+01 · Controlled history test, no real conversation data.
+02 · Controlled history test, no real conversation data.
+03 · Controlled history test, no real conversation data.
+04 · Controlled history test, no real conversation data.
+05 · Controlled history test, no real conversation data.
+06 · Controlled history test, no real conversation data.
+07 · Controlled history test, no real conversation data.
+08 · Controlled history test, no real conversation data.
+
+									87 button Show more
+									88 text Research marker E — later synthetic history block.
+01 · Later block for unread and reload observations.
+02 · Later block for unread and reload observations.
+03 · Later block for unread and reload observations.
+04 · Later block for unread and reload observations.
+05 · Later block for unread and reload observations.
+06 · Later block for unread and reload observations.
+07 · Later block for unread and reload observations.
+08 · Later block for unread and reload observations.
+09 · Later block for unread and reloa
+									89 button Show more
+									90 text Research marker F — final latest-message marker for the controlled unread and reload tests.
+								91 container
+									92 button Send a file
+									93 text entry area (settable) Message #history-lab
+									94 button Create a poll
+									95 button GIF
+									96 button Emoji
+									97 container Emoji picker
+										98 text field (settable) Search emojis, Placeholder: Find the perfect emoji
+										99 button Add an emoji to this server
+										100 container (showing 0-100 of 171 items)
+											101 text Tip: right-click (or hold) any emoji to add it to your favorites. MR- Meldiq Research - Private Test
+											102 button research_dot, Help: :research_dot:
+											103 text MINECRAFT
+											104 button creeper, Help: :creeper:
+											105 button exploding_creeper, Help: :exploding_creeper:
+											106 button ghast, Help: :ghast:
+											107 button mace, Help: :mace:
+											108 button neon_ghast, Help: :neon_ghast:
+											109 button parrot, Help: :parrot:
+											110 button parrot2, Help: :parrot2:
+											111 button pickaxe, Help: :pickaxe:
+											112 button pig, Help: :pig:
+											113 button steve, Help: :steve:
+											114 button totem, Help: :totem:
+											115 button tuff, Help: :tuff:
+											116 button walking_steve, Help: :walking_steve:
+											117 text Yapin' Headquarters
+											118 button angry, Help: :angry:
+											119 button bricesad, Help: :bricesad:
+											120 button briceshock, Help: :briceshock:
+											121 button cat, Help: :cat:
+											122 button ChatGPT_Image_1_Oct_2026_09_25_3, Help: :ChatGPT_Image_1_Oct_2026_09_25_3:
+											123 button dwggg, Help: :dwggg:
+											124 button gappy, Help: :gappy:
+											125 button happy, Help: :happy:
+											126 button iq, Help: :iq:
+											127 button ok, Help: :ok:
+											128 button shocked, Help: :shocked:
+											129 button smiley, Help: :smiley:
+											130 button stressed, Help: :stressed:
+											131 button surprised, Help: :surprised:
+											132 button waddgg, Help: :waddgg:
+											133 button XDaura, Help: :XDaura:
+											134 button yap, Help: :yap:
+											135 button yappy, Help: :yappy:
+											136 text STANDARD
+											137 button 😀, Help: grinning
+											138 button 😂, Help: joy
+											139 button 🤣, Help: rofl
+											140 button 😊, Help: blush
+											141 button 😍, Help: heart
+											142 button 🥰, Help: smiling
+											143 button 😘, Help: kiss
+											144 button 😎, Help: cool
+											145 button 🤔, Help: thinking
+											146 button 🙄, Help: eye
+											147 button 😏, Help: smirk
+											148 button 😴, Help: sleeping
+											149 button 😭, Help: sob
+											150 button 😡, Help: angry
+											151 button 🤯, Help: mind
+											152 button 😱, Help: scream
+											153 button 🥺, Help: pleading
+											154 button 😬, Help: grimace
+											155 button 🤡, Help: clown
+											156 button 💀, Help: skull
+											157 button 👻, Help: ghost
+											158 button 🤖, Help: robot
+											159 button 👽, Help: alien
+											160 button 💩, Help: poop
+											161 button 🙃, Help: upside
+											162 button 😇, Help: angel
+											163 button 🤠, Help: cowboy
+											164 button 🥳, Help: party
+											165 button 😤, Help: triumph
+											166 button 🤫, Help: shush
+											167 button 🫡, Help: salute
+											168 button 🫠, Help: melting
+											169 button 👍, Help: thumbs
+											170 button 👎, Help: thumbs
+											171 button 👏, Help: clap
+											172 button 🙌, Help: raised
+											173 button 🙏, Help: pray
+											174 button 👋, Help: wave
+											175 button 🤝, Help: handshake
+											176 button 💪, Help: muscle
+											177 button ✌️, Help: peace
+											178 button 🤞, Help: fingers
+											179 button 👀, Help: eyes
+											180 button 🧠, Help: brain
+											181 button ❤️, Help: red
+											182 button 🧡, Help: orange
+											183 button 💛, Help: yellow
+											184 button 💚, Help: green
+											185 button 💙, Help: blue
+											186 button 💜, Help: purple
+											187 button 🖤, Help: black
+											188 button 💔, Help: broken
+											189 button 🔥, Help: fire
+											190 button ✨, Help: sparkles
+											191 button ⭐, Help: star
+											192 button 💯, Help: hundred
+											193 button ✅, Help: check
+											194 button ❌, Help: cross
+											195 button ⚠️, Help: warning
+											196 button ❓, Help: question
+											197 button 🎉, Help: tada
+											198 button 🎮, Help: video
+											199 button 🏆, Help: trophy
+									200 button Record a voice message
+									201 button (disabled) Send
+								202 content list Members
+									203 heading RESEARCH MEMBER - 1, Value: 3
+										204 text RESEARCH MEMBER - 1
+									205 button nahian Server owner
+							206 button Getting started
+			207 container
+				208 tab group
+					209 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						210 button Close
+					211 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 228 MB, Value: on
+						212 button Close
+					213 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						214 button Close
+			215 button New Tab
+	216 close button
+	217 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	218 minimize button
+219 menu bar
+	220 Chrome
+	221 File
+	222 Edit
+	223 View
+	224 History
+	225 Bookmarks
+	226 Profiles
+	227 Tab
+	228 Window
+	229 Help
+
+The focused UI element is 99 button Add an emoji to this server

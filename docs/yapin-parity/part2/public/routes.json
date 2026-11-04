@@ -1,0 +1,78 @@
+[
+  {
+    "slug": "home",
+    "path": "/",
+    "stateLength": 8073
+  },
+  {
+    "slug": "features",
+    "path": "/features",
+    "stateLength": 8023
+  },
+  {
+    "slug": "download",
+    "path": "/download",
+    "stateLength": 5534
+  },
+  {
+    "slug": "roadmap",
+    "path": "/roadmap",
+    "stateLength": 5061
+  },
+  {
+    "slug": "brand",
+    "path": "/brand",
+    "stateLength": 4545
+  },
+  {
+    "slug": "tutorials",
+    "path": "/tutorials",
+    "stateLength": 5589
+  },
+  {
+    "slug": "faq",
+    "path": "/faq",
+    "stateLength": 8831
+  },
+  {
+    "slug": "community",
+    "path": "/community",
+    "stateLength": 5091
+  },
+  {
+    "slug": "developers",
+    "path": "/developers",
+    "stateLength": 4868
+  },
+  {
+    "slug": "bots",
+    "path": "/bots",
+    "stateLength": 4750
+  },
+  {
+    "slug": "security",
+    "path": "/security",
+    "stateLength": 5494
+  },
+  {
+    "slug": "support",
+    "path": "/support",
+    "stateLength": 5508
+  },
+  {
+    "slug": "privacy",
+    "path": "/legal/privacy",
+    "stateLength": 11359
+  },
+  {
+    "slug": "guidelines",
+    "path": "/legal/acceptable-use",
+    "stateLength": 6673
+  },
+  {
+    "slug": "terms",
+    "path": "/legal/terms",
+    "stateLength": 235,
+    "source": "terms.txt"
+  }
+]

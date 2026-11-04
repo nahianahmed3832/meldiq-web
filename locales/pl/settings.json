@@ -860,5 +860,11 @@
     "accountDescription": "E-mail, stan konta, eksport danych i usunięcie konta.",
     "notificationsDescription": "Alerty pulpitu, dźwięki, wstrzymywanie powiadomień i skróty do preferencji rozmów.",
     "appearanceDescription": "Motywy, kolory, układ wiadomości, podgląd multimediów i gesty czatu."
+  },
+  "foundation": {
+    "profileSections": "Sekcje profilu",
+    "profileSectionsDescription": "Wybierz widoczne sekcje i ich kolejność. Ustawienia odbiorców nadal obowiązują.",
+    "resetSections": "Cofnij zmiany sekcji",
+    "saveSections": "Zapisz sekcje"
   }
 }

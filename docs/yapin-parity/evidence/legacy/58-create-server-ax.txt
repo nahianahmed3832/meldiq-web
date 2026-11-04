@@ -1,0 +1,51 @@
+container Create your server
+							21 heading Create your server, Value: 2
+								22 text Create your server
+							23 text Give your new server a name and an icon. You can always change them later.
+							24 container
+								25 button New server
+								26 button Import from Discord
+							27 container
+								28 container Upload server icon
+									29 image
+									30 text UPLOAD
+									31 text +
+								32 button Upload server icon: No file chosen
+								33 text SERVER NAME
+								34 text field (settable) SERVER NAME, Value: nahian's server
+								35 text PICK A LAYOUT
+								36 Pick a layout
+									37 radio button Blank #general and a voice channel, Value: 1
+									38 radio button Gaming Squad up, share clips, find people to play with, Value: 0
+									39 radio button Friends A cozy spot for your crew, Value: 0
+									40 radio button Study Study rooms, homework help and resources, Value: 0
+									41 radio button Art Share your work, get feedback, draw together, Value: 0
+									42 radio button Roleplay Characters, lore and scenes, with out of character chat, Value: 0
+									43 radio button Community For a bigger crowd: intros, events, suggestions, Value: 0
+								44 text OR USE A TEMPLATE
+								45 button Use a template link someone sent you
+							46 button Cancel
+							47 button Create
+			48 container
+				49 tab group
+					50 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						51 button Close
+					52 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: on
+						53 button Close
+			54 button New Tab
+	55 close button
+	56 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	57 minimize button
+58 menu bar
+	59 Chrome
+	60 File
+	61 Edit
+	62 View
+	63 History
+	64 Bookmarks
+	65 Profiles
+	66 Tab
+	67 Window
+	68 Help
+
+The focused UI element is 34 text field (settable) SERVER NAME, Value: nahian's server

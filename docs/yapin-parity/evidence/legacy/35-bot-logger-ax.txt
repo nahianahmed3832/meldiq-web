@@ -1,0 +1,90 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 button Close
+							22 text Logger BOT Remembers everything for the mods Off
+							23 checkbox Off, Value: 0
+							24 text Dry and exact. Writes one line per thing that happened, never pings anyone, never comments.
+							25 content list
+								26 text Edited and deleted messages, with the old text
+								27 text Joins (flags brand-new accounts) and leaves
+								28 text Kicks, bans, unbans and timeouts, with who did it
+								29 text Roles given and taken
+							30 text Logger
+							31 text BOT
+							32 text 🗑️  A message by  someone  in  #general  was deleted by  nahian Deleted text is copied in, so pick a private channel only staff can see. Logger never pings anyone. Logger+
+							33 text PLUS
+							34 table
+								35 row
+									36 column header
+										37 text FREE
+									38 column header
+										39 text LOGGER+
+								40 row
+									41 cell
+										42 text Edits, deletes, joins, leaves, bans, timeouts, roles
+									43 cell
+										44 image Yes
+									45 cell
+										46 image Yes
+								47 row
+									48 cell
+										49 text Member events in their own channel
+									50 cell
+										51 container No
+											52 text ✕
+									53 cell
+										54 image Yes
+								55 row
+									56 cell
+										57 text Leave channels out of the log
+									58 cell
+										59 container No
+											60 text ✕
+									61 cell
+										62 text up to 25
+							63 button Get Bots+ · $3.99/mo
+							64 text Renews every month at $3.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+							65 link yapin.gg/cancel
+							66 text . Bots+ is one subscription for this server: it unlocks the Plus extras of every Yapin’ bot together. Saved
+							67 button (disabled) Save
+			68 container
+				69 tab group
+					70 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 151 MB, Value: on
+						71 button Close
+			72 button New Tab
+	73 close button
+	74 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	75 minimize button
+76 menu bar
+	77 Chrome
+	78 File
+	79 Edit
+	80 View
+	81 History
+	82 Bookmarks
+	83 Profiles
+	84 Tab
+	85 Window
+	86 Help
+
+The focused UI element is 23 checkbox Off, Value: 0

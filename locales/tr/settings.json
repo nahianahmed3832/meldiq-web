@@ -860,5 +860,11 @@
     "accountDescription": "E-posta, hesap durumu, veri dışa aktarma ve hesap silme.",
     "notificationsDescription": "Masaüstü uyarıları, sesler, bildirim duraklatma ve sohbet tercihlerine kısayollar.",
     "appearanceDescription": "Temalar, renkler, mesaj düzeni, medya önizlemeleri ve sohbet hareketleri."
+  },
+  "foundation": {
+    "profileSections": "Profil bölümleri",
+    "profileSectionsDescription": "Görünecek bölümleri ve sıralarını seç. Hedef kitle ayarların geçerli kalır.",
+    "resetSections": "Bölüm değişikliklerini sıfırla",
+    "saveSections": "Bölümleri kaydet"
   }
 }

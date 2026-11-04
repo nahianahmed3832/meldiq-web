@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "En sourdine"
+  },
+  "password": {
+    "show": "Afficher le mot de passe",
+    "hide": "Masquer le mot de passe"
+  },
+  "navigation": {
+    "skipToContent": "Aller au contenu principal"
   }
 }

@@ -1,0 +1,324 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 text (32) Yapin’
+		3 text Yapin’
+		4 container Servers
+			5 button Direct messages
+			6 container
+				7 button Meldiq Research - Private Test
+				8 button Meldiq
+				9 button Yapin' Headquarters
+				10 text 10
+				11 button MINECRAFT
+				12 text 22
+			13 button Create a server
+			14 button Discover servers
+				15 image
+		16 container
+			17 button Meldiq Research - Private Test Events
+				18 text Meldiq Research - Private Test
+				19 button Events
+			20 button Lobby OFF
+				21 image
+				22 text Lobby
+				23 text OFF
+			24 button Invite people
+				25 image
+				26 text Invite people
+			27 button (expanded) TEXT CHANNELS, Secondary Actions: Collapse
+				28 image
+				29 text TEXT CHANNELS
+			30 button Description: Create channel in this category, Help: Create channel here
+				31 image
+			32 pop up button Description: More options for Text channels, Help: More
+				33 image
+			34 container
+				35 button general
+					36 image
+					37 text general
+				42 button history-lab
+					43 image
+					44 text history-lab
+				74 button Edit channel
+					75 image
+				76 button Description: Delete channel, Help: Delete
+					77 image
+			45 button (expanded) VOICE CHANNELS, Secondary Actions: Collapse
+				46 image
+				47 text VOICE CHANNELS
+			48 button Description: Create channel in this category, Help: Create channel here
+				49 image
+			50 pop up button Description: More options for Voice channels, Help: More
+				51 image
+			52 button General
+				53 image
+				54 text General
+			55 button (expanded) RESEARCH, Secondary Actions: Collapse
+				56 image
+				57 text RESEARCH
+			58 button Description: Create channel in this category, Help: Create channel here
+				59 image
+			60 pop up button Description: More options for Research, Help: More
+				61 image
+			62 button Discussion ideas-lab
+				63 image Discussion
+				64 text ideas-lab
+			65 pop up button (collapsed) nahian Online, Help: Your account, Secondary Actions: Expand
+				66 text nahian
+				67 text Online
+			68 button (collapsed) Description: Inbox, Secondary Actions: Expand
+			69 button Settings
+				70 image
+			71 button Log out
+				72 image
+		73 container
+			78 image
+			79 button history-lab
+			80 button Mute
+				81 image
+			82 button (collapsed) Description: Threads, Secondary Actions: Expand
+				83 image
+			84 button Pinned messages
+				85 image
+			86 button Media
+				87 image
+			88 button Members
+				89 image
+			90 button Search Meldiq Research - Private Test, Help: Search this server
+				91 image
+				92 text Search Meldiq Research - Private Test
+			119 container
+				120 image
+				121 heading Welcome to #history-lab!, Value: 3
+					122 text Welcome to #history-lab!
+				123 text This is the start of the  # history-lab  channel. Sunday, November 1, 2026
+				124 button nahian's profile
+				125 button nahian
+				126 text Nov 1, 2026 11:31 AM
+				127 container
+					128 text Research marker A — start of synthetic history.  Bold ,  italic ,  code , and 
+					129 link Description: example, Help: https://example.com, Value: example.com/
+					130 text .
+				131 text Research marker B — synthetic scroll fixture.
+01 · Reading anchor for the private scroll test.
+02 · Reading anchor for the private scroll test.
+03 · Reading anchor for the private scroll test.
+04 · Reading anchor for the private scroll test.
+05 · Reading anchor for the private scroll test.
+06 · Reading anchor for the private scroll test.
+07 · Reading anchor for the private scroll test.
+08 · Reading anchor for the private scroll test.
+09 · Reading anchor for the private scroll test.
+10 · Reading anchor for the private scroll test.
+11 · Reading anchor for the private scroll test.
+12 · Reading anchor for the private scroll test.
+13 · Reading anchor for the private scroll test.
+14 · Reading anchor for the private scroll test.
+15 · Reading anchor for the private scroll test.
+16 · Reading anchor for the private scroll test.
+17 · Reading anchor for the private scroll test.
+18 · Reading anchor for the private scroll test.
+19 · Reading anchor for the private scroll test.
+20 · Reading anchor for the private scroll test.
+21 · Reading anchor for the private scroll test.
+22 · Reading anchor for the private scroll test.
+23 · Reading anchor for the private scroll test.
+24 · Reading anchor for the private scroll test.
+				132 button (collapsed) Show more, Secondary Actions: Expand
+				133 text Research marker C — latest message. This is synthetic test content in the private research server.
+				134 text Research marker D — additional synthetic reading depth.
+01 · Controlled history test, no real conversation data.
+02 · Controlled history test, no real conversation data.
+03 · Controlled history test, no real conversation data.
+04 · Controlled history test, no real conversation data.
+05 · Controlled history test, no real conversation data.
+06 · Controlled history test, no real conversation data.
+07 · Controlled history test, no real conversation data.
+08 · Controlled history test, no real conversation data.
+09 · Controlled history test, no real conversation data.
+10 · Controlled history test, no real conversation data.
+11 · Controlled history test, no real conversation data.
+12 · Controlled history test, no real conversation data.
+13 · Controlled history test, no real conversation data.
+14 · Controlled history test, no real conversation data.
+15 · Controlled history test, no real conversation data.
+16 · Controlled history test, no real conversation data.
+17 · Controlled history test, no real conversation data.
+18 · Controlled history test, no real conversation data.
+19 · Controlled history test, no real conversation data.
+20 · Controlled history test, no real conversation data.
+21 · Controlled history test, no real conversation data.
+22 · Controlled history test, no real conversation data.
+				135 button (collapsed) Show more, Secondary Actions: Expand
+				136 text Research marker E — later synthetic history block.
+01 · Later block for unread and reload observations.
+02 · Later block for unread and reload observations.
+03 · Later block for unread and reload observations.
+04 · Later block for unread and reload observations.
+05 · Later block for unread and reload observations.
+06 · Later block for unread and reload observations.
+07 · Later block for unread and reload observations.
+08 · Later block for unread and reload observations.
+09 · Later block for unread and reload observations.
+10 · Later block for unread and reload observations.
+11 · Later block for unread and reload observations.
+12 · Later block for unread and reload observations.
+13 · Later block for unread and reload observations.
+14 · Later block for unread and reload observations.
+15 · Later block for unread and reload observations.
+16 · Later block for unread and reload observations.
+17 · Later block for unread and reload observations.
+18 · Later block for unread and reload observations.
+19 · Later block for unread and reload observations.
+20 · Later block for unread and reload observations.
+21 · Later block for unread and reload observations.
+22 · Later block for unread and reload observations.
+				137 button (collapsed) Show more, Secondary Actions: Expand
+				138 text Research marker F — final latest-message marker for the controlled unread and reload tests.
+				139 button Private synthetic thread 1 message · 3d
+					140 text Private synthetic thread
+					141 text 1 message
+					142 text  · 
+					143 text 3d
+				144 checkbox Description: 👍 1 reaction, Value: 1
+					145 image 👍
+					146 text 1
+				147 button Add reaction
+				157 button nahian's profile
+				158 button nahian
+				159 text Nov 1, 2026 11:51 AM
+				160 image Description: :research_dot:, Help: :research_dot: from Meldiq Research - Private Test
+				161 image Description: :creeper:, Help: :creeper: from MINECRAFT
+				162 button Open picture
+				163 checkbox Description: Star GIF, Help: Add to favourites, Value: 0
+					164 image
+				165 button nahian's profile
+				166 button nahian
+				167 text Nov 1, 2026 12:00 PM
+				168 text !help
+				169 button Helper's profile
+				170 button Helper
+				171 container Description: Yapin’ bot, Help: Made and run by Yapin’
+				172 text Nov 1, 2026 12:00 PM
+				173 container
+					174 text Helper commands !8ball question  ·  !roll  or  !roll 2d6  ·  !flip  ·  !choose a | b | c  ·  !afk reason  ·  !rank  ·  !top
+			94 container
+				95 button Send a file
+					96 image
+				97 text entry area (settable)
+				98 button Create a poll
+					99 image
+				100 button GIF
+				101 button Emoji
+					102 image
+				103 button Record a voice message
+					104 image
+				105 button (disabled) Send
+					106 image
+			175 text Search
+			176 button Close
+				177 image
+			178 container
+				179 text field (settable) Description: Search messages, Value: Research marker
+				180 button Go
+				181 button Whole server
+				182 button This channel
+				183 text field (settable) From
+				184 button nahian 11/1/2026, 11:33:21 AM Research marker F — final latest-message marker for the controlled unread and reload tests.
+					185 text nahian
+					186 text 11/1/2026, 11:33:21 AM
+					187 text Research marker F — final latest-message marker for the controlled unread and reload tests.
+				188 button nahian 11/1/2026, 11:33:12 AM Research marker E — later synthetic history block. 01 · Later block for unread and reload observations. 02 · Later block for unread and reload observations. 03 · Later block for unread and reload observations. 04 · Later block for unread and reload observations. 05 · Later block for unread and reload observations. 06 · Later block for unread and reload observations. 07 · Later block for unread and reload observations. 08 · Later block for unread and reload observations. 09 · Later block for unread and reload observations. 10 · Later block for unread and reload observations. 11 · Later block for unread and reload observations. 12 · Later block for unread and reload observations. 13 · Later block for unread and reload observations. 14 · Later block for unread and reload observations. 15 · Later block for unread and reload observations. 16 · Later block for unread and reload observations. 17 · Later block for unread and reload observations. 18 · Later block for unread and reload observations. 19 · Later block for unread and reload observations. 20 · Later block for unread and reload observations. 21 · Later block for unread and reload observations. 22 · Later block for unread and reload observations.
+					189 text nahian
+					190 text 11/1/2026, 11:33:12 AM
+					191 text Research marker E — later synthetic history block.
+01 · Later block for unread and reload observations.
+02 · Later block for unread and reload observations.
+03 · Later block for unread and reload observations.
+04 · Later block for unread and reload observations.
+05 · Later block for unread and reload observations.
+06 · Later block for unread and reload observations.
+07 · Later block for unread and reload observations.
+08 · Later block for unread and reload observations.
+09 · Later block for unread and reload observations.
+10 · Later block for unread and reload observations.
+11 · Later block for unread and reload observations.
+12 · Later block for unread and reload observations.
+13 · Later block for unread and reload observations.
+14 · Later block for unread and reload observations.
+15 · Later block for unread and reload observations.
+16 · Later block for unread and reload observations.
+17 · Later block for unread and reload observations.
+18 · Later block for unread and reload observations.
+19 · Later block for unread and reload observations.
+20 · Later block for unread and reload observations.
+21 · Later block for unread and reload observations.
+22 · Later block for unread and reload observations.
+				192 button nahian 11/1/2026, 11:33:05 AM Research marker D — additional synthetic reading depth. 01 · Controlled history test, no real conversation data. 02 · Controlled history test, no real conversation data. 03 · Controlled history test, no real conversation data. 04 · Controlled history test, no real conversation data. 05 · Controlled history test, no real conversation data. 06 · Controlled history test, no real conversation data. 07 · Controlled history test, no real conversation data. 08 · Controlled history test, no real conversation data. 09 · Controlled history test, no real conversation data. 10 · Controlled history test, no real conversation data. 11 · Controlled history test, no real conversation data. 12 · Controlled history test, no real conversation data. 13 · Controlled history test, no real conversation data. 14 · Controlled history test, no real conversation data. 15 · Controlled history test, no real conversation data. 16 · Controlled history test, no real conversation data. 17 · Controlled history test, no real conversation data. 18 · Controlled history test, no real conversation data. 19 · Controlled history test, no real conversation data. 20 · Controlled history test, no real conversation data. 21 · Controlled history test, no real conversation data. 22 · Controlled history test, no real conversation data.
+					193 text nahian
+					194 text 11/1/2026, 11:33:05 AM
+					195 text Research marker D — additional synthetic reading depth.
+01 · Controlled history test, no real conversation data.
+02 · Controlled history test, no real conversation data.
+03 · Controlled history test, no real conversation data.
+04 · Controlled history test, no real conversation data.
+05 · Controlled history test, no real conversation data.
+06 · Controlled history test, no real conversation data.
+07 · Controlled history test, no real conversation data.
+08 · Controlled history test, no real conversation data.
+09 · Controlled history test, no real conversation data.
+10 · Controlled history test, no real conversation data.
+11 · Controlled history test, no real conversation data.
+12 · Controlled history test, no real conversation data.
+13 · Controlled history test, no real conversation data.
+14 · Controlled history test, no real conversation data.
+15 · Controlled history test, no real conversation data.
+16 · Controlled history test, no real conversation data.
+17 · Controlled history test, no real conversation data.
+18 · Controlled history test, no real conversation data.
+19 · Controlled history test, no real conversation data.
+20 · Controlled history test, no real conversation data.
+21 · Controlled history test, no real conversation data.
+22 · Controlled history test, no real conversation data.
+				196 button nahian 11/1/2026, 11:31:43 AM Research marker C — latest message. This is synthetic test content in the private research server.
+					197 text nahian
+					198 text 11/1/2026, 11:31:43 AM
+					199 text Research marker C — latest message. This is synthetic test content in the private research server.
+				200 button nahian 11/1/2026, 11:31:37 AM Research marker B — synthetic scroll fixture. 01 · Reading anchor for the private scroll test. 02 · Reading anchor for the private scroll test. 03 · Reading anchor for the private scroll test. 04 · Reading anchor for the private scroll test. 05 · Reading anchor for the private scroll test. 06 · Reading anchor for the private scroll test. 07 · Reading anchor for the private scroll test. 08 · Reading anchor for the private scroll test. 09 · Reading anchor for the private scroll test. 10 · Reading anchor for the private scroll test. 11 · Reading anchor for the private scroll test. 12 · Reading anchor for the private scroll test. 13 · Reading anchor for the private scroll test. 14 · Reading anchor for the private scroll test. 15 · Reading anchor for the private scroll test. 16 · Reading anchor for the private scroll test. 17 · Reading anchor for the private scroll test. 18 · Reading anchor for the private scroll test. 19 · Reading anchor for the private scroll test. 20 · Reading anchor for the private scroll test. 21 · Reading anchor for the private scroll test. 22 · Reading anchor for the private scroll test. 23 · Reading anchor for the private scroll test. 24 · Reading anchor for the private scroll test.
+					201 text nahian
+					202 text 11/1/2026, 11:31:37 AM
+					203 text Research marker B — synthetic scroll fixture.
+01 · Reading anchor for the private scroll test.
+02 · Reading anchor for the private scroll test.
+03 · Reading anchor for the private scroll test.
+04 · Reading anchor for the private scroll test.
+05 · Reading anchor for the private scroll test.
+06 · Reading anchor for the private scroll test.
+07 · Reading anchor for the private scroll test.
+08 · Reading anchor for the private scroll test.
+09 · Reading anchor for the private scroll test.
+10 · Reading anchor for the private scroll test.
+11 · Reading anchor for the private scroll test.
+12 · Reading anchor for the private scroll test.
+13 · Reading anchor for the private scroll test.
+14 · Reading anchor for the private scroll test.
+15 · Reading anchor for the private scroll test.
+16 · Reading anchor for the private scroll test.
+17 · Reading anchor for the private scroll test.
+18 · Reading anchor for the private scroll test.
+19 · Reading anchor for the private scroll test.
+20 · Reading anchor for the private scroll test.
+21 · Reading anchor for the private scroll test.
+22 · Reading anchor for the private scroll test.
+23 · Reading anchor for the private scroll test.
+24 · Reading anchor for the private scroll test.
+				204 button nahian 11/1/2026, 11:31:31 AM Research marker A — start of synthetic history. Bold, italic, code, and [example](https://example.com).
+					205 text nahian
+					206 text 11/1/2026, 11:31:31 AM
+					207 container
+						208 text Research marker A — start of synthetic history.  Bold ,  italic ,  code , and  [example](
+						209 link Description: https://example.com, Value: example.com/
+						210 text ) .
+
+The focused UI element is 0 AXWebArea (32) Yapin’, URL: yapin.gg/

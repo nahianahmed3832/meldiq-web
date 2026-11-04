@@ -1,0 +1,60 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 text (32) Yapin’
+		3 text Yapin’
+		4 container Servers
+			5 button Direct messages
+			6 container
+				7 button Meldiq Research - Private Test
+				8 button Meldiq
+				9 button Yapin' Headquarters
+				10 text 10
+				11 button MINECRAFT
+				12 text 22
+			13 button Create a server
+			14 button Discover servers
+				15 image
+		16 container
+			17 text Direct messages
+			18 button Friends
+				19 image
+				20 text Friends
+			21 button Find people
+				22 image
+				23 text Find people
+			24 button Create group
+				25 image
+				26 text Create group
+			27 text DIRECT MESSAGES
+			28 button New message
+				29 image
+			30 text No DMs yet
+			31 text Add a friend, then say hi.
+			32 button Find friends
+			33 pop up button (collapsed) nahian Online, Help: Your account, Secondary Actions: Expand
+				34 text nahian
+				35 text Online
+			36 button (collapsed) Description: Inbox, Secondary Actions: Expand
+			37 button Settings
+				38 image
+			39 button Log out
+				40 image
+		41 container
+			42 image
+			43 text Friends
+			44 button Online
+			45 button All
+			46 button Pending
+			47 button Blocked
+			48 button Suggested
+			49 button Add Friend
+			50 heading ADD FRIEND, Value: 3
+				51 text ADD FRIEND
+			52 text You can add friends with their Yapin’ username.
+			53 text field (settable) Username
+			54 button (disabled) Send Friend Request
+			55 text field (settable) Note
+			56 text They only see the note if their DM settings let you message them. 100
+
+The focused UI element is 53 text field (settable) Username

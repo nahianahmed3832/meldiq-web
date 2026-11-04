@@ -1,0 +1,166 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Change avatar decoration
+							21 heading Change avatar decoration, Value: 2
+								22 text Change avatar decoration
+							23 container Decoration set
+								24 toggle button Included, Value: 0
+								25 toggle button Community, Value: 1
+							26 button Make a decoration
+							27 container
+								28 search text field (settable) Search community decorations, Placeholder: Search by name or artist
+								29 tab group Moving or still
+									30 button All
+									31 button Moving
+									32 button Still
+								33 tab group Show
+									34 toggle button All, Value: 1
+									35 toggle button ★ Favorites, Value: 0
+									36 toggle button Owned, Value: 0
+									37 toggle button Halloween, Value: 0
+								38 button Stary Night by @3rd
+								39 toggle button Favorite Stary Night, Help: Add to favorites, Value: 0
+								40 button Primal Energy by @Saad 25
+								41 toggle button Favorite Primal Energy, Help: Add to favorites, Value: 0
+								42 button Fly Away by @scorche
+								43 toggle button Favorite Fly Away, Help: Add to favorites, Value: 0
+								44 button Blossom by @Farawayfromcool
+								45 toggle button Favorite Blossom, Help: Add to favorites, Value: 0
+								46 button Missing Texture by @tuxy
+								47 toggle button Favorite Missing Texture, Help: Add to favorites, Value: 0
+								48 button Crimson by @Osama_aka
+								49 toggle button Favorite Crimson, Help: Add to favorites, Value: 0
+								50 button Celestial Void Winged Halo Frame by @7B
+								51 toggle button Favorite Celestial Void Winged Halo Frame, Help: Add to favorites, Value: 0
+								52 button Circle Pointer by @tiz
+								53 toggle button Favorite Circle Pointer, Help: Add to favorites, Value: 0
+								54 button Eclipse Slash by @Truwty 25
+								55 toggle button Favorite Eclipse Slash, Help: Add to favorites, Value: 0
+								56 button White Lace by @nortoncampbell
+								57 toggle button Favorite White Lace, Help: Add to favorites, Value: 0
+								58 button Doodle Notes by @mp3
+								59 toggle button Favorite Doodle Notes, Help: Add to favorites, Value: 0
+								60 button Black Smokey Halo by @Truwty 50
+								61 toggle button Favorite Black Smokey Halo, Help: Add to favorites, Value: 0
+								62 button Black glitter by @DeltaExecutor
+								63 toggle button Favorite Black glitter, Help: Add to favorites, Value: 0
+								64 button Cats V2 by @0q7
+								65 toggle button Favorite Cats V2, Help: Add to favorites, Value: 0
+								66 button An IQ Too High? by @Joe_
+								67 toggle button Favorite An IQ Too High?, Help: Add to favorites, Value: 0
+								68 button fake Verified by @amca
+								69 toggle button Favorite fake Verified, Help: Add to favorites, Value: 0
+								70 button Vampire by @Jakens
+								71 toggle button Favorite Vampire, Help: Add to favorites, Value: 0
+								72 button clouds by @nvm.satvrnn
+								73 toggle button Favorite clouds, Help: Add to favorites, Value: 0
+								74 button Censored by @Celebi
+								75 toggle button Favorite Censored, Help: Add to favorites, Value: 0
+								76 button Glitched Frame by @Dexterious
+								77 toggle button Favorite Glitched Frame, Help: Add to favorites, Value: 0
+								78 button BITE (animated) by @Jum
+								79 toggle button Favorite BITE (animated), Help: Add to favorites, Value: 0
+								80 button skill issue lil bro by @milosz14
+								81 toggle button Favorite skill issue lil bro, Help: Add to favorites, Value: 0
+								82 button Blue Ring by @th
+								83 toggle button Favorite Blue Ring, Help: Add to favorites, Value: 0
+								84 button Windows 7 by @xxch4rag4m1ngxx
+								85 toggle button Favorite Windows 7, Help: Add to favorites, Value: 0
+								86 button Blackflash by @Shrine
+								87 toggle button Favorite Blackflash, Help: Add to favorites, Value: 0
+								88 button Chained swirls by @rumour
+								89 toggle button Favorite Chained swirls, Help: Add to favorites, Value: 0
+								90 button Black cat ears by @ThatDiamondShark
+								91 toggle button Favorite Black cat ears, Help: Add to favorites, Value: 0
+								92 button Halo by @ekki
+								93 toggle button Favorite Halo, Help: Add to favorites, Value: 0
+								94 button Cool Kitten by @Zyndor
+								95 toggle button Favorite Cool Kitten, Help: Add to favorites, Value: 0
+								96 button DOES HE KNOW? by @edjaxd
+								97 toggle button Favorite DOES HE KNOW?, Help: Add to favorites, Value: 0
+								98 button Lace and bow by @Remington
+								99 toggle button Favorite Lace and bow, Help: Add to favorites, Value: 0
+								100 button Money by @th
+								101 toggle button Favorite Money, Help: Add to favorites, Value: 0
+								102 button Cute Bow by @Celebi
+								103 toggle button Favorite Cute Bow, Help: Add to favorites, Value: 0
+								104 button Shrine by @bye
+								105 toggle button Favorite Shrine, Help: Add to favorites, Value: 0
+								106 button Halo and wings by @ekki
+								107 toggle button Favorite Halo and wings, Help: Add to favorites, Value: 0
+								108 button Circlet of the Iron Martyr by @3x3 50
+								109 toggle button Favorite Circlet of the Iron Martyr, Help: Add to favorites, Value: 0
+								110 button Red John by @Shady1545
+								111 toggle button Favorite Red John, Help: Add to favorites, Value: 0
+								112 button Black Lace by @nortoncampbell
+								113 toggle button Favorite Black Lace, Help: Add to favorites, Value: 0
+								114 button Crows by @regret
+								115 toggle button Favorite Crows, Help: Add to favorites, Value: 0
+								116 button Cutie bow (still ver.) by @akiyama.net
+								117 toggle button Favorite Cutie bow (still ver.), Help: Add to favorites, Value: 0
+								118 button Ice Fairy (Animated) by @kg_osi
+								119 toggle button Favorite Ice Fairy (Animated), Help: Add to favorites, Value: 0
+								120 button acid by @.cc
+								121 toggle button Favorite acid, Help: Add to favorites, Value: 0
+								122 button pink angel wings by @doII
+								123 toggle button Favorite pink angel wings, Help: Add to favorites, Value: 0
+								124 button Hollow Eve by @rztx
+								125 toggle button Favorite Hollow Eve, Help: Add to favorites, Value: 0
+								126 button Midnight Celestial Chains by @Truwty 25
+								127 toggle button Favorite Midnight Celestial Chains, Help: Add to favorites, Value: 0
+								128 button Static by @regret
+								129 toggle button Favorite Static, Help: Add to favorites, Value: 0
+								130 button Clouds! by @Sviter
+								131 toggle button Favorite Clouds!, Help: Add to favorites, Value: 0
+								132 button nyan cat by @reallyflux
+								133 toggle button Favorite nyan cat, Help: Add to favorites, Value: 0
+								134 button Show more (2341 left)
+							135 container
+								136 text INCLUDED
+								137 text Flames
+							138 button Cancel
+							139 button Apply
+			140 container
+				141 tab group
+					142 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						143 button Close
+					144 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 330 MB, Value: on
+						145 button Close
+					146 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						147 button Close
+			148 button New Tab
+	149 close button
+	150 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	151 minimize button
+152 menu bar
+	153 Chrome
+	154 File
+	155 Edit
+	156 View
+	157 History
+	158 Bookmarks
+	159 Profiles
+	160 Tab
+	161 Window
+	162 Help
+
+The focused UI element is 25 toggle button Community, Value: 1

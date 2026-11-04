@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-04T05:58:01.175858+00:00",
+  "source": "1f18c4a4e503c2aba263082b56d3d0db436e3736",
+  "deployedWebSource": "3cc3c032b973ef9f03b7a2c95593cface27e6f32",
+  "productionRelease": "0.5.0-beta-ui-standardization-3cc3c03",
+  "branch": "codex/meldiq-part2-foundation",
+  "worktree": "/Volumes/code_files/meldiq_web_part2_foundation",
+  "sharedCheckout": "/Volumes/code_files/meldiq_web",
+  "productionMutationAuthorized": false,
+  "dependencyStrategy": "Reuse installed matching dependency tree; no package changes"
+}

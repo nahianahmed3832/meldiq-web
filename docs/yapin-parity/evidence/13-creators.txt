@@ -1,0 +1,62 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Creator Program, Value: 2
+			177 text Creator Program
+		178 text Make videos or posts about Yapin’ and get paid in Plus: 10K views is 1 month, 1M is 8. Shorts and TikToks count too. Plus a badge, 10 Shards for every real person your invite link brings in, and 3 or 6 months of Plus up front if you come in as Pro or Elite. Only for content about Yapin’.
+		179 heading WHAT YOU STILL NEED, Value: 3
+			180 text WHAT YOU STILL NEED
+		181 content list
+			182 container
+				183 text 1 A verified channel YouTube, TikTok, Twitch, Instagram or X,  public , with  1,000+ followers or subscribers  and a post in the last 60 days. Your Yapin’ username has to match the channel name. Apply right here: Are you a YouTuber, streamer or creator? Get a badge so nobody can impersonate you. We need a link to your channel, a screenshot with your follower count, and a line in your channel bio that points back here. First, put this in your channel bio or description
+				184 container
+					185 text yapin:  nahian
+				186 button Copy
+				187 text That's how we know the channel is really yours. Anyone can copy a profile picture and a name, but only the owner can edit the bio. Leave it there until you get the badge. Applications without it are rejected. To qualify you need 1,000+ followers or subscribers  on the platform you're applying with. Your proof screenshot must show the follower count. Smaller channels are rejected, so apply once you're there. Your Yapin’ name has to match the channel.  Set your username or display name to the same name as your social media account before applying. Applications under a different name are rejected. Once you're verified you can change your display name whenever you want, but a new username that doesn't match removes the badge. PLATFORM
+				188 combo box (collapsed) PLATFORM, Value: YouTube, ID: ver-platform, Secondary Actions: Expand
+					189 text YouTube
+				190 text CHANNEL / ACCOUNT NAME
+				191 text field (settable) CHANNEL / ACCOUNT NAME, ID: ver-handle
+				192 text LINK TO IT
+				193 text field (settable) LINK TO IT, ID: ver-link
+				194 text ANYTHING ELSE WE SHOULD KNOW
+				195 text entry area (settable) ANYTHING ELSE WE SHOULD KNOW, ID: ver-note
+				196 text PROOF SCREENSHOT (MUST SHOW YOUR FOLLOWER COUNT) Add screenshot
+				197 button Add screenshot
+				198 text “yapin: nahian” is in my channel bio
+				199 text We open your channel and check before approving.
+				200 checkbox (settable, integer) Description: “yapin: nahian” is in my channel bio We open your channel and check before approving., Value: 0
+				201 button (disabled) Apply for verification
+			202 container
+				203 text 2 Apply Unlocks once your channel is verified.
+			204 container
+				205 text 3 Get approved, then send things in A mod checks your channel. Approved: the Creator badge, and this tab turns into your dashboard, where every video or post about Yapin’ goes in with one link. Send something in at least every 30 days to stay in.
+		206 container
+			207 text The full rewards table, the leaderboard and the creator kit are in the 
+			208 link Description: Creator Center, Value: yapin.gg/creator
+			209 text . Verification also lives in 
+			210 button My Account
+			211 text .
+		174 button Close
+			175 image
+
+The focused UI element is 22 button Creators

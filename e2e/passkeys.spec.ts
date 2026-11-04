@@ -1,3 +1,4 @@
+import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import { type BrowserContext, type CDPSession, expect, type Page, test } from "@playwright/test";
 import { expectSignedOut } from "./link";
@@ -10,7 +11,7 @@ import { testAddress } from "./phone";
  * makes http://localhost:5181 a relying party of its own (PASSKEY_WEB_ORIGINS in playwright.config.ts): WebAuthn needs a
  * host name, so these pages use localhost rather than 127.0.0.1, where passkeys aren't offered.
  */
-const WEB = "http://localhost:5181";
+const WEB = `http://localhost:${process.env.ORBIT_E2E_WEB_PORT ?? 5181}`;
 const PASSWORD = "a long enough password";
 
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "CDP WebAuthn is Chromium's; one desktop run is enough");
@@ -48,14 +49,16 @@ test("add a passkey in Settings, sign in with it in another browser, then remove
   const email = `e2e.passkey.${crypto.randomBytes(4).toString("hex")}@example.test`;
   await first.getByRole("button", { name: "Create an account" }).click();
   await first.getByLabel("Your name").fill("Passkey Person");
-  await first.getByLabel("Email").fill(email);
-  await first.getByLabel("Password").fill(PASSWORD);
+  await first.getByLabel("Email", { exact: true }).fill(email);
+  await first.getByLabel("Password", { exact: true }).fill(PASSWORD);
+  await first.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
   await first.getByRole("button", { name: "Create account" }).click();
   await first.getByLabel("Code").fill(await emailedCode(email, "verify"));
   await first.getByRole("button", { name: "Confirm" }).click();
   await first.getByRole("button", { name: "Set up encryption" }).click();
   await first.getByLabel("I've stored my recovery key somewhere safe.").check();
   await first.getByRole("button", { name: "Open Meldiq" }).click();
+  await finishWelcome(first);
   await expect(first.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
 
   await first.goto(`${WEB}/settings/security`);

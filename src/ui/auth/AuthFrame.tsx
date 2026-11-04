@@ -70,7 +70,6 @@ function AppPreview() {
         </span>
         <span className="lp-ch on">{"# welcome"}</span>
         <span className="lp-ch">{"# general"}</span>
-        <span className="lp-ch">{"# clips"}</span>
         <span className="lp-cat">
           <Localized k="auth.interface.voice_87bf2bc" />
         </span>
@@ -132,10 +131,10 @@ export function FormNotice({ text }: { text: string | null }) {
   );
 }
 /** A quiet text button, for "Forgot password?" and the like. */
-export function LinkButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
+export function LinkButton({ onClick, children, disabled = false }: { onClick: () => void; children: ReactNode; disabled?: boolean }) {
   useLocaleRender();
   return (
-    <button type="button" className="text-link" onClick={onClick}>
+    <button type="button" className="text-link" onClick={onClick} disabled={disabled}>
       {children}
     </button>
   );

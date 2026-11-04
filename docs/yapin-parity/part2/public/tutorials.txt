@@ -1,0 +1,97 @@
+Browser tab: 6, Title: "Getting started · Meldiq", URL: "https://meldiq.app/tutorials".
+1 AXWebArea Getting started · Meldiq, URL: meldiq.app/tutorials
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/tutorials#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Getting started, Value: meldiq.app/
+				16 text YOUR FIRST FEW MINUTES
+				17 heading Less setup. More conversation., Value: 1
+					18 text Less setup. More conversation.
+				19 text A short guide to finding your way around Meldiq, from your first account to your own community.
+			20 container
+				21 text 01
+				22 heading Create your account, Value: 2
+					23 text Create your account
+				24 text Open Meldiq in your browser or get the app for your device. Create an account, verify your email and sign in. Core messaging is free and doesn’t require a payment card.
+				25 link Description: Create an account, Value: meldiq.app/signup
+			26 container
+				27 text 02
+				28 heading Find your people, Value: 2
+					29 text Find your people
+				30 text Use Discover to look for public communities, or follow an invitation from a friend. Introduce yourself in a text channel and check the community’s rules before posting.
+				31 link Description: About communities, Value: meldiq.app/community
+			32 container
+				33 text 03
+				34 heading Keep in touch, Value: 2
+					35 text Keep in touch
+				36 text Start a direct message for a one-to-one conversation or bring a few friends into a private group. Reply to messages, add reactions and share files from the conversation.
+				37 link Description: Messaging features, Value: meldiq.app/features#messaging
+			38 container
+				39 text 04
+				40 heading Talk it through, Value: 2
+					41 text Talk it through
+				42 text Join a voice channel or start a call. Allow microphone or camera access when you choose to use them. Check the call encryption indicator, and select a screen or window when sharing.
+				43 link Description: Calls and screen sharing, Value: meldiq.app/features#calls
+			44 container
+				45 text 05
+				46 heading Make your own community, Value: 2
+					47 text Make your own community
+				48 text Create a community, give it a name and add channels around your group’s interests. Set roles and permissions before sharing an invitation. Start small; you can add more structure as your group grows.
+				49 link Description: Community tools, Value: meldiq.app/features#communities
+			50 container
+				51 text 06
+				52 heading Secure your account, Value: 2
+					53 text Secure your account
+				54 text Set up a passkey or authenticator-based two-step sign-in. Keep your recovery codes somewhere safe and review your signed-in sessions regularly.
+				55 link Description: Account security, Value: meldiq.app/security
+			56 container
+				57 heading Make yourself at home., Value: 2
+					58 text Make yourself at home.
+				59 text Your next conversation is only a tab away.
+				60 link Description: Open Meldiq, Value: web.meldiq.app/
+		61 container
+			62 link Description: Meldiq home, Value: meldiq.app/
+			63 text Communities, direct messages and calls in one place.
+			64 link Description: Open Meldiq, Value: web.meldiq.app/
+			65 heading PRODUCT, Value: 2
+				66 text PRODUCT
+			67 link Description: Features, Value: meldiq.app/features
+			68 link Description: Pricing, Value: meldiq.app/pricing
+			69 link Description: Download, Value: meldiq.app/download
+			70 link Description: Developers, Value: meldiq.app/developers
+			71 link Description: Bots, Value: meldiq.app/bots
+			72 link Description: Roadmap, Value: meldiq.app/roadmap
+			73 link Description: Brand kit, Value: meldiq.app/brand
+			74 link Description: Service status, Value: status.meldiq.app/
+			75 heading COMMUNITY, Value: 2
+				76 text COMMUNITY
+			77 link Description: Find your community, Value: meldiq.app/community
+			78 link Description: Getting started, Value: meldiq.app/tutorials
+			79 link Description: Questions & answers, Value: meldiq.app/faq
+			80 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			81 link Description: Your account, Value: meldiq.app/account
+			82 link Description: Billing, Value: meldiq.app/account/billing
+			83 link Description: Contact support, Value: meldiq.app/support
+			84 heading LEGAL, Value: 2
+				85 text LEGAL
+			86 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			87 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			88 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			89 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			90 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			91 link Description: Security & encryption, Value: meldiq.app/security
+			92 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			93 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			94 link Description: Back to top ↑, Value: meldiq.app/tutorials#top
+
+The focused UI element is 1 AXWebArea Getting started · Meldiq, URL: meldiq.app/tutorials

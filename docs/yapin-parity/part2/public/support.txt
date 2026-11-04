@@ -1,0 +1,95 @@
+Browser tab: 6, Title: "A little help with Meldiq · Meldiq", URL: "https://meldiq.app/support".
+1 AXWebArea A little help with Meldiq · Meldiq, URL: meldiq.app/support
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/support#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Support, Value: meldiq.app/
+				16 heading How can we help?, Value: 1
+					17 text How can we help?
+				18 text Let’s get you pointed in the right direction.
+				19 link Description: Check service health and active incidents →, Value: status.meldiq.app/
+				20 link Description: Search all help topics, Value: meldiq.app/faq
+			21 container
+				22 heading Account & sign-in, Value: 2
+					23 text Account & sign-in
+				24 text Password recovery, account access and ways to keep your account secure.
+				25 link Description: Reset your password, Value: meldiq.app/forgot-password
+				26 heading Meldiq Plus & billing, Value: 2
+					27 text Meldiq Plus & billing
+				28 text Use the original billing page for existing subscriptions, invoices and cancellation.
+				29 link Description: Open your billing account, Value: meldiq.app/account/billing
+				30 heading Communities & moderation, Value: 2
+					31 text Communities & moderation
+				32 text Get help with invitations, roles, permissions and community tools.
+				33 link Description: Explore community help, Value: meldiq.app/faq?category=Communities
+				34 heading Privacy & your data, Value: 2
+					35 text Privacy & your data
+				36 text Understand encryption, visible metadata and your data rights.
+				37 link Description: Read about your rights, Value: meldiq.app/legal/privacy#rights
+				38 heading Report abuse, Value: 2
+					39 text Report abuse
+				40 text Report a message or person in Meldiq. Reports go to the community’s moderators.
+				41 link Description: How to report, Value: meldiq.app/legal/acceptable-use#report
+				42 heading Account deletion, Value: 2
+					43 text Account deletion
+				44 text Learn how to delete your account, what is removed and what may remain.
+				45 link Description: Account & data information, Value: meldiq.app/legal/account-deletion
+			46 container contact
+				47 image Meldling, Meldiq’s mascot
+				48 text STILL NEED A HAND?
+				49 heading Contact support., Value: 2
+					50 text Contact 
+					51 text support.
+				52 text A verified support email has not been published yet. Direct email support is currently unavailable.
+				53 container
+					54 text A verified privacy contact is also pending. Read the 
+					55 link Description: Privacy Policy, Value: meldiq.app/legal/privacy#rights
+					56 text  for the current data-rights information.
+				57 text For now, use the help topics above, the existing account tools, or in-app reporting for community issues. Never share passwords, recovery codes or card numbers.
+				58 link Description: Browse questions & answers, Value: meldiq.app/faq
+		59 container
+			60 link Description: Meldiq home, Value: meldiq.app/
+			61 text Communities, direct messages and calls in one place.
+			62 link Description: Open Meldiq, Value: web.meldiq.app/
+			63 heading PRODUCT, Value: 2
+				64 text PRODUCT
+			65 link Description: Features, Value: meldiq.app/features
+			66 link Description: Pricing, Value: meldiq.app/pricing
+			67 link Description: Download, Value: meldiq.app/download
+			68 link Description: Developers, Value: meldiq.app/developers
+			69 link Description: Bots, Value: meldiq.app/bots
+			70 link Description: Roadmap, Value: meldiq.app/roadmap
+			71 link Description: Brand kit, Value: meldiq.app/brand
+			72 link Description: Service status, Value: status.meldiq.app/
+			73 heading COMMUNITY, Value: 2
+				74 text COMMUNITY
+			75 link Description: Find your community, Value: meldiq.app/community
+			76 link Description: Getting started, Value: meldiq.app/tutorials
+			77 link Description: Questions & answers, Value: meldiq.app/faq
+			78 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			79 link Description: Your account, Value: meldiq.app/account
+			80 link Description: Billing, Value: meldiq.app/account/billing
+			81 link Description: Contact support, Value: meldiq.app/support
+			82 heading LEGAL, Value: 2
+				83 text LEGAL
+			84 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			85 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			86 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			87 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			88 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			89 link Description: Security & encryption, Value: meldiq.app/security
+			90 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			91 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			92 link Description: Back to top ↑, Value: meldiq.app/support#top
+
+The focused UI element is 1 AXWebArea A little help with Meldiq · Meldiq, URL: meldiq.app/support

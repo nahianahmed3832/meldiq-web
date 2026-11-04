@@ -1,0 +1,98 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading Creator Program, Value: 2
+								40 text Creator Program
+							41 text Make videos or posts about Yapin’ and get paid in Plus: 10K views is 1 month, 1M is 8. Shorts and TikToks count too. Plus a badge, 10 Shards for every real person your invite link brings in, and 3 or 6 months of Plus up front if you come in as Pro or Elite. Only for content about Yapin’.
+							42 heading WHAT YOU STILL NEED, Value: 3
+								43 text WHAT YOU STILL NEED
+							44 content list
+								45 container
+									46 text 1 A verified channel YouTube, TikTok, Twitch, Instagram or X,  public , with  1,000+ followers or subscribers  and a post in the last 60 days. Your Yapin’ username has to match the channel name. Apply right here: Are you a YouTuber, streamer or creator? Get a badge so nobody can impersonate you. We need a link to your channel, a screenshot with your follower count, and a line in your channel bio that points back here. First, put this in your channel bio or description
+									47 container
+										48 text yapin:  nahian
+									49 button Copy
+									50 text That's how we know the channel is really yours. Anyone can copy a profile picture and a name, but only the owner can edit the bio. Leave it there until you get the badge. Applications without it are rejected. To qualify you need 1,000+ followers or subscribers  on the platform you're applying with. Your proof screenshot must show the follower count. Smaller channels are rejected, so apply once you're there. Your Yapin’ name has to match the channel.  Set your username or display name to the same name as your social media account before applying. Applications under a different name are rejected. Once you're verified you can change your display name whenever you want, but a new username that doesn't match removes the badge. PLATFORM
+									51 combo box (settable) PLATFORM, Value: YouTube
+										52 text YouTube
+									53 text CHANNEL / ACCOUNT NAME
+									54 text field (settable) CHANNEL / ACCOUNT NAME, Placeholder: e.g. Antic983 (without the @)
+									55 text LINK TO IT
+									56 text field (settable) LINK TO IT, Placeholder: https://youtube.com/@…
+									57 text ANYTHING ELSE WE SHOULD KNOW
+									58 text entry area (settable) ANYTHING ELSE WE SHOULD KNOW, Placeholder: Optional
+									59 text PROOF SCREENSHOT (MUST SHOW YOUR FOLLOWER COUNT) Add screenshot
+									60 button Add screenshot: No file chosen
+									61 text “yapin: nahian” is in my channel bio
+									62 text We open your channel and check before approving.
+									63 checkbox “yapin: nahian” is in my channel bio We open your channel and check before approving., Value: 0
+									64 button (disabled) Apply for verification
+								65 container
+									66 text 2 Apply Unlocks once your channel is verified.
+								67 container
+									68 text 3 Get approved, then send things in A mod checks your channel. Approved: the Creator badge, and this tab turns into your dashboard, where every video or post about Yapin’ goes in with one link. Send something in at least every 30 days to stay in.
+							69 container
+								70 text The full rewards table, the leaderboard and the creator kit are in the 
+								71 link Creator Center, Value: yapin.gg/creator
+								72 text . Verification also lives in 
+								73 button My Account
+								74 text .
+							75 button Close
+			76 container
+				77 tab group
+					78 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						79 button Close
+			80 button New Tab
+	81 close button
+	82 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	83 minimize button
+84 menu bar
+	85 Chrome
+	86 File
+	87 Edit
+	88 View
+	89 History
+	90 Bookmarks
+	91 Profiles
+	92 Tab
+	93 Window
+	94 Help
+
+The focused UI element is 35 button Creators

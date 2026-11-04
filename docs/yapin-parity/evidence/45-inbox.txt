@@ -1,0 +1,18 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container Inbox
+		2 container
+			3 button Close
+			4 heading Inbox, Value: 2
+				5 image
+				6 text Inbox
+		7 tab group Inbox
+			8 tab (selected, settable, boolean) For you, Value: 1
+			9 tab (selectable, settable, boolean) Mentions 32, Value: 0
+			10 tab (selectable, settable, boolean) Unreads 46, Value: 0
+		11 button Mark all read
+		12 container
+			13 text You're all caught up
+			14 button Find friends
+
+The focused UI element is 3 button Close

@@ -1,0 +1,128 @@
+Browser tab: 6, Title: "Meldiq — Your people, your channels, one place to talk.", URL: "https://meldiq.app/".
+1 AXWebArea Meldiq — Your people, your channels, one place to talk., URL: meldiq.app/
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: A little space for your people, Value: meldiq.app/community
+				16 heading Your people, your channels, one place to talk., Value: 1
+					17 text Your people,
+					18 text your channels, one place to talk.
+				19 text Meldiq brings your friends and communities together to talk, call and share. The core experience is free. Meldiq Plus is optional.
+				20 link Description: Open Meldiq in your browser, Value: web.meldiq.app/
+				21 link Description: Download Meldiq, Value: meldiq.app/download
+				22 text Free to use · Web, Android & Windows
+			23 container Meldiq community preview
+				24 container
+					25 container Illustrative Meldiq community preview with sample content
+					26 text Illustrative Meldiq preview · Sample content
+				27 container Included with free messaging
+					28 text GOOD COMPANY. ALL IN ONE PLACE.
+					29 link Description: Communities & channels, Value: meldiq.app/features#communities
+					30 link Description: Private conversations, Value: meldiq.app/features#messaging
+					31 link Description: Voice, video & screen share, Value: meldiq.app/features#calls
+			32 container
+				33 text COMMUNITIES
+				34 heading A place for your people., Value: 2
+					35 text A place for your people.
+				36 text Discover a public community or start one for your own group. Keep conversations organized with text channels, forums and voice rooms, and make the space your own with roles and invitations.
+				37 link Description: Explore communities, Value: meldiq.app/community
+				38 container Illustrative Meldiq discover preview with sample content
+				39 text Illustrative Meldiq preview · Sample content
+			40 container
+				41 container Illustrative Meldiq messages preview with sample content
+				42 text Illustrative Meldiq preview · Sample content
+				43 text DIRECT MESSAGES
+				44 heading Keep your conversations close., Value: 2
+					45 text Keep your conversations close.
+				46 text Direct messages and private groups alongside your communities. Catch up with a friend, make plans with the group, and share the photos, files and little things that keep you connected.
+				47 link Description: See messaging features, Value: meldiq.app/features#messaging
+			48 container
+				49 text VOICE, VIDEO & SCREEN SHARING
+				50 heading A conversation worth staying for., Value: 2
+					51 text A conversation worth staying for.
+				52 text Drop into a voice room, catch up face to face or share what’s on your screen. From quick questions to long evenings, there’s room for the whole group.
+				53 link Description: Find your way into a call, Value: meldiq.app/features#calls
+				54 container Illustrative Meldiq voice room with three sample participants
+				55 text Illustrative voice room · Sample participants
+			56 container More ways to make Meldiq yours
+				57 link Description: A little help from bots. Tools and add-ons for your community., Value: meldiq.app/bots
+				58 link Description: Know what you’re sharing. Privacy and security, explained plainly., Value: meldiq.app/security
+			59 container Free at heart. Plus by choice.
+				60 text A LITTLE EXTRA, IF YOU WANT IT
+				61 heading Free at heart. Plus by choice., Value: 2, ID: home-plus-heading
+					62 text Free at heart.
+					63 text Plus by choice.
+				64 text Your everyday conversations stay free. Meldiq Plus adds more room to share and helps support the service.
+				65 link Description: Compare Free and Plus, Value: meldiq.app/pricing
+				66 container
+					67 text MELDIQ PLUS $4.99  / month Announced price · Check availability ✓ Files up to 1 GB ✓ One account, every supported device
+					68 link Description: Explore Plus, Value: meldiq.app/pricing
+			69 container
+				70 heading Come say hello., Value: 2
+					71 text Come say hello.
+				72 text Open Meldiq, create your account and bring your people together. Core messaging is free; Meldiq Plus is an optional extra.
+				73 link Description: Open Meldiq in your browser, Value: web.meldiq.app/
+				74 link Description: Download Meldiq, Value: meldiq.app/download
+				75 text Free to use · No card to start · Runs in your browser
+			76 container faq
+				77 heading Questions., Value: 2
+					78 text Questions.
+				79 container
+					80 button (expanded) Is Meldiq free?, Secondary Actions: Collapse
+						81 text Is Meldiq free?
+					82 text Yes. Communities, channels, direct messages, private groups, voice and video calls, screen sharing and encrypted file sharing are part of the free experience. Meldiq Plus is optional. Visit Pricing for current availability and details.
+				83 button (collapsed) Which platforms are available?, Secondary Actions: Expand
+					84 text Which platforms are available?
+				85 button (collapsed) Can I create my own community?, Secondary Actions: Expand
+					86 text Can I create my own community?
+				87 button (collapsed) What does Meldiq Plus add?, Secondary Actions: Expand
+					88 text What does Meldiq Plus add?
+				89 button (collapsed) How private are my conversations?, Secondary Actions: Expand
+					90 text How private are my conversations?
+				91 link Description: More questions and answers →, Value: meldiq.app/faq
+		92 container
+			93 link Description: Meldiq home, Value: meldiq.app/
+			94 text Communities, direct messages and calls in one place.
+			95 link Description: Open Meldiq, Value: web.meldiq.app/
+			96 heading PRODUCT, Value: 2
+				97 text PRODUCT
+			98 link Description: Features, Value: meldiq.app/features
+			99 link Description: Pricing, Value: meldiq.app/pricing
+			100 link Description: Download, Value: meldiq.app/download
+			101 link Description: Developers, Value: meldiq.app/developers
+			102 link Description: Bots, Value: meldiq.app/bots
+			103 link Description: Roadmap, Value: meldiq.app/roadmap
+			104 link Description: Brand kit, Value: meldiq.app/brand
+			105 link Description: Service status, Value: status.meldiq.app/
+			106 heading COMMUNITY, Value: 2
+				107 text COMMUNITY
+			108 link Description: Find your community, Value: meldiq.app/community
+			109 link Description: Getting started, Value: meldiq.app/tutorials
+			110 link Description: Questions & answers, Value: meldiq.app/faq
+			111 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			112 link Description: Your account, Value: meldiq.app/account
+			113 link Description: Billing, Value: meldiq.app/account/billing
+			114 link Description: Contact support, Value: meldiq.app/support
+			115 heading LEGAL, Value: 2
+				116 text LEGAL
+			117 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			118 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			119 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			120 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			121 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			122 link Description: Security & encryption, Value: meldiq.app/security
+			123 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			124 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			125 link Description: Back to top ↑, Value: meldiq.app/#top
+
+The focused UI element is 1 AXWebArea Meldiq — Your people, your channels, one place to talk., URL: meldiq.app/

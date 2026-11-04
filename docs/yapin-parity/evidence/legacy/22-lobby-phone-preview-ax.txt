@@ -1,0 +1,214 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq
+								25 container
+									26 button Yapin' Headquarters
+									27 text 15
+								28 container
+									29 button MINECRAFT
+									30 text 13
+								31 button Create a server
+								32 button Discover servers
+							33 container
+								34 button Meldiq
+								35 button Lobby
+								36 button Invite people
+								37 text TEXT CHANNELS
+								38 button Create text channel, Help: Create channel
+								39 button general
+								40 text VOICE CHANNELS
+								41 button Create voice channel
+								42 button General
+								43 pop up button nahian Online, Help: Your account
+									44 text nahian
+									45 text Online
+								46 button Inbox
+								47 button Settings
+								48 button Log out
+							49 container
+								50 container
+									51 container
+										52 text Me
+										53 heading Meldiq, Value: 1
+											54 text Meldiq
+										55 text 1 member 1 online
+									56 heading ABOUT, Value: 2
+										57 text ABOUT
+									58 text Your intro goes here. Write it under About in Sections.
+									59 button Write it
+									60 heading JUMP IN, Value: 2
+										61 text JUMP IN
+									62 button (disabled) general
+									63 heading LIVE NOW, Value: 2
+										64 text LIVE NOW
+									65 text Shows up on its own when someone's in voice. Nothing to fill in.
+									66 heading GIVEAWAYS, Value: 2
+										67 text GIVEAWAYS
+									68 text Giveaways from the Giveaways bot show up here while they run. Nothing to fill in.
+									69 heading FEED, Value: 2
+										70 text FEED
+									71 text Posts from your YouTube, stream alerts or patch notes show up here. Make a feed URL in Sections and paste it into the app.
+									72 heading FAQ, Value: 2
+										73 text FAQ
+									74 text The questions newcomers always ask go here. Add them under FAQ in Sections.
+									75 button Add questions
+									76 heading LEADERBOARD, Value: 2
+										77 text LEADERBOARD
+									78 text The top 10 yappers go here, ranked by the Levels bot. Turn it on under Bots.
+									79 button Open Bots
+									80 heading PICK YOUR ROLES, Value: 2
+										81 text PICK YOUR ROLES
+									82 text A role picker goes here, built from your Onboarding questions.
+									83 button Set up Onboarding
+									84 heading RULES, Value: 2
+										85 text RULES
+									86 text A button to your rules channel goes here. Pick the channel in Server Profile.
+									87 button Pick a rules channel
+									88 heading WHO RUNS IT, Value: 2
+										89 text WHO RUNS IT
+									90 button nahian Owner
+									91 heading LINKS, Value: 2
+										92 text LINKS
+									93 text Your site, socials and store go here. Add them under Links in Server Profile.
+									94 button Add links
+								95 text Drag the cards to move them. Click one to edit it.
+								96 container Customize lobby
+									97 text Customize lobby
+									98 container Preview size
+										99 toggle button Desktop, Value: 0
+										100 toggle button Phone, Value: 1
+									101 button Preview
+									102 button Close editor, Help: Close
+									103 container
+										104 text Show the lobby to members On. Members see it and land on it the first time.
+										105 checkbox Show the lobby to members, Value: 1
+									106 tab group
+										107 tab (settable, integer) Templates, Value: 0
+										108 tab (settable, integer) Look, Value: 0
+										109 tab (selected) Sections, Value: 1
+									110 container
+										111 tab group Layout
+											112 tab (settable, integer) Desktop, Value: 0
+											113 tab (selected) Phone, Value: 1
+										114 text Phones show the desktop order for now, with the side column last. Drag a block here to give phones their own order. Top of the page ALWAYS FIRST The tagline and buttons under the server name.
+										115 text TAGLINE
+										116 text field (settable) TAGLINE, Placeholder: One line under the name, e.g. The comfiest corner for cozy games
+										117 text BUTTONS
+										118 text Up to 4 under the name. The first one stands out. Link a site or a channel.
+										119 button Add button
+										120 button Drag About to reorder, or press the arrow keys, Help: Drag to reorder
+										121 text About
+										122 text EMPTY A few lines on what the server is about.
+										123 container
+											124 text entry area (settable) About, Placeholder: What's this server about? Who's it for, what goes on here?
+											125 text 0/2000. Markdown works.
+										126 checkbox Show About, Value: 1
+										127 button Drag Main channels to reorder, or press the arrow keys, Help: Drag to reorder
+										128 text Main channels
+										129 text The channels you want people to open first.
+										130 container
+											131 text Pick up to 6, in the order you tap them. None picked: the busiest ones show.
+											132 toggle button general, Value: 0
+											133 toggle button General, Value: 0
+										134 checkbox Show Main channels, Value: 1
+										135 button Drag Live now to reorder, or press the arrow keys, Help: Drag to reorder
+										136 text Live now
+										137 text NOTHING YET Voice channels with people in them right now. Nobody is in voice right now. Shows up as soon as someone is.
+										138 checkbox Show Live now, Value: 1
+										139 button Drag Giveaways to reorder, or press the arrow keys, Help: Drag to reorder
+										140 text Giveaways
+										141 text NOTHING YET Giveaways from the Giveaways bot while they run. Shows up while a giveaway from the Giveaways bot runs.
+										142 checkbox Show Giveaways, Value: 1
+										143 button Drag Feed to reorder, or press the arrow keys, Help: Drag to reorder
+										144 text Feed
+										145 text Posts from outside apps: YouTube uploads, stream alerts, patch notes. No posts yet. Make a feed below and paste its URL into your app.
+										146 container
+											147 text field (settable) New feed name, Placeholder: Feed name, e.g. YouTube uploads
+											148 button (disabled) Make feed
+											149 text Apps POST JSON to the URL: 
+											150 text {"title", "text", "url", "image"}
+											151 text . Discord webhook tools work too. Links need https, and pictures only show from hosts we allow (YouTube, Twitch, Imgur and a few more).
+										152 checkbox Show Feed, Value: 1
+										153 button Drag FAQ to reorder, or press the arrow keys, Help: Drag to reorder
+										154 text FAQ
+										155 text EMPTY The questions newcomers always ask.
+										156 button Add question
+										157 checkbox Show FAQ, Value: 1
+										158 button Drag Leaderboard to reorder, or press the arrow keys, Help: Drag to reorder
+										159 text Leaderboard
+										160 text NOTHING YET Top 10 from the Levels bot. Turn on the Levels bot (Server settings, Bots) to rank who yaps the most.
+										161 container
+											162 container Leaderboards to show
+												163 toggle button Levels, Value: 1
+												164 toggle button Messages this week, Value: 0
+												165 toggle button Invites, Value: 0
+											166 text Pick one or more. With more than one, people switch between them with tabs, in the order you picked.
+										167 button Bots
+										168 checkbox Show Leaderboard, Value: 1
+										169 button Drag Pick your roles to reorder, or press the arrow keys, Help: Drag to reorder
+										170 text Pick your roles
+										171 text NOTHING YET Lets people pick roles from your onboarding questions. Set up Onboarding questions in Server settings to let people pick roles here.
+										172 button Set up
+										173 checkbox Show Pick your roles, Value: 1
+										174 button Drag Rules to reorder, or press the arrow keys, Help: Drag to reorder
+										175 text Rules
+										176 text NOTHING YET A link to your rules channel. Pick a rules channel in Server settings, Overview.
+										177 button Pick a channel
+										178 checkbox Show Rules, Value: 1
+										179 button Drag Who runs it to reorder, or press the arrow keys, Help: Drag to reorder
+										180 text Who runs it
+										181 text The owner and the people with mod powers. nahian
+										182 checkbox Show Who runs it, Value: 1
+										183 button Drag Links to reorder, or press the arrow keys, Help: Drag to reorder
+										184 text Links
+										185 text NOTHING YET Your site, socials and store, from Server Profile. Add links in Server settings, Server Profile.
+										186 button Add links
+										187 checkbox Show Links, Value: 1
+									188 text No changes yet
+									189 button Cancel
+									190 button (disabled) Save
+							191 button Getting started
+			192 container
+				193 tab group
+					194 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						195 button Close
+			196 button New Tab
+	197 close button
+	198 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	199 minimize button
+200 menu bar
+	201 Chrome
+	202 File
+	203 Edit
+	204 View
+	205 History
+	206 Bookmarks
+	207 Profiles
+	208 Tab
+	209 Window
+	210 Help
+
+The focused UI element is 100 toggle button Phone, Value: 1

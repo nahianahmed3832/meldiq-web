@@ -1,0 +1,161 @@
+Window: "Status · Yapin’", App: Google Chrome.
+0 standard window Status · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/status, Secondary Actions: Raise
+	1 container Status · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/status
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/status, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Status · Yapin’, URL: yapin.gg/status
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 heading Yapin’ Status, Value: 1
+									30 text Yapin’ Status
+								31 text All Systems Operational
+								32 container Components
+									33 text Uptime over the past 90 days Checked Nov 1, 11:15 AM
+									34 text Website
+									35 text Operational
+									36 container Website, last 90 days
+									37 text 90 days ago 98.31% uptime Today
+									38 text API
+									39 text Operational
+									40 container API, last 90 days
+									41 text 90 days ago 99.58% uptime Today
+									42 text Realtime
+									43 text Operational
+									44 container Realtime, last 90 days
+									45 text 90 days ago 99.68% uptime Today
+									46 text Voice and video
+									47 text Operational
+									48 container Voice and video, last 90 days
+									49 text 90 days ago 100.00% uptime Today
+									50 text Bot API
+									51 text Operational
+									52 container Bot API, last 90 days
+									53 text 90 days ago 98.52% uptime Today
+									54 text Database
+									55 text Operational
+									56 container Database, last 90 days
+									57 text 90 days ago 99.89% uptime Today
+								58 container API response time
+									59 text API response time, last 24 hours now 142 ms · average 155 ms
+									60 image Average 155 ms
+									61 text 24 hours ago Peak 500 ms Now
+								62 container Past incidents
+									63 heading Past incidents, Value: 2
+										64 text Past incidents
+									65 heading Nov 1, 2026, Value: 4
+										66 text Nov 1, 2026
+									67 text No incidents reported.
+									68 heading Oct 31, 2026, Value: 4
+										69 text Oct 31, 2026
+									70 text No incidents reported.
+									71 heading Oct 30, 2026, Value: 4
+										72 text Oct 30, 2026
+									73 text No incidents reported.
+									74 heading Oct 29, 2026, Value: 4
+										75 text Oct 29, 2026
+									76 text No incidents reported.
+									77 heading Oct 28, 2026, Value: 4
+										78 text Oct 28, 2026
+									79 text No incidents reported.
+									80 heading Oct 27, 2026, Value: 4
+										81 text Oct 27, 2026
+									82 text No incidents reported.
+									83 heading Oct 26, 2026, Value: 4
+										84 text Oct 26, 2026
+									85 text No incidents reported.
+									86 heading Oct 25, 2026, Value: 4
+										87 text Oct 25, 2026
+									88 text No incidents reported.
+									89 heading Oct 24, 2026, Value: 4
+										90 text Oct 24, 2026
+									91 text No incidents reported.
+									92 heading Oct 23, 2026, Value: 4
+										93 text Oct 23, 2026
+									94 text No incidents reported.
+									95 heading Oct 22, 2026, Value: 4
+										96 text Oct 22, 2026
+									97 text No incidents reported.
+									98 heading Oct 21, 2026, Value: 4
+										99 text Oct 21, 2026
+									100 text No incidents reported.
+									101 heading Oct 20, 2026, Value: 4
+										102 text Oct 20, 2026
+									103 text No incidents reported.
+									104 heading Oct 19, 2026, Value: 4
+										105 text Oct 19, 2026
+									106 text No incidents reported.
+							107 text Yapin’
+							108 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							109 heading Product, Value: 4
+								110 text Product
+							111 content list
+								112 link Download, Value: yapin.gg/download
+								113 link Developers, Value: yapin.gg/developers
+								114 link Yapin’ Plus, Value: yapin.gg/plus
+								115 link Creator Program, Value: yapin.gg/creators
+								116 link Roadmap, Value: yapin.gg/roadmap
+								117 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								118 link Bugs, Value: yapin.gg/bugs
+								119 link Status, Value: yapin.gg/status
+							120 heading Community, Value: 4
+								121 text Community
+							122 content list
+								123 link Guidelines, Value: yapin.gg/guidelines
+								124 link Tutorials, Value: yapin.gg/tutorials
+								125 link Bots, Value: yapin.gg/bots
+							126 heading Legal, Value: 4
+								127 text Legal
+							128 content list
+								129 link Terms, Value: yapin.gg/terms
+								130 link Privacy, Value: yapin.gg/privacy
+								131 link Copyright, Value: yapin.gg/copyright
+								132 link Cancel a subscription, Value: yapin.gg/cancel
+								133 link Contact, Value: mailto:[email redacted]
+							134 text © 2026 Yapper Media LLC. Free to use.
+			135 container
+				136 tab group
+					137 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						138 button Close
+					139 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						140 button Close
+					141 tab (selected, settable, boolean) Status · Yapin’, Value: on
+						142 button Close
+			143 button New Tab
+	144 close button
+	145 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	146 minimize button
+147 menu bar
+	148 Chrome
+	149 File
+	150 Edit
+	151 View
+	152 History
+	153 Bookmarks
+	154 Profiles
+	155 Tab
+	156 Window
+	157 Help
+
+The focused UI element is 19 HTML content Status · Yapin’, URL: yapin.gg/status

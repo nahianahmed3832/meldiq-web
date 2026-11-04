@@ -860,5 +860,11 @@
     "accountDescription": "E-mail, état du compte, exportation des données et suppression du compte.",
     "notificationsDescription": "Alertes du bureau, sons, pause des notifications et raccourcis vers les préférences des conversations.",
     "appearanceDescription": "Thèmes, couleurs, disposition des messages, aperçus multimédias et gestes de discussion."
+  },
+  "foundation": {
+    "profileSections": "Rubriques du profil",
+    "profileSectionsDescription": "Choisissez les rubriques visibles et leur ordre. Vos réglages de visibilité restent applicables.",
+    "resetSections": "Réinitialiser les rubriques",
+    "saveSections": "Enregistrer les rubriques"
   }
 }

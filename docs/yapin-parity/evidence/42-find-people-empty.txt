@@ -1,0 +1,13 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container Find people
+		2 heading Find people, Value: 2
+			3 text Find people
+		4 text Search your friends and anyone online in your servers.
+		5 image
+		6 search text field (settable) Description: Search people by name, Value: meldiqauditnoresult
+		7 list People
+			8 container
+				9 text Nobody found This finds your friends and people online in your servers.
+
+The focused UI element is 6 search text field (settable) Description: Search people by name, Value: meldiqauditnoresult

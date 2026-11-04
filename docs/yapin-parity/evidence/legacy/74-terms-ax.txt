@@ -1,0 +1,396 @@
+Window: "Terms of Service · Yapin’", App: Google Chrome.
+0 standard window Terms of Service · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/terms, Secondary Actions: Raise
+	1 container Terms of Service · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/terms
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/terms, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Terms of Service · Yapin’, URL: yapin.gg/terms
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container (showing 0-100 of 151 items)
+								29 heading Terms of Service, Value: 1
+									30 text Terms of Service
+								31 text LAST UPDATED  30 OCTOBER 2026 These Terms of Service are a binding agreement between you and Yapper Media LLC, the company that runs Yapin’. By creating an account, clicking “I agree”, buying anything, or otherwise using Yapin’, you accept them. If you don’t agree, don’t use Yapin’. IMPORTANT NOTICE FOR USERS IN THE UNITED STATES: SECTION 21 CONTAINS A BINDING ARBITRATION AGREEMENT AND A CLASS ACTION WAIVER. IT AFFECTS HOW DISPUTES ARE RESOLVED. YOU CAN OPT OUT WITHIN 30 DAYS (SECTION 21.6).
+								32 heading 1. About these Terms, Value: 2
+									33 text 1. About these Terms
+								34 text These Terms, together with our Community Guidelines (
+								35 link yapin.gg/guidelines
+								36 text ), our Privacy Policy (
+								37 link yapin.gg/privacy
+								38 text ) and the developer documentation (
+								39 link yapin.gg/developers
+								40 text ) (for bots), make up the whole agreement between you and us (the “Terms”). If they conflict, these Terms win, except that the Privacy Policy controls how we handle personal data. “Yapin’” or the “Service” means the website at yapin.gg (and at our older address, yapper.website), our apps, the bot API and everything we offer through them. “Content” means anything posted, uploaded, sent or shared on Yapin’, including messages, images, video, files, emojis, stickers, voice, profile details and server names. Nothing in these Terms takes away rights you have by law that cannot be waived by contract, such as consumer rights in the country where you live. Where these Terms say “to the extent permitted by law”, that is what we mean.
+								41 heading 2. Who we are, Value: 2
+									42 text 2. Who we are
+								43 text Yapin’ is run by Yapper Media LLC, a Delaware limited liability company, 131 Continental Dr, Suite 305, Newark, DE 19713, United States (“we”, “us”, “our”). Yapin’ was called Yapper until 22 October 2026; only the name changed, and these Terms apply to accounts and purchases made under either name. Until 20 October 2026 it was run by its founder personally. Yapper Media LLC has taken over the Service and these Terms (see “Assignment” in section 24); your rights stay the same. Contact for everything, including legal notices, reports, appeals and refunds: 
+								44 link [email redacted], Value: mailto:[email redacted]
+								45 text . This address is also our single point of contact for users, authorities and the European Commission under the EU Digital Services Act (“DSA”); authorities can find what to include in section 12.5. We communicate in English. Copyright notices go to our designated DMCA agent (section 11.2).
+								46 heading 3. Who can use Yapin’, Value: 2
+									47 text 3. Who can use Yapin’
+								48 content list
+									49 container
+										50 AXListMarker • 
+										51 text You must be at least 13 years old. If the law where you live sets a higher minimum age for using an online service like Yapin’ on your own (for example 14, 15 or 16 in some EU countries), you must meet that age or have your parent or legal guardian’s permission. We may ask you to confirm your age, or your parent or guardian to confirm their permission, and may limit or close an account until we get it.
+									52 container
+										53 AXListMarker • 
+										54 text If you are under 18, or under the age of majority where you live, you confirm that your parent or legal guardian has read these Terms and lets you use Yapin’. They are responsible for your use of Yapin’, including any purchases. Ask them before buying anything.
+									55 container
+										56 AXListMarker • 
+										57 text You can’t use Yapin’ if we have previously banned you, if you are barred from receiving services under the laws that apply to you, or if you are located in, or ordinarily resident in, a country or region under comprehensive EU, UN, UK or US sanctions, or are on any government list of restricted parties.
+									58 container
+										59 AXListMarker • 
+										60 text If we learn that a child under 13 has an account, we will delete it. Parents can tell us at 
+										61 link [email redacted], Value: mailto:[email redacted]
+										62 text .
+								63 heading 4. Your account, Value: 2
+									64 text 4. Your account
+								65 content list
+									66 container
+										67 AXListMarker • 
+										68 text Give accurate information, use an email address you control, and keep your password and login sessions private. Never share your password, login codes or the contents of your browser’s storage with anyone. Yapin’ staff will never ask for them.
+									69 container
+										70 AXListMarker • 
+										71 text You are responsible for everything done through your account, unless it happened because of our failure. Tell us right away at 
+										72 link [email redacted], Value: mailto:[email redacted]
+										73 text  if you think someone else got in.
+									74 container
+										75 AXListMarker • 
+										76 text You may hold more than one account, but not to evade a ban, timeout or limit, to manipulate votes, reactions, rankings or member counts, or to impersonate anyone.
+									77 container
+										78 AXListMarker • 
+										79 text Accounts, usernames, servers, badges and roles are not your property. You may not sell, rent, trade or transfer them, or buy them from anyone else. We may change or reclaim usernames, vanity names, server names or badges that are misleading, infringe someone’s rights, impersonate staff, or have been inactive for a long time.
+									80 container
+										81 AXListMarker • 
+										82 text You can delete your account at any time in User Settings → My Account, except while it is locked during an investigation (section 12.3). Servers you own are deleted with it, so hand them over first if you want them to stay. Some information may be kept for a limited time afterwards, as described in section 5.2 and our Privacy Policy.
+									83 container
+										84 AXListMarker • 
+										85 text New accounts.  Brand-new accounts may have extra limits for their first days, for example on uploads, direct messages, Shards or how much they can post, to slow down spam and ban evasion.
+									86 container
+										87 AXListMarker • 
+										88 text Verified badges.  We may give a verified badge to a creator, brand or public figure after checking that an account really belongs to them. It only confirms who the account belongs to; it is not an endorsement by us. You can’t buy, sell or transfer it. We may remove it if the account changes its name, no longer matches who we verified, impersonates someone or breaks these Terms.
+								89 heading 5. Your Content, Value: 2
+									90 text 5. Your Content
+								91 heading 5.1 You own it, Value: 3
+									92 text 5.1 You own it
+								93 text You keep all rights you have in Content you post. We don’t claim ownership.
+								94 heading 5.2 The licence you give us, Value: 3
+									95 text 5.2 The licence you give us
+								96 text So we can run Yapin’, you give us a worldwide, non-exclusive, royalty-free, transferable (only together with the Service) and sublicensable (only to the providers that help us run the Service) licence to host, store, copy, process, transmit, cache, adapt for technical purposes (such as resizing images or transcoding video) and display your Content, only to operate, secure, provide, improve and enforce the rules of Yapin’, and to show it to the people you share it with. This licence ends when your Content is deleted, except: (a) copies in backups, which expire on the schedule in our Privacy Policy; (b) Content that other people have already copied, quoted, forwarded or replied to, which we don’t remove from their copies; (c) where we must keep it to comply with the law, handle a report or dispute, or protect people’s safety; (d) for a short time after you delete a message, so it can still be reviewed if someone reports it, as described in our Privacy Policy; and (e) commun In particular, when Content or an account is reported, removed or under investigation, we may keep the Content, related messages, IP addresses, device and session logs, payment records and other account information after it is deleted, for as long as needed to report it to authorities, respond to a legal request or preservation order, or protect people. For child sexual abuse material and similar serious offences this is at least one year, or longer if the law or an authority requires it.
+								97 heading 5.3 Your promises about Content, Value: 3
+									98 text 5.3 Your promises about Content
+								99 text You promise that you have all rights needed to post your Content and to give us the licence above, and that your Content and your use of Yapin’ comply with these Terms and the law. Don’t post anything you don’t have the right to share.
+								100 heading 5.4 Public and private spaces, Value: 3
+									101 text 5.4 Public and private spaces
+								102 text Content in a server that is listed on Discovery, or that anyone with an invite link can join, may be seen by anyone. Direct messages and group chats are visible to their members. Messages on Yapin’ are encrypted in transit but are not end-to-end encrypted, so don’t use Yapin’ for information that must stay strictly secret. Voice calls and screen shares are end-to-end encrypted (see section 13).
+								103 heading 5.5 Automated checks of Content, Value: 3
+									104 text 5.5 Automated checks of Content
+								105 text To keep Yapin’ safe and working, Content you send or upload, including direct messages, group chats and files, is processed and checked by automated systems on our servers and our providers’ servers. These checks look for things like slurs and hate symbols, selling sexual content, telling someone to hurt themselves, adult links, spam, scam and phishing links, malware, sexual, violent or abusive images, child sexual abuse material and ban evasion, and may block, hide or flag Content for human review. Our Pri
+								106 heading 5.6 Responsibility for Content, Value: 3
+									107 text 5.6 Responsibility for Content
+								108 text People don’t review Content before it is posted, and apart from the automated checks in 5.5 we have no general obligation to monitor it. Content is the responsibility of the person who posted it. We are not responsible for Content posted by others, and the views in it are not ours. In the United States we rely on 47 U.S.C. §230, including our right to remove or restrict Content in good faith.
+								109 heading 5.7 Feedback, Value: 3
+									110 text 5.7 Feedback
+								111 text If you send us ideas, suggestions or bug reports, we may use them freely without owing you anything. Bug report rewards, badges or other recognition are given at our discretion and have no cash value.
+								112 heading 5.8 Community decorations, Value: 3
+									113 text 5.8 Community decorations
+								114 text If you submit an avatar decoration or profile effect for others to wear, you promise it is your own work (not copied from Discord, another app or another artist) and that it follows these Terms. Once we approve it, you also let us show it on the profile of everyone who wears or bought it, and keep it available to them, even after you take it down or delete your account. We may still remove it if it breaks these Terms, infringes someone’s rights or is reported and found not allowed. What you earn from it is 
+								115 heading 6. What you must not do, Value: 2
+									116 text 6. What you must not do
+								117 text Follow the Community Guidelines (
+								118 link yapin.gg/guidelines
+								119 text ) and the law. In particular, you must not use Yapin’ to post, share, promote or do any of the following:
+								120 content list
+									121 container
+										122 AXListMarker • 
+										123 text Anything illegal where you live or where we are, or that helps someone else break the law.
+									124 container
+										125 AXListMarker • 
+										126 text Child sexual abuse material, or any Content that sexualises minors, grooming, or sexual contact with anyone under 18. We report this to the authorities and to organisations such as NCMEC, and permanently ban the accounts involved.
+									127 container
+										128 AXListMarker • 
+										129 text Sexual or pornographic Content, or sexually explicit messages to people who haven’t asked for them. Intimate images of anyone shared without their consent, including fake or AI-generated ones. If that happened to you, see “Intimate images” below.
+									130 container
+										131 AXListMarker • 
+										132 text Servers or channels set up for sexual, pornographic or other adult (“NSFW”) Content, or labelled as such. Yapin’ has no NSFW or 18+ spaces, and age gates or warnings don’t make this Content allowed.
+									133 container
+										134 AXListMarker • 
+										135 text Sex trafficking, prostitution, escort or other paid sexual services, or anything that advertises, arranges or helps them, including in direct messages.
+									136 container
+										137 AXListMarker • 
+										138 text Harassment, bullying, threats, intimidation, stalking, hate speech or attacks on people based on protected characteristics, or encouraging others to do any of these.
+									139 container
+										140 AXListMarker • 
+										141 text Promoting or glorifying violence, terrorism or violent extremism, or encouraging suicide, self-harm or eating disorders.
+									142 container
+										143 AXListMarker • 
+										144 text Sharing someone’s private information (doxxing), or recording, publishing or monitoring people without their consent where the law requires it.
+									145 container
+										146 AXListMarker • 
+										147 text Impersonating any person, organisation, server, bot or Yapin’ staff, or falsely claiming to be official, verified or affiliated with us.
+									148 container
+										149 AXListMarker • 
+										150 text Scams, phishing, fraud, fake giveaways, account or currency trading, pyramid schemes, or links designed to steal accounts or money.
+									151 container
+										152 AXListMarker • 
+										153 text Spam: unsolicited advertising, mass or repeated messages, mass friend requests or invites, or artificially inflating members, reactions, votes or rankings.
+									154 container
+										155 AXListMarker • 
+										156 text Malware, viruses, exploits or any harmful code or files.
+									157 container
+										158 AXListMarker • 
+										159 text Links that pretend to go somewhere they don’t, for example a masked link whose text shows one site but opens another.
+									160 container
+										161 AXListMarker • 
+										162 text Using Yapin’ as file storage or a file host: attachments are for sharing with the people in a chat, not for backups, archives or piles of files dumped into an empty or tiny server or a chat with yourself. We limit how much you can upload per file and per period of time (the current limits are shown in the app, and Plus may get higher ones), and accounts that upload far more than normal chatting needs are flagged to our moderators automatically.
+									163 container
+										164 AXListMarker • 
+										165 text Selling, buying, promoting or arranging illegal or regulated goods and services, such as drugs, weapons, counterfeit goods, stolen data or accounts, or unlicensed gambling, including running a server or direct messages to coordinate trades or deliveries even if payment happens somewhere else.
+									166 container
+										167 AXListMarker • 
+										168 text Unlicensed gambling, casino or betting referrals, crypto giveaways or “investment” schemes, or other financial schemes that promise money or prizes.
+									169 container
+										170 AXListMarker • 
+										171 text Paying for anything on Yapin’ with a card or account that isn’t yours or that you aren’t allowed to use.
+									172 container
+										173 AXListMarker • 
+										174 text Infringing anyone’s copyright, trademark, privacy, publicity or other rights.
+									175 container
+										176 AXListMarker • 
+										177 text Running bots, self-bots, scripts or automated accounts, or automating a normal user account, except through the official bot API and only where server rules allow. Bot-like behaviour outside channels meant for bots may be restricted automatically.
+									178 container
+										179 AXListMarker • 
+										180 text Scraping, crawling or bulk-collecting Content or user data, including to build datasets or train AI models, except through the bot API within its limits.
+									181 container
+										182 AXListMarker • 
+										183 text Accessing or trying to access accounts, servers, channels or data you aren’t allowed to see; probing, scanning or testing our systems for weaknesses (other than good-faith security research reported to us privately and without harming users or data); getting around bans, timeouts, slow mode, file limits, age checks, verification, paid features or any other limit or protection.
+									184 container
+										185 AXListMarker • 
+										186 text Overloading, disrupting or interfering with the Service, our infrastructure or other users.
+									187 container
+										188 AXListMarker • 
+										189 text Copying, modifying, reverse engineering or decompiling our software or creating derivative works of it, except as the law expressly allows.
+									190 container
+										191 AXListMarker • 
+										192 text Abusing reports, appeals or our support channels, or making reports you know are false.
+								193 text Intimate images.  If someone shared an intimate or sexual image or video of you without your consent (real, edited or AI-generated), or threatens to, you can ask us to remove it on our removal page (
+								194 link yapin.gg/remove-image
+								195 text ) or by emailing 
+								196 link [email redacted], Value: mailto:[email redacted]
+								197 text . You don’t need an account. Tell us where it is (a message link, server and channel, or a screenshot) and confirm it shows you or someone you are allowed to act for. We remove it, and copies of it we can find, within 48 hours of a valid request, try to stop it from being uploaded again, and act against the accounts that shared it. We tell you what we did by email. If you were under 18 in the image, you can also use NCMEC’s Take It Down service (takeitdown.ncmec.org), which lets participating platforms bloc Reporting people in voice channels.  When you report someone in a voice channel, you can attach the last 30 seconds of call audio your own device heard, so we can hear what happened. Section 13 explains how these clips are made, who can hear them and when they are deleted.
+								198 heading 7. Servers, owners and moderators, Value: 2
+									199 text 7. Servers, owners and moderators
+								200 content list
+									201 container
+										202 AXListMarker • 
+										203 text Server owners can set extra rules for their server, as long as they don’t conflict with these Terms. Owners and the moderators they appoint are responsible for their servers and should enforce these Terms there.
+									204 container
+										205 AXListMarker • 
+										206 text Moderators can remove messages and kick, time out, warn or ban people in their servers. Owners and moderators are ordinary users running their own spaces. They are not our staff, agents or representatives, and they can’t speak or make decisions for Yapin’. Their everyday moderation decisions belong to the server; we may review and override them.
+									207 container
+										208 AXListMarker • 
+										209 text Server moderation never replaces ours. We may act on any server, channel, message or account at any time, whatever its owners or moderators decide, including to remove illegal Content they missed or left up.
+									210 container
+										211 AXListMarker • 
+										212 text If an owner deletes their account, their servers are deleted with it. If an owner leaves Yapin’ without deleting their account or is banned, we may transfer, lock or delete the server.
+									213 container
+										214 AXListMarker • 
+										215 text We may remove, lock, freeze, hide from Discovery, take over, transfer or delete any server, channel or account that breaks these Terms or the law or puts users at risk, immediately and without notice where safety or the law calls for it. This includes whole servers set up for illegal trade, scams, sexual exploitation or copyright infringement (for example sharing pirated films, leaks or cracked software), not just individual messages.
+								216 heading 8. Bots and the developer API, Value: 2
+									217 text 8. Bots and the developer API
+								218 text No selfbots.  Don’t automate a normal user account (a “selfbot”): no scripts, extensions or tools that send messages, react, join servers, read messages or click things as you. Bots must use a bot account made in Settings → Developer and the official bot API (
+								219 link yapin.gg/developers
+								220 text ). Using the bot API is free. Optional paid bot hosting is covered in section 9. Accounts that automate themselves may be limited, suspended or banned, and their bots removed. If you create a bot or use the bot API:
+								221 content list
+									222 container
+										223 AXListMarker • 
+										224 text Keep your bot token secret.  You are responsible for everything your bot does. If a token leaks, reset it.
+									225 container
+										226 AXListMarker • 
+										227 text Follow the developer documentation (
+										228 link yapin.gg/developers
+										229 text ), its rate limits and these Terms. Only use data your bot receives to provide its features to the server that added it. Don’t sell it, share it, or keep it longer than you need.
+									230 container
+										231 AXListMarker • 
+										232 text Tell users what your bot does and don’t make it look official. Badges such as “Official” or a checkmark are reserved for bots run by us.
+									233 container
+										234 AXListMarker • 
+										235 text If your bot is in the public bot list, say in its description what data it keeps and for how long, and delete what it stored about a server when it is removed from that server, unless the law makes you keep it.
+									236 container
+										237 AXListMarker • 
+										238 text We can limit, suspend or remove any bot or API access at any time, especially to protect users or the Service.
+								239 heading 9. Paid features, Value: 2
+									240 text 9. Paid features
+								241 heading 9.1 What we sell, Value: 3
+									242 text 9.1 What we sell
+								243 content list
+									244 container
+										245 AXListMarker • 
+										246 text Yapin’ Plus: a subscription with extra features. It renews automatically every month (see 9.3).
+									247 container
+										248 AXListMarker • 
+										249 text Plus gifts: a one-off payment for a fixed period of Yapin’ Plus (shown at checkout) for someone else. They do not renew and can’t be exchanged for money.
+									250 container
+										251 AXListMarker • 
+										252 text Server Plus and Supercharge: subscriptions that unlock extra features for one server. Any member can buy a Supercharge for a server they are in. They renew automatically every month (see 9.3). The perks belong to the server, so if the server is deleted, locked or removed, or you leave it, the perks there end (see 9.7). If the server’s owner or moderators kick or ban you, or the owner deletes the server, your subscription for it is cancelled and, if you ask us within 30 days, we refund the unused part of the
+									253 container
+										254 AXListMarker • 
+										255 text Server Boost and Promoted placement on Discovery: subscriptions that renew automatically every week (see 9.3) at the price shown at checkout. Placements bought earlier as one-off purchases for a fixed period (7 days) don’t renew and simply run out.
+									256 container
+										257 AXListMarker • 
+										258 text Bot Boost and Promoted placement in the bot list (yapin.gg/bots and the in-app bot list): subscriptions bought by a bot’s owner that renew automatically every week (see 9.3) at the price shown at checkout. Earlier one-off purchases (7 days) don’t renew. Only verified, public bots can buy them.
+									259 container
+										260 AXListMarker • 
+										261 text Bot hosting: a subscription that runs one of your bots on our servers, at the size and price shown at checkout. It renews automatically every month (see 9.3 and 9.10).
+								262 text The current price and what each feature includes are shown in the app before you buy. Features, limits and perks may change over time. If we make a change that takes away something important you are paying for, we’ll tell you in advance and you can cancel (and, for an unused prepaid period, get a proportionate refund).
+								263 heading 9.2 Payment, Value: 3
+									264 text 9.2 Payment
+								265 text Payments are processed by our payment provider, Stripe, under its own terms. For most purchases Stripe also acts as the seller (merchant of record) through its Managed Payments service: Stripe sells you the purchase, collects the payment and any sales tax or VAT, and its own terms for that sale are shown at checkout. We still provide the paid feature, and your rights under these Terms (including refunds in 9.4 and withdrawal in 9.5) stay the same; we may handle them together with Stripe. We never see or sto
+								266 heading 9.3 Automatic renewal and cancellation, Value: 3
+									267 text 9.3 Automatic renewal and cancellation
+								268 text Yapin’ Plus, Server Plus, Supercharge and bot hosting renew automatically each month, and Boosts and Promoted placements each week, at the then-current price and your payment method is charged at the start of each billing period until you cancel. You can cancel online at any time (for Plus in User Settings → Yapin’ Plus → Manage subscription, for bot hosting in the bot’s hosting settings, for Server Plus, Supercharge, Boosts and Promoted placements through Stripe’s billing page or the Cancel button next to 
+								269 link yapin.gg/cancel
+								270 text ), or by emailing 
+								271 link [email redacted], Value: mailto:[email redacted]
+								272 text . Cancellation stops future renewals. You keep Plus, hosting or a placement until the end of the period you already paid for, and we don’t refund that period except as required by law or set out below. We’ll give you at least 30 days’ notice of any price increase, and it applies from your next billing period after that notice, so you can cancel before it does.
+								273 heading 9.4 Refunds, Value: 3
+									274 text 9.4 Refunds
+								275 text Except as required by law or described in these Terms, payments are non-refundable. We may give refunds or credits at our discretion; doing so once doesn’t oblige us to do it again. If a purchase failed because of our error (for example you were charged but didn’t receive the feature), email us and we will fix it or refund you.
+								276 heading 9.5 Right of withdrawal (EU, EEA, UK and Switzerland), Value: 3
+									277 text 9.5 Right of withdrawal (EU, EEA, UK and Switzerland)
+								278 text If you are a consumer living in the EU, the EEA, the UK or Switzerland, you have the right to withdraw from a purchase within 14 days of the contract without giving a reason. At checkout you’ll see a separate box, not ticked in advance and apart from accepting these Terms, that says: “Start [the feature] as soon as I pay. I understand that once it’s been fully used, I can’t get a refund for changing my mind.” Ticking it asks us to start providing the paid feature immediately, and we keep a record that you did. Because paid features start right away, you need to tick it to buy. If you then withdraw within the 14 days, we’ll refund you, minus a proportionate amount for the part of To withdraw from a subscription, use the  Withdraw from contract  button next to it in User Settings → Subscriptions: it ends at once and we refund the unused part. For anything else, or if you prefer, send a clear statement to 
+								279 link [email redacted], Value: mailto:[email redacted]
+								280 text  before the 14 days end. You may use this model form: “To Yapper Media LLC, 131 Continental Dr, Suite 305, Newark, DE 19713, United States, 
+								281 link [email redacted], Value: mailto:[email redacted]
+								282 text : I hereby give notice that I withdraw from my contract for the following service: [service], ordered on [date]. Name: [name]. Yapin’ username: [username]. Email used for payment: [email]. Date: [date].” We’ll refund you within 14 days of receiving your notice, using the same payment method.
+								283 heading 9.6 Promotion and Boost rules, Value: 3
+									284 text 9.6 Promotion and Boost rules
+								285 text Paid placement buys position in Discovery or the bot list only. It does not guarantee any number of views, joins, members or servers added, and does not exempt a server or bot from these Terms. Slots are limited and may be unavailable; when they are full, a new purchase may wait in a queue and starts when a slot is free, as shown at checkout. We may refuse, pause or end a placement for a server or bot that breaks these Terms or the law, is locked or banned, loses its verification, or changes its name or con
+								286 heading 9.7 Chargebacks and enforcement, Value: 3
+									287 text 9.7 Chargebacks and enforcement
+								288 text If you dispute a valid charge with your bank, we may suspend paid features or the account until it’s resolved. If your account or server is suspended or removed for breaking these Terms, you lose access to paid features without a refund, unless the law requires one. Paid features have no cash value, can’t be transferred or exchanged, and end if the Service ends (in which case we refund any unused prepaid period).
+								289 heading 9.8 Fraudulent payments, Value: 3
+									290 text 9.8 Fraudulent payments
+								291 text Payments made with stolen, borrowed or otherwise unauthorised cards or accounts, or used to promote scams, phishing or malware, lead to an immediate ban of every account involved, removal of the paid feature and of the server from Discovery, and no refund. We keep the payment and account records and may share them with our payment provider, the card holder’s bank and the authorities to investigate fraud.
+								292 heading 9.9 Sanctions, Value: 3
+									293 text 9.9 Sanctions
+								294 text You may not buy anything on Yapin’ if you are located in, or ordinarily resident in, a country or region under comprehensive EU, UN, UK or US sanctions, or are on a government list of restricted parties. We or our payment provider may block, cancel or refund payments, and close accounts, where we believe this applies.
+								295 heading 9.10 Bot hosting, Value: 3
+									296 text 9.10 Bot hosting
+								297 text Bot hosting runs code you upload. You are responsible for that code, what your bot does and any data it handles, exactly as in section 8, and it must not break these Terms or harm our systems or other users. We don’t promise any uptime: hosted bots may be restarted, moved or paused for maintenance, updates or security. If a renewal payment fails, your bot keeps running for a short grace period (currently 3 days) and is then stopped until you pay. If hosting ends, is cancelled or the bot is deleted, we stop 
+								298 heading 9.11 Shards and virtual items, Value: 3
+									299 text 9.11 Shards and virtual items
+								300 text Shards are an in-app currency you earn by using Yapin’ (for example by being active or inviting friends who join), and spend inside Yapin’ on things like community decorations and your account level. Shards and anything you get with them are a limited licence to use a feature of the Service; you don’t own them. They have no cash value, can’t be bought, sold, traded or exchanged for money or anything outside Yapin’, and can’t be sent to other people, except that buying a creator’s community decoration passes
+								301 heading 9.12 Creator Program, Value: 3
+									302 text 9.12 Creator Program
+								303 text If we run a Creator Program, verified creators can apply to it. Being accepted, your tier and every reward are up to us. Rewards are Yapin’ Plus time and badges only: they have no cash value, can’t be exchanged or transferred, and are not wages or payment for a job. Views you report must be real; content with bought, faked or botted views, or that breaks these Terms or the platform it is on, is rejected and can get you removed from the program. Content you make for the program is an advertisement for Yapin’, because you get something from us for it. You must say so clearly in the content itself, in the way the platform and the law where you live require (for example “#ad”, “sponsored” or the platform’s paid partnership label). You keep the rights to your content, and you let us link to it and show it on Yapin’ and our social accounts with credit to you. You can leave the program at any time. We may change or end the program, or remove you, at any  Getting a Creator badge also adds you to the Official Yapin’ Creators server. Its rules and these Terms apply there like in any server, and you can leave it any time; we won’t add you back.
+								304 heading 9.13 Yapin’ Partner servers, Value: 3
+									305 text 9.13 Yapin’ Partner servers
+								306 text Server owners can apply for Yapin’ Partner in Server Settings. The current requirements are shown there before you apply; today they include Supercharge level 2 or higher, a minimum number of members, active moderators, rules and verification set up, a server and owner account at least 10 days old, and a clean record (not shut down, hidden or warned by our staff in the last 90 days, an allowed server name and an owner who isn’t banned). Partners get a Partner badge next to the server’s name, the owner gets 
+								307 heading 10. Our intellectual property, Value: 2
+									308 text 10. Our intellectual property
+								309 text Yapin’, our name, logos, designs, software and everything we create belong to us or our licensors and are protected by law. We give you a personal, worldwide, revocable, non-exclusive, non-transferable licence to use the Service as these Terms allow. Our software includes open-source libraries that are covered by their own licences. You may not use our name or logos in a way that suggests we endorse or are affiliated with you without our written permission. We expressly reserve all rights to text and data mining of Yapin’ and the Content on it, including under Article 4(3) of the EU Copyright Directive (2019/790). Nobody may scrape, crawl or mine Yapin’, or use it to train AI models, without our written permission, except through the bot API as section 8 allows or where the law gives a right that can’t be reserved.
+								310 heading 11. Reporting illegal content and copyright, Value: 2
+									311 text 11. Reporting illegal content and copyright
+								312 heading 11.1 How to report, Value: 3
+									313 text 11.1 How to report
+								314 text Anyone, including people without an account, can report Content they believe is illegal, infringes their rights, or breaks these Terms, by using the report tools in the app or emailing 
+								315 link [email redacted], Value: mailto:[email redacted]
+								316 text . Please include: the exact location (link, server and channel, or a screenshot showing it), why you believe it is illegal or infringing (and, for illegal content, which law if you know it), your name and email address, and a statement that you believe in good faith that the information in your report is accurate and complete. You may report child sexual abuse material anonymously. We review reports promptly, carefully and objectively, and tell you what we decided where we can contact you.
+								317 heading 11.2 Copyright (including the US DMCA), Value: 3
+									318 text 11.2 Copyright (including the US DMCA)
+								319 text Our designated agent to receive notices of claimed copyright infringement, registered with the US Copyright Office (registration number DMCA-1084137), is: DMCA Agent, Yapper Media, LLC 300 Delaware Ave, Ste 210 #801, Wilmington, DE 19801, United States Phone: 717-470-8008 Email: 
+								320 link [email redacted], Value: mailto:[email redacted]
+								321 text Email is fastest; use the subject “Copyright notice”. Our copyright page (
+								322 link yapin.gg/copyright
+								323 text ) explains the process step by step. Notices sent elsewhere may be delayed. If you believe Content infringes your copyright, your notice must contain: (1) your physical or electronic signature; (2) identification of the copyrighted work; (3) identification of the infringing material and where it is on Yapin’; (4) your contact information; (5) a statement that you have a good faith belief that the use is not authorised by the copyright owner, its agent or the law; and (6) a statement, under penalty of perjur If your Content was removed and you believe that was a mistake or that you had the right to use it, you can send a counter-notice to the same address with: your signature; identification of the removed material and where it was; a statement under penalty of perjury that you have a good faith belief it was removed by mistake or misidentification; your name, address and phone number; and a statement that you consent to the jurisdiction of the federal district court for your address (or, if you are outside the Knowingly false notices or counter-notices can make you liable for damages. Repeat infringers.  Each valid copyright notice against your Content counts as a strike on your account (and, for a server owner, on the server where it was posted). If an account or server gets three strikes within 12 months, we will normally terminate it, and we may act sooner for serious or deliberate infringement. A strike is removed if a counter-notice succeeds or the notice is withdrawn. This applies to user accounts, bots and server owners alike. We may remove, lock or delete a whole server, not only individual message
+								324 heading 12. Moderation, enforcement and appeals, Value: 2
+									325 text 12. Moderation, enforcement and appeals
+								326 heading 12.1 What we can do, Value: 3
+									327 text 12.1 What we can do
+								328 text If we reasonably believe Content or conduct breaks these Terms or the law, or puts users, Yapin’ or others at risk, we may: remove or hide Content; restrict who can see it; demote or remove a server from Discovery; restrict features (such as uploads, messaging, voice or bots); issue warnings or timeouts; suspend or terminate accounts, servers or bots; withhold or end paid features as described in section 9; and keep information and share it with authorities where the law requires or allows it. When an accou
+								329 heading 12.2 Tools we use, Value: 3
+									330 text 12.2 Tools we use
+								331 text We use a mix of human review and automated tools to keep Yapin’ safe, including: automated checks of uploaded images, GIFs and videos that block sexual and abusive images and pictures our moderators already removed, with an AI model from our provider Anthropic taking a second look at images the first check flags before they are blocked, and also checking every picture in Yapin’ HQ and pictures from accounts less than a day old for graphic violence; automated checks that block dangerous file types and suspic
+								332 heading 12.3 Telling you why, Value: 3
+									333 text 12.3 Telling you why
+								334 text When we restrict your Content or account, we will tell you, where possible and lawful, what we did, why, which rule or law it was based on, whether automated tools were involved, and how to appeal. We may not notify you where that would be unlawful, would put someone at risk, or would help someone evade enforcement, for example in cases of child abuse, spam or fraud. In those cases we may also lock or restrict an account or server without warning, keeping its data, so that evidence isn’t destroyed before th
+								335 heading 12.4 Appeals, Value: 3
+									336 text 12.4 Appeals
+								337 text You can appeal any decision we make about your Content or account, and any decision on a report you made, for at least 6 months after the decision. If your account is banned, use the  Appeal  box on the ban screen; a blocked upload has its own appeal button. For anything else, email 
+								338 link [email redacted], Value: mailto:[email redacted]
+								339 text  with your username and what you are appealing. Appeals are reviewed by a person, not only by automated tools, and we’ll reverse decisions that turn out to be wrong. If you are in the EU you may also use a certified out-of-court dispute settlement body under Article 21 of the DSA, or go to court. Nothing here limits your right to complain to a regulator.
+								340 heading 12.5 Legal requests, Value: 3
+									341 text 12.5 Legal requests
+							342 text Yapin’
+							343 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							344 heading Product, Value: 4
+								345 text Product
+							346 content list
+								347 link Download, Value: yapin.gg/download
+								348 link Developers, Value: yapin.gg/developers
+								349 link Yapin’ Plus, Value: yapin.gg/plus
+								350 link Creator Program, Value: yapin.gg/creators
+								351 link Roadmap, Value: yapin.gg/roadmap
+								352 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								353 link Bugs, Value: yapin.gg/bugs
+								354 link Status, Value: yapin.gg/status
+							355 heading Community, Value: 4
+								356 text Community
+							357 content list
+								358 link Guidelines, Value: yapin.gg/guidelines
+								359 link Tutorials, Value: yapin.gg/tutorials
+								360 link Bots, Value: yapin.gg/bots
+							361 heading Legal, Value: 4
+								362 text Legal
+							363 content list
+								364 link Terms, Value: yapin.gg/terms
+								365 link Privacy, Value: yapin.gg/privacy
+								366 link Copyright, Value: yapin.gg/copyright
+								367 link Cancel a subscription, Value: yapin.gg/cancel
+								368 link Contact, Value: mailto:[email redacted]
+							369 text © 2026 Yapper Media LLC. Free to use.
+			370 container
+				371 tab group
+					372 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						373 button Close
+					374 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						375 button Close
+					376 tab (selected, settable, boolean) Terms of Service · Yapin’, Value: on
+						377 button Close
+			378 button New Tab
+	379 close button
+	380 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	381 minimize button
+382 menu bar
+	383 Chrome
+	384 File
+	385 Edit
+	386 View
+	387 History
+	388 Bookmarks
+	389 Profiles
+	390 Tab
+	391 Window
+	392 Help
+
+The focused UI element is 19 HTML content Terms of Service · Yapin’, URL: yapin.gg/terms

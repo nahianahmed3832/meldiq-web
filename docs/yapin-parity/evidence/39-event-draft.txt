@@ -1,0 +1,60 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container Create event
+		2 heading Create event, Value: 2
+			3 text Create event
+		4 text Times are in your time (Asia/Shanghai)
+		5 container
+			6 text EVENT NAME
+			7 text field (settable) EVENT NAME, ID: ev-title
+			8 text WHERE
+			9 checkbox Voice channel, Value: 1
+				10 image
+				11 text Voice channel
+			12 checkbox Somewhere else, Value: 0
+				13 image
+				14 text Somewhere else
+			15 pop up button (collapsed, settable) Description: Voice channel, Value: General, Secondary Actions: Expand
+				16 menu
+					17 (selected) General
+			18 text STARTS
+			19 date field (settable) STARTS, Value: 2026-11-04T14:00, ID: ev-start
+				20 container
+					21 stepper
+					22 stepper
+					23 stepper
+					24 stepper
+					25 stepper
+					26 stepper
+				27 pop up button Show local date and time picker Show local date and time picker
+			28 text ENDS (OPTIONAL)
+			29 date field (settable) ENDS (OPTIONAL), ID: ev-end
+				30 container
+					31 stepper
+					32 stepper
+					33 stepper
+					34 stepper
+					35 stepper
+					36 stepper
+				37 pop up button Show local date and time picker Show local date and time picker
+			38 text REPEAT
+			39 pop up button (collapsed, settable) REPEAT, Value: Just once, ID: ev-repeat, Secondary Actions: Expand
+				40 menu
+					41 (selected) Just once
+					42 Every week
+			43 text POST WHEN IT STARTS IN
+			44 pop up button (collapsed, settable) POST WHEN IT STARTS IN, Value: #general, ID: ev-announce, Secondary Actions: Expand
+				45 menu
+					46 Nowhere
+					47 (selected) #general
+					48 #history-lab
+			49 text DESCRIPTION
+			50 text entry area (settable) DESCRIPTION, ID: ev-desc
+			51 text COVER IMAGE
+			52 image
+			53 text Add image
+			54 button Add image
+		55 button Cancel
+		56 button (disabled) Create event
+
+The focused UI element is 7 text field (settable) EVENT NAME, ID: ev-title

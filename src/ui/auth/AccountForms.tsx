@@ -1,8 +1,10 @@
+import { TermsConsent } from "./TermsConsent";
+import { PasswordInput } from "../components/PasswordInput";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { SocialSignIn } from "./SocialSignIn";
 import { ArrowLeft, ChevronRight, KeyRound, LockKeyhole, Mail, MailX, Smartphone } from "lucide-react";
-import { type FormEvent, type ReactNode, useState } from "react";
+import { cloneElement, isValidElement, type FormEvent, type ReactElement, type ReactNode, useState } from "react";
 import type { AccountSessionGrant } from "../../api/accountSchemas";
 import { ApiError } from "../../api/client";
 import type { AccountApi } from "../../auth/accountApi";
@@ -11,6 +13,7 @@ import { cleanVerifyCode, emailProblem, nameProblem, normalizeEmail, PASSWORD_MI
 import { AuthHeading, FormError, FormNotice, LinkButton } from "./AuthFrame";
 import { useSubmit } from "./useSubmit";
 import { useT } from "../../i18n";
+import { useCodeCooldown } from "./useCodeCooldown";
 /** Shared by every form: the server's account API and this browser's name in the account's session list. */
 export interface FormContext {
   accounts: AccountApi;
@@ -21,8 +24,12 @@ export function Field({ id, label, hint, children }: { id: string; label: string
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
-      {children}
-      {hint && <span className="hint">{hint}</span>}
+      {hint && isValidElement(children) ? cloneElement(children as ReactElement<{ "aria-describedby"?: string }>, { "aria-describedby": `${id}-hint` }) : children}
+      {hint && (
+        <span id={`${id}-hint`} className="hint">
+          {hint}
+        </span>
+      )}
     </div>
   );
 }
@@ -176,10 +183,10 @@ export function SignInForm(props: {
             />
           </Field>
           <Field id="si-password" label={t("common_password")}>
-            <input
+            <PasswordInput
               id="si-password"
               className="input"
-              type="password"
+
               autoComplete="current-password"
               value={password}
               onInput={(e) => setPassword(e.currentTarget.value)}
@@ -245,11 +252,16 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [invite, setInvite] = useState("");
+  const [accepted, setAccepted] = useState(false);
   const { busy, error, setError, run } = useSubmit();
   const t = useT();
   const submit = () => {
     const problem = nameProblem(name) ?? emailProblem(email) ?? passwordProblem(password, email) ?? (props.inviteRequired && !invite.trim() ? t("signup_invite_missing") : null);
     if (problem) return setError(problem);
+    if (!accepted) {
+      document.getElementById("su-terms")?.focus();
+      return setError(t("auth.foundation.termsRequired"));
+    }
     void run(async () => {
       await props.ctx.accounts.register(name.trim(), normalizeEmail(email), password, invite.trim() || undefined);
       props.onSent(normalizeEmail(email), password);
@@ -257,7 +269,7 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
   };
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
-      <Back onClick={props.onBack} label={t("signup_back")} />
+      <Back onClick={props.onBack} label={t("signup_back")} disabled={busy} />
       <AuthHeading title={t("signup_title")} sub={t("signup_sub")} />
       <FormError text={error} />
       <Field id="su-name" label={t("common_your_name")} hint={t("signup_name_hint")}>
@@ -267,13 +279,14 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
         <input id="su-email" className="input" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </Field>
       <Field id="su-password" label={t("common_password")} hint={t("signup_password_hint", { n: PASSWORD_MIN_LENGTH })}>
-        <input id="su-password" className="input" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <PasswordInput id="su-password" className="input" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       {props.inviteRequired && (
         <Field id="su-invite" label={t("signup_invite")} hint={t("signup_invite_hint")}>
           <input id="su-invite" className="input" value={invite} onChange={(e) => setInvite(e.target.value)} autoComplete="off" />
         </Field>
       )}
+      <TermsConsent id="su-terms" accepted={accepted} onChange={setAccepted} disabled={busy} />
       <button className="btn btn-primary btn-lg" disabled={busy}>
         {busy ? t("signup_busy") : t("signup_button")}
       </button>
@@ -281,12 +294,13 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
   );
 }
 // ───────────────────────── email code ─────────────────────────
-export function VerifyEmailForm(props: { ctx: FormContext; email: string; password: string; onVerified: (grant: AccountSessionGrant) => void; onBack: () => void }) {
+export function VerifyEmailForm(props: { ctx: FormContext; email: string; password: string; sentAt?: number; onVerified: (grant: AccountSessionGrant) => void; onBack: () => void }) {
   useLocaleRender();
   const t = useT();
   const [code, setCode] = useState("");
   const [notice, setNotice] = useState<string | null>(() => t("verify_sent", { email: props.email }));
   const { busy, error, setError, run } = useSubmit();
+  const cooldown = useCodeCooldown(props.sentAt ? props.sentAt + 30_000 : 0);
   const submit = () => {
     const c = cleanVerifyCode(code);
     if (c.length !== 6) return setError(t("verify_enter"));
@@ -295,14 +309,22 @@ export function VerifyEmailForm(props: { ctx: FormContext; email: string; passwo
       props.onVerified(await props.ctx.accounts.login(props.email, props.password, props.ctx.deviceName));
     });
   };
-  const resend = () =>
+  const resend = () => {
+    if (cooldown.seconds || busy) return;
     void run(async () => {
-      await props.ctx.accounts.resendVerification(props.email);
-      setNotice(t("verify_resent", { email: props.email }));
+      try {
+        await props.ctx.accounts.resendVerification(props.email);
+        cooldown.waitUntil(Date.now() + 30_000);
+        setNotice(t("verify_resent", { email: props.email }));
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 429) cooldown.waitUntil(Date.now() + (error.retryAfterMs ?? 30_000));
+        throw error;
+      }
     });
+  };
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
-      <Back onClick={props.onBack} />
+      <Back onClick={props.onBack} disabled={busy} />
       <AuthHeading title={t("verify_title")} />
       <FormNotice text={notice} />
       <FormError text={error} />
@@ -313,7 +335,9 @@ export function VerifyEmailForm(props: { ctx: FormContext; email: string; passwo
         {busy ? t("common_checking") : t("verify_button")}
       </button>
       <div className="auth-links">
-        <LinkButton onClick={resend}>{t("common_send_new_code")}</LinkButton>
+        <LinkButton onClick={resend} disabled={busy || cooldown.seconds > 0}>
+          {cooldown.seconds ? t("auth.foundation.resendIn", { seconds: cooldown.seconds }) : t("common_send_new_code")}
+        </LinkButton>
       </div>
     </form>
   );
@@ -370,7 +394,7 @@ export function ResetPasswordForm(props: { ctx: FormContext; email: string; onDo
         <input id="rp-code" className="input code-input" autoComplete="one-time-code" value={code} maxLength={32} onChange={(e) => setCode(e.target.value)} autoFocus />
       </Field>
       <Field id="rp-password" label={t("reset_new_password")} hint={t("common_password_min", { n: PASSWORD_MIN_LENGTH })}>
-        <input id="rp-password" className="input" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <PasswordInput id="rp-password" className="input" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       <button className="btn btn-primary btn-lg" disabled={busy}>
         {busy ? t("common_saving") : t("reset_button")}

@@ -54,5 +54,15 @@
     "android": "Obtener Meldiq para Android",
     "title": "Invitación de Meldiq",
     "hint": "¿No has iniciado sesión todavía? Inicia sesión o crea una cuenta primero: volverás a esta comunidad."
+  },
+  "foundation": {
+    "welcomeBody": "Unos detalles hacen que este espacio sea tuyo. Puedes cambiarlos en Configuración.",
+    "profileBody": "Elige cómo te ven los demás. Tu correo permanece privado.",
+    "preferencesBody": "Elige una apariencia cómoda y tu idioma.",
+    "startBody": "Encuentra a tu gente, únete a una comunidad o crea la tuya.",
+    "ready": "Tu espacio está listo.",
+    "finish": "Comenzar a explorar",
+    "onDevice": "Las opciones de apariencia se aplican a este navegador.",
+    "permissions": "Meldiq pide permiso para el micrófono, la cámara o las notificaciones cuando usas una función que lo necesita."
   }
 }

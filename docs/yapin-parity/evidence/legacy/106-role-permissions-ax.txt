@@ -1,0 +1,183 @@
+Window: "Yapin’ · Free chat with servers, voice and screen sharing", App: Google Chrome.
+0 standard window Yapin’ · Free chat with servers, voice and screen sharing - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container Yapin’ · Free chat with servers, voice and screen sharing - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ RESEARCH - PRIVATE TEST
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 button Back
+							44 button Create role
+							45 button Research Member
+							46 button @everyone
+							47 text EDIT ROLE - RESEARCH MEMBER
+							48 button Copy role ID, Help: d960fb24-0973-40c7-879a-c446a7212400
+							49 button Delete role
+							50 button Display
+							51 button Permissions
+							52 button Manage Members
+							53 text field (settable) Search permissions
+							54 text General Server Permissions
+							55 button Clear permissions
+							56 container
+								57 text Manage Channels Create, edit, reorder and delete channels.
+								58 checkbox Manage Channels Create, edit, reorder and delete channels., Value: 0
+							59 container
+								60 text Manage Roles Create and edit roles below their own, and give them to people.
+								61 checkbox Manage Roles Create and edit roles below their own, and give them to people., Value: 0
+							62 container
+								63 text Manage Emoji Add and remove server emojis.
+								64 checkbox Manage Emoji Add and remove server emojis., Value: 0
+							65 container
+								66 text Manage Server Change the server name, icon, banner and settings.
+								67 checkbox Manage Server Change the server name, icon, banner and settings., Value: 0
+							68 container
+								69 text Manage Webhooks Make, change and delete channel webhooks.
+								70 checkbox Manage Webhooks Make, change and delete channel webhooks., Value: 0
+							71 container
+								72 text View Audit Log See who changed what in the server.
+								73 checkbox View Audit Log See who changed what in the server., Value: 0
+							74 container
+								75 text Create Invite Invite people to the server.
+								76 checkbox Create Invite Invite people to the server., Value: 0
+							77 container
+								78 text Change Nickname Change their own nickname.
+								79 checkbox Change Nickname Change their own nickname., Value: 0
+							80 container
+								81 text Manage Nicknames Change other people’s nicknames.
+								82 checkbox Manage Nicknames Change other people’s nicknames., Value: 0
+							83 text Membership Permissions
+							84 container
+								85 text Kick Members Remove people; they can rejoin with an invite.
+								86 checkbox Kick Members Remove people; they can rejoin with an invite., Value: 0
+							87 container
+								88 text Ban Members Remove people for good (until unbanned).
+								89 checkbox Ban Members Remove people for good (until unbanned)., Value: 0
+							90 container
+								91 text Timeout Members Stop someone from talking for a while.
+								92 checkbox Timeout Members Stop someone from talking for a while., Value: 0
+							93 text Text Channel Permissions
+							94 container
+								95 text Send Messages Post in text channels.
+								96 checkbox Send Messages Post in text channels., Value: 0
+							97 container
+								98 text Embed Links Post links.
+								99 checkbox Embed Links Post links., Value: 0
+							100 container
+								101 text Attach Files Upload pictures, videos and audio.
+								102 checkbox Attach Files Upload pictures, videos and audio., Value: 0
+							103 container
+								104 text Send Voice Messages Record and send voice messages.
+								105 checkbox Send Voice Messages Record and send voice messages., Value: 0
+							106 container
+								107 text Add Reactions Add new reactions. Without it people can still click ones already there.
+								108 checkbox Add Reactions Add new reactions. Without it people can still click ones already there., Value: 0
+							109 container
+								110 text Use External Emoji Use emojis from other servers.
+								111 checkbox Use External Emoji Use emojis from other servers., Value: 0
+							112 container
+								113 text Create Polls Start polls.
+								114 checkbox Create Polls Start polls., Value: 0
+							115 container
+								116 text Use Big Text Post headings (# text). Turn it off for @everyone to keep big text for the roles you pick.
+								117 checkbox Value: 0, Use Big Text Post headings (# text). Turn it off for @everyone to keep big text for the roles you pick.
+							118 container
+								119 text Mention @everyone Ping the whole server.
+								120 checkbox Mention @everyone Ping the whole server., Value: 0
+							121 container
+								122 text Manage Messages Delete and pin anyone’s messages. Moderator stuff.
+								123 checkbox Manage Messages Delete and pin anyone’s messages. Moderator stuff., Value: 0
+							124 container
+								125 text Create Threads Start threads in text channels. Turn it off for @everyone to keep threads to the roles you pick.
+								126 checkbox Value: 0, Create Threads Start threads in text channels. Turn it off for @everyone to keep threads to the roles you pick.
+							127 container
+								128 text Send Messages in Threads Reply in threads and forum posts.
+								129 checkbox Send Messages in Threads Reply in threads and forum posts., Value: 0
+							130 container
+								131 text Manage Threads Close, lock, pin, rename, move and delete threads and forum posts, and post in locked ones.
+								132 checkbox Value: 0, Manage Threads Close, lock, pin, rename, move and delete threads and forum posts, and post in locked ones.
+							133 container
+								134 text Read Message History See messages sent before they were around.
+								135 checkbox Read Message History See messages sent before they were around., Value: 0
+							136 text Voice Channel Permissions
+							137 container
+								138 text Connect Join voice channels.
+								139 checkbox Connect Join voice channels., Value: 0
+							140 container
+								141 text Speak Talk in voice channels.
+								142 checkbox Speak Talk in voice channels., Value: 0
+							143 container
+								144 text Mute Members Mute other people in voice.
+								145 checkbox Mute Members Mute other people in voice., Value: 0
+							146 container
+								147 text Move Members Disconnect people from voice.
+								148 checkbox Move Members Disconnect people from voice., Value: 0
+							149 text Advanced Permissions
+							150 container
+								151 text Administrator Every permission, and bypasses channel restrictions. Dangerous.
+								152 checkbox Administrator Every permission, and bypasses channel restrictions. Dangerous., Value: 0
+							153 container
+								154 text Changes are saved when you press Save
+								155 button (disabled) Save
+							156 button Close
+			157 container
+				158 tab group
+					159 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						160 button Close
+					161 tab (selected, settable, boolean) Yapin’ · Free chat with servers, voice and screen sharing - Memory usage - 225 MB, Value: on
+						162 button Close
+					163 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						164 button Close
+			165 button New Tab
+	166 close button
+	167 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	168 minimize button
+169 menu bar
+	170 Chrome
+	171 File
+	172 Edit
+	173 View
+	174 History
+	175 Bookmarks
+	176 Profiles
+	177 Tab
+	178 Window
+	179 Help
+
+The focused UI element is 51 button Permissions

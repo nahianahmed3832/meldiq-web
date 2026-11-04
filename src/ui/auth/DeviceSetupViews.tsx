@@ -1,3 +1,4 @@
+import { PasswordInput } from "../components/PasswordInput";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Check, Copy, Download, KeyRound, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
@@ -13,6 +14,7 @@ import { type LinkApproval, LinkError, type PendingLink, pollLinkApproval, start
 import { AuthHeading, FormError, LinkButton } from "./AuthFrame";
 import { authErrorText, useSubmit } from "./useSubmit";
 import { useT } from "../../i18n";
+import { TermsConsent } from "./TermsConsent";
 const POLL_MS = 2000;
 // ───────────────────────── first device: make the identity ─────────────────────────
 export function CreateIdentityView(props: {
@@ -21,11 +23,13 @@ export function CreateIdentityView(props: {
   deviceName: string;
   /** The sign-in password, to back the new keys up (server docs/KEY_BACKUP.md). */
   password?: string;
+  consentAccepted?: boolean;
   onCreated: (device: DeviceRecord, recoveryCode: string) => void;
   onSignOut: () => void;
 }) {
   useLocaleRender();
   const { busy, error, run } = useSubmit();
+  const [accepted, setAccepted] = useState(props.consentAccepted ?? false);
   const t = useT();
   return (
     <div className="auth-form">
@@ -34,9 +38,10 @@ export function CreateIdentityView(props: {
         {t("create_body")}
       </p>
       <FormError text={error} />
+      {!props.consentAccepted && <TermsConsent id="identity-terms" accepted={accepted} onChange={setAccepted} disabled={busy} />}
       <button
         className="btn btn-primary btn-lg"
-        disabled={busy}
+        disabled={busy || !accepted}
         onClick={() =>
           void run(async () => {
             const r = await createIdentity(props.creds.accounts, props.account, props.deviceName, props.password);
@@ -304,7 +309,7 @@ function EmailUnlock(
       {!props.password && (
         <div className="field">
           <label htmlFor="ku-password">{t("common_password")}</label>
-          <input id="ku-password" className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <PasswordInput id="ku-password" className="input" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <span className="hint">{t("setup_password_hint")}</span>
         </div>
       )}

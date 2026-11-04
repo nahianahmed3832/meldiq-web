@@ -1,0 +1,90 @@
+Browser tab: 2, Title: "Yapin’ Partners · Yapin’", URL: "https://www.yapin.gg/partners".
+1 AXWebArea Yapin’ Partners · Yapin’, URL: yapin.gg/partners
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text COMMUNITY
+			14 heading Yapin’ Partners, Value: 1
+				15 text Yapin’ Partners
+			16 text LAST UPDATED  OCTOBER 30, 2026 Partners are big, well-run servers we love. Here’s what the badge means, what it takes and how to apply.
+		17 container
+			18 heading What the badge means, Value: 2
+				19 text What the badge means
+			20 text A Partner server is active, well moderated and Supercharged, and our staff checked it by hand. It gets the Partner badge next to its name, the owner gets a Partner badge on their profile, and the server gets a small bump in Discovery.
+			21 heading Requirements, Value: 2
+				22 text Requirements
+			23 content list
+				24 container
+					25 AXListMarker • 
+					26 text Supercharge level 2+
+				27 container
+					28 AXListMarker • 
+					29 text 1,000+ members
+				30 container
+					31 AXListMarker • 
+					32 text Rules channel or onboarding
+				33 container
+					34 AXListMarker • 
+					35 text 2+ active mods (last 30 days)
+				36 container
+					37 AXListMarker • 
+					38 text Verification level Medium or higher
+				39 container
+					40 AXListMarker • 
+					41 text Server and owner 10+ days old
+				42 container
+					43 AXListMarker • 
+					44 text Clean record (no staff action)
+			45 text Active mods are people other than the owner who banned, kicked, timed out or moderated voice in the last 30 days. A clean record means the server wasn’t shut down, hidden or warned by staff in the last 90 days, its name is allowed and the owner isn’t banned.
+			46 heading How to apply, Value: 2
+				47 text How to apply
+			48 text Server owners: open Server Settings and pick Yapin’ Partner. You’ll see the checklist with where your server is now. Hit every requirement and you can apply right there. Staff look at every application.
+			49 heading Keeping it, Value: 2
+				50 text Keeping it
+			51 text We check Partners every day. If a server stops meeting the requirements, its Supercharge ends or it breaks the rules, it can lose the badge. Meeting the requirements doesn’t guarantee approval, and Partner status isn’t an endorsement. The fine print is in the Terms, section 9.13:
+			52 link Description: Terms, Value: yapin.gg/terms#partners
+			53 link Description: ← Back to Yapin’, Value: yapin.gg/
+			54 text  · 
+			55 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		56 text Yapin’
+		57 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		58 heading PRODUCT, Value: 4
+			59 text PRODUCT
+		60 content list
+			61 link Description: Download, Value: yapin.gg/download
+			62 link Description: Developers, Value: yapin.gg/developers
+			63 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			64 link Description: Creator Program, Value: yapin.gg/creators
+			65 link Description: FanKit, Value: yapin.gg/fankit
+			66 link Description: Roadmap, Value: yapin.gg/roadmap
+			67 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			68 link Description: Bugs, Value: yapin.gg/bugs
+			69 link Description: Status, Value: yapin.gg/status
+		70 heading COMMUNITY, Value: 4
+			71 text COMMUNITY
+		72 content list
+			73 link Description: Guidelines, Value: yapin.gg/guidelines
+			74 link Description: Tutorials, Value: yapin.gg/tutorials
+			75 link Description: Bots, Value: yapin.gg/bots
+			76 link Description: Partners, Value: yapin.gg/partners
+		77 heading LEGAL, Value: 4
+			78 text LEGAL
+		79 content list
+			80 link Description: Terms, Value: yapin.gg/terms
+			81 link Description: Privacy, Value: yapin.gg/privacy
+			82 link Description: Copyright, Value: yapin.gg/copyright
+			83 link Description: Security, Value: yapin.gg/security
+			84 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			85 link Description: Contact, Value: mailto:hello@yapin.gg
+		86 text © 2026 Yapper Media LLC. Free to use.
+		87 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Yapin’ Partners · Yapin’, URL: yapin.gg/partners

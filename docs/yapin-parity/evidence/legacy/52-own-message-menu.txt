@@ -1,0 +1,43 @@
+menu Secondary Actions: Cancel
+									104 button React 👍
+									105 button React ❤️
+									106 button React 😂
+									107 button React 🔥
+									108 Add Reaction
+									109 Reply
+									110 Create thread
+									111 Edit message
+									112 Forward
+									113 Copy text
+									114 Copy message link
+									115 Mark unread
+									116 Translate
+									117 Reaction roles…
+									118 Pin message
+									119 Delete message
+								120 content list Members
+									121 heading ONLINE - 1, Value: 3
+										122 text ONLINE - 1
+									123 button nahian Server owner
+							124 button Getting started
+			125 container
+				126 tab group
+					127 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 204 MB, Value: on
+						128 button Close
+			129 button New Tab
+	130 close button
+	131 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	132 minimize button
+133 menu bar
+	134 Chrome
+	135 File
+	136 Edit
+	137 View
+	138 History
+	139 Bookmarks
+	140 Profiles
+	141 Tab
+	142 Window
+	143 Help
+
+The focused UI element is 108 Add Reaction

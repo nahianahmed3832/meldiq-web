@@ -1,0 +1,519 @@
+Browser tab: 2, Title: "Webhooks · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/webhooks".
+1 AXWebArea Webhooks · Bot API reference · Yapin’, URL: yapin.gg/developers/api/webhooks
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Webhooks, Value: 1
+				15 text Webhooks
+			16 text Channel webhooks the bot makes, and posting through them with a name and picture per message (PluralKit style, in testing).
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-channels-id-webhooks
+				25 text GET
+				26 text /channels/{id}/webhooks
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/webhooks#get-channels-id-webhooks
+				28 text Webhooks in a channel (people’s too, without tokens)
+				29 text Auth :  Bot token  +  Manage Webhooks In testing : 
+				30 text bot_webhooks
+				31 text JS: 
+				32 text bot.webhooks()
+				33 text Python: 
+				34 text bot.webhooks()
+				35 heading PARAMETERS, Value: 4
+					36 text PARAMETERS
+				37 table
+					38 row
+						39 cell
+							40 text NAME
+						41 cell
+							42 text TYPE
+						43 cell
+							44 text DESCRIPTION
+					45 row
+						46 cell
+							47 text {id}
+						48 cell
+							49 text string (uuid)
+						50 cell
+							51 text Channel id
+							52 container
+								53 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				54 heading RESPONSE200, Value: 4
+					55 text RESPONSE
+					56 text 200
+				57 text object
+				58 table
+					59 row
+						60 cell
+							61 text FIELD
+						62 cell
+							63 text TYPE
+						64 cell
+							65 text DESCRIPTION
+					66 row
+						67 cell
+							68 text webhooks
+						69 cell
+							70 text Webhook[]
+						71 cell
+							72 text Oldest first
+							73 button (collapsed) Fields of Webhook, Secondary Actions: Expand
+								74 text Fields of Webhook
+				75 button (collapsed) Example response, Secondary Actions: Expand
+					76 text Example response
+				77 heading ERRORS, Value: 4
+					78 text ERRORS
+				79 content list
+					80 container
+						81 AXListMarker • 
+						82 text 401 Missing or wrong token
+					83 container
+						84 AXListMarker • 
+						85 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					86 container
+						87 AXListMarker • 
+						88 text 404 No such thing, or the bot can’t see it
+					89 container
+						90 AXListMarker • 
+						91 text 500 Something went wrong on our side
+					92 container
+						93 AXListMarker • 
+						94 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			95 container post-channels-id-webhooks
+				96 text POST
+				97 text /channels/{id}/webhooks
+				98 link Description: Link to this endpoint, Value: yapin.gg/developers/api/webhooks#post-channels-id-webhooks
+				99 text Make a webhook the bot can post through (up to 10 per channel)
+				100 text Auth :  Bot token  +  Manage Webhooks In testing : 
+				101 text bot_webhooks
+				102 text Limit :  10 webhook changes a minute JS: 
+				103 text bot.createWebhook()
+				104 text Python: 
+				105 text bot.create_webhook()
+				106 heading PARAMETERS, Value: 4
+					107 text PARAMETERS
+				108 table
+					109 row
+						110 cell
+							111 text NAME
+						112 cell
+							113 text TYPE
+						114 cell
+							115 text DESCRIPTION
+					116 row
+						117 cell
+							118 text {id}
+						119 cell
+							120 text string (uuid)
+						121 cell
+							122 text Channel id
+							123 container
+								124 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				125 heading REQUEST BODY, Value: 4
+					126 text REQUEST BODY
+				127 text object
+				128 table
+					129 row
+						130 cell
+							131 text FIELD
+						132 cell
+							133 text TYPE
+						134 cell
+							135 text DESCRIPTION
+					136 row
+						137 cell
+							138 text name
+						139 cell
+							140 text string
+						141 cell
+							142 text 1 to 80 characters. No admin, mod, staff, Yapin’ or staff names  ( up to 80 characters )
+							143 container
+								144 text Example :  "Proxy"
+				145 button (collapsed) Example request, Secondary Actions: Expand
+					146 text Example request
+				147 heading RESPONSE201, Value: 4
+					148 text RESPONSE
+					149 text 201
+				150 text object
+				151 table
+					152 row
+						153 cell
+							154 text FIELD
+						155 cell
+							156 text TYPE
+						157 cell
+							158 text DESCRIPTION
+					159 row
+						160 cell
+							161 text webhook
+						162 cell
+							163 text object
+						164 cell
+							165 text The webhook, with its secret
+							166 button (collapsed) Fields, Secondary Actions: Expand
+								167 text Fields
+				168 button (collapsed) Example response, Secondary Actions: Expand
+					169 text Example response
+				170 heading ERRORS, Value: 4
+					171 text ERRORS
+				172 content list
+					173 container
+						174 AXListMarker • 
+						175 text 400 Bad input: the error says what’s wrong
+					176 container
+						177 AXListMarker • 
+						178 text 401 Missing or wrong token
+					179 container
+						180 AXListMarker • 
+						181 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					182 container
+						183 AXListMarker • 
+						184 text 404 No such thing, or the bot can’t see it
+					185 container
+						186 AXListMarker • 
+						187 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					188 container
+						189 AXListMarker • 
+						190 text 500 Something went wrong on our side
+					191 container
+						192 AXListMarker • 
+						193 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			194 container get-webhooks
+				195 text GET
+				196 text /webhooks
+				197 link Description: Link to this endpoint, Value: yapin.gg/developers/api/webhooks#get-webhooks
+				198 text The bot’s own webhooks in every server (up to 500, newest first)
+				199 text Auth :  Bot token JS: 
+				200 text bot.myWebhooks()
+				201 text Python: 
+				202 text bot.my_webhooks()
+				203 heading RESPONSE200, Value: 4
+					204 text RESPONSE
+					205 text 200
+				206 text object
+				207 table
+					208 row
+						209 cell
+							210 text FIELD
+						211 cell
+							212 text TYPE
+						213 cell
+							214 text DESCRIPTION
+					215 row
+						216 cell
+							217 text webhooks
+						218 cell
+							219 text Webhook[]
+						220 cell
+							221 text Newest first
+							222 button (collapsed) Fields of Webhook, Secondary Actions: Expand
+								223 text Fields of Webhook
+				224 button (collapsed) Example response, Secondary Actions: Expand
+					225 text Example response
+				226 heading ERRORS, Value: 4
+					227 text ERRORS
+				228 content list
+					229 container
+						230 AXListMarker • 
+						231 text 401 Missing or wrong token
+					232 container
+						233 AXListMarker • 
+						234 text 500 Something went wrong on our side
+					235 container
+						236 AXListMarker • 
+						237 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			238 container post-webhooks-id
+				239 text POST
+				240 text /webhooks/{id}
+				241 link Description: Link to this endpoint, Value: yapin.gg/developers/api/webhooks#post-webhooks-id
+				242 text Post through one of the bot’s webhooks, with its own name and picture
+				243 text Auth :  Bot token  +  Manage Webhooks In testing : 
+				244 text bot_webhooks
+				245 text Limit :  5 per 2 seconds per webhook, 30 a minute per channel, and the bot’s own message limits JS: 
+				246 text bot.sendWebhook()
+				247 text Python: 
+				248 text bot.send_webhook()
+				249 text The message shows the name and picture with a BOT tag, so it can’t pass for a person or for staff. Only webhooks this bot made; the bot token is enough (no webhook token).
+				250 heading PARAMETERS, Value: 4
+					251 text PARAMETERS
+				252 table
+					253 row
+						254 cell
+							255 text NAME
+						256 cell
+							257 text TYPE
+						258 cell
+							259 text DESCRIPTION
+					260 row
+						261 cell
+							262 text {id}
+						263 cell
+							264 text string (uuid)
+						265 cell
+							266 text Webhook id
+							267 container
+								268 text Example :  "4b05b926-7f4e-4dab-b1c2-8e6f5a7d4c2b"
+				269 heading REQUEST BODY, Value: 4
+					270 text REQUEST BODY
+				271 text object
+				272 table
+					273 row
+						274 cell
+							275 text FIELD
+						276 cell
+							277 text TYPE
+						278 cell
+							279 text DESCRIPTION
+					280 row
+						281 cell
+							282 text content
+							283 text optional
+						284 cell
+							285 text string
+						286 cell
+							287 text Text, up to 2000 characters  ( up to 2000 characters )
+							288 container
+								289 text Example :  "Hi, it’s Alice!"
+					290 row
+						291 cell
+							292 text username
+							293 text optional
+						294 cell
+							295 text string | null
+						296 cell
+							297 text Name for this message, 1 to 80 characters. Same rules as webhook names  ( up to 80 characters )
+					298 row
+						299 cell
+							300 text avatar_url
+							301 text optional
+						302 cell
+							303 text string (uri) | null
+						304 cell
+							305 text Picture for this message: an https link to Yapin’ uploads or a known image host (i.imgur.com, cdn.discordapp.com and the rest listed on /developers)
+					306 row
+						307 cell
+							308 text embeds
+							309 text optional
+						310 cell
+							311 text Embed[] | null
+						312 cell
+							313 text Up to 10 cards  ( up to 10 items )
+							314 button (collapsed) Fields of Embed, Secondary Actions: Expand
+								315 text Fields of Embed
+					316 row
+						317 cell
+							318 text components
+							319 text optional
+						320 cell
+							321 text ActionRow | LayoutComponent[] | null
+						322 cell
+							323 text Link buttons only (style link)  ( up to 40 items )
+							324 button (collapsed) Fields of ActionRow, Secondary Actions: Expand
+								325 text Fields of ActionRow
+							326 button (collapsed) Fields of V2ActionRow, Secondary Actions: Expand
+								327 text Fields of V2ActionRow
+							328 button (collapsed) Fields of V2TextDisplay, Secondary Actions: Expand
+								329 text Fields of V2TextDisplay
+							330 button (collapsed) Fields of V2Section, Secondary Actions: Expand
+								331 text Fields of V2Section
+							332 button (collapsed) Fields of V2MediaGallery, Secondary Actions: Expand
+								333 text Fields of V2MediaGallery
+							334 button (collapsed) Fields of V2File, Secondary Actions: Expand
+								335 text Fields of V2File
+							336 button (collapsed) Fields of V2Separator, Secondary Actions: Expand
+								337 text Fields of V2Separator
+							338 button (collapsed) Fields of V2Container, Secondary Actions: Expand
+								339 text Fields of V2Container
+					340 row
+						341 cell
+							342 text allowed_mentions
+							343 text optional
+						344 cell
+							345 text object
+						346 cell
+							347 text Who gets pinged. @everyone needs the bot to have Mention @everyone too
+							348 button (collapsed) Fields, Secondary Actions: Expand
+								349 text Fields
+				350 button (collapsed) Example request, Secondary Actions: Expand
+					351 text Example request
+				352 heading RESPONSE201, Value: 4
+					353 text RESPONSE
+					354 text 201
+				355 text object
+				356 table
+					357 row
+						358 cell
+							359 text FIELD
+						360 cell
+							361 text TYPE
+						362 cell
+							363 text DESCRIPTION
+					364 row
+						365 cell
+							366 text message
+						367 cell
+							368 text Message
+						369 cell
+							370 text A message. POST and PATCH answer with the stored row, which can carry a few more columns: rely on these ones
+							371 button (collapsed) Fields of Message, Secondary Actions: Expand
+								372 text Fields of Message
+				373 button (collapsed) Example response, Secondary Actions: Expand
+					374 text Example response
+				375 heading ERRORS, Value: 4
+					376 text ERRORS
+				377 content list
+					378 container
+						379 AXListMarker • 
+						380 text 400 Bad input: the error says what’s wrong
+					381 container
+						382 AXListMarker • 
+						383 text 401 Missing or wrong token
+					384 container
+						385 AXListMarker • 
+						386 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					387 container
+						388 AXListMarker • 
+						389 text 404 No such thing, or the bot can’t see it
+					390 container
+						391 AXListMarker • 
+						392 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					393 container
+						394 AXListMarker • 
+						395 text 500 Something went wrong on our side
+					396 container
+						397 AXListMarker • 
+						398 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			399 container delete-webhooks-id
+				400 text DELETE
+				401 text /webhooks/{id}
+				402 link Description: Link to this endpoint, Value: yapin.gg/developers/api/webhooks#delete-webhooks-id
+				403 text Delete a webhook (its old messages stay)
+				404 text Auth :  Bot token  +  Manage Webhooks In testing : 
+				405 text bot_webhooks
+				406 text Limit :  10 webhook changes a minute JS: 
+				407 text bot.deleteWebhook()
+				408 text Python: 
+				409 text bot.delete_webhook()
+				410 heading PARAMETERS, Value: 4
+					411 text PARAMETERS
+				412 table
+					413 row
+						414 cell
+							415 text NAME
+						416 cell
+							417 text TYPE
+						418 cell
+							419 text DESCRIPTION
+					420 row
+						421 cell
+							422 text {id}
+						423 cell
+							424 text string (uuid)
+						425 cell
+							426 text Webhook id
+							427 container
+								428 text Example :  "4b05b926-7f4e-4dab-b1c2-8e6f5a7d4c2b"
+				429 heading RESPONSE200, Value: 4
+					430 text RESPONSE
+					431 text 200
+				432 text Ok
+				433 table
+					434 row
+						435 cell
+							436 text FIELD
+						437 cell
+							438 text TYPE
+						439 cell
+							440 text DESCRIPTION
+					441 row
+						442 cell
+							443 text ok
+						444 cell
+							445 text true
+						446 cell
+							447 text Done
+							448 container
+								449 text Example :  true
+				450 button (collapsed) Example response, Secondary Actions: Expand
+					451 text Example response
+				452 heading ERRORS, Value: 4
+					453 text ERRORS
+				454 content list
+					455 container
+						456 AXListMarker • 
+						457 text 401 Missing or wrong token
+					458 container
+						459 AXListMarker • 
+						460 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					461 container
+						462 AXListMarker • 
+						463 text 404 No such thing, or the bot can’t see it
+					464 container
+						465 AXListMarker • 
+						466 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					467 container
+						468 AXListMarker • 
+						469 text 500 Something went wrong on our side
+					470 container
+						471 AXListMarker • 
+						472 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			473 link Description: ← Back to Yapin’, Value: yapin.gg/
+			474 text  · 
+			475 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		476 container On this page
+			477 text ON THIS PAGE
+			478 content list
+				479 link Description: Overview, Value: yapin.gg/developers/api/webhooks#top
+				480 link Description: GET /channels/{id}/webhooks, Value: yapin.gg/developers/api/webhooks#get-channels-id-webhooks
+				481 link Description: POST /channels/{id}/webhooks, Value: yapin.gg/developers/api/webhooks#post-channels-id-webhooks
+				482 link Description: GET /webhooks, Value: yapin.gg/developers/api/webhooks#get-webhooks
+				483 link Description: POST /webhooks/{id}, Value: yapin.gg/developers/api/webhooks#post-webhooks-id
+				484 link Description: DELETE /webhooks/{id}, Value: yapin.gg/developers/api/webhooks#delete-webhooks-id
+		485 text Yapin’
+		486 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		487 heading PRODUCT, Value: 4
+			488 text PRODUCT
+		489 content list
+			490 link Description: Download, Value: yapin.gg/download
+			491 link Description: Developers, Value: yapin.gg/developers
+			492 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			493 link Description: Creator Program, Value: yapin.gg/creators
+			494 link Description: FanKit, Value: yapin.gg/fankit
+			495 link Description: Roadmap, Value: yapin.gg/roadmap
+			496 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			497 link Description: Bugs, Value: yapin.gg/bugs
+			498 link Description: Status, Value: yapin.gg/status
+		499 heading COMMUNITY, Value: 4
+			500 text COMMUNITY
+		501 content list
+			502 link Description: Guidelines, Value: yapin.gg/guidelines
+			503 link Description: Tutorials, Value: yapin.gg/tutorials
+			504 link Description: Bots, Value: yapin.gg/bots
+			505 link Description: Partners, Value: yapin.gg/partners
+		506 heading LEGAL, Value: 4
+			507 text LEGAL
+		508 content list
+			509 link Description: Terms, Value: yapin.gg/terms
+			510 link Description: Privacy, Value: yapin.gg/privacy
+			511 link Description: Copyright, Value: yapin.gg/copyright
+			512 link Description: Security, Value: yapin.gg/security
+			513 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			514 link Description: Contact, Value: mailto:hello@yapin.gg
+		515 text © 2026 Yapper Media LLC. Free to use.
+		516 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Webhooks · Bot API reference · Yapin’, URL: yapin.gg/developers/api/webhooks

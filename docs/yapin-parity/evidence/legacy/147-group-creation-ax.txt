@@ -1,0 +1,55 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Create a group
+							21 heading Create a group, Value: 2
+								22 text Create a group
+							23 text Pick who’s in it (up to 9 friends).
+							24 text field (settable) Friend username, Placeholder: Type the username of a friend
+							25 text You can add 9 more.
+							26 text No friends yet. Add some from the Friends page.
+							27 button Cancel
+							28 button (disabled) Next
+			29 container
+				30 tab group
+					31 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						32 button Close
+					33 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 243 MB, Value: on
+						34 button Close
+					35 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						36 button Close
+			37 button New Tab
+	38 close button
+	39 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	40 minimize button
+41 menu bar
+	42 Chrome
+	43 File
+	44 Edit
+	45 View
+	46 History
+	47 Bookmarks
+	48 Profiles
+	49 Tab
+	50 Window
+	51 Help
+
+The focused UI element is 24 text field (settable) Friend username, Placeholder: Type the username of a friend

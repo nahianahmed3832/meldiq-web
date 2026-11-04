@@ -1,0 +1,73 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 heading Yapin’ Partner, Value: 2
+								44 text Yapin’ Partner
+							45 text Partners are big, well-run servers we love. They get a Partner badge next to the server name, and the owner gets the Partner badge on their profile.
+							46 heading Requirements, Value: 3
+								47 text Requirements
+							48 text Supercharge level 2+ Level 0 1,000+ members 1 members Rules channel or onboarding None set 2+ active mods (last 30 days) 0 active Verification level Medium or higher Medium Server and owner 10+ days old 2 days Clean record (no staff action) All good
+							49 text Hit every requirement and you can apply right here.
+							50 button Close
+			51 container
+				52 tab group
+					53 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						54 button Close
+			55 button New Tab
+	56 close button
+	57 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	58 minimize button
+59 menu bar
+	60 Chrome
+	61 File
+	62 Edit
+	63 View
+	64 History
+	65 Bookmarks
+	66 Profiles
+	67 Tab
+	68 Window
+	69 Help
+
+The focused UI element is 29 button Yapin’ Partner

@@ -1,0 +1,284 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content DevTools, URL: devtools://devtools/bundled/devtools_app.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@93ce6b54af3fee27e384d1f30346e80db47a14da/&targetType=tab&can_dock=true
+						20 container
+							21 container
+								22 container
+									23 toolbar
+										24 text Dimensions:
+										25 pop up button Device type, Value: Responsive
+											26 (selected) Responsive
+										27 stepper (settable, float) Width, Value: 768
+										28 text ×
+										29 stepper (settable, float) Height (leave empty for full), Value: 844
+										30 pop up button Zoom, Value: Fit to window
+											31 (selected) Fit to window
+										32 pop up button Throttling, Value: Disabled: No throttling
+											33 (selected) Disabled: No throttling
+										34 pop up button 'Save-Data': default
+											35 (selected) 'Save-Data': default
+										36 button Rotate
+									37 toolbar
+										38 button More options
+									39 container
+								40 container
+									41 container Main toolbar
+										42 toolbar
+											43 container Select an element in the page to inspect it, Help: Select an element in the page to inspect it - ⌘ ⇧ C
+												44 toggle button Select an element in the page to inspect it - ⌘ ⇧ C, Value: 0
+											45 container Toggle device toolbar, Help: Toggle device toolbar - ⌘ ⇧ M
+												46 toggle button Toggle device toolbar - ⌘ ⇧ M, Value: 1
+										47 container
+											48 tab group Panels
+												49 tab (settable, integer) Elements, Value: 0
+												50 tab (settable, integer) Console, Value: 0
+												51 tab (settable, integer) Sources, Value: 0
+												52 tab (selected) Network, Value: 1
+											53 pop up button More tabs
+										54 toolbar
+											55 container Open Issues to view 5 issues: 5 possible improvements
+												56 button Open Issues to view 5 issues: 5 possible improvements
+											57 container Settings, Help: Settings - F1 - ⇧ ?
+												58 button Settings - F1 - ⇧ ?
+											59 pop up button Customize and control DevTools
+												60 button Customize and control DevTools
+											61 container Close
+												62 button Close
+									63 container Network panel
+										64 container network
+											65 container
+												66 toolbar
+													67 container Stop recording network log, Help: Stop recording network log - ⌘ E
+														68 toggle button Stop recording network log - ⌘ E, Value: 1
+													69 container Clear network log, Help: Clear network log - Ctrl L - ⌘ K
+														70 button Clear network log - Ctrl L - ⌘ K
+													71 container Filter
+														72 toggle button Filter, Value: 1
+													73 container Search
+														74 toggle button Search, Value: 0
+													75 container
+														76 checkbox Keep log, Value: 0
+														77 text Keep log
+													78 container
+														79 checkbox Disable cache, Value: 0
+														80 text Disable cache
+													81 pop up button Throttling, Value: Disabled: No throttling
+														82 (selected) Disabled: No throttling
+													83 container More network conditions…
+														84 button More network conditions…
+													85 container Import HAR file…
+														86 button Import HAR file…
+													87 container Export HAR (sanitized)…
+														88 button Export HAR (sanitized)…
+													89 container Network settings
+														90 toggle button Network settings, Value: 0
+												91 toolbar
+													92 container
+														93 text entry area (settable) Filter, Value: messages
+															94 text messages
+														95 container Clear
+															96 button Clear
+												97 container Inverts the search filter
+													98 checkbox Invert, Value: 0
+													99 text Invert
+												100 container Show only/hide requests dropdown
+													101 pop up button Show only/hide requests
+														102 text More filters
+												103 list box Request types to include, Help: ⌘ Click to select multiple types
+													104 text (selected) All Fetch/XHR Doc CSS JS Font Img Media Manifest Socket Wasm Other
+												105 container Overview grid window
+													106 container
+														107 container
+															108 text 0 ms
+															109 text 20,000 ms
+															110 text 40,000 ms
+															111 text 60,000 ms
+															112 text 80,000 ms
+													113 slider Left resizer, Value: 0, Details: 0 ms, Secondary Actions: Increment, Decrement
+													114 slider Right resizer, Value: 100, Details: 87,581 ms, Secondary Actions: Increment, Decrement
+												115 container
+													116 container
+														117 table
+															118 row
+																119 column header Name - Sortable column. Press enter to sort.
+																	120 text Name
+																121 column header Status - Sortable column. Press enter to sort.
+																	122 text Status
+																123 column header Type - Sortable column. Press enter to sort.
+																	124 text Type
+																125 column header Initiator - Sortable column. Press enter to sort.
+																	126 text Initiator
+																127 column header Size - Sortable column. Press enter to sort.
+																	128 text Size
+																129 column header Time - Sortable column. Press enter to sort.
+																	130 text Time
+													131 container 0 / 25 requests
+														132 text 0 / 25 requests
+													133 container 0 B / 36693 B transferred over network
+														134 text 0.0 kB / 36.7 kB transferred
+													135 container 0 B / 1253328 B resources loaded by the page
+														136 text 0.0 kB / 1,253 kB resources
+							137 text Network data available 
+				138 scroll area
+					139 HTML content (23) Yapin’, URL: yapin.gg/
+						140 container
+							141 text (23) Yapin’
+							142 text Yapin’
+							143 container Servers
+								144 button Direct messages
+								145 button Meldiq Research - Private Test
+								146 button Meldiq
+								147 container
+									148 button Yapin' Headquarters
+									149 text 10
+								150 container
+									151 button MINECRAFT
+									152 text 13
+								153 button Create a server
+								154 button Discover servers
+							155 container
+								156 button Meldiq Research - Private Test
+								157 button Lobby OFF
+								158 button Invite people
+								159 button TEXT CHANNELS
+								160 button Create channel in this category, Help: Create channel here
+								161 pop up button More options for Text channels, Help: More
+									162 image
+								163 button general
+								164 button Edit channel
+								165 button Delete channel, Help: Delete
+								166 button history-lab
+								167 button Edit channel
+								168 button Delete channel, Help: Delete
+								169 button VOICE CHANNELS
+								170 button Create channel in this category, Help: Create channel here
+								171 pop up button More options for Voice channels, Help: More
+									172 image
+								173 button General
+								174 button Open chat in General, Help: Open chat
+								175 button Edit channel
+								176 button Delete channel, Help: Delete
+								177 button RESEARCH
+								178 button Create channel in this category, Help: Create channel here
+								179 pop up button More options for Research, Help: More
+									180 image
+								181 button Discussion ideas-lab
+								182 button Edit channel
+								183 button Delete channel, Help: Delete
+								184 pop up button nahian Online, Help: Your account
+									185 text nahian
+									186 text Online
+								187 button Inbox
+								188 button Settings
+								189 button Log out
+							190 container
+								191 container
+									192 image
+									193 button history-lab
+								194 button Mute
+								195 button Threads
+								196 button Pinned messages
+								197 button Media
+								198 button Members
+								199 button Search Meldiq Research - Private Test, Help: Search this server
+								200 container
+									201 image
+									202 heading Welcome to #history-lab!, Value: 3
+										203 text Welcome to #history-lab!
+									204 text This is the start of the  # history-lab  channel. Sunday, November 1, 2026
+									205 button nahian's profile
+									206 button nahian
+									207 text Today at 11:31 AM
+									208 container
+										209 text Research marker A — start of synthetic history.  Bold ,  italic ,  code , and 
+										210 link example, Help: https://example.com, Value: example.com/
+										211 text .
+									212 text Research marker D — additional synthetic reading depth.
+01 · Controlled history test, no real conversation data.
+02 · Controlled history test, no real conversation data.
+03 · Controlled history test, no real conversation data.
+04 · Controlled history test, no real conversation data.
+05 · Controlled history test, no real conversation data.
+06 · Controlled history test, no real conversation data.
+07 · Controlled history test, no real conversation data.
+08 · Controlled history test, no real conversation data.
+
+									213 button Show more
+									214 text Research marker E — later synthetic history block.
+01 · Later block for unread and reload observations.
+02 · Later block for unread and reload observations.
+03 · Later block for unread and reload observations.
+04 · Later block for unread and reload observations.
+05 · Later block for unread and reload observations.
+06 · Later block for unread and reload observations.
+07 · Later block for unread and reload observations.
+08 · Later block for unread and reload observations.
+09 · Later block for unread and reloa
+									215 button Show more
+									216 text Research marker F — final latest-message marker for the controlled unread and reload tests.
+									217 button Private synthetic thread 1 message · 4m
+									218 toggle button 👍 1 reaction, Value: 1
+										219 Unlabeled image 👍
+										220 text 1
+									221 button Add reaction
+									222 button nahian's profile
+									223 button nahian
+									224 text Today at 11:51 AM
+									225 image :research_dot:, Help: :research_dot: from Meldiq Research - Private Test
+									226 image :creeper:, Help: :creeper: from MINECRAFT
+									227 button Open picture
+								228 container
+									229 button Send a file
+									230 text entry area (settable) Message #history-lab
+									231 button Create a poll
+									232 button GIF
+									233 button Emoji
+									234 button (disabled) Send
+							235 button Getting started
+			236 container
+				237 tab group
+					238 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						239 button Close
+					240 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 243 MB, Value: on
+						241 button Close
+					242 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						243 button Close
+			244 button New Tab
+	245 close button
+	246 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	247 minimize button
+248 menu bar
+	249 Chrome
+	250 File
+	251 Edit
+	252 View
+	253 History
+	254 Bookmarks
+	255 Profiles
+	256 Tab
+	257 Window
+	258 Help
+
+Selected text: ```
+844
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

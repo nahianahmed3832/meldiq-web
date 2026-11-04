@@ -1,0 +1,1215 @@
+Browser tab: 2, Title: "Messages · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/messages".
+1 AXWebArea Messages · Bot API reference · Yapin’, URL: yapin.gg/developers/api/messages
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Messages, Value: 1
+				15 text Messages
+			16 text Read, send, edit, delete, pin and react.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-channels-id-messages
+				25 text GET
+				26 text /channels/{id}/messages
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#get-channels-id-messages
+				28 text Messages, oldest first. Empty without Read Message History
+				29 text Auth :  Bot token JS: 
+				30 text bot.messages(), bot.messagesAfter()
+				31 text Python: 
+				32 text bot.messages_after(), bot.messages()
+				33 heading PARAMETERS, Value: 4
+					34 text PARAMETERS
+				35 table
+					36 row
+						37 cell
+							38 text NAME
+						39 cell
+							40 text TYPE
+						41 cell
+							42 text DESCRIPTION
+					43 row
+						44 cell
+							45 text {id}
+						46 cell
+							47 text string (uuid)
+						48 cell
+							49 text Channel id
+							50 container
+								51 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					52 row
+						53 cell
+							54 text ?limit
+							55 text optional
+						56 cell
+							57 text integer
+						58 cell
+							59 text How many  ( 1 to 100, default 50 )
+							60 container
+								61 text Example :  50
+					62 row
+						63 cell
+							64 text ?before
+							65 text optional
+						66 cell
+							67 text string (date-time)
+						68 cell
+							69 text Older than this
+							70 container
+								71 text Example :  "2026-11-01T18:30:00.000Z"
+					72 row
+						73 cell
+							74 text ?after
+							75 text optional
+						76 cell
+							77 text string (date-time)
+						78 cell
+							79 text Newer than this (reads forward)
+							80 container
+								81 text Example :  "2026-11-01T18:30:00.000Z"
+				82 heading RESPONSE200, Value: 4
+					83 text RESPONSE
+					84 text 200
+				85 text object
+				86 table
+					87 row
+						88 cell
+							89 text FIELD
+						90 cell
+							91 text TYPE
+						92 cell
+							93 text DESCRIPTION
+					94 row
+						95 cell
+							96 text messages
+						97 cell
+							98 text Message[]
+						99 cell
+							100 text Messages
+							101 button (collapsed) Fields of Message, Secondary Actions: Expand
+								102 text Fields of Message
+					103 row
+						104 cell
+							105 text authors
+						106 cell
+							107 text User[]
+						108 cell
+							109 text Everyone who wrote one
+							110 button (collapsed) Fields of User, Secondary Actions: Expand
+								111 text Fields of User
+				112 button (collapsed) Example response, Secondary Actions: Expand
+					113 text Example response
+				114 heading ERRORS, Value: 4
+					115 text ERRORS
+				116 content list
+					117 container
+						118 AXListMarker • 
+						119 text 401 Missing or wrong token
+					120 container
+						121 AXListMarker • 
+						122 text 404 No such thing, or the bot can’t see it
+					123 container
+						124 AXListMarker • 
+						125 text 500 Something went wrong on our side
+					126 container
+						127 AXListMarker • 
+						128 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			129 container post-channels-id-messages
+				130 text POST
+				131 text /channels/{id}/messages
+				132 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#post-channels-id-messages
+				133 text Send a message
+				134 text Auth :  Bot token  +  Send Messages Limit :  30 a minute per server; 30 a minute overall (300 for verified bots) JS: 
+				135 text bot.send(), bot.sendLayout()
+				136 text Python: 
+				137 text bot.send(), bot.send_layout()
+				138 heading PARAMETERS, Value: 4
+					139 text PARAMETERS
+				140 table
+					141 row
+						142 cell
+							143 text NAME
+						144 cell
+							145 text TYPE
+						146 cell
+							147 text DESCRIPTION
+					148 row
+						149 cell
+							150 text {id}
+						151 cell
+							152 text string (uuid)
+						153 cell
+							154 text Channel id
+							155 container
+								156 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				157 heading REQUEST BODY, Value: 4
+					158 text REQUEST BODY
+				159 text object
+				160 table
+					161 row
+						162 cell
+							163 text FIELD
+						164 cell
+							165 text TYPE
+						166 cell
+							167 text DESCRIPTION
+					168 row
+						169 cell
+							170 text content
+							171 text optional
+						172 cell
+							173 text string
+						174 cell
+							175 text Text, up to 2000 characters. Markdown works  ( up to 2000 characters )
+							176 container
+								177 text Example :  "Hello!"
+					178 row
+						179 cell
+							180 text embeds
+							181 text optional
+						182 cell
+							183 text Embed[] | null
+						184 cell
+							185 text Up to 5 cards; content can be empty then  ( up to 5 items )
+							186 button (collapsed) Fields of Embed, Secondary Actions: Expand
+								187 text Fields of Embed
+					188 row
+						189 cell
+							190 text components
+							191 text optional
+						192 cell
+							193 text ActionRow | LayoutComponent[] | null
+						194 cell
+							195 text Button rows (up to 5), or with flags 32768 a Components V2 layout  ( up to 40 items )
+							196 button (collapsed) Fields of ActionRow, Secondary Actions: Expand
+								197 text Fields of ActionRow
+							198 button (collapsed) Fields of V2ActionRow, Secondary Actions: Expand
+								199 text Fields of V2ActionRow
+							200 button (collapsed) Fields of V2TextDisplay, Secondary Actions: Expand
+								201 text Fields of V2TextDisplay
+							202 button (collapsed) Fields of V2Section, Secondary Actions: Expand
+								203 text Fields of V2Section
+							204 button (collapsed) Fields of V2MediaGallery, Secondary Actions: Expand
+								205 text Fields of V2MediaGallery
+							206 button (collapsed) Fields of V2File, Secondary Actions: Expand
+								207 text Fields of V2File
+							208 button (collapsed) Fields of V2Separator, Secondary Actions: Expand
+								209 text Fields of V2Separator
+							210 button (collapsed) Fields of V2Container, Secondary Actions: Expand
+								211 text Fields of V2Container
+					212 row
+						213 cell
+							214 text flags
+							215 text optional
+						216 cell
+							217 text integer
+						218 cell
+							219 text 32768 (IS_COMPONENTS_V2): components is the whole message, no content or embeds
+							220 container
+								221 text Example :  32768
+					222 row
+						223 cell
+							224 text reply_to
+							225 text optional
+						226 cell
+							227 text string (uuid) | null
+						228 cell
+							229 text Message in this channel to reply to
+				230 button (collapsed) Example request, Secondary Actions: Expand
+					231 text Example request
+				232 heading RESPONSE201, Value: 4
+					233 text RESPONSE
+					234 text 201
+				235 text object
+				236 table
+					237 row
+						238 cell
+							239 text FIELD
+						240 cell
+							241 text TYPE
+						242 cell
+							243 text DESCRIPTION
+					244 row
+						245 cell
+							246 text message
+						247 cell
+							248 text Message
+						249 cell
+							250 text A message. POST and PATCH answer with the stored row, which can carry a few more columns: rely on these ones
+							251 button (collapsed) Fields of Message, Secondary Actions: Expand
+								252 text Fields of Message
+					253 row
+						254 cell
+							255 text messages
+							256 text optional
+						257 cell
+							258 text Message[]
+						259 cell
+							260 text With files: every message sent, one per file, in order
+							261 button (collapsed) Fields of Message, Secondary Actions: Expand
+								262 text Fields of Message
+					263 row
+						264 cell
+							265 text error
+							266 text optional
+						267 cell
+							268 text string
+						269 cell
+							270 text With files: why the rest weren’t sent, when only some went out
+							271 container
+								272 text Example :  "Slow down: 30 messages a minute in this server (try agai…
+				273 button (collapsed) Example response, Secondary Actions: Expand
+					274 text Example response
+				275 heading ERRORS, Value: 4
+					276 text ERRORS
+				277 content list
+					278 container
+						279 AXListMarker • 
+						280 text 400 Bad input: the error says what’s wrong
+					281 container
+						282 AXListMarker • 
+						283 text 401 Missing or wrong token
+					284 container
+						285 AXListMarker • 
+						286 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					287 container
+						288 AXListMarker • 
+						289 text 404 No such thing, or the bot can’t see it
+					290 container
+						291 AXListMarker • 
+						292 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					293 container
+						294 AXListMarker • 
+						295 text 500 Something went wrong on our side
+					296 container
+						297 AXListMarker • 
+						298 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			299 container get-channels-id-messages-mid
+				300 text GET
+				301 text /channels/{id}/messages/{mid}
+				302 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#get-channels-id-messages-mid
+				303 text One message
+				304 text Auth :  Bot token  +  Read Message History JS: 
+				305 text bot.message()
+				306 text Python: 
+				307 text bot.message()
+				308 heading PARAMETERS, Value: 4
+					309 text PARAMETERS
+				310 table
+					311 row
+						312 cell
+							313 text NAME
+						314 cell
+							315 text TYPE
+						316 cell
+							317 text DESCRIPTION
+					318 row
+						319 cell
+							320 text {id}
+						321 cell
+							322 text string (uuid)
+						323 cell
+							324 text Channel id
+							325 container
+								326 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					327 row
+						328 cell
+							329 text {mid}
+						330 cell
+							331 text string (uuid)
+						332 cell
+							333 text Message id
+							334 container
+								335 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+				336 heading RESPONSE200, Value: 4
+					337 text RESPONSE
+					338 text 200
+				339 text object
+				340 table
+					341 row
+						342 cell
+							343 text FIELD
+						344 cell
+							345 text TYPE
+						346 cell
+							347 text DESCRIPTION
+					348 row
+						349 cell
+							350 text message
+						351 cell
+							352 text Message
+						353 cell
+							354 text A message. POST and PATCH answer with the stored row, which can carry a few more columns: rely on these ones
+							355 button (collapsed) Fields of Message, Secondary Actions: Expand
+								356 text Fields of Message
+					357 row
+						358 cell
+							359 text author
+						360 cell
+							361 text User | null
+						362 cell
+							363 button (collapsed) Fields of User, Secondary Actions: Expand
+								364 text Fields of User
+				365 button (collapsed) Example response, Secondary Actions: Expand
+					366 text Example response
+				367 heading ERRORS, Value: 4
+					368 text ERRORS
+				369 content list
+					370 container
+						371 AXListMarker • 
+						372 text 401 Missing or wrong token
+					373 container
+						374 AXListMarker • 
+						375 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					376 container
+						377 AXListMarker • 
+						378 text 404 No such thing, or the bot can’t see it
+					379 container
+						380 AXListMarker • 
+						381 text 500 Something went wrong on our side
+					382 container
+						383 AXListMarker • 
+						384 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			385 container patch-channels-id-messages-mid
+				386 text PATCH
+				387 text /channels/{id}/messages/{mid}
+				388 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#patch-channels-id-messages-mid
+				389 text Edit the bot’s own message (null removes embeds or components; a key left out stays)
+				390 text Auth :  Bot token JS: 
+				391 text bot.edit(), bot.editLayout()
+				392 text Python: 
+				393 text bot.edit_layout(), bot.edit()
+				394 heading PARAMETERS, Value: 4
+					395 text PARAMETERS
+				396 table
+					397 row
+						398 cell
+							399 text NAME
+						400 cell
+							401 text TYPE
+						402 cell
+							403 text DESCRIPTION
+					404 row
+						405 cell
+							406 text {id}
+						407 cell
+							408 text string (uuid)
+						409 cell
+							410 text Channel id
+							411 container
+								412 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					413 row
+						414 cell
+							415 text {mid}
+						416 cell
+							417 text string (uuid)
+						418 cell
+							419 text Message id
+							420 container
+								421 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+				422 heading REQUEST BODY, Value: 4
+					423 text REQUEST BODY
+				424 text object
+				425 table
+					426 row
+						427 cell
+							428 text FIELD
+						429 cell
+							430 text TYPE
+						431 cell
+							432 text DESCRIPTION
+					433 row
+						434 cell
+							435 text content
+							436 text optional
+						437 cell
+							438 text string
+						439 cell
+							440 text Text, up to 2000 characters. Markdown works  ( up to 2000 characters )
+							441 container
+								442 text Example :  "Hello!"
+					443 row
+						444 cell
+							445 text embeds
+							446 text optional
+						447 cell
+							448 text Embed[] | null
+						449 cell
+							450 text Up to 5 cards; content can be empty then  ( up to 5 items )
+							451 button (collapsed) Fields of Embed, Secondary Actions: Expand
+								452 text Fields of Embed
+					453 row
+						454 cell
+							455 text components
+							456 text optional
+						457 cell
+							458 text ActionRow | LayoutComponent[] | null
+						459 cell
+							460 text Button rows (up to 5), or with flags 32768 a Components V2 layout  ( up to 40 items )
+							461 button (collapsed) Fields of ActionRow, Secondary Actions: Expand
+								462 text Fields of ActionRow
+							463 button (collapsed) Fields of V2ActionRow, Secondary Actions: Expand
+								464 text Fields of V2ActionRow
+							465 button (collapsed) Fields of V2TextDisplay, Secondary Actions: Expand
+								466 text Fields of V2TextDisplay
+							467 button (collapsed) Fields of V2Section, Secondary Actions: Expand
+								468 text Fields of V2Section
+							469 button (collapsed) Fields of V2MediaGallery, Secondary Actions: Expand
+								470 text Fields of V2MediaGallery
+							471 button (collapsed) Fields of V2File, Secondary Actions: Expand
+								472 text Fields of V2File
+							473 button (collapsed) Fields of V2Separator, Secondary Actions: Expand
+								474 text Fields of V2Separator
+							475 button (collapsed) Fields of V2Container, Secondary Actions: Expand
+								476 text Fields of V2Container
+					477 row
+						478 cell
+							479 text flags
+							480 text optional
+						481 cell
+							482 text integer
+						483 cell
+							484 text 32768 (IS_COMPONENTS_V2): components is the whole message, no content or embeds
+							485 container
+								486 text Example :  32768
+				487 button (collapsed) Example request, Secondary Actions: Expand
+					488 text Example request
+				489 heading RESPONSE200, Value: 4
+					490 text RESPONSE
+					491 text 200
+				492 text object
+				493 table
+					494 row
+						495 cell
+							496 text FIELD
+						497 cell
+							498 text TYPE
+						499 cell
+							500 text DESCRIPTION
+					501 row
+						502 cell
+							503 text message
+						504 cell
+							505 text Message | null
+						506 cell
+							507 button (collapsed) Fields of Message, Secondary Actions: Expand
+								508 text Fields of Message
+				509 button (collapsed) Example response, Secondary Actions: Expand
+					510 text Example response
+				511 heading ERRORS, Value: 4
+					512 text ERRORS
+				513 content list
+					514 container
+						515 AXListMarker • 
+						516 text 400 Bad input: the error says what’s wrong
+					517 container
+						518 AXListMarker • 
+						519 text 401 Missing or wrong token
+					520 container
+						521 AXListMarker • 
+						522 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					523 container
+						524 AXListMarker • 
+						525 text 404 No such thing, or the bot can’t see it
+					526 container
+						527 AXListMarker • 
+						528 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					529 container
+						530 AXListMarker • 
+						531 text 500 Something went wrong on our side
+					532 container
+						533 AXListMarker • 
+						534 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			535 container delete-channels-id-messages-mid
+				536 text DELETE
+				537 text /channels/{id}/messages/{mid}
+				538 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#delete-channels-id-messages-mid
+				539 text Delete a message (its own, or others with Manage Messages)
+				540 text Auth :  Bot token JS: 
+				541 text bot.delete()
+				542 text Python: 
+				543 text bot.delete()
+				544 heading PARAMETERS, Value: 4
+					545 text PARAMETERS
+				546 table
+					547 row
+						548 cell
+							549 text NAME
+						550 cell
+							551 text TYPE
+						552 cell
+							553 text DESCRIPTION
+					554 row
+						555 cell
+							556 text {id}
+						557 cell
+							558 text string (uuid)
+						559 cell
+							560 text Channel id
+							561 container
+								562 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					563 row
+						564 cell
+							565 text {mid}
+						566 cell
+							567 text string (uuid)
+						568 cell
+							569 text Message id
+							570 container
+								571 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+				572 heading RESPONSE200, Value: 4
+					573 text RESPONSE
+					574 text 200
+				575 text Ok
+				576 table
+					577 row
+						578 cell
+							579 text FIELD
+						580 cell
+							581 text TYPE
+						582 cell
+							583 text DESCRIPTION
+					584 row
+						585 cell
+							586 text ok
+						587 cell
+							588 text true
+						589 cell
+							590 text Done
+							591 container
+								592 text Example :  true
+				593 button (collapsed) Example response, Secondary Actions: Expand
+					594 text Example response
+				595 heading ERRORS, Value: 4
+					596 text ERRORS
+				597 content list
+					598 container
+						599 AXListMarker • 
+						600 text 401 Missing or wrong token
+					601 container
+						602 AXListMarker • 
+						603 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					604 container
+						605 AXListMarker • 
+						606 text 404 No such thing, or the bot can’t see it
+					607 container
+						608 AXListMarker • 
+						609 text 500 Something went wrong on our side
+					610 container
+						611 AXListMarker • 
+						612 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			613 container post-channels-id-messages-bulk-delete
+				614 text POST
+				615 text /channels/{id}/messages/bulk-delete
+				616 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#post-channels-id-messages-bulk-delete
+				617 text Delete up to 100 messages
+				618 text Auth :  Bot token  +  Manage Messages (for others’ messages) JS: 
+				619 text bot.bulkDelete()
+				620 text Python: 
+				621 text bot.bulk_delete()
+				622 heading PARAMETERS, Value: 4
+					623 text PARAMETERS
+				624 table
+					625 row
+						626 cell
+							627 text NAME
+						628 cell
+							629 text TYPE
+						630 cell
+							631 text DESCRIPTION
+					632 row
+						633 cell
+							634 text {id}
+						635 cell
+							636 text string (uuid)
+						637 cell
+							638 text Channel id
+							639 container
+								640 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				641 heading REQUEST BODY, Value: 4
+					642 text REQUEST BODY
+				643 text object
+				644 table
+					645 row
+						646 cell
+							647 text FIELD
+						648 cell
+							649 text TYPE
+						650 cell
+							651 text DESCRIPTION
+					652 row
+						653 cell
+							654 text ids
+						655 cell
+							656 text string (uuid)[]
+						657 cell
+							658 text Messages  ( up to 100 items )
+				659 button (collapsed) Example request, Secondary Actions: Expand
+					660 text Example request
+				661 heading RESPONSE200, Value: 4
+					662 text RESPONSE
+					663 text 200
+				664 text object
+				665 table
+					666 row
+						667 cell
+							668 text FIELD
+						669 cell
+							670 text TYPE
+						671 cell
+							672 text DESCRIPTION
+					673 row
+						674 cell
+							675 text deleted
+						676 cell
+							677 text string (uuid)[]
+						678 cell
+							679 text Deleted
+					680 row
+						681 cell
+							682 text skipped
+						683 cell
+							684 text string (uuid)[]
+						685 cell
+							686 text Not deleted (gone, or not allowed)
+				687 button (collapsed) Example response, Secondary Actions: Expand
+					688 text Example response
+				689 heading ERRORS, Value: 4
+					690 text ERRORS
+				691 content list
+					692 container
+						693 AXListMarker • 
+						694 text 400 Bad input: the error says what’s wrong
+					695 container
+						696 AXListMarker • 
+						697 text 401 Missing or wrong token
+					698 container
+						699 AXListMarker • 
+						700 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					701 container
+						702 AXListMarker • 
+						703 text 404 No such thing, or the bot can’t see it
+					704 container
+						705 AXListMarker • 
+						706 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					707 container
+						708 AXListMarker • 
+						709 text 500 Something went wrong on our side
+					710 container
+						711 AXListMarker • 
+						712 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			713 container put-channels-id-messages-mid-pin
+				714 text PUT
+				715 text /channels/{id}/messages/{mid}/pin
+				716 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#put-channels-id-messages-mid-pin
+				717 text Pin
+				718 text Auth :  Bot token  +  Manage Messages JS: 
+				719 text bot.pin()
+				720 text Python: 
+				721 text bot.pin()
+				722 heading PARAMETERS, Value: 4
+					723 text PARAMETERS
+				724 table
+					725 row
+						726 cell
+							727 text NAME
+						728 cell
+							729 text TYPE
+						730 cell
+							731 text DESCRIPTION
+					732 row
+						733 cell
+							734 text {id}
+						735 cell
+							736 text string (uuid)
+						737 cell
+							738 text Channel id
+							739 container
+								740 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					741 row
+						742 cell
+							743 text {mid}
+						744 cell
+							745 text string (uuid)
+						746 cell
+							747 text Message id
+							748 container
+								749 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+				750 heading RESPONSE200, Value: 4
+					751 text RESPONSE
+					752 text 200
+				753 text object
+				754 table
+					755 row
+						756 cell
+							757 text FIELD
+						758 cell
+							759 text TYPE
+						760 cell
+							761 text DESCRIPTION
+					762 row
+						763 cell
+							764 text ok
+						765 cell
+							766 text true
+						767 cell
+							768 text Done
+							769 container
+								770 text Example :  true
+					771 row
+						772 cell
+							773 text pinned
+						774 cell
+							775 text boolean
+						776 cell
+							777 text Pinned now
+							778 container
+								779 text Example :  true
+				780 button (collapsed) Example response, Secondary Actions: Expand
+					781 text Example response
+				782 heading ERRORS, Value: 4
+					783 text ERRORS
+				784 content list
+					785 container
+						786 AXListMarker • 
+						787 text 400 Bad input: the error says what’s wrong
+					788 container
+						789 AXListMarker • 
+						790 text 401 Missing or wrong token
+					791 container
+						792 AXListMarker • 
+						793 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					794 container
+						795 AXListMarker • 
+						796 text 404 No such thing, or the bot can’t see it
+					797 container
+						798 AXListMarker • 
+						799 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					800 container
+						801 AXListMarker • 
+						802 text 500 Something went wrong on our side
+					803 container
+						804 AXListMarker • 
+						805 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			806 container delete-channels-id-messages-mid-pin
+				807 text DELETE
+				808 text /channels/{id}/messages/{mid}/pin
+				809 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#delete-channels-id-messages-mid-pin
+				810 text Unpin
+				811 text Auth :  Bot token  +  Manage Messages JS: 
+				812 text bot.unpin()
+				813 text Python: 
+				814 text bot.unpin()
+				815 heading PARAMETERS, Value: 4
+					816 text PARAMETERS
+				817 table
+					818 row
+						819 cell
+							820 text NAME
+						821 cell
+							822 text TYPE
+						823 cell
+							824 text DESCRIPTION
+					825 row
+						826 cell
+							827 text {id}
+						828 cell
+							829 text string (uuid)
+						830 cell
+							831 text Channel id
+							832 container
+								833 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					834 row
+						835 cell
+							836 text {mid}
+						837 cell
+							838 text string (uuid)
+						839 cell
+							840 text Message id
+							841 container
+								842 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+				843 heading RESPONSE200, Value: 4
+					844 text RESPONSE
+					845 text 200
+				846 text object
+				847 table
+					848 row
+						849 cell
+							850 text FIELD
+						851 cell
+							852 text TYPE
+						853 cell
+							854 text DESCRIPTION
+					855 row
+						856 cell
+							857 text ok
+						858 cell
+							859 text true
+						860 cell
+							861 text Done
+							862 container
+								863 text Example :  true
+					864 row
+						865 cell
+							866 text pinned
+						867 cell
+							868 text boolean
+						869 cell
+							870 text Pinned now
+							871 container
+								872 text Example :  false
+				873 button (collapsed) Example response, Secondary Actions: Expand
+					874 text Example response
+				875 heading ERRORS, Value: 4
+					876 text ERRORS
+				877 content list
+					878 container
+						879 AXListMarker • 
+						880 text 400 Bad input: the error says what’s wrong
+					881 container
+						882 AXListMarker • 
+						883 text 401 Missing or wrong token
+					884 container
+						885 AXListMarker • 
+						886 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					887 container
+						888 AXListMarker • 
+						889 text 404 No such thing, or the bot can’t see it
+					890 container
+						891 AXListMarker • 
+						892 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					893 container
+						894 AXListMarker • 
+						895 text 500 Something went wrong on our side
+					896 container
+						897 AXListMarker • 
+						898 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			899 container get-channels-id-messages-mid-reactions
+				900 text GET
+				901 text /channels/{id}/messages/{mid}/reactions
+				902 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#get-channels-id-messages-mid-reactions
+				903 text Reactions on a message
+				904 text Auth :  Bot token  +  Read Message History JS: 
+				905 text bot.reactions()
+				906 text Python: 
+				907 text bot.reactions()
+				908 heading PARAMETERS, Value: 4
+					909 text PARAMETERS
+				910 table
+					911 row
+						912 cell
+							913 text NAME
+						914 cell
+							915 text TYPE
+						916 cell
+							917 text DESCRIPTION
+					918 row
+						919 cell
+							920 text {id}
+						921 cell
+							922 text string (uuid)
+						923 cell
+							924 text Channel id
+							925 container
+								926 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					927 row
+						928 cell
+							929 text {mid}
+						930 cell
+							931 text string (uuid)
+						932 cell
+							933 text Message id
+							934 container
+								935 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+				936 heading RESPONSE200, Value: 4
+					937 text RESPONSE
+					938 text 200
+				939 text object
+				940 table
+					941 row
+						942 cell
+							943 text FIELD
+						944 cell
+							945 text TYPE
+						946 cell
+							947 text DESCRIPTION
+					948 row
+						949 cell
+							950 text reactions
+						951 cell
+							952 text Reaction[]
+						953 cell
+							954 text Reactions, oldest first
+							955 button (collapsed) Fields of Reaction, Secondary Actions: Expand
+								956 text Fields of Reaction
+				957 button (collapsed) Example response, Secondary Actions: Expand
+					958 text Example response
+				959 heading ERRORS, Value: 4
+					960 text ERRORS
+				961 content list
+					962 container
+						963 AXListMarker • 
+						964 text 401 Missing or wrong token
+					965 container
+						966 AXListMarker • 
+						967 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					968 container
+						969 AXListMarker • 
+						970 text 404 No such thing, or the bot can’t see it
+					971 container
+						972 AXListMarker • 
+						973 text 500 Something went wrong on our side
+					974 container
+						975 AXListMarker • 
+						976 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			977 container put-channels-id-messages-mid-reactions-emoji
+				978 text PUT
+				979 text /channels/{id}/messages/{mid}/reactions/{emoji}
+				980 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#put-channels-id-messages-mid-reactions-emoji
+				981 text React (custom emojis: from servers the bot is in, flag bot_custom_emojis)
+				982 text Auth :  Bot token  +  Add Reactions JS: 
+				983 text bot.react()
+				984 text Python: 
+				985 text bot.react()
+				986 heading PARAMETERS, Value: 4
+					987 text PARAMETERS
+				988 table
+					989 row
+						990 cell
+							991 text NAME
+						992 cell
+							993 text TYPE
+						994 cell
+							995 text DESCRIPTION
+					996 row
+						997 cell
+							998 text {id}
+						999 cell
+							1000 text string (uuid)
+						1001 cell
+							1002 text Channel id
+							1003 container
+								1004 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					1005 row
+						1006 cell
+							1007 text {mid}
+						1008 cell
+							1009 text string (uuid)
+						1010 cell
+							1011 text Message id
+							1012 container
+								1013 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+					1014 row
+						1015 cell
+							1016 text {emoji}
+						1017 cell
+							1018 text string
+						1019 cell
+							1020 text URL-encoded emoji: unicode, or "<:name:id>"
+							1021 container
+								1022 text Example :  "%F0%9F%91%8D"
+				1023 heading RESPONSE200, Value: 4
+					1024 text RESPONSE
+					1025 text 200
+				1026 text Ok
+				1027 table
+					1028 row
+						1029 cell
+							1030 text FIELD
+						1031 cell
+							1032 text TYPE
+						1033 cell
+							1034 text DESCRIPTION
+					1035 row
+						1036 cell
+							1037 text ok
+						1038 cell
+							1039 text true
+						1040 cell
+							1041 text Done
+							1042 container
+								1043 text Example :  true
+				1044 button (collapsed) Example response, Secondary Actions: Expand
+					1045 text Example response
+				1046 heading ERRORS, Value: 4
+					1047 text ERRORS
+				1048 content list
+					1049 container
+						1050 AXListMarker • 
+						1051 text 400 Bad input: the error says what’s wrong
+					1052 container
+						1053 AXListMarker • 
+						1054 text 401 Missing or wrong token
+					1055 container
+						1056 AXListMarker • 
+						1057 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					1058 container
+						1059 AXListMarker • 
+						1060 text 404 No such thing, or the bot can’t see it
+					1061 container
+						1062 AXListMarker • 
+						1063 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					1064 container
+						1065 AXListMarker • 
+						1066 text 500 Something went wrong on our side
+					1067 container
+						1068 AXListMarker • 
+						1069 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			1070 container delete-channels-id-messages-mid-reactions-emoji
+				1071 text DELETE
+				1072 text /channels/{id}/messages/{mid}/reactions/{emoji}
+				1073 link Description: Link to this endpoint, Value: yapin.gg/developers/api/messages#delete-channels-id-messages-mid-reactions-emoji
+				1074 text Remove the bot’s reaction
+				1075 text Auth :  Bot token JS: 
+				1076 text bot.unreact()
+				1077 text Python: 
+				1078 text bot.unreact()
+				1079 heading PARAMETERS, Value: 4
+					1080 text PARAMETERS
+				1081 table
+					1082 row
+						1083 cell
+							1084 text NAME
+						1085 cell
+							1086 text TYPE
+						1087 cell
+							1088 text DESCRIPTION
+					1089 row
+						1090 cell
+							1091 text {id}
+						1092 cell
+							1093 text string (uuid)
+						1094 cell
+							1095 text Channel id
+							1096 container
+								1097 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					1098 row
+						1099 cell
+							1100 text {mid}
+						1101 cell
+							1102 text string (uuid)
+						1103 cell
+							1104 text Message id
+							1105 container
+								1106 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+					1107 row
+						1108 cell
+							1109 text {emoji}
+						1110 cell
+							1111 text string
+						1112 cell
+							1113 text URL-encoded emoji: unicode, or "<:name:id>"
+							1114 container
+								1115 text Example :  "%F0%9F%91%8D"
+				1116 heading RESPONSE200, Value: 4
+					1117 text RESPONSE
+					1118 text 200
+				1119 text Ok
+				1120 table
+					1121 row
+						1122 cell
+							1123 text FIELD
+						1124 cell
+							1125 text TYPE
+						1126 cell
+							1127 text DESCRIPTION
+					1128 row
+						1129 cell
+							1130 text ok
+						1131 cell
+							1132 text true
+						1133 cell
+							1134 text Done
+							1135 container
+								1136 text Example :  true
+				1137 button (collapsed) Example response, Secondary Actions: Expand
+					1138 text Example response
+				1139 heading ERRORS, Value: 4
+					1140 text ERRORS
+				1141 content list
+					1142 container
+						1143 AXListMarker • 
+						1144 text 400 Bad input: the error says what’s wrong
+					1145 container
+						1146 AXListMarker • 
+						1147 text 401 Missing or wrong token
+					1148 container
+						1149 AXListMarker • 
+						1150 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					1151 container
+						1152 AXListMarker • 
+						1153 text 404 No such thing, or the bot can’t see it
+					1154 container
+						1155 AXListMarker • 
+						1156 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					1157 container
+						1158 AXListMarker • 
+						1159 text 500 Something went wrong on our side
+					1160 container
+						1161 AXListMarker • 
+						1162 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			1163 link Description: ← Back to Yapin’, Value: yapin.gg/
+			1164 text  · 
+			1165 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		1166 container On this page
+			1167 text ON THIS PAGE
+			1168 content list
+				1169 link Description: Overview, Value: yapin.gg/developers/api/messages#top
+				1170 link Description: GET /channels/{id}/messages, Value: yapin.gg/developers/api/messages#get-channels-id-messages
+				1171 link Description: POST /channels/{id}/messages, Value: yapin.gg/developers/api/messages#post-channels-id-messages
+				1172 link Description: GET /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages#get-channels-id-messages-mid
+				1173 link Description: PATCH /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages#patch-channels-id-messages-mid
+				1174 link Description: DELETE /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages#delete-channels-id-messages-mid
+				1175 link Description: POST /channels/{id}/messages/bulk-delete, Value: yapin.gg/developers/api/messages#post-channels-id-messages-bulk-delete
+				1176 link Description: PUT /channels/{id}/messages/{mid}/pin, Value: yapin.gg/developers/api/messages#put-channels-id-messages-mid-pin
+				1177 link Description: DELETE /channels/{id}/messages/{mid}/pin, Value: yapin.gg/developers/api/messages#delete-channels-id-messages-mid-pin
+				1178 link Description: GET /channels/{id}/messages/{mid}/reactions, Value: yapin.gg/developers/api/messages#get-channels-id-messages-mid-reactions
+				1179 link Description: PUT /channels/{id}/messages/{mid}/reactions/{emoji}, Value: yapin.gg/developers/api/messages#put-channels-id-messages-mid-reactions-emoji
+				1180 link Description: DELETE /channels/{id}/messages/{mid}/reactions/{emoji}, Value: yapin.gg/developers/api/messages#delete-channels-id-messages-mid-reactions-emoji
+		1181 text Yapin’
+		1182 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		1183 heading PRODUCT, Value: 4
+			1184 text PRODUCT
+		1185 content list
+			1186 link Description: Download, Value: yapin.gg/download
+			1187 link Description: Developers, Value: yapin.gg/developers
+			1188 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			1189 link Description: Creator Program, Value: yapin.gg/creators
+			1190 link Description: FanKit, Value: yapin.gg/fankit
+			1191 link Description: Roadmap, Value: yapin.gg/roadmap
+			1192 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			1193 link Description: Bugs, Value: yapin.gg/bugs
+			1194 link Description: Status, Value: yapin.gg/status
+		1195 heading COMMUNITY, Value: 4
+			1196 text COMMUNITY
+		1197 content list
+			1198 link Description: Guidelines, Value: yapin.gg/guidelines
+			1199 link Description: Tutorials, Value: yapin.gg/tutorials
+			1200 link Description: Bots, Value: yapin.gg/bots
+			1201 link Description: Partners, Value: yapin.gg/partners
+		1202 heading LEGAL, Value: 4
+			1203 text LEGAL
+		1204 content list
+			1205 link Description: Terms, Value: yapin.gg/terms
+			1206 link Description: Privacy, Value: yapin.gg/privacy
+			1207 link Description: Copyright, Value: yapin.gg/copyright
+			1208 link Description: Security, Value: yapin.gg/security
+			1209 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			1210 link Description: Contact, Value: mailto:hello@yapin.gg
+		1211 text © 2026 Yapper Media LLC. Free to use.
+		1212 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Messages · Bot API reference · Yapin’, URL: yapin.gg/developers/api/messages

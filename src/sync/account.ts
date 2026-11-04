@@ -65,6 +65,7 @@ export async function removeProfileBanner(engine: Engine): Promise<void> {
   await engine.api.call("DELETE", "/v1/users/me/profile-banner");
 }
 export interface ProfileStyleChange {
+  layout?: ProfileStyle["layout"];
   baseStyleRevision?: string;
   decoration?: string | null;
   effect?: ProfileStyle["effect"];

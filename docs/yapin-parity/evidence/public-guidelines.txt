@@ -1,0 +1,128 @@
+Browser tab: 2, Title: "Community Guidelines · Yapin’", URL: "https://www.yapin.gg/guidelines".
+1 AXWebArea Community Guidelines · Yapin’, URL: yapin.gg/guidelines
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text LEGAL
+			14 heading Community Guidelines, Value: 1
+				15 text Community Guidelines
+			16 text LAST UPDATED  2 NOVEMBER 2026 Yap freely, but don't make Yapin’ worse for everyone else. These rules apply everywhere on Yapin’: servers, DMs, group chats, profiles, emojis and voice.
+		17 container
+			18 text Zero tolerance.  There’s no place on Yapin’ for objectionable content or abusive people. Breaking these rules gets content removed and accounts suspended or banned, and you agreed to them (and our
+			19 link Description: Terms, Value: yapin.gg/terms
+			20 text ) when you signed up.
+			21 heading Don’t, Value: 2
+				22 text Don’t
+			23 content list
+				24 container
+					25 AXListMarker • 
+					26 text Share anything sexual involving minors.  Zero tolerance. Accounts are removed and we report it to the authorities.
+				27 container
+					28 AXListMarker • 
+					29 text Post porn, hentai or other sexual content.  Yapin’ isn’t a place for adult content, so no NSFW or 18+ servers or channels either, and images are checked automatically.
+				30 container
+					31 AXListMarker • 
+					32 text Harass, bully, threaten or stalk people , or encourage others to.
+				33 container
+					34 AXListMarker • 
+					35 text Attack people  for their race, ethnicity, religion, nationality, gender, sexuality, disability or similar.
+				36 container
+					37 AXListMarker • 
+					38 text Share someone’s private information  (address, phone number, photos, etc.) without their permission.
+				39 container
+					40 AXListMarker • 
+					41 text Promote violence, terrorism or violent extremism , or glorify real-world attacks.
+				42 container
+					43 AXListMarker • 
+					44 text Encourage self-harm or suicide.  If you’re struggling, please reach out to someone you trust or a local helpline.
+				45 container
+					46 AXListMarker • 
+					47 text Scam, phish, spread malware , or try to get people’s passwords or money.
+				48 container
+					49 AXListMarker • 
+					50 text Hide where a link goes.  Masked link text has to match where it really takes people.
+				51 container
+					52 AXListMarker • 
+					53 text Use Yapin’ as file storage.  Attachments are for sharing in chats, not for dumping backups or piles of files into an empty server.
+				54 container
+					55 AXListMarker • 
+					56 text Spam  - mass messages, mass friend requests, fake accounts or raiding servers.
+				57 container
+					58 AXListMarker • 
+					59 text Pretend to be someone else  - including Yapin’ staff.
+				60 container
+					61 AXListMarker • 
+					62 text Sell or promote illegal things , like drugs or weapons.
+				63 container
+					64 AXListMarker • 
+					65 text Post stuff you don’t have the rights to , like pirated content.
+				66 container
+					67 AXListMarker • 
+					68 text Get around a ban  with another account.
+				69 container
+					70 AXListMarker • 
+					71 text Farm Shards  with alt accounts, bots or fake invites. We take them back and may ban every account involved.
+				72 container
+					73 AXListMarker • 
+					74 text Submit decorations you didn’t make , like art copied from Discord or another artist.
+				75 container
+					76 AXListMarker • 
+					77 text Fake your numbers  - bought or botted views for the Creator Program, or fake members, votes or leaderboard stats.
+			78 heading Server owners, Value: 2
+				79 text Server owners
+			80 text You run your server. Set clear rules, use roles, read-only channels, slowmode and bans, and remove content that breaks these guidelines. Servers built around breaking these rules will be removed. Well-run servers with Supercharge level 2 or higher can apply to be a Yapin’ Partner in Server Settings; breaking these rules can cost a server its Partner status.
+			81 heading Reporting, Value: 2
+				82 text Reporting
+			83 text See something that breaks these rules or the law? Right-click the message or profile (or hold it on a phone) and pick  Report . It goes straight to our moderators, who review every report. You can also block anyone from their profile, so they can’t message you. In a server, you can also tell its moderators. No account? Email
+			84 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			85 text  with where it is (server and channel, or a screenshot) and what’s wrong.
+			86 heading What happens, Value: 2
+				87 text What happens
+			88 text Depending on how serious it is, we may remove content, give a warning, or suspend or delete accounts and servers. The full rules are in our 
+			89 link Description: Terms of Service, Value: yapin.gg/terms
+			90 text .
+			91 link Description: ← Back to Yapin’, Value: yapin.gg/
+			92 text  · 
+			93 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		94 text Yapin’
+		95 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		96 heading PRODUCT, Value: 4
+			97 text PRODUCT
+		98 content list
+			99 link Description: Download, Value: yapin.gg/download
+			100 link Description: Developers, Value: yapin.gg/developers
+			101 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			102 link Description: Creator Program, Value: yapin.gg/creators
+			103 link Description: FanKit, Value: yapin.gg/fankit
+			104 link Description: Roadmap, Value: yapin.gg/roadmap
+			105 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			106 link Description: Bugs, Value: yapin.gg/bugs
+			107 link Description: Status, Value: yapin.gg/status
+		108 heading COMMUNITY, Value: 4
+			109 text COMMUNITY
+		110 content list
+			111 link Description: Guidelines, Value: yapin.gg/guidelines
+			112 link Description: Tutorials, Value: yapin.gg/tutorials
+			113 link Description: Bots, Value: yapin.gg/bots
+			114 link Description: Partners, Value: yapin.gg/partners
+		115 heading LEGAL, Value: 4
+			116 text LEGAL
+		117 content list
+			118 link Description: Terms, Value: yapin.gg/terms
+			119 link Description: Privacy, Value: yapin.gg/privacy
+			120 link Description: Copyright, Value: yapin.gg/copyright
+			121 link Description: Security, Value: yapin.gg/security
+			122 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			123 link Description: Contact, Value: mailto:hello@yapin.gg
+		124 text © 2026 Yapper Media LLC. Free to use.
+		125 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Community Guidelines · Yapin’, URL: yapin.gg/guidelines

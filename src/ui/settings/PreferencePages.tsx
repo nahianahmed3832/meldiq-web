@@ -11,15 +11,14 @@ import { APP_VERSION } from "../../application/env";
 import { serverHost } from "../../application/config";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { LIST_PREVIEWS, MESSAGE_LAYOUTS, type Palette, PALETTES, type Prefs, QUICK_REACTIONS, setPrefs, THEMES, TIME_FORMATS, usePrefs, volumeOf } from "../../application/prefs";
+import { LIST_PREVIEWS, MESSAGE_LAYOUTS, QUICK_REACTIONS, setPrefs, TIME_FORMATS, usePrefs, volumeOf } from "../../application/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { BackgroundNotifications } from "./BackgroundNotifications";
 import { type ChimeState, chimeState, playChime, unlockChime } from "../../application/messageChime";
-import { type StringKey, useT } from "../../i18n";
+import { useT } from "../../i18n";
 import { InstallSetting } from "./InstallButton";
-const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark", black: "ap_black" } as const satisfies Record<Prefs["theme"], StringKey>;
-const PALETTE_KEY = { meldiq: "ap_meldiq", midnight: "ap_midnight", charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
+import { ThemeChoice, PaletteChoice } from "../components/AppearanceControls";
 export function NotificationsPage() {
   useLocaleRender();
   const engine = useEngine();
@@ -182,31 +181,14 @@ export function AppearancePage() {
             <strong>{t("ap_theme")}</strong>
             <small>{t("ap_theme_sub")}</small>
           </div>
-          <div className="segmented" role="group" aria-label={t("ap_theme")}>
-            {THEMES.map((th) => (
-              <button key={th} aria-pressed={prefs.theme === th} onClick={() => setPrefs({ theme: th, themeChosen: true })}>
-                {t(THEME_KEY[th])}
-              </button>
-            ))}
-          </div>
+          <ThemeChoice />
         </div>
         <div className="setting">
           <div className="lines">
             <strong>{t("ap_colour")}</strong>
             <small>{t("ap_colour_sub")}</small>
           </div>
-          <div className="palette-picker" role="radiogroup" aria-label={t("ap_colour")}>
-            {PALETTES.map((p) => (
-              <button key={p} role="radio" aria-checked={prefs.palette === p} className="palette-swatch" data-swatch={p} onClick={() => setPrefs({ palette: p, paletteChosen: true })}>
-                <span className="swatch" aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                {t(PALETTE_KEY[p])}
-              </button>
-            ))}
-          </div>
+          <PaletteChoice />
         </div>
         <div className="setting">
           <div className="lines">

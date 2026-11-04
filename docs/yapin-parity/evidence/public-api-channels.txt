@@ -1,0 +1,1348 @@
+Browser tab: 2, Title: "Channels · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/channels".
+1 AXWebArea Channels · Bot API reference · Yapin’, URL: yapin.gg/developers/api/channels
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Channels, Value: 1
+				15 text Channels
+			16 text Channels and categories: list, create, edit, permission overrides.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-channels
+				25 text GET
+				26 text /channels
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#get-channels
+				28 text Every channel the bot can see, in all its servers
+				29 text Auth :  Bot token JS: 
+				30 text bot.channels()
+				31 text Python: 
+				32 text bot.channels()
+				33 heading PARAMETERS, Value: 4
+					34 text PARAMETERS
+				35 table
+					36 row
+						37 cell
+							38 text NAME
+						39 cell
+							40 text TYPE
+						41 cell
+							42 text DESCRIPTION
+					43 row
+						44 cell
+							45 text ?type
+							46 text optional
+						47 cell
+							48 text "text" | "voice"
+						49 cell
+							50 text Text or voice channel
+							51 container
+								52 text Example :  "text"
+				53 heading RESPONSE200, Value: 4
+					54 text RESPONSE
+					55 text 200
+				56 text object
+				57 table
+					58 row
+						59 cell
+							60 text FIELD
+						61 cell
+							62 text TYPE
+						63 cell
+							64 text DESCRIPTION
+					65 row
+						66 cell
+							67 text channels
+						68 cell
+							69 text Channel[]
+						70 cell
+							71 text Channels
+							72 button (collapsed) Fields of Channel, Secondary Actions: Expand
+								73 text Fields of Channel
+				74 button (collapsed) Example response, Secondary Actions: Expand
+					75 text Example response
+				76 heading ERRORS, Value: 4
+					77 text ERRORS
+				78 content list
+					79 container
+						80 AXListMarker • 
+						81 text 401 Missing or wrong token
+					82 container
+						83 AXListMarker • 
+						84 text 500 Something went wrong on our side
+					85 container
+						86 AXListMarker • 
+						87 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			88 container get-servers-id-channels
+				89 text GET
+				90 text /servers/{id}/channels
+				91 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#get-servers-id-channels
+				92 text Channels the bot can see in one server, in sidebar order
+				93 text Auth :  Bot token JS: 
+				94 text bot.channels(), bot.categories()
+				95 text Python: 
+				96 text bot.channels(), bot.categories()
+				97 heading PARAMETERS, Value: 4
+					98 text PARAMETERS
+				99 table
+					100 row
+						101 cell
+							102 text NAME
+						103 cell
+							104 text TYPE
+						105 cell
+							106 text DESCRIPTION
+					107 row
+						108 cell
+							109 text {id}
+						110 cell
+							111 text string (uuid)
+						112 cell
+							113 text Server id
+							114 container
+								115 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					116 row
+						117 cell
+							118 text ?type
+							119 text optional
+						120 cell
+							121 text "text" | "voice"
+						122 cell
+							123 text Text or voice channel
+							124 container
+								125 text Example :  "text"
+				126 heading RESPONSE200, Value: 4
+					127 text RESPONSE
+					128 text 200
+				129 text object
+				130 table
+					131 row
+						132 cell
+							133 text FIELD
+						134 cell
+							135 text TYPE
+						136 cell
+							137 text DESCRIPTION
+					138 row
+						139 cell
+							140 text channels
+						141 cell
+							142 text Channel[]
+						143 cell
+							144 text Channels
+							145 button (collapsed) Fields of Channel, Secondary Actions: Expand
+								146 text Fields of Channel
+					147 row
+						148 cell
+							149 text categories
+						150 cell
+							151 text Category[]
+						152 cell
+							153 text Categories
+							154 button (collapsed) Fields of Category, Secondary Actions: Expand
+								155 text Fields of Category
+				156 button (collapsed) Example response, Secondary Actions: Expand
+					157 text Example response
+				158 heading ERRORS, Value: 4
+					159 text ERRORS
+				160 content list
+					161 container
+						162 AXListMarker • 
+						163 text 401 Missing or wrong token
+					164 container
+						165 AXListMarker • 
+						166 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					167 container
+						168 AXListMarker • 
+						169 text 500 Something went wrong on our side
+					170 container
+						171 AXListMarker • 
+						172 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			173 container post-servers-id-channels
+				174 text POST
+				175 text /servers/{id}/channels
+				176 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#post-servers-id-channels
+				177 text Create a channel
+				178 text Auth :  Bot token  +  Manage Channels JS: 
+				179 text bot.createChannel()
+				180 text Python: 
+				181 text bot.create_channel()
+				182 heading PARAMETERS, Value: 4
+					183 text PARAMETERS
+				184 table
+					185 row
+						186 cell
+							187 text NAME
+						188 cell
+							189 text TYPE
+						190 cell
+							191 text DESCRIPTION
+					192 row
+						193 cell
+							194 text {id}
+						195 cell
+							196 text string (uuid)
+						197 cell
+							198 text Server id
+							199 container
+								200 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				201 heading REQUEST BODY, Value: 4
+					202 text REQUEST BODY
+				203 text object
+				204 table
+					205 row
+						206 cell
+							207 text FIELD
+						208 cell
+							209 text TYPE
+						210 cell
+							211 text DESCRIPTION
+					212 row
+						213 cell
+							214 text name
+						215 cell
+							216 text string
+						217 cell
+							218 text Name
+							219 container
+								220 text Example :  "trivia"
+					221 row
+						222 cell
+							223 text kind
+							224 text optional
+						225 cell
+							226 text "text" | "voice"
+						227 cell
+							228 text text (default) or voice
+							229 container
+								230 text Example :  "text"
+					231 row
+						232 cell
+							233 text category_id
+							234 text optional
+						235 cell
+							236 text string (uuid)
+						237 cell
+							238 text Put it in this category
+							239 container
+								240 text Example :  "e6b0c4d1-2a9f-4e5b-8c7d-3f1a0b2e9d76"
+				241 button (collapsed) Example request, Secondary Actions: Expand
+					242 text Example request
+				243 heading RESPONSE201, Value: 4
+					244 text RESPONSE
+					245 text 201
+				246 text object
+				247 table
+					248 row
+						249 cell
+							250 text FIELD
+						251 cell
+							252 text TYPE
+						253 cell
+							254 text DESCRIPTION
+					255 row
+						256 cell
+							257 text channel
+						258 cell
+							259 text object | null
+						260 cell
+							261 text The channel
+							262 button (collapsed) Fields, Secondary Actions: Expand
+								263 text Fields
+				264 button (collapsed) Example response, Secondary Actions: Expand
+					265 text Example response
+				266 heading ERRORS, Value: 4
+					267 text ERRORS
+				268 content list
+					269 container
+						270 AXListMarker • 
+						271 text 400 Bad input: the error says what’s wrong
+					272 container
+						273 AXListMarker • 
+						274 text 401 Missing or wrong token
+					275 container
+						276 AXListMarker • 
+						277 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					278 container
+						279 AXListMarker • 
+						280 text 404 No such thing, or the bot can’t see it
+					281 container
+						282 AXListMarker • 
+						283 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					284 container
+						285 AXListMarker • 
+						286 text 500 Something went wrong on our side
+					287 container
+						288 AXListMarker • 
+						289 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			290 container get-channels-id
+				291 text GET
+				292 text /channels/{id}
+				293 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#get-channels-id
+				294 text One channel (or a DM the bot is in)
+				295 text Auth :  Bot token JS: 
+				296 text bot.channel()
+				297 text Python: 
+				298 text bot.channel()
+				299 heading PARAMETERS, Value: 4
+					300 text PARAMETERS
+				301 table
+					302 row
+						303 cell
+							304 text NAME
+						305 cell
+							306 text TYPE
+						307 cell
+							308 text DESCRIPTION
+					309 row
+						310 cell
+							311 text {id}
+						312 cell
+							313 text string (uuid)
+						314 cell
+							315 text Channel id
+							316 container
+								317 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				318 heading RESPONSE200, Value: 4
+					319 text RESPONSE
+					320 text 200
+				321 text object
+				322 table
+					323 row
+						324 cell
+							325 text FIELD
+						326 cell
+							327 text TYPE
+						328 cell
+							329 text DESCRIPTION
+					330 row
+						331 cell
+							332 text channel
+						333 cell
+							334 text ChannelRow
+						335 cell
+							336 text One channel (or a DM the bot is in)
+							337 button (collapsed) Fields of ChannelRow, Secondary Actions: Expand
+								338 text Fields of ChannelRow
+				339 button (collapsed) Example response, Secondary Actions: Expand
+					340 text Example response
+				341 heading ERRORS, Value: 4
+					342 text ERRORS
+				343 content list
+					344 container
+						345 AXListMarker • 
+						346 text 401 Missing or wrong token
+					347 container
+						348 AXListMarker • 
+						349 text 404 No such thing, or the bot can’t see it
+					350 container
+						351 AXListMarker • 
+						352 text 500 Something went wrong on our side
+					353 container
+						354 AXListMarker • 
+						355 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			356 container patch-channels-id
+				357 text PATCH
+				358 text /channels/{id}
+				359 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#patch-channels-id
+				360 text Edit a channel
+				361 text Auth :  Bot token  +  Manage Channels JS: 
+				362 text bot.editChannel()
+				363 text Python: 
+				364 text bot.edit_channel()
+				365 heading PARAMETERS, Value: 4
+					366 text PARAMETERS
+				367 table
+					368 row
+						369 cell
+							370 text NAME
+						371 cell
+							372 text TYPE
+						373 cell
+							374 text DESCRIPTION
+					375 row
+						376 cell
+							377 text {id}
+						378 cell
+							379 text string (uuid)
+						380 cell
+							381 text Channel id
+							382 container
+								383 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				384 heading REQUEST BODY, Value: 4
+					385 text REQUEST BODY
+				386 text object
+				387 table
+					388 row
+						389 cell
+							390 text FIELD
+						391 cell
+							392 text TYPE
+						393 cell
+							394 text DESCRIPTION
+					395 row
+						396 cell
+							397 text name
+							398 text optional
+						399 cell
+							400 text string
+						401 cell
+							402 text New name
+							403 container
+								404 text Example :  "trivia"
+					405 row
+						406 cell
+							407 text category_id
+							408 text optional
+						409 cell
+							410 text string (uuid) | null
+						411 cell
+							412 text Category, null for none
+							413 container
+								414 text Example :  "e6b0c4d1-2a9f-4e5b-8c7d-3f1a0b2e9d76"
+					415 row
+						416 cell
+							417 text private
+							418 text optional
+						419 cell
+							420 text boolean
+						421 cell
+							422 text Only role_ids can see it
+							423 container
+								424 text Example :  false
+					425 row
+						426 cell
+							427 text role_ids
+							428 text optional
+						429 cell
+							430 text string (uuid)[]
+						431 cell
+							432 text Roles that can see it when private
+					433 row
+						434 cell
+							435 text read_only
+							436 text optional
+						437 cell
+							438 text boolean
+						439 cell
+							440 text Only post_role_ids can post
+							441 container
+								442 text Example :  false
+					443 row
+						444 cell
+							445 text post_role_ids
+							446 text optional
+						447 cell
+							448 text string (uuid)[]
+						449 cell
+							450 text Roles that can post when read only
+					451 row
+						452 cell
+							453 text slowmode
+							454 text optional
+						455 cell
+							456 text integer
+						457 cell
+							458 text Seconds between messages, 0 for off  ( 0 to 21600 )
+							459 container
+								460 text Example :  10
+				461 button (collapsed) Example request, Secondary Actions: Expand
+					462 text Example request
+				463 heading RESPONSE200, Value: 4
+					464 text RESPONSE
+					465 text 200
+				466 text object
+				467 table
+					468 row
+						469 cell
+							470 text FIELD
+						471 cell
+							472 text TYPE
+						473 cell
+							474 text DESCRIPTION
+					475 row
+						476 cell
+							477 text channel
+						478 cell
+							479 text object | null
+						480 cell
+							481 text The channel now
+							482 button (collapsed) Fields, Secondary Actions: Expand
+								483 text Fields
+				484 button (collapsed) Example response, Secondary Actions: Expand
+					485 text Example response
+				486 heading ERRORS, Value: 4
+					487 text ERRORS
+				488 content list
+					489 container
+						490 AXListMarker • 
+						491 text 400 Bad input: the error says what’s wrong
+					492 container
+						493 AXListMarker • 
+						494 text 401 Missing or wrong token
+					495 container
+						496 AXListMarker • 
+						497 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					498 container
+						499 AXListMarker • 
+						500 text 404 No such thing, or the bot can’t see it
+					501 container
+						502 AXListMarker • 
+						503 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					504 container
+						505 AXListMarker • 
+						506 text 500 Something went wrong on our side
+					507 container
+						508 AXListMarker • 
+						509 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			510 container delete-channels-id
+				511 text DELETE
+				512 text /channels/{id}
+				513 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#delete-channels-id
+				514 text Delete a channel
+				515 text Auth :  Bot token  +  Manage Channels JS: 
+				516 text bot.deleteChannel()
+				517 text Python: 
+				518 text bot.delete_channel()
+				519 heading PARAMETERS, Value: 4
+					520 text PARAMETERS
+				521 table
+					522 row
+						523 cell
+							524 text NAME
+						525 cell
+							526 text TYPE
+						527 cell
+							528 text DESCRIPTION
+					529 row
+						530 cell
+							531 text {id}
+						532 cell
+							533 text string (uuid)
+						534 cell
+							535 text Channel id
+							536 container
+								537 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				538 heading RESPONSE200, Value: 4
+					539 text RESPONSE
+					540 text 200
+				541 text Ok
+				542 table
+					543 row
+						544 cell
+							545 text FIELD
+						546 cell
+							547 text TYPE
+						548 cell
+							549 text DESCRIPTION
+					550 row
+						551 cell
+							552 text ok
+						553 cell
+							554 text true
+						555 cell
+							556 text Done
+							557 container
+								558 text Example :  true
+				559 button (collapsed) Example response, Secondary Actions: Expand
+					560 text Example response
+				561 heading ERRORS, Value: 4
+					562 text ERRORS
+				563 content list
+					564 container
+						565 AXListMarker • 
+						566 text 401 Missing or wrong token
+					567 container
+						568 AXListMarker • 
+						569 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					570 container
+						571 AXListMarker • 
+						572 text 404 No such thing, or the bot can’t see it
+					573 container
+						574 AXListMarker • 
+						575 text 500 Something went wrong on our side
+					576 container
+						577 AXListMarker • 
+						578 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			579 container get-channels-id-permissions
+				580 text GET
+				581 text /channels/{id}/permissions
+				582 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#get-channels-id-permissions
+				583 text Permission overrides on a channel
+				584 text Auth :  Bot token In testing : 
+				585 text bot_roles
+				586 text JS: 
+				587 text bot.channelPermissions()
+				588 text Python: 
+				589 text bot.channel_permissions()
+				590 heading PARAMETERS, Value: 4
+					591 text PARAMETERS
+				592 table
+					593 row
+						594 cell
+							595 text NAME
+						596 cell
+							597 text TYPE
+						598 cell
+							599 text DESCRIPTION
+					600 row
+						601 cell
+							602 text {id}
+						603 cell
+							604 text string (uuid)
+						605 cell
+							606 text Channel id
+							607 container
+								608 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				609 heading RESPONSE200, Value: 4
+					610 text RESPONSE
+					611 text 200
+				612 text object
+				613 table
+					614 row
+						615 cell
+							616 text FIELD
+						617 cell
+							618 text TYPE
+						619 cell
+							620 text DESCRIPTION
+					621 row
+						622 cell
+							623 text overrides
+						624 cell
+							625 text Override[]
+						626 cell
+							627 text Overrides
+							628 button (collapsed) Fields of Override, Secondary Actions: Expand
+								629 text Fields of Override
+				630 button (collapsed) Example response, Secondary Actions: Expand
+					631 text Example response
+				632 heading ERRORS, Value: 4
+					633 text ERRORS
+				634 content list
+					635 container
+						636 AXListMarker • 
+						637 text 401 Missing or wrong token
+					638 container
+						639 AXListMarker • 
+						640 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					641 container
+						642 AXListMarker • 
+						643 text 404 No such thing, or the bot can’t see it
+					644 container
+						645 AXListMarker • 
+						646 text 500 Something went wrong on our side
+					647 container
+						648 AXListMarker • 
+						649 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			650 container put-channels-id-permissions-role
+				651 text PUT
+				652 text /channels/{id}/permissions/{role}
+				653 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#put-channels-id-permissions-role
+				654 text Set a role’s override on a channel
+				655 text Auth :  Bot token  +  Manage Roles or Manage Channels In testing : 
+				656 text bot_roles
+				657 text Limit :  30 role and permission changes a minute JS: 
+				658 text bot.setChannelPermissions()
+				659 text Python: 
+				660 text bot.set_channel_permissions()
+				661 heading PARAMETERS, Value: 4
+					662 text PARAMETERS
+				663 table
+					664 row
+						665 cell
+							666 text NAME
+						667 cell
+							668 text TYPE
+						669 cell
+							670 text DESCRIPTION
+					671 row
+						672 cell
+							673 text {id}
+						674 cell
+							675 text string (uuid)
+						676 cell
+							677 text Channel id
+							678 container
+								679 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					680 row
+						681 cell
+							682 text {role}
+						683 cell
+							684 text string
+						685 cell
+							686 text A role id, or "everyone"
+							687 container
+								688 text Example :  "everyone"
+				689 heading REQUEST BODY, Value: 4
+					690 text REQUEST BODY
+				691 text object
+				692 table
+					693 row
+						694 cell
+							695 text FIELD
+						696 cell
+							697 text TYPE
+						698 cell
+							699 text DESCRIPTION
+					700 row
+						701 cell
+							702 text allow
+							703 text optional
+						704 cell
+							705 text "view_channel" | "send_messages" | "add_reactions" | "attach_files" | "embed_links" | "mention_everyone" | "manage_messages" | "connect" | "speak" | "send_voice_messages" | "use_headings" | "create_threads" | "send_in_threads" | "manage_threads"[]
+						706 cell
+							707 text Turn on
+					708 row
+						709 cell
+							710 text deny
+							711 text optional
+						712 cell
+							713 text "view_channel" | "send_messages" | "add_reactions" | "attach_files" | "embed_links" | "mention_everyone" | "manage_messages" | "connect" | "speak" | "send_voice_messages" | "use_headings" | "create_threads" | "send_in_threads" | "manage_threads"[]
+						714 cell
+							715 text Turn off
+				716 button (collapsed) Example request, Secondary Actions: Expand
+					717 text Example request
+				718 heading RESPONSE200, Value: 4
+					719 text RESPONSE
+					720 text 200
+				721 text object | Ok
+				722 button (collapsed) Shape 1, Secondary Actions: Expand
+					723 text Shape 1
+				724 button (collapsed) Ok, Secondary Actions: Expand
+					725 text Ok
+				726 button (collapsed) Example response, Secondary Actions: Expand
+					727 text Example response
+				728 heading ERRORS, Value: 4
+					729 text ERRORS
+				730 content list
+					731 container
+						732 AXListMarker • 
+						733 text 400 Bad input: the error says what’s wrong
+					734 container
+						735 AXListMarker • 
+						736 text 401 Missing or wrong token
+					737 container
+						738 AXListMarker • 
+						739 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					740 container
+						741 AXListMarker • 
+						742 text 404 No such thing, or the bot can’t see it
+					743 container
+						744 AXListMarker • 
+						745 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					746 container
+						747 AXListMarker • 
+						748 text 500 Something went wrong on our side
+					749 container
+						750 AXListMarker • 
+						751 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			752 container delete-channels-id-permissions-role
+				753 text DELETE
+				754 text /channels/{id}/permissions/{role}
+				755 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#delete-channels-id-permissions-role
+				756 text Remove a role’s override on a channel
+				757 text Auth :  Bot token  +  Manage Roles or Manage Channels In testing : 
+				758 text bot_roles
+				759 text Limit :  30 role and permission changes a minute JS: 
+				760 text bot.clearChannelPermissions()
+				761 text Python: 
+				762 text bot.clear_channel_permissions()
+				763 heading PARAMETERS, Value: 4
+					764 text PARAMETERS
+				765 table
+					766 row
+						767 cell
+							768 text NAME
+						769 cell
+							770 text TYPE
+						771 cell
+							772 text DESCRIPTION
+					773 row
+						774 cell
+							775 text {id}
+						776 cell
+							777 text string (uuid)
+						778 cell
+							779 text Channel id
+							780 container
+								781 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					782 row
+						783 cell
+							784 text {role}
+						785 cell
+							786 text string
+						787 cell
+							788 text A role id, or "everyone"
+							789 container
+								790 text Example :  "everyone"
+				791 heading RESPONSE200, Value: 4
+					792 text RESPONSE
+					793 text 200
+				794 text object | Ok
+				795 button (collapsed) Shape 1, Secondary Actions: Expand
+					796 text Shape 1
+				797 button (collapsed) Ok, Secondary Actions: Expand
+					798 text Ok
+				799 button (collapsed) Example response, Secondary Actions: Expand
+					800 text Example response
+				801 heading ERRORS, Value: 4
+					802 text ERRORS
+				803 content list
+					804 container
+						805 AXListMarker • 
+						806 text 400 Bad input: the error says what’s wrong
+					807 container
+						808 AXListMarker • 
+						809 text 401 Missing or wrong token
+					810 container
+						811 AXListMarker • 
+						812 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					813 container
+						814 AXListMarker • 
+						815 text 404 No such thing, or the bot can’t see it
+					816 container
+						817 AXListMarker • 
+						818 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					819 container
+						820 AXListMarker • 
+						821 text 500 Something went wrong on our side
+					822 container
+						823 AXListMarker • 
+						824 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			825 container post-servers-id-categories
+				826 text POST
+				827 text /servers/{id}/categories
+				828 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#post-servers-id-categories
+				829 text Create a category
+				830 text Auth :  Bot token  +  Manage Channels JS: 
+				831 text bot.createCategory()
+				832 text Python: 
+				833 text bot.create_category()
+				834 heading PARAMETERS, Value: 4
+					835 text PARAMETERS
+				836 table
+					837 row
+						838 cell
+							839 text NAME
+						840 cell
+							841 text TYPE
+						842 cell
+							843 text DESCRIPTION
+					844 row
+						845 cell
+							846 text {id}
+						847 cell
+							848 text string (uuid)
+						849 cell
+							850 text Server id
+							851 container
+								852 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				853 heading REQUEST BODY, Value: 4
+					854 text REQUEST BODY
+				855 text object
+				856 table
+					857 row
+						858 cell
+							859 text FIELD
+						860 cell
+							861 text TYPE
+						862 cell
+							863 text DESCRIPTION
+					864 row
+						865 cell
+							866 text name
+						867 cell
+							868 text string
+						869 cell
+							870 text Name
+							871 container
+								872 text Example :  "Games"
+				873 button (collapsed) Example request, Secondary Actions: Expand
+					874 text Example request
+				875 heading RESPONSE201, Value: 4
+					876 text RESPONSE
+					877 text 201
+				878 text object
+				879 table
+					880 row
+						881 cell
+							882 text FIELD
+						883 cell
+							884 text TYPE
+						885 cell
+							886 text DESCRIPTION
+					887 row
+						888 cell
+							889 text category
+						890 cell
+							891 text object
+						892 cell
+							893 text The category
+							894 button (collapsed) Fields, Secondary Actions: Expand
+								895 text Fields
+				896 button (collapsed) Example response, Secondary Actions: Expand
+					897 text Example response
+				898 heading ERRORS, Value: 4
+					899 text ERRORS
+				900 content list
+					901 container
+						902 AXListMarker • 
+						903 text 400 Bad input: the error says what’s wrong
+					904 container
+						905 AXListMarker • 
+						906 text 401 Missing or wrong token
+					907 container
+						908 AXListMarker • 
+						909 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					910 container
+						911 AXListMarker • 
+						912 text 404 No such thing, or the bot can’t see it
+					913 container
+						914 AXListMarker • 
+						915 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					916 container
+						917 AXListMarker • 
+						918 text 500 Something went wrong on our side
+					919 container
+						920 AXListMarker • 
+						921 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			922 container patch-servers-id-categories-cid
+				923 text PATCH
+				924 text /servers/{id}/categories/{cid}
+				925 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#patch-servers-id-categories-cid
+				926 text Rename a category
+				927 text Auth :  Bot token  +  Manage Channels
+				928 heading PARAMETERS, Value: 4
+					929 text PARAMETERS
+				930 table
+					931 row
+						932 cell
+							933 text NAME
+						934 cell
+							935 text TYPE
+						936 cell
+							937 text DESCRIPTION
+					938 row
+						939 cell
+							940 text {id}
+						941 cell
+							942 text string (uuid)
+						943 cell
+							944 text Server id
+							945 container
+								946 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					947 row
+						948 cell
+							949 text {cid}
+						950 cell
+							951 text string (uuid)
+						952 cell
+							953 text Category id
+							954 container
+								955 text Example :  "e6b0c4d1-2a9f-4e5b-8c7d-3f1a0b2e9d76"
+				956 heading REQUEST BODY, Value: 4
+					957 text REQUEST BODY
+				958 text object
+				959 table
+					960 row
+						961 cell
+							962 text FIELD
+						963 cell
+							964 text TYPE
+						965 cell
+							966 text DESCRIPTION
+					967 row
+						968 cell
+							969 text name
+						970 cell
+							971 text string
+						972 cell
+							973 text New name
+							974 container
+								975 text Example :  "Games"
+				976 button (collapsed) Example request, Secondary Actions: Expand
+					977 text Example request
+				978 heading RESPONSE200, Value: 4
+					979 text RESPONSE
+					980 text 200
+				981 text Ok
+				982 table
+					983 row
+						984 cell
+							985 text FIELD
+						986 cell
+							987 text TYPE
+						988 cell
+							989 text DESCRIPTION
+					990 row
+						991 cell
+							992 text ok
+						993 cell
+							994 text true
+						995 cell
+							996 text Done
+							997 container
+								998 text Example :  true
+				999 button (collapsed) Example response, Secondary Actions: Expand
+					1000 text Example response
+				1001 heading ERRORS, Value: 4
+					1002 text ERRORS
+				1003 content list
+					1004 container
+						1005 AXListMarker • 
+						1006 text 400 Bad input: the error says what’s wrong
+					1007 container
+						1008 AXListMarker • 
+						1009 text 401 Missing or wrong token
+					1010 container
+						1011 AXListMarker • 
+						1012 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					1013 container
+						1014 AXListMarker • 
+						1015 text 404 No such thing, or the bot can’t see it
+					1016 container
+						1017 AXListMarker • 
+						1018 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					1019 container
+						1020 AXListMarker • 
+						1021 text 500 Something went wrong on our side
+					1022 container
+						1023 AXListMarker • 
+						1024 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			1025 container delete-servers-id-categories-cid
+				1026 text DELETE
+				1027 text /servers/{id}/categories/{cid}
+				1028 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#delete-servers-id-categories-cid
+				1029 text Delete a category (its channels stay)
+				1030 text Auth :  Bot token  +  Manage Channels JS: 
+				1031 text bot.deleteCategory()
+				1032 text Python: 
+				1033 text bot.delete_category()
+				1034 heading PARAMETERS, Value: 4
+					1035 text PARAMETERS
+				1036 table
+					1037 row
+						1038 cell
+							1039 text NAME
+						1040 cell
+							1041 text TYPE
+						1042 cell
+							1043 text DESCRIPTION
+					1044 row
+						1045 cell
+							1046 text {id}
+						1047 cell
+							1048 text string (uuid)
+						1049 cell
+							1050 text Server id
+							1051 container
+								1052 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					1053 row
+						1054 cell
+							1055 text {cid}
+						1056 cell
+							1057 text string (uuid)
+						1058 cell
+							1059 text Category id
+							1060 container
+								1061 text Example :  "e6b0c4d1-2a9f-4e5b-8c7d-3f1a0b2e9d76"
+				1062 heading RESPONSE200, Value: 4
+					1063 text RESPONSE
+					1064 text 200
+				1065 text Ok
+				1066 table
+					1067 row
+						1068 cell
+							1069 text FIELD
+						1070 cell
+							1071 text TYPE
+						1072 cell
+							1073 text DESCRIPTION
+					1074 row
+						1075 cell
+							1076 text ok
+						1077 cell
+							1078 text true
+						1079 cell
+							1080 text Done
+							1081 container
+								1082 text Example :  true
+				1083 button (collapsed) Example response, Secondary Actions: Expand
+					1084 text Example response
+				1085 heading ERRORS, Value: 4
+					1086 text ERRORS
+				1087 content list
+					1088 container
+						1089 AXListMarker • 
+						1090 text 401 Missing or wrong token
+					1091 container
+						1092 AXListMarker • 
+						1093 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					1094 container
+						1095 AXListMarker • 
+						1096 text 500 Something went wrong on our side
+					1097 container
+						1098 AXListMarker • 
+						1099 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			1100 container put-servers-id-categories-cid-permissions-role
+				1101 text PUT
+				1102 text /servers/{id}/categories/{cid}/permissions/{role}
+				1103 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#put-servers-id-categories-cid-permissions-role
+				1104 text Set a role’s override on a category
+				1105 text Auth :  Bot token  +  Manage Roles or Manage Channels In testing : 
+				1106 text bot_roles
+				1107 text Limit :  30 role and permission changes a minute JS: 
+				1108 text bot.setCategoryPermissions()
+				1109 text Python: 
+				1110 text bot.set_category_permissions()
+				1111 heading PARAMETERS, Value: 4
+					1112 text PARAMETERS
+				1113 table
+					1114 row
+						1115 cell
+							1116 text NAME
+						1117 cell
+							1118 text TYPE
+						1119 cell
+							1120 text DESCRIPTION
+					1121 row
+						1122 cell
+							1123 text {id}
+						1124 cell
+							1125 text string (uuid)
+						1126 cell
+							1127 text Server id
+							1128 container
+								1129 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					1130 row
+						1131 cell
+							1132 text {cid}
+						1133 cell
+							1134 text string (uuid)
+						1135 cell
+							1136 text Category id
+							1137 container
+								1138 text Example :  "e6b0c4d1-2a9f-4e5b-8c7d-3f1a0b2e9d76"
+					1139 row
+						1140 cell
+							1141 text {role}
+						1142 cell
+							1143 text string
+						1144 cell
+							1145 text A role id, or "everyone"
+							1146 container
+								1147 text Example :  "everyone"
+				1148 heading REQUEST BODY, Value: 4
+					1149 text REQUEST BODY
+				1150 text object
+				1151 table
+					1152 row
+						1153 cell
+							1154 text FIELD
+						1155 cell
+							1156 text TYPE
+						1157 cell
+							1158 text DESCRIPTION
+					1159 row
+						1160 cell
+							1161 text allow
+							1162 text optional
+						1163 cell
+							1164 text "view_channel" | "send_messages" | "add_reactions" | "attach_files" | "embed_links" | "mention_everyone" | "manage_messages" | "connect" | "speak" | "send_voice_messages" | "use_headings" | "create_threads" | "send_in_threads" | "manage_threads"[]
+						1165 cell
+							1166 text Turn on
+					1167 row
+						1168 cell
+							1169 text deny
+							1170 text optional
+						1171 cell
+							1172 text "view_channel" | "send_messages" | "add_reactions" | "attach_files" | "embed_links" | "mention_everyone" | "manage_messages" | "connect" | "speak" | "send_voice_messages" | "use_headings" | "create_threads" | "send_in_threads" | "manage_threads"[]
+						1173 cell
+							1174 text Turn off
+				1175 button (collapsed) Example request, Secondary Actions: Expand
+					1176 text Example request
+				1177 heading RESPONSE200, Value: 4
+					1178 text RESPONSE
+					1179 text 200
+				1180 text object | Ok
+				1181 button (collapsed) Shape 1, Secondary Actions: Expand
+					1182 text Shape 1
+				1183 button (collapsed) Ok, Secondary Actions: Expand
+					1184 text Ok
+				1185 button (collapsed) Example response, Secondary Actions: Expand
+					1186 text Example response
+				1187 heading ERRORS, Value: 4
+					1188 text ERRORS
+				1189 content list
+					1190 container
+						1191 AXListMarker • 
+						1192 text 400 Bad input: the error says what’s wrong
+					1193 container
+						1194 AXListMarker • 
+						1195 text 401 Missing or wrong token
+					1196 container
+						1197 AXListMarker • 
+						1198 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					1199 container
+						1200 AXListMarker • 
+						1201 text 404 No such thing, or the bot can’t see it
+					1202 container
+						1203 AXListMarker • 
+						1204 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					1205 container
+						1206 AXListMarker • 
+						1207 text 500 Something went wrong on our side
+					1208 container
+						1209 AXListMarker • 
+						1210 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			1211 container delete-servers-id-categories-cid-permissions-role
+				1212 text DELETE
+				1213 text /servers/{id}/categories/{cid}/permissions/{role}
+				1214 link Description: Link to this endpoint, Value: yapin.gg/developers/api/channels#delete-servers-id-categories-cid-permissions-role
+				1215 text Remove a role’s override on a category
+				1216 text Auth :  Bot token  +  Manage Roles or Manage Channels In testing : 
+				1217 text bot_roles
+				1218 text Limit :  30 role and permission changes a minute JS: 
+				1219 text bot.clearCategoryPermissions()
+				1220 text Python: 
+				1221 text bot.clear_category_permissions()
+				1222 heading PARAMETERS, Value: 4
+					1223 text PARAMETERS
+				1224 table
+					1225 row
+						1226 cell
+							1227 text NAME
+						1228 cell
+							1229 text TYPE
+						1230 cell
+							1231 text DESCRIPTION
+					1232 row
+						1233 cell
+							1234 text {id}
+						1235 cell
+							1236 text string (uuid)
+						1237 cell
+							1238 text Server id
+							1239 container
+								1240 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					1241 row
+						1242 cell
+							1243 text {cid}
+						1244 cell
+							1245 text string (uuid)
+						1246 cell
+							1247 text Category id
+							1248 container
+								1249 text Example :  "e6b0c4d1-2a9f-4e5b-8c7d-3f1a0b2e9d76"
+					1250 row
+						1251 cell
+							1252 text {role}
+						1253 cell
+							1254 text string
+						1255 cell
+							1256 text A role id, or "everyone"
+							1257 container
+								1258 text Example :  "everyone"
+				1259 heading RESPONSE200, Value: 4
+					1260 text RESPONSE
+					1261 text 200
+				1262 text object | Ok
+				1263 button (collapsed) Shape 1, Secondary Actions: Expand
+					1264 text Shape 1
+				1265 button (collapsed) Ok, Secondary Actions: Expand
+					1266 text Ok
+				1267 button (collapsed) Example response, Secondary Actions: Expand
+					1268 text Example response
+				1269 heading ERRORS, Value: 4
+					1270 text ERRORS
+				1271 content list
+					1272 container
+						1273 AXListMarker • 
+						1274 text 400 Bad input: the error says what’s wrong
+					1275 container
+						1276 AXListMarker • 
+						1277 text 401 Missing or wrong token
+					1278 container
+						1279 AXListMarker • 
+						1280 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					1281 container
+						1282 AXListMarker • 
+						1283 text 404 No such thing, or the bot can’t see it
+					1284 container
+						1285 AXListMarker • 
+						1286 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					1287 container
+						1288 AXListMarker • 
+						1289 text 500 Something went wrong on our side
+					1290 container
+						1291 AXListMarker • 
+						1292 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			1293 link Description: ← Back to Yapin’, Value: yapin.gg/
+			1294 text  · 
+			1295 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		1296 container On this page
+			1297 text ON THIS PAGE
+			1298 content list
+				1299 link Description: Overview, Value: yapin.gg/developers/api/channels#top
+				1300 link Description: GET /channels, Value: yapin.gg/developers/api/channels#get-channels
+				1301 link Description: GET /servers/{id}/channels, Value: yapin.gg/developers/api/channels#get-servers-id-channels
+				1302 link Description: POST /servers/{id}/channels, Value: yapin.gg/developers/api/channels#post-servers-id-channels
+				1303 link Description: GET /channels/{id}, Value: yapin.gg/developers/api/channels#get-channels-id
+				1304 link Description: PATCH /channels/{id}, Value: yapin.gg/developers/api/channels#patch-channels-id
+				1305 link Description: DELETE /channels/{id}, Value: yapin.gg/developers/api/channels#delete-channels-id
+				1306 link Description: GET /channels/{id}/permissions, Value: yapin.gg/developers/api/channels#get-channels-id-permissions
+				1307 link Description: PUT /channels/{id}/permissions/{role}, Value: yapin.gg/developers/api/channels#put-channels-id-permissions-role
+				1308 link Description: DELETE /channels/{id}/permissions/{role}, Value: yapin.gg/developers/api/channels#delete-channels-id-permissions-role
+				1309 link Description: POST /servers/{id}/categories, Value: yapin.gg/developers/api/channels#post-servers-id-categories
+				1310 link Description: PATCH /servers/{id}/categories/{cid}, Value: yapin.gg/developers/api/channels#patch-servers-id-categories-cid
+				1311 link Description: DELETE /servers/{id}/categories/{cid}, Value: yapin.gg/developers/api/channels#delete-servers-id-categories-cid
+				1312 link Description: PUT /servers/{id}/categories/{cid}/permissions/{role}, Value: yapin.gg/developers/api/channels#put-servers-id-categories-cid-permissions-role
+				1313 link Description: DELETE /servers/{id}/categories/{cid}/permissions/{role}, Value: yapin.gg/developers/api/channels#delete-servers-id-categories-cid-permissions-role
+		1314 text Yapin’
+		1315 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		1316 heading PRODUCT, Value: 4
+			1317 text PRODUCT
+		1318 content list
+			1319 link Description: Download, Value: yapin.gg/download
+			1320 link Description: Developers, Value: yapin.gg/developers
+			1321 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			1322 link Description: Creator Program, Value: yapin.gg/creators
+			1323 link Description: FanKit, Value: yapin.gg/fankit
+			1324 link Description: Roadmap, Value: yapin.gg/roadmap
+			1325 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			1326 link Description: Bugs, Value: yapin.gg/bugs
+			1327 link Description: Status, Value: yapin.gg/status
+		1328 heading COMMUNITY, Value: 4
+			1329 text COMMUNITY
+		1330 content list
+			1331 link Description: Guidelines, Value: yapin.gg/guidelines
+			1332 link Description: Tutorials, Value: yapin.gg/tutorials
+			1333 link Description: Bots, Value: yapin.gg/bots
+			1334 link Description: Partners, Value: yapin.gg/partners
+		1335 heading LEGAL, Value: 4
+			1336 text LEGAL
+		1337 content list
+			1338 link Description: Terms, Value: yapin.gg/terms
+			1339 link Description: Privacy, Value: yapin.gg/privacy
+			1340 link Description: Copyright, Value: yapin.gg/copyright
+			1341 link Description: Security, Value: yapin.gg/security
+			1342 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			1343 link Description: Contact, Value: mailto:hello@yapin.gg
+		1344 text © 2026 Yapper Media LLC. Free to use.
+		1345 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Channels · Bot API reference · Yapin’, URL: yapin.gg/developers/api/channels

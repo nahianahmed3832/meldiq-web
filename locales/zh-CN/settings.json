@@ -860,5 +860,11 @@
     "accountDescription": "电子邮件、账户状态、数据导出和账户删除。",
     "notificationsDescription": "桌面提醒、声音、暂停通知及会话偏好的快捷入口。",
     "appearanceDescription": "主题、颜色、消息布局、媒体预览和聊天手势。"
+  },
+  "foundation": {
+    "profileSections": "个人资料版块",
+    "profileSectionsDescription": "选择显示哪些版块及其顺序。你的受众设置仍然适用。",
+    "resetSections": "重置版块更改",
+    "saveSections": "保存版块"
   }
 }

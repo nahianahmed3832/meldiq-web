@@ -1,0 +1,116 @@
+Browser tab: 2, Title: "Copyright and DMCA · Yapin’", URL: "https://www.yapin.gg/copyright".
+1 AXWebArea Copyright and DMCA · Yapin’, URL: yapin.gg/copyright
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text LEGAL
+			14 heading Copyright and DMCA, Value: 1
+				15 text Copyright and DMCA
+			16 text LAST UPDATED  2 NOVEMBER 2026 Found your work on Yapin’ without your permission? Here’s how to get it taken down, and what to do if your own post was removed by mistake.
+		17 container
+			18 heading Our DMCA agent, Value: 2
+				19 text Our DMCA agent
+			20 text Copyright notices go to our designated agent, registered with the US Copyright Office (registration number DMCA-1084137 ): DMCA Agent, Yapper Media, LLC
+			21 text 300 Delaware Ave, Ste 210 #801, Wilmington, DE 19801, United States
+			22 text Phone:  717-470-8008
+			23 text Email: 
+			24 link Description: support@yapin.gg, Value: mailto:support@yapin.gg
+			25 text Email is fastest. Put “Copyright notice” in the subject. The phone number is for the agent’s records; we can’t take notices by phone. Other reports (abuse, illegal content, privacy) go through the in-app report button or
+			26 link Description: the contacts in our Terms, Value: yapin.gg/terms
+			27 text , not this address.
+			28 heading Sending a takedown notice, Value: 2
+				29 text Sending a takedown notice
+			30 text Your notice needs all of this, or we may not be able to act on it:
+			31 content list
+				32 container
+					33 AXListMarker 1. 
+					34 text Your physical or electronic signature (typing your full name works).
+				35 container
+					36 AXListMarker 2. 
+					37 text The work you own: what it is, and a link to it if it’s online.
+				38 container
+					39 AXListMarker 3. 
+					40 text Where it is on Yapin’: a message link (right-click the message, Copy message link), or the server, channel and username. Don’t attach the file itself.
+				41 container
+					42 AXListMarker 4. 
+					43 text Your name, postal address, phone number and email.
+				44 container
+					45 AXListMarker 5. 
+					46 text A statement that you believe in good faith that the use isn’t allowed by the copyright owner, its agent or the law.
+				47 container
+					48 AXListMarker 6. 
+					49 text A statement that the information in your notice is accurate and, under penalty of perjury, that you own the copyright or are allowed to act for the owner.
+			50 text We remove or disable the content, tell the person who posted it, and send them a copy of your notice (we may hide your email and phone number). Knowingly false notices can make you liable for damages, so think about fair use first.
+			51 heading If your post was removed, Value: 2
+				52 text If your post was removed
+			53 text If you think it was a mistake, or you had the right to post it, you can send a counter-notice to the same agent with:
+			54 content list
+				55 container
+					56 AXListMarker 1. 
+					57 text Your physical or electronic signature.
+				58 container
+					59 AXListMarker 2. 
+					60 text What was removed and where it was before.
+				61 container
+					62 AXListMarker 3. 
+					63 text A statement, under penalty of perjury, that you believe in good faith it was removed by mistake or misidentification.
+				64 container
+					65 AXListMarker 4. 
+					66 text Your name, address and phone number.
+				67 container
+					68 AXListMarker 5. 
+					69 text A statement that you consent to the jurisdiction of the federal district court for your address (or, outside the US, any judicial district where we can be found), and that you’ll accept service from the person who sent the original notice.
+			70 text We forward it to the person who sent the notice. Unless they tell us within 10 to 14 business days that they’ve gone to court, we may put your content back.
+			71 heading Repeat infringers, Value: 2
+				72 text Repeat infringers
+			73 text Each valid notice counts as a strike on the account that posted the content, and for server owners on the server too. Three strikes within 12 months normally means the account or server is closed. Strikes go away when a counter-notice succeeds or the notice is withdrawn. Full rules are in section 11.2 of the
+			74 link Description: Terms of Service, Value: yapin.gg/terms
+			75 text .
+			76 heading Outside the US, Value: 2
+				77 text Outside the US
+			78 text You don’t need to use the DMCA. Anyone, anywhere, can report content that infringes their rights with the same details, and we handle it under our Terms and the law that applies (for example the EU Digital Services Act).
+			79 link Description: ← Back to Yapin’, Value: yapin.gg/
+			80 text  · 
+			81 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		82 text Yapin’
+		83 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		84 heading PRODUCT, Value: 4
+			85 text PRODUCT
+		86 content list
+			87 link Description: Download, Value: yapin.gg/download
+			88 link Description: Developers, Value: yapin.gg/developers
+			89 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			90 link Description: Creator Program, Value: yapin.gg/creators
+			91 link Description: FanKit, Value: yapin.gg/fankit
+			92 link Description: Roadmap, Value: yapin.gg/roadmap
+			93 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			94 link Description: Bugs, Value: yapin.gg/bugs
+			95 link Description: Status, Value: yapin.gg/status
+		96 heading COMMUNITY, Value: 4
+			97 text COMMUNITY
+		98 content list
+			99 link Description: Guidelines, Value: yapin.gg/guidelines
+			100 link Description: Tutorials, Value: yapin.gg/tutorials
+			101 link Description: Bots, Value: yapin.gg/bots
+			102 link Description: Partners, Value: yapin.gg/partners
+		103 heading LEGAL, Value: 4
+			104 text LEGAL
+		105 content list
+			106 link Description: Terms, Value: yapin.gg/terms
+			107 link Description: Privacy, Value: yapin.gg/privacy
+			108 link Description: Copyright, Value: yapin.gg/copyright
+			109 link Description: Security, Value: yapin.gg/security
+			110 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			111 link Description: Contact, Value: mailto:hello@yapin.gg
+		112 text © 2026 Yapper Media LLC. Free to use.
+		113 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Copyright and DMCA · Yapin’, URL: yapin.gg/copyright

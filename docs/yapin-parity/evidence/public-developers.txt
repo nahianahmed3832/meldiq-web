@@ -1,0 +1,3485 @@
+Browser tab: 2, Title: "Developers: make a bot · Yapin’", URL: "https://www.yapin.gg/developers".
+1 AXWebArea Developers: make a bot · Yapin’, URL: yapin.gg/developers
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Build bots on Yapin’, Value: 1
+				15 text Build bots on Yapin’
+			16 text A bot is an account your code drives. It runs on your own computer (nothing to host) and talks to Yapin’ over plain HTTPS. Free. Verified bots can also run on Yapin’s own hosting.
+			17 link Description: API reference, Value: yapin.gg/developers/api
+			18 link Description: OpenAPI 3.1 /openapi.json, Value: yapin.gg/openapi.json
+			19 link Description: Bots people made, Value: yapin.gg/bots
+			20 link Description: Roadmap, Value: yapin.gg/roadmap
+			21 link Description: Devs server, Value: yapin.gg/invite/developers
+		22 container
+			23 heading Quick start, 5 minutes, Value: 2, ID: quick-start
+				24 text Quick start, 5 minutes
+			25 text Rule one:  bots use bot accounts. Automating your own account (a selfbot) is against the 
+			26 link Description: Terms, Value: yapin.gg/terms
+			27 text .
+			28 content list
+				29 container
+					30 text 1 1 Make the bot.  In Yapin’: Settings → Developer → type a name → Create. Copy the token (Token tab), it is shown once. Never post it anywhere.
+				31 container
+					32 text 2 2 Add it to a server you manage.  Same screen, or Server settings → Bots → Your bots → Add. Your own bots work in your own servers right away.
+				33 container
+					34 text 3 3 Run it.  Make a folder, save 
+					35 link Description: yapper.js, Value: yapin.gg/sdk/yapper.js
+					36 text , 
+					37 link Description: starter.js, Value: yapin.gg/sdk/starter.js
+					38 text  and 
+					39 link Description: package.json, Value: yapin.gg/sdk/package.json
+					40 text  into it, paste the token into starter.js, then in a terminal in that folder: TERMINAL
+					41 button Copy
+					42 text node starter.js
+					43 text You need 
+					44 link Description: Node 18 or newer, Value: nodejs.org/
+					45 text . Python instead? Save 
+					46 link Description: yapper.py, Value: yapin.gg/sdk/yapper.py
+					47 text  and 
+					48 link Description: starter.py, Value: yapin.gg/sdk/starter.py
+					49 text , nothing to install:  python starter.py . Want no library at all? 
+					50 link Description: starter_single.py, Value: yapin.gg/sdk/starter_single.py
+					51 text  is the whole bot in one file.
+				52 container
+					53 text 4 4 In the server, type  /ping . The bot answers  pong . The terminal shows what it receives.
+			54 text Give it a picture in Settings → Developer → your bot → Profile, or from code with 
+			55 text bot.setAvatar('./avatar.png')
+			56 text . Stuck? Settings → Developer → your bot → Get started has a  Send test event  button: if your bot prints the test, it is wired up. The Yapin’ Developers server is at 
+			57 link yapin.gg/invite/developers
+			58 text .
+			59 heading What you can build, Value: 2, ID: build
+				60 text What you can build
+			61 link Description: Buttons Up to 25 clickable buttons per message, ephemeral replies, live message updates. See Buttons, Value: yapin.gg/developers
+			62 link Value: yapin.gg/developers, Description: Embed cards Rich cards with titles, fields, pictures and footers for scores, alerts and feeds. See Embeds
+			63 link Description: Voice tools Watch who joins voice, move people, auto-delete join-to-create rooms. See Voice, Value: yapin.gg/developers
+			64 link Description: Webhooks No bots needed: post into a channel from CI pipelines and other tools. See Webhooks, Value: yapin.gg/developers
+			65 link Description: Login with Yapin’ OAuth2 sign-in for your site with a Yapin’ account. Identify scope. See Login, Value: yapin.gg/developers
+			66 link Description: Bot hosting Verified bots can run on Yapin’s own containers, no computer left on. See Hosting, Value: yapin.gg/developers
+			67 heading The SDKs, Value: 2, ID: sdks
+				68 text The SDKs
+			69 text Two small libraries, one file each, no dependencies: 
+			70 link Description: yapper.js, Value: yapin.gg/sdk/yapper.js
+			71 text  for Node 18+, Bun and Deno, and 
+			72 link Description: yapper.py, Value: yapin.gg/sdk/yapper.py
+			73 text  for Python 3.9+ (standard library only, see 
+			74 link Description: Python, Value: yapin.gg/developers
+			75 text ). Both register your commands, get events over the 
+			76 link Description: gateway, Value: yapin.gg/developers
+			77 text  (and poll when that's off), retry when Yapin’ says to wait, and can split a bot into 
+			78 link Description: cogs, Value: yapin.gg/developers
+			79 text . JAVASCRIPT
+			80 button Copy
+			81 text import { Bot } from './yapper.js';
+const bot = new Bot('yb_…');                    // your token
+
+// Commands: people type /name (or !name). They show up in the "/" menu for everyone in the server.
+bot.command('ping', 'Is the bot alive?', (msg) => msg.reply('pong'));
+bot.command('roll', 'Roll a die, like /roll 20', (msg) => {
+  const n = Number(msg.argv[0]);                 // msg.args = "20", msg.argv = ["20"]
+  const sides = Number.isSafeInteger(n) && n >= 2 && n <= 1000 ? n : 6;   // no -5, 2.5 or Infinity
+  msg.reply(`🎲 ${1 + Math.floor(Math.random() * sides)} (d${sides})`);
+});
+
+bot.on('message', (msg) => {                    // every message in the bot's servers (not its own)
+  if (msg.mentioned) msg.reply(`hey ${msg.authorMention}`);
+});
+bot.on('member_join', (ev) => bot.send(someChannelId, `welcome <@${ev.user_id}>, member #${ev.member_count}`));
+bot.on('member_leave', (ev) => console.log(ev.username, 'left'));
+bot.on('ready', (me) => console.log('online as', me.username));
+bot.on('error', (e) => console.error(e));
+
+bot.start();                                    // registers the commands, then listens until you stop it
+			82 table
+				83 row
+					84 cell
+						85 text CALL
+					86 cell
+						87 text WHAT IT DOES
+				88 row
+					89 cell
+						90 text new Bot(token, opts?)
+					91 cell
+						92 text opts.prefixes
+						93 text  (default 
+						94 text ['/', '!']
+						95 text , a prefix can be more than one character, like 
+						96 text 'yap!'
+						97 text ), 
+						98 text opts.log
+						99 text  (default true), 
+						100 text opts.ignoreBots
+						101 text  (default true: messages from other bots and webhooks are skipped), 
+						102 text opts.gateway
+						103 text  (default on: events over the 
+						104 link Description: gateway, Value: yapin.gg/developers
+						105 text  when it's on for your bot, 
+						106 text false
+						107 text  to always poll).
+				108 row
+					109 cell
+						110 text bot.command(name, description, fn)
+					111 cell
+						112 text Registers a command. Names: 1 to 32 lowercase letters, numbers, 
+						113 text -
+						114 text  or 
+						115 text _
+						116 text . Descriptions up to 100 characters. Up to 100 commands.
+				117 row
+					118 cell
+						119 text bot.on(event, fn)
+					120 cell
+						121 text message
+						122 text , 
+						123 text command
+						124 text , 
+						125 text dm_message
+						126 text , 
+						127 text member_join
+						128 text , 
+						129 text member_leave
+						130 text , 
+						131 text reaction_add
+						132 text , 
+						133 text reaction_remove
+						134 text , 
+						135 text voice_join
+						136 text , 
+						137 text voice_leave
+						138 text , 
+						139 text invite_create
+						140 text , 
+						141 text invite_delete
+						142 text , 
+						143 text interaction
+						144 text , 
+						145 text test
+						146 text , 
+						147 text ready
+						148 text , 
+						149 text error
+						150 text .
+				151 row
+					152 cell
+						153 text bot.send(channelId, text,  { replyTo, embeds, components } )
+					154 cell
+						155 text Posts a message. Returns it. Up to 2000 characters, markdown works, mention with 
+						156 text <@user id>
+						157 text , ping a role with 
+						158 text <@&role id>
+						159 text  (roles set to Let anyone @mention, or any role if the bot has  Mention @everyone  in that channel; automatic roles never ping), link a channel with 
+						160 text <#channel id>
+						161 text . Add up to 5 
+						162 link Description: embeds, Value: yapin.gg/developers
+						163 text ; text can be empty then. 
+						164 text components
+						165 text : up to 5 rows of 
+						166 link Description: buttons, Value: yapin.gg/developers
+						167 text .
+				168 row
+					169 cell
+						170 text bot.send(channelId, text,  { files } ) (testing)
+					171 cell
+						172 text Send pictures and files: up to 4 per message, each a file path, a Blob/File, or 
+						173 text { name: 'card.png', data: bytes }
+						174 text . Every file shows as its own message, like when people send a few. See 
+						175 link Description: Sending files, Value: yapin.gg/developers
+						176 text .
+				177 row
+					178 cell
+						179 text bot.onButton(customId, fn) / new Row(…) / Button.primary(label, id)
+					180 cell
+						181 text Buttons and their clicks, see 
+						182 link Description: Buttons, Value: yapin.gg/developers
+						183 text . 
+						184 text customId
+						185 text  can be a string or a RegExp like 
+						186 text /^vote:/
+						187 text .
+				188 row
+					189 cell
+						190 text bot.onSelect(customId, fn) / new Select(id).option(label, value) / bot.onModal(customId, fn) / i.showModal(new Modal(…))
+					191 cell
+						192 text Select menus and modals (testing), see 
+						193 link Description: Select menus, Value: yapin.gg/developers
+						194 text  and 
+						195 link Description: Modals, Value: yapin.gg/developers
+						196 text .
+				197 row
+					198 cell
+						199 text bot.messageEmojis(ch, msg) / bot.stealEmoji(server, emoji, name)
+					200 cell
+						201 text The custom emojis in a message, and copying one into a server (testing), see 
+						202 link Description: Custom emojis, Value: yapin.gg/developers
+						203 text .
+				204 row
+					205 cell
+						206 text bot.sendLayout(channelId, components) / bot.editLayout(ch, msg, components) / new Container(…)
+					207 cell
+						208 text A message built from layout parts (containers, sections, galleries, separators), see 
+						209 link Description: Components V2, Value: yapin.gg/developers
+						210 text . 
+						211 container
+							212 text i.update( { layout } )
+						213 text  changes one after a click.
+				214 row
+					215 cell
+						216 text bot.load(file) / bot.loadCogs(folder) / bot.unload(name) / bot.reload(name)
+					217 cell
+						218 text Split the bot into files, see 
+						219 link Description: Cogs, Value: yapin.gg/developers
+						220 text .
+				221 row
+					222 cell
+						223 text bot.sendEmbed(channelId, embed) / new Embed()
+					224 cell
+						225 text Send a card. 
+						226 text new Embed().title(…).description(…).color('#ff6b4a').field(name, value, inline).image(url).footer(text)
+						227 text . 
+						228 container
+							229 text msg.reply('',  { embeds: [e] } )
+						230 text  works too.
+				231 row
+					232 cell
+						233 text bot.delete(channelId, messageId)
+					234 cell
+						235 text Deletes a message: the bot's own, or anyone's with Manage messages.
+				236 row
+					237 cell
+						238 text bot.servers() / bot.members(serverId, after?)
+					239 cell
+						240 text What the bot can see. Members come 200 a page (the API takes 
+						241 text limit
+						242 text  up to 500); pass the last user id as 
+						243 text after
+						244 text  for the next page.
+				245 row
+					246 cell
+						247 text bot.channels(serverId?,  { type } ) / bot.categories(serverId) / bot.channel(id)
+					248 cell
+						249 text Channels the bot can see, in sidebar order: 
+						250 text id, name, type, category, position, private, read_only, slowmode
+						251 text . Leave out the server for every server at once; 
+						252 text type: 'text'
+						253 text  for text only.
+				254 row
+					255 cell
+						256 text bot.messages(channelId, limit?) / bot.user(userId)
+					257 cell
+						258 text Recent messages (oldest first, each with its 
+						259 text author
+						260 text ; 50 by default, up to 100), someone's public profile.
+				261 row
+					262 cell
+						263 text bot.setAvatar(file, type?)
+					264 cell
+						265 text The bot's profile picture: a file path (
+						266 text './avatar.png'
+						267 text ), a Blob, or bytes plus the type. PNG, JPG, GIF or WebP, 8 MB max. Once is enough, it sticks.
+				268 row
+					269 cell
+						270 text bot.setProfile( { displayName, bio } )
+					271 cell
+						272 text Display name (32 characters) and bio (300).
+				273 row
+					274 cell
+						275 text bot.setBanner(file, type?) / bot.setStatus(status, activity?)
+					276 cell
+						277 text Banner like the avatar. Status 
+						278 text online
+						279 text , 
+						280 text idle
+						281 text  or 
+						282 text dnd
+						283 text  plus an activity line (up to 60 characters), kept while the bot polls.
+				284 row
+					285 cell
+						286 text bot.edit(ch, msg, text,  { embeds, components } ) / bot.message(ch, msg) / bot.messagesAfter(ch, time)
+					287 cell
+						288 text Edit the bot's own message (pass 
+						289 text null
+						290 text  as text to keep it, 
+						291 text components: null
+						292 text  removes the buttons), fetch one by id, read forward from a time.
+				293 row
+					294 cell
+						295 text bot.bulkDelete(ch, ids) / bot.pin(ch, msg) / bot.unpin(ch, msg)
+					296 cell
+						297 text Up to 100 at once. Other people's messages and pins need the Manage messages permission.
+				298 row
+					299 cell
+						300 text bot.onDm(fn) / bot.onReactionOnMine(fn)
+					301 cell
+						302 text Someone DMed the bot, or reacted to one of its messages (
+						303 text r.added
+						304 text  is false when they took it off). See 
+						305 link Description: DMs and reactions, Value: yapin.gg/developers
+						306 text .
+				307 row
+					308 cell
+						309 text bot.react(ch, msg, emoji) / bot.unreact(…) / bot.reactions(ch, msg)
+					310 cell
+						311 text React with a unicode emoji. Events 
+						312 text reaction_add
+						313 text  / 
+						314 text reaction_remove
+						315 text  tell you when others do.
+				316 row
+					317 cell
+						318 text bot.server(id) / bot.roles(id) / bot.member(id, userId)
+					319 cell
+						320 text Server details, its roles, one member with nickname, role ids and timeout.
+				321 row
+					322 cell
+						323 text bot.memberCounts(server)
+					324 cell
+						325 text { member_count, online_count }
+						326 text  for a live "Members / Online" counter. Online is people online right now, refreshed once a minute, so ask every few minutes. 
+						327 text bot.servers()
+						328 text  and 
+						329 text bot.server(id)
+						330 text  carry 
+						331 text online_count
+						332 text  too. In testing: test servers only for now.
+				333 row
+					334 cell
+						335 text bot.addRole / bot.removeRole(server, user, role) / bot.setNickname(server, user, nick)
+					336 cell
+						337 text Manage roles, Manage nicknames. Renaming someone else also needs a higher role than theirs, like kick and ban.
+				338 row
+					339 cell
+						340 text bot.createRole(server,  { name, color, mentionable, permissions } ) / bot.editRole(server, role,  {…, position } ) / bot.deleteRole(server, role)
+					341 cell
+						342 text Manage Roles, same rules as a person: only roles below the bot's highest role, only permissions the bot has itself (Administrator: owners only), and not roles given out automatically. 
+						343 text permissions
+						344 text  is like 
+						345 text { kick_members: true }
+						346 text ; on edit only the keys you pass change. Yapin’ roles have no hoist switch. Everything shows in the audit log as the bot. 30 role and permission changes a minute. In testing: test servers only for now.
+				347 row
+					348 cell
+						349 text bot.setEveryonePerms(server, perms) / bot.setChannelPermissions(ch, role,  { allow, deny } ) / bot.setCategoryPermissions(server, cat, role,  { allow, deny } )
+					350 cell
+						351 text @everyone's basic permissions, and per channel or category overrides for a role (or 
+						352 text 'everyone'
+						353 text ): 
+						354 text view_channel, send_messages, add_reactions, attach_files, embed_links, mention_everyone, manage_messages, connect, speak, send_voice_messages, use_headings, create_threads, send_in_threads, manage_threads
+						355 text . Empty lists (or 
+						356 text clearChannelPermissions
+						357 text ) remove one; 
+						358 text channelPermissions(ch)
+						359 text  lists them (
+						360 text clearCategoryPermissions
+						361 text  for categories). Overrides need Manage Roles or Manage Channels. In testing: test servers only for now.
+				362 row
+					363 cell
+						364 text bot.kick / bot.ban / bot.unban(server, user) / bot.bans(server) / bot.timeout(server, user, minutes, reason?)
+					365 cell
+						366 text Kick, Ban and Timeout permissions. Timeouts last up to 28 days (40320 minutes); 0 clears one.
+				367 row
+					368 cell
+						369 text bot.invites(server)
+					370 cell
+						371 text The server's invites: 
+						372 text code, url, inviter_id, uses, max_uses, expires_at, vanity, created_at
+						373 text . Manage Server. Yapin’ invites don't run out, so 
+						374 text max_uses
+						375 text  is 0 and 
+						376 text expires_at
+						377 text  null. With 
+						378 text member_join
+						379 text 's 
+						380 text invite_code
+						381 text  and 
+						382 text inviter_id
+						383 text  that's an invite tracker. In testing: test servers only for now.
+				384 row
+					385 cell
+						386 text bot.createChannel(server, name,  { kind, categoryId } ) / bot.editChannel(ch,  {…} ) / bot.deleteChannel(ch)
+					387 cell
+						388 text Manage channels. Edit takes 
+						389 text name, categoryId, private, roleIds, readOnly, postRoleIds, slowmode
+						390 text .
+				391 row
+					392 cell
+						393 text bot.createCategory(server, name) / bot.deleteCategory(server, id)
+					394 cell
+						395 text Manage channels.
+				396 row
+					397 cell
+						398 text bot.emojis(server) / bot.createEmoji(server, name, image) / bot.editEmoji(server, emoji, name) / bot.deleteEmoji(server, emoji)
+					399 cell
+						400 text A server's custom emojis: list, add (a file path, Blob or bytes; PNG, GIF or WebP up to 1 MB), rename, delete. Manage Emoji. See 
+						401 link Description: Custom emojis, Value: yapin.gg/developers
+						402 text .
+				403 row
+					404 cell
+						405 text bot.voice(server) / bot.moveMember(server, user, ch) / bot.disconnectMember(server, user)
+					406 cell
+						407 text Who is in voice (
+						408 container
+							409 text [ { channel_id, user_ids } ]
+						410 text ), move someone to another voice channel, drop them from voice. Move Members. See 
+						411 link Description: Voice, Value: yapin.gg/developers
+						412 text .
+				413 row
+					414 cell
+						415 text bot.connectVoice(rtc, server, ch) / bot.joinVoice(server, ch) / bot.leaveVoice(server)
+					416 cell
+						417 text Join a voice channel and play audio. See 
+						418 link Description: Music bots, Value: yapin.gg/developers
+						419 text .
+				420 row
+					421 cell
+						422 text bot.dm(userId) / bot.dmSend(userId, text)
+					423 cell
+						424 text Opens a DM (their DM setting applies, like for a person) and returns the channel id.
+				425 row
+					426 cell
+						427 text bot.api(method, path, body?)
+					428 cell
+						429 text Any endpoint below, with the token added for you.
+				430 row
+					431 cell
+						432 text bot.stop()
+					433 cell
+						434 text Stops listening after the current poll.
+			435 text A 
+			436 text msg
+			437 text  has every field of the message event (below) plus 
+			438 text reply(text)
+			439 text  (quotes the message), 
+			440 text say(text)
+			441 text  (same channel, no quote), 
+			442 text authorMention
+			443 text , and for commands 
+			444 text command
+			445 text , 
+			446 text args
+			447 text  (the rest of the line) and 
+			448 text argv
+			449 text  (split on spaces).
+			450 heading Install with npm or pip, Value: 3, ID: install
+				451 text Install with npm or pip
+			452 text Same code as the single files, as packages. Pick whichever you like: the files keep working. TERMINAL
+			453 button Copy
+			454 text npm install yapin          # JavaScript, Node 18+, Bun, Deno
+pip install yapin          # Python 3.9+ (the module is still called yapper)
+pip install "yapin[voice]" # plus what music bots need
+			455 text PYTHON
+			456 button Copy
+			457 text import { Bot, Embed } from 'yapin';      // ESM
+const { Bot } = require('yapin');         // CommonJS works too
+
+import yapper                          # Python: pip install yapin, then import yapper
+			458 text TypeScript types come with the npm package, including every API object (
+			459 text import type { API } from 'yapin'
+			460 text , then 
+			461 text API.Message
+			462 text , 
+			463 text API.Server
+			464 text  …) and typed 
+			465 text bot.api('GET', '/me')
+			466 text  answers. Current SDK version:  1.6.0  (
+			467 text VERSION
+			468 text  in JS, 
+			469 text yapper.__version__
+			470 text  in Python).
+			471 heading Python, Value: 3, ID: python
+				472 text Python
+			473 text Save 
+			474 link Description: yapper.py, Value: yapin.gg/sdk/yapper.py
+			475 text  next to your bot. The token comes from 
+			476 text YAPPER_BOT_TOKEN
+			477 text , or pass it in. Options: 
+			478 text prefixes
+			479 text , 
+			480 text log
+			481 text , 
+			482 text ignore_bots
+			483 text  and 
+			484 text gateway
+			485 text  (default on: events over the 
+			486 link Description: gateway, Value: yapin.gg/developers
+			487 text  when it's on for your bot, 
+			488 text None
+			489 text  to always poll). yapper.py 1.1 or newer (
+			490 text yapper.__version__
+			491 text ) has the gateway; older copies still poll, so download it again. PYTHON
+			492 button Copy
+			493 text import yapper
+
+bot = yapper.Bot()                          # or yapper.Bot("yb_…")
+
+@bot.command("ping", "Is the bot alive?")
+def ping(msg):
+    msg.reply("pong")                       # msg.args, msg.argv, msg.say(), msg.author_mention
+
+@bot.on("member_join")                      # or: @bot.event def on_member_join(ev)
+def welcome(ev):
+    print(ev.username, "joined")
+
+@bot.button("vote:")                        # clicks on custom_ids starting with "vote:"
+def vote(i):
+    i.ephemeral("You picked " + i.custom_id[5:])
+
+bot.run()
+			494 text Everything in the JavaScript table above is in yapper.py 1.3 and newer too, with snake_case names: 
+			495 text bot.bulk_delete
+			496 text , 
+			497 text send_embed
+			498 text , 
+			499 text messages_after
+			500 text , 
+			501 text set_nickname
+			502 text , 
+			503 text bans
+			504 text , 
+			505 text invites
+			506 text , 
+			507 text member_counts
+			508 text , 
+			509 text create_role
+			510 text , 
+			511 text edit_role
+			512 text , 
+			513 text set_channel_permissions
+			514 text , 
+			515 text create_channel
+			516 text , 
+			517 text edit_channel
+			518 text , 
+			519 text pin
+			520 text , 
+			521 text unreact
+			522 text , 
+			523 text reactions
+			524 text , 
+			525 text dm_send
+			526 text , 
+			527 text set_avatar
+			528 text , 
+			529 text set_banner
+			530 text , 
+			531 text on_button
+			532 text  (an exact custom_id or 
+			533 text re.compile(r"^vote:")
+			534 text ), 
+			535 text connect_voice
+			536 text  (see 
+			537 link Description: Music bots, Value: yapin.gg/developers
+			538 text ) and the rest. The builders are the same classes: 
+			539 text yapper.Embed().title("Hi").color("blue")
+			540 text , 
+			541 text yapper.Row(yapper.Button.success("Yes", "vote:yes"))
+			542 text , 
+			543 text yapper.Container
+			544 text , 
+			545 text Section
+			546 text , 
+			547 text MediaGallery
+			548 text ; plain dicts (and 
+			549 text yapper.row()
+			550 text  / 
+			551 text yapper.btn()
+			552 text ) still work. 
+			553 text bot.api(method, path, body)
+			554 text  for anything else. Older copy? Download yapper.py again (
+			555 text yapper.__version__
+			556 text  says  1.6.0 ), or 
+			557 container
+				558 text pip install -U  yapin
+			559 text .
+			560 heading SDK methods and their API reference, Value: 3, ID: sdk-reference
+				561 text SDK methods and their API reference
+			562 text What each SDK method calls, with the full request and response schema one click away. The SDK files link to the same entries, so your editor shows them on hover.
+			563 table
+				564 row
+					565 cell
+						566 text JAVASCRIPT
+					567 cell
+						568 text PYTHON
+					569 cell
+						570 text ENDPOINT
+				571 row
+					572 cell
+						573 text bot.start()
+					574 cell
+						575 text bot.run()
+					576 cell
+						577 link Description: GET /me, Value: yapin.gg/developers/api/bot
+						578 text The bot itself
+				579 row
+					580 cell
+						581 text bot.setProfile()
+					582 cell
+						583 text bot.set_profile()
+					584 cell
+						585 link Description: PATCH /me, Value: yapin.gg/developers/api/bot
+						586 text Change display name or bio
+				587 row
+					588 cell
+						589 text bot.setAvatar()
+					590 cell
+						591 text bot.set_avatar()
+					592 cell
+						593 link Description: PUT /me/avatar, Value: yapin.gg/developers/api/bot
+						594 text Set the profile picture
+				595 row
+					596 cell
+						597 text bot.setBanner()
+					598 cell
+						599 text bot.set_banner()
+					600 cell
+						601 link Description: PUT /me/banner, Value: yapin.gg/developers/api/bot
+						602 text Set the banner
+				603 row
+					604 cell
+						605 text bot.setStatus()
+					606 cell
+						607 text bot.set_status()
+					608 cell
+						609 link Description: PUT /me/status, Value: yapin.gg/developers/api/bot
+						610 text Status and activity line (kept while the bot is online)
+				611 row
+					612 cell
+						613 text bot.reload(), bot.start()
+					614 cell
+						615 text bot.sync_commands()
+					616 cell
+						617 link Description: PUT /commands, Value: yapin.gg/developers/api/bot
+						618 text Replace all slash commands (up to 100)
+				619 row
+					620 cell
+						621 text bot.start()
+					622 cell
+						623 text bot.run()
+					624 cell
+						625 link Description: GET /events, Value: yapin.gg/developers/api/events
+						626 text Long-poll for events, up to 100 a call (also keeps the bot online)
+				627 row
+					628 cell
+						629 text bot.servers()
+					630 cell
+						631 text bot.servers()
+					632 cell
+						633 link Description: GET /servers, Value: yapin.gg/developers/api/servers
+						634 text Servers the bot is in
+				635 row
+					636 cell
+						637 text bot.server()
+					638 cell
+						639 text bot.server()
+					640 cell
+						641 link Description: GET /servers/{id}, Value: yapin.gg/developers/api/servers
+						642 text One server
+				643 row
+					644 cell
+						645 text bot.memberCounts()
+					646 cell
+						647 text bot.member_counts()
+					648 cell
+						649 link Description: GET /servers/{id}/counts, Value: yapin.gg/developers/api/servers
+						650 text Member and online counts for a live counter (ask every few minutes)
+				651 row
+					652 cell
+						653 text bot.members()
+					654 cell
+						655 text bot.members()
+					656 cell
+						657 link Description: GET /servers/{id}/members, Value: yapin.gg/developers/api/servers
+						658 text Members, sorted by user id, a page at a time
+				659 row
+					660 cell
+						661 text bot.member()
+					662 cell
+						663 text bot.member()
+					664 cell
+						665 link Description: GET /servers/{id}/members/{uid}, Value: yapin.gg/developers/api/servers
+						666 text One member with roles, timeout and invite
+				667 row
+					668 cell
+						669 text bot.setNickname()
+					670 cell
+						671 text bot.set_nickname()
+					672 cell
+						673 link Description: PATCH /servers/{id}/members/{uid}, Value: yapin.gg/developers/api/moderation
+						674 text Set a nickname
+				675 row
+					676 cell
+						677 text bot.channels()
+					678 cell
+						679 text bot.channels()
+					680 cell
+						681 link Description: GET /channels, Value: yapin.gg/developers/api/channels
+						682 text Every channel the bot can see, in all its servers
+				683 row
+					684 cell
+						685 text bot.channels(), bot.categories()
+					686 cell
+						687 text bot.channels(), bot.categories()
+					688 cell
+						689 link Description: GET /servers/{id}/channels, Value: yapin.gg/developers/api/channels
+						690 text Channels the bot can see in one server, in sidebar order
+				691 row
+					692 cell
+						693 text bot.createChannel()
+					694 cell
+						695 text bot.create_channel()
+					696 cell
+						697 link Description: POST /servers/{id}/channels, Value: yapin.gg/developers/api/channels
+						698 text Create a channel
+				699 row
+					700 cell
+						701 text bot.channel()
+					702 cell
+						703 text bot.channel()
+					704 cell
+						705 link Description: GET /channels/{id}, Value: yapin.gg/developers/api/channels
+						706 text One channel (or a DM the bot is in)
+				707 row
+					708 cell
+						709 text bot.editChannel()
+					710 cell
+						711 text bot.edit_channel()
+					712 cell
+						713 link Description: PATCH /channels/{id}, Value: yapin.gg/developers/api/channels
+						714 text Edit a channel
+				715 row
+					716 cell
+						717 text bot.deleteChannel()
+					718 cell
+						719 text bot.delete_channel()
+					720 cell
+						721 link Description: DELETE /channels/{id}, Value: yapin.gg/developers/api/channels
+						722 text Delete a channel
+				723 row
+					724 cell
+						725 text bot.channelPermissions()
+					726 cell
+						727 text bot.channel_permissions()
+					728 cell
+						729 link Description: GET /channels/{id}/permissions, Value: yapin.gg/developers/api/channels
+						730 text Permission overrides on a channel
+				731 row
+					732 cell
+						733 text bot.setChannelPermissions()
+					734 cell
+						735 text bot.set_channel_permissions()
+					736 cell
+						737 link Description: PUT /channels/{id}/permissions/{role}, Value: yapin.gg/developers/api/channels
+						738 text Set a role’s override on a channel
+				739 row
+					740 cell
+						741 text bot.clearChannelPermissions()
+					742 cell
+						743 text bot.clear_channel_permissions()
+					744 cell
+						745 link Description: DELETE /channels/{id}/permissions/{role}, Value: yapin.gg/developers/api/channels
+						746 text Remove a role’s override on a channel
+				747 row
+					748 cell
+						749 text bot.createCategory()
+					750 cell
+						751 text bot.create_category()
+					752 cell
+						753 link Description: POST /servers/{id}/categories, Value: yapin.gg/developers/api/channels
+						754 text Create a category
+				755 row
+					756 cell
+						757 text bot.deleteCategory()
+					758 cell
+						759 text bot.delete_category()
+					760 cell
+						761 link Description: DELETE /servers/{id}/categories/{cid}, Value: yapin.gg/developers/api/channels
+						762 text Delete a category (its channels stay)
+				763 row
+					764 cell
+						765 text bot.setCategoryPermissions()
+					766 cell
+						767 text bot.set_category_permissions()
+					768 cell
+						769 link Description: PUT /servers/{id}/categories/{cid}/permissions/{role}, Value: yapin.gg/developers/api/channels
+						770 text Set a role’s override on a category
+				771 row
+					772 cell
+						773 text bot.clearCategoryPermissions()
+					774 cell
+						775 text bot.clear_category_permissions()
+					776 cell
+						777 link Description: DELETE /servers/{id}/categories/{cid}/permissions/{role}, Value: yapin.gg/developers/api/channels
+						778 text Remove a role’s override on a category
+				779 row
+					780 cell
+						781 text bot.messages(), bot.messagesAfter()
+					782 cell
+						783 text bot.messages_after(), bot.messages()
+					784 cell
+						785 link Description: GET /channels/{id}/messages, Value: yapin.gg/developers/api/messages
+						786 text Messages, oldest first. Empty without Read Message History
+				787 row
+					788 cell
+						789 text bot.send(), bot.sendLayout()
+					790 cell
+						791 text bot.send(), bot.send_layout()
+					792 cell
+						793 link Description: POST /channels/{id}/messages, Value: yapin.gg/developers/api/messages
+						794 text Send a message
+				795 row
+					796 cell
+						797 text bot.message()
+					798 cell
+						799 text bot.message()
+					800 cell
+						801 link Description: GET /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages
+						802 text One message
+				803 row
+					804 cell
+						805 text bot.edit(), bot.editLayout()
+					806 cell
+						807 text bot.edit_layout(), bot.edit()
+					808 cell
+						809 link Description: PATCH /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages
+						810 text Edit the bot’s own message (null removes embeds or components; a key left out stays)
+				811 row
+					812 cell
+						813 text bot.delete()
+					814 cell
+						815 text bot.delete()
+					816 cell
+						817 link Description: DELETE /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages
+						818 text Delete a message (its own, or others with Manage Messages)
+				819 row
+					820 cell
+						821 text bot.bulkDelete()
+					822 cell
+						823 text bot.bulk_delete()
+					824 cell
+						825 link Description: POST /channels/{id}/messages/bulk-delete, Value: yapin.gg/developers/api/messages
+						826 text Delete up to 100 messages
+				827 row
+					828 cell
+						829 text bot.pin()
+					830 cell
+						831 text bot.pin()
+					832 cell
+						833 link Description: PUT /channels/{id}/messages/{mid}/pin, Value: yapin.gg/developers/api/messages
+						834 text Pin
+				835 row
+					836 cell
+						837 text bot.unpin()
+					838 cell
+						839 text bot.unpin()
+					840 cell
+						841 link Description: DELETE /channels/{id}/messages/{mid}/pin, Value: yapin.gg/developers/api/messages
+						842 text Unpin
+				843 row
+					844 cell
+						845 text bot.reactions()
+					846 cell
+						847 text bot.reactions()
+					848 cell
+						849 link Description: GET /channels/{id}/messages/{mid}/reactions, Value: yapin.gg/developers/api/messages
+						850 text Reactions on a message
+				851 row
+					852 cell
+						853 text bot.react()
+					854 cell
+						855 text bot.react()
+					856 cell
+						857 link Description: PUT /channels/{id}/messages/{mid}/reactions/{emoji}, Value: yapin.gg/developers/api/messages
+						858 text React (custom emojis: from servers the bot is in, flag bot_custom_emojis)
+				859 row
+					860 cell
+						861 text bot.unreact()
+					862 cell
+						863 text bot.unreact()
+					864 cell
+						865 link Description: DELETE /channels/{id}/messages/{mid}/reactions/{emoji}, Value: yapin.gg/developers/api/messages
+						866 text Remove the bot’s reaction
+				867 row
+					868 cell
+						869 text bot.messageEmojis()
+					870 cell
+						871 text bot.message_emojis()
+					872 cell
+						873 link Description: GET /channels/{id}/messages/{mid}/emojis, Value: yapin.gg/developers/api/emojis
+						874 text The custom emojis in one message (text, embeds, buttons, reactions), from any server, for steal emoji commands
+				875 row
+					876 cell
+						877 text bot.respond()
+					878 cell
+						879 text bot.respond()
+					880 cell
+						881 link Description: POST /interactions/{id}/{token}/callback, Value: yapin.gg/developers/api/interactions
+						882 text Answer a click, a pick, a modal or a slash command (within 15 minutes, up to 10 answers)
+				883 row
+					884 cell
+						885 text bot.roles()
+					886 cell
+						887 text bot.roles()
+					888 cell
+						889 link Description: GET /servers/{id}/roles, Value: yapin.gg/developers/api/roles
+						890 text Roles, highest first
+				891 row
+					892 cell
+						893 text bot.createRole()
+					894 cell
+						895 text bot.create_role()
+					896 cell
+						897 link Description: POST /servers/{id}/roles, Value: yapin.gg/developers/api/roles
+						898 text Create a role, just below the bot’s highest one
+				899 row
+					900 cell
+						901 text bot.setEveryonePerms()
+					902 cell
+						903 text bot.set_everyone_perms()
+					904 cell
+						905 link Description: PATCH /servers/{id}/roles/everyone, Value: yapin.gg/developers/api/roles
+						906 text Change @everyone’s permissions (only basic ones, and only ones the bot has)
+				907 row
+					908 cell
+						909 text bot.editRole()
+					910 cell
+						911 text bot.edit_role()
+					912 cell
+						913 link Description: PATCH /servers/{id}/roles/{rid}, Value: yapin.gg/developers/api/roles
+						914 text Edit a role below the bot’s highest one
+				915 row
+					916 cell
+						917 text bot.deleteRole()
+					918 cell
+						919 text bot.delete_role()
+					920 cell
+						921 link Description: DELETE /servers/{id}/roles/{rid}, Value: yapin.gg/developers/api/roles
+						922 text Delete a role below the bot’s highest one
+				923 row
+					924 cell
+						925 text bot.addRole()
+					926 cell
+						927 text bot.add_role()
+					928 cell
+						929 link Description: PUT /servers/{id}/members/{uid}/roles/{rid}, Value: yapin.gg/developers/api/roles
+						930 text Give someone a role
+				931 row
+					932 cell
+						933 text bot.removeRole()
+					934 cell
+						935 text bot.remove_role()
+					936 cell
+						937 link Description: DELETE /servers/{id}/members/{uid}/roles/{rid}, Value: yapin.gg/developers/api/roles
+						938 text Take a role away
+				939 row
+					940 cell
+						941 text bot.kick()
+					942 cell
+						943 text bot.kick()
+					944 cell
+						945 link Description: POST /servers/{id}/kick, Value: yapin.gg/developers/api/moderation
+						946 text Kick someone (also drops them from voice)
+				947 row
+					948 cell
+						949 text bot.bans()
+					950 cell
+						951 text bot.bans()
+					952 cell
+						953 link Description: GET /servers/{id}/bans, Value: yapin.gg/developers/api/moderation
+						954 text Bans, newest first
+				955 row
+					956 cell
+						957 text bot.ban()
+					958 cell
+						959 text bot.ban()
+					960 cell
+						961 link Description: POST /servers/{id}/bans, Value: yapin.gg/developers/api/moderation
+						962 text Ban someone (also drops them from voice)
+				963 row
+					964 cell
+						965 text bot.unban()
+					966 cell
+						967 text bot.unban()
+					968 cell
+						969 link Description: DELETE /servers/{id}/bans/{uid}, Value: yapin.gg/developers/api/moderation
+						970 text Unban
+				971 row
+					972 cell
+						973 text bot.timeout()
+					974 cell
+						975 text bot.timeout()
+					976 cell
+						977 link Description: POST /servers/{id}/timeouts, Value: yapin.gg/developers/api/moderation
+						978 text Time someone out; minutes 0 clears it
+				979 row
+					980 cell
+						981 text bot.invites()
+					982 cell
+						983 text bot.invites()
+					984 cell
+						985 link Description: GET /servers/{id}/invites, Value: yapin.gg/developers/api/moderation
+						986 text The server’s invites
+				987 row
+					988 cell
+						989 text bot.voice()
+					990 cell
+						991 text bot.voice()
+					992 cell
+						993 link Description: GET /servers/{id}/voice, Value: yapin.gg/developers/api/voice
+						994 text Who is in voice, for every voice channel the bot can see
+				995 row
+					996 cell
+						997 text bot.moveMember()
+					998 cell
+						999 text bot.move_member()
+					1000 cell
+						1001 link Description: POST /servers/{id}/voice/move, Value: yapin.gg/developers/api/voice
+						1002 text Move someone to another voice channel
+				1003 row
+					1004 cell
+						1005 text bot.disconnectMember()
+					1006 cell
+						1007 text bot.disconnect_member()
+					1008 cell
+						1009 link Description: POST /servers/{id}/voice/disconnect, Value: yapin.gg/developers/api/voice
+						1010 text Drop someone from voice
+				1011 row
+					1012 cell
+						1013 text bot.joinVoice()
+					1014 cell
+						1015 text bot.join_voice()
+					1016 cell
+						1017 link Description: POST /servers/{id}/voice/join, Value: yapin.gg/developers/api/voice
+						1018 text A LiveKit ticket so the bot can join a call and play audio (one track, hears nobody)
+				1019 row
+					1020 cell
+						1021 text bot.leaveVoice()
+					1022 cell
+						1023 text bot.leave_voice()
+					1024 cell
+						1025 link Description: POST /servers/{id}/voice/leave, Value: yapin.gg/developers/api/voice
+						1026 text Take the bot out of voice in this server
+				1027 row
+					1028 cell
+						1029 text bot.emojis()
+					1030 cell
+						1031 text bot.emojis()
+					1032 cell
+						1033 link Description: GET /servers/{id}/emojis, Value: yapin.gg/developers/api/emojis
+						1034 text The server’s custom emojis and how many it can have
+				1035 row
+					1036 cell
+						1037 text bot.createEmoji()
+					1038 cell
+						1039 text bot.create_emoji()
+					1040 cell
+						1041 link Description: POST /servers/{id}/emojis, Value: yapin.gg/developers/api/emojis
+						1042 text Add a custom emoji (checked like every new emoji before it shows up)
+				1043 row
+					1044 cell
+						1045 text bot.editEmoji()
+					1046 cell
+						1047 text bot.edit_emoji()
+					1048 cell
+						1049 link Description: PATCH /servers/{id}/emojis/{eid}, Value: yapin.gg/developers/api/emojis
+						1050 text Rename a custom emoji
+				1051 row
+					1052 cell
+						1053 text bot.deleteEmoji()
+					1054 cell
+						1055 text bot.delete_emoji()
+					1056 cell
+						1057 link Description: DELETE /servers/{id}/emojis/{eid}, Value: yapin.gg/developers/api/emojis
+						1058 text Delete a custom emoji
+				1059 row
+					1060 cell
+						1061 text bot.webhooks()
+					1062 cell
+						1063 text bot.webhooks()
+					1064 cell
+						1065 link Description: GET /channels/{id}/webhooks, Value: yapin.gg/developers/api/webhooks
+						1066 text Webhooks in a channel (people’s too, without tokens)
+				1067 row
+					1068 cell
+						1069 text bot.createWebhook()
+					1070 cell
+						1071 text bot.create_webhook()
+					1072 cell
+						1073 link Description: POST /channels/{id}/webhooks, Value: yapin.gg/developers/api/webhooks
+						1074 text Make a webhook the bot can post through (up to 10 per channel)
+				1075 row
+					1076 cell
+						1077 text bot.myWebhooks()
+					1078 cell
+						1079 text bot.my_webhooks()
+					1080 cell
+						1081 link Description: GET /webhooks, Value: yapin.gg/developers/api/webhooks
+						1082 text The bot’s own webhooks in every server (up to 500, newest first)
+				1083 row
+					1084 cell
+						1085 text bot.sendWebhook()
+					1086 cell
+						1087 text bot.send_webhook()
+					1088 cell
+						1089 link Description: POST /webhooks/{id}, Value: yapin.gg/developers/api/webhooks
+						1090 text Post through one of the bot’s webhooks, with its own name and picture
+				1091 row
+					1092 cell
+						1093 text bot.deleteWebhook()
+					1094 cell
+						1095 text bot.delete_webhook()
+					1096 cell
+						1097 link Description: DELETE /webhooks/{id}, Value: yapin.gg/developers/api/webhooks
+						1098 text Delete a webhook (its old messages stay)
+				1099 row
+					1100 cell
+						1101 text bot.events()
+					1102 cell
+						1103 text bot.events()
+					1104 cell
+						1105 link Description: GET /servers/{id}/events, Value: yapin.gg/developers/api/scheduled-events
+						1106 text Upcoming and live events
+				1107 row
+					1108 cell
+						1109 text bot.createEvent()
+					1110 cell
+						1111 text bot.create_event()
+					1112 cell
+						1113 link Description: POST /servers/{id}/events, Value: yapin.gg/developers/api/scheduled-events
+						1114 text Schedule an event
+				1115 row
+					1116 cell
+						1117 text bot.user()
+					1118 cell
+						1119 text bot.user()
+					1120 cell
+						1121 link Description: GET /users/{id}, Value: yapin.gg/developers/api/users
+						1122 text A user’s public profile
+				1123 row
+					1124 cell
+						1125 text bot.dm()
+					1126 cell
+						1127 text bot.dm()
+					1128 cell
+						1129 link Description: POST /users/{id}/dm, Value: yapin.gg/developers/api/users
+						1130 text Open (or find) a DM with someone; their DM settings apply
+			1131 heading Cogs: split your bot into files, Value: 2, ID: cogs
+				1132 text Cogs: split your bot into files
+			1133 text One huge file gets messy. A  cog  is a file that groups some commands, buttons and event listeners, like 
+			1134 text cogs/fun.js
+			1135 text  and 
+			1136 text cogs/mod.js
+			1137 text . Your main file just starts the bot and loads them. Commands from cogs work exactly like 
+			1138 text bot.command
+			1139 text  (same 100 limit), and the same command name in two cogs is an error that names both files. JAVASCRIPT
+			1140 button Copy
+			1141 text // bot.js
+import { Bot } from './yapper.js';
+const bot = new Bot(process.env.YAPPER_BOT_TOKEN);
+await bot.loadCogs('./cogs');                   // every .js in cogs/, A to Z (_files are skipped)
+bot.start();
+
+// cogs/fun.js: a class...
+import { Cog } from '../yapper.js';
+export class Fun extends Cog {
+  commands = {
+    joke: { description: 'Tell a joke', run: (msg) => msg.reply('…') },
+  };
+  buttons = { 'vote:': (i) => i.ephemeral('thanks') };   // custom_ids starting with "vote:"
+  on = { member_join: (ev) => console.log(ev.username, 'joined') };
+  check(msg) { return true; }                   // optional: false skips this cog's commands
+  cogLoad() {}  cogUnload() {}                  // optional
+}
+
+// cogs/mod.js: ...or a setup function, with the bot.command / bot.on you already know
+export default function setup(bot) {
+  bot.command('kick', 'Kick someone', (msg) => { /* … */ });
+}
+			1142 text bot.load('./cogs/fun.js')
+			1143 text  loads one file (paths are relative to your main file), 
+			1144 text bot.unload('fun')
+			1145 text  takes it out, 
+			1146 text bot.reload('fun')
+			1147 text  reads your edits without a restart (if the new version breaks, the old one stays). Load or unload while the bot runs and the command list updates by itself. An error in a cog command goes to 
+			1148 text on('error')
+			1149 text  with 
+			1150 text e.cog
+			1151 text  set, and the log says which cog broke. PYTHON
+			1152 button Copy
+			1153 text # bot.py
+import yapper
+bot = yapper.Bot()
+bot.load_extensions("cogs")                     # every .py in cogs/, or bot.load_extension("cogs.fun")
+bot.run()
+
+# cogs/fun.py
+import yapper
+
+class Fun(yapper.Cog):
+    @yapper.command("joke", "Tell a joke")
+    def joke(self, msg):
+        msg.reply("…")
+
+    @yapper.listener("member_join")
+    def hello(self, ev):
+        print(ev.username, "joined")
+
+    def check(self, msg):                       # optional, also cog_load / cog_unload
+        return True
+
+def setup(bot):
+    bot.add_cog(Fun(bot))
+			1154 text Python has the same short names: 
+			1155 text bot.load("cogs/fun.py")
+			1156 text , 
+			1157 text bot.load_cogs("cogs")
+			1158 text , 
+			1159 text bot.unload("fun")
+			1160 text  and 
+			1161 text bot.reload("fun")
+			1162 text  (the longer 
+			1163 text load_extension
+			1164 text  / 
+			1165 text unload_extension
+			1166 text  / 
+			1167 text reload_extension
+			1168 text  still work). Examples:  JavaScript: 
+			1169 link Description: bot.js, Value: yapin.gg/sdk/examples/cogs-js/bot.js
+			1170 text , 
+			1171 link Description: package.json, Value: yapin.gg/sdk/examples/cogs-js/package.json
+			1172 text , and in a 
+			1173 text cogs
+			1174 text  folder 
+			1175 link Description: fun.js, Value: yapin.gg/sdk/examples/cogs-js/cogs/fun.js
+			1176 text , 
+			1177 link Description: mod.js, Value: yapin.gg/sdk/examples/cogs-js/cogs/mod.js
+			1178 text  and 
+			1179 link Description: invites.js, Value: yapin.gg/sdk/examples/cogs-js/cogs/invites.js
+			1180 text , plus yapper.js next to bot.js. Python: 
+			1181 link Description: bot.py, Value: yapin.gg/sdk/examples/cogs-py/bot.py
+			1182 text , and in a 
+			1183 text cogs
+			1184 text  folder 
+			1185 link Description: fun.py, Value: yapin.gg/sdk/examples/cogs-py/cogs/fun.py
+			1186 text , 
+			1187 link Description: mod.py, Value: yapin.gg/sdk/examples/cogs-py/cogs/mod.py
+			1188 text  and 
+			1189 link Description: invites.py, Value: yapin.gg/sdk/examples/cogs-py/cogs/invites.py
+			1190 text , plus yapper.py next to bot.py. Hosting a bot with cogs on 
+			1191 link Description: Bot hosting, Value: yapin.gg/developers
+			1192 text ? Uploads are just bot.js and package.json, so put the folder in a public GitHub repo and link that instead. Python hosting is in testing; until it reaches you, Python bots run on your own computer.
+			1193 heading How it works, Value: 2, ID: how-it-works
+				1194 text How it works
+			1195 text Yapin’ keeps every event for your bot for a day: new messages in its servers, joins, leaves, reactions, button clicks, voice joins and leaves, tests. Your bot asks
+			1196 text  GET /events?after=<last id>&wait=20
+			1197 text ; the call returns as soon as there is something (up to 100 events), or after about 20 seconds with an empty list. The SDK runs that loop for you. Events come in order and each id once; if a poll fails, ask again with the same 
+			1198 text after
+			1199 text  and nothing is lost. (A bot that was offline for a while skips slash commands older than 15 minutes and button clicks that already expired, see 
+			1200 text /events
+			1201 text  below.) No public URL, no port forwarding, works on a laptop behind any router. If you do host the bot somewhere, set a webhook URL in Settings → Developer → your bot → Advanced and the same events are also POSTed there (see Event webhooks). Messages people send in DMs aren't sent to bots as events. A bot can still open a DM and post there.
+			1202 heading Gateway (beta), Value: 3, ID: gateway
+				1203 text Gateway (beta)
+			1204 text Instead of polling, a bot can keep one WebSocket open and get its events pushed, like Discord's gateway. Same events, same ids, same order as 
+			1205 text GET /events
+			1206 text , so switching changes nothing in your handlers. It's in beta: bots not in it yet get closed with code 4003, so just keep polling then. Both SDKs do all of this for you (yapper.js on Node 22+, Bun and Deno; yapper.py 1.1+ on any Python 3.9+, still nothing to install) and fall back to polling by themselves. CODE
+			1207 button Copy
+			1208 text wss://rt.yapper.website/bot
+
+← { "op": "hello", "heartbeat_interval": 30000 }
+→ { "op": "identify", "token": "yb_…" }                      start from now
+→ { "op": "resume", "token": "yb_…", "seq": 1234 }           everything after event 1234
+← { "op": "ready", "bot": { "id": "…", "name": "…" }, "seq": 1234 }
+← { "op": "event", "s": 1235, "t": "message", "d": { "id": 1235, "type": "message", "data": { … }, "created_at": "…" } }
+→ { "op": "heartbeat" }
+← { "op": "heartbeat_ack", "seq": 1235 }
+			1209 content list
+				1210 container
+					1211 AXListMarker • 
+					1212 text Identify within 10 seconds  of connecting.  d  is exactly one item of  /events ;  s  is its id.
+				1213 container
+					1214 AXListMarker • 
+					1215 text Optional fields  on identify and resume:  events  (a list of types, like  ["message", "interaction"] , to only get those) and  max_age  (seconds, same as on  /events ).
+				1216 container
+					1217 AXListMarker • 
+					1218 text Resume : save the last  s  you handled. After a drop, connect again and send  resume  with it: you get everything you missed (events are kept for a day, and old commands and expired button clicks are skipped like when polling). A  seq  from  /events  ( last ) works too, so you can switch between the two any time.
+				1219 container
+					1220 AXListMarker • 
+					1221 text Heartbeat  every  heartbeat_interval  ms. No heartbeat for 75 seconds closes the socket. No ack back? The connection is dead, reconnect and resume.
+				1222 container
+					1223 AXListMarker • 
+					1224 text Online status : the bot shows as online while the socket is open (or while it keeps long polling), and goes offline about 45 seconds after the socket closes. Nothing to send for that: the heartbeat is enough, and the SDKs keep the bot online by themselves while your process runs. Changed your status with  PUT /me/status ? Also send  { "op": "presence", "status": "dnd", "activity": "Playing trivia" }  on the socket so the dot changes right away (the SDKs'  setStatus  /  set_status  do).
+				1225 container
+					1226 AXListMarker • 
+					1227 text Limits : 2 open sockets per bot, 10 connects a minute per bot, 30 messages per 10 seconds per socket (API calls below have their own limit). You only need to send heartbeats.
+			1228 heading API calls over the gateway (testing), Value: 4, ID: gateway-requests
+				1229 text API calls over the gateway (testing)
+			1230 text When 
+			1231 text ready
+			1232 text  says 
+			1233 text "requests": true
+			1234 text , the bot can also send its API calls on the same socket instead of one HTTPS request each. Same token, same rules, same limits and the same answers as HTTPS. yapper.js does this by itself; yapper.py stays on HTTPS for now. CODE
+			1235 button Copy
+			1236 text → { "op": "request", "id": "1", "method": "POST", "path": "/channels/<id>/messages", "body": { "content": "hi" } }
+← { "op": "response", "id": "1", "status": 200, "body": { "message": { … } } }
+			1237 content list
+				1238 container
+					1239 AXListMarker • 
+					1240 text id  is yours (text, up to 64 characters): the answer carries it back. Answers can come in any order.
+				1241 container
+					1242 AXListMarker • 
+					1243 text JSON bodies only: sending files and  /events  stay on HTTPS. Up to 8 calls at once and 100 per 10 seconds per socket; over that you get  status  429 with  retry_after  and the socket stays up.
+				1244 container
+					1245 AXListMarker • 
+					1246 text If the socket drops before the answer, you don't know if the call went through (like a network error): ask a GET again, check before repeating anything else.
+			1247 table
+				1248 row
+					1249 cell
+						1250 text CLOSE CODE
+					1251 cell
+						1252 text WHAT TO DO
+				1253 row
+					1254 cell
+						1255 text 4002
+					1256 cell
+						1257 text You didn't identify in time, or sent something first. Connect again and identify.
+				1258 row
+					1259 cell
+						1260 text 4003
+					1261 cell
+						1262 text The gateway isn't on for this bot yet. Poll 
+						1263 text /events
+						1264 text  instead and try again later.
+				1265 row
+					1266 cell
+						1267 text 4004
+					1268 cell
+						1269 text Wrong token. Stop and make a new one in Settings → Developer.
+				1270 row
+					1271 cell
+						1272 text 4008
+					1273 cell
+						1274 text Already 2 sockets open for this bot. Close one.
+				1275 row
+					1276 cell
+						1277 text 4009
+					1278 cell
+						1279 text No heartbeat. Reconnect and resume.
+				1280 row
+					1281 cell
+						1282 text 4029
+					1283 cell
+						1284 text Too many connects or messages. Wait a minute, then resume.
+				1285 row
+					1286 cell
+						1287 text 1013
+					1288 cell
+						1289 text Yapin’ is busy. Wait a few seconds and resume, or poll meanwhile.
+			1290 heading Publishing and verified bots, Value: 2, ID: verified
+				1291 text Publishing and verified bots
+			1292 text Your bot works in your own servers from the start. To let  other  servers add it, write a description (20 to 300 characters) and press  Publish for review  on the Community tab in Settings → Developer → your bot. Yapin’ checks every bot by hand (Yapin’ Plus members are checked first). Once approved it's a  verified bot : it appears in Server settings → Bots → Community bots and on 
+			1293 link Description: /bots, Value: yapin.gg/bots
+			1294 text , and anyone with Manage Server can add it. If it is sent back you see why, fix it and submit again. Verified bots get a   BOT  tag in chat, can show a support server, can send 300 messages a minute overall instead of 30 (see 
+			1295 link Description: Limits, Value: yapin.gg/developers
+			1296 text ) and can use 
+			1297 link Description: Bot hosting, Value: yapin.gg/developers
+			1298 text . Private verification.  Made for one server or one community? On the same Community tab press  Ask for private verification  instead of publishing (it needs the same description). Yapin’ checks it the same way. Once approved it is verified, with the tag, the higher message limit and hosting, but it is not listed anywhere: it stays off 
+			1299 link Description: /bots, Value: yapin.gg/bots
+			1300 text  and Community bots. Anyone who has its bot ID and Manage Server can add it from Server settings → Bots →  Have a bot ID? , so treat the ID like an invite link. A verified public bot can go private and keep its tag with  Make private (keep ✓) . Publishing a private bot sends it back for a public review, and the tag and hosting pause until it is approved. Getting into your first servers.  Before Yapin’ verifies a bot it has to be in 3 servers you don't own, with 3+ members each. You don't need roles in other people's servers for that: on the Community tab press  Let server owners add it  and send them its bot ID. Anyone with Manage Server can add it from Server settings → Bots →  Have a bot ID? , up to 10 servers until it is verified. Press  Stop sharing  to turn it off; servers that already have it keep it. Please don't DM people you don't know to ask, post it in a bot promo channel instead.
+			1301 heading Invite link, Value: 2, ID: invite-link
+				1302 text Invite link
+			1303 text Every bot that can be added by others (verified, or with  Let server owners add it  on) has its own page and one click invite link: 
+			1304 text yapin.gg/bot/<bot id>
+			1305 text  (
+			1306 text /bots/<bot id>
+			1307 text  works too). It shows the bot's card and an  Add to server  button. People pick a server where they have Manage Server, see the permissions your bot asks for, untick the ones it doesn't need and press  Authorize . The bot then gets its own role, named after it, with the ticked permissions. Signed out? The page asks them to log in and comes right back. Pick what it asks for in Settings → Developer → your bot → Community →  Invite link . Mark the ones it can't work without as  Needed : those can't be unticked. Nobody can give a permission they don't have themselves, so a bot that needs Administrator can only be added by the owner or an admin. To share a link that starts with fewer ticked, add 
+			1308 text ?perms=
+			1309 text  with a comma list, like 
+			1310 text yapin.gg/bot/<bot id>?perms=send_messages,manage_messages
+			1311 text . It only picks from what the bot asks for, and needed ones always stay. The keys are the ones in 
+			1312 link Description: Permissions, Value: yapin.gg/developers
+			1313 text  below (
+			1314 text kick_members
+			1315 text , 
+			1316 text manage_roles
+			1317 text ...). In testing: test servers only for now.
+			1318 heading Permissions, Value: 2, ID: permissions
+				1319 text Permissions
+			1320 text A bot is a member. Everything it does beyond reading and posting is checked with the bot's own roles, the same way as for a person: give the bot a role with  Manage messages  and it can delete and pin,  Manage roles  and it can hand out roles,  Kick ,  Ban ,  Timeout ,  Manage channels ,  Manage nicknames ,  Move Members  likewise. Server settings → Members → the bot → roles. Without a role it can read, post, react and DM.
+			1321 heading REST API, Value: 2, ID: rest
+				1322 text REST API
+			1323 text Base URL 
+			1324 text https://bots.yapper.website/api/bot/v1
+			1325 text . Every request sends 
+			1326 text Authorization: Bot <token>
+			1327 text . Bodies and answers are JSON, ids are UUIDs.
+			1328 table
+				1329 row
+					1330 cell
+						1331 text METHOD
+					1332 cell
+						1333 text PATH
+					1334 cell
+						1335 text WHAT IT DOES
+				1336 row
+					1337 cell
+						1338 text GET
+					1339 cell
+						1340 text /events?after=&wait=
+					1341 cell
+						1342 text Events with id above 
+						1343 text after
+						1344 text , up to 100 a call. 
+						1345 text after=0&wait=0
+						1346 text  returns no events and the newest id as 
+						1347 text last
+						1348 text , so start there (with a 
+						1349 text wait
+						1350 text  it waits for new ones); to catch up after a restart, save 
+						1351 text last
+						1352 text  and pass it back. Catching up skips slash commands older than 15 minutes and button clicks that already expired, so a restarted bot doesn't answer yesterday's 
+						1353 text /ping
+						1354 text . Add 
+						1355 text max_age=
+						1356 text  (seconds, up to 86400) to skip everything older too, like joins: 
+						1357 text max_age=300
+						1358 text  catches up on the last 5 minutes only. Skipped events are gone for good, 
+						1359 text last
+						1360 text  still moves past them. 
+						1361 text wait
+						1362 text  up to 20 s (a longer wait comes back empty after about 20 s, just ask again). Up to 4 waiting polls per bot at once and 300 polls a minute per token, past that you get a 429. Returns 
+						1363 text { events: [{ id, type, data, created_at }], last }
+						1364 text . Pass 
+						1365 text last
+						1366 text  back as 
+						1367 text after
+						1368 text .
+				1369 row
+					1370 cell
+						1371 text GET
+						1372 text PUT
+					1373 cell
+						1374 text /commands
+					1375 cell
+						1376 text Read or replace the bot's commands: 
+						1377 text { "commands": [{ "name": "ping", "description": "…" }] }
+						1378 text . PUT replaces the whole list. Up to 100, descriptions up to 100 characters, no duplicate names.
+				1379 row
+					1380 cell
+						1381 text GET
+					1382 cell
+						1383 text /me
+					1384 cell
+						1385 text The bot's own profile with 
+						1386 text avatar_url
+						1387 text , 
+						1388 text banner_url
+						1389 text  and 
+						1390 container
+							1391 text bot:  { name, public, owner_id }
+						1392 text .
+				1393 row
+					1394 cell
+						1395 text PATCH
+					1396 cell
+						1397 text /me
+					1398 cell
+						1399 text { "display_name": "…", "bio": "…" }
+						1400 text , name up to 32 characters, bio up to 300.
+				1401 row
+					1402 cell
+						1403 text PUT
+					1404 cell
+						1405 text /me/avatar
+					1406 cell
+						1407 text The image is the request body with its 
+						1408 text Content-Type
+						1409 text  (
+						1410 text image/png
+						1411 text , 
+						1412 text image/jpeg
+						1413 text , 
+						1414 text image/gif
+						1415 text , 
+						1416 text image/webp
+						1417 text ), or multipart field 
+						1418 text file
+						1419 text . 8 MB max, checked like every upload. DELETE removes it.
+				1420 row
+					1421 cell
+						1422 text GET
+					1423 cell
+						1424 text /servers
+					1425 cell
+						1426 text Servers the bot was added to.
+				1427 row
+					1428 cell
+						1429 text GET
+					1430 cell
+						1431 text /servers/:id/channels?type=text|voice
+					1432 cell
+						1433 text Channels in a server the bot can see, in sidebar order, plus 
+						1434 text categories
+						1435 text . Each: 
+						1436 text { id, name, type, server_id, position, category: { id, name, position } | null, category_id, private, read_only, slowmode }
+						1437 text . Private channels only show if the bot or one of its roles was let in.
+				1438 row
+					1439 cell
+						1440 text GET
+					1441 cell
+						1442 text /channels?type=
+					1443 cell
+						1444 text The same list for every server the bot is in.
+				1445 row
+					1446 cell
+						1447 text GET
+					1448 cell
+						1449 text /servers/:id/members?limit=200&after=:userId
+					1450 cell
+						1451 text Members, sorted by user id: 200 a page by default, up to 500 with 
+						1452 text limit
+						1453 text .
+				1454 row
+					1455 cell
+						1456 text GET
+					1457 cell
+						1458 text /channels/:id
+					1459 cell
+						1460 text One channel: 
+						1461 text { id, kind, name, server_id, category_id, private, read_only, slowmode }
+						1462 text , or 404 if the bot can't see it.
+				1463 row
+					1464 cell
+						1465 text GET
+					1466 cell
+						1467 text /channels/:id/messages?limit=50&before=:isoTime
+					1468 cell
+						1469 text Recent messages, oldest first (50 by default, up to 100), plus an 
+						1470 text authors
+						1471 text  list. Every message has an 
+						1472 text id
+						1473 text ; the id of what you posted comes back from POST.
+				1474 row
+					1475 cell
+						1476 text POST
+					1477 cell
+						1478 text /channels/:id/messages
+					1479 cell
+						1480 text Send 
+						1481 text { "content": "hi", "reply_to": "<message id>", "embeds": [ … ] }
+						1482 text . Up to 2000 characters. Limits: 30 messages a minute per server, and 30 a minute overall (300 for 
+						1483 link Description: verified bots, Value: yapin.gg/developers
+						1484 text ); see 
+						1485 link Description: Limits, Value: yapin.gg/developers
+						1486 text . 
+						1487 text content
+						1488 text  or 
+						1489 text embeds
+						1490 text  is required (a 
+						1491 link Description: Components V2, Value: yapin.gg/developers
+						1492 text  layout takes neither). Add 
+						1493 text "components"
+						1494 text  for 
+						1495 link Description: buttons, Value: yapin.gg/developers
+						1496 text , or 
+						1497 text "flags": 32768
+						1498 text  for a 
+						1499 link Description: Components V2, Value: yapin.gg/developers
+						1500 text  layout. PATCH takes the same 
+						1501 text content
+						1502 text  / 
+						1503 text embeds
+						1504 text  / 
+						1505 text components
+						1506 text  (
+						1507 text null
+						1508 text  removes them). Files go as 
+						1509 text multipart/form-data
+						1510 text  (testing, see 
+						1511 link Description: Sending files, Value: yapin.gg/developers
+						1512 text ).
+				1513 row
+					1514 cell
+						1515 text DELETE
+					1516 cell
+						1517 text /channels/:id/messages/:messageId
+					1518 cell
+						1519 text Delete a message: the bot's own, or anyone's with Manage messages.
+				1520 row
+					1521 cell
+						1522 text POST
+					1523 cell
+						1524 text /interactions/:id/:token/callback
+					1525 cell
+						1526 text Answer a button click: 
+						1527 text { "type": "reply" | "ephemeral" | "update" | "ack", "content", "embeds", "components" }
+						1528 text . See 
+						1529 link Description: Buttons, Value: yapin.gg/developers
+						1530 text .
+				1531 row
+					1532 cell
+						1533 text GET
+					1534 cell
+						1535 text /users/:id
+					1536 cell
+						1537 text Someone's public profile.
+				1538 row
+					1539 cell
+						1540 text POST
+					1541 cell
+						1542 text /users/:id/dm
+					1543 cell
+						1544 text Open or find a DM with them. Returns 
+						1545 text { channel_id }
+						1546 text ; post there like any channel.
+				1547 row
+					1548 cell
+						1549 text PUT
+					1550 cell
+						1551 text /me/banner, /me/status
+					1552 cell
+						1553 text Banner like the avatar, up to 10 MB. Status: 
+						1554 text { "status": "dnd", "activity": "Moderating" }
+						1555 text , activity up to 60 characters.
+				1556 row
+					1557 cell
+						1558 text GET
+					1559 cell
+						1560 text /servers/:id, /servers/:id/roles, /servers/:id/members/:uid
+					1561 cell
+						1562 text Server details; roles; one member with 
+						1563 text roles
+						1564 text  (ids), 
+						1565 text nickname
+						1566 text , 
+						1567 text timeout
+						1568 text . The members list carries 
+						1569 text roles
+						1570 text  too.
+				1571 row
+					1572 cell
+						1573 text GET
+					1574 cell
+						1575 text /channels/:id/messages?after=:isoTime
+					1576 cell
+						1577 text Forward from a time, oldest first. 
+						1578 text /channels/:id/messages/:mid
+						1579 text  fetches one.
+				1580 row
+					1581 cell
+						1582 text PATCH
+					1583 cell
+						1584 text /channels/:id/messages/:mid
+					1585 cell
+						1586 text Edit the bot's own message: 
+						1587 text { "content": "…", "embeds": [ … ], "components": [ … ] }
+						1588 text . Leave a key out to keep it. Changing only the buttons doesn't mark the message edited.
+				1589 row
+					1590 cell
+						1591 text POST
+					1592 cell
+						1593 text /channels/:id/messages/bulk-delete
+					1594 cell
+						1595 text { "ids": […] }
+						1596 text , up to 100. Returns 
+						1597 text deleted
+						1598 text  and 
+						1599 text skipped
+						1600 text .
+				1601 row
+					1602 cell
+						1603 text PUT
+						1604 text DELETE
+					1605 cell
+						1606 text /channels/:id/messages/:mid/pin
+					1607 cell
+						1608 text Pin or unpin (Manage messages).
+				1609 row
+					1610 cell
+						1611 text GET
+						1612 text PUT
+						1613 text DELETE
+					1614 cell
+						1615 text /channels/:id/messages/:mid/reactions[/:emoji]
+					1616 cell
+						1617 text List reactions, add or remove the bot's own. URL-encode the emoji.
+				1618 row
+					1619 cell
+						1620 text PUT
+						1621 text DELETE
+					1622 cell
+						1623 text /servers/:id/members/:uid/roles/:rid
+					1624 cell
+						1625 text Give or take a role (Manage roles).
+				1626 row
+					1627 cell
+						1628 text PATCH
+					1629 cell
+						1630 text /servers/:id/members/:uid
+					1631 cell
+						1632 text { "nickname": "…" }
+						1633 text , up to 32 characters, empty clears (Manage nicknames).
+				1634 row
+					1635 cell
+						1636 text POST
+					1637 cell
+						1638 text /servers/:id/kick, /servers/:id/bans, /servers/:id/timeouts
+					1639 cell
+						1640 text { "user_id" }
+						1641 text ; timeouts also 
+						1642 text minutes
+						1643 text  (10 if left out, up to 40320 = 28 days, 0 clears) and 
+						1644 text reason
+						1645 text  (200 characters). 
+						1646 text GET /servers/:id/bans
+						1647 text  lists, 
+						1648 text DELETE /servers/:id/bans/:uid
+						1649 text  unbans.
+				1650 row
+					1651 cell
+						1652 text POST
+						1653 text PATCH
+						1654 text DELETE
+					1655 cell
+						1656 text /servers/:id/roles[/:rid]
+					1657 cell
+						1658 text { "name", "color": "#rrggbb", "mentionable", "permissions": { "kick_members": true } }
+						1659 text ; PATCH also 
+						1660 text position
+						1661 text , and only the permission keys you send change. 
+						1662 text PATCH /servers/:id/roles/everyone
+						1663 text { "permissions": { … } }
+						1664 text  for @everyone's basic ones. Manage Roles, only roles below the bot's highest, only permissions it has itself, not automatic roles. 30 changes a minute. In testing: test servers only for now.
+				1665 row
+					1666 cell
+						1667 text GET
+						1668 text PUT
+						1669 text DELETE
+					1670 cell
+						1671 text /channels/:id/permissions[/:role], /servers/:id/categories/:cid/permissions/:role
+					1672 cell
+						1673 text Overrides for a role id or 
+						1674 text everyone
+						1675 text : 
+						1676 text { "allow": ["send_messages"], "deny": ["view_channel"] }
+						1677 text . Empty lists or DELETE remove it. Manage Roles or Manage Channels, and only permissions the bot has in every channel it touches. Counts towards the 30 changes a minute. In testing: test servers only for now.
+				1678 row
+					1679 cell
+						1680 text GET
+					1681 cell
+						1682 text /servers/:id/counts
+					1683 cell
+						1684 text { server_id, member_count, online_count }
+						1685 text . 
+						1686 text online_count
+						1687 text  is people online right now (refreshed once a minute) and is also on 
+						1688 text GET /servers
+						1689 text  and 
+						1690 text /servers/:id
+						1691 text . Poll every few minutes; 
+						1692 text member_join
+						1693 text  / 
+						1694 text member_leave
+						1695 text  carry 
+						1696 text member_count
+						1697 text  in between. In testing: test servers only for now.
+				1698 row
+					1699 cell
+						1700 text GET
+					1701 cell
+						1702 text /servers/:id/invites
+					1703 cell
+						1704 text { invites: [{ code, url, inviter_id, uses, max_uses, expires_at, vanity, created_at }] }
+						1705 text . Manage Server. 
+						1706 text max_uses
+						1707 text  is 0 (no limit) and 
+						1708 text expires_at
+						1709 text  null: Yapin’ invites don't run out. One member (
+						1710 text /servers/:id/members/:uid
+						1711 text ) then also has 
+						1712 text invite_code
+						1713 text  and 
+						1714 text inviter_id
+						1715 text  (null when not known, left out when the bot can't see invites). In testing: test servers only for now.
+				1716 row
+					1717 cell
+						1718 text POST
+					1719 cell
+						1720 text /servers/:id/channels, /servers/:id/categories
+					1721 cell
+						1722 text { "name", "kind": "text"|"voice", "category_id" }
+						1723 text  / 
+						1724 text { "name" }
+						1725 text . PATCH 
+						1726 text /servers/:id/categories/:cid
+						1727 text { "name" }
+						1728 text  renames. DELETE 
+						1729 text /channels/:id
+						1730 text , 
+						1731 text /servers/:id/categories/:cid
+						1732 text . All need Manage channels.
+				1733 row
+					1734 cell
+						1735 text GET
+						1736 text POST
+					1737 cell
+						1738 text /servers/:id/events
+					1739 cell
+						1740 text Upcoming and live events: 
+						1741 text { events: [{ id, title, description, starts_at, ends_at, channel_id, location, announce_channel_id, repeat, status, interested_count }] }
+						1742 text . POST 
+						1743 text { "title", "starts_at", "ends_at", "channel_id" (a voice channel) or "location", "announce_channel_id", "repeat": "none"|"weekly", "tz", "description" }
+						1744 text  makes one (Manage Events or Manage Server), up to 25 upcoming per server. In testing: test servers only for now.
+				1745 row
+					1746 cell
+						1747 text PATCH
+					1748 cell
+						1749 text /channels/:id
+					1750 cell
+						1751 text name, category_id, private + role_ids, read_only + post_role_ids, slowmode
+						1752 text  (seconds, up to 21600).
+				1753 row
+					1754 cell
+						1755 text GET
+						1756 text POST
+					1757 cell
+						1758 text /servers/:id/emojis
+					1759 cell
+						1760 text The server's custom emojis: 
+						1761 text { emojis: [{ id, name, animated, url, path, owner_id, server_id, created_at }], limit }
+						1762 text  (
+						1763 text limit
+						1764 text  is its emoji slots). POST adds one: multipart 
+						1765 text name
+						1766 text  + 
+						1767 text file
+						1768 text , or JSON 
+						1769 text { "name", "image": "<base64 or data: URL>" }
+						1770 text . PNG, GIF or WebP up to 1 MB, names 2 to 32 letters, numbers or 
+						1771 text _
+						1772 text , same slots as people. Every new emoji is checked first; one the check isn't sure about waits for a moderator (
+						1773 text { emoji: null, pending: true }
+						1774 text ). See 
+						1775 link Description: Custom emojis, Value: yapin.gg/developers
+						1776 text .
+				1777 row
+					1778 cell
+						1779 text PATCH
+						1780 text DELETE
+					1781 cell
+						1782 text /servers/:id/emojis/:eid
+					1783 cell
+						1784 text { "name" }
+						1785 text  renames; DELETE removes it. Manage Emoji, 30 emoji changes a minute. In testing: test servers only for now.
+				1786 row
+					1787 cell
+						1788 text GET
+					1789 cell
+						1790 text /servers/:id/voice
+					1791 cell
+						1792 text Who is in voice: 
+						1793 text { voice: [{ channel_id, user_ids }] }
+						1794 text  for every voice channel the bot can see. See 
+						1795 link Description: Voice, Value: yapin.gg/developers
+						1796 text .
+				1797 row
+					1798 cell
+						1799 text POST
+					1800 cell
+						1801 text /servers/:id/voice/move, /servers/:id/voice/disconnect
+					1802 cell
+						1803 text { "user_id", "channel_id" }
+						1804 text  / 
+						1805 text { "user_id" }
+						1806 text . Move someone to another voice channel, or drop them from voice (Move Members).
+				1807 row
+					1808 cell
+						1809 text POST
+					1810 cell
+						1811 text /servers/:id/voice/join, /servers/:id/voice/leave
+					1812 cell
+						1813 text { "channel_id" }
+						1814 text  / nothing. Join returns a LiveKit ticket 
+						1815 text { url, token, e2ee, voice_muted, channel_id, server_id, expires_in }
+						1816 text ; leave takes the bot out of voice in that server. See 
+						1817 link Description: Music bots, Value: yapin.gg/developers
+						1818 text .
+			1819 text CORS is open, so a bot can run in a browser page too (keep the token out of anything public). Errors come back as 
+			1820 text { "error": "…" }
+			1821 text : 400 bad input, 401 wrong or missing token, 403 not allowed (the bot is not in that server, or its roles lack the permission), 404 not found or not visible, 409 the person isn't in voice, 429 slow down, 503 Yapin’ is busy. A 429 that has a 
+			1822 text Retry-After
+			1823 text  header (seconds) is safe to retry after that wait (the SDK does it for you); one without it won't go through by waiting (like the same message twice, or more than 10 answers to one click). A 503 with 
+			1824 text Retry-After
+			1825 text  means nothing was done: wait and try again (the SDKs do).
+			1826 heading Pictures and files, Value: 3, ID: files
+				1827 text Pictures and files
+			1828 text The API gives pictures as paths, not links: 
+			1829 text avatar_path
+			1830 text , 
+			1831 text banner_path
+			1832 text , a server's 
+			1833 text icon_path
+			1834 text , a message's 
+			1835 text attachment_path
+			1836 text . Put the bucket and the path after 
+			1837 container
+				1838 text https://files.yapper.website /
+			1839 text :
+			1840 table
+				1841 row
+					1842 cell
+						1843 text FIELD
+					1844 cell
+						1845 text LINK
+				1846 row
+					1847 cell
+						1848 text avatar_path
+					1849 cell
+						1850 container
+							1851 text https://files.yapper.website /avatars/<path>
+				1852 row
+					1853 cell
+						1854 text banner_path
+						1855 text  (people and servers)
+					1856 cell
+						1857 container
+							1858 text https://files.yapper.website /banners/<path>
+				1859 row
+					1860 cell
+						1861 text icon_path
+					1862 cell
+						1863 container
+							1864 text https://files.yapper.website /icons/<path>
+				1865 row
+					1866 cell
+						1867 text attachment_path
+					1868 cell
+						1869 container
+							1870 text https://files.yapper.website /attachments/<path>
+			1871 text A path that starts with 
+			1872 text /
+			1873 text  (built-in bot pictures) lives on the site: 
+			1874 text https://www.yapin.gg<path>
+			1875 text . 
+			1876 text null
+			1877 text  means there's no picture, so show initials or a default. A new picture always gets a new path, so links never change and are fine to cache. 
+			1878 text GET /me
+			1879 text  and the avatar/banner uploads also hand back a ready 
+			1880 text url
+			1881 text . JAVASCRIPT
+			1882 button Copy
+			1883 text const pic = (bucket, path) => !path ? null : path.startsWith('/') ? 'https://www.yapin.gg' + path : `https://files.yapper.website/${bucket}/${path}`;
+pic('icons', server.icon_path);   // https://files.yapper.website/icons/<user id>/r2-…png
+			1884 heading Sending files (testing), Value: 3, ID: sending-files
+				1885 text Sending files (testing)
+			1886 text Welcome cards, generated images, logs as a .txt: bots can attach files to messages, on test servers for now (and in DMs for testers' bots). Send 
+			1887 text POST /channels/:id/messages
+			1888 text  as 
+			1889 text multipart/form-data
+			1890 text  with the usual JSON body as text in 
+			1891 text payload_json
+			1892 text  and the files in 
+			1893 text files[0]
+			1894 text , 
+			1895 text files[1]
+			1896 text … (
+			1897 text file
+			1898 text  works for one). DMs work the same way: open one with 
+			1899 text POST /users/:id/dm
+			1900 text  and send to that channel.
+			1901 content list
+				1902 container
+					1903 AXListMarker • 
+					1904 text Up to 4 files per message, 10 MB each and 12 MB for all of them together. 20 files a minute per bot, and each file counts as a message for the usual limits.
+				1905 container
+					1906 AXListMarker • 
+					1907 text Pictures (PNG, JPG, GIF, WebP), videos (MP4, WebM, MOV), sounds (MP3, OGG, WAV, M4A, up to a minute) and TXT, PDF or ZIP files. The type comes from the file's name, so name it right.
+				1908 container
+					1909 AXListMarker • 
+					1910 text Every file gets the same check as people's uploads before it shows. A file that doesn't pass comes back as a 400 and nothing is sent.
+				1911 container
+					1912 AXListMarker • 
+					1913 text Each file shows as its own message, just like a person's files. The first one carries your text, embeds, buttons and reply;  content  can be empty. The answer has  message  (the first) and  messages  (all of them).
+				1914 container
+					1915 AXListMarker • 
+					1916 text The bot needs  Attach Files  in that channel. A name starting with  SPOILER_  hides a picture until it's clicked.
+			1917 text JAVASCRIPT
+			1918 button Copy
+			1919 container
+				1920 text // JavaScript
+await bot.send(channelId, 'Welcome to the server!', { files: ['./welcome.png'] });
+msg.reply('', { files: [{ name: 'log.txt', data: Buffer.from(text) }] });
+
+# Python
+bot.send(channel_id, "Welcome!", files=["welcome.png"])
+msg.reply("", files=[("card.png", png_bytes)])
+
+# curl
+curl -X POST https://bots.yapper.website/api/bot/v1/channels/<channel id>/messages -H "Authorization: Bot $TOKEN" \
+  -F 'payload_json={"content":"Welcome!"}' -F 'files[0] =@welcome.png '
+			1921 text Need an id? Turn on  Settings → Advanced → Developer Mode , then right-click a server, channel, category, message or person and pick  Copy … ID .
+			1922 heading Events, Value: 2, ID: events
+				1923 text Events
+			1924 text Every event has 
+			1925 text channel_id
+			1926 text  and 
+			1927 text server_id
+			1928 text . 
+			1929 text channel_id
+			1930 text  is 
+			1931 text null
+			1932 text  for events that don't happen in a channel (members joining or leaving, tests); 
+			1933 text server_id
+			1934 text  is 
+			1935 text null
+			1936 text  for tests and for clicks on buttons the bot posted in a DM.
+			1937 table
+				1938 row
+					1939 cell
+						1940 text TYPE
+					1941 cell
+						1942 text DATA
+				1943 row
+					1944 cell
+						1945 text message
+					1946 cell
+						1947 text id, channel_id, channel_name, server_id, author_id, author, content, attachment, reply_to_id, created_at, mentioned, author_bot
+						1948 text  (true when another bot or a webhook sent it; skip those so two bots don't answer each other forever). When the message starts with 
+						1949 text /
+						1950 text  or 
+						1951 text !
+						1952 text  and one of your registered commands: 
+						1953 text command
+						1954 text  and 
+						1955 text args
+						1956 text  too. When two bots here have the same command, people can pick one (
+						1957 text /fish @YourBot
+						1958 text ): only that bot gets 
+						1959 text command
+						1960 text , the others get the message with 
+						1961 text command_for
+						1962 text  (the picked bot's id) and should not answer. The SDKs handle this; if you parse the text yourself, skip it when 
+						1963 text command_for
+						1964 text  is there and doesn't have your id. Mentions in 
+						1965 text content
+						1966 text  look like 
+						1967 text <@user id>
+						1968 text . The bot's own messages are not sent to it. DMs to the bot come as 
+						1969 text dm_message
+						1970 text , never as 
+						1971 text message
+						1972 text .
+				1973 row
+					1974 cell
+						1975 text dm_message
+					1976 cell
+						1977 text id, channel_id (the DM), dm_channel_id (the same id), server_id (null), is_dm (true), dm (true), author_id, author, author_name, content, attachment, attachments, reply_to_id, created_at, author_bot
+						1978 text . Someone DMed the bot. See 
+						1979 link Description: DMs and reactions, Value: yapin.gg/developers
+						1980 text  (in testing).
+				1981 row
+					1982 cell
+						1983 text member_join
+					1984 cell
+						1985 text server_id, channel_id (null), user_id, username, joined_at, member_count
+						1986 text . Not sent when another bot joins. Bots with Manage Server also get 
+						1987 text invite_code
+						1988 text  and 
+						1989 text inviter_id
+						1990 text  when the person joined with an invite link (in testing: test servers only for now).
+				1991 row
+					1992 cell
+						1993 text invite_create / invite_delete
+					1994 cell
+						1995 text server_id, code, inviter_id, uses, max_uses (0), expires_at (null), vanity, created_at
+						1996 text . Someone made or deleted an invite. Bots with Manage Server only (in testing: test servers only for now).
+				1997 row
+					1998 cell
+						1999 text member_leave
+					2000 cell
+						2001 text server_id, channel_id (null), user_id, username, joined_at (null), member_count
+				2002 row
+					2003 cell
+						2004 text reaction_add / reaction_remove
+					2005 cell
+						2006 text message_id, channel_id, server_id, user_id, username, emoji, message_author_id
+						2007 text . In a DM: only for the bot's own messages, with 
+						2008 text server_id
+						2009 text  null, 
+						2010 text is_dm
+						2011 text  (and 
+						2012 text dm
+						2013 text ) true and 
+						2014 text dm_channel_id
+						2015 text . Reaction roles in a few lines: on 
+						2016 text reaction_add
+						2017 text  with the right message and emoji, 
+						2018 text bot.addRole(…)
+						2019 text .
+				2020 row
+					2021 cell
+						2022 text command
+					2023 cell
+						2024 text id, token, command, args, channel_id, server_id, user_id, username, expires_at
+						2025 text . Someone picked one of the bot's slash commands from the 
+						2026 text /
+						2027 text  menu (in testing: test servers only for now). Only for bots that sent 
+						2028 text PUT /commands
+						2029 text  with 
+						2030 text "interactions": true
+						2031 text  (the SDKs do): nothing is posted in chat, and people see your answer with " name  used /command" above it. Answer with 
+						2032 text POST /interactions/:id/:token/callback
+						2033 text  and type 
+						2034 text reply
+						2035 text , 
+						2036 text ephemeral
+						2037 text  (only they see it), 
+						2038 text ack
+						2039 text  or 
+						2040 text modal
+						2041 text  (a form, see 
+						2042 link Description: Modals, Value: yapin.gg/developers
+						2043 text ) within 15 minutes. In the SDKs your command handler runs as usual and 
+						2044 text msg.reply
+						2045 text  answers it. Bots that don't send 
+						2046 text interactions
+						2047 text  keep getting commands as 
+						2048 text message
+						2049 text  events, as before.
+				2050 row
+					2051 cell
+						2052 text interaction
+					2053 cell
+						2054 text id, token, type ("button"), custom_id, message_id, channel_id, server_id, user_id, username, expires_at
+						2055 text . Someone clicked one of the bot's buttons. Answer with 
+						2056 text POST /interactions/:id/:token/callback
+						2057 text , see 
+						2058 link Description: Buttons, Value: yapin.gg/developers
+						2059 text .
+				2060 row
+					2061 cell
+						2062 text voice_join / voice_leave
+					2063 cell
+						2064 text user_id, channel_id, server_id
+						2065 text . Someone joined or left a voice channel the bot can see. A move is a 
+						2066 text voice_leave
+						2067 text  plus a 
+						2068 text voice_join
+						2069 text  (in either order), and a dropped connection that comes back sends both too. See 
+						2070 link Description: Voice, Value: yapin.gg/developers
+						2071 text .
+				2072 row
+					2073 cell
+						2074 text test
+					2075 cell
+						2076 text bot, by, at, hello
+						2077 text . Sent by the "Send test event" button in Settings → Developer.
+			2078 heading DMs and reactions (testing), Value: 3, ID: dms
+				2079 text DMs and reactions (testing)
+			2080 text People can DM your bot from its profile (it takes DMs from people it shares a server with). Each message they send comes in as a 
+			2081 text dm_message
+			2082 text  event, and 
+			2083 text msg.reply
+			2084 text  answers right there in the DM. Your bot only ever gets its own DMs: chats between other people, group chats and other bots' DMs never reach it. Commands don't run in DMs, so read 
+			2085 text msg.content
+			2086 text  yourself. DM events have 
+			2087 text is_dm: true
+			2088 text  and 
+			2089 text dm_channel_id
+			2090 text , with 
+			2091 text server_id
+			2092 text  null; server events don't have 
+			2093 text is_dm
+			2094 text . Reactions on the bot's own messages come as 
+			2095 text reaction_add
+			2096 text  / 
+			2097 text reaction_remove
+			2098 text : in server channels the bot can see (as before) and now in its DMs too. 
+			2099 text onReactionOnMine
+			2100 text  keeps just those and sets 
+			2101 text added
+			2102 text .
+			2103 text attachments
+			2104 text  is a list of 
+			2105 text { path, name, size, width, height, voice_secs }
+			2106 text  (empty when there's no file); put 
+			2107 text path
+			2108 text  after 
+			2109 container
+				2110 text https://files.yapper.website /attachments/
+			2111 text  for a link (see 
+			2112 link Description: Pictures and files, Value: yapin.gg/developers
+			2113 text ). Same delivery as every other event: gateway, long poll or your 
+			2114 link Description: event webhook, Value: yapin.gg/developers
+			2115 text . In testing: works when the person DMing or the bot's owner is a tester, or the bot is in a test server. JAVASCRIPT
+			2116 button Copy
+			2117 text // JavaScript
+bot.onDm(async (msg) => {
+  if (msg.content.toLowerCase() === 'help') return msg.reply('Hey! Use /help in a server, or ask me here.');
+  if (msg.attachments.length) return msg.reply(`Got your file: ${msg.attachments[0].name}`);
+  await msg.reply(`You said: ${msg.content}`);
+});
+
+bot.onReactionOnMine((r) => {
+  console.log(r.username, r.added ? 'reacted' : 'took back', r.emoji, 'on', r.message_id, r.dm ? '(in a DM)' : '');
+});
+
+// Same thing with on(): bot.on('dm_message', fn), bot.on('reaction_add', fn) and check r.message_author_id === bot.me.id
+			2118 text PYTHON
+			2119 button Copy
+			2120 text # Python (yapper.py 1.4)
+@bot.on_dm
+def dm(msg):
+    msg.reply("You said: " + msg.content)
+
+@bot.on_reaction_on_mine
+def reacted(r):
+    if r.added and r.emoji == "👍":
+        bot.dm_send(r.user_id, "Thanks for the thumbs up!")
+			2121 heading Bot profile, Value: 2, ID: profile
+				2122 text Bot profile
+			2123 text Owners can edit all of this without code in the  Developer Portal  (Settings → Developer → your bot → Profile), with a live preview. From code:
+			2124 table
+				2125 row
+					2126 cell
+						2127 text CALL
+					2128 cell
+						2129 text WHAT IT DOES
+				2130 row
+					2131 cell
+						2132 text PATCH /me
+						2133 text { "display_name": "Dice Bot", "bio": "Rolls dice. /roll 2d6" }
+					2134 cell
+						2135 text Name up to 32 characters, bio up to 300. Same filters as people's profiles. SDK: 
+						2136 container
+							2137 text bot.setProfile( { displayName, bio } )
+						2138 text .
+				2139 row
+					2140 cell
+						2141 text PUT /me/avatar
+					2142 cell
+						2143 text The picture: the image as the request body (
+						2144 text Content-Type: image/png
+						2145 text ) or multipart field 
+						2146 text file
+						2147 text . PNG, JPG, GIF or WebP, up to 8 MB. Checked before it shows. SDK: 
+						2148 text bot.setAvatar('./avatar.png')
+						2149 text .
+				2150 row
+					2151 cell
+						2152 text PUT /me/banner
+					2153 cell
+						2154 text The banner, same way, up to 10 MB. SDK: 
+						2155 text bot.setBanner('./banner.png')
+						2156 text .
+				2157 row
+					2158 cell
+						2159 text DELETE /me/avatar
+						2160 text , 
+						2161 text DELETE /me/banner
+					2162 cell
+						2163 text Remove them.
+				2164 row
+					2165 cell
+						2166 text PUT /me/status
+						2167 text { "status": "online", "activity": "Playing chess" }
+					2168 cell
+						2169 text Status (
+						2170 text online
+						2171 text , 
+						2172 text idle
+						2173 text , 
+						2174 text dnd
+						2175 text ) and an activity line. SDK: 
+						2176 text bot.setStatus('online', 'Playing chess')
+						2177 text .
+				2178 row
+					2179 cell
+						2180 text GET /me
+					2181 cell
+						2182 text The profile as it is now, with 
+						2183 text avatar_url
+						2184 text  and 
+						2185 text banner_url
+						2186 text .
+			2187 text TERMINAL
+			2188 button Copy
+			2189 text curl -X PATCH https://bots.yapper.website/api/bot/v1/me -H "Authorization: Bot $TOKEN" -H "Content-Type: application/json"   -d '{"display_name":"Dice Bot","bio":"Rolls dice. /roll 2d6"}'
+curl -X PUT https://bots.yapper.website/api/bot/v1/me/avatar -H "Authorization: Bot $TOKEN" -H "Content-Type: image/png" --data-binary @avatar.png
+			2190 heading Embeds, Value: 2, ID: embeds
+				2191 text Embeds
+			2192 text Bot messages can carry up to 5 cards. Unknown keys are ignored and text over a limit is cut. More than 5 embeds, more than 10 fields, over 6000 characters in all, an empty card or a picture from a host we don't allow is a 400 that says what's wrong, so you find out. JSON
+			2193 button Copy
+			2194 text {
+  "content": "",
+  "embeds": [{
+    "title": "Match result",                // 256
+    "url": "https://example.com/match/42",
+    "description": "**Blue** won 3-1. [Replay](https://example.com/r/42)",   // 4096, markdown + [masked](links)
+    "color": "#ff6b4a",                      // or a number like 16739146
+    "author": { "name": "Score Bot", "icon_url": "https://i.imgur.com/abc.png" },   // name 256
+    "fields": [                             // up to 10, name 256, value 1024; inline ones sit 3 to a row
+      { "name": "MVP", "value": "<@user id>", "inline": true },
+      { "name": "Time", "value": "34:12", "inline": true }
+    ],
+    "thumbnail": { "url": "https://i.imgur.com/thumb.png" },
+    "image": { "url": "https://media.tenor.com/x.gif" },
+    "footer": { "text": "Season 2", "icon_url": "https://i.imgur.com/s2.png" },   // text 2048
+    "timestamp": "2026-10-16T12:00:00Z"
+  }]
+}
+			2195 text Limits: 6000 characters across one message's embeds (titles, descriptions, fields, author names, footers). Links can be http or https, up to 512 characters. Pictures must be 
+			2196 text https
+			2197 text  links to Yapin’ uploads or  i.imgur.com, media.tenor.com, media.giphy.com, i.giphy.com, upload.wikimedia.org, raw.githubusercontent.com, avatars.githubusercontent.com, user-images.githubusercontent.com, i.ytimg.com, cdn.discordapp.com, media.discordapp.net, pbs.twimg.com, i.redd.it, static-cdn.jtvnw.net, i.scdn.co, s4.anilist.co, cdn.myanimelist.net, nekos.best, cdn.weeb.sh , *.klipy.com, *.rbxcdn.com. Image proxy (rolling out server by server): where it's on, embed pictures (
+			2198 text image
+			2199 text , 
+			2200 text thumbnail
+			2201 text , 
+			2202 text author.icon_url
+			2203 text , 
+			2204 text footer.icon_url
+			2205 text ) and webhook 
+			2206 text avatar_url
+			2207 text  can be 
+			2208 text https
+			2209 text  links to any site. We fetch each picture once, check it like an upload, resize it and serve it from our own storage, so people looking at it never connect to your site. The message you get back has 
+			2210 text proxy_url
+			2211 text  / 
+			2212 text proxy_icon_url
+			2213 text  next to your link, like Discord. Links must use the normal https port and a domain name (no IP addresses). Each sender can post up to 60 new picture links an hour and each server 300 (links already seen don't count); past that the bot API answers 
+			2214 text 429
+			2215 text  and webhooks leave the picture out. A picture that fails the check shows as a grey "Picture blocked" box. Pictures over 15 MB, slower than 10 s, SVGs and non-images aren't shown. GIF links from Tenor, Giphy and KLIPY load directly.
+			2216 heading Buttons, Value: 2, ID: buttons
+				2217 text Buttons
+			2218 text Bot messages can carry up to 5 rows of up to 5 buttons under the text and embeds. Styles: 
+			2219 text primary
+			2220 text  (blurple), 
+			2221 text secondary
+			2222 text  (grey), 
+			2223 text success
+			2224 text  (green), 
+			2225 text danger
+			2226 text  (red) and 
+			2227 text link
+			2228 text  (opens a https link after a "Leaving Yapin’" check, nothing is sent to the bot). JAVASCRIPT
+			2229 button Copy
+			2230 text import { Bot, Row, Button } from './yapper.js';
+
+bot.command('vote', 'Pizza or not', (msg) => msg.reply('Pizza tonight?', {
+  components: [new Row(
+    Button.success('Yes', 'vote:yes').emoji('🍕'),
+    Button.danger('No', 'vote:no'),
+    Button.link('Menu', 'https://example.com/menu'),
+  )],
+}));
+
+bot.onButton(/^vote:/, async (i) => {
+  await i.ephemeral(`You voted ${i.custom_id.slice(5)}`);      // only the clicker sees this
+  // or: i.reply('text') for everyone, i.update({ components: [...] }) to change the message, i.ack() to just say ok
+});
+			2231 text The same thing without the SDK: JSON
+			2232 button Copy
+			2233 text "components": [{
+  "type": "row",
+  "components": [
+    { "type": "button", "style": "success", "label": "Yes", "emoji": "🍕", "custom_id": "vote:yes" },
+    { "type": "button", "style": "danger", "label": "No", "custom_id": "vote:no", "disabled": false },
+    { "type": "button", "style": "link", "label": "Menu", "url": "https://example.com/menu" }
+  ]
+}]
+			2234 text Rules: every button needs a 
+			2235 text label
+			2236 text  (80 characters) or an 
+			2237 text emoji
+			2238 text  (one emoji like 
+			2239 text 🔥
+			2240 text , or a server emoji 
+			2241 text <:name:id>
+			2242 text ). Style numbers (1 to 5) and type 
+			2243 text 2
+			2244 text  work too. Other buttons need a 
+			2245 text custom_id
+			2246 text  (1 to 100 characters, each one different in a message) and no 
+			2247 text url
+			2248 text ; link buttons need an 
+			2249 text https
+			2250 text url
+			2251 text  and no 
+			2252 text custom_id
+			2253 text . Anything else is a 400 that says what's wrong. Disabled buttons show greyed out and can't be clicked. Clicks.  A click on a button that isn't a link sends your bot an 
+			2254 text interaction
+			2255 text  event (polling and webhook, like every event). Only people who can see the channel and aren't timed out can click, and each person gets 5 clicks per 10 seconds and 30 a minute. Answer within  3 seconds  or the person sees "This interaction failed". The same interaction stays open for 15 minutes and takes up to 10 answers: TERMINAL
+			2256 button Copy
+			2257 text POST https://bots.yapper.website/api/bot/v1/interactions/<id>/<token>/callback
+{ "type": "ephemeral", "content": "Only you can see this" }
+
+type  reply      a new message in the channel (content, embeds, components)
+      ephemeral  a message only the clicker sees (content, embeds). It shows until they reload or dismiss it.
+      update     edit the clicked message: leave a key out to keep it, null removes it.
+                 e.g. { "type": "update", "components": [ …same buttons with "disabled": true… ] }
+      ack        nothing visible, just "got it" so no error shows
+			2258 text Keep the 
+			2259 text token
+			2260 text  to yourself: anyone with it can answer as your bot for 15 minutes. After that the callback says the interaction expired; past 10 answers it's a 429.
+			2261 heading Select menus (testing), Value: 3, ID: select-menus
+				2262 text Select menus (testing)
+			2263 text A row can hold one dropdown instead of buttons: type 
+			2264 text "select"
+			2265 text  (or 
+			2266 text 3
+			2267 text ) with a 
+			2268 text custom_id
+			2269 text  and up to 25 
+			2270 text options
+			2271 text  (
+			2272 text label
+			2273 text , 
+			2274 text value
+			2275 text , and optional 
+			2276 text description
+			2277 text , 
+			2278 text emoji
+			2279 text , 
+			2280 text default
+			2281 text ). 
+			2282 text min_values
+			2283 text  and 
+			2284 text max_values
+			2285 text  (default 1) say how many can be picked; 
+			2286 text placeholder
+			2287 text  shows while nothing is. A pick sends an 
+			2288 text interaction
+			2289 text  event with 
+			2290 text type: "select"
+			2291 text  and 
+			2292 text values
+			2293 text , the picked values, answered like a click. We check the picks against your menu, so 
+			2294 text values
+			2295 text  only ever holds your own values. Works in Components V2 rows too. In testing: test servers only for now. JAVASCRIPT
+			2296 button Copy
+			2297 text import { Bot, Row, Select } from './yapper.js';
+
+bot.command('lunch', 'Pick lunch', (msg) => msg.reply('What do you want?', {
+  components: [new Row(new Select('food').placeholder('Pick up to 2').max(2)
+    .option('Pizza', 'pizza', { emoji: '🍕' })
+    .option('Tacos', 'tacos', { description: 'Spicy' })
+    .option('Soup', 'soup'))],
+}));
+
+bot.onSelect('food', (i) => i.ephemeral(`You picked ${i.values.join(' and ')}`));
+			2298 text Python: 
+			2299 text yapper.Select("food").option("Pizza", "pizza")
+			2300 text  and 
+			2301 text @bot.on_select("food")
+			2302 text .
+			2303 heading Modals (testing), Value: 3, ID: modals
+				2304 text Modals (testing)
+			2305 text Answer a click, a pick or a 
+			2306 text /command
+			2307 text  with 
+			2308 text type: "modal"
+			2309 text  to pop up a form for that person: a 
+			2310 text title
+			2311 text  (45 characters), a 
+			2312 text custom_id
+			2313 text  and up to 5 inputs. Inputs are text boxes (
+			2314 text "text_input"
+			2315 text  or 
+			2316 text 4
+			2317 text : 
+			2318 text label
+			2319 text , 
+			2320 text style
+			2321 text  short or paragraph, 
+			2322 text min_length
+			2323 text , 
+			2324 text max_length
+			2325 text  up to 4000, 
+			2326 text required
+			2327 text , 
+			2328 text value
+			2329 text , 
+			2330 text placeholder
+			2331 text ) or select menus with a 
+			2332 text label
+			2333 text  (and 
+			2334 text required
+			2335 text ). The wrappers other chat apps use work too: an action row around one input, or a label (type 18) with 
+			2336 text component
+			2337 text . A modal has to be the first answer to an interaction, and a modal_submit can't open another one. When they send it, your bot gets an 
+			2338 text interaction
+			2339 text  with 
+			2340 text type: "modal_submit"
+			2341 text , the modal's 
+			2342 text custom_id
+			2343 text  and 
+			2344 text values
+			2345 text : each input's custom_id with what was typed (trimmed, 
+			2346 text ""
+			2347 text  for a skipped optional one) or a list of picked values. Every answer is checked against your modal first (required, lengths, only your options). Answer it with reply, ephemeral or ack (update too, when the modal came from a click on your message). Slash commands can open one too when they come as 
+			2348 text command
+			2349 text  events (bots that sent 
+			2350 text PUT /commands
+			2351 text  with 
+			2352 text "interactions": true
+			2353 text , which the SDKs do; see 
+			2354 link Description: Events, Value: yapin.gg/developers
+			2355 text ): 
+			2356 text msg.showModal(…)
+			2357 text  in the command handler. A modal_submit from a command has no message, so answer it with reply, ephemeral or ack. Commands that still come as chat messages have nothing to answer: reply with a button that opens the form instead. JAVASCRIPT
+			2358 button Copy
+			2359 text import { Bot, Modal, TextInput, Select } from './yapper.js';
+
+bot.command('apply', 'Apply for staff', (msg) => msg.showModal(new Modal('apply', 'Apply for staff',
+  TextInput.short('age', 'How old are you?').length(1, 3),
+  TextInput.paragraph('why', 'Why do you want to help?').length(20, 1000),
+  new Select('role').label('Which team?').option('Mods', 'mods').option('Events', 'events'),
+)));
+
+bot.onModal('apply', (i) => i.ephemeral(`Thanks! We got your ${i.values.role[0]} application.`));
+			2360 text Python: 
+			2361 text msg.show_modal(yapper.Modal("apply", "Apply", yapper.TextInput.short("age", "Age")))
+			2362 text , 
+			2363 text i.show_modal(…)
+			2364 text  and 
+			2365 text @bot.on_modal("apply")
+			2366 text . Raw API: 
+			2367 text { "type": "modal", "modal": { "custom_id": "apply", "title": "Apply", "components": [ … ] } }
+			2368 text  to the callback.
+			2369 heading Components V2, Value: 2, ID: components-v2
+				2370 text Components V2
+			2371 text Build a whole message out of layout parts: cards with an accent colour, text next to a button or a picture, galleries, separators and files, with button rows anywhere. Send 
+			2372 text "flags": 32768
+			2373 text  (
+			2374 text IS_COMPONENTS_V2
+			2375 text , 
+			2376 text 1 << 15
+			2377 text ) and 
+			2378 text components
+			2379 text , with no 
+			2380 text content
+			2381 text  or 
+			2382 text embeds
+			2383 text : put the text in text displays. It uses the standard Components V2 JSON (same 
+			2384 text type
+			2385 text  numbers and field names), so bot code written for other chat apps ports over as is. JAVASCRIPT
+			2386 button Copy
+			2387 text import { Bot, Container, Section, MediaGallery, Separator, Row, Button } from './yapper.js';
+
+bot.command('poll', 'Game night poll', (msg) => bot.sendLayout(msg.channel_id, [
+  new Container().accent('blue').add(
+    '## Game night',                                   // plain text works as a text display
+    new Section('**Minecraft**\nSurvival, new world').accessory(Button.primary('Vote', 'poll:mc')),
+    new Section('**Among Us**\nUp to 10 players').accessory(Button.primary('Vote', 'poll:au')),
+    new Separator(),
+    new MediaGallery('https://i.imgur.com/a.png', 'https://i.imgur.com/b.png'),
+    new Row(Button.link('Rules', 'https://example.com/rules')),
+  ),
+]));
+
+bot.onButton(/^poll:/, (i) => i.ephemeral('Vote counted'));
+// Change the layout after a click: i.update({ layout: [ ... ] }), or bot.editLayout(channelId, messageId, [ ... ])
+			2388 text Python: 
+			2389 text bot.send_layout(ch, [container(text("## Game night"), section("**Minecraft**", accessory=btn("Vote", "poll:mc", "primary")), separator(), gallery("https://i.imgur.com/a.png"), accent="blue")])
+			2390 text , and 
+			2391 text i.update(layout=[…])
+			2392 text . The same thing without the SDK: TERMINAL
+			2393 button Copy
+			2394 text POST https://bots.yapper.website/api/bot/v1/channels/<channel id>/messages
+{
+  "flags": 32768,
+  "components": [{
+    "type": 17,                                   // container
+    "accent_color": 16739146,                     // optional, 0 to 0xFFFFFF; "spoiler": true hides it until clicked
+    "components": [
+      { "type": 10, "content": "## Game night" }, // text display: markdown, mentions, links
+      { "type": 9,                                // section: 1 to 3 text displays + a button or a thumbnail
+        "components": [{ "type": 10, "content": "**Minecraft**\nSurvival, new world" }],
+        "accessory": { "type": 2, "style": 1, "label": "Vote", "custom_id": "poll:mc" } },
+      { "type": 9,
+        "components": [{ "type": 10, "content": "**Among Us**" }],
+        "accessory": { "type": 11, "media": { "url": "https://i.imgur.com/au.png" }, "description": "Among Us" } },
+      { "type": 14, "divider": true, "spacing": 1 },   // separator: line or just space, spacing 1 small / 2 large
+      { "type": 12, "items": [                         // media gallery: 1 to 10 pictures or videos
+        { "media": { "url": "https://i.imgur.com/a.png" }, "description": "map" },
+        { "media": { "url": "https://media.tenor.com/b.mp4" }, "spoiler": true }
+      ] },
+      { "type": 13, "file": { "url": "https://i.imgur.com/rules.pdf" } },   // file
+      { "type": 1, "components": [                     // action row: up to 5 buttons
+        { "type": 2, "style": 5, "label": "Rules", "url": "https://example.com/rules" }
+      ] }
+    ]
+  }]
+}
+			2395 table
+				2396 row
+					2397 cell
+						2398 text TYPE
+					2399 cell
+						2400 text PART
+					2401 cell
+						2402 text NOTES
+				2403 row
+					2404 cell
+						2405 text 17
+					2406 cell
+						2407 text Container
+					2408 cell
+						2409 text A card. 
+						2410 text components
+						2411 text : action rows, text displays, sections, galleries, separators, files (not another container). 
+						2412 text accent_color
+						2413 text , 
+						2414 text spoiler
+						2415 text .
+				2416 row
+					2417 cell
+						2418 text 10
+					2419 cell
+						2420 text Text display
+					2421 cell
+						2422 text content
+						2423 text : markdown, rendered like a normal message. No HTML.
+				2424 row
+					2425 cell
+						2426 text 9
+					2427 cell
+						2428 text Section
+					2429 cell
+						2430 text 1 to 3 text displays in 
+						2431 text components
+						2432 text  and an 
+						2433 text accessory
+						2434 text : a button (2) or a thumbnail (11).
+				2435 row
+					2436 cell
+						2437 text 11
+					2438 cell
+						2439 text Thumbnail
+					2440 cell
+						2441 text Only as a section accessory. 
+						2442 text media.url
+						2443 text  (a picture), 
+						2444 text description
+						2445 text  (1024), 
+						2446 text spoiler
+						2447 text .
+				2448 row
+					2449 cell
+						2450 text 12
+					2451 cell
+						2452 text Media gallery
+					2453 cell
+						2454 text items
+						2455 text : 1 to 10 of 
+						2456 text { media: { url }, description, spoiler }
+						2457 text . Pictures or mp4 / webm / mov videos.
+				2458 row
+					2459 cell
+						2460 text 14
+					2461 cell
+						2462 text Separator
+					2463 cell
+						2464 text divider
+						2465 text  (default true), 
+						2466 text spacing
+						2467 text  1 or 2.
+				2468 row
+					2469 cell
+						2470 text 13
+					2471 cell
+						2472 text File
+					2473 cell
+						2474 text file.url
+						2475 text , 
+						2476 text spoiler
+						2477 text . A download card. 
+						2478 text attachment://
+						2479 text  isn't supported yet: use an https link.
+				2480 row
+					2481 cell
+						2482 text 1 / 2
+					2483 cell
+						2484 text Action row / button
+					2485 cell
+						2486 text Up to 5 buttons a row, same rules as 
+						2487 link Description: Buttons, Value: yapin.gg/developers
+						2488 text . Clicks work exactly the same. Select menus aren't supported yet.
+			2489 text Limits: 40 components per message (nested ones count, gallery items don't), 4000 characters of text across all text displays, nesting up to container > section > accessory. Every 
+			2490 text custom_id
+			2491 text  must be different across the whole message. Each part can carry an 
+			2492 text id
+			2493 text  (a whole number, unique in the message); left out, they count up from 1. Pictures, videos and files follow the 
+			2494 link Description: embed picture hosts, Value: yapin.gg/developers
+			2495 text : 
+			2496 text https
+			2497 text  links to Yapin’ uploads or the listed hosts. Unknown types, HTML tags and anything over a limit are a 400 that says where. A V2 message stays V2: edit it with 
+			2498 text PATCH
+			2499 text  and 
+			2500 text "flags": 32768
+			2501 text  plus the new 
+			2502 text components
+			2503 text , and answer clicks on it with 
+			2504 text { "type": "update", "flags": 32768, "components": [ … ] }
+			2505 text . Ephemeral replies can't be V2 yet.
+			2506 heading Voice, Value: 2, ID: voice
+				2507 text Voice
+			2508 text Bots can see who is in voice, move people between voice channels and drop them, and get 
+			2509 text voice_join
+			2510 text  / 
+			2511 text voice_leave
+			2512 text  events. Moving and dropping need  Move Members  and a higher role than the person, like for people, and never work on Yapin’ staff. The person must be allowed to join the new channel, and the bot must see both channels. Up to 30 moves and disconnects plus 60 
+			2513 text voice
+			2514 text  lookups a minute per bot. Bots can also join calls and play audio: see 
+			2515 link Description: Music bots, Value: yapin.gg/developers
+			2516 text . A join-to-create bot: make a voice channel called  Join to create , give the bot  Manage channels  and  Move Members , then: JAVASCRIPT
+			2517 button Copy
+			2518 text const made = new Set();                        // channels this bot made
+
+bot.on('voice_join', async (ev) => {
+  const ch = await bot.channel(ev.channel_id);
+  if (ch?.name !== 'Join to create') return;
+  const who = await bot.user(ev.user_id);
+  const room = await bot.createChannel(ev.server_id, `${who.display_name || who.username}'s room`, { kind: 'voice', categoryId: ch.category_id });
+  made.add(room.id);
+  await bot.moveMember(ev.server_id, ev.user_id, room.id);
+});
+
+bot.on('voice_leave', async (ev) => {
+  if (!made.has(ev.channel_id)) return;
+  const voice = await bot.voice(ev.server_id);
+  if (voice.find((v) => v.channel_id === ev.channel_id)?.user_ids.length) return;   // still someone there
+  made.delete(ev.channel_id);
+  await bot.deleteChannel(ev.channel_id);
+});
+			2519 text Servers can make up to 10 new channels a minute, so a busy server may need a moment. 
+			2520 text made
+			2521 text  is forgotten when the bot restarts; keep the ids in a file if that matters.
+			2522 heading Custom emojis, Value: 2, ID: emojis
+				2523 text Custom emojis
+			2524 text Bots with  Manage Emoji  can add, rename and delete a server's custom emojis, with the same rules as people: PNG, GIF or WebP up to 1 MB (still pictures are shrunk to 128 px), names 2 to 32 letters, numbers or 
+			2525 text _
+			2526 text  and unique in the server, and the server's emoji slots (50, more with Supercharge). Every new emoji goes through the same check as people's before it shows up. Up to 30 emoji changes and 60 lookups a minute per bot, and each change shows in the server's Audit Log. In testing: test servers only for now. JAVASCRIPT
+			2527 button Copy
+			2528 text const party = await bot.createEmoji(serverId, 'party', './party.gif');   // null: waiting for a moderator
+if (party) {
+  await bot.send(channelId, `<a:party:${party.id}>`);
+  await bot.editEmoji(serverId, party.id, 'party_time');
+  await bot.deleteEmoji(serverId, party.id);
+}
+const { emojis, limit } = await bot.emojis(serverId);
+			2529 text Python: 
+			2530 text bot.emojis(server)
+			2531 text , 
+			2532 text bot.create_emoji(server, "party", "party.gif")
+			2533 text , 
+			2534 text bot.edit_emoji(server, emoji_id, name)
+			2535 text , 
+			2536 text bot.delete_emoji(server, emoji_id)
+			2537 text . Using custom emojis (testing).  Put 
+			2538 text <:name:id>
+			2539 text  (or 
+			2540 text <a:name:id>
+			2541 text  when animated) in messages, embeds and Components V2 text, use it as a button or select option 
+			2542 text emoji
+			2543 text  (the object 
+			2544 text { "id", "name", "animated" }
+			2545 text  works too), or react with it. Like on other chat apps, a bot uses emojis from servers it's in: in text an emoji from anywhere else turns into plain 
+			2546 text :name:
+			2547 text , and buttons, options and reactions refuse it. Steal emoji commands (testing).
+			2548 text GET /channels/:id/messages/:mid/emojis
+			2549 text  gives the custom emojis in one message the bot can read (text, embeds, buttons and reactions), from any server: 
+			2550 text { emojis: [{ id, name, animated, url, in_server, text }] }
+			2551 text . There's no way to list another server's emojis, only the ones already in front of the bot. Read Message History, 60 lookups a minute. To copy one, download 
+			2552 text url
+			2553 text  and add it to your server (Manage Emoji there): JAVASCRIPT
+			2554 button Copy
+			2555 text bot.command('steal', 'Copy an emoji: reply to a message with /steal [name]', async (msg) => {
+  const [e] = await bot.messageEmojis(msg.channel_id, msg.reply_to_id || msg.id);
+  if (!e) return msg.reply('No custom emoji there');
+  const added = await bot.stealEmoji(msg.server_id, e, msg.argv[0]);   // downloads e.url, then createEmoji
+  await msg.reply(added ? `Added <${added.animated ? 'a' : ''}:${added.name}:${added.id}>` : 'Sent for a check');
+});
+			2556 text Python: 
+			2557 text bot.message_emojis(channel, message)
+			2558 text  and 
+			2559 text bot.steal_emoji(server, emoji, name)
+			2560 text .
+			2561 heading Music bots, Value: 2, ID: music-bots
+				2562 text Music bots
+			2563 text Bots can join a voice channel and play audio, so you can bring a music bot over. Only play audio you have the rights to.  Streaming from YouTube, Spotify, SoundCloud and similar services breaks their terms, and so does ripping their audio. Use your own music, royalty-free or Creative Commons tracks (with the credit they ask for), or a radio stream that allows it. Bots that play stuff they don't have the rights to get turned off. How it works: the bot asks Yapin’ for a ticket to a channel, connects to our voice server with a LiveKit SDK, and sends one audio track from its own code. We don't download, convert or host anything for you. The bot gets the same checks as a member: it must see the channel and have  Connect , and a server ban, voice ban or timeout keeps it out. Without  Speak , or while a mod has it muted, it joins muted. It can't hear anyone, can't share video, and can only be in one voice channel per server (joining another one leaves the first). People see it in the call with a BOT tag. Mods can mute or disconnect it like anyone, but not move it. Up to 10 joins and leaves a minute per bot. The bot also gets 
+			2564 text voice_join
+			2565 text  / 
+			2566 text voice_leave
+			2567 text  about itself, for example when a mod disconnects it. Calls on Yapin’ are end-to-end encrypted. 
+			2568 text connectVoice
+			2569 text  / 
+			2570 text connect_voice
+			2571 text  handle that for you: the bot hands its media key to each person in the call, sealed so only they can open it, and encrypts its audio with it. If you connect with your own code instead (
+			2572 text joinVoice
+			2573 text  gives you the raw ticket), you have to do the same or nobody hears you. Node: 
+			2574 text npm i @livekit/rtc-node
+			2575 text , plus 
+			2576 link Description: ffmpeg, Value: ffmpeg.org/
+			2577 text  to decode files. 
+			2578 text !play song
+			2579 text  joins your voice channel and plays 
+			2580 text music/song.mp3
+			2581 text : JAVASCRIPT
+			2582 button Copy
+			2583 text import * as rtc from '@livekit/rtc-node';
+import { spawn } from 'node:child_process';
+import { Bot } from './yapper.js';
+
+const bot = new Bot(process.env.YAPPER_BOT_TOKEN);
+const FRAME = 480 * 2 * 2;                       // 10 ms of 48 kHz stereo, 16-bit
+
+bot.command('play', 'Play a song from the music folder', async (msg) => {
+  const name = msg.args.replace(/[^\w-]/g, '');
+  const voice = await bot.voice(msg.server_id);
+  const here = voice.find((v) => v.user_ids.includes(msg.author_id));
+  if (!here) return msg.reply('Join a voice channel first');
+  const call = await bot.connectVoice(rtc, msg.server_id, here.channel_id);
+  msg.reply(`Playing ${name}`);
+  const ff = spawn('ffmpeg', ['-loglevel', 'error', '-i', `music/${name}.mp3`, '-f', 's16le', '-ar', '48000', '-ac', '2', 'pipe:1']);
+  let buf = Buffer.alloc(0);
+  for await (const chunk of ff.stdout) {
+    buf = Buffer.concat([buf, chunk]);
+    while (buf.length >= FRAME) {
+      const pcm = new Int16Array(buf.buffer.slice(buf.byteOffset, buf.byteOffset + FRAME));
+      buf = buf.subarray(FRAME);
+      await call.source.captureFrame(new rtc.AudioFrame(pcm, 48000, 2, 480));   // waits, so it plays in real time
+    }
+  }
+  await call.source.waitForPlayout();
+  await call.leave();
+});
+
+bot.start();
+			2584 text Python: 
+			2585 text pip install livekit cryptography
+			2586 text , plus ffmpeg. 
+			2587 text connect_voice
+			2588 text  is async, so a command starts it on its own thread: PYTHON
+			2589 button Copy
+			2590 text import asyncio, re, threading
+import yapper
+from livekit import rtc
+
+bot = yapper.Bot()
+FRAME = 480 * 2 * 2                          # 10 ms of 48 kHz stereo, 16-bit
+
+async def play(server_id, channel_id, path):
+    call = await bot.connect_voice(server_id, channel_id)
+    ff = await asyncio.create_subprocess_exec("ffmpeg", "-loglevel", "error", "-i", path,
+        "-f", "s16le", "-ar", "48000", "-ac", "2", "pipe:1", stdout=asyncio.subprocess.PIPE)
+    while True:
+        try:
+            chunk = await ff.stdout.readexactly(FRAME)
+        except asyncio.IncompleteReadError:
+            break                            # end of the song
+        await call.source.capture_frame(rtc.AudioFrame(chunk, 48000, 2, 480))   # waits, so it plays in real time
+    await call.source.wait_for_playout()
+    await call.leave()
+
+@bot.command("play", "Play a song from the music folder")
+def play_cmd(msg):
+    name = re.sub(r"[^\w-]", "", msg.args)
+    here = next((v for v in bot.voice(msg.server_id) if msg.author_id in v["user_ids"]), None)
+    if not here:
+        return msg.reply("Join a voice channel first")
+    msg.reply(f"Playing {name}")
+    threading.Thread(target=lambda: asyncio.run(play(msg.server_id, here["channel_id"], f"music/{name}.mp3")), daemon=True).start()
+
+bot.run()
+			2591 text Stop early with 
+			2592 text call.leave()
+			2593 text , or 
+			2594 text bot.leaveVoice(server)
+			2595 text  / 
+			2596 text bot.leave_voice(server)
+			2597 text  from anywhere.
+			2598 heading Activities (testing), Value: 2, ID: activities
+				2599 text Activities (testing)
+			2600 text An activity is your own web page that people open together inside a voice call or DM call: a game, a quiz, a shared tool. Yapper shows it in a sandboxed frame next to the call and gives it a small shared state everyone in the call sees, relayed through our realtime server. This is being tested in a few servers before it opens up.
+			2601 content list
+				2602 container
+					2603 AXListMarker 1. 
+					2604 text Host your page on  HTTPS  (any host, your own domain).
+				2605 container
+					2606 AXListMarker 2. 
+					2607 text Developer portal → your bot →  Activities  → add it: a name, the URL, an emoji icon (or your bot’s picture).
+				2608 container
+					2609 AXListMarker 3. 
+					2610 text Load the SDK in your page and talk to the call with it.
+			2611 text JAVASCRIPT
+			2612 button Copy
+			2613 text <script src="https://www.yapper.website/sdk/activity.js"></script>
+<script>
+  const yapper = YapperActivity.connect();
+  yapper.on('ready', ({ me, participants, host, state }) => {
+    render(state);                          // the shared state as it is now (late joiners too)
+  });
+  yapper.on('state', ({ key, value, by }) => render(yapper.state));
+  yapper.on('message', ({ data, by }) => { /* someone else's yapper.send() */ });
+  yapper.on('participants', ({ participants, host }) => { /* joined / left */ });
+
+  button.onclick = () => yapper.set('score', { ...yapper.state.score, [yapper.me.id]: 1 });
+  yapper.send({ cursor: [x, y] });           // one-off, to everyone else, not kept
+  yapper.close();                            // leave (just for you)
+</script>
+			2614 heading Who sees your activity, Value: 3, ID: activities-who
+				2615 text Who sees your activity
+			2616 content list
+				2617 container
+					2618 AXListMarker • 
+					2619 text Verified bots  (Community, see 
+					2620 link Description: Publishing & verified, Value: yapin.gg/developers
+					2621 text ): in the Activities menu of every call, once staff checked the activity’s site. Moving it to another site needs a new check.
+				2622 container
+					2623 AXListMarker • 
+					2624 text Other bots : only in servers where the bot is added and a manager switched the activity on (Server settings → Bots → Call activities from bots). Moving it to another site switches it off again there.
+				2625 container
+					2626 AXListMarker • 
+					2627 text You , the bot’s owner, can always start your own to test. Others in the call only load it if they could have started it too.
+				2628 container
+					2629 AXListMarker • 
+					2630 text In a DM call only verified bots’ activities are listed.
+			2631 heading The sandbox, Value: 3, ID: activities-sandbox
+				2632 text The sandbox
+			2633 content list
+				2634 container
+					2635 AXListMarker • 
+					2636 text Your page runs in an iframe with  sandbox="allow-scripts allow-same-origin"  on your own origin: your storage and your own API calls work, but no popups, top navigation, forms posting to other pages or downloads.
+				2637 container
+					2638 AXListMarker • 
+					2639 text No camera, microphone, location or other permissions; no referrer is sent.
+				2640 container
+					2641 AXListMarker • 
+					2642 text It can’t reach the Yapin’ page: everything goes through the SDK’s postMessage bridge, which only talks to your frame from your origin.
+				2643 container
+					2644 AXListMarker • 
+					2645 text Yapin’s own domains can’t be used as an activity URL.
+				2646 container
+					2647 AXListMarker • 
+					2648 text Nobody loads your page until they click  Join . It gets their user id and display name, and those of the people in the call.
+			2649 heading Activity limits, Value: 3, ID: activities-limits
+				2650 text Activity limits
+			2651 content list
+				2652 container
+					2653 AXListMarker • 
+					2654 text Up to 5 activities per bot.
+				2655 container
+					2656 AXListMarker • 
+					2657 text Shared state: keys of letters, digits and  _ . : -  (up to 64), values up to 4 KB of JSON, 256 keys and 64 KB per call.
+				2658 container
+					2659 AXListMarker • 
+					2660 text set  +  send : 100 per 10 seconds per person, 600 per call.
+				2661 container
+					2662 AXListMarker • 
+					2663 text One activity per call at a time. Whoever starts it is the host; the host (or a server mod) can stop it for everyone.
+				2664 container
+					2665 AXListMarker • 
+					2666 text The state is gone when the activity stops or the call ends. Keep anything that matters on your own server.
+				2667 container
+					2668 AXListMarker • 
+					2669 text Testing on another Yapin’ address (a preview build):  YapperActivity.connect( { extraOrigins: ['https://…'] } ) .
+			2670 heading Channel webhooks, Value: 2, ID: channel-webhooks
+				2671 text Channel webhooks
+			2672 text No bot needed: a webhook is a secret URL that posts into one text channel. People with  Manage Webhooks  make them in Edit channel → Webhooks (up to 10 per channel), give each a name and picture, and copy the URL. It's shown once;  New URL  makes a fresh one and kills the old. Most tools that post to chat webhooks work as they are. TERMINAL
+			2673 button Copy
+			2674 text curl -X POST "https://www.yapin.gg/api/webhooks/<id>/<token>?wait=true" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "Deploy finished", "username": "CI", "embeds": [{"title": "Build #42", "color": 5763719}]}'
+			2675 table
+				2676 row
+					2677 cell
+						2678 text Field
+					2679 cell
+						2680 text What it does
+				2681 row
+					2682 cell
+						2683 text content
+					2684 cell
+						2685 text Up to 2000 characters, markdown works. 
+						2686 text content
+						2687 text  or 
+						2688 text embeds
+						2689 text  is required.
+				2690 row
+					2691 cell
+						2692 text username
+						2693 text , 
+						2694 text avatar_url
+					2695 cell
+						2696 text Override the name (up to 80) and picture for this message. Pictures follow the 
+						2697 link Description: embed picture hosts, Value: yapin.gg/developers
+						2698 text ; others are left out.
+				2699 row
+					2700 cell
+						2701 text embeds
+					2702 cell
+						2703 text Up to 10, same shape as 
+						2704 link Description: bot embeds, Value: …
+						2705 text , but webhooks get up to 25 fields each (bot messages: 5 embeds, 10 fields each). 6000 characters total either way. Pictures from other hosts are left out instead of failing.
+				2706 row
+					2707 cell
+						2708 text allowed_mentions
+					2709 cell
+						2710 text { "parse": ["users", "roles", "everyone"], "users": [ids], "roles": [ids] }
+						2711 text . By default only users are pinged. 
+						2712 text @everyone
+						2713 text  and 
+						2714 text @here
+						2715 text  only ping when allowed here  and  the person who made the webhook can mention everyone in that channel.
+				2716 row
+					2717 cell
+						2718 text components
+					2719 cell
+						2720 text Link buttons under the message, Discord's shape: up to 5 rows of 5, 
+						2721 text { "type": 1, "components": [{ "type": 2, "style": 5, "label": "Rules", "url": "https://…", "emoji": { "name": "📜" } }] }
+						2722 text . https links only, other button kinds are refused.
+			2723 text Send JSON, or multipart with the JSON in a 
+			2724 text payload_json
+			2725 text  field (file uploads aren't supported yet). Bodies up to 128 KB. Answers 
+			2726 text 204
+			2727 text  with no body, or 
+			2728 text 200
+			2729 text  with the message when you add 
+			2730 text ?wait=true
+			2731 text . Errors are 
+			2732 text { "message", "code" }
+			2733 text : 
+			2734 text 10015
+			2735 text  unknown webhook (404), 
+			2736 text 50027
+			2737 text  wrong token (401), 
+			2738 text 50006
+			2739 text  empty message, 
+			2740 text 50035
+			2741 text  bad field, 
+			2742 text 50109
+			2743 text  bad JSON (400), 
+			2744 text 50001
+			2745 text  can't post here (403), 
+			2746 text 40005
+			2747 text  body too big (413). Up to 5 posts per 2 seconds per webhook and 30 a minute per channel; past that you get 
+			2748 text 429
+			2749 text  with 
+			2750 text retry_after
+			2751 text  in seconds. 
+			2752 text GET
+			2753 text  on the same URL returns the webhook. The same content rules as everyone else apply, and a webhook stops working if the person who made it gets banned from the server. Custom emojis:  write 
+			2754 text :name:
+			2755 text  (or paste Discord's 
+			2756 text <:name:123…>
+			2757 text ) and it shows the server's own custom emoji with that name, in the text, the embeds and on buttons. People with Manage Webhooks also get  Make a post  in Edit channel → Webhooks: an editor for boxes, emojis and link buttons with a live preview, which also loads JSON from Discohook.
+			2758 heading Bot webhooks (testing), Value: 3, ID: bot-webhooks
+				2759 text Bot webhooks (testing)
+			2760 text Bots can make channel webhooks too, and post through them with a different name and picture on every message. That's how PluralKit and Tupperbox style bots work: someone writes 
+			2761 text a: hi!
+			2762 text , the bot deletes it and posts  hi!  as  Alice  with Alice's picture. The bot needs  Manage Webhooks  in that channel. Every message shows a  BOT  tag, so it can't pass for a person, and names follow the webhook rules: no admin, mod, staff, support, Yapin’ or Yapper look-alikes, and no staff names. JAVASCRIPT
+			2763 button Copy
+			2764 text const hook = await bot.createWebhook(channelId, 'Proxy');   // once per channel; bot.myWebhooks() finds them again
+
+bot.on('message', async (msg) => {
+  const m = /^a:s*(.+)/s.exec(msg.content);
+  if (!m) return;
+  await bot.delete(msg.channel_id, msg.id);                  // needs Manage Messages
+  await hook.send({ content: m[1], username: 'Alice', avatarUrl: 'https://i.imgur.com/abc.png' });
+});
+			2765 text Python: 
+			2766 text hook = bot.create_webhook(ch, "Proxy")
+			2767 text , 
+			2768 text hook.send("hi!", username="Alice", avatar_url="https://i.imgur.com/abc.png")
+			2769 text , 
+			2770 text bot.my_webhooks()
+			2771 text , 
+			2772 text bot.delete_webhook(id)
+			2773 text .
+			2774 content list
+				2775 container
+					2776 AXListMarker • 
+					2777 text Endpoints: POST /channels/:id/webhooks { "name" }  makes one (answers with its  token  and secret  url , shown only then),  GET /channels/:id/webhooks  lists a channel's,  GET /webhooks  lists the bot's own,  DELETE /webhooks/:id  deletes one,  POST /webhooks/:id  posts. Full list in the 
+					2778 link Description: API reference, Value: …
+					2779 text .
+				2780 container
+					2781 AXListMarker • 
+					2782 text Posting: { "content", "username", "avatar_url", "embeds", "components", "allowed_mentions" } , the same fields as the secret URL above. The bot token is enough, so you don't have to keep the webhook tokens. Only webhooks the bot made itself.
+				2783 container
+					2784 AXListMarker • 
+					2785 text Pictures: avatar_url  must be an https link to Yapin’ uploads or a 
+					2786 link Description: known image host, Value: …
+					2787 text  (the same rule as embed pictures). Anything else is refused with a 400.
+				2788 container
+					2789 AXListMarker • 
+					2790 text Buttons:  link buttons only, like the secret URL.
+				2791 container
+					2792 AXListMarker • 
+					2793 text Limits:  up to 10 webhooks a channel and 100 per bot per server; 10 makes and deletes a minute per bot. Posts: 5 per 2 seconds per webhook, 30 a minute per channel, and they count toward the bot's own message limits (30 a minute per server, 30 or 300 a minute overall). The secret URL of a bot's webhook counts the same way.
+				2794 container
+					2795 AXListMarker • 
+					2796 text Server side:  they show in Edit channel → Webhooks as made by the bot. Server mods can delete them (only the bot can rename them or post with them), and making or deleting one goes in the audit log with the bot's name.
+				2797 container
+					2798 AXListMarker • 
+					2799 text In testing:  test servers only for now.
+			2800 heading Bot hosting, Value: 2, ID: hosting
+				2801 text Bot hosting
+			2802 text Don't want to keep a computer on? 
+			2803 link Description: Verified bots, Value: …
+			2804 text  can run on Yapin’: Settings → Developer → your bot → Hosting. Pick a plan, add your code, press Start.
+			2805 content list
+				2806 container
+					2807 AXListMarker • 
+					2808 text Plans:  Small (256 MB RAM, 0.25 CPU, 512 MB disk) fits most bots; Large (1 GB RAM, 1 CPU, 2 GB disk) is for bots in 50+ servers. Monthly, prices are on the Hosting tab. With Yapin’ Plus one Small bot may run free; the tab says so when it does.
+				2809 container
+					2810 AXListMarker • 
+					2811 text Code:  upload  bot.js  (up to 1 MB) and an optional  package.json  (64 KB), or link a public GitHub repo (and branch, up to 20 MB). Uploads are just those two files, so a bot that imports  yapper.js  or other files should use a repo. Using  import ? Add  "type": "module"  to package.json.
+				2812 container
+					2813 AXListMarker • 
+					2814 text Running:  Node, one sandboxed container per bot. Dependencies from package.json are installed for you (install scripts don't run). It runs  node  on your package.json  start  script if that is exactly  node file.js , else  main , else  bot.js , else  index.js .
+				2815 container
+					2816 AXListMarker • 
+					2817 text Token:  your bot gets its own token as  process.env.YAPPER_BOT_TOKEN  (new on every start), so write  new Bot(process.env.YAPPER_BOT_TOKEN)  and don't paste your token in.
+				2818 container
+					2819 AXListMarker • 
+					2820 text Crashes:  it's restarted for you. 5 crashes or 3 out-of-memory kills within 10 minutes stop it; check the logs on the tab, fix it and start it again.
+			2821 heading Python (in testing), Value: 3, ID: hosting-python
+				2822 text Python (in testing)
+			2823 text Pick  Python  under Language on the Hosting tab. Same plans, limits, sandbox, logs and crash restarts as Node.
+			2824 content list
+				2825 container
+					2826 AXListMarker • 
+					2827 text Code:  upload  main.py  (up to 1 MB) and an optional  requirements.txt  (64 KB), or link a public GitHub repo. It runs  python main.py  (Python 3.12) from the top folder, else  bot.py . Switching language drops an uploaded file, a linked repo stays.
+				2828 container
+					2829 AXListMarker • 
+					2830 text Already there: yapper.py  (so just  import yapper ),  requests ,  aiohttp ,  python-dotenv  and  Pillow . A  yapper.py  of your own next to main.py wins.
+				2831 container
+					2832 AXListMarker • 
+					2833 text More packages:  list them in  requirements.txt , one per line, like  requests==2.32.3  or  aiohttp>=3.9,<4 . They are installed when the file changes, in 2 minutes at most, ready-made builds (wheels) only, so packages that need a compiler won't install. Options like  -r  or  --index-url , URLs, paths and  ;  markers aren't allowed; max 50 packages.
+				2834 container
+					2835 AXListMarker • 
+					2836 text Token: yapper.Bot()  reads  YAPPER_BOT_TOKEN  by itself.
+			2837 text PYTHON
+			2838 button Copy
+			2839 text # main.py
+import yapper
+
+bot = yapper.Bot()   # the token comes from YAPPER_BOT_TOKEN
+
+@bot.command("ping", "Is the bot alive?")
+def ping(msg):
+    msg.reply("pong")
+
+bot.run()
+			2840 heading Environment variables (in testing), Value: 3, ID: hosting-env
+				2841 text Environment variables (in testing)
+			2842 text For your own API keys and settings, in the  Environment variables  box on the Hosting tab, for Node and Python bots. Read them with 
+			2843 text process.env.NAME
+			2844 text  or 
+			2845 text os.environ["NAME"]
+			2846 text .
+			2847 content list
+				2848 container
+					2849 AXListMarker • 
+					2850 text Up to 20 per bot. Names use letters, numbers and  _  and can't start with a number. Values are one line, up to 4 KB.
+				2851 container
+					2852 AXListMarker • 
+					2853 text YAPPER_BOT_TOKEN ,  YAPPER_API_URL  and anything starting with  YAPPER_  are taken, and so are names the runtime sets itself ( PATH ,  HOME ,  NODE_ENV ,  NODE_OPTIONS ,  PYTHONPATH ,  LD_PRELOAD  and a few more).
+				2854 container
+					2855 AXListMarker • 
+					2856 text Values are stored encrypted and never shown again: you can replace or delete one, not read it back. If your bot prints one (6 characters or longer), the logs show  [hidden]  instead.
+				2857 container
+					2858 AXListMarker • 
+					2859 text Changes apply on the next Start or Restart.
+			2860 heading Event webhooks (optional), Value: 2, ID: event-webhooks
+				2861 text Event webhooks (optional)
+			2862 text Only if you host the bot somewhere with a public https URL. Set it in Settings → Developer → your bot → Advanced. Polling keeps working alongside. TERMINAL
+			2863 button Copy
+			2864 text POST <your webhook url>
+Content-Type: application/json
+X-Yapper-Bot: <bot id>
+X-Yapper-Signature: sha256=<hex HMAC-SHA256 of the raw body, keyed with your webhook secret>
+
+{ "id": 1234, "event": "message", "data": { … same fields as above … } }
+			2865 text Check the signature before trusting a request (the secret is under Advanced in Settings → Developer). Answer 200 quickly and do the slow work after; Yapin’ waits 3 seconds and doesn't retry. 
+			2866 text id
+			2867 text  is the same event id polling uses, so if you can't miss anything, also poll 
+			2868 text /events
+			2869 text  and skip ids you already got.
+			2870 heading Login with Yapin’, Value: 2, ID: login-with-yapper
+				2871 text Login with Yapin’
+			2872 text In testing, so only some people can make apps for now. Let people log in to your site with their Yapin’ account (OAuth2 authorization code flow). Your site never sees their password, only what they agree to share.
+			2873 content list
+				2874 container
+					2875 AXListMarker 1. 
+					2876 text Make an app  in Settings → Developer → Login with Yapin’. You get a  client ID  and a  client secret  (shown once, keep it on your server). Add your  redirect URL , e.g.  https://your-site.example/callback . It must match exactly. https only;  http://localhost  and  http://127.0.0.1  work for testing.
+				2877 container
+					2878 AXListMarker 2. 
+					2879 text Send people to Yapin’.  Make a random  state , keep it in their session, then link to: CODE
+					2880 button Copy
+					2881 text https://www.yapin.gg/oauth/authorize?client_id=<client id>
+  &redirect_uri=https%3A%2F%2Fyour-site.example%2Fcallback
+  &response_type=code&scope=identify&state=<random state>
+					2882 text They log in if needed, see your app's name and what it wants, and press Authorize or Cancel.
+				2883 container
+					2884 AXListMarker 3. 
+					2885 text They come back  to  /callback?code=…&state=…  (or  ?error=access_denied&state=…  if they said no). Check  state  is the one you made. The code works once, for 60 seconds.
+				2886 container
+					2887 AXListMarker 4. 
+					2888 text Swap the code for a token  from your server, then ask who it is:
+			2889 text JAVASCRIPT
+			2890 button Copy
+			2891 text // on your server, in the /callback handler
+const res = await fetch('https://www.yapin.gg/api/oauth/token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: new URLSearchParams({
+    grant_type: 'authorization_code',
+    code,                                          // from the query
+    redirect_uri: 'https://your-site.example/callback',   // the same one as in step 2
+    client_id: process.env.YAPPER_CLIENT_ID,
+    client_secret: process.env.YAPPER_CLIENT_SECRET,
+  }),
+});
+const { access_token } = await res.json();         // also token_type "Bearer", expires_in, scope
+
+const me = await fetch('https://www.yapin.gg/api/oauth/me', {
+  headers: { Authorization: `Bearer ${access_token}` },
+}).then((r) => r.json());
+// { id, username, display_name, avatar_url }  use me.id as the account key, usernames can change
+			2892 table
+				2893 row
+					2894 cell
+						2895 text Thing
+					2896 cell
+						2897 text Details
+				2898 row
+					2899 cell
+						2900 text Scopes
+					2901 cell
+						2902 text Only 
+						2903 text identify
+						2904 text : id, username, display name (
+						2905 text null
+						2906 text  if not set) and profile picture URL (
+						2907 text null
+						2908 text  if none). No email, no messages, no posting.
+				2909 row
+					2910 cell
+						2911 text Token request
+					2912 cell
+						2913 text Form encoded or JSON. The client secret can also go in an 
+						2914 text Authorization: Basic
+						2915 text  header (client ID and secret). Errors follow OAuth2: 
+						2916 text { "error": "invalid_grant", "error_description": "…" }
+						2917 text  with 
+						2918 text 400
+						2919 text , or 
+						2920 text invalid_client
+						2921 text  with 
+						2922 text 401
+						2923 text .
+				2924 row
+					2925 cell
+						2926 text PKCE
+					2927 cell
+						2928 text For apps without a server (mobile, desktop, single page): leave out the secret, add 
+						2929 text code_challenge
+						2930 text  (base64url of the SHA-256 of a random 
+						2931 text code_verifier
+						2932 text ) and 
+						2933 text code_challenge_method=S256
+						2934 text  to the authorize link, then send 
+						2935 text code_verifier
+						2936 text  with the token request. Only S256 works. Apps with a server can use it too.
+				2937 row
+					2938 cell
+						2939 text Tokens
+					2940 cell
+						2941 text Start with 
+						2942 text yo_
+						2943 text  and last 30 days. There are no refresh tokens yet: send people through the login again when it runs out. A token stops working early if the person removes your app in Settings → Authorized Apps, or you remove the app.
+				2944 row
+					2945 cell
+						2946 text Limits
+					2947 cell
+						2948 text Token requests: 120 a minute per IP. 
+						2949 text /me
+						2950 text : 300 a minute per IP and 120 per token. Past that: 
+						2951 text 429
+						2952 text  with 
+						2953 text Retry-After
+						2954 text .
+				2955 row
+					2956 cell
+						2957 text Rules
+					2958 cell
+						2959 text Up to 10 apps per person and 10 redirect URLs per app. Your app shows as not made by Yapin’. Don't pretend to be Yapin’, and the same 
+						2960 link Description: Terms, Value: …
+						2961 text  apply as for bots.
+			2962 heading Rules and limits, Value: 2, ID: limits
+				2963 text Rules and limits
+			2964 content list
+				2965 container
+					2966 AXListMarker • 
+					2967 text Bots carry a BOT tag and only see and post in servers a manager added them to. Private channels stay hidden unless the bot (or a role it was given) is let in. They show as online while they use the API or keep a gateway connection open, and do not count towards a server's member count.
+				2968 container
+					2969 AXListMarker • 
+					2970 text The same content rules apply to bots as to people: slurs, adult links and spam get the bot, and you, banned.
+				2971 container
+					2972 AXListMarker • 
+					2973 text 2 bots per person (10 with Yapin’ Plus), 25 bots per server, 100 commands per bot, events kept for 1 day.
+				2974 container
+					2975 AXListMarker • 
+					2976 text Messages: 30 a minute per server (DMs: per DM), and 30 a minute overall for the whole bot, 300 for 
+					2977 link Description: verified bots, Value: …
+					2978 text . Replies to a slash command (a person's message starting with  /  and one of your commands; send with  reply_to  set to it, within 15 minutes, the first 5 replies per command) and the first 5  reply  answers to each button press don't count toward the overall limit, only toward the server one. Past a limit you get  429  saying which one ( "30 messages a minute in this server"  or  "300 messages a minute overall" ) with  Retry-After  and  retry_after  in seconds; the SDKs wait and retry.
+				2979 container
+					2980 AXListMarker • 
+					2981 text Edits (PATCH on a message, or  update  on a button press) have no limit of their own and are saved in a few milliseconds. If edits feel slow, it's almost always a 429 being waited out: the SDKs retry at most 3 times and stop after 30 seconds of waiting in total ( new Bot(token,  { maxRetryWait: 10 } )  in JS,  bot.max_retry_wait = 10  in Python to give up sooner), then throw with  retryAfter  /  retry_after . Turn on logging to see  rate limited, retrying  lines.
+				2982 container
+					2983 AXListMarker • 
+					2984 text A 429 that is an HTML page instead of our JSON comes from Cloudflare in front of us: it limits per IP address, not per bot. Lots of bots on one shared host can hit it together. The SDKs print a warning when that happens; tell us in Yapin’ HQ with the host's IP and we'll look at it.
+				2985 container
+					2986 AXListMarker • 
+					2987 text A link straight to an image (.png, .jpg, .gif, .webp) shows as a picture under the message, so bots can post images by URL.
+				2988 container
+					2989 AXListMarker • 
+					2990 text Lost the token? "New token" on the Token tab in Settings → Developer makes a fresh one and kills the old.
+			2991 heading Versions, Value: 2, ID: versions
+				2992 text Versions
+			2993 text The API is on version  1.3.0  and the path stays 
+			2994 text /v1
+			2995 text : inside v1 we only add things, so ignore fields you don't know. Every answer carries two headers:
+			2996 table
+				2997 row
+					2998 cell
+						2999 text HEADER
+					3000 cell
+						3001 text WHAT IT IS
+				3002 row
+					3003 cell
+						3004 text X-Yapin-API-Version
+					3005 cell
+						3006 text The API version, like 
+						3007 text 1.3.0
+						3008 text . Goes up when endpoints, fields or events are added.
+				3009 row
+					3010 cell
+						3011 text X-Yapin-Build
+					3012 cell
+						3013 text Short commit of the build that answered. Handy in bug reports.
+			3014 text GET /version
+			3015 text  needs no token and says the same plus the newest SDKs: 
+			3016 text { "api": "1.3.0", "build": "a1b2c3d", "sdk": { "js": "1.6.0", "python": "1.6.0" }, "packages": { "npm": "yapin", "pypi": "yapin" } }
+			3017 text . The SDKs ask once when they start and print one line if yours is behind. Set 
+			3018 text YAPPER_NO_UPDATE_CHECK=1
+			3019 text  (or turn logging off) to skip that.
+			3020 heading Changelog, Value: 2, ID: changelog
+				3021 text Changelog
+			3022 text What changed lately. The full list is on the 
+			3023 link Description: changelog page, Value: …
+			3024 text , and as JSON at 
+			3025 text GET /changelog?limit=10
+			3026 text  (no token) or 
+			3027 link Description: /sdk/changelog.json, Value: …
+			3028 text , so you can watch it from a bot instead of the #api-changelog channel.
+			3029 container week-2026-11-03
+				3030 heading Week of Nov 32026-11-03, Value: 3
+					3031 text Week of Nov 3 2026-11-03
+				3032 text API 1.3.0, SDK 1.6.0
+				3033 text Added
+				3034 content list
+					3035 container
+						3036 AXListMarker • 
+						3037 text Select menus: a row can hold one dropdown (type "select" or 3) with up to 25 options. Picks come as an interaction with type "select" and values. SDK: Select, bot.onSelect / on_select. bot_selects
+					3038 container
+						3039 AXListMarker • 
+						3040 text Modals: answer a click, a pick or a /command with type "modal" to open a form with text boxes and select menus. It comes back as an interaction with type "modal_submit" and values. Slash commands that come as command events can open one too. SDK: Modal, TextInput, i.showModal / msg.showModal (command events), bot.onModal / on_modal. bot_modals
+					3041 container
+						3042 AXListMarker • 
+						3043 text GET /channels/{id}/messages/{mid}/emojis: the custom emojis in one message, from any server, with their picture link, for steal emoji commands. SDK: bot.messageEmojis and bot.stealEmoji. bot_emoji_lookup
+				3044 text Changed
+				3045 content list
+					3046 container
+						3047 AXListMarker • 
+						3048 text Custom emojis follow Discord's rule: bots use emojis from servers they're in. In text and embeds others turn into :name:; buttons, menu options and reactions refuse them. Emoji objects like { id, name, animated } work for buttons and options. bot_custom_emojis
+			3049 link Description: ← Back to Yapin’, Value: …
+			3050 text  · 
+			3051 link Description: Remove an intimate image, Value: …
+		3052 container On this page
+			3053 text ON THIS PAGE
+			3054 content list
+				3055 link Description: Quick start, Value: …
+				3056 link Description: What you can build, Value: …
+				3057 link Description: The SDKs, Value: …
+				3058 link Description: Install with npm or pip, Value: …
+				3059 link Description: Python, Value: …
+				3060 link Description: SDK → API reference, Value: …
+				3061 link Description: Cogs, Value: …
+				3062 link Description: How it works, Value: …
+				3063 link Description: Gateway (beta), Value: …
+				3064 link Description: Publishing & verified, Value: …
+				3065 link Description: Invite link, Value: …
+				3066 link Description: Permissions, Value: …
+				3067 link Description: REST API, Value: …
+				3068 link Description: Pictures and files, Value: …
+				3069 link Description: Events, Value: …
+				3070 link Description: DMs and reactions (testing), Value: …
+				3071 link Description: Bot profile, Value: …
+				3072 link Description: Embeds, Value: …
+				3073 link Description: Buttons, Value: …
+				3074 link Description: Select menus (testing), Value: …
+				3075 link Description: Modals (testing), Value: …
+				3076 link Description: Components V2, Value: …
+				3077 link Description: Voice, Value: …
+				3078 link Description: Music bots, Value: …
+				3079 link Description: Activities (testing), Value: …
+				3080 link Description: Channel webhooks, Value: …
+				3081 link Description: Bot webhooks (testing), Value: …
+				3082 link Description: Bot hosting, Value: …
+				3083 link Description: Event webhooks, Value: …
+				3084 link Description: Login with Yapin’, Value: …
+				3085 link Description: Rules and limits, Value: …
+				3086 link Description: Versions, Value: …
+				3087 link Description: Changelog, Value: …
+		3088 text Yapin’
+		3089 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		3090 heading PRODUCT, Value: 4
+			3091 text PRODUCT
+		3092 content list
+			3093 link Description: Download, Value: …
+			3094 link Description: Developers, Value: …
+			3095 link Description: Yapin’ Plus, Value: …
+			3096 link Description: Creator Program, Value: …
+			3097 link Description: FanKit, Value: …
+			3098 link Description: Roadmap, Value: …
+			3099 link Description: Yapper is now Yapin’, Value: …
+			3100 link Description: Bugs, Value: …
+			3101 link Description: Status, Value: …
+		3102 heading COMMUNITY, Value: 4
+			3103 text COMMUNITY
+		3104 content list
+			3105 link Description: Guidelines, Value: …
+			3106 link Description: Tutorials, Value: …
+			3107 link Description: Bots, Value: …
+			3108 link Description: Partners, Value: …
+		3109 heading LEGAL, Value: 4
+			3110 text LEGAL
+		3111 content list
+			3112 link Description: Terms, Value: …
+			3113 link Description: Privacy, Value: …
+			3114 link Description: Copyright, Value: …
+			3115 link Description: Security, Value: …
+			3116 link Description: Cancel a subscription, Value: …
+			3117 link Description: Contact, Value: …
+		3118 text © 2026 Yapper Media LLC. Free to use.
+		3119 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Developers: make a bot · Yapin’, URL: yapin.gg/developers

@@ -1,0 +1,429 @@
+Browser tab: 2, Title: "Servers · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/servers".
+1 AXWebArea Servers · Bot API reference · Yapin’, URL: yapin.gg/developers/api/servers
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Servers, Value: 1
+				15 text Servers
+			16 text Servers the bot is in, their members and counts.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-servers
+				25 text GET
+				26 text /servers
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/servers#get-servers
+				28 text Servers the bot is in
+				29 text Auth :  Bot token JS: 
+				30 text bot.servers()
+				31 text Python: 
+				32 text bot.servers()
+				33 heading RESPONSE200, Value: 4
+					34 text RESPONSE
+					35 text 200
+				36 text object
+				37 table
+					38 row
+						39 cell
+							40 text FIELD
+						41 cell
+							42 text TYPE
+						43 cell
+							44 text DESCRIPTION
+					45 row
+						46 cell
+							47 text servers
+						48 cell
+							49 text Server[]
+						50 cell
+							51 text Servers
+							52 button (collapsed) Fields of Server, Secondary Actions: Expand
+								53 text Fields of Server
+				54 button (collapsed) Example response, Secondary Actions: Expand
+					55 text Example response
+				56 heading ERRORS, Value: 4
+					57 text ERRORS
+				58 content list
+					59 container
+						60 AXListMarker • 
+						61 text 401 Missing or wrong token
+					62 container
+						63 AXListMarker • 
+						64 text 500 Something went wrong on our side
+					65 container
+						66 AXListMarker • 
+						67 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			68 container get-servers-id
+				69 text GET
+				70 text /servers/{id}
+				71 link Description: Link to this endpoint, Value: yapin.gg/developers/api/servers#get-servers-id
+				72 text One server
+				73 text Auth :  Bot token JS: 
+				74 text bot.server()
+				75 text Python: 
+				76 text bot.server()
+				77 heading PARAMETERS, Value: 4
+					78 text PARAMETERS
+				79 table
+					80 row
+						81 cell
+							82 text NAME
+						83 cell
+							84 text TYPE
+						85 cell
+							86 text DESCRIPTION
+					87 row
+						88 cell
+							89 text {id}
+						90 cell
+							91 text string (uuid)
+						92 cell
+							93 text Server id
+							94 container
+								95 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				96 heading RESPONSE200, Value: 4
+					97 text RESPONSE
+					98 text 200
+				99 text object
+				100 table
+					101 row
+						102 cell
+							103 text FIELD
+						104 cell
+							105 text TYPE
+						106 cell
+							107 text DESCRIPTION
+					108 row
+						109 cell
+							110 text server
+						111 cell
+							112 text ServerDetail | null
+						113 cell
+							114 button (collapsed) Fields of ServerDetail, Secondary Actions: Expand
+								115 text Fields of ServerDetail
+				116 button (collapsed) Example response, Secondary Actions: Expand
+					117 text Example response
+				118 heading ERRORS, Value: 4
+					119 text ERRORS
+				120 content list
+					121 container
+						122 AXListMarker • 
+						123 text 401 Missing or wrong token
+					124 container
+						125 AXListMarker • 
+						126 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					127 container
+						128 AXListMarker • 
+						129 text 500 Something went wrong on our side
+					130 container
+						131 AXListMarker • 
+						132 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			133 container get-servers-id-counts
+				134 text GET
+				135 text /servers/{id}/counts
+				136 link Description: Link to this endpoint, Value: yapin.gg/developers/api/servers#get-servers-id-counts
+				137 text Member and online counts for a live counter (ask every few minutes)
+				138 text Auth :  Bot token In testing : 
+				139 text bot_online_count
+				140 text JS: 
+				141 text bot.memberCounts()
+				142 text Python: 
+				143 text bot.member_counts()
+				144 heading PARAMETERS, Value: 4
+					145 text PARAMETERS
+				146 table
+					147 row
+						148 cell
+							149 text NAME
+						150 cell
+							151 text TYPE
+						152 cell
+							153 text DESCRIPTION
+					154 row
+						155 cell
+							156 text {id}
+						157 cell
+							158 text string (uuid)
+						159 cell
+							160 text Server id
+							161 container
+								162 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				163 heading RESPONSE200, Value: 4
+					164 text RESPONSE
+					165 text 200
+				166 text object
+				167 table
+					168 row
+						169 cell
+							170 text FIELD
+						171 cell
+							172 text TYPE
+						173 cell
+							174 text DESCRIPTION
+					175 row
+						176 cell
+							177 text server_id
+						178 cell
+							179 text string (uuid)
+						180 cell
+							181 text Server id
+							182 container
+								183 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					184 row
+						185 cell
+							186 text member_count
+						187 cell
+							188 text integer
+						189 cell
+							190 text Members
+							191 container
+								192 text Example :  128
+					193 row
+						194 cell
+							195 text online_count
+						196 cell
+							197 text integer
+						198 cell
+							199 text Online now (refreshed once a minute)
+							200 container
+								201 text Example :  42
+				202 button (collapsed) Example response, Secondary Actions: Expand
+					203 text Example response
+				204 heading ERRORS, Value: 4
+					205 text ERRORS
+				206 content list
+					207 container
+						208 AXListMarker • 
+						209 text 401 Missing or wrong token
+					210 container
+						211 AXListMarker • 
+						212 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					213 container
+						214 AXListMarker • 
+						215 text 500 Something went wrong on our side
+					216 container
+						217 AXListMarker • 
+						218 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			219 container get-servers-id-members
+				220 text GET
+				221 text /servers/{id}/members
+				222 link Description: Link to this endpoint, Value: yapin.gg/developers/api/servers#get-servers-id-members
+				223 text Members, sorted by user id, a page at a time
+				224 text Auth :  Bot token JS: 
+				225 text bot.members()
+				226 text Python: 
+				227 text bot.members()
+				228 heading PARAMETERS, Value: 4
+					229 text PARAMETERS
+				230 table
+					231 row
+						232 cell
+							233 text NAME
+						234 cell
+							235 text TYPE
+						236 cell
+							237 text DESCRIPTION
+					238 row
+						239 cell
+							240 text {id}
+						241 cell
+							242 text string (uuid)
+						243 cell
+							244 text Server id
+							245 container
+								246 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					247 row
+						248 cell
+							249 text ?limit
+							250 text optional
+						251 cell
+							252 text integer
+						253 cell
+							254 text Page size  ( 1 to 500, default 200 )
+							255 container
+								256 text Example :  200
+					257 row
+						258 cell
+							259 text ?after
+							260 text optional
+						261 cell
+							262 text string (uuid)
+						263 cell
+							264 text Last user id of the previous page
+							265 container
+								266 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				267 heading RESPONSE200, Value: 4
+					268 text RESPONSE
+					269 text 200
+				270 text object
+				271 table
+					272 row
+						273 cell
+							274 text FIELD
+						275 cell
+							276 text TYPE
+						277 cell
+							278 text DESCRIPTION
+					279 row
+						280 cell
+							281 text members
+						282 cell
+							283 text Member[]
+						284 cell
+							285 text Members
+							286 button (collapsed) Fields of Member, Secondary Actions: Expand
+								287 text Fields of Member
+				288 button (collapsed) Example response, Secondary Actions: Expand
+					289 text Example response
+				290 heading ERRORS, Value: 4
+					291 text ERRORS
+				292 content list
+					293 container
+						294 AXListMarker • 
+						295 text 401 Missing or wrong token
+					296 container
+						297 AXListMarker • 
+						298 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					299 container
+						300 AXListMarker • 
+						301 text 500 Something went wrong on our side
+					302 container
+						303 AXListMarker • 
+						304 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			305 container get-servers-id-members-uid
+				306 text GET
+				307 text /servers/{id}/members/{uid}
+				308 link Description: Link to this endpoint, Value: yapin.gg/developers/api/servers#get-servers-id-members-uid
+				309 text One member with roles, timeout and invite
+				310 text Auth :  Bot token JS: 
+				311 text bot.member()
+				312 text Python: 
+				313 text bot.member()
+				314 heading PARAMETERS, Value: 4
+					315 text PARAMETERS
+				316 table
+					317 row
+						318 cell
+							319 text NAME
+						320 cell
+							321 text TYPE
+						322 cell
+							323 text DESCRIPTION
+					324 row
+						325 cell
+							326 text {id}
+						327 cell
+							328 text string (uuid)
+						329 cell
+							330 text Server id
+							331 container
+								332 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					333 row
+						334 cell
+							335 text {uid}
+						336 cell
+							337 text string (uuid)
+						338 cell
+							339 text User id
+							340 container
+								341 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				342 heading RESPONSE200, Value: 4
+					343 text RESPONSE
+					344 text 200
+				345 text object
+				346 table
+					347 row
+						348 cell
+							349 text FIELD
+						350 cell
+							351 text TYPE
+						352 cell
+							353 text DESCRIPTION
+					354 row
+						355 cell
+							356 text member
+						357 cell
+							358 text MemberDetail
+						359 cell
+							360 text One member, with timeout and invite
+							361 button (collapsed) Fields of MemberDetail, Secondary Actions: Expand
+								362 text Fields of MemberDetail
+				363 button (collapsed) Example response, Secondary Actions: Expand
+					364 text Example response
+				365 heading ERRORS, Value: 4
+					366 text ERRORS
+				367 content list
+					368 container
+						369 AXListMarker • 
+						370 text 401 Missing or wrong token
+					371 container
+						372 AXListMarker • 
+						373 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					374 container
+						375 AXListMarker • 
+						376 text 404 No such thing, or the bot can’t see it
+					377 container
+						378 AXListMarker • 
+						379 text 500 Something went wrong on our side
+					380 container
+						381 AXListMarker • 
+						382 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			383 link Description: ← Back to Yapin’, Value: yapin.gg/
+			384 text  · 
+			385 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		386 container On this page
+			387 text ON THIS PAGE
+			388 content list
+				389 link Description: Overview, Value: yapin.gg/developers/api/servers#top
+				390 link Description: GET /servers, Value: yapin.gg/developers/api/servers#get-servers
+				391 link Description: GET /servers/{id}, Value: yapin.gg/developers/api/servers#get-servers-id
+				392 link Description: GET /servers/{id}/counts, Value: yapin.gg/developers/api/servers#get-servers-id-counts
+				393 link Description: GET /servers/{id}/members, Value: yapin.gg/developers/api/servers#get-servers-id-members
+				394 link Description: GET /servers/{id}/members/{uid}, Value: yapin.gg/developers/api/servers#get-servers-id-members-uid
+		395 text Yapin’
+		396 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		397 heading PRODUCT, Value: 4
+			398 text PRODUCT
+		399 content list
+			400 link Description: Download, Value: yapin.gg/download
+			401 link Description: Developers, Value: yapin.gg/developers
+			402 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			403 link Description: Creator Program, Value: yapin.gg/creators
+			404 link Description: FanKit, Value: yapin.gg/fankit
+			405 link Description: Roadmap, Value: yapin.gg/roadmap
+			406 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			407 link Description: Bugs, Value: yapin.gg/bugs
+			408 link Description: Status, Value: yapin.gg/status
+		409 heading COMMUNITY, Value: 4
+			410 text COMMUNITY
+		411 content list
+			412 link Description: Guidelines, Value: yapin.gg/guidelines
+			413 link Description: Tutorials, Value: yapin.gg/tutorials
+			414 link Description: Bots, Value: yapin.gg/bots
+			415 link Description: Partners, Value: yapin.gg/partners
+		416 heading LEGAL, Value: 4
+			417 text LEGAL
+		418 content list
+			419 link Description: Terms, Value: yapin.gg/terms
+			420 link Description: Privacy, Value: yapin.gg/privacy
+			421 link Description: Copyright, Value: yapin.gg/copyright
+			422 link Description: Security, Value: yapin.gg/security
+			423 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			424 link Description: Contact, Value: mailto:hello@yapin.gg
+		425 text © 2026 Yapper Media LLC. Free to use.
+		426 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Servers · Bot API reference · Yapin’, URL: yapin.gg/developers/api/servers

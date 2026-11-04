@@ -1,0 +1,322 @@
+Browser tab: 2, Title: "Privacy Policy · Yapin’", URL: "https://www.yapin.gg/privacy".
+1 AXWebArea Privacy Policy · Yapin’, URL: yapin.gg/privacy
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text LEGAL
+			14 heading Privacy Policy, Value: 1
+				15 text Privacy Policy
+			16 text LAST UPDATED  2 NOVEMBER 2026 What Yapin’ collects, why, who helps us run it, and the rights you have. No selling your data, no ad profiles, no tracking cookies.
+		17 container
+			18 heading Who is responsible, Value: 2
+				19 text Who is responsible
+			20 text This policy covers Yapin’: the website at yapin.gg (and our older address yapper.website, which goes to the same service), our apps and the bot API. The data controller, the company responsible for your data, is  Yapper Media LLC, a Delaware limited liability company ,  131 Continental Dr, Suite 305, Newark, DE 19713, United States . It took over Yapin’ from its founder on 20 October 2026; nothing about how your data is used changed with that. Contact for anything about your data:
+			21 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			22 text . Yapin’ is open to people in the European Union and the UK, so the EU General Data Protection Regulation (GDPR) and the UK GDPR apply to everything on this page for them. You can complain to the data protection authority where you live. This page is meant to answer the usual questions (who we are, what we collect and why, who receives it, transfers outside the EU, how long we keep it, automated decisions and your rights) in one place. If something isn't covered, write to us.
+			23 heading What we collect, Value: 2
+				24 text What we collect
+			25 content list
+				26 container
+					27 AXListMarker • 
+					28 text Account:  your email address, username and password (stored only as a secure hash), and the language you picked, which we also use for our emails and notifications.
+				29 container
+					30 AXListMarker • 
+					31 text Sign-in methods:  if you sign in with Google, Google tells us your Google account ID, email address, name and profile picture. If you add a passkey, we store its public key (never anything secret from your device), the name you gave it, what kind of device or password manager made it, and when it was added and last used. 2FA backup codes are stored only as hashes.
+				32 container
+					33 AXListMarker • 
+					34 text Profile:  profile picture, banner, bio and how you cropped them, plus the decoration, account level and badges you have.
+				35 container
+					36 AXListMarker • 
+					37 text Profile comments:  comments you leave on profiles and who liked them, plus who can comment on yours (Friends, Everyone or Off) and whether you get notified. A comment the profile owner or our team takes down is kept privately so it can still be reported; one you delete yourself is wiped.
+				38 container
+					39 AXListMarker • 
+					40 text What you post:  messages, direct and group messages, images, reactions, custom emojis, servers, channels, roles, invites, and when you last read each chat.
+				41 container
+					42 AXListMarker • 
+					43 text Drafts:  unsent drafts are saved to your account so they follow you between devices; sent or cleared drafts are removed.
+				44 container
+					45 AXListMarker • 
+					46 text Connections:  friends, friend requests and people you’ve blocked.
+				47 container
+					48 AXListMarker • 
+					49 text Payments:  if you buy something (Plus, a Plus gift, Server Plus, a Supercharge, a boost or promotion, bot hosting), we keep what you bought, the amount and currency, when you paid, the email used at checkout and Stripe’s customer and payment IDs. Your card details go straight to Stripe. We never see or store your full card number.
+				50 container
+					51 AXListMarker • 
+					52 text Technical:  IP address and basic browser details in our providers’ server logs, used for security and to stop abuse. We also keep the IP address you signed up from (90 days, to limit sign-ups per address) and the IP address of each sign-in attempt (about a day, to stop password guessing). We also keep a security log of 2FA, passkey and account recovery events (what happened, when, and the IP address), so we can look into account takeovers and check staff actions. It's kept for up to 1 year and deleted with your account. For some visits the app also sends us how fast it loaded and any errors it hit (load times, the error text, the app version and whether you’re on a phone or a computer). These reports have no account, IP address or message content in them and are deleted after 14 days.
+				53 container
+					54 AXListMarker • 
+					55 text Time online:  how many seconds you’re online each day, used for levels, Shards and activity stats.
+				56 container
+					57 AXListMarker • 
+					58 text Leaderboards:  running counts of your messages (this week and all time), time in voice this week (calls in DMs and group chats included), Shards earned this week, gifts given and invites that worked. Only the totals are kept, not which messages. The top 50 on each board are shown to everyone signed in, and you always see your own rank. You can turn on “Hide me from leaderboards” in Settings.
+				59 container
+					60 AXListMarker • 
+					61 text Uploads:  how many files and how much data each account uploads per hour, kept for 2 days, so we can enforce upload limits and spot people using Yapin’ as free file storage. Very heavy uploading automatically opens a report for our moderators to check (that alone is not a ban).
+				62 container
+					63 AXListMarker • 
+					64 text Reports and appeals:  what you report (a message, a person, a server), why, and your account, plus any evidence attached. We don’t tell the person you report who reported them, and server reports go to Yapin’ staff, not to that server’s owner or moderators.
+				65 container
+					66 AXListMarker • 
+					67 text Partner applications:  if you apply for Yapin’ Partner, what you write about your server, the links you add, the requirement checks at the time and our staff's decision. Partner status is shown on the server and as a badge on the owner's profile.
+				68 container
+					69 AXListMarker • 
+					70 text Staff:  if you apply to be Yapin’ staff or a manager, your answers (including that you’re 18 or older, languages and hours). If you are staff, leave requests (dates, reason, who covers) and your moderation actions.
+				71 container
+					72 AXListMarker • 
+					73 text Phone app notifications:  if you use the Yapin’ phone app and allow notifications, we store your device’s push token. A notification (who sent it, the chat or server name and the message text, or who is calling you) is delivered through Google Firebase Cloud Messaging and, on iPhones, Apple’s push service.
+				74 container
+					75 AXListMarker • 
+					76 text Device and network check:  the app keeps a random device ID in your browser or desktop app (in local storage and a first-party cookie called “yd” that lasts 2 years) and sends it to us when it loads. It isn’t made from anything on your device. We store it, and the network you connect from, only as scrambled (salted SHA-256) hashes that nobody can read through our API. The device hash is also saved with your sign-up record (90 days). We use them to stop ban evasion and alt account farming, for example to block a banned person’s new accounts and to refuse Shards rewards and decoration sales between accounts on the same device or network, and to limit how many accounts can be made from one device or network in a day.
+				77 container
+					78 AXListMarker • 
+					79 text Linked accounts:  if you connect Steam, AniList, Last.fm or Trakt in Settings, we save what that site shows publicly about you: your account ID, name, avatar and profile link, plus your games with hours played and achievements (Steam), favourite and watched anime and manga (AniList), top and recent artists and tracks (Last.fm), or watched and rated movies and shows (Trakt). We refresh it now and then from the site’s public API. Sign-in keys from AniList and Trakt are used once to find your account and never stored. You can hide each one from your profile or disconnect it any time; disconnecting deletes what we saved.
+				80 container
+					81 AXListMarker • 
+					82 text Shards and levels:  a history of every Shard you earned or spent and why (activity, invites, decorations, levels), your balance and streak, and which friend you invited, so rewards can be checked.
+				83 container
+					84 AXListMarker • 
+					85 text Creator Program and verification:  if you apply, what you send us: your follower count, links to your content and its view counts, notes, and any proof you upload to get verified.
+				86 container
+					87 AXListMarker • 
+					88 text Bug reports:  what you write and any screenshots you attach.
+				89 container
+					90 AXListMarker • 
+					91 text Desktop app game status:  off unless you turn on “Show what I’m playing” in the desktop app. When it’s on, the app looks at the names of programs running on your computer every 20 seconds to spot known games. That list stays on your computer; only the matched game’s name is sent to us, to show “Playing …” on your profile.
+				92 container
+					93 AXListMarker • 
+					94 text Voice and screen sharing:  streamed live through our provider while you’re in a call. Calls are end-to-end encrypted: audio and video are encrypted on your device with keys only the people in the call have, so neither we nor our provider can listen in while the service works as designed (click the lock in a call for a safety code you can compare with the other person). We don’t record calls. We do see who joined which call and when. In servers, joins, leaves, moves and how long someone stayed in a voice channel are kept for 14 days and shown to that server’s moderators (people with View Audit Log or Manage Server), for channels they can see. Bots in a server can get voice join and leave events too.
+				95 container
+					96 AXListMarker • 
+					97 text Voice report clips:  while you’re in a voice channel, your own device keeps the last 30 seconds of the call audio in memory (not video or screen shares). It never leaves your device unless you report someone in that call and leave “Attach last 30 seconds of audio” on. The clip is then stored privately with the report, only Yapin’ staff can listen to it, and it’s deleted 30 days after the report is handled. Other members can do the same, so what you say in a call can end up in a report.
+				98 container
+					99 AXListMarker • 
+					100 text Clips:  if you turn clips on, your own device keeps the last 15 to 60 seconds of the call audio and of the stream you’re watching in memory. It never leaves your device unless you press Clip and then post or download the clip. Everyone in the call is told when someone clips it. You can turn off “Let people clip me” so other people’s clips leave out your voice and stream, and server managers can turn clips off for their server.
+				101 container
+					102 AXListMarker • 
+					103 text GIF search:  what you type in the GIF picker is sent to our GIF provider, KLIPY, by our server. When you pick a GIF, KLIPY is told which one, with a random ID that changes every time. Nothing that identifies you, and never your name, email or messages.
+				104 container
+					105 AXListMarker • 
+					106 text Translations:  when someone translates a message and their browser can’t do it on the device, the message text is sent by our server to Google Translate or, for short texts when Google is busy, to MyMemory (by Translated, Italy), without names or account details. Anyone who can see a message can translate it. These services handle the text under their own terms.
+				107 container
+					108 AXListMarker • 
+					109 text Links and videos in chat:  when a message has a link, our server asks that site (for example YouTube, Spotify, TikTok, X, Reddit, SoundCloud, Vimeo or Twitch) for a preview and keeps it for a week. Preview pictures load from that site in your browser, and pressing play loads the site’s own player, which sees your IP address and works under that site’s own privacy policy.
+				110 container
+					111 AXListMarker • 
+					112 text Watch together in calls:  when someone in a call starts a YouTube video for everyone, your browser plays it from YouTube’s own player (youtube-nocookie.com), so YouTube sees your IP address and its own privacy policy, terms and ads apply. Our realtime server only passes along which video is on, the queue and where playback is, to the people in that call, and keeps none of it after the call.
+				113 container
+					114 AXListMarker • 
+					115 text Bots and apps:  a bot added to a server gets what happens in the channels it can see (messages, reactions, members joining and leaving, voice joins and leaves) so it can work. Where it’s turned on, bots that can manage the server also see which invite link someone joined with and who made it. Apps you allow with Login with Yapin’ get your user ID, username, display name and profile picture. Bots and apps are made by other people, who handle that data under their own terms (Terms section 8).
+			116 text Ads:  the GIF picker shows no ads, and we don't build ad profiles about you. Where it comes from:  from you, from other users (for example when they report a message or mention you), from Stripe when you pay, from Google if you sign in with it, and from Steam, AniList, Last.fm or Trakt if you connect them. You need an email address to make an account; everything else is up to you. Automated safety checks:  after an image uploads, our servers check images, GIFs and videos for sexual or abusive content and for pictures our moderators already removed. When that check thinks an image might be sexual, the image itself (not your name, account or messages) is sent to Anthropic’s Claude AI for a second look before we block it, so innocent pictures don’t get blocked by mistake. Claude also checks for graphic violence and gore: every picture posted in Yapin’ HQ, and pictures in messages from accounts less than a day old, are sent to it (again without your name, account or messages). Every new custom emoji and every decoration submitted to the shop is checked by Claude too. Anthropic doesn’t use these images to train its AI. Messages and files you send, including in DMs and group chats, are also checked automatically on our servers for slurs, hate symbols and slogans, selling sexual content, telling someone to hurt themselves, adult links, spam, scam and phishing links, malware and ban evasion. A message that fails is refused before it’s saved. These checks are automated; moderators only see private content when it was reported or flagged by a check. The owner has wider access, explained under “Who can read private messages” below. See also section 5.5 of the Terms. We don't rely on your consent (or on you accepting our Terms) for these checks: they run on the legal bases listed under “Why we use it” below, so turning them off isn't an option, but you can object and appeal any decision they lead to. Automated decisions:  most actions on accounts are taken by people. A few happen automatically: blocking an upload or a message the checks above catch, rate limits and upload limits, refusing a sign-up from a blocked or mistyped email domain or from a device or network that already made too many accounts, banning a new account made on the device of a banned account (ban evasion), and banning an account after several different people report the same message for slurs. You can appeal any of these from the ban screen or by email, and every appeal is decided by a person, so you can always get a human decision (GDPR Art. 22). We don't build ad or marketing profiles about you. Friend suggestions:  where it’s turned on, Friends, Suggested shows people you might get along with. We work it out from the games, anime, music, movies and shows on linked accounts and the servers you share, and show both of you what you have in common. Hidden links and private profiles on those sites don't count. You can turn it off in Settings, Privacy (“Suggest me to people with similar interests”), and then you show up in nobody's list.
+			117 heading Why we use it (and our legal basis), Value: 2
+				118 text Why we use it (and our legal basis)
+			119 content list
+				120 container
+					121 AXListMarker • 
+					122 text To run Yapin’ for you  - accounts, chats, calls, emails like sign-up confirmation and password resets. Basis: our contract with you (GDPR Art. 6(1)(b)).
+				123 container
+					124 AXListMarker • 
+					125 text To keep Yapin’ safe  - preventing spam and abuse, the automated safety checks above, moderating, enforcing our rules, preventing payment fraud, fixing bugs. Basis: our legitimate interests and yours and other users' in a safe service (Art. 6(1)(f)), and, for reporting child sexual abuse material and other illegal content to the authorities, our legal obligations (Art. 6(1)(c)). Not consent.
+				126 container
+					127 AXListMarker • 
+					128 text To handle purchases  - taking payments, giving you what you bought, refunds and payment support. Basis: our contract with you (Art. 6(1)(b)).
+				129 container
+					130 AXListMarker • 
+					131 text Linked accounts, Shards and the Creator Program  - showing what you chose to connect, keeping your Shards balance and reviewing applications. Basis: our contract with you (Art. 6(1)(b)); you can disconnect or stop any of them.
+				132 container
+					133 AXListMarker • 
+					134 text Desktop game status  - only if you turn it on. Basis: your consent (Art. 6(1)(a)), which you can withdraw any time by turning it off.
+				135 container
+					136 AXListMarker • 
+					137 text Friend suggestions  - Basis: our legitimate interest in helping people find friends (Art. 6(1)(f)); you can opt out as described above.
+				138 container
+					139 AXListMarker • 
+					140 text To follow the law  - answering valid legal requests, handling reports of illegal content, and keeping payment records for tax and accounting. Basis: legal obligation (Art. 6(1)(c)).
+				141 container
+					142 AXListMarker • 
+					143 text Desktop and phone notifications  - only if you turn them on in your browser or phone. Basis: consent, which you can withdraw any time.
+				144 container
+					145 AXListMarker • 
+					146 text Leaderboards  - Basis: our legitimate interest in fun, friendly competition (Art. 6(1)(f)); you can hide yourself as described above.
+			147 heading Who can see your stuff, Value: 2
+				148 text Who can see your stuff
+			149 text Your username, profile picture, banner, bio, decoration, badges and account level are visible to other Yapin’ users, and so are whether you have Plus and since when, how many gifts you gave, and your leaderboard stats (unless you hide them). Linked accounts you haven't hidden show on your profile to people who share a server, a DM or a friendship with you (and to people you appear to as a friend suggestion). Messages are visible to the people in that chat or channel. Server owners and moderators can remove messages in their servers. Server moderators see the voice log described above. Your Shards history, device and network hashes, security log, creator and staff applications, reports and bug reports are only visible to you (where it's yours) and Yapin’ staff.
+			150 heading Who can read private messages, Value: 2, ID: private-access
+				151 text Who can read private messages
+			152 text Moderators can’t.  Not DMs, not group chats, not private channels they aren’t in. The database blocks it, and the rules plus the tests that prove it are public at
+			153 link github.com/Yapper-Media-LLC/yapper-db
+			154 text . A moderator only sees DM content inside a report sent by someone in that DM. Every message a moderator deletes is logged. The owner can.  Yapper Media LLC, in practice one person, has full access to the database, DMs included. Messages are not end to end encrypted (calls are), so technically we can read them. We do it for moderation, safety, support and fixing bugs, nothing else. Staff tool actions are logged, direct database reads are not, so on that part you’re trusting us. AI tools too.  We run and fix Yapin’ with Anthropic’s Claude through their API. When we use it on an incident or a bug it can see message content and account data, the same as the owner. Anthropic doesn’t train on that data and doesn’t keep it beyond their API retention period. Not OK with this? Delete your account and your data goes with it, see
+			155 link Description: How long we keep it, Value: yapin.gg/privacy#how-long
+			156 text .
+			157 heading Who helps us run Yapin’, Value: 2
+				158 text Who helps us run Yapin’
+			159 text These providers process data for us, only to provide their service:
+			160 content list
+				161 container
+					162 AXListMarker • 
+					163 text Supabase  - database, logins and some file storage. Servers in Frankfurt, Germany (EU).
+				164 container
+					165 AXListMarker • 
+					166 text Hetzner  - runs the website, our live chat server, our API, voice calls and screen shares, and hosted bots. Servers in Falkenstein, Germany and Helsinki, Finland (EU).
+				167 container
+					168 AXListMarker • 
+					169 text Cloudflare  - sits in front of the website, the API and the live chat server (so it handles every request, including your IP address, to deliver it and block attacks), stores uploaded images and files (R2, global network) and runs the bot check (Turnstile) on the login and sign-up form, which gets your IP address. The bot check only loads once you start using that form, not when a page opens.
+				170 container
+					171 AXListMarker • 
+					172 text Vercel  - builds the website and keeps a spare copy ready in case our own servers fail (global network). We don't run visit analytics on it.
+				173 container
+					174 AXListMarker • 
+					175 text Resend  - sends our emails and runs our support inbox, so it holds the emails you send us (United States company).
+				176 container
+					177 AXListMarker • 
+					178 text Google  - some company email (Google Workspace) may also hold emails you send us, Google sign-in if you use it, phone app notifications (Firebase Cloud Messaging), and the YouTube API we use to check creator channels (United States).
+				179 container
+					180 AXListMarker • 
+					181 text Apple  - delivers phone app notifications to iPhones (United States).
+				182 container
+					183 AXListMarker • 
+					184 text Anthropic  - its Claude AI checks images, emojis and decorations as described above, and we use Claude through Anthropic’s API to run and maintain Yapin’, as described under “Who can read private messages” (United States).
+				185 container
+					186 AXListMarker • 
+					187 text Stripe  - processes payments (United States company with EU entities). For most purchases Stripe also acts as the seller (merchant of record) through its Managed Payments service and handles sales tax and VAT. Stripe processes payment data for us, and is also responsible on its own for using it to sell, prevent fraud and meet its legal duties, as described in
+					188 link Description: Stripe’s privacy policy, Value: stripe.com/privacy
+					189 text .
+			190 text Two services get data from us but use it under their own terms and privacy policies, as independent companies, not on our behalf:  KLIPY  (GIF search, as described above), Google Translate  and  MyMemory  (messages someone asks to translate), and the sites whose link previews and players show in chat. We only send them what’s described above. When you connect Steam, AniList, Last.fm or Trakt, our server asks that site's API for your public data. Those sites see that request, not your Yapin’ email or messages. Trakt posters are copied to our file storage once so we don't load them from Trakt every time. Linking is covered by each site's own terms and privacy policy. If you import a server from Discord, we read that server's structure (channels, roles, emojis and icon) through Discord's API using our Discord bot. Members and messages aren't copied. Most of your data is stored in the EU: the database in Frankfurt and our servers in Germany and Finland. Vercel, Cloudflare, Resend, Google, Apple, Anthropic, KLIPY and Stripe can process data outside the EU/EEA, mostly in the United States, and our company itself is registered in the United States. For the providers that work for us, these transfers are covered by the provider's data processing agreement with the European Commission's Standard Contractual Clauses and, where the provider is certified, the EU–US Data Privacy Framework. KLIPY, Google Translate and MyMemory receive data under their own terms, as described above. Ask us at
+			191 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			192 text  and we'll send you a copy of the safeguards for any provider. We never sell your data or share it with advertisers. The website’s fonts and emoji are served by Yapin’ itself, so loading a page doesn’t send your IP address to Google Fonts or any other font or emoji service. The sign-in page loads Google’s sign-in button from Google.
+			193 heading How long we keep it, Value: 2, ID: how-long
+				194 text How long we keep it
+			195 content list
+				196 container
+					197 AXListMarker • 
+					198 text Your content stays until you delete it or delete your account.
+				199 container
+					200 AXListMarker • 
+					201 text An unsent draft is deleted when you send it or clear the box, and after 30 days without changes.
+				202 container
+					203 AXListMarker • 
+					204 text A message you delete is kept privately for 2 days so it can still be reported (spam gets deleted fast), then it's gone. Only our report system can read it.
+				205 container
+					206 AXListMarker • 
+					207 text Deleting your account (User Settings → My Account) immediately removes your login, profile, messages, reactions, friends, uploaded pictures, linked accounts, Shards, device and network hashes and any servers you own. Decorations you made that other people bought stay on their profiles (Terms 5.8).
+				208 container
+					209 AXListMarker • 
+					210 text Linked account data stays until you disconnect it or delete your account (hiding it only takes it off your profile). We keep only the times we last refreshed it, so the refresh limits still work.
+				211 container
+					212 AXListMarker • 
+					213 text Creator applications, verification proofs and bug reports stay while they're open and for as long as your badge or program membership lasts; ask us to delete them any time after they're decided.
+				214 container
+					215 AXListMarker • 
+					216 text Payment records stay after you delete your account, for as long as tax and accounting law requires, then they’re deleted.
+				217 container
+					218 AXListMarker • 
+					219 text If a banned account is deleted, we keep a scrambled (hashed) copy of its email and the networks it recently signed in from until the ban would have ended (a year at most), only so the ban can’t be dodged with a new account.
+				220 container
+					221 AXListMarker • 
+					222 text Device and network hashes are deleted once they haven't been seen for 120 days. Sign-up IP addresses are deleted after 90 days and sign-in attempt IPs after about a day. Time online is kept until you delete your account.
+				223 container
+					224 AXListMarker • 
+					225 text Upload counters are deleted after 2 days, the server voice log after 14 days, and leaderboard stats stay until you delete your account. Passkeys stay until you remove them or delete your account. The security log is kept for up to 1 year and deleted with your account.
+				226 container
+					227 AXListMarker • 
+					228 text If an account is banned from Yapin’, the files it uploaded are deleted within minutes, except what we keep for a report or investigation (see below). Unbanning doesn't bring them back.
+				229 container
+					230 AXListMarker • 
+					231 text Backups are kept for up to 7 days and server logs for a short time (up to about 30 days), then they’re gone.
+				232 container
+					233 AXListMarker • 
+					234 text We may keep specific information longer if the law requires it or to deal with a serious abuse report. When content or an account is reported, removed or under investigation, we may keep the content, IP addresses, session logs and account and payment records after deletion for as long as needed for the report, a legal request or a preservation order. For child sexual abuse material this is at least one year, and we report it to NCMEC and/or the authorities.
+			235 heading Your rights, Value: 2
+				236 text Your rights
+			237 text You can ask to access, correct, delete or get a copy of your data (in a machine-readable file), to restrict or object to how we use it, and to withdraw consent. Email 
+			238 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			239 text  from your account’s email address. It's free, and we'll answer within one month (we may take up to two more months for complicated requests, and we'll tell you if so). To protect accounts, we only act on a request about an account when it comes from that account's email address, or when you can otherwise show it's yours. The fastest way to delete everything is User Settings, My Account, Delete account. You can complain to the data protection authority where you live. Where it’s turned on for you, you can also grab a copy yourself: Settings, My Account, Your data, Download. You get one JSON file with your account, messages (your newest 50,000), friends, servers, uploads, linked accounts, Shards, time online, device and network hashes, your sign-up and sign-in IPs, your passkeys (without their keys), your security log and more, up to 3 times a day.
+			240 heading Law enforcement and legal requests, Value: 2, ID: law-enforcement
+				241 text Law enforcement and legal requests
+			242 text Police, courts and other authorities can send requests to
+			243 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			244 text  with “Legal request” in the subject (our single point of contact, Terms section 2). Please send from an official address so we can check the request is real.
+			245 content list
+				246 container
+					247 AXListMarker • 
+					248 text What to include:  the authority and the officer's name and official contact details, the legal basis (for example a court order, warrant or subpoena), the usernames or user IDs involved, and exactly what information and time range you need.
+				249 container
+					250 AXListMarker • 
+					251 text Emergencies:  if someone is at risk of death or serious physical harm, put  EMERGENCY  in the subject and describe the danger. We handle these first and may share what is needed to prevent the harm, as the law allows, before formal paperwork arrives.
+				252 container
+					253 AXListMarker • 
+					254 text Keeping data:  you can ask us to preserve an account's data while you get the legal paperwork. We keep it for 90 days and can extend that once on request.
+				255 container
+					256 AXListMarker • 
+					257 text What we may have:  account details (email, username, sign-up date), recent IP addresses and session logs (kept for a short time), messages and uploads that haven't been deleted, and payment records. Calls and screen shares are end-to-end encrypted and not recorded, so we have no audio or video.
+				258 container
+					259 AXListMarker • 
+					260 text How we decide:  we check each request against the law that applies and only share what it asks for. Requests from outside the United States and the EU may need to come through formal international channels, except in an emergency.
+				261 container
+					262 AXListMarker • 
+					263 text Telling the user:  we tell people when we receive a request about their account, unless the law forbids it, a court orders us not to, or telling them would put someone at risk or harm an investigation (for example in child safety cases).
+			264 text We report child sexual abuse material to the National Center for Missing & Exploited Children (NCMEC) and/or the competent authorities ourselves, and keep the related records for at least one year. Anyone can report it to us in the app, anonymously if they want.
+			265 heading Cookies and storage, Value: 2
+				266 text Cookies and storage
+			267 text We don’t use advertising or tracking cookies. Your browser stores only what Yapin’ needs to work: your login session, the device ID used for the security check above, short-lived sign-in checks when you link an account, a 7-day cookie if the age check on the sign-up form stopped you, and your settings (theme, layout, recent GIFs and emojis, what notices you've dismissed and similar). Some settings, like your language, are also saved with your account so they follow you to other devices and to our emails. Because all of this is strictly necessary or something you asked for, there is no cookie banner.
+			268 heading Children, Value: 2
+				269 text Children
+			270 text Yapin’ is not for children under  13 . If you believe a child under  13  has an account, email us and we’ll delete it, along with its data. In some countries (for example many EU countries, where the age is between 13 and 16) teens below a set age need a parent or guardian's OK to use an online service. If that applies to you, ask them first (Terms section 3). We treat teens' data the same as everyone else's: no ads profiles, no selling, nothing public they didn't post. Parents and guardians can email
+			271 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			272 text  to ask about, get a copy of or delete their child's account. We'll check it's really them first.
+			273 heading Security, Value: 2
+				274 text Security
+			275 text Connections are encrypted (HTTPS), passwords are hashed, calls and screen shares are end-to-end encrypted, and access rules in our database stop people, moderators included, reading chats they’re not part of (the owner's admin access is the exception, see “Who can read private messages” above). No system is perfect. If we have a breach that puts you at risk, we’ll tell you and the authorities as the law requires. Don’t take our word for the database part. The access rules, every migration and the tests that check them are public at
+			276 link github.com/Yapper-Media-LLC/yapper-db
+			277 text . You can read them or run the tests yourself. Nobody outside Yapper has audited any of it yet. If you spot a hole, tell us at
+			278 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			279 text .
+			280 heading Changes, Value: 2
+				281 text Changes
+			282 text If we change how we use your data in a way that matters, we’ll tell you in the app or by email at least 30 days before it takes effect, the same as for our Terms (section 16), unless the law or an urgent safety or security problem needs it sooner. Changes that only describe what we already do more clearly take effect right away. See also our
+			283 link Description: Terms of Service, Value: yapin.gg/terms
+			284 text .
+			285 link Description: ← Back to Yapin’, Value: yapin.gg/
+			286 text  · 
+			287 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		288 text Yapin’
+		289 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		290 heading PRODUCT, Value: 4
+			291 text PRODUCT
+		292 content list
+			293 link Description: Download, Value: yapin.gg/download
+			294 link Description: Developers, Value: yapin.gg/developers
+			295 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			296 link Description: Creator Program, Value: yapin.gg/creators
+			297 link Description: FanKit, Value: yapin.gg/fankit
+			298 link Description: Roadmap, Value: yapin.gg/roadmap
+			299 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			300 link Description: Bugs, Value: yapin.gg/bugs
+			301 link Description: Status, Value: yapin.gg/status
+		302 heading COMMUNITY, Value: 4
+			303 text COMMUNITY
+		304 content list
+			305 link Description: Guidelines, Value: yapin.gg/guidelines
+			306 link Description: Tutorials, Value: yapin.gg/tutorials
+			307 link Description: Bots, Value: yapin.gg/bots
+			308 link Description: Partners, Value: yapin.gg/partners
+		309 heading LEGAL, Value: 4
+			310 text LEGAL
+		311 content list
+			312 link Description: Terms, Value: yapin.gg/terms
+			313 link Description: Privacy, Value: yapin.gg/privacy
+			314 link Description: Copyright, Value: yapin.gg/copyright
+			315 link Description: Security, Value: yapin.gg/security
+			316 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			317 link Description: Contact, Value: mailto:hello@yapin.gg
+		318 text © 2026 Yapper Media LLC. Free to use.
+		319 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Privacy Policy · Yapin’, URL: yapin.gg/privacy

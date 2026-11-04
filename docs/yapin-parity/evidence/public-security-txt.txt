@@ -1,0 +1,6 @@
+Contact: mailto:hello@yapin.gg
+Expires: 2027-10-18T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://www.yapin.gg/.well-known/security.txt
+Canonical: https://www.yapper.website/.well-known/security.txt
+# Database access rules, migrations and the tests behind them: https://github.com/Yapper-Media-LLC/yapper-db

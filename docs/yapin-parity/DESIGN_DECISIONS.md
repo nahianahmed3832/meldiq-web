@@ -1,0 +1,44 @@
+# Design and architecture decisions
+
+These decisions describe the planning foundation and the subsequent Part 2 local implementation. `ACCEPTED CONSTRAINT` comes from the current request or verified baseline. `PROPOSED` requires evaluation in the responsible implementation part. `OPEN` is not silently approved.
+
+| ID | Status | Decision and reason | Owner / affected features |
+| --- | --- | --- | --- |
+| DD-001 | ACCEPTED CONSTRAINT | Part 1 is research only. Preserve existing functionality and production state; no major redesign, infrastructure/database change or multi-region migration. | All parts |
+| DD-002 | ACCEPTED CONSTRAINT | One primary application authority and Frankfurt PostgreSQL/storage are the planning baseline. No regional gateway/database/synchronization topology is established. Provider-confirmed compute geography remains a discrepancy, not a migration task. | Part 4; architecture |
+| DD-003 | ACCEPTED CONSTRAINT | The active Web release is a stronger baseline than the old shared working tree. Preserve missing newer release files and use exact source identities. | All; 3cc3c03 comparison |
+| DD-004 | ACCEPTED CONSTRAINT | Source existence, a visible control, a public claim and an executed workflow are separate evidence classes. No UI observation is promoted to tested behavior. | All; all feature rows |
+| DD-005 | ACCEPTED CONSTRAINT | Preserve the custom `/v1/ws` protocol and existing sessions/device keys while PostgreSQL is authoritative. Native Supabase Auth/Realtime migration remains separate; the social provider adapter is already configured. | Part 2/3; AUTH, MSG |
+| DD-006 | ACCEPTED CONSTRAINT | Use the current server-owned catalog for price, availability, decimal bytes and entitlements. Superseded research pricing and competitor products do not override it. | Part 4; BILL |
+| DD-007 | ACCEPTED CONSTRAINT | Keep disabled card/vault/recurring-card gates disabled. Source components and mocked lifecycle checks are not merchant settlement/3DS proof. | Part 4; BILL |
+| DD-008 | ACCEPTED CONSTRAINT | Research screenshots are reference evidence only. Do not copy proprietary application code, logos, illustrations, sound effects, GIFs, fonts or artwork into Meldiq. | All; WEB, LOOK, EXPR, VOICE |
+| DD-009 | IMPLEMENTED LOCALLY | Improve the existing shell/settings registry and domain components in small changes. Preserve stable phone destinations, keyboard/back/focus behavior and original Meldiq identity. | Part 2; SHELL, PREF |
+| DD-010 | PROPOSED | Prioritize accepted messaging/permission behavior before feature expansion. Deterministic cursor, history window and read-marker tests precede cosmetic timeline changes. | Part 3; MSG, SEARCH, PERM |
+| DD-011 | ACCEPTED CONSTRAINT | Owner-only powers and constrained delegation remain Meldiq's model. Do not add a blanket administrator flag just because Yapin lists one. | Part 3; YAP-PERM-032 |
+| DD-012 | PROPOSED | Reuse one membership-safe expression/media library and one send pipeline; let Part 4 supply assets/drafts while Part 3 owns composer delivery. | Parts 3/4; MSG, MEDIA, EXPR |
+| DD-013 | OPEN | GIF preview versus immediate send is a user-experience decision. Both sampled systems have immediate-send paths; an optional preference requires actual save/sync semantics. | Part 4; YAP-EXPR-008 |
+| DD-014 | PARTLY IMPLEMENTED / COMMENTS OPEN | Optional About/Links/Connections visibility/order implemented behind profile-layout capability, with server withholding and older-client preservation. Comments remain a separate unapproved social domain with privacy, moderation and retention work. | Part 2/3; PROFILE-012/013/026, SOCIAL-018 |
+| DD-015 | ACCEPTED CONSTRAINT | Preserve existing Meldiq strengths: Saved/Reminders, stickers, camera paths, call safety verification, privacy controls and native Android. Lack of a competitor counterpart is not a removal reason. | All; existing product outside competitor-only rows |
+| DD-016 | OPEN | Keep the current no-clips/no-recording position until participant consent enforcement, local buffer behavior, retention, reporting and user expectations are explicitly decided. A server toggle alone is insufficient. | Part 4; VOICE-023–026 |
+| DD-017 | OPEN | Soundboard and hosted activities need a scoped value, original assets, privacy and technical decision. UI visibility on Yapin is not a reason to implement recording or remote execution. | Part 4; VOICE-021/022/027 |
+| DD-018 | OPEN | Hosted bot containers, secrets and Python jobs require an operating/isolation/cost model. Reuse existing bot APIs without assuming hosted execution is active. | Part 4; DEV-012–014 |
+| DD-019 | OPEN | Paid creator settlement, recurring discovery placement, new partner rewards and virtual-currency policy need product decisions. Preserve current acquired ownership and existing agreements. | Part 4 with Part 3; LOOK-008–010, BILL-011/014 |
+| DD-020 | PROPOSED | Community event scope belongs to Part 3, with Part 4 call/location hooks. Weekly recurrence and RSVP are independently accepted rather than inferred from a create form. | Part 3; EVENT |
+| DD-021 | PROPOSED | Show measured call quality and honest unknown states. A chosen preset or LiveKit health is not proof of delivered resolution/FPS, camera operation or mobile capture support. | Part 4; VOICE, RELEASE |
+| DD-022 | ACCEPTED CONSTRAINT | Disclose security by data class. Current media v2 keys can be seen by the relay; text, call and backup security must be verified separately. No blanket E2EE copy is justified by a dependency or old README. | Part 2/4; TRUST, MEDIA |
+| DD-023 | ACCEPTED CONSTRAINT | Preserve the distinction between monthly Yapin Supercharge and weekly promotion. Do not reinterpret Meldiq Spark's one-time purchase as a monthly/weekly subscription. | Part 4; BILL-009–011 |
+| DD-024 | ACCEPTED CONSTRAINT | Keep conflicting competitor claims visible. Roadmap/download say phone app next/testing/no native app, while 2 November security copy mentions an Android APK. Camera and sticker roadmap items remain unverified as shipped functionality. | Part 4; RELEASE-005, VOICE-020, EXPR-010 |
+| DD-025 | PROPOSED | Status/real-user charts are reference patterns. Collect permitted aggregate data and show sampling/unknown states before comparing cohorts or drawing performance conclusions. | Part 4; OPS |
+| DD-026 | ACCEPTED CONSTRAINT | No exact CSS, preset names, permission strings or REST paths are mandated by parity. Native Meldiq contracts and accessible original design remain authoritative. | All; API/PERM and shared contracts |
+
+
+| DD-027 | OWNER DECISION / RELEASE WORK OPEN | Minimum age 13+; GRIIPBUDDY LLC is the Wyoming operator with supplied contact/address. Prepared policies revision 2026-11-04.1; explicit UI declaration uses no DOB. Durable server policy acceptance/publication remain required before claiming cross-client enforcement. | Part 2/4; AUTH-007/008, TRUST |
+| DD-028 | IMPLEMENTED LOCALLY | New-account welcome follows existing verification/key/recovery flow, saves a real profile, shares browser appearance/language controls, and stores only an account-scoped presentation stage. Returning users are not enrolled automatically. | Part 2; AUTH-012 |
+| DD-029 | IMPLEMENTED LOCALLY | One existing token/catalog/overlay system remains canonical. Add keyboard search, top-modal isolation, visible-content skip and shared profile rendering instead of independent per-domain visual systems. | Part 2/3/4; C-SHELL, C-NAVIGATION, C-PROFILE |
+| DD-030 | ACCEPTED CONSTRAINT | Local built-Web and SQLite/file-mail fixture acceptance is explicitly bounded. No whole-program completion, real provider, physical device, production delivery or legal compliance is inferred. Use exact source manifest and per-row remaining criteria. | All; Part 2 validation/report |
+
+## Decisions requiring concrete proposals
+
+For an `OPEN` decision, the owner should present the current implementation, the exact user-visible gap, the smallest proposed behavior, dependencies, acceptance criteria and operational cost/risks where relevant. It must remain `RESEARCH_REQUIRED` or `DEFERRED_DECISION` until decided. Do not invent approval because a feature appears in this register.
+
+The same feature has one implementation owner even when consulted parts supply privacy, permission, shell or media contracts. No decision here authorizes messages to other people, third-party consent, recording, purchases, sanctions, production writes or deletion.

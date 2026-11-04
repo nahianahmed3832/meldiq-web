@@ -123,7 +123,7 @@ export default defineConfig({
         ]
       : [
           {
-            command: `npm run -s sw:dev && npx next dev --hostname 127.0.0.1 --port ${NEXT_DEV_PORT}`,
+            command: `npm run -s sw:dev && npx next dev --webpack --hostname 127.0.0.1 --port ${NEXT_DEV_PORT}`,
             url: `http://127.0.0.1:${NEXT_DEV_PORT}`,
             reuseExistingServer: process.env.ORBIT_E2E_REUSE_NEXT === "1",
             timeout: 120_000,

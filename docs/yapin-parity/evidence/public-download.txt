@@ -1,0 +1,129 @@
+Browser tab: 2, Title: "Download Yapin’ for Windows and Linux", URL: "https://www.yapin.gg/download".
+0 AXWebArea Download Yapin’ for Windows and Linux, URL: yapin.gg/download
+	1 container
+		2 container Main
+			3 link Description: Yapin’, Value: yapin.gg/
+			4 content list
+				5 link Description: Download, Value: yapin.gg/download
+				6 link Description: Developers, Value: yapin.gg/developers
+				7 link Description: Plus, Value: yapin.gg/plus
+			8 button Description: Switch to light mode, Help: Light mode
+				9 image
+			10 link Description: Open Yapin’, Value: yapin.gg/
+		11 container
+			12 text DESKTOP APP
+			13 heading Yapin’, on your desktop., Value: 1
+				14 text Yapin’, on
+				15 text your desktop.
+			16 text Same Yapin’, in its own window. Faster, quieter, and it knows what you're playing.
+			17 link Description: Use the web app No Mac app yet., Value: yapin.gg/
+			18 link Description: Also for Windows, Value: yapin.gg/download/windows
+			19 link Description: Also for Linux, Value: yapin.gg/download/linux
+			20 text Free, no account needed to download No Mac app yet, use the website for now
+			21 image The Yapin’ desktop client showing a server with text and voice channels.
+		22 container
+			23 heading Why the app, Value: 2
+				24 text Why the app
+			25 text Screen share
+			26 text Pick a screen or an app from live previews. Whole screens share game audio too.
+			27 text Shows what you’re playing
+			28 text Friends see "Playing Fortnite" under your name while the game runs. Only the name leaves your PC.
+			29 text Lives in your tray
+			30 text Close the window and calls keep going. Start with Windows if you want.
+		31 container how
+			32 heading How to get it, Value: 2
+				33 text How to get it
+			34 text Windows
+			35 content list
+				36 container
+					37 AXListMarker 1. 
+					38 text Hit 
+					39 link Description: Download for Windows, Value: yapin.gg/download/windows
+					40 text . You get  Yapper-Setup.exe .
+				41 container
+					42 AXListMarker 2. 
+					43 text Open it from your Downloads.
+				44 container
+					45 AXListMarker 3. 
+					46 text If a blue  "Windows protected your PC"  box pops up, click  More info , then  Run anyway . That shows up for every new app without a paid certificate.
+				47 container
+					48 AXListMarker 4. 
+					49 text It installs by itself in a few seconds and opens. Log in like on the website.
+				50 container
+					51 AXListMarker 5. 
+					52 text Done. Yapin’ is in your Start menu and tray, and updates itself.
+			53 text Linux
+			54 content list
+				55 container
+					56 AXListMarker 1. 
+					57 text Hit 
+					58 link Description: Download for Linux, Value: yapin.gg/download/linux
+					59 text . You get  Yapper-Setup.AppImage .
+				60 container
+					61 AXListMarker 2. 
+					62 text Make it runnable: right-click it,  Properties , tick  Allow executing as program . Or run  chmod +x Yapper-Setup.AppImage
+				63 container
+					64 AXListMarker 3. 
+					65 text Double-click it. No install, no root.
+				66 container
+					67 AXListMarker 4. 
+					68 text Won't open? Install FUSE:  sudo apt install libfuse2  (on Ubuntu 24.04 it's  libfuse2t64 ).
+			69 container
+				70 text On a Mac or a phone? There's no app for those yet, just use 
+				71 link Description: yapin.gg, Value: yapin.gg/
+				72 text  in your browser. On a phone, "Add to Home Screen" gives you an icon too.
+		73 container
+			74 heading Questions, Value: 2
+				75 text Questions
+			76 content list
+				77 container
+					78 heading Is it safe? Windows says it's unrecognised., Value: 3
+						79 button (collapsed) Is it safe? Windows says it's unrecognised., Secondary Actions: Expand
+					80 text That warning appears for any new app without a paid code-signing certificate. The installer is built automatically from the Yapin’ source, and that exact build is what you download here. It goes away as more people install it, or once we buy a certificate.
+				81 container
+					82 heading What does it send?, Value: 3
+						83 button (collapsed) What does it send?, Secondary Actions: Expand
+					84 text The same things the website does, plus the name of a game you're playing while it runs (you can turn that off in Settings → Activity). Nothing else from your computer.
+				85 container
+					86 heading Does it update by itself?, Value: 3
+						87 button (collapsed) Does it update by itself?, Secondary Actions: Expand
+					88 text Yes. It checks on start and every few hours, downloads quietly, and installs when you quit.
+				89 container
+					90 heading Phone?, Value: 3
+						91 button (collapsed) Phone?, Secondary Actions: Expand
+					92 text Open yapin.gg in your phone browser and use "Add to Home Screen". You get an icon and full-screen Yapin’.
+			93 link Description: Use the website instead, Value: yapin.gg/
+		94 text Yapin’
+		95 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		96 heading PRODUCT, Value: 4
+			97 text PRODUCT
+		98 content list
+			99 link Description: Download, Value: yapin.gg/download
+			100 link Description: Developers, Value: yapin.gg/developers
+			101 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			102 link Description: Creator Program, Value: yapin.gg/creators
+			103 link Description: FanKit, Value: yapin.gg/fankit
+			104 link Description: Roadmap, Value: yapin.gg/roadmap
+			105 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			106 link Description: Bugs, Value: yapin.gg/bugs
+			107 link Description: Status, Value: yapin.gg/status
+		108 heading COMMUNITY, Value: 4
+			109 text COMMUNITY
+		110 content list
+			111 link Description: Guidelines, Value: yapin.gg/guidelines
+			112 link Description: Tutorials, Value: yapin.gg/tutorials
+			113 link Description: Bots, Value: yapin.gg/bots
+			114 link Description: Partners, Value: yapin.gg/partners
+		115 heading LEGAL, Value: 4
+			116 text LEGAL
+		117 content list
+			118 link Description: Terms, Value: yapin.gg/terms
+			119 link Description: Privacy, Value: yapin.gg/privacy
+			120 link Description: Copyright, Value: yapin.gg/copyright
+			121 link Description: Security, Value: yapin.gg/security
+			122 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			123 link Description: Contact, Value: mailto:hello@yapin.gg
+		124 text © 2026 Yapper Media LLC. Free to use.
+		125 text Made for people who talk.
+
+The focused UI element is 0 AXWebArea Download Yapin’ for Windows and Linux, URL: yapin.gg/download

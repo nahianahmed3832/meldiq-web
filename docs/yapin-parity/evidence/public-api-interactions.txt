@@ -1,0 +1,254 @@
+Browser tab: 2, Title: "Interactions · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/interactions".
+1 AXWebArea Interactions · Bot API reference · Yapin’, URL: yapin.gg/developers/api/interactions
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Interactions, Value: 1
+				15 text Interactions
+			16 text Answering button clicks.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container post-interactions-id-token-callback
+				25 text POST
+				26 text /interactions/{id}/{token}/callback
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/interactions#post-interactions-id-token-callback
+				28 text Answer a click, a pick, a modal or a slash command (within 15 minutes, up to 10 answers)
+				29 text Auth :  Bot token JS: 
+				30 text bot.respond()
+				31 text Python: 
+				32 text bot.respond()
+				33 text A slash command (the command event) has no message of its own: answer it with reply (shown with “<user> used /cmd” above it), ephemeral, ack or modal. update is refused for commands, and for a modal_submit that came from a command.
+				34 heading PARAMETERS, Value: 4
+					35 text PARAMETERS
+				36 table
+					37 row
+						38 cell
+							39 text NAME
+						40 cell
+							41 text TYPE
+						42 cell
+							43 text DESCRIPTION
+					44 row
+						45 cell
+							46 text {id}
+						47 cell
+							48 text string (uuid)
+						49 cell
+							50 text Interaction id, from the interaction event
+							51 container
+								52 text Example :  "3af4a815-6e3d-4c9f-a0b1-7d5e4f6c3b1a"
+					53 row
+						54 cell
+							55 text {token}
+						56 cell
+							57 text string
+						58 cell
+							59 text The token from the interaction event
+							60 container
+								61 text Example :  "9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a3928"
+				62 heading REQUEST BODY, Value: 4
+					63 text REQUEST BODY
+				64 text object
+				65 table
+					66 row
+						67 cell
+							68 text FIELD
+						69 cell
+							70 text TYPE
+						71 cell
+							72 text DESCRIPTION
+					73 row
+						74 cell
+							75 text type
+						76 cell
+							77 text "reply" | "ephemeral" | "update" | "ack" | "modal"
+						78 cell
+							79 text reply: new message. ephemeral: only the clicker sees it. update: edit the clicked message. ack: just “got it”. modal: open a form (flag bot_modals; only as the first answer, not to a modal_submit)
+							80 container
+								81 text Example :  "reply"
+					82 row
+						83 cell
+							84 text modal
+							85 text optional
+						86 cell
+							87 text Modal
+						88 cell
+							89 text type modal only: the form
+							90 button (collapsed) Fields of Modal, Secondary Actions: Expand
+								91 text Fields of Modal
+					92 row
+						93 cell
+							94 text content
+							95 text optional
+						96 cell
+							97 text string | null
+						98 cell
+							99 text Text  ( up to 2000 characters )
+							100 container
+								101 text Example :  "You’re in!"
+					102 row
+						103 cell
+							104 text embeds
+							105 text optional
+						106 cell
+							107 text Embed[] | null
+						108 cell
+							109 text Up to 5 cards; content can be empty then  ( up to 5 items )
+							110 button (collapsed) Fields of Embed, Secondary Actions: Expand
+								111 text Fields of Embed
+					112 row
+						113 cell
+							114 text components
+							115 text optional
+						116 cell
+							117 text ActionRow | LayoutComponent[] | null
+						118 cell
+							119 text reply and update only  ( up to 40 items )
+							120 button (collapsed) Fields of ActionRow, Secondary Actions: Expand
+								121 text Fields of ActionRow
+							122 button (collapsed) Fields of V2ActionRow, Secondary Actions: Expand
+								123 text Fields of V2ActionRow
+							124 button (collapsed) Fields of V2TextDisplay, Secondary Actions: Expand
+								125 text Fields of V2TextDisplay
+							126 button (collapsed) Fields of V2Section, Secondary Actions: Expand
+								127 text Fields of V2Section
+							128 button (collapsed) Fields of V2MediaGallery, Secondary Actions: Expand
+								129 text Fields of V2MediaGallery
+							130 button (collapsed) Fields of V2File, Secondary Actions: Expand
+								131 text Fields of V2File
+							132 button (collapsed) Fields of V2Separator, Secondary Actions: Expand
+								133 text Fields of V2Separator
+							134 button (collapsed) Fields of V2Container, Secondary Actions: Expand
+								135 text Fields of V2Container
+					136 row
+						137 cell
+							138 text flags
+							139 text optional
+						140 cell
+							141 text integer
+						142 cell
+							143 text 32768 for a Components V2 layout (reply and update)
+							144 container
+								145 text Example :  32768
+				146 button (collapsed) Example request, Secondary Actions: Expand
+					147 text Example request
+				148 heading RESPONSE200, Value: 4
+					149 text RESPONSE
+					150 text 200
+				151 text object
+				152 table
+					153 row
+						154 cell
+							155 text FIELD
+						156 cell
+							157 text TYPE
+						158 cell
+							159 text DESCRIPTION
+					160 row
+						161 cell
+							162 text ok
+						163 cell
+							164 text true
+						165 cell
+							166 text Done
+							167 container
+								168 text Example :  true
+					169 row
+						170 cell
+							171 text type
+						172 cell
+							173 text "reply" | "ephemeral" | "update" | "ack" | "modal"
+						174 cell
+							175 text What was done
+							176 container
+								177 text Example :  "reply"
+					178 row
+						179 cell
+							180 text message
+						181 cell
+							182 text Message | null
+						183 cell
+							184 button (collapsed) Fields of Message, Secondary Actions: Expand
+								185 text Fields of Message
+				186 button (collapsed) Example response, Secondary Actions: Expand
+					187 text Example response
+				188 heading ERRORS, Value: 4
+					189 text ERRORS
+				190 content list
+					191 container
+						192 AXListMarker • 
+						193 text 400 Bad input: the error says what’s wrong
+					194 container
+						195 AXListMarker • 
+						196 text 401 Missing or wrong token
+					197 container
+						198 AXListMarker • 
+						199 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					200 container
+						201 AXListMarker • 
+						202 text 404 No such thing, or the bot can’t see it
+					203 container
+						204 AXListMarker • 
+						205 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					206 container
+						207 AXListMarker • 
+						208 text 500 Something went wrong on our side
+					209 container
+						210 AXListMarker • 
+						211 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			212 link Description: ← Back to Yapin’, Value: yapin.gg/
+			213 text  · 
+			214 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		215 container On this page
+			216 text ON THIS PAGE
+			217 content list
+				218 link Description: Overview, Value: yapin.gg/developers/api/interactions#top
+				219 link Description: POST /interactions/{id}/{token}/callback, Value: yapin.gg/developers/api/interactions#post-interactions-id-token-callback
+		220 text Yapin’
+		221 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		222 heading PRODUCT, Value: 4
+			223 text PRODUCT
+		224 content list
+			225 link Description: Download, Value: yapin.gg/download
+			226 link Description: Developers, Value: yapin.gg/developers
+			227 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			228 link Description: Creator Program, Value: yapin.gg/creators
+			229 link Description: FanKit, Value: yapin.gg/fankit
+			230 link Description: Roadmap, Value: yapin.gg/roadmap
+			231 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			232 link Description: Bugs, Value: yapin.gg/bugs
+			233 link Description: Status, Value: yapin.gg/status
+		234 heading COMMUNITY, Value: 4
+			235 text COMMUNITY
+		236 content list
+			237 link Description: Guidelines, Value: yapin.gg/guidelines
+			238 link Description: Tutorials, Value: yapin.gg/tutorials
+			239 link Description: Bots, Value: yapin.gg/bots
+			240 link Description: Partners, Value: yapin.gg/partners
+		241 heading LEGAL, Value: 4
+			242 text LEGAL
+		243 content list
+			244 link Description: Terms, Value: yapin.gg/terms
+			245 link Description: Privacy, Value: yapin.gg/privacy
+			246 link Description: Copyright, Value: yapin.gg/copyright
+			247 link Description: Security, Value: yapin.gg/security
+			248 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			249 link Description: Contact, Value: mailto:hello@yapin.gg
+		250 text © 2026 Yapper Media LLC. Free to use.
+		251 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Interactions · Bot API reference · Yapin’, URL: yapin.gg/developers/api/interactions

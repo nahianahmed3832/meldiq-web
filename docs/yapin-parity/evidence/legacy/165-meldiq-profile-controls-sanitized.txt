@@ -1,0 +1,80 @@
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+					8 pop up button View site information
+					10 button Install Meldiq
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+					16 button Tab groups
+									24 heading Settings, Value: 2
+										28 button My Account
+										29 button My Profile
+										30 button Privacy & security
+										31 button Devices
+										32 button Meldiq Mojo
+										33 button Meldiq Spark
+										36 button Appearance
+										37 button Voice & Audio
+										38 button Notifications
+										39 button Shortcuts
+										40 button Points
+										41 button Advanced
+										42 button Developer
+										43 button Creators
+										44 button Storage
+										45 button About
+									46 button Back to conversations
+									48 heading My Profile, Value: 1
+									51 button Change photo
+									52 button Remove
+									76 button + Add link
+									85 button Save changes
+										87 heading Look, Value: 2
+											91 heading ANIMATED AVATAR, Value: 3
+											93 button Change
+											94 button Remove
+											97 heading BANNER, Value: 3
+											99 button Change banner
+											100 button Remove
+											103 heading COMMUNITY TAG, Value: 3
+												106 toggle button None, Value: 0
+												107 toggle button tag GB GriipBuddy, Value: 0
+												111 toggle button tag MDQ Meldiq HQ, Value: 1
+											117 heading BADGE, Value: 3
+												120 toggle button None, Value: 0
+												121 toggle button Mojo Plus member, with Meldiq Check (a Plus perk, not verification) Mojo, Value: 1
+										125 button Avatar decoration Toast
+											128 heading BANNER EFFECT, Value: 3
+												131 toggle button None, Value: 0
+												132 toggle button Sparkles, Value: 0
+												133 toggle button Glow, Value: 0
+												134 toggle button Stars, Value: 1
+												135 toggle button Bubbles, Value: 0
+											137 heading PROFILE THEME, Value: 3
+											139 toggle button None, Value: 0
+											144 button Remove the second colour
+												146 toggle button Sunset, Value: 0
+												147 toggle button Ocean, Value: 0
+												148 toggle button Grape, Value: 0
+												149 toggle button Mint, Value: 0
+												150 toggle button Midnight, Value: 0
+												151 toggle button Cherry, Value: 0
+												152 toggle button Gold, Value: 0
+												153 toggle button Aurora, Value: 0
+												154 toggle button Rose, Value: 0
+												155 toggle button Forest, Value: 0
+												156 toggle button Neon, Value: 1
+												157 toggle button Candy, Value: 0
+										160 heading Connections, Value: 2
+												166 button (disabled) Connect
+												169 button (disabled) Connect
+												172 button (disabled) Connect
+												175 button (disabled) Connect
+					186 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+					188 tab (settable, boolean) (23) Yapin’ - Memory usage - 337 MB, Value: off
+					190 tab (selected, settable, boolean) (1) Meldiq - Memory usage - 392 MB, Value: on
+			192 button New Tab
+	193 close button
+	194 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	195 minimize button

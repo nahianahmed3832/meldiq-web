@@ -13,6 +13,7 @@ import { useLoad } from "../workspace/useLoad";
 import { NO_STYLE } from "./noStyle";
 import { useProfileDraft } from "./profileDraft";
 import { ProfilePins } from "../people/ProfilePins";
+import { ProfileContent } from "../people/ProfileContent";
 /**
  * Settings › My Profile's right column (the reference, 2026-10-29): your profile card as others see it, following what
  * you type and pick before it's saved. Sticky, so it stays in view while the editor scrolls.
@@ -31,7 +32,8 @@ export function ProfilePreviewCard() {
   const bannerKind = p?.profileBanner?.kind;
   const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", p?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
   if (!me) return null;
-  const style = draft?.style ?? p?.profileStyle ?? NO_STYLE;
+  const sourceStyle = draft?.style ?? p?.profileStyle ?? NO_STYLE;
+  const style = draft?.layout !== undefined ? { ...sourceStyle, layout: draft.layout } : sourceStyle;
   const name = draft?.displayName || me.displayName;
   const pronouns = draft?.pronouns ?? "";
   const about = draft?.aboutMe ?? "";
@@ -71,7 +73,7 @@ export function ProfilePreviewCard() {
             @{draft?.username || me.username}
             {pronouns && <span className="faint"> · {pronouns}</span>}
           </p>
-          {about && <p className="profile-preview-about">{about}</p>}
+          <ProfileContent profile={{ aboutMe: about || null, links: draft?.links ?? p?.links ?? [], connections: p?.connections ?? [], profileStyle: style }} />
           <CollectibleBadge style={style} />
           <ProfilePins pins={p?.pins ?? []} />
         </div>

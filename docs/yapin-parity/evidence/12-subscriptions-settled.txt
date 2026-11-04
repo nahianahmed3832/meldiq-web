@@ -1,0 +1,34 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Subscriptions, Value: 2
+			177 text Subscriptions
+		178 text Everything that renews by itself, monthly or weekly. Cancelling stops the next charge, and you keep what you paid for until the end of the period.
+		184 text You don’t have any subscriptions.
+		180 container
+			181 text Can’t sign in, or bought with another email? Email 
+			182 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			183 text  and we’ll cancel it for you.
+		174 button Close
+			175 image
+
+The focused UI element is 21 button Subscriptions

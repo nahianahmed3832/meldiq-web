@@ -1,0 +1,96 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 button Close
+							22 text Giveaways BOT Prizes on a timer Off
+							23 checkbox Off, Value: 0
+							24 text Hypes the prize, keeps the clock, picks fairly. Only staff can start one.
+							25 content list
+								26 text !giveaway 1d Prize, people react 🎉 to enter
+								27 text Up to 3 winners and 7 days: !giveaway 1d 3w Prize
+								28 text Picks the winner by itself when time is up
+								29 text !gend to end early, !greroll to pick again
+							30 text Giveaways
+							31 text BOT
+							32 text 🎉  GIVEAWAY  🎉 A custom role for a week React with 🎉 to enter! 1 winner · ends tomorrow · hosted by  nahian COMMANDS (STAFF ONLY) !giveaway 1d Prize start one: s, m, h, d or w !giveaway 2h 3w Prize 3 winners !gend end the one in this channel now !greroll pick someone new Anyone who can manage messages can run giveaways. Bots can't win, and you have to still be in the server. Giveaways+
+							33 text PLUS
+							34 table
+								35 row
+									36 column header
+										37 text FREE
+									38 column header
+										39 text GIVEAWAYS+
+								40 row
+									41 cell
+										42 text Timed giveaways, picks winners itself
+									43 cell
+										44 image Yes
+									45 cell
+										46 image Yes
+								47 row
+									48 cell
+										49 text Winners per giveaway
+									50 cell
+										51 text up to 3
+									52 cell
+										53 text up to 20
+								54 row
+									55 cell
+										56 text Longest giveaway
+									57 cell
+										58 text 7 days
+									59 cell
+										60 text 30 days
+								61 row
+									62 cell
+										63 text Only members with a role can win
+									64 cell
+										65 container No
+											66 text ✕
+									67 cell
+										68 image Yes
+							69 button Get Bots+ · $3.99/mo
+							70 text Renews every month at $3.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+							71 link yapin.gg/cancel
+							72 text . Bots+ is one subscription for this server: it unlocks the Plus extras of every Yapin’ bot together. Saved
+							73 button (disabled) Save
+			74 container
+				75 tab group
+					76 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 151 MB, Value: on
+						77 button Close
+			78 button New Tab
+	79 close button
+	80 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	81 minimize button
+82 menu bar
+	83 Chrome
+	84 File
+	85 Edit
+	86 View
+	87 History
+	88 Bookmarks
+	89 Profiles
+	90 Tab
+	91 Window
+	92 Help
+
+The focused UI element is 23 checkbox Off, Value: 0

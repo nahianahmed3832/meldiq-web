@@ -1,0 +1,62 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Get Primal Energy?
+							21 heading Get Primal Energy?, Value: 2
+								22 text Get Primal Energy?
+							23 text Made by @Saad. Most of what you pay goes to them.
+							24 tab group Preview
+								25 toggle button With it, Value: 1
+								26 toggle button Without it, Value: 0
+							27 container
+								28 text nahian
+								29 text @ nahian ABOUT ME Nothing here yet. MEMBER SINCE Oct 26, 2026
+							30 container In chat
+								31 text nahian
+								32 text hey, how do I look?
+							33 text You have 10 You need 15 more. Keep chatting to earn them.
+							34 button Not now
+							35 button (disabled) Buy for 25
+			36 container
+				37 tab group
+					38 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						39 button Close
+					40 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 330 MB, Value: on
+						41 button Close
+					42 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						43 button Close
+			44 button New Tab
+	45 close button
+	46 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	47 minimize button
+48 menu bar
+	49 Chrome
+	50 File
+	51 Edit
+	52 View
+	53 History
+	54 Bookmarks
+	55 Profiles
+	56 Tab
+	57 Window
+	58 Help
+
+The focused UI element is 25 toggle button With it, Value: 1

@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "Dimatikan"
+  },
+  "password": {
+    "show": "Tampilkan kata sandi",
+    "hide": "Sembunyikan kata sandi"
+  },
+  "navigation": {
+    "skipToContent": "Lewati ke konten utama"
   }
 }

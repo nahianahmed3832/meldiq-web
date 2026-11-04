@@ -1,0 +1,862 @@
+[
+  {
+    "workspace": "web",
+    "path": "e2e/accounts.spec.ts",
+    "sha256": "50188698e8b266f79a392284afbb4fb7b13a9081f47065d7d04a79b8c6c1bafe"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/call-receipts-sidebar.spec.ts",
+    "sha256": "5e2d5438f1b872a55d44b3cc0fadb063eb6bf2691f08dbc6e8abe7e60b77b9eb"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/community-identity.spec.ts",
+    "sha256": "5a16c0985f36a73d77d5ce4b278481aab0de32787f90029306941dd8819ab77c"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/leaderboards.spec.ts",
+    "sha256": "45e25ae2be7360a78ae44357350809ccb5c40ff45d844df6009229d6e0edae1e"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/media-sharing.spec.ts",
+    "sha256": "02bb70722547c2953fa40c96e31cbd0f305b798116f5cea168aa797ab95e84b7"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/multiple-accounts.spec.ts",
+    "sha256": "6bf7371a906ac9ead5b39b81863fdbb2dcde90c0f921a50ff563affa7e1fe3a8"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/part2-foundation.spec.ts",
+    "sha256": "761ea4444f9a9078420806180705abfcfabb43be50b1c992cf90c128b26c2adf"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/passkeys.spec.ts",
+    "sha256": "62f767cbb3feaf70533351797923c9ec0255f20e6421bda61d8f3efaa346e7d7"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/platform-operations.spec.ts",
+    "sha256": "491b59f38cd395d83b8c348513e1171655486b6a4345f8d6b5a1320f496be10a"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/poll-media.spec.ts",
+    "sha256": "9435d3ed54c8f0dc3d0330f2e26dcf042456217814969f7a15210009e4a35314"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/rules-channel.spec.ts",
+    "sha256": "b4c4a7b4b6b31aa86b0f0a0e4108f15f1a7370399a9632c7c89438506463f102"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/smooth-auth-upload.spec.ts",
+    "sha256": "5f1abe007fa9309ea9bae124b2b8e37ef00f9c1ee2ee249665634742b1613f12"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/stage1-account.spec.ts",
+    "sha256": "a16f520595d4465d34b01ba55689dacb05fe9e947630676b7d9ba872b376838f"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/supabase-preparation.spec.ts",
+    "sha256": "320df82a0fe6c8dd54d6511cfd876967f6b758f600f67ecc6bef8a4cfa07fc22"
+  },
+  {
+    "workspace": "web",
+    "path": "e2e/welcome.ts",
+    "sha256": "43c295e449482d64ed86390a5ffb84b25a4c661ec2261d0893a982014b7374d9"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ar/auth.json",
+    "sha256": "a28c4483131a3f89e4b9bfa598edb4c75e7a28a2c8580b14a798d8176771abdb"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ar/common.json",
+    "sha256": "a81217518497b5f45d755e3825a7e9745a1392a5c96a503915c730530d0185cb"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ar/onboarding.json",
+    "sha256": "96bf25f32eec939b920c694a7fcd88c764d699e3549c7c93b886f4c31312dcd9"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ar/settings.json",
+    "sha256": "ecc6b2c3f17f31e2093bbd471b4e71058eda5c322fa25db39d2cdda25e122baa"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/bn/auth.json",
+    "sha256": "63405be55ed4f9c016c7521a30aa0121fd8e078127a4325f8dc4c6e74468b021"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/bn/common.json",
+    "sha256": "7f41b55bb34722b4c01a313dc156594d1303f39595e238da4791b7c1c0d8729c"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/bn/onboarding.json",
+    "sha256": "b94eceb778995e36d8c6592d042b529bfeb8ae94079fc7854ed14c5753fe3f98"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/bn/settings.json",
+    "sha256": "36a6d858a8a433e5c6b1d79dd96ca15101af288bfaf585e5f4ae4fd55815bfb4"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/cs/auth.json",
+    "sha256": "28c57b75c45e90c603dc64bb73a89b43011d4bb59495425ae4b7d3e712b1c324"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/cs/common.json",
+    "sha256": "3e78efc92cafdc683b84d3a66ab158ce857ee5bb96d9a5cb33e2e541ac0ef878"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/cs/onboarding.json",
+    "sha256": "c503e08426e747a36455a5f79f8f9ccb92d21f2df3906be13dde2003f1527052"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/cs/settings.json",
+    "sha256": "926ecfbc5cf022aeb27417f799642af3a19fb8771d24967542c9b79703afe23d"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/de/auth.json",
+    "sha256": "1009441aa3eae2b7dfb636b7d8264187f5a9bab44855f9767c4f9cd773f0b350"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/de/common.json",
+    "sha256": "d9ea664e3ba4273ca7b166177a0bf4b8478974ea2127e6ffe2baadf2e0f96aae"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/de/onboarding.json",
+    "sha256": "cfe7ee77b8c3bd722dfcfb575c16898cdf935a743597ab07cb6f936da60db475"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/de/settings.json",
+    "sha256": "63e3014077bf5580324eeaa93442bb562b9df48097a3d57adc4d3caa85af6f95"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/el/auth.json",
+    "sha256": "68f122672913ff8a787d5e70d51ed15e5eec94df2788b42f9a4edb8680188604"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/el/common.json",
+    "sha256": "f9dfe35011e736e8046f2c40c972f3d19f6268e7a2349be9e6f1dc0c56960586"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/el/onboarding.json",
+    "sha256": "c43a9580d5236a9568f99d8715f1acba839893ccfb28bb17a784af4bdae6d51c"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/el/settings.json",
+    "sha256": "40f5882a0e8a1d568d51f0f1b0a5526f5c2af3b156979bbd12088e176dbc755e"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/en/auth.json",
+    "sha256": "7a968cdf2128b868678fe0ec27432a98331b0a2d66995ed1b0b100fa7fb707ac"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/en/common.json",
+    "sha256": "72fff48f6810eeef9a54810e77662188367852e473f8a279d009c3973dfd4301"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/en/onboarding.json",
+    "sha256": "b7517e8e98acabaadecf936c2427df5ae3c302a9333f570eee41a27347bbe8c3"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/en/settings.json",
+    "sha256": "42a3a156201e8e2f4c6b92b670894095e8d2b8dabd49c9d65803b32fa7ea0c93"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/es-419/auth.json",
+    "sha256": "9982085465200f478dd357c43e1d79812c2b1f05ce78dbaad618abd30d42122c"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/es-419/common.json",
+    "sha256": "a40d85ce63b3d37f1b1856666df453cba81b8db03564da1035571f8525e0946f"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/es-419/onboarding.json",
+    "sha256": "a29c27b141f8fe8b25e400157c6815717f49cbea465d1cb1df758db3bc6ea3b2"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/es-419/settings.json",
+    "sha256": "fd4a15558370bce2b4186713fcca81d238e6887a7b751db86e0b60cbe686248c"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/es-ES/auth.json",
+    "sha256": "f4a9f1e3dd59f3c3ad2322fa9b206cbdf02ea476c40e49357dc1126b7151c50e"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/es-ES/common.json",
+    "sha256": "afee23a9f89ca1757ee93fd23791a4560d7dc927def71533d314b63bc61a2ca2"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/es-ES/onboarding.json",
+    "sha256": "ef8cc6ba3968576646858805c95790d675bf7da792724fbba73a4869a77cf252"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/es-ES/settings.json",
+    "sha256": "631167c856611c5a380f27e7ce23d90fa25175931553027ed6ff33febf4659d5"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/fr/auth.json",
+    "sha256": "8acb1c5344fdb3e5a53fd08024b7569af4875e3d6357e065133c9cb0295b91ec"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/fr/common.json",
+    "sha256": "b4ccb2de0dc8ed18ebba8b4b8af00c997ec1a057cbe455bbf817c3739e474691"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/fr/onboarding.json",
+    "sha256": "ac6a3a78b1397ac8890f30fe949dab58692a42b5e9c7e40c671e128f1cbeb313"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/fr/settings.json",
+    "sha256": "8c0bec5172386ecf3af0db4a707d9a1a977dfbf107d59459392caa6f8e8f4f1b"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/hi/auth.json",
+    "sha256": "46469dccbfd0c54ae6437b55e60ef2aff851c23e802fae76926ed9c6cee6735e"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/hi/common.json",
+    "sha256": "ed1232e33f5aede2a4bb7b17bc392750fdbdab1da71f775af552bb23cade2c05"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/hi/onboarding.json",
+    "sha256": "dad369c2c7b82965156d1a9f1a96c96ef13ebb0366a59270d84ffc87d1b6a8c4"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/hi/settings.json",
+    "sha256": "0482a70c5dbeeb0cbd2fa7938f5cdc1a6539abf6e400cd5d68e763009d6afb36"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/id/auth.json",
+    "sha256": "afd26268c73f3c933e0b651ae611bb44217a25e8058f7c18839eec6c2126b1a8"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/id/common.json",
+    "sha256": "9d1912c3a76d2f0b66213f08eb2c58509a9f5590820d41d59fae8cba65da8e2f"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/id/onboarding.json",
+    "sha256": "487c8088c6acf0d82b560837482ae94e14265295f26d118843b61116886728eb"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/id/settings.json",
+    "sha256": "7105bec92e5ccde1a5a7efe6347d435a7b7726f62a664c21d5e5232e0c82761b"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/it/auth.json",
+    "sha256": "8c3beb9cf7af2d2a1692e11ab4e7c25846339383df6293f780963cb5b1f63cf4"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/it/common.json",
+    "sha256": "96b5a9073ab2703afc48bcaee0f7e28102651ebd3716c07cbad4f0dc2706d8c9"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/it/onboarding.json",
+    "sha256": "d7b5125a49559ad24068a8f2b42a546d25656795bf32f11af47ba69391fc884c"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/it/settings.json",
+    "sha256": "25b9d400c5c35015562816f67473d945e35e2c628cb1367cd0e8b546872629e0"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ja/auth.json",
+    "sha256": "f72d75ce250832b5443dc7a645116f3f627cf71f8afe87862863c8b85cb687a0"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ja/common.json",
+    "sha256": "3e3b38d8c24b18bcde724ce81dd2cdb88f6a50ec01823226feec3a593428d531"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ja/onboarding.json",
+    "sha256": "fe3d05693b81f2a7b27ad91bdd902ba84a866e94fd665bd9b5b9ef440f7f4b2c"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ja/settings.json",
+    "sha256": "367d7ae0312366f1bf9116c8eb5525be64a6d6e12659ea8c04e6e06fab2e6ffc"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ko/auth.json",
+    "sha256": "4df2cdfe2ebf6451e70280760370b971da3fc572979d75101625e65697eb642e"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ko/common.json",
+    "sha256": "20e40b5e3bdcb9002b8e53b9af6ded2fdcf564714afe5a92f1a19476947721f4"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ko/onboarding.json",
+    "sha256": "d37390dbe54f84677f39fe4a9513cb8a7092677f581a9e5e8b6f7fc8c8eb6762"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ko/settings.json",
+    "sha256": "85d82f033059b0802d82fb4f47bfe721e84f306b43b125e5f87343cb5b908baa"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/nl/auth.json",
+    "sha256": "afbd1d1993048a57cbf90429d874da03339785c363fa80e2a370382b3178c0e0"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/nl/common.json",
+    "sha256": "3b6da7a522cc58053566f431ebd61493c14cfbf843624bdca63b70964d77e7da"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/nl/onboarding.json",
+    "sha256": "35af5ed212c037de82bc12d71c6283498ab9e2c0355363c10384b1dc05846a29"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/nl/settings.json",
+    "sha256": "ac4e82b2882deccf3a01422599e77ed7b494ffc8aae75906b06d448138b9eb56"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pl/auth.json",
+    "sha256": "964f2344816ad87fbd103a22b14fbefd1a99624b3370b57aa628d56cd7fb5f11"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pl/common.json",
+    "sha256": "504163d16facfa6512b0f0bd6d4ba30c4d76972a7a4a1b383726fe3366d21edf"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pl/onboarding.json",
+    "sha256": "c771a3cbbcf7c6253b630ead0c2defd4223bf431c89b8daf7ed4611d4f6e7be5"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pl/settings.json",
+    "sha256": "65904a1d66a52bc696c20b95ed9dfc2bb5d4be33f9d5d6b3167a5e89b2d3e50c"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pt-BR/auth.json",
+    "sha256": "ff6ede318be3ef3f34f264423c387ab427011bd4dbc3bae628c1beb416ad958a"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pt-BR/common.json",
+    "sha256": "ea329164adb8f68e62edfcbe161daf80324d9c137fe8710e0bb15982ab053f90"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pt-BR/onboarding.json",
+    "sha256": "e44bea32675d96ef4c3a820fe288ea0b1a9f7afd478093afd2de596427eb260d"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pt-BR/settings.json",
+    "sha256": "b20c75cf092c653f432b77c5b1f614295bfdd6e6d98c6f1d61c9f0f704c31ec2"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pt-PT/auth.json",
+    "sha256": "a1bff0c5c1ef84194414a6eeada19616efcb70c581aeb48193614a7a9ee27b7f"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pt-PT/common.json",
+    "sha256": "983a5b005c9af8ba8eceb2bb54521b2d5dd327a7bbecac361f3b243dda0add5b"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pt-PT/onboarding.json",
+    "sha256": "4758434a1c7f0a51d118dc749d70a76eb37c897c4bdc95d7c661937bc66225cd"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/pt-PT/settings.json",
+    "sha256": "62e43d7c6848deeed0a9e27050db225077d4d1f5aa9a0a17061f6e8c46061d43"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ro/auth.json",
+    "sha256": "def18605ea262009a0f14cb85c88f5e2c28d690887a971a783cbc8338cb177c8"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ro/common.json",
+    "sha256": "5663b195015ef7a283540818fdc1b1382244c49db674d04df43d21070db85885"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ro/onboarding.json",
+    "sha256": "eefc901f5aedbd9a33bd7ae3517d2a72371dfb233816a17ce5f2d714a0bc37e4"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ro/settings.json",
+    "sha256": "66e8f2968f04f8bca57d33b4abb2cb6fe67c2d39d795885ebd9da877430e23a2"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ru/auth.json",
+    "sha256": "d4c0fc3687607307e70eac6a8b1628d8c3f41ec358bcc0a5f5e2f12d9c6706fc"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ru/common.json",
+    "sha256": "79819e2af7ff80e3ffecd106409b29a86fe73f4632dd2d81a81e86f7f72bd79b"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ru/onboarding.json",
+    "sha256": "c601b8adc385108feaa7611693b260c15c0dba0f0f5dac9ac4131c106253fbf2"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ru/settings.json",
+    "sha256": "59edd82779b498449cc6af9f5e6b449bb14c2d25b9d2b4f6d80bb8672061f660"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/sv/auth.json",
+    "sha256": "a443addccf79ea3616c8899490a62cdc5fae72367650df31bf9583d7621dbaca"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/sv/common.json",
+    "sha256": "66435591524e76a35efef614aae50592bfbce775ed04f89952c2f362dd9ad5be"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/sv/onboarding.json",
+    "sha256": "1d5ecb6c86050890373d05eb47d99c85678a309d1ae399ad30f5b70c776a018b"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/sv/settings.json",
+    "sha256": "77851d0c60a6c71fd073448aad0a27e7cc6ad6cd530b190add62c309c359c20d"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/th/auth.json",
+    "sha256": "2842b394900d9c1b4bb925819f5d31405fa1b19e64714ca1d2e417ffba105b8d"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/th/common.json",
+    "sha256": "9a33f0afe988b21039b5cdd9dfa5e041fce53b438dd54aa12f3d99fbfdb0d052"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/th/onboarding.json",
+    "sha256": "bb60d120744c97bcaabd86c554298dfa6240dc607a67dc7a214638866c37af95"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/th/settings.json",
+    "sha256": "189ea81269faa6a03d19e1b28209c23ecde21b7bae456a456b8b9d6612111a5e"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/tr/auth.json",
+    "sha256": "d3b213d1d29d2cb716bd0f750ac630666f67b12598d926ace76fde8b2c21a153"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/tr/common.json",
+    "sha256": "17029057999f3b4413e73543f440860e30fc5e52206e86f4584c5b69a7967669"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/tr/onboarding.json",
+    "sha256": "740910e2305e7cbcac6da238680b07cf29e15bf6ec4b85cf485076c4928efebd"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/tr/settings.json",
+    "sha256": "39f0d7f9bb4c7e0440e87ba6ac0b36a57338246cb9a4a189df6d057f8fc76a29"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/uk/auth.json",
+    "sha256": "fba5d42883e745b49ddc3f141aeecab1fe12e4a668e93760b99818a69141a1a9"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/uk/common.json",
+    "sha256": "0cfe4760518ad0b30136374d9176c3358399e4027607672b6f17386dee238613"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/uk/onboarding.json",
+    "sha256": "85a6472a5d421bcc6220a0370ae76036480bde528ee02e0c61b240361b459d49"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/uk/settings.json",
+    "sha256": "607ae061861d18be3767b94df346a9022ab68a523a84a1a9e17cd4e1a5333e3c"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ur/auth.json",
+    "sha256": "22868e5d04d077e196838ba8f8d6915ad478aa66297fa183308489daf842e509"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ur/common.json",
+    "sha256": "477dac094da6721276621e4efdd8dcf63bf5a5240f1f743b9034aee76c3243af"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ur/onboarding.json",
+    "sha256": "245810a209359d7a06b977460bf6d844bd907472b845b2be3bb03e5dfbcc1d05"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/ur/settings.json",
+    "sha256": "90ac3d262f04a065a127173da30102d640d8c805b07a40bd60b51606ed72f10b"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/vi/auth.json",
+    "sha256": "ecfdb435e005493032b9ab590bc6985254aaba002d552018b93753e884c57399"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/vi/common.json",
+    "sha256": "32bd3ac4c3bf49c1aafc42fd8f8ab46c355049e47b84aced9b44cde80a84a445"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/vi/onboarding.json",
+    "sha256": "cb0af5c477527b22337e14df16bfbd93eb4fa3d7362a4c1e65c4e3f54c986139"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/vi/settings.json",
+    "sha256": "110280f151b260d4660002ab2f03ad8a4d02b8eb30643751fc2fe5ef0d05dc29"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/zh-CN/auth.json",
+    "sha256": "d9426e1cf2f0f2c37516b953d4a7f14e5d9a48f9f514b86623db10fb99294faa"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/zh-CN/common.json",
+    "sha256": "75ec48091d77c8bb6a7f4c56876b399ae70d163f5ce03767cbaa61621015cf19"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/zh-CN/onboarding.json",
+    "sha256": "9d0180b64464d77a41bcf08758b47ea4c89dc820be76fbb1fedad866f687caf2"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/zh-CN/settings.json",
+    "sha256": "505c399aa39d85c65a930b235f9de5d8778693bff43c1ac8956ccd7c2140d10b"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/zh-TW/auth.json",
+    "sha256": "26458b2d81f30979475f842ffe2a9bd0271c24e7b64997d8e62d3d6fd5b8d312"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/zh-TW/common.json",
+    "sha256": "99a83bdbacc1f640e3e5f4b120b029f01831cfa67795baa731d761da71e4388a"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/zh-TW/onboarding.json",
+    "sha256": "f442cf6facea58663d7f1e9cdffc74d96e32f3a9068f5d2f702bc16869e30813"
+  },
+  {
+    "workspace": "web",
+    "path": "locales/zh-TW/settings.json",
+    "sha256": "0fa0c6bd1c9771d4ee882db0245c88e847f5348e3f64177a3bdd842e93fac723"
+  },
+  {
+    "workspace": "web",
+    "path": "playwright.config.ts",
+    "sha256": "a9a910f76a0e824bbb87c15117bc47505d87c7827aba415c9b5c291b6a532ec1"
+  },
+  {
+    "workspace": "web",
+    "path": "server-patches/0015-profile-layout-foundation.patch",
+    "sha256": "54a576037619e16ac97a13022ea4f7b58a17b15d12e4a615dc170b57999c439c"
+  },
+  {
+    "workspace": "web",
+    "path": "server-patches/README.md",
+    "sha256": "272589b9d817ac8cbfc3f3105eb6bc0146ed85d56779769beb5dc134ca33f0ad"
+  },
+  {
+    "workspace": "web",
+    "path": "src/api/profileSchemas.ts",
+    "sha256": "04c62749351aa079ccdfe0081a1c3444f8a37bf8029f2eb7bea475c0bf0407c1"
+  },
+  {
+    "workspace": "web",
+    "path": "src/application/welcome.ts",
+    "sha256": "e596d794a495974a8d9ae2e3601bab600c3d3fdf650a8f408f936ba091d3a41c"
+  },
+  {
+    "workspace": "web",
+    "path": "src/pages/_app.tsx",
+    "sha256": "a8e64beb4bd8b13664394cb67af9719d222b84744227092ed4ce3268bd1496bb"
+  },
+  {
+    "workspace": "web",
+    "path": "src/styles/foundation.css",
+    "sha256": "78d7310eb83e3c60bdbaa983694327fc8338f1a2fe02aad1cb397ec4a76c158e"
+  },
+  {
+    "workspace": "web",
+    "path": "src/sync/account.ts",
+    "sha256": "830dc6f8953e7de44f3e6ed66e5bbf9dde9f3c7864d1cc9dfed84af80d6fc7d7"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/AccountForms.tsx",
+    "sha256": "64e32f6f11a9f332b41262073bc5ba9b982864d1846ea2499ea9ba54c4eb029e"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/AuthFrame.tsx",
+    "sha256": "f59cb4584a8fba12495a0c989a0dc5d02e155732d4623f5f1f69c9442ac8c382"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/AuthScreen.tsx",
+    "sha256": "ae8c69dbabe016389f802030bd15307c19638f7255d75eecd110af3b59e34648"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/DeviceSetupViews.tsx",
+    "sha256": "3bbeb234a541b81428ee9569d7486ffae5d3a6e22f91349a40bcbe0be3daae68"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/ReauthScreen.tsx",
+    "sha256": "1701ff4a68deaa1df6c715d4ac82760d441972adb278c7ab09a6d5b283794de5"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/RecoverForms.tsx",
+    "sha256": "f48a016c432765513adff75e3da61fcbf5c702b1b4af972aa03d0e929ec62775"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/TermsConsent.tsx",
+    "sha256": "017a921a3e0c3cb990c9d7b0b9405abab3d7dcbd8efd03a6e51cdf28bad2e02d"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/WelcomeFlow.tsx",
+    "sha256": "f14abf9d7014fabe530d65f840204e764d97780436a476880cd4aa82a5c4051a"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/useCodeCooldown.ts",
+    "sha256": "eea54b0ed854964570a6ca3c6cc8e2e3ed144ca7076b57eba1d5783b20363c24"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/auth/useSubmit.ts",
+    "sha256": "b28954d4c9e58b42a86f5f3a8d18177d418dcf968d4f2bb7a1832e4ac0acd165"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/components/AppearanceControls.tsx",
+    "sha256": "2415d5f7529d2c778567f80821123afdc3c85700f7c1dc77c9244dfb3c8ddb8d"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/components/Overlay.tsx",
+    "sha256": "4967daba25a9aac2b2c263db58ddd8fead25656f20c44ac374594a9510ef40f0"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/components/PasswordInput.tsx",
+    "sha256": "8beb03ebe5f14a70390c5c80fdf4a5563666dea772bebfe077f90f78951ad93b"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/components/SettingsNavigation.tsx",
+    "sha256": "6ffa5ccd0053f0e01be16a311c81be927b5c630903a8b033bce69ecec8ebb836"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/components/SetupProgress.tsx",
+    "sha256": "54f9115aeb3a53c6da8f797bf720a97fefb8e042fec093d71d1077c185e6c03f"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/components/StatePanel.tsx",
+    "sha256": "97c4940d27383f098e8cba6088726302bc2038b62cf4dafd270e5ef88907dc18"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/components/modalIsolation.ts",
+    "sha256": "63b373781c54a111d977780d348708124be7f061518706ed7ffa054070a92623"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/people/ProfileContent.tsx",
+    "sha256": "702025f4c9768b12747a453b7171b16a77205db9a53fffa123a07fe9262524d9"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/people/ProfileDialog.tsx",
+    "sha256": "31a19f348223cef6bc30629bab3f117bafc08095ac071f6865e2b38f80937716"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/people/profileSections.ts",
+    "sha256": "ef257187821a6503f377133e39b5ae5ce1b176c76136cb65b8e10fb34f7e9fc5"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/settings/AccountSettingsPage.tsx",
+    "sha256": "1428247aaae6ddd1f2354f280bed36fad51e02ddaadb3a811b7d2717d935a9f4"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/settings/PreferencePages.tsx",
+    "sha256": "fcb6d58396b9c3c07cd8a760d3bde2067f4fd91d170d3021d12b370ae227dce0"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/settings/ProfilePage.tsx",
+    "sha256": "d752c2865b647f5ed93c6e3a1bad5d9a44a1710d21a2c6c18f2f16510b5f0014"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/settings/ProfilePreviewCard.tsx",
+    "sha256": "e5dc5ba1993004e4a68b9591af4cc4bacab4b57c4d5965b3d94581b64485c217"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/settings/ProfileSectionsCard.tsx",
+    "sha256": "0556da58fcf0f40f575cc1f48453af43050cbf218a4c3ee168a05a528d1b0205"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/settings/profileDraft.tsx",
+    "sha256": "cd3ec298682e4adf2f834ab7ef287c124926365b8e1e82538f90f3ad2df34a90"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/shell/Shell.tsx",
+    "sha256": "95f9366f1945253559feb2508a12ef166148e1321936e0f6d72c1309af5bf9bf"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/shell/SkipToContent.tsx",
+    "sha256": "ea5df9d5df8fb39ca1a2e2a179953a8bba22a529965e29654f5d724b1cdbc50e"
+  },
+  {
+    "workspace": "web",
+    "path": "src/ui/views/HomeView.tsx",
+    "sha256": "394204d93616194f85663904b0361b2d09c00a52dee4083df56fb10ee1c442e2"
+  },
+  {
+    "workspace": "web",
+    "path": "test/foundation.test.ts",
+    "sha256": "446b122d2f0d2870fc13de2fa549b28333238f00077735c0a2ec646a0624322e"
+  },
+  {
+    "workspace": "api",
+    "path": "server/src/app/server.ts",
+    "sha256": "63b03dac073cb44d272e2e138d5258a5c1ef4c1d9be846649e268ec72fef0b44"
+  },
+  {
+    "workspace": "api",
+    "path": "server/src/modules/accounts/profile.ts",
+    "sha256": "c391cfb57afe5c5baf96e314fc0fb82d8de139a4a08c0fab019c330a52f2f0e4"
+  },
+  {
+    "workspace": "api",
+    "path": "server/src/modules/accounts/profileMedia.ts",
+    "sha256": "d198cfd42c8bba7f4eefe453b929ec9860087617a15ba11199b3636784c1786a"
+  },
+  {
+    "workspace": "api",
+    "path": "server/src/modules/accounts/profileMediaRoutes.ts",
+    "sha256": "d05d788b5be76814b25b3cb1cb6b8c52afa0dbc3c7eb3754cb23bf81069fda75"
+  },
+  {
+    "workspace": "api",
+    "path": "server/src/modules/accounts/usersRoutes.ts",
+    "sha256": "d5b716f998fcfb55db3ba78c435189f5f47faa91d836deb60291d386dcc4aaa9"
+  },
+  {
+    "workspace": "api",
+    "path": "server/src/shared/contracts/http/users.ts",
+    "sha256": "75c0dc8249a0797a9c76da6db4077253b389329747704ef288fbee8a048c0ed2"
+  },
+  {
+    "workspace": "api",
+    "path": "server/test/profile_layout.test.ts",
+    "sha256": "f0dc46c89f93749e48c70d074e38fafed96f50ade17d031906e904a10948bdcd"
+  }
+]

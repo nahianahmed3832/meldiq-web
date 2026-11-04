@@ -1,0 +1,78 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Audit log, Value: 2
+				29 text Audit log
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		87 text Who changed what in this server. Kept for 90 days.
+		88 pop up button (collapsed) Description: Filter by action, Secondary Actions: Expand
+		89 combo box (collapsed) Description: Filter by person, Value: Everyone, Secondary Actions: Expand
+			90 text Everyone
+		91 button (expanded) nahian changed the #ideas-lab channel Nov 1, Secondary Actions: Collapse
+			92 text nahian
+			93 text  changed the 
+			94 text #ideas-lab
+			95 text  channel
+			96 text Nov 1
+		125 content list
+			126 container
+				127 AXListMarker • 
+				128 text Changed the category
+		97 button (disabled, collapsed) nahian made the #ideas-lab channel Nov 1, Secondary Actions: Expand
+			98 text nahian  made the  #ideas-lab  channel
+			99 text Nov 1
+		100 button (disabled, collapsed) nahian made the #history-lab channel Nov 1, Secondary Actions: Expand
+			101 text nahian  made the  #history-lab  channel
+			102 text Nov 1
+		103 button (disabled, collapsed) nahian gave nahian the Research Member role Nov 1, Secondary Actions: Expand
+			104 text nahian  gave  nahian  the  Research Member  role
+			105 text Nov 1
+		106 button (collapsed) nahian changed the Research Member role Nov 1, Secondary Actions: Expand
+			107 text nahian
+			108 text  changed the 
+			109 text Research Member
+			110 text  role
+			111 text Nov 1
+		112 button (disabled, collapsed) nahian made the new role role Nov 1, Secondary Actions: Expand
+			113 text nahian  made the  new role  role
+			114 text Nov 1
+		115 button (collapsed) nahian changed the server settings Nov 1, Secondary Actions: Expand
+			116 text nahian
+			117 text  changed the server settings
+			118 text Nov 1
+		119 button (disabled, collapsed) nahian made the #General channel Nov 1, Secondary Actions: Expand
+			120 text nahian  made the  #General  channel
+			121 text Nov 1
+		122 button (disabled, collapsed) nahian made the #general channel Nov 1, Secondary Actions: Expand
+			123 text nahian  made the  #general  channel
+			124 text Nov 1
+		85 button Close
+			86 image
+
+The focused UI element is 91 button (expanded) nahian changed the #ideas-lab channel Nov 1, Secondary Actions: Collapse

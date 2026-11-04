@@ -1,0 +1,13 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container Events
+		2 heading Events, Value: 2
+			3 image
+			4 text Events
+		5 text No events yet
+		6 text Plan a game night or a watch party and people can say they’re in.
+		7 button Create event
+			8 image
+			9 text Create event
+
+The focused UI element is 7 button Create event

@@ -1,0 +1,207 @@
+Window: "Roadmap: what’s new and what’s next · Yapin’", App: Google Chrome.
+0 standard window Roadmap: what’s new and what’s next · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/roadmap, Secondary Actions: Raise
+	1 container Roadmap: what’s new and what’s next · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/roadmap
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/roadmap, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Roadmap: what’s new and what’s next · Yapin’, URL: yapin.gg/roadmap
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 heading Roadmap, Value: 1
+									30 text Roadmap
+								31 text LAST UPDATED  30 OCTOBER 2026 What we shipped, what is being tested in a few servers right now, and what is next. Plans change; this page follows.
+								32 heading Shipped lately, Value: 2
+									33 text Shipped lately
+								34 content list
+									35 container
+										36 AXListMarker • 
+										37 text Better calls: faster joins, a mic and speaker menu, input sensitivity, connection bars, clearer voice and media key controls
+									38 container
+										39 AXListMarker • 
+										40 text Yapin’ Partner: well-run servers with Supercharge level 2 or higher can apply for a Partner badge and a small Discover boost
+									41 container
+										42 AXListMarker • 
+										43 text Upload limits per hour and per day, so attachments stay for chatting (Plus gets more)
+									44 container
+										45 AXListMarker • 
+										46 text Server lobby: a landing page for your server, now with leaderboards and feeds
+									47 container
+										48 AXListMarker • 
+										49 text Global leaderboards: messages, voice time, Shards, gifts and invites
+									50 container
+										51 AXListMarker • 
+										52 text Quiz polls with a right answer, and a list of who voted for what
+									53 container
+										54 AXListMarker • 
+										55 text Search filters: mentions:, pinned:true, during: and has:embed, sound or poll
+									56 container
+										57 AXListMarker • 
+										58 text Ping roles: pick the notification roles you want from the server menu or lobby
+									59 container
+										60 AXListMarker • 
+										61 text Click a role mention to see who has the role
+									62 container
+										63 AXListMarker • 
+										64 text Any colour you want for server folders
+									65 container
+										66 AXListMarker • 
+										67 text Masked links: put a link behind your own text with [text](link)
+									68 container
+										69 AXListMarker • 
+										70 text Notification settings per channel: every message, mentions only or nothing
+									71 container
+										72 AXListMarker • 
+										73 text Report a whole server straight to the Yapin’ team
+									74 container
+										75 AXListMarker • 
+										76 text Sign in with a passkey or with Google
+									77 container
+										78 AXListMarker • 
+										79 text 2FA backup codes, and a way back in if you lose your phone
+									80 container
+										81 AXListMarker • 
+										82 text Yapin’ in Spanish, German, French and Brazilian Portuguese
+									83 container
+										84 AXListMarker • 
+										85 text Shorter profile cards: mutuals on one line, long lists tucked away
+									86 container
+										87 AXListMarker • 
+										88 text Voice log for server mods: who joined, left or got moved in voice
+									89 container
+										90 AXListMarker • 
+										91 text Missed call notices in DMs
+									92 container
+										93 AXListMarker • 
+										94 text Discussions: forum channels with posts, tags, search, a gallery view, pinning, locking and following
+									95 container
+										96 AXListMarker • 
+										97 text Threads you can start from any message
+									98 container
+										99 AXListMarker • 
+										100 text AI noise suppression in calls: keyboards, fans and background voices cut out
+									101 container
+										102 AXListMarker • 
+										103 text Stage channels for Q&As: raise your hand and mods bring you up to talk
+									104 container
+										105 AXListMarker • 
+										106 text Join applications: servers can ask people to apply before they get in
+									107 container
+										108 AXListMarker • 
+										109 text Decorations: star your favorites and filter by favorites, owned, pictures or effects
+									110 container
+										111 AXListMarker • 
+										112 text Safer DMs: a safety card at the start of every DM, and you pick who can add you to group chats
+									113 container
+										114 AXListMarker • 
+										115 text Login with Yapin’ for other apps, and Add App on bot profiles
+								116 heading In testing, Value: 2
+									117 text In testing
+								118 text On for a few test servers first. If nothing breaks, everyone gets it.
+								119 content list
+									120 container
+										121 AXListMarker • 
+										122 text Profile effects made by community artists
+									123 container
+										124 AXListMarker • 
+										125 text Name banners: a strip behind your name in the member list and DMs
+									126 container
+										127 AXListMarker • 
+										128 text The Yapin’ phone app
+									129 container
+										130 AXListMarker • 
+										131 text Extra limits for brand-new accounts, to slow down spam
+								132 heading Next, Value: 2
+									133 text Next
+								134 content list
+									135 container
+										136 AXListMarker • 
+										137 text Thread settings per channel
+									138 container
+										139 AXListMarker • 
+										140 text Role icons
+									141 container
+										142 AXListMarker • 
+										143 text Stickers
+									144 container
+										145 AXListMarker • 
+										146 text Video calls with camera
+								147 text Ideas or requests? Tell us in the Yapin’ HQ server, or in the 
+								148 link Developers server, Value: yapin.gg/invite/developers
+								149 text  for bot things.
+								150 link ← Back to Yapin’, Value: yapin.gg/
+								151 text  · 
+								152 link Remove an intimate image, Value: yapin.gg/remove-image
+							153 text Yapin’
+							154 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							155 heading Product, Value: 4
+								156 text Product
+							157 content list
+								158 link Download, Value: yapin.gg/download
+								159 link Developers, Value: yapin.gg/developers
+								160 link Yapin’ Plus, Value: yapin.gg/plus
+								161 link Creator Program, Value: yapin.gg/creators
+								162 link Roadmap, Value: yapin.gg/roadmap
+								163 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								164 link Bugs, Value: yapin.gg/bugs
+								165 link Status, Value: yapin.gg/status
+							166 heading Community, Value: 4
+								167 text Community
+							168 content list
+								169 link Guidelines, Value: yapin.gg/guidelines
+								170 link Tutorials, Value: yapin.gg/tutorials
+								171 link Bots, Value: yapin.gg/bots
+							172 heading Legal, Value: 4
+								173 text Legal
+							174 content list
+								175 link Terms, Value: yapin.gg/terms
+								176 link Privacy, Value: yapin.gg/privacy
+								177 link Copyright, Value: yapin.gg/copyright
+								178 link Cancel a subscription, Value: yapin.gg/cancel
+								179 link Contact, Value: mailto:[email redacted]
+							180 text © 2026 Yapper Media LLC. Free to use.
+			181 container
+				182 tab group
+					183 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						184 button Close
+					185 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						186 button Close
+					187 tab (selected, settable, boolean) Roadmap: what’s new and what’s next · Yapin’ - Memory usage - 264 MB, Value: on
+						188 button Close
+			189 button New Tab
+	190 close button
+	191 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	192 minimize button
+193 menu bar
+	194 Chrome
+	195 File
+	196 Edit
+	197 View
+	198 History
+	199 Bookmarks
+	200 Profiles
+	201 Tab
+	202 Window
+	203 Help
+
+The focused UI element is 19 HTML content Roadmap: what’s new and what’s next · Yapin’, URL: yapin.gg/roadmap

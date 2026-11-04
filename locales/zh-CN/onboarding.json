@@ -54,5 +54,15 @@
     "android": "获取 Meldiq 用于 Android",
     "title": "Meldiq 邀请",
     "hint": "还没有登录? 首先登录或创建一个帐户:你会回到这个社区。"
+  },
+  "foundation": {
+    "welcomeBody": "填写几项信息，让这里更有你的风格。你可以随时在设置中修改。",
+    "profileBody": "选择别人看到的你的形象。你的邮箱会保持私密。",
+    "preferencesBody": "选择舒适的外观和你的语言。",
+    "startBody": "寻找同好、加入社区，或创建自己的社区。",
+    "ready": "你的空间已准备就绪。",
+    "finish": "开始探索",
+    "onDevice": "外观选项仅适用于此浏览器。",
+    "permissions": "当你使用需要相关权限的功能时，Meldiq 才会请求麦克风、摄像头或通知权限。"
   }
 }

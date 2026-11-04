@@ -1,0 +1,710 @@
+[
+  {
+    "id": "YAP-WEB-001",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Public home snapshot and source inspected; application chooser tested separately.",
+    "gap": "Existing public introduction retained. Hero CTA delivery/return destination not exercised on the public release."
+  },
+  {
+    "id": "YAP-WEB-002",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Public entry link observed; local account and navigation suites pass.",
+    "gap": "Existing app entry retained. Cross-origin allowed return-destination preservation requires final-site acceptance."
+  },
+  {
+    "id": "YAP-WEB-003",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Public theme control observed; local app theme/reload tested.",
+    "gap": "Public site's saved-theme and all contrast combinations were not newly accepted."
+  },
+  {
+    "id": "YAP-WEB-004",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Public FAQ snapshot inspected; no public accordion submission.",
+    "gap": "Keyboard accordion and installed-platform claims need public-site acceptance against final artifacts."
+  },
+  {
+    "id": "YAP-WEB-005",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Current download route observed; native distributions not installed.",
+    "gap": "Existing downloads/browser entry preserved; physical installation, signatures and supported-version matrix remain Part 4."
+  },
+  {
+    "id": "YAP-WEB-006",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Current tutorials route inspected without playing media.",
+    "gap": "Existing catalog retained. Individual destination and failed-playback recovery remain unaccepted."
+  },
+  {
+    "id": "YAP-WEB-007",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Current roadmap route observed.",
+    "gap": "Existing roadmap distinguishes plans in its presentation; delivery claims need release-owner reconciliation."
+  },
+  {
+    "id": "YAP-WEB-008",
+    "state": "RESEARCH_REQUIRED",
+    "testing": "Source and route investigation only.",
+    "gap": "Legacy account and invitation redirect policy is not yet accepted across old hostnames; no speculative redirect was added."
+  },
+  {
+    "id": "YAP-WEB-009",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Public status link observed; no status incident injected.",
+    "gap": "Existing independent status entry retained. Part 4 must test app-outage access and stale/unknown probe results."
+  },
+  {
+    "id": "YAP-WEB-010",
+    "state": "DEFERRED_DECISION",
+    "testing": "Source review of creator settings; no application submitted.",
+    "gap": "Public creator eligibility must follow an approved Meldiq program; no new program promise was copied."
+  },
+  {
+    "id": "YAP-WEB-011",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Current brand page observed; no brand archive downloaded.",
+    "gap": "Original Meldiq brand materials retained. Bundle contents, license guidance and download integrity remain unaccepted."
+  },
+  {
+    "id": "YAP-WEB-012",
+    "state": "DEFERRED_DECISION",
+    "testing": "No partner application submitted.",
+    "gap": "New partner eligibility/rewards require owner policy and authorized review status; no duplicate program created."
+  },
+  {
+    "id": "YAP-WEB-013",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Current security page and attachment disclosure read.",
+    "gap": "Public security UI correctly discloses relay-readable attachment keys and no independent audit; final text/call/backup coverage remains in TRUST rows."
+  },
+  {
+    "id": "YAP-WEB-014",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing billing/support routes inspected, no purchase/cancel mutation.",
+    "gap": "Authorized billing navigation preserved. Actual provider cancellation and inaccessible-account handling belong to Part 4 acceptance."
+  },
+  {
+    "id": "YAP-WEB-015",
+    "state": "RESEARCH_REQUIRED",
+    "testing": "No intimate image or third-party report was submitted.",
+    "gap": "New removal intake needs tracked private review/escalation and response policy; a generic contact address alone is not accepted as this workflow."
+  },
+  {
+    "id": "YAP-WEB-016",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Prepared Terms give supplied corporate contact and rights-complaint information.",
+    "gap": "Copy exists locally; public publication, actual complaint handling and any statutory agent registration remain unaccepted. No registered-agent claim made."
+  },
+  {
+    "id": "YAP-WEB-017",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Current community-guidelines route observed.",
+    "gap": "Original existing guidelines retained. Part 3 must align real reports/moderation outcomes; policy presence is not enforcement."
+  },
+  {
+    "id": "YAP-WEB-018",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Live support states no verified contact; owner supplied contact@griipbuddy.com for prepared policies.",
+    "gap": "Contact now specified in prepared policies. Public support integration and actual mailbox delivery were not tested; no message sent."
+  },
+  {
+    "id": "YAP-AUTH-001",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "accounts.spec.ts login/wrong-password/recovery tests in local build.",
+    "gap": "Meldiq keeps its existing email sign-in contract; username login is not introduced merely for competitor parity. Identifier/enumeration matrix remains bounded."
+  },
+  {
+    "id": "YAP-AUTH-002",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Rules unit tests plus built-browser empty login produces an alert and zero login requests; capability outage/retry passes.",
+    "gap": "Actionable form errors remain; empty-field focus/aria-invalid across every auth form not fully accepted."
+  },
+  {
+    "id": "YAP-AUTH-003",
+    "state": "ACCEPTED",
+    "testing": "part2-foundation.spec.ts shows/hides entered password; account recovery/login regressions and source audit.",
+    "gap": "Shared reveal used in signup/login/unlock/reset/reauth/settings; no new secret persistence. Physical password-manager combinations remain native release checks."
+  },
+  {
+    "id": "YAP-AUTH-004",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing Google/Discord adapter retained; no external human consent.",
+    "gap": "Final provider approval/cancellation/account-collision evidence remains required. New identity setup shows Terms declaration without replacing auth."
+  },
+  {
+    "id": "YAP-AUTH-005",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Virtual Chromium passkey add/sign-in/remove/cancel regressions pass; this is separate from physical-device acceptance.",
+    "gap": "Existing passkey alternatives/cancellation retained; real Windows/Android/iOS authenticator acceptance remains Part 4."
+  },
+  {
+    "id": "YAP-AUTH-006",
+    "state": "ACCEPTED",
+    "testing": "Local build fresh register validates consent, prevents duplicate POST, verifies code and retains name; 28-locale structural checks.",
+    "gap": "Actual email/password account contract reused. Local file-mail evidence does not establish production email delivery."
+  },
+  {
+    "id": "YAP-AUTH-007",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Browser rejects unchecked combined 13+ declaration before registration.",
+    "gap": "Owner approved 13+ on 4 Nov. No DOB collected; declaration is not age verification. Server enforcement across all public entry paths and native compatibility remain release work."
+  },
+  {
+    "id": "YAP-AUTH-008",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Explicit Terms agreement and Privacy acknowledgement block unchecked signup/first identity setup.",
+    "gap": "Prepared GRIIPBUDDY LLC policies revision 2026-11-04.1 exist; live links still earlier draft. Durable accepted revision/server timestamp and publication not implemented."
+  },
+  {
+    "id": "YAP-AUTH-009",
+    "state": "DEFERRED_DECISION",
+    "testing": "No Meldiq human-challenge contract exists in inspected registration path.",
+    "gap": "Kept existing admission/rate controls. Do not fabricate CAPTCHA or bypass a provider challenge; add only after an approved server integration decision."
+  },
+  {
+    "id": "YAP-AUTH-010",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Local file-mail verification, invalid code and used setup flows exercised.",
+    "gap": "Production deliverability and explicit expiration/reuse matrix remain unaccepted; local delivery is not real SES evidence."
+  },
+  {
+    "id": "YAP-AUTH-011",
+    "state": "ACCEPTED",
+    "testing": "New browser scenario waits initial cooldown, resends, checks renewed disabled state, rejects old code and accepts newest.",
+    "gap": "UI uses deadline plus server 429 retry duration; server remains authority. Exact production throttling/delivery still needs release acceptance."
+  },
+  {
+    "id": "YAP-AUTH-012",
+    "state": "ACCEPTED",
+    "testing": "Fresh signup through verification, keys, recovery acknowledgement, name/avatar, preferences/language, reload resume and first entry on both browser widths.",
+    "gap": "Account-scoped presentation state has storage fallback and no secret/profile payload. Returning accounts are not enrolled. This is local build acceptance only."
+  },
+  {
+    "id": "YAP-AUTH-013",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "accounts.spec.ts wrong-password/forgot-password path and real local file mail.",
+    "gap": "Existing anti-enumeration contract retained; full unknown-account/rate/production delivery matrix remains unaccepted."
+  },
+  {
+    "id": "YAP-AUTH-014",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing SignInHelp recovery/key guidance source inspected.",
+    "gap": "No account lookup or forgotten-email enumeration added. Live monitored support route must be integrated with supplied address."
+  },
+  {
+    "id": "YAP-AUTH-015",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing browser account password-reset completion works in local fixture.",
+    "gap": "Expired/reused reset token, all revocation cases and production delivery remain unaccepted; no real user's credential changed."
+  },
+  {
+    "id": "YAP-AUTH-016",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "stage1-account.spec.ts local authenticator enrollment and new-browser TOTP challenge pass.",
+    "gap": "Existing TOTP contract preserved; complete wrong/expired/backup-code and physical-authenticator matrix remains unaccepted."
+  },
+  {
+    "id": "YAP-AUTH-017",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing recovery code and device setup unit/source paths retained.",
+    "gap": "One-use recovery and full lost-phone/session-revocation scenario not newly accepted in production."
+  },
+  {
+    "id": "YAP-AUTH-018",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Virtual-authenticator add/sign-in/remove and prompt cancellation pass in the corrected built-browser run.",
+    "gap": "Existing passkey manager preserved; rename/platform-specific and physical authenticator cases not claimed."
+  },
+  {
+    "id": "YAP-AUTH-019",
+    "state": "ACCEPTED",
+    "testing": "multiple-accounts.spec.ts separate Alice/Bob data, add/cancel, switch/reload and one-account logout in local build.",
+    "gap": "Existing per-account device DB/outbox contracts retained; no account merges or identity replacement. Installed native interoperability remains separate."
+  },
+  {
+    "id": "YAP-AUTH-020",
+    "state": "ACCEPTED",
+    "testing": "accounts and multiple-accounts built-browser reload/logout tests, plus production-PWA local session recovery.",
+    "gap": "Intended account alone is removed; other account and own conversation survive. Production and installed-client revocation remain separate."
+  },
+  {
+    "id": "YAP-AUTH-021",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing session controls and confirmation source retained.",
+    "gap": "No production sign-out-all mutation. Full offline/revoked-device matrix still required."
+  },
+  {
+    "id": "YAP-AUTH-022",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing owner export controls and account tests retained.",
+    "gap": "No production account exported. Quota/failure/complete data-class export acceptance remains outstanding."
+  },
+  {
+    "id": "YAP-AUTH-023",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing deletion confirmation and rules unit suite retained.",
+    "gap": "No account deleted during manual audit. Retention/recovery policy and production deletion lifecycle must be accepted separately."
+  },
+  {
+    "id": "YAP-AUTH-024",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "AppealAccess and existing operations contracts retained; no restriction bypass added.",
+    "gap": "Authorized restricted-account appeal submission/tracking not newly exercised; domain acceptance remains required."
+  },
+  {
+    "id": "YAP-PROFILE-001",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Profile editor and draft/navigation browser scenarios; existing username rules retained.",
+    "gap": "Uniqueness, hold expiry and all cross-device projection cases not newly accepted; existing name-hold API unchanged."
+  },
+  {
+    "id": "YAP-PROFILE-002",
+    "state": "ACCEPTED",
+    "testing": "Fresh signup name preserved, edited welcome name saved/reloaded, account rename alignment checked by accounts suite.",
+    "gap": "Initial state now waits for sync before seeding welcome name, avoiding overwrite with a temporary username. All native identity projections remain release work."
+  },
+  {
+    "id": "YAP-PROFILE-003",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing pronoun capability, draft preview and schema validation retained.",
+    "gap": "Specific Unicode length/audience and all chat projections not newly accepted."
+  },
+  {
+    "id": "YAP-PROFILE-004",
+    "state": "ACCEPTED",
+    "testing": "Fresh local signup uploads fixture photo through existing image/upload path and saves profile across reload.",
+    "gap": "Original image processing reused; no new media service. Failure/animated-avatar and native output acceptance stays with media owner."
+  },
+  {
+    "id": "YAP-PROFILE-005",
+    "state": "DEFERRED_DECISION",
+    "testing": "No temporary-avatar expiry workflow established.",
+    "gap": "No timer/restoration UI added. Requires approved lifecycle and server persistence before implementation."
+  },
+  {
+    "id": "YAP-PROFILE-006",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing banner crop/style components retained.",
+    "gap": "Exact crop/output, upload failure and animated banner behavior across devices not newly accepted in Part 2."
+  },
+  {
+    "id": "YAP-PROFILE-007",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Shared About renderer, local biography retained when hidden, owner/peer server tests.",
+    "gap": "Existing length/privacy checks preserved; exhaustive Unicode/failed-save behavior remains unaccepted."
+  },
+  {
+    "id": "YAP-PROFILE-008",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Profile link draft now previews through shared renderer and existing SafeLink.",
+    "gap": "Protocol validation and owner/peer hidden projection tested; exhaustive unsafe-link confirmation and failed-save cases remain unaccepted."
+  },
+  {
+    "id": "YAP-PROFILE-009",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing membership-owned community tag logic preserved.",
+    "gap": "Leaving/revocation and every entitlement projection still require role/native acceptance; no free customization restriction added."
+  },
+  {
+    "id": "YAP-PROFILE-010",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing server-owned badge selection and privacy preserved.",
+    "gap": "Entitlement loss/hide/ownership cases not newly accepted across clients."
+  },
+  {
+    "id": "YAP-PROFILE-011",
+    "state": "ACCEPTED",
+    "testing": "settings-redesign and ui-standardization test local preview, reset, canceled navigation and confirmed discard; profile-collection tests draft/apply.",
+    "gap": "One shared content renderer and distinct layout draft. A local preview does not save until its named action."
+  },
+  {
+    "id": "YAP-PROFILE-012",
+    "state": "ACCEPTED",
+    "testing": "New browser save/reload plus 54 backend tests including owner/peer withholding, audience rules, invalid input, old-client preservation and reset.",
+    "gap": "Capability-gated optional layout stored in existing profile_style JSON; hidden connections are withheld server-side. Production/native rollout not yet performed."
+  },
+  {
+    "id": "YAP-PROFILE-013",
+    "state": "ACCEPTED",
+    "testing": "New browser bounded Up/Down reorder/save/reload; unit immutable moves; backend stale-revision/old-client tests.",
+    "gap": "Complete unique order and hidden subset enforced. Keyboard buttons remain usable without drag; unrelated older style saves preserve layout."
+  },
+  {
+    "id": "YAP-PROFILE-014",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "ProfileDialog now consumes shared About/Links/Connections renderer.",
+    "gap": "Correct peer identity/return-origin and all modal/history routes remain a broader Part 3 scenario; no new public profile routes invented."
+  },
+  {
+    "id": "YAP-PROFILE-015",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing mutuals/relationship projections retained.",
+    "gap": "Long-list navigation and outsider/private relationships not newly accepted; Part 3 owns relationship authority."
+  },
+  {
+    "id": "YAP-PROFILE-016",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Connected-service source preserved; synthetic hidden Steam connection tested in backend fixture.",
+    "gap": "Real Steam consent, refresh and token revocation not performed; no provider passwords collected."
+  },
+  {
+    "id": "YAP-PROFILE-017",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing AniList connection controls retained.",
+    "gap": "Real consent/cancel/privacy suggestions not performed; Part 4 provider integration acceptance required."
+  },
+  {
+    "id": "YAP-PROFILE-018",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing Last.fm connection controls retained.",
+    "gap": "Real token lifecycle and public-data refresh/revocation remain unaccepted."
+  },
+  {
+    "id": "YAP-PROFILE-019",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing Trakt connection controls retained.",
+    "gap": "Real provider outage/stale-data and revoke lifecycle remain unaccepted."
+  },
+  {
+    "id": "YAP-PROFILE-020",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing privacy/suggestions source preserved.",
+    "gap": "Opt-out across real peer suggestions not newly accepted; Part 3 must preserve new layout withholding in future projections."
+  },
+  {
+    "id": "YAP-PROFILE-021",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing leaderboard privacy controls preserved.",
+    "gap": "Next-refresh ranking removal and aggregate-derived privacy need domain acceptance; no public ranking policy changed."
+  },
+  {
+    "id": "YAP-PROFILE-022",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing creator verification settings retained in common catalog.",
+    "gap": "No proof uploaded/application submitted. Private proof/reviewer status matrix remains unaccepted."
+  },
+  {
+    "id": "YAP-PROFILE-023",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing creator program screen/capability retained.",
+    "gap": "Eligibility and persisted application outcome not newly accepted; no new reward promise introduced."
+  },
+  {
+    "id": "YAP-PROFILE-024",
+    "state": "DEFERRED_DECISION",
+    "testing": "No creator content submitted or paid reward granted.",
+    "gap": "New reviewed reward/idempotency rules require approved program policy and domain/commerce implementation."
+  },
+  {
+    "id": "YAP-PROFILE-025",
+    "state": "DEFERRED_DECISION",
+    "testing": "Existing invite attribution left unchanged.",
+    "gap": "New creator reward attribution/eligible-join abuse policy remains decision-gated with Parts 3/4."
+  },
+  {
+    "id": "YAP-PROFILE-026",
+    "state": "DEFERRED_DECISION",
+    "testing": "No comments endpoint/rollout established from inspected baseline.",
+    "gap": "No UI-only comments or retention claim added. Part 3 must first approve moderation, authority, reporting and lifecycle."
+  },
+  {
+    "id": "YAP-LOOK-001",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "profile-collection.spec.ts preview/claim/equip/reset and compact-phone long-name coverage.",
+    "gap": "Original Meldiq collection retained; exhaustive library quota/denied/loading/error states not newly accepted."
+  },
+  {
+    "id": "YAP-LOOK-002",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing effects and collection rendering retained; collection browser tests.",
+    "gap": "Feature-wide performance and installed-client effect compatibility remain unaccepted."
+  },
+  {
+    "id": "YAP-LOOK-003",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing accessory/NameStyle renderer retained.",
+    "gap": "All ownership and long-name/status occlusion combinations remain unaccepted."
+  },
+  {
+    "id": "YAP-LOOK-004",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing favorites API/schema/unit paths preserved.",
+    "gap": "Cross-device favorite/removal race not newly accepted by this pass."
+  },
+  {
+    "id": "YAP-LOOK-005",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing collection filters preserved.",
+    "gap": "Filter empty/error/selection durability not individually accepted; no replacement duplicate library introduced."
+  },
+  {
+    "id": "YAP-LOOK-006",
+    "state": "ACCEPTED",
+    "testing": "profile-collection and settings-redesign verify draft preview/equip/reset without silent global mutation.",
+    "gap": "Existing Apply boundary retained; all cosmetic categories still depend on their own ownership/media acceptance."
+  },
+  {
+    "id": "YAP-LOOK-007",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing authorized Collection Studio retained.",
+    "gap": "No artist asset submitted. Private moderation/rights queue not newly accepted."
+  },
+  {
+    "id": "YAP-LOOK-008",
+    "state": "DEFERRED_DECISION",
+    "testing": "No purchase, balance mutation or entitlement granted by audit.",
+    "gap": "Preserve current ownership/free options; additional priced acquisition policy and real commerce acceptance remain Part 4."
+  },
+  {
+    "id": "YAP-LOOK-009",
+    "state": "DEFERRED_DECISION",
+    "testing": "No artist sale created or repriced.",
+    "gap": "New seller price bounds, rights review and grandfathering require approved commerce policy."
+  },
+  {
+    "id": "YAP-LOOK-010",
+    "state": "DEFERRED_DECISION",
+    "testing": "No artist payout or revenue percentage promised.",
+    "gap": "Meldiq has not adopted competitor settlement terms. Part 4 must obtain product/legal/economic decision before implementation."
+  },
+  {
+    "id": "YAP-LOOK-011",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing local fonts and name style fallbacks preserved.",
+    "gap": "License provenance and native fallback/readability matrix not newly accepted."
+  },
+  {
+    "id": "YAP-LOOK-012",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing name colors/gradients retained; profile preview tests.",
+    "gap": "Contrast across role colors, selected background and all combinations not certified."
+  },
+  {
+    "id": "YAP-LOOK-013",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing original presets retained; collection preview/apply tests.",
+    "gap": "Profile/call-tile consistency needs Part 4 actual-call/native acceptance."
+  },
+  {
+    "id": "YAP-LOOK-014",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing color validation and explicit style draft/save retained.",
+    "gap": "Custom profile colors remain free. Exhaustive contrast/reset/concurrent-save matrix not newly accepted."
+  },
+  {
+    "id": "YAP-PREF-001",
+    "state": "ACCEPTED",
+    "testing": "Shared ThemeChoice in welcome/settings; local Light selection persists after reload; existing theme unit tests.",
+    "gap": "System/Light/Dark/Black stay available freely and retain browser scope. Physical OS theme transitions remain release checks."
+  },
+  {
+    "id": "YAP-PREF-002",
+    "state": "ACCEPTED",
+    "testing": "Shared PaletteChoice saves existing palette; welcome reload and stage1 theme test.",
+    "gap": "Six original Meldiq palettes retained without a second preference store. Exhaustive contrast combinations not certified."
+  },
+  {
+    "id": "YAP-PREF-003",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing AppearanceExtras custom themes retained and source audited.",
+    "gap": "Bounds/reset/device-scope unit paths exist; all contrast combinations not newly accepted."
+  },
+  {
+    "id": "YAP-PREF-004",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing community-theme personal opt-out retained.",
+    "gap": "Render precedence against every server theme requires community-role acceptance."
+  },
+  {
+    "id": "YAP-PREF-005",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing unread bubble preference preserved.",
+    "gap": "Unread counts remain in existing selectors; specific hide/reload scenario not newly accepted."
+  },
+  {
+    "id": "YAP-PREF-006",
+    "state": "DEFERRED_DECISION",
+    "testing": "No equivalent header-only versus full-profile side-panel option established.",
+    "gap": "Do not add a duplicate color preference without a product decision; existing profile styling remains."
+  },
+  {
+    "id": "YAP-PREF-007",
+    "state": "DEFERRED_DECISION",
+    "testing": "Existing desktop window controls retained.",
+    "gap": "No persistent hide-top-strip preference added; requires reachable navigation and Windows window-control design."
+  },
+  {
+    "id": "YAP-PREF-008",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing Comfortable/Compact modes retained, no third density mode added.",
+    "gap": "Existing two-mode behavior is the chosen foundation; all zoom/composer cases need messaging acceptance."
+  },
+  {
+    "id": "YAP-PREF-009",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing bounded text-size preference retained.",
+    "gap": "Full message action/composer clipping acceptance is Part 3's message UI check."
+  },
+  {
+    "id": "YAP-PREF-010",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing normal/relaxed spacing retained; no precision slider added.",
+    "gap": "Preserve current choice until measured need; all message/zoom combinations remain Part 3 acceptance."
+  },
+  {
+    "id": "YAP-PREF-011",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "New spinner respects OS and explicit motion preference; existing reduced-motion unit/source paths.",
+    "gap": "Whole-app animation sweep and physical OS/screen-reader checks remain unaccepted; no new motion preference introduced."
+  },
+  {
+    "id": "YAP-PREF-012",
+    "state": "ACCEPTED",
+    "testing": "New keyboard search plus ui-standardization covers catalog search, capability/admin denial and scoped community navigation.",
+    "gap": "One settings registry; ArrowDown/Up/Home/End and unique-match Enter added without duplicate options."
+  },
+  {
+    "id": "YAP-PREF-013",
+    "state": "ACCEPTED",
+    "testing": "languages.spec.ts and fresh welcome select Bangla/English, persist locale/reload; 28 catalogs/6232 keys validate.",
+    "gap": "Existing locale/pluralization/fallback system retained. Structural completeness is not professional translation certification."
+  },
+  {
+    "id": "YAP-PREF-014",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing keyboard help and platform bindings retained.",
+    "gap": "All platform-specific chords and screen-reader navigation not newly accepted."
+  },
+  {
+    "id": "YAP-PREF-015",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "stage1-account.spec.ts shortcut change and theme flow; existing shortcut unit tests.",
+    "gap": "Existing browser-local remapping retained; complete conflict/cancel/reset and native keyboard matrix remains unaccepted."
+  },
+  {
+    "id": "YAP-PREF-016",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing developer mode and permission-gated catalogs preserved.",
+    "gap": "ID visibility is presentation only; exhaustive menu checks not newly accepted, and mode grants no authority."
+  },
+  {
+    "id": "YAP-PREF-017",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "SafeLink reused by shared ProfileContent; existing trusted-site unit/source paths.",
+    "gap": "No unsafe-scheme policy relaxed. Full allow/revoke/navigation matrix not newly accepted."
+  },
+  {
+    "id": "YAP-PREF-018",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing notification volume/ringing preferences retained.",
+    "gap": "No new per-event toggle policy added. Part 3/4 own actual delivery/audio acceptance."
+  },
+  {
+    "id": "YAP-PREF-019",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing sound preview/reset controls retained.",
+    "gap": "No microphone permission requested by welcome. Actual sound outputs/reset scope need feature-owner acceptance."
+  },
+  {
+    "id": "YAP-SHELL-001",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing rail/canonical navigation retained; built-browser account/settings navigation tests.",
+    "gap": "Complete keyboard folder/unread/reload combinations remain Part 3 domain acceptance."
+  },
+  {
+    "id": "YAP-SHELL-002",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing folders and membership paths preserved.",
+    "gap": "Create/rename/reorder/leave race matrix not newly exercised; do not replace existing server identity model."
+  },
+  {
+    "id": "YAP-SHELL-003",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing quick switcher and shortcuts retained.",
+    "gap": "Composer draft/focus/escape end-to-end matrix remains Part 3."
+  },
+  {
+    "id": "YAP-SHELL-004",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing desktop columns retained; target-width geometry and long-profile tests pass.",
+    "gap": "Long channel/member names, hidden panels and message actions still need Part 3 domain coverage."
+  },
+  {
+    "id": "YAP-SHELL-005",
+    "state": "ACCEPTED",
+    "testing": "Phone account/settings/language/menu tests use established primary tabs and You; target widths pass.",
+    "gap": "Native-aligned destinations retained; no desktop rail squeezed into phone navigation. Physical phone behavior remains Part 4."
+  },
+  {
+    "id": "YAP-SHELL-006",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing focused-chat/back route logic retained; accounts browser uses actual conversation navigation.",
+    "gap": "Exact draft/list-scroll restoration and physical gestures remain Part 3/4 acceptance."
+  },
+  {
+    "id": "YAP-SHELL-007",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing composer overflow preserved without domain rewrite.",
+    "gap": "Part 3 must test every actual send action; Part 4 supplies media/expression contracts. No fake composer controls added."
+  },
+  {
+    "id": "YAP-SHELL-008",
+    "state": "ACCEPTED",
+    "testing": "New browser geometry checks at 768 tablet plus 1920/1440/1280/1024 desktop and 390 portrait/844 landscape phone.",
+    "gap": "Settings navigation and document width stay within viewport; physical tablet/keyboard and all domain panels remain release tests."
+  },
+  {
+    "id": "YAP-SHELL-009",
+    "state": "ACCEPTED",
+    "testing": "StatePanel covers welcome/profile/lazy shell; server-info failure/retry browser test; existing PWA network recovery.",
+    "gap": "Initial profile fetch no longer exposes a blank editable form. Domain owners retain their own loading/empty/error semantics."
+  },
+  {
+    "id": "YAP-SHELL-010",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing message empty/loading/error and authorized composer behavior preserved.",
+    "gap": "Part 3 must accept permissioned history/empty/failure distinctions on message lifecycle; no visual-only acceptance claimed."
+  },
+  {
+    "id": "YAP-SHELL-011",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing account-owned lastPlace retained; reload/account-switch browser and PWA tests.",
+    "gap": "All deep-link/private-channel revocation/scroll-return cases remain Part 3 and final-release acceptance."
+  },
+  {
+    "id": "YAP-TRUST-001",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Current security page and source architecture compared; prepared Privacy/Terms distinguish server-readable attachment keys.",
+    "gap": "Prepared copy not published. Full text/call/key-backup mode disclosure and actual media/device verification remain Part 4."
+  },
+  {
+    "id": "YAP-TRUST-002",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Prepared privacy explains server metadata/content limits; no independent audit claimed.",
+    "gap": "Operator access review/logging coverage is not established by public copy; release-owner needs actual data-class verification."
+  },
+  {
+    "id": "YAP-TRUST-003",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Existing call key-check UI retained without claiming a new security protocol.",
+    "gap": "Part 4 must verify what the indicator compares in real multi-party calls and installed clients."
+  },
+  {
+    "id": "YAP-TRUST-004",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Live page discloses no independent audit; prepared policies repeat truthful limits.",
+    "gap": "No penetration test or audit certification performed; dated issue/remediation verification remains Part 4."
+  },
+  {
+    "id": "YAP-TRUST-005",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "Prepared GRIIPBUDDY LLC Privacy includes supplied contact, 13+ policy and actual deletion/attachment limitations.",
+    "gap": "Actual retention table, provider coverage, mailbox delivery and published rights workflow require final verification; no shorter periods invented."
+  },
+  {
+    "id": "YAP-TRUST-006",
+    "state": "DEFERRED_DECISION",
+    "testing": "No comments rollout established and no public comment-retention promise created.",
+    "gap": "Define real comment storage/moderation/deletion/reporting only if Part 3 approves the feature."
+  }
+]

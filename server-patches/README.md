@@ -33,3 +33,9 @@ This adds optional expression preferences, authenticated attachment streaming, r
 `0010-profile-collectibles.patch` applies candidate `70eb0272` over authentication/Atlas/Redis baseline `207c3958`; the cached-index apply check passed. Preserve migration085, apply additive086, and keep the schema5/API0.75 rollout behind the migration chat's all16/schema4 handoff. See `docs/profile-customization/DEPLOYMENT.md` and `deploy/profile-customization` for the authorized release, source provenance, tests and incomplete deployment state.
 
 `0012-call-read-receipts.patch` restores public read markers to main-history and collection pages on SQLite and MongoDB. It is published in the API repository as `0f77a9d8`; the production overlay replaces only the three messaging modules on the current media API image. No schema migration is required.
+
+## Part 2 application foundation (4 November 2026)
+
+`0015-profile-layout-foundation.patch` is a plain `git apply` patch against backend `bd20d747e3a4a768b823263cab017b9d9e0017c4`, including `server/test/profile_layout.test.ts`. It adds optional profile section ordering/visibility, with a `profile-layout` capability, owner/peer privacy projection, older-client field preservation and existing optimistic style revisions. No schema migration, production configuration, price, entitlement or infrastructure change is included. Backend source is isolated in `/Volumes/code_files/meldiq_part2_api`, branch `codex/meldiq-part2-profile-contract`.
+
+Apply only to a reconciled compatible source with `git apply --check` first; do not replay the historical migration patches above. The original backend baseline apply check passed. Four focused backend suites pass all 54 tests; typecheck passes. See [Part 2 handoff](../docs/yapin-parity/handoffs/PART_2_REPORT.md) for scope, Web source and final release requirements. This patch has not been deployed.

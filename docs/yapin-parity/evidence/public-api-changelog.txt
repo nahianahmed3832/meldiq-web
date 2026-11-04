@@ -1,0 +1,287 @@
+Browser tab: 2, Title: "API changelog · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/changelog".
+1 AXWebArea API changelog · Bot API reference · Yapin’, URL: yapin.gg/developers/api/changelog
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading API changelog, Value: 1
+				15 text API changelog
+			16 text What changed in the bot API and the SDKs, one week at a time, newest first.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 heading Versioning, Value: 2, ID: versioning
+				25 text Versioning
+			26 text Current version: 1.3.0 (the path stays /v1). Every answer carries X-Yapin-API-Version (the version) and X-Yapin-Build (the build that answered). GET /version tells you both plus the newest SDK versions, no token needed. Inside v1 we only add things: new endpoints, new fields, new events. Your bot should ignore fields it doesn’t know. Anything that would break a working bot gets a new /v2 path, announced ahead of time, and v1 keeps working. Every change is listed in the changelog. Features marked “In testing” work on test servers only and can still change.
+			27 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			28 text The same list as JSON: GET /changelog?limit=10 (no token), /sdk/changelog.json, or CHANGELOG.md in the npm and PyPI packages.
+			29 link Description: changelog.json, Value: yapin.gg/sdk/changelog.json
+			30 text  · 
+			31 link Description: CHANGELOG.md, Value: yapin.gg/sdk/CHANGELOG.md
+			32 heading Changes, Value: 2, ID: changes
+				33 text Changes
+			34 container week-2026-11-03
+				35 heading Week of Nov 32026-11-03, Value: 3
+					36 text Week of Nov 3 2026-11-03
+				37 text API 1.3.0, SDK 1.6.0
+				38 text Added
+				39 content list
+					40 container
+						41 AXListMarker • 
+						42 text Select menus: a row can hold one dropdown (type "select" or 3) with up to 25 options. Picks come as an interaction with type "select" and values. SDK: Select, bot.onSelect / on_select. bot_selects
+					43 container
+						44 AXListMarker • 
+						45 text Modals: answer a click, a pick or a /command with type "modal" to open a form with text boxes and select menus. It comes back as an interaction with type "modal_submit" and values. Slash commands that come as command events can open one too. SDK: Modal, TextInput, i.showModal / msg.showModal (command events), bot.onModal / on_modal. bot_modals
+					46 container
+						47 AXListMarker • 
+						48 text GET /channels/{id}/messages/{mid}/emojis: the custom emojis in one message, from any server, with their picture link, for steal emoji commands. SDK: bot.messageEmojis and bot.stealEmoji. bot_emoji_lookup
+				49 text Changed
+				50 content list
+					51 container
+						52 AXListMarker • 
+						53 text Custom emojis follow Discord's rule: bots use emojis from servers they're in. In text and embeds others turn into :name:; buttons, menu options and reactions refuse them. Emoji objects like { id, name, animated } work for buttons and options. bot_custom_emojis
+			54 container week-2026-11-02
+				55 heading Week of Oct 272026-11-02, Value: 3
+					56 text Week of Oct 27 2026-11-02
+				57 text API 1.2.0, SDK 1.5.0
+				58 text Added
+				59 content list
+					60 container
+						61 AXListMarker • 
+						62 text Bots send files: POST /channels/{id}/messages takes multipart/form-data with payload_json and up to 4 files (10 MB each, 12 MB in all), scanned like people's uploads. bot_uploads
+					63 container
+						64 AXListMarker • 
+						65 text Custom emojis: GET and POST /servers/{id}/emojis, PATCH and DELETE /servers/{id}/emojis/{eid} (Manage Emoji). Every picture is checked like people's emojis. bot_emojis
+					66 container
+						67 AXListMarker • 
+						68 text Bot webhooks: GET and POST /channels/{id}/webhooks, GET /webhooks, DELETE /webhooks/{id} and POST /webhooks/{id} to post with a name and picture per message (shown with a BOT tag). bot_webhooks
+					69 container
+						70 AXListMarker • 
+						71 text Bot invite links: /bot/{id} shows the bot card with Add to server and asks for the permissions the bot needs. bot_invite_link
+					72 container
+						73 AXListMarker • 
+						74 text Bot hosting runs Python bots (main.py or bot.py with requirements.txt) and takes per-bot environment variables. bothost_python
+					75 container
+						76 AXListMarker • 
+						77 text SDKs on npm and PyPI: npm install yapin, pip install yapin. The single files at /sdk/yapper.js and /sdk/yapper.py still work and are the same code.
+					78 container
+						79 AXListMarker • 
+						80 text Every API answer carries X-Yapin-API-Version and X-Yapin-Build. GET /version (no token) says which API and SDK versions are live; the SDKs print one line when a newer one is out.
+					81 container
+						82 AXListMarker • 
+						83 text This changelog, as JSON at GET /changelog and /sdk/changelog.json, and as CHANGELOG.md.
+					84 container
+						85 AXListMarker • 
+						86 text TypeScript types for the JS SDK and every API object.
+					87 container
+						88 AXListMarker • 
+						89 text Role management: create, edit and delete roles below the bot's highest one, change @everyone, and set permission overrides on channels and categories. bot_roles
+					90 container
+						91 AXListMarker • 
+						92 text Live online counts: GET /servers/{id}/counts, and online_count on GET /servers and GET /servers/{id}. bot_online_count
+					93 container
+						94 AXListMarker • 
+						95 text Invite tracking: GET /servers/{id}/invites, invite_code and inviter_id on member_join, invite_create and invite_delete events. bot_invite_tracking
+					96 container
+						97 AXListMarker • 
+						98 text Scheduled server events: GET and POST /servers/{id}/events. Still in testing (test servers only). server_events
+					99 container
+						100 AXListMarker • 
+						101 text DM events: dm_message, and reaction events on the bot's own DM messages, with is_dm and dm_channel_id. Still in testing. bot_dm_events
+					102 container
+						103 AXListMarker • 
+						104 text Custom in-call activities for bots (/sdk/activity.js). custom_activities
+					105 container
+						106 AXListMarker • 
+						107 text Python SDK gets events over the gateway (wss://rt.yapper.website/bot), long poll only as the fallback, and now has every method, builder and event the JS SDK has.
+					108 container
+						109 AXListMarker • 
+						110 text Full reference at /developers/api with a schema for every endpoint and event, built from the same spec as /openapi.json.
+				111 text Changed
+				112 content list
+					113 container
+						114 AXListMarker • 
+						115 text Embed pictures and webhook avatar_url may come from any https site where the image proxy is on: we fetch and serve them ourselves. image_proxy
+					116 container
+						117 AXListMarker • 
+						118 text The SDKs talk to bots.yapper.website by default and switch to www.yapin.gg for 10 minutes when it can't be reached.
+					119 container
+						120 AXListMarker • 
+						121 text SDK retries on 429 and busy 503s stop after 30 seconds of waiting in total (maxRetryWait / max_retry_wait), with less jitter. A Cloudflare 429 prints a warning that names it.
+					122 container
+						123 AXListMarker • 
+						124 text Embed pictures from Roblox's image CDN (*.rbxcdn.com) are allowed.
+				125 text Fixed
+				126 content list
+					127 container
+						128 AXListMarker • 
+						129 text Webhook bots showed offline while answering commands: any API call now counts as the bot being online.
+					130 container
+						131 AXListMarker • 
+						132 text Music bots played to nobody in encrypted calls: the SDKs publish voice without Opus RED and join with e2ee.
+					133 container
+						134 AXListMarker • 
+						135 text Kicks and bans from the API also drop the person from the server's voice calls.
+					136 container
+						137 AXListMarker • 
+						138 text Live edits that never arrived on screen are caught up, so bot edits no longer look 30 seconds late.
+			139 container week-2026-10-26
+				140 heading Week of Oct 202026-10-26, Value: 3
+					141 text Week of Oct 20 2026-10-26
+				142 text API 1.0.0, SDK 1.0.0
+				143 text Added
+				144 content list
+					145 container
+						146 AXListMarker • 
+						147 text Gateway: bots get their events over a WebSocket on the realtime server. The JS SDK uses it when the runtime has WebSocket built in. bot_gateway
+					148 container
+						149 AXListMarker • 
+						150 text Components V2: containers, sections, text, galleries, files, separators and buttons anywhere (flags 32768), with SDK builders. bot_components_v2
+					151 container
+						152 AXListMarker • 
+						153 text Bots in voice: POST /servers/{id}/voice/join and /voice/leave give a LiveKit ticket so a bot can play audio in a call. bot_voice_join
+					154 container
+						155 AXListMarker • 
+						156 text Shared slash commands: people pick which bot answers (/fish @Bot); the others get the message without the command. command_target
+					157 container
+						158 AXListMarker • 
+						159 text Long poll on our own API server, idle bots look every 2 seconds after 5 seconds. bot_poll_api
+				160 text Changed
+				161 content list
+					162 container
+						163 AXListMarker • 
+						164 text Bots with Move Members can move the server owner between voice channels (not mute or disconnect them).
+					165 container
+						166 AXListMarker • 
+						167 text Embed text over the limit and a bad reply_to are refused with a 400 instead of quietly dropped.
+					168 container
+						169 AXListMarker • 
+						170 text Bot message scope: GET of a single message needs Read Message History, like listing messages.
+					171 container
+						172 AXListMarker • 
+						173 text The product is Yapin' now: docs and SDKs point at www.yapin.gg. API header names keep Yapper.
+				174 text Fixed
+				175 content list
+					176 container
+						177 AXListMarker • 
+						178 text Timeouts drop the person from the call they're in.
+					179 container
+						180 AXListMarker • 
+						181 text A bad id in the path (like %FF) answers with a JSON 400 instead of an HTML page.
+			182 container week-2026-10-19
+				183 heading Week of Oct 132026-10-19, Value: 3
+					184 text Week of Oct 13 2026-10-19
+				185 text API 1.0.0, SDK 1.0.0
+				186 text Added
+				187 content list
+					188 container
+						189 AXListMarker • 
+						190 text The bot API: tokens, REST API, webhooks, the Developer page, and SDKs that run on your own PC with long polling and slash commands. bot_api
+					191 container
+						192 AXListMarker • 
+						193 text Bots act with their own roles: roles, kick, ban, timeouts, channels and categories, pins, reactions, DMs, edits, bulk delete, status and banner.
+					194 container
+						195 AXListMarker • 
+						196 text Embeds (with the SDK Embed builder) and message buttons with interaction events and callbacks. bot_buttons
+					197 container
+						198 AXListMarker • 
+						199 text Voice: see who's in voice, move and disconnect people, voice_join and voice_leave events. bot_voice
+					200 container
+						201 AXListMarker • 
+						202 text GET /channels lists every channel the bot can see; every event carries channel_id and server_id.
+					203 container
+						204 AXListMarker • 
+						205 text Cogs: split a bot into files (JS, and the new Python SDK).
+					206 container
+						207 AXListMarker • 
+						208 text OpenAPI spec at /openapi.json and a reference on /developers.
+					209 container
+						210 AXListMarker • 
+						211 text events?max_age= skips older events when a bot catches up.
+				212 text Changed
+				213 content list
+					214 container
+						215 AXListMarker • 
+						216 text events?after=0 starts from now instead of replaying the oldest day of events.
+					217 container
+						218 AXListMarker • 
+						219 text Message limits: 30 a minute per server and 30 a minute overall (300 for verified bots); command and button replies don't count overall.
+					220 container
+						221 AXListMarker • 
+						222 text Up to 100 slash commands per bot; duplicate names are refused up front.
+					223 container
+						224 AXListMarker • 
+						225 text Database hiccups answer 503 with Retry-After instead of a fake 401, 403 or 404, and the SDKs retry them with jitter and growing backoff.
+					226 container
+						227 AXListMarker • 
+						228 text A 401 says what's wrong with the Authorization header; ids must be real UUIDs.
+				229 text Fixed
+				230 content list
+					231 container
+						232 AXListMarker • 
+						233 text Bots restarting no longer get stale slash commands (over 15 minutes old) or expired button clicks.
+					234 container
+						235 AXListMarker • 
+						236 text Command prefixes longer than one character work.
+					237 container
+						238 AXListMarker • 
+						239 text Private channels are hidden from bots that weren't let in.
+			240 link Description: ← Back to Yapin’, Value: yapin.gg/
+			241 text  · 
+			242 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		243 container On this page
+			244 text ON THIS PAGE
+			245 content list
+				246 link Description: Overview, Value: yapin.gg/developers/api/changelog#top
+				247 link Description: Versioning, Value: yapin.gg/developers/api/changelog#versioning
+				248 link Description: Changes, Value: yapin.gg/developers/api/changelog#changes
+				249 link Description: Week of Nov 3, Value: yapin.gg/developers/api/changelog#week-2026-11-03
+				250 link Description: Week of Oct 27, Value: yapin.gg/developers/api/changelog#week-2026-11-02
+				251 link Description: Week of Oct 20, Value: yapin.gg/developers/api/changelog#week-2026-10-26
+				252 link Description: Week of Oct 13, Value: yapin.gg/developers/api/changelog#week-2026-10-19
+		253 text Yapin’
+		254 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		255 heading PRODUCT, Value: 4
+			256 text PRODUCT
+		257 content list
+			258 link Description: Download, Value: yapin.gg/download
+			259 link Description: Developers, Value: yapin.gg/developers
+			260 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			261 link Description: Creator Program, Value: yapin.gg/creators
+			262 link Description: FanKit, Value: yapin.gg/fankit
+			263 link Description: Roadmap, Value: yapin.gg/roadmap
+			264 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			265 link Description: Bugs, Value: yapin.gg/bugs
+			266 link Description: Status, Value: yapin.gg/status
+		267 heading COMMUNITY, Value: 4
+			268 text COMMUNITY
+		269 content list
+			270 link Description: Guidelines, Value: yapin.gg/guidelines
+			271 link Description: Tutorials, Value: yapin.gg/tutorials
+			272 link Description: Bots, Value: yapin.gg/bots
+			273 link Description: Partners, Value: yapin.gg/partners
+		274 heading LEGAL, Value: 4
+			275 text LEGAL
+		276 content list
+			277 link Description: Terms, Value: yapin.gg/terms
+			278 link Description: Privacy, Value: yapin.gg/privacy
+			279 link Description: Copyright, Value: yapin.gg/copyright
+			280 link Description: Security, Value: yapin.gg/security
+			281 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			282 link Description: Contact, Value: mailto:hello@yapin.gg
+		283 text © 2026 Yapper Media LLC. Free to use.
+		284 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea API changelog · Bot API reference · Yapin’, URL: yapin.gg/developers/api/changelog

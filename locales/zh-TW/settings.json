@@ -860,5 +860,11 @@
     "accountDescription": "電子郵件、帳號狀態、資料匯出與刪除帳號。",
     "notificationsDescription": "桌面提醒、音效、暫停通知及對話偏好的快捷入口。",
     "appearanceDescription": "主題、色彩、訊息版面、媒體預覽與聊天手勢。"
+  },
+  "foundation": {
+    "profileSections": "個人檔案區塊",
+    "profileSectionsDescription": "選擇顯示哪些區塊及其順序。你的閱覽對象設定仍然適用。",
+    "resetSections": "重設區塊變更",
+    "saveSections": "儲存區塊"
   }
 }

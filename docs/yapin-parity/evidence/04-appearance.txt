@@ -1,0 +1,112 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Appearance, Value: 2
+			177 text Appearance
+		178 text THEME
+		179 checkbox Dark ✓, Value: 1
+			180 image
+			181 text Dark
+			182 text ✓
+		183 checkbox Light, Value: 0
+			184 image
+			185 text Light
+		186 text COLOUR THEMES
+		187 text Tint the whole app. Free, obviously.
+		188 checkbox None ✓, Value: 1
+			189 text None
+			190 text ✓
+		191 checkbox Mint Apple, Value: 0
+		192 checkbox Citrus Sherbert, Value: 0
+		193 checkbox Retro Raincloud, Value: 0
+		194 checkbox Hanami, Value: 0
+		195 checkbox Sunrise, Value: 0
+		196 checkbox Cotton Candy, Value: 0
+		197 checkbox Lofi Vibes, Value: 0
+		198 checkbox Desert Khaki, Value: 0
+		199 checkbox Sunset, Value: 0
+		200 checkbox Chroma Glow, Value: 0
+		201 checkbox Forest, Value: 0
+		202 checkbox Crimson Moon, Value: 0
+		203 checkbox Midnight Blurple, Value: 0
+		204 checkbox Mars, Value: 0
+		205 checkbox Dusk, Value: 0
+		206 checkbox Under the Sea, Value: 0
+		207 checkbox Strawberry Lemonade, Value: 0
+		208 checkbox Aurora, Value: 0
+		209 checkbox Neon Nights, Value: 0
+		210 checkbox Deep Ocean, Value: 0
+		211 text Custom theme
+		212 text Two colours, or add a third. Then set how strong it is.
+		213 container First colour
+			214 color well (settable) Description: First colour, Value: #ff6b4a
+		215 container Second colour
+			216 color well (settable) Description: Second colour, Value: #9b59ff
+		217 button +, Help: Add a third colour
+		218 text Intensity
+		219 slider (disabled, settable, integer) Description: Theme intensity, Value: 75
+		220 container
+			221 text 75 %
+		222 text SERVER COLOURS
+		223 container
+			224 text Use a server's own colours Show a server's colours while you're in it. Turn off to always keep yours.
+			225 checkbox (settable, integer) Value: 1, Description: Use a server's own colours Show a server's colours while you're in it. Turn off to always keep yours.
+		226 text SERVER LIST
+		227 container
+			228 text Unread DMs in the server list People who just messaged you show up as bubbles under Home. Turn off if they pile up.
+			229 checkbox (settable, integer) Value: 1, Description: Unread DMs in the server list People who just messaged you show up as bubbles under Home. Turn off if they pile up.
+		230 text PROFILES
+		231 text Show profile colors in side panels
+		232 text Header only keeps their colors on the banner and avatar, so the DM panel matches the app.
+		233 Show profile colors in side panels
+			234 radio button Full, Value: 0
+			235 radio button Header only, Value: 1
+		236 text TOP BAR
+		237 container
+			238 text Hide the top bar Drops the thin Yapin’ strip at the very top. Handy if your window already has its own title bar. This device only.
+			239 checkbox (settable, integer) Value: 0, Description: Hide the top bar Drops the thin Yapin’ strip at the very top. Handy if your window already has its own title bar. This device only.
+		240 text CHAT
+		241 text Message density
+		242 text Compact fits more on screen, Spacious gives everything room to breathe.
+		243 Message density
+			244 radio button Cozy, Value: 1
+			245 radio button Compact, Value: 0
+			246 radio button Spacious, Value: 0
+		247 text CHAT FONT SIZE
+		248 slider (settable, integer) CHAT FONT SIZE, Value: 16, ID: dens-fs
+		249 container
+			250 text 16 px
+		251 text SPACE BETWEEN MESSAGE GROUPS
+		252 slider (settable, integer) SPACE BETWEEN MESSAGE GROUPS, Value: 16, ID: dens-gap
+		253 container
+			254 text 16 px
+		255 text MOTION
+		256 text Reduce motion
+		257 text Turns animations down to simple fades. Auto follows your device setting.
+		258 Reduce motion
+			259 radio button Auto, Value: 1
+			260 radio button On, Value: 0
+			261 radio button Off, Value: 0
+		174 button Close
+			175 image
+
+The focused UI element is 13 button Appearance

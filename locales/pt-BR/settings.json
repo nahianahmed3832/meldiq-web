@@ -860,5 +860,11 @@
     "accountDescription": "E-mail, situação da conta, exportação de dados e exclusão da conta.",
     "notificationsDescription": "Alertas na área de trabalho, sons, pausa de notificações e atalhos para preferências de conversas.",
     "appearanceDescription": "Temas, cores, layout de mensagens, prévias de mídia e gestos do chat."
+  },
+  "foundation": {
+    "profileSections": "Seções do perfil",
+    "profileSectionsDescription": "Escolha quais seções aparecem e a ordem delas. Suas configurações de público continuam valendo.",
+    "resetSections": "Redefinir alterações das seções",
+    "saveSections": "Salvar seções"
   }
 }

@@ -1,0 +1,597 @@
+Window: "Bot API reference · Yapin’", App: Google Chrome.
+0 standard window Bot API reference · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/developers/api, Secondary Actions: Raise
+	1 container Bot API reference · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/developers/api
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/developers/api, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Bot API reference · Yapin’, URL: yapin.gg/developers/api
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 link ← Back to Yapin’, Value: yapin.gg/
+								30 text DEVELOPERS
+								31 heading Bot API reference, Value: 1
+									32 text Bot API reference
+								33 text Base URL https://bots.yapper.website/api/bot/v1 · send Authorization: Bot <token> on every call · JSON in, JSON out. LAST UPDATED 18 OCTOBER 2026
+								34 link OpenAPI 3.1 /openapi.json, Value: yapin.gg/openapi.json
+								35 link Guide & SDK, Value: yapin.gg/developers
+								36 link Publish your bot, Value: yapin.gg/developers#verified
+							37 container
+								38 text Machine-readable: 
+								39 link openapi.json, Value: yapin.gg/openapi.json
+								40 text  (OpenAPI 3.1, works with Postman, Insomnia and code generators). Guide and SDK: 
+								41 link /developers, Value: yapin.gg/developers
+								42 text . Errors look like 
+								43 text { "error": "…" }
+								44 text : 400 bad input, 401 wrong or missing token, 403 not allowed (the bot is not in that server, or its roles lack the permission), 404 not found or not visible, 409 the person isn't in voice, 429 slow down (30 messages a minute per server, 30 a minute overall or 300 for verified bots; the error says which, with 
+								45 text Retry-After
+								46 text ), 503 Yapin’ is busy (nothing was done, retry after 
+								47 text Retry-After
+								48 text ). A 429 without 
+								49 text Retry-After
+								50 text  won't go through by waiting.
+								51 heading Bot, Value: 2
+									52 text Bot
+								53 text GET
+								54 text /me
+								55 text The bot itself
+								56 text PATCH
+								57 text /me
+								58 text Change display name or bio
+								59 table
+									60 row
+										61 cell
+											62 text display_name
+										63 cell
+											64 text string  (≤ 32)
+									65 row
+										66 cell
+											67 text bio
+										68 cell
+											69 text string  (≤ 300)
+								70 text PUT
+								71 text /me/avatar
+								72 text Set the profile picture (image body or multipart "file", PNG/JPG/GIF/WebP, 8 MB)
+								73 container
+									74 text Body:  The image itself (PNG, JPG, GIF or WebP, up to 8 MB), or multipart/form-data with it in "file"
+								75 text DELETE
+								76 text /me/avatar
+								77 text Remove the profile picture
+								78 text PUT
+								79 text /me/banner
+								80 text Set the banner (10 MB)
+								81 container
+									82 text Body:  The image itself (PNG, JPG, GIF or WebP, up to 10 MB), or multipart/form-data with it in "file"
+								83 text DELETE
+								84 text /me/banner
+								85 text Remove the banner
+								86 text PUT
+								87 text /me/status
+								88 text Status and activity
+								89 table
+									90 row
+										91 cell
+											92 text status
+										93 cell
+											94 text "online" | "idle" | "dnd"
+									95 row
+										96 cell
+											97 text activity
+										98 cell
+											99 text string  (≤ 60)
+								100 text GET
+								101 text /commands
+								102 text The bot's slash commands
+								103 text PUT
+								104 text /commands
+								105 text Replace the slash commands (up to 100)
+								106 container
+									107 container commands
+										108 text commands
+									109 container Command[] (≤ 100)
+										110 text Command[]  (≤ 100)
+								111 heading Events, Value: 2
+									112 text Events
+								113 text GET
+								114 text /events
+								115 text Long-poll for events, up to 100 a call (keeps the bot online)
+								116 text ?after
+								117 text  Last event id you saw. 0 returns no events and the newest id as last (start from now)
+								118 text ?wait
+								119 text  Seconds to wait for something
+								120 text ?max_age
+								121 text  Skip events older than this many seconds (commands older than 15 minutes and expired button clicks are always skipped)
+								122 heading Servers, Value: 2
+									123 text Servers
+								124 text GET
+								125 text /servers
+								126 text Servers the bot is in
+								127 text GET
+								128 text /servers/{id}
+								129 text One server
+								130 text :id
+								131 text GET
+								132 text /servers/{id}/roles
+								133 text Roles
+								134 text :id
+								135 text GET
+								136 text /servers/{id}/members
+								137 text Members, sorted by user id: 200 a page by default, up to 500 with limit
+								138 text :id
+								139 text ?limit
+								140 text ?after
+								141 text  Last user id of the previous page GET
+								142 text /servers/{id}/members/{uid}
+								143 text One member with roles
+								144 text :id
+								145 text :uid
+								146 heading Channels, Value: 2
+									147 text Channels
+								148 text GET
+								149 text /servers/{id}/channels
+								150 text Channels the bot can see, in sidebar order (private ones only if it was let in)
+								151 text :id
+								152 text ?type
+								153 text POST
+								154 text /servers/{id}/channels
+								155 text Create a channel (Manage channels)
+								156 text :id
+								157 table
+									158 row
+										159 cell
+											160 text name
+											161 text  *
+										162 cell
+											163 text string
+									164 row
+										165 cell
+											166 text kind
+										167 cell
+											168 text "text" | "voice"
+									169 row
+										170 cell
+											171 text category_id
+										172 cell
+											173 text string
+								174 text GET
+								175 text /channels
+								176 text Every channel the bot can see, in all its servers
+								177 text ?type
+								178 text POST
+								179 text /servers/{id}/categories
+								180 text Create a category
+								181 text :id
+								182 container
+									183 container name *
+										184 text name
+										185 text  *
+									186 container string
+										187 text string
+								188 text PATCH
+								189 text /servers/{id}/categories/{cid}
+								190 text Rename a category
+								191 text :id
+								192 text :cid
+								193 container
+									194 container name
+										195 text name
+									196 container string
+										197 text string
+								198 text DELETE
+								199 text /servers/{id}/categories/{cid}
+								200 text Delete a category
+								201 text :id
+								202 text :cid
+								203 text GET
+								204 text /channels/{id}
+								205 text One channel
+								206 text :id
+								207 text PATCH
+								208 text /channels/{id}
+								209 text Edit a channel (Manage channels)
+								210 text :id
+								211 table
+									212 row
+										213 cell
+											214 text name
+										215 cell
+											216 text string
+									217 row
+										218 cell
+											219 text category_id
+										220 cell
+											221 text string | null
+									222 row
+										223 cell
+											224 text private
+										225 cell
+											226 text boolean
+									227 row
+										228 cell
+											229 text role_ids
+										230 cell
+											231 text string[]
+									232 row
+										233 cell
+											234 text read_only
+										235 cell
+											236 text boolean
+									237 row
+										238 cell
+											239 text post_role_ids
+										240 cell
+											241 text string[]
+									242 row
+										243 cell
+											244 text slowmode
+										245 cell
+											246 text integer  (≤ 21600)
+								247 text DELETE
+								248 text /channels/{id}
+								249 text Delete a channel
+								250 text :id
+								251 heading Moderation, Value: 2
+									252 text Moderation
+								253 text PATCH
+								254 text /servers/{id}/members/{uid}
+								255 text Set a nickname (Manage nicknames)
+								256 text :id
+								257 text :uid
+								258 container
+									259 container nickname *
+										260 text nickname
+										261 text  *
+									262 container string (≤ 32) · Empty clears it
+										263 text string  (≤ 32)  · Empty clears it
+								264 text PUT
+								265 text /servers/{id}/members/{uid}/roles/{rid}
+								266 text Give a role (Manage roles)
+								267 text :id
+								268 text :uid
+								269 text :rid
+								270 text DELETE
+								271 text /servers/{id}/members/{uid}/roles/{rid}
+								272 text Take a role away
+								273 text :id
+								274 text :uid
+								275 text :rid
+								276 text POST
+								277 text /servers/{id}/kick
+								278 text Kick someone (Kick members)
+								279 text :id
+								280 container
+									281 container user_id *
+										282 text user_id
+										283 text  *
+									284 container string
+										285 text string
+								286 text GET
+								287 text /servers/{id}/bans
+								288 text Bans
+								289 text :id
+								290 text POST
+								291 text /servers/{id}/bans
+								292 text Ban someone (Ban members)
+								293 text :id
+								294 container
+									295 container user_id *
+										296 text user_id
+										297 text  *
+									298 container string
+										299 text string
+								300 text DELETE
+								301 text /servers/{id}/bans/{uid}
+								302 text Unban
+								303 text :id
+								304 text :uid
+								305 text POST
+								306 text /servers/{id}/timeouts
+								307 text Time someone out (Timeout members); minutes 0 clears
+								308 text :id
+								309 table
+									310 row
+										311 cell
+											312 text user_id
+											313 text  *
+										314 cell
+											315 text string
+									316 row
+										317 cell
+											318 text minutes
+										319 cell
+											320 text integer  (≤ 40320)
+									321 row
+										322 cell
+											323 text reason
+										324 cell
+											325 text string  (≤ 200)
+								326 heading Voice, Value: 2
+									327 text Voice
+								328 text GET
+								329 text /servers/{id}/voice
+								330 text Who is in voice, for every voice channel the bot can see (60 a minute)
+								331 text :id
+								332 text POST
+								333 text /servers/{id}/voice/move
+								334 text Move someone who is in voice to another voice channel (Move Members, 30 a minute)
+								335 text :id
+								336 table
+									337 row
+										338 cell
+											339 text user_id
+											340 text  *
+										341 cell
+											342 text string
+									343 row
+										344 cell
+											345 text channel_id
+											346 text  *
+										347 cell
+											348 text string
+								349 text POST
+								350 text /servers/{id}/voice/disconnect
+								351 text Drop someone from voice (Move Members, 30 a minute)
+								352 text :id
+								353 container
+									354 container user_id *
+										355 text user_id
+										356 text  *
+									357 container string
+										358 text string
+								359 text POST
+								360 text /servers/{id}/voice/join
+								361 text A LiveKit ticket so the bot can join a voice channel and play audio (Connect; one audio track, hears nobody; 10 joins and leaves a minute). See Music bots on /developers
+								362 text :id
+								363 container
+									364 container channel_id *
+										365 text channel_id
+										366 text  *
+									367 container string
+										368 text string
+								369 text POST
+								370 text /servers/{id}/voice/leave
+								371 text Take the bot out of voice in this server
+								372 text :id
+								373 heading Messages, Value: 2
+									374 text Messages
+								375 text GET
+								376 text /channels/{id}/messages
+								377 text Messages, oldest first (50, up to 100)
+								378 text :id
+								379 text ?limit
+								380 text ?before
+								381 text ?after
+								382 text POST
+								383 text /channels/{id}/messages
+								384 text Send a message (30 a minute per server; 30 a minute overall, 300 for verified bots)
+								385 text :id
+								386 table
+									387 row
+										388 cell
+											389 text content
+										390 cell
+											391 text string  (≤ 2000)
+									392 row
+										393 cell
+											394 text reply_to
+										395 cell
+											396 text string
+									397 row
+										398 cell
+											399 text embeds
+										400 cell
+											401 text Embed[]  (≤ 5)
+									402 row
+										403 cell
+											404 text components
+										405 cell
+											406 text object[]  (≤ 40)  · Up to 5 rows of buttons, or with flags 32768 a Components V2 layout
+									407 row
+										408 cell
+											409 text flags
+										410 cell
+											411 text integer  · 32768 (IS_COMPONENTS_V2): components is the whole message, no content or embeds
+								412 text POST
+								413 text /channels/{id}/messages/bulk-delete
+								414 text Delete up to 100 messages
+								415 text :id
+								416 container
+									417 container ids *
+										418 text ids
+										419 text  *
+									420 container string[] (≤ 100)
+										421 text string[]  (≤ 100)
+								422 text GET
+								423 text /channels/{id}/messages/{mid}
+								424 text One message
+								425 text :id
+								426 text :mid
+								427 text PATCH
+								428 text /channels/{id}/messages/{mid}
+								429 text Edit the bot's own message (embeds / components: null removes them)
+								430 text :id
+								431 text :mid
+								432 table
+									433 row
+										434 cell
+											435 text content
+										436 cell
+											437 text string  (≤ 2000)
+									438 row
+										439 cell
+											440 text embeds
+										441 cell
+											442 text Embed[]  (≤ 5)
+									443 row
+										444 cell
+											445 text components
+										446 cell
+											447 text object[]  (≤ 40)  · Up to 5 rows of buttons, or with flags 32768 a Components V2 layout
+									448 row
+										449 cell
+											450 text flags
+										451 cell
+											452 text integer  · 32768 (IS_COMPONENTS_V2): components is the whole message, no content or embeds
+								453 text DELETE
+								454 text /channels/{id}/messages/{mid}
+								455 text Delete a message (own, or others with Manage messages)
+								456 text :id
+								457 text :mid
+								458 text PUT
+								459 text /channels/{id}/messages/{mid}/pin
+								460 text Pin
+								461 text :id
+								462 text :mid
+								463 text DELETE
+								464 text /channels/{id}/messages/{mid}/pin
+								465 text Unpin
+								466 text :id
+								467 text :mid
+								468 text GET
+								469 text /channels/{id}/messages/{mid}/reactions
+								470 text Reactions on a message
+								471 text :id
+								472 text :mid
+								473 text PUT
+								474 text /channels/{id}/messages/{mid}/reactions/{emoji}
+								475 text React
+								476 text :id
+								477 text :mid
+								478 text :emoji
+								479 text  URL-encoded unicode emoji DELETE
+								480 text /channels/{id}/messages/{mid}/reactions/{emoji}
+								481 text Remove the bot's reaction
+								482 text :id
+								483 text :mid
+								484 text :emoji
+								485 text  URL-encoded unicode emoji POST
+								486 text /interactions/{id}/{token}/callback
+								487 text Answer a button click (within 15 minutes, up to 10 answers)
+								488 text :id
+								489 text :token
+								490 text  The token from the interaction event
+								491 table
+									492 row
+										493 cell
+											494 text type
+											495 text  *
+										496 cell
+											497 text "reply" | "ephemeral" | "update" | "ack"  · reply: new message in the channel. ephemeral: only the clicker sees it. update: edit the clicked message. ack: just "got it"
+									498 row
+										499 cell
+											500 text content
+										501 cell
+											502 text string | null  (≤ 2000)
+									503 row
+										504 cell
+											505 text embeds
+										506 cell
+											507 text Embed[]  (≤ 5)
+									508 row
+										509 cell
+											510 text components
+										511 cell
+											512 text object[]  (≤ 40)  · reply and update only
+									513 row
+										514 cell
+											515 text flags
+										516 cell
+											517 text integer  · 32768 (IS_COMPONENTS_V2) for a Components V2 layout (reply and update)
+								518 heading Users, Value: 2
+									519 text Users
+								520 text GET
+								521 text /users/{id}
+								522 text A user's public profile
+								523 text :id
+								524 text POST
+								525 text /users/{id}/dm
+								526 text Open (or find) a DM; their DM setting applies
+								527 text :id
+								528 link ← Back to Yapin’, Value: yapin.gg/
+								529 text  · 
+								530 link Remove an intimate image, Value: yapin.gg/remove-image
+							531 container On this page
+								532 text ON THIS PAGE
+								533 content list
+									534 link Overview, Value: yapin.gg/developers/api#top
+									535 link Bot, Value: yapin.gg/developers/api#bot
+									536 link Events, Value: yapin.gg/developers/api#events
+									537 link Servers, Value: yapin.gg/developers/api#servers
+									538 link Channels, Value: yapin.gg/developers/api#channels
+									539 link Moderation, Value: yapin.gg/developers/api#moderation
+									540 link Voice, Value: yapin.gg/developers/api#voice
+									541 link Messages, Value: yapin.gg/developers/api#messages
+									542 link Users, Value: yapin.gg/developers/api#users
+							543 text Yapin’
+							544 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							545 heading Product, Value: 4
+								546 text Product
+							547 content list
+								548 link Download, Value: yapin.gg/download
+								549 link Developers, Value: yapin.gg/developers
+								550 link Yapin’ Plus, Value: yapin.gg/plus
+								551 link Creator Program, Value: yapin.gg/creators
+								552 link Roadmap, Value: yapin.gg/roadmap
+								553 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								554 link Bugs, Value: yapin.gg/bugs
+								555 link Status, Value: yapin.gg/status
+							556 heading Community, Value: 4
+								557 text Community
+							558 content list
+								559 link Guidelines, Value: yapin.gg/guidelines
+								560 link Tutorials, Value: yapin.gg/tutorials
+								561 link Bots, Value: yapin.gg/bots
+							562 heading Legal, Value: 4
+								563 text Legal
+							564 content list
+								565 link Terms, Value: yapin.gg/terms
+								566 link Privacy, Value: yapin.gg/privacy
+								567 link Copyright, Value: yapin.gg/copyright
+								568 link Cancel a subscription, Value: yapin.gg/cancel
+								569 link Contact, Value: mailto:[email redacted]
+							570 text © 2026 Yapper Media LLC. Free to use.
+			571 container
+				572 tab group
+					573 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						574 button Close
+					575 tab (settable, boolean) (23) Yapin’ - Memory usage - 337 MB, Value: off
+						576 button Close
+					577 tab (selected, settable, boolean) Bot API reference · Yapin’ - Memory usage - 128 MB, Value: on
+						578 button Close
+			579 button New Tab
+	580 close button
+	581 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	582 minimize button
+583 menu bar
+	584 Chrome
+	585 File
+	586 Edit
+	587 View
+	588 History
+	589 Bookmarks
+	590 Profiles
+	591 Tab
+	592 Window
+	593 Help
+
+The focused UI element is 19 HTML content Bot API reference · Yapin’, URL: yapin.gg/developers/api

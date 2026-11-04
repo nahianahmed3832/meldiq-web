@@ -1,3 +1,4 @@
+import { ProfileContent } from "./ProfileContent";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -19,7 +20,6 @@ import { acceptConnection, connect, connections, connectionState, invitableCommu
 import { ReportDialog } from "../chat/ReportDialog";
 import { usePhoto } from "../components/photos";
 import { StyledName } from "./NameStyle";
-import { SafeLink } from "../chat/SafeLink";
 import { ProfileEffect, StyledAvatar, useReducedMotion } from "./ProfileStyle";
 import { ArtistDecorations } from "./ArtistDecorations";
 import { ProfilePins } from "./ProfilePins";
@@ -30,7 +30,6 @@ import { toneOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { directory } from "../../sync/workspaces";
 import { relative } from "../format";
-import { ProfileConnections } from "./ProfileConnections";
 type Profile = Awaited<ReturnType<typeof userProfile>>;
 /** Opens someone's profile from anywhere (a name in a message, a member list): the shell shows the dialog. */
 export const OPEN_PROFILE_EVENT = "meldiq:open-profile";
@@ -367,29 +366,7 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
                 )}
               </>
             )}
-            {profile.aboutMe && (
-              <section className="profile-box" aria-label={uiText("files.interface.about_me_1359ec8")}>
-                <h3>
-                  <Localized k="files.interface.about_me_1359ec8" />
-                </h3>
-                <p className="profile-about">{profile.aboutMe}</p>
-              </section>
-            )}
-            {profile.links.length > 0 && (
-              <section className="profile-box" aria-label={uiText("messaging.interface.links_9024c19")}>
-                <h3>
-                  <Localized k="messaging.interface.links_9024c19" />
-                </h3>
-                <ul className="profile-links">
-                  {profile.links.map((l) => (
-                    <li key={l.url}>
-                      <SafeLink href={l.url}>{l.label}</SafeLink>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-            {features.includes("connections-v2") && <ProfileConnections list={profile.connections} />}
+            <ProfileContent profile={profile} connections={features.includes("connections-v2")} />
             {error && (
               <div className="banner danger" role="alert">
                 {error}

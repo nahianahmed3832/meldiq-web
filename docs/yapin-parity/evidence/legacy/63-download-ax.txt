@@ -1,0 +1,158 @@
+Window: "Download Yapin’ for Windows and Linux", App: Google Chrome.
+0 standard window Download Yapin’ for Windows and Linux - Google Chrome - Nahian, URL: yapin.gg/download, Secondary Actions: Raise
+	1 container Download Yapin’ for Windows and Linux - Google Chrome - Nahian, URL: yapin.gg/download
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/download, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Download Yapin’ for Windows and Linux, URL: yapin.gg/download
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 text DESKTOP APP
+								30 heading Yapin’, on your desktop., Value: 1
+									31 text Yapin’, on your desktop.
+								32 text Same Yapin’, in its own window. Faster, quieter, and it knows what you're playing.
+								33 link Use the web app No Mac app yet., Value: yapin.gg/
+								34 link Also for Windows, Value: yapin.gg/download/windows
+								35 link Also for Linux, Value: yapin.gg/download/linux
+								36 text Free, no account needed to download No Mac app yet, use the website for now
+								37 image The Yapin’ desktop client showing a server with text and voice channels.
+							38 container
+								39 heading Why the app, Value: 2
+									40 text Why the app
+								41 text Screen share Pick a screen or an app from live previews. Whole screens share game audio too. Shows what you’re playing Friends see "Playing Fortnite" under your name while the game runs. Only the name leaves your PC. Lives in your tray Close the window and calls keep going. Start with Windows if you want.
+							42 container
+								43 heading How to get it, Value: 2
+									44 text How to get it
+								45 text Windows
+								46 content list
+									47 container
+										48 AXListMarker 1. 
+										49 text Hit 
+										50 link Download for Windows, Value: yapin.gg/download/windows
+										51 text . You get  Yapper-Setup.exe .
+									52 container
+										53 AXListMarker 2. 
+										54 text Open it from your Downloads.
+									55 container
+										56 AXListMarker 3. 
+										57 text If a blue  "Windows protected your PC"  box pops up, click  More info , then  Run anyway . That shows up for every new app without a paid certificate.
+									58 container
+										59 AXListMarker 4. 
+										60 text It installs by itself in a few seconds and opens. Log in like on the website.
+									61 container
+										62 AXListMarker 5. 
+										63 text Done. Yapin’ is in your Start menu and tray, and updates itself.
+								64 text Linux
+								65 content list
+									66 container
+										67 AXListMarker 1. 
+										68 text Hit 
+										69 link Download for Linux, Value: yapin.gg/download/linux
+										70 text . You get  Yapper-Setup.AppImage .
+									71 container
+										72 AXListMarker 2. 
+										73 text Make it runnable: right-click it,  Properties , tick  Allow executing as program . Or run  chmod +x Yapper-Setup.AppImage
+									74 container
+										75 AXListMarker 3. 
+										76 text Double-click it. No install, no root.
+									77 container
+										78 AXListMarker 4. 
+										79 text Won't open? Install FUSE:  sudo apt install libfuse2  (on Ubuntu 24.04 it's  libfuse2t64 ).
+								80 text On a Mac or a phone? There's no app for those yet, just use 
+								81 link yapin.gg, Value: yapin.gg/
+								82 text  in your browser. On a phone, "Add to Home Screen" gives you an icon too.
+							83 container
+								84 heading Questions, Value: 2
+									85 text Questions
+								86 content list
+									87 container
+										88 heading Is it safe? Windows says it's unrecognised., Value: 3
+											89 button Is it safe? Windows says it's unrecognised.
+										90 text That warning appears for any new app without a paid code-signing certificate. The installer is built automatically from the Yapin’ source, and that exact build is what you download here. It goes away as more people install it, or once we buy a certificate.
+									91 container
+										92 heading What does it send?, Value: 3
+											93 button What does it send?
+										94 text The same things the website does, plus the name of a game you're playing while it runs (you can turn that off in Settings → Activity). Nothing else from your computer.
+									95 container
+										96 heading Does it update by itself?, Value: 3
+											97 button Does it update by itself?
+										98 text Yes. It checks on start and every few hours, downloads quietly, and installs when you quit.
+									99 container
+										100 heading Phone?, Value: 3
+											101 button Phone?
+										102 text Open yapin.gg in your phone browser and use "Add to Home Screen". You get an icon and full-screen Yapin’.
+								103 link Use the website instead, Value: yapin.gg/
+							104 text Yapin’
+							105 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							106 heading Product, Value: 4
+								107 text Product
+							108 content list
+								109 link Download, Value: yapin.gg/download
+								110 link Developers, Value: yapin.gg/developers
+								111 link Yapin’ Plus, Value: yapin.gg/plus
+								112 link Creator Program, Value: yapin.gg/creators
+								113 link Roadmap, Value: yapin.gg/roadmap
+								114 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								115 link Bugs, Value: yapin.gg/bugs
+								116 link Status, Value: yapin.gg/status
+							117 heading Community, Value: 4
+								118 text Community
+							119 content list
+								120 link Guidelines, Value: yapin.gg/guidelines
+								121 link Tutorials, Value: yapin.gg/tutorials
+								122 link Bots, Value: yapin.gg/bots
+							123 heading Legal, Value: 4
+								124 text Legal
+							125 content list
+								126 link Terms, Value: yapin.gg/terms
+								127 link Privacy, Value: yapin.gg/privacy
+								128 link Copyright, Value: yapin.gg/copyright
+								129 link Cancel a subscription, Value: yapin.gg/cancel
+								130 link Contact, Value: mailto:[email redacted]
+							131 text © 2026 Yapper Media LLC. Free to use.
+			132 container
+				133 tab group
+					134 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						135 button Close
+					136 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						137 button Close
+					138 tab (selected, settable, boolean) Download Yapin’ for Windows and Linux - Memory usage - 572 MB, Value: on
+						139 button Close
+			140 button New Tab
+	141 close button
+	142 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	143 minimize button
+144 menu bar
+	145 Chrome
+	146 File
+	147 Edit
+	148 View
+	149 History
+	150 Bookmarks
+	151 Profiles
+	152 Tab
+	153 Window
+	154 Help
+
+The focused UI element is 19 HTML content Download Yapin’ for Windows and Linux, URL: yapin.gg/download

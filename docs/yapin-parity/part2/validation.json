@@ -1,0 +1,75 @@
+{
+  "status": "PASS_LOCAL_WITH_DOCUMENTED_RELEASE_GATES",
+  "date": "2026-11-04",
+  "timezone": "Asia/Shanghai",
+  "webBaseline": "1f18c4a4e503c2aba263082b56d3d0db436e3736",
+  "apiBaseline": "bd20d747e3a4a768b823263cab017b9d9e0017c4",
+  "environment": "isolated local synthetic accounts, SQLite/file-mail API, built static Web; no production data or deployment",
+  "webUnit": {
+    "filesPassed": 143,
+    "passed": 973,
+    "skipped": 1,
+    "exitCode": 0
+  },
+  "backendFocused": {
+    "filesPassed": 4,
+    "passed": 54,
+    "exitCode": 0
+  },
+  "browser": {
+    "projects": [
+      "chromium",
+      "phone-width"
+    ],
+    "uniqueScenarios": 46,
+    "passedAfterCorrection": 41,
+    "expectedSkipped": 5,
+    "mainRun": {
+      "passed": 39,
+      "failed": 2,
+      "skipped": 5,
+      "failureCause": "passkey spec hardcoded port 5181; local server intentionally on 5291"
+    },
+    "correctedTargetedRun": {
+      "passed": 4,
+      "skipped": 2,
+      "failed": 0,
+      "scope": "two passkey cases and expanded capability-retry/empty-login case on both projects; phone passkey cases intentionally skipped"
+    },
+    "finalOnboardingRun": {
+      "passed": 2,
+      "failed": 0,
+      "scope": "fresh account name preservation, real resend/old-code invalidation, avatar, preferences/language, resume/reload, reduced phone mascot layout"
+    },
+    "limitations": [
+      "Chromium emulation, not physical devices",
+      "virtual passkey authenticator, not external human provider consent",
+      "local PWA/security headers, not production service observations"
+    ]
+  },
+  "checks": {
+    "webTypecheck": "PASS via final build",
+    "backendTypecheck": "PASS",
+    "eslint": "PASS; zero warnings",
+    "prettierFullSourceCheck": "PASS",
+    "i18n": "PASS; all 28 locales, 6232 keys each, zero structural errors/hardcoded candidates",
+    "productionBuild": "PASS with NEXT_PUBLIC_MELDIQ_TEST_LINKING=0",
+    "backendPatchApplyCheck": "PASS against clean bd20d747 baseline"
+  },
+  "sourceManifest": "source-manifest.json",
+  "remainingReleaseGates": [
+    "Versioned durable server policy acceptance and public policy publication",
+    "Physical Android/Windows and external provider consent",
+    "Current API overlay/PostgreSQL integration and native optional-layout preservation",
+    "Feature-specific remaining cases in all 118 row dispositions",
+    "No new cosmetic economy, partner/creator settlement or comments without approved contracts"
+  ],
+  "productionMutations": false,
+  "normalBuildIndexSha256": "5378405ec7438f89b6c2fcb76ddf9ec94006c70d4ad2c5d54f78aa5381971eef",
+  "apiCommit": "598f7c1d",
+  "manualNormalRelease": {
+    "signup": "13+ declaration observed, no submission",
+    "accountHelp": "test phone linking absent, existing recovery choices present"
+  },
+  "documentationQA": "QA_REPORT.md"
+}

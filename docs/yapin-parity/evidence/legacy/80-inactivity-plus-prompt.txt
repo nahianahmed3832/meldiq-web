@@ -1,0 +1,36 @@
+container Yapin’ Plus
+								103 container
+									104 button Close
+									105 text Help keep Yapin’ running No investors. Plus is how Yapin’ pays for servers and storage.
+								106 content list
+									107 text 100 MB uploads
+									108 text 1080p 60 fps screen share
+									109 text PLUS badge next to your name
+									110 text 1 free supercharge for a server
+								111 button Get Plus · $4.99/mo
+								112 button Not now
+			113 container
+				114 tab group
+					115 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						116 button Close
+					117 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: on
+						118 button Close
+					119 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						120 button Close
+			121 button New Tab
+	122 close button
+	123 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	124 minimize button
+125 menu bar
+	126 Chrome
+	127 File
+	128 Edit
+	129 View
+	130 History
+	131 Bookmarks
+	132 Profiles
+	133 Tab
+	134 Window
+	135 Help
+
+The focused UI element is 19 HTML content (28) Yapin’, URL: yapin.gg/

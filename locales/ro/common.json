@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "Dezactivat"
+  },
+  "password": {
+    "show": "Arată parola",
+    "hide": "Ascunde parola"
+  },
+  "navigation": {
+    "skipToContent": "Sari la conținutul principal"
   }
 }

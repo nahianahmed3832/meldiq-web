@@ -1,0 +1,96 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 button Close
+							22 text Welcomer BOT The friendly face at the door Off
+							23 checkbox Off, Value: 0
+							24 text Warm and short. Says hi once, tags the newcomer so they see it, never spams.
+							25 content list
+								26 text Greets every new member
+								27 text Your own wording
+								28 text Knows the member count
+								29 text Picks #general by itself
+							30 text Welcomer
+							31 text BOT
+							32 text Welcome to Meldiq, @nahian! 👋 Welcomer+
+							33 text PLUS
+							34 table
+								35 row
+									36 column header
+										37 text FREE
+									38 column header
+										39 text WELCOMER+
+								40 row
+									41 cell
+										42 text Greets new members
+									43 cell
+										44 image Yes
+									45 cell
+										46 image Yes
+								47 row
+									48 cell
+										49 text Your own wording
+									50 cell
+										51 image Yes
+									52 cell
+										53 image Yes
+								54 row
+									55 cell
+										56 text Welcome lines
+									57 cell
+										58 text 1
+									59 cell
+										60 text up to 10, random
+								61 row
+									62 cell
+										63 text Goodbye message when someone leaves
+									64 cell
+										65 container No
+											66 text ✕
+									67 cell
+										68 image Yes
+							69 button Get Bots+ · $3.99/mo
+							70 text Renews every month at $3.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+							71 link yapin.gg/cancel
+							72 text . Bots+ is one subscription for this server: it unlocks the Plus extras of every Yapin’ bot together. Saved
+							73 button (disabled) Save
+			74 container
+				75 tab group
+					76 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 151 MB, Value: on
+						77 button Close
+			78 button New Tab
+	79 close button
+	80 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	81 minimize button
+82 menu bar
+	83 Chrome
+	84 File
+	85 Edit
+	86 View
+	87 History
+	88 Bookmarks
+	89 Profiles
+	90 Tab
+	91 Window
+	92 Help
+
+The focused UI element is 23 checkbox Off, Value: 0

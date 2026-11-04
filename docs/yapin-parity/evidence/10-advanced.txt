@@ -1,0 +1,44 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Advanced, Value: 2
+			177 text Advanced
+		178 text Desktop notifications
+		179 text Get a pop-up for new messages while Yapin’ isn’t in focus.
+		180 button Turn on
+		181 container
+			182 text Developer Mode Adds Copy Server, Channel, Category, Message and User ID to right-click menus, for building bots with the Yapin’ API.
+			183 checkbox (settable, integer) Value: 0, Description: Developer Mode Adds Copy Server, Channel, Category, Message and User ID to right-click menus, for building bots with the Yapin’ API.
+		184 container
+			185 text Making a bot? See the 
+			186 link Description: developer docs, Value: yapin.gg/developers
+			187 text .
+		188 container
+			189 text Join the staff team 18+ only
+		190 text Help moderate Yapin’: reports, spam and raids.
+		191 button Apply for staff
+		192 text TRUSTED SITES
+		193 text Links to sites you trust open without asking. You haven't trusted any yet.
+		174 button Close
+			175 image
+
+The focused UI element is 19 button Advanced

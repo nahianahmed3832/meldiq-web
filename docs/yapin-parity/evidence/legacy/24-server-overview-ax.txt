@@ -1,0 +1,141 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 heading Server profile, Value: 2
+								44 text Server profile
+							45 text How your server appears in invite links and Discovery.
+							46 container Change icon
+								47 text Me
+							48 text A square image works best. GIFs move here too.
+							49 text Upload image
+							50 button Me Upload image: No file chosen
+							51 text SERVER BANNER
+							52 text A wide image shown at the top of the channel list. You can drag and zoom to frame it.
+							53 text Upload banner
+							54 button Upload banner: No file chosen
+							55 text SERVER NAME
+							56 text field (settable) SERVER NAME, Value: Meldiq
+							57 button (disabled) Save
+							58 text CUSTOM INVITE LINK
+							59 text Unlocks at 5 members (you have 1).
+							60 text yapin.gg/invite/
+							61 text field (disabled) CUSTOM INVITE LINK, Placeholder: yourserver
+							62 button (disabled) Save
+							63 text SERVER TEMPLATE
+							64 text Let people create a server with the same channels, roles and permissions. No messages or members are shared.
+							65 button Create template link
+							66 text LINKS
+							67 button + Add link
+							68 text SERVER TAG
+							69 text 2 to 4 letters or numbers. Members can wear it next to their name everywhere on Yapin’ (Settings → Profile).
+							70 text TAG
+							71 text field (settable) e.g. YAP
+							72 button (disabled) Save
+							73 text DISCOVERY
+							74 container
+								75 text Show in Discovery Servers are public by default: anyone can find and join from the compass button. Turn this off to be invite-only. Listed once you have 5 members (you have 1).
+								76 checkbox Value: 1, Show in Discovery Servers are public by default: anyone can find and join from the compass button. Turn this off to be invite-only. Listed once you have 5 members (you have 1).
+							77 text field (settable) Discovery description, Placeholder: One line about the server (shown on the card)
+							78 text field (settable) Discovery tags, Placeholder: Tags, comma-separated (up to 5): gaming, music, art
+							79 button (disabled) Save
+							80 text RAID PROTECTION
+							81 text Locked: nobody new can join and only people who can manage messages can post. Yapin’ locks a server by itself for 15 minutes after 60 joins in a minute, and puts a 5-second slowmode on a channel that gets 30 messages from 6 people in 10 seconds.
+							82 button Lock for 15 min
+							83 button Lock for 1 hour
+							84 button Lock for a day
+							85 text VERIFICATION LEVEL
+							86 text What people need before they can talk here. Mods, people with roles and bots skip it.
+							87 combo box (settable) Verification level, Value: Medium
+								88 text Medium
+							89 text Accounts older than 5 minutes, and in this server for 5 minutes.
+							90 text NEW ACCOUNTS
+							91 text Stops raids from freshly made accounts. Mods and Yapin’ staff are never blocked.
+							92 combo box (settable) New account age, Value: Off
+								93 text Off
+							94 text WHO CAN JOIN
+							95 text What happens when someone opens your invite link.
+							96 combo box (settable) Who can join, Value: Anyone with the link
+								97 text Anyone with the link
+							98 text People join the moment they open the link.
+							99 text TICKETS
+							100 container
+								101 text Let members open tickets A ticket is a private channel between one member and everyone who can manage messages. They open it from the server menu; it lands in a Tickets category. Close it from the channel header when done.
+								102 checkbox Value: 0, Let members open tickets A ticket is a private channel between one member and everyone who can manage messages. They open it from the server menu; it lands in a Tickets category. Close it from the channel header when done.
+							103 text CLIPS
+							104 container
+								105 text Allow clips in voice channels Members can save the last few seconds of a call or stream and post them. Off: the Clip button is gone in this server’s calls.
+								106 checkbox Value: 1, Allow clips in voice channels Members can save the last few seconds of a call or stream and post them. Off: the Clip button is gone in this server’s calls.
+							107 text RULES CHANNEL
+							108 combo box (settable) Rules channel, Value: No rules channel
+								109 text No rules channel
+							110 text Gets a book icon, only people who can manage the server can post in it, and new members get a nudge to read it first.
+							111 text Delete server
+							112 text Everything in it goes too. No take-backs.
+							113 button Delete server
+							114 container
+								115 text Me Meldiq
+								116 text 1 online
+								117 text 1 Member Est. Oct 2026
+							118 button Close
+			119 container
+				120 tab group
+					121 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						122 button Close
+			123 button New Tab
+	124 close button
+	125 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	126 minimize button
+127 menu bar
+	128 Chrome
+	129 File
+	130 Edit
+	131 View
+	132 History
+	133 Bookmarks
+	134 Profiles
+	135 Tab
+	136 Window
+	137 Help
+
+The focused UI element is 21 combo box (settable) Search settings

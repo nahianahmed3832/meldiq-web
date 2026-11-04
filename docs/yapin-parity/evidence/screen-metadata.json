@@ -1,0 +1,3805 @@
+[
+  {
+    "id": "SCR-001",
+    "screenshot": "screenshots/current/01-private-server.jpg",
+    "purpose": "Private server and empty general channel",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Server rail; categories; conversation; composer; member list",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Select channel; open member; compose controls",
+    "interaction": "General changes from a loading indicator to a welcome empty state. No message sent.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/shell; ConversationView.tsx",
+    "features": [
+      "YAP-SHELL-010",
+      "YAP-MSG-006"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "a3d1228d1c91c767e644bdb79f7bbb2f987c7d73e8762dcda87397382119ed36"
+  },
+  {
+    "id": "SCR-002",
+    "screenshot": "screenshots/current/02-profile.jpg",
+    "purpose": "Profile identity and live preview",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Identity/About/Looks/Privacy fields; preview; section ordering",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Edit identity; upload; select tag badge accessories; reorder sections",
+    "interaction": "Controls inspected; no identity or privacy save performed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings/ProfilePage.tsx; ProfileDialog.tsx",
+    "features": [
+      "YAP-PROFILE-001",
+      "YAP-PROFILE-002",
+      "YAP-PROFILE-003",
+      "YAP-PROFILE-004",
+      "YAP-PROFILE-006",
+      "YAP-PROFILE-007",
+      "YAP-PROFILE-008",
+      "YAP-PROFILE-009",
+      "YAP-PROFILE-010",
+      "YAP-PROFILE-011",
+      "YAP-PROFILE-012",
+      "YAP-PROFILE-013",
+      "YAP-PROFILE-016",
+      "YAP-PROFILE-017",
+      "YAP-PROFILE-018",
+      "YAP-PROFILE-019",
+      "YAP-PROFILE-020",
+      "YAP-PROFILE-021",
+      "YAP-LOOK-003",
+      "YAP-LOOK-013",
+      "YAP-LOOK-014"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "8ecb06a851822cfb2e01d1206eaf03ea9b4dc6850bb8866022865030a47361b9"
+  },
+  {
+    "id": "SCR-003",
+    "screenshot": "screenshots/current/04-appearance.jpg",
+    "purpose": "Application appearance and reading comfort",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Theme palette; custom colors; density; spacing; reduced motion",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Choose presets; adjust controls; reset supported preferences",
+    "interaction": "Options observed; persistent theme changes not performed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "AppearanceExtras.tsx; application/prefs.ts",
+    "features": [
+      "YAP-PREF-001",
+      "YAP-PREF-002",
+      "YAP-PREF-003",
+      "YAP-PREF-004",
+      "YAP-PREF-005",
+      "YAP-PREF-006",
+      "YAP-PREF-007",
+      "YAP-PREF-008",
+      "YAP-PREF-009",
+      "YAP-PREF-010",
+      "YAP-PREF-011",
+      "YAP-PREF-012"
+    ],
+    "dimensions": [
+      1096,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "a623f738215315bdb902615aad4d838d51ea7965a9237cd08e94876ab8b6650c"
+  },
+  {
+    "id": "SCR-004",
+    "screenshot": "screenshots/current/05-chat.jpg",
+    "purpose": "Quick reaction preferences",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Reaction slots; add/change controls; sync description",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Configure three to five quick reactions",
+    "interaction": "Controls observed; changes not saved.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Reactions.tsx; ExpressionPicker.tsx",
+    "features": [
+      "YAP-MSG-009"
+    ],
+    "dimensions": [
+      1096,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "1375e1f98cd8b63f1c1a6780249072080e62e5235c5aa0c48b5dc2efa692a710"
+  },
+  {
+    "id": "SCR-005",
+    "screenshot": "screenshots/current/06-sounds.jpg",
+    "purpose": "Sound preferences by event",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Global volume; per-event toggles; play controls; reset",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Preview sounds; change event switches; reset",
+    "interaction": "Control inventory only; no audio playback or saved changes.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "NotificationOverview.tsx; application/prefs.ts",
+    "features": [
+      "YAP-PREF-018",
+      "YAP-PREF-019",
+      "YAP-NOTIFY-005"
+    ],
+    "dimensions": [
+      1096,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "6aedc0ad311675ffb1f1ae3b306b203af6e516b6fa8b3709660d706c624d168e"
+  },
+  {
+    "id": "SCR-006",
+    "screenshot": "screenshots/current/07-language.jpg",
+    "purpose": "Application language choices",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Language list with selected locale",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Select a language",
+    "interaction": "List observed; no locale changed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "i18n; LanguagePicker.tsx",
+    "features": [
+      "YAP-PREF-013"
+    ],
+    "dimensions": [
+      1096,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "d8956c5142e75860f4fed2f2c4c7383208966970ab00aeac1d1ed1e8965d0fb1"
+  },
+  {
+    "id": "SCR-007",
+    "screenshot": "screenshots/current/08-voice-audio.jpg",
+    "purpose": "Voice devices processing and clip consent",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Device selects; meters; volume; input mode; processing; clips",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Test mic; choose devices; configure consent",
+    "interaction": "No mic permission or recording granted. Clip capture behavior unverified.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings/CallsPage.tsx; src/call",
+    "features": [
+      "YAP-VOICE-003",
+      "YAP-VOICE-004",
+      "YAP-VOICE-005",
+      "YAP-VOICE-006",
+      "YAP-VOICE-007",
+      "YAP-VOICE-008",
+      "YAP-VOICE-009",
+      "YAP-VOICE-023",
+      "YAP-VOICE-024"
+    ],
+    "dimensions": [
+      1096,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "76df668a574c91251f6bf6f49785abfb0673b310d590ea986f1cdc3e62e71252"
+  },
+  {
+    "id": "SCR-008",
+    "screenshot": "screenshots/current/09-keybinds.jpg",
+    "purpose": "Keyboard help and rebinding",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Binding rows; off switches; platform modifier labels",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Record binding; cancel; open shortcut list",
+    "interaction": "Rows observed; no binding changed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ShortcutsPage.tsx; application/shortcuts.ts",
+    "features": [
+      "YAP-PREF-014",
+      "YAP-PREF-015"
+    ],
+    "dimensions": [
+      1096,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "8cbcc7425b4d4320a1f5a133cd23128720688d324b54b14d7be59d11300088c1"
+  },
+  {
+    "id": "SCR-009",
+    "screenshot": "screenshots/current/10-advanced.jpg",
+    "purpose": "Advanced preferences and developer access",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Notifications; developer mode; staff application; trusted sites",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Enable notifications; inspect trusted origins; apply for staff",
+    "interaction": "Permission requests and applications not submitted.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "AdvancedPage.tsx; SpecializedPages.tsx",
+    "features": [
+      "YAP-PREF-016",
+      "YAP-PREF-017",
+      "YAP-MOD-018",
+      "YAP-NOTIFY-006"
+    ],
+    "dimensions": [
+      1096,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "7fedcba4ae68b12a8a875b1c5634957e31b68bace797d53377dfd0c9f88b8bb5"
+  },
+  {
+    "id": "SCR-010",
+    "screenshot": "screenshots/current/11-developer.jpg",
+    "purpose": "Owned bots and OAuth applications",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Bot creation; quota; documentation; app creation",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "New bot; New app; open docs",
+    "interaction": "No token or OAuth app generated; initial loading may be visible in the capture.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/developer; src/ui/oauth",
+    "features": [
+      "YAP-DEV-001",
+      "YAP-DEV-015"
+    ],
+    "dimensions": [
+      1096,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "038fc52f4e4e0f058a1019fbb8d9bd7d3071f7cf1477e65812de6fd139df413f"
+  },
+  {
+    "id": "SCR-011",
+    "screenshot": "screenshots/current/12-subscriptions.jpg",
+    "purpose": "Account subscription inventory",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Recurring-payment explanation; settled no-subscriptions empty state; support",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Review subscriptions; cancel where eligible",
+    "interaction": "Revisited after loading and confirmed no subscriptions; no billing action.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "deployed src/ui/billing; sync/mojo.ts",
+    "features": [
+      "YAP-BILL-004"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "21a58e4247d317268b9434f892fe692688014052bf24b8622ef0ef780c7164dc"
+  },
+  {
+    "id": "SCR-012",
+    "screenshot": "screenshots/current/13-creators.jpg",
+    "purpose": "Creator eligibility and verification",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Eligibility checklist; channel proof fields; disabled submission",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Select provider; add proof; apply when eligible",
+    "interaction": "Proof and eligibility observed; no application or upload.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "CreatorsPage.tsx; CreatorVerificationCard.tsx",
+    "features": [
+      "YAP-PROFILE-022",
+      "YAP-PROFILE-023"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "3ca9ea897006036daf621bf3db8340aa20c4ad165be91659ff20824e844623b8"
+  },
+  {
+    "id": "SCR-013",
+    "screenshot": "screenshots/current/14-leaderboards.jpg",
+    "purpose": "Public ranking categories and privacy",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Level/Messages/Voice/Shards/Gifts/Invites tabs; settled ranking rows; privacy control",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Change metric; toggle visibility",
+    "interaction": "Revisited after loading; ranking calculation and privacy changes not tested.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/leaderboards; sync/leaderboards.ts",
+    "features": [
+      "YAP-NOTIFY-010"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "f4c4a510802d5a312c1eaa54d7e2579a60c30c258889ad07a5edabdcd708bbb7"
+  },
+  {
+    "id": "SCR-014",
+    "screenshot": "screenshots/current/15-shards.jpg",
+    "purpose": "Earned currency and creator economy",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Balance; earnings; level purchase; decorations; seller rules",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "View history; browse; level up when eligible",
+    "interaction": "No spend or sale; copied figures are an observed account snapshot.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/points; CollectionStudio.tsx",
+    "features": [
+      "YAP-LOOK-010",
+      "YAP-NOTIFY-011",
+      "YAP-NOTIFY-012",
+      "YAP-BILL-013",
+      "YAP-BILL-014"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "89c752081978e45a5baf4bef01ed3d199fcde18c954adaa055f24f6f1b8b6935"
+  },
+  {
+    "id": "SCR-015",
+    "screenshot": "screenshots/current/16-plus.jpg",
+    "purpose": "Plus benefits and gifting",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Price; catalog comparison; tenure badges; recurring terms",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Begin checkout; open gift entry",
+    "interaction": "Purchase and benefit delivery not tested.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "MojoPage.tsx; billing; catalog",
+    "features": [
+      "YAP-MSG-002",
+      "YAP-BILL-001",
+      "YAP-BILL-002",
+      "YAP-BILL-003",
+      "YAP-BILL-007",
+      "YAP-BILL-008",
+      "YAP-BILL-015"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "9ced395bde5eda297d579267c6f55744e0dd15359b57602d2c8d30d3ea8958d0"
+  },
+  {
+    "id": "SCR-016",
+    "screenshot": "screenshots/current/17-server-menu.jpg",
+    "purpose": "Owner server context menu",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Invite; boosts; events; settings; bots; safety; notifications",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Open management forms and contextual actions",
+    "interaction": "Menu opened; no lock invite deletion or purchase executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "communityMenu.tsx; WorkspaceView.tsx",
+    "features": [
+      "YAP-COMM-007",
+      "YAP-COMM-024",
+      "YAP-COMM-026"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "115b73a7f9682a4ca5264b3faefa9950141e3f8e803bca4a038bbce45b2e5bed"
+  },
+  {
+    "id": "SCR-017",
+    "screenshot": "screenshots/current/18-server-overview.jpg",
+    "purpose": "Server identity discoverability and features",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Identity; tag; discovery; invites; rules; ticket/clip switches",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Edit profile; configure visibility; select rules channel",
+    "interaction": "Private research server retains Discovery off; no configuration saved here.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "OverviewPage.tsx; RulesPage.tsx",
+    "features": [
+      "YAP-COMM-002",
+      "YAP-COMM-004",
+      "YAP-COMM-008",
+      "YAP-COMM-009",
+      "YAP-COMM-010",
+      "YAP-COMM-011",
+      "YAP-COMM-012",
+      "YAP-COMM-019",
+      "YAP-COMM-020",
+      "YAP-VOICE-025"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "9ed86bc804025185377d2d55c5f5827d1021f4651d9d87ba23318f49717756b8"
+  },
+  {
+    "id": "SCR-018",
+    "screenshot": "screenshots/current/19-homepage.png",
+    "purpose": "First visitor homepage",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Header; product hero; app/download CTA; FAQ; footer",
+    "layout": "Public header, hero, product sections, FAQ and footer.",
+    "actions": "Open login; expand FAQs; follow product and policy links",
+    "interaction": "Incognito visitor surface; no signup or provider consent completed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website workspace",
+    "features": [
+      "YAP-WEB-001",
+      "YAP-WEB-002",
+      "YAP-WEB-003",
+      "YAP-WEB-004",
+      "YAP-WEB-018"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "8db2903b1edc3ab629453e5f55dcb686615d385fefaae3a509707e3283d4c5c4"
+  },
+  {
+    "id": "SCR-019",
+    "screenshot": "screenshots/current/20-server-safety.jpg",
+    "purpose": "Community safety gates",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Temporary locks; verification level; new-account age; join mode",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Select policy; lock if authorized",
+    "interaction": "Some join-mode controls disabled; no safety settings changed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ModerationPages.tsx; backend community safety",
+    "features": [
+      "YAP-MOD-001",
+      "YAP-MOD-002",
+      "YAP-MOD-003",
+      "YAP-MOD-004",
+      "YAP-MOD-005"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "259b3a72a85aa210b62baa6237e3746366d43c3c5eaf2072e59157c1fdf85aa6"
+  },
+  {
+    "id": "SCR-020",
+    "screenshot": "screenshots/current/21-login.png",
+    "purpose": "Visitor sign-in form",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Google/passkey; email or username; password; challenge; recovery",
+    "layout": "Centered visitor authentication form inside native Incognito Chrome.",
+    "actions": "Log in; reveal password; recover; register",
+    "interaction": "Empty required-field validation exercised; no credentials entered. Clean capture excludes autofill.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "AuthScreen.tsx; AccountForms.tsx",
+    "features": [
+      "YAP-AUTH-001",
+      "YAP-AUTH-002",
+      "YAP-AUTH-003",
+      "YAP-AUTH-004",
+      "YAP-AUTH-005"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "8a1d943a3a5fef5dbfcec265bba33bfb82d40ef676f622c132f84e467c933b8d"
+  },
+  {
+    "id": "SCR-021",
+    "screenshot": "screenshots/current/22-registration.png",
+    "purpose": "New account signup form",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Email; username; password; birth month/year; agreement; CAPTCHA",
+    "layout": "Centered visitor authentication form inside native Incognito Chrome.",
+    "actions": "Sign up; use Google; return to login",
+    "interaction": "No terms accepted or challenge solved by agent. Human registration pending.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "AccountForms.tsx; account session",
+    "features": [
+      "YAP-AUTH-006",
+      "YAP-AUTH-007",
+      "YAP-AUTH-008",
+      "YAP-AUTH-009",
+      "YAP-AUTH-010"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "5f2f14773d97a275b32858e0a0d76bce39ea03748a342b17019bc57ac7e758bd"
+  },
+  {
+    "id": "SCR-022",
+    "screenshot": "screenshots/current/23-password-recovery.png",
+    "purpose": "Password reset request",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Email; challenge; reset action; login and forgotten-email help",
+    "layout": "Centered visitor authentication form inside native Incognito Chrome.",
+    "actions": "Request reset; expand account identification help",
+    "interaction": "No email submitted and no credential changed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "RecoverForms.tsx",
+    "features": [
+      "YAP-AUTH-013",
+      "YAP-AUTH-014"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "f5f6bf5cdd7cc8da66637f9a2d9afa8e2a7ae56588fc4782f3f23911eb33fd1e"
+  },
+  {
+    "id": "SCR-023",
+    "screenshot": "screenshots/current/25-server-theme.jpg",
+    "purpose": "Community colors",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Accent presets; custom hex; background tint; save",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Preview and save colors",
+    "interaction": "Observed only; unsaved settings not applied.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "workspace/ThemePage.tsx",
+    "features": [
+      "YAP-COMM-018"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "4ec178cbce5572c8a87af7d036320268409d5664f7be68882b2cc5aac6de3994"
+  },
+  {
+    "id": "SCR-024",
+    "screenshot": "screenshots/current/26-server-channels.jpg",
+    "purpose": "Channel and category organization",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Tree rows; reorder arrows; keyboard instructions",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Move channels; collapse; edit category",
+    "interaction": "Existing research structure inspected; no order mutation.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "workspace/ChannelsPage.tsx",
+    "features": [
+      "YAP-CHANNEL-001",
+      "YAP-CHANNEL-002",
+      "YAP-CHANNEL-005",
+      "YAP-CHANNEL-006",
+      "YAP-CHANNEL-007",
+      "YAP-CHANNEL-010",
+      "YAP-CHANNEL-011",
+      "YAP-CHANNEL-012"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "02d905ba7a924ac95581134242978df7232d093868068c3c674a1e4f9bc6ce47"
+  },
+  {
+    "id": "SCR-025",
+    "screenshot": "screenshots/current/27-server-onboarding.jpg",
+    "purpose": "Community onboarding settings",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Enable; require completion; starting channel; questions",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Add question; configure roles; save",
+    "interaction": "New-member execution unverified; settings not saved.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "GuidePages.tsx; GuideOnboarding.tsx",
+    "features": [
+      "YAP-COMM-021",
+      "YAP-COMM-022"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "b356a00ffe7df66169560233839b3d480beec0d6967a06dbef8a8a146d5d12cc"
+  },
+  {
+    "id": "SCR-026",
+    "screenshot": "screenshots/current/28-server-ping-roles.jpg",
+    "purpose": "Opt-in notification role settings",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Role-choice configuration and eligibility",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Configure permitted ping roles",
+    "interaction": "Only observed; member assignment enforcement not tested.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "GuidePages.tsx; RoleEditor.tsx",
+    "features": [
+      "YAP-COMM-023"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "4ac8ab49b5c4e6762b24531a2e3486a6ea281c7adff46ee86db7238b524d3ab3"
+  },
+  {
+    "id": "SCR-027",
+    "screenshot": "screenshots/current/29-server-reports.jpg",
+    "purpose": "Community report queues",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Open/Handled tabs; resolution explanation",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Inspect; dismiss; delete/ban when authorized",
+    "interaction": "No report submitted or sanction applied.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ReportsPage.tsx; backend reports",
+    "features": [
+      "YAP-MOD-010",
+      "YAP-MOD-011",
+      "YAP-MOD-012"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "a58dcfee62e74c7bd72c4c4acd16ffb642e4445854e7b2713d7c30f890e22fe2"
+  },
+  {
+    "id": "SCR-028",
+    "screenshot": "screenshots/current/30-server-audit.jpg",
+    "purpose": "Filtered audit log with expanded change",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Actor/action filters; event rows; change detail",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Filter; expand a change",
+    "interaction": "Existing synthetic channel change expanded successfully.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "AuditPage.tsx; backend audit",
+    "features": [
+      "YAP-MOD-014",
+      "YAP-MOD-015"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "dd625c7cf9b391bbef7baab0fadd66c0f77c2d498307ccc3db4b815afc10909f"
+  },
+  {
+    "id": "SCR-029",
+    "screenshot": "screenshots/current/31-server-members.jpg",
+    "purpose": "Member management",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Search; filters; sort; selection; roles; overflow",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Select loaded; assign eligible roles; manage members",
+    "interaction": "Owner-only test account; no bulk action or sanction executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "PeoplePage.tsx; RoleMembers.tsx",
+    "features": [
+      "YAP-ROLE-001",
+      "YAP-ROLE-002",
+      "YAP-ROLE-005",
+      "YAP-MOD-006"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "a946d9f13b3e93661eaccc46d9cd8ce22b81ac81127e2888132ea66ce9adab66"
+  },
+  {
+    "id": "SCR-030",
+    "screenshot": "screenshots/current/32-server-roles.jpg",
+    "purpose": "Roles and hierarchy",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Everyone base; role list; ordering; create/edit",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Open matrix; create role; reorder",
+    "interaction": "Earlier role save was tested; current screen inspection does not test privilege enforcement.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "RolesPage.tsx; RoleEditor.tsx",
+    "features": [
+      "YAP-ROLE-003"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "8386bd88da42ca7b4252710730cce383b5f7d65cc635b48a8c2aa0768efa5f45"
+  },
+  {
+    "id": "SCR-031",
+    "screenshot": "screenshots/current/33-server-bans.jpg",
+    "purpose": "Server and voice bans",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Separate ban classes; empty/loading data",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Review and unban when authorized",
+    "interaction": "No bans applied or removed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ModerationPages.tsx; VoiceBansCard.tsx",
+    "features": [
+      "YAP-MOD-007",
+      "YAP-MOD-009"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "292c9d085a7311efd8f6716c8952eee31bc4c2fcbffe57ee34e028ab878f47d1"
+  },
+  {
+    "id": "SCR-032",
+    "screenshot": "screenshots/current/34-server-bots.jpg",
+    "purpose": "Official and community bots",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Nine free cards; state toggles; Bots+; Browse/Installed; direct ID",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Configure bots; browse; inspect installation",
+    "interaction": "Helper is already on from historical controlled test; no new bot enabled.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "workspace/bots; officialBots.ts",
+    "features": [
+      "YAP-BOT-001",
+      "YAP-BOT-002",
+      "YAP-BOT-004",
+      "YAP-BOT-005",
+      "YAP-BOT-006",
+      "YAP-BOT-007",
+      "YAP-BOT-008",
+      "YAP-BOT-009",
+      "YAP-BOT-010",
+      "YAP-BOT-012",
+      "YAP-BOT-015",
+      "YAP-BOT-016",
+      "YAP-BILL-012",
+      "YAP-BOTOPT-001",
+      "YAP-BOTOPT-002",
+      "YAP-BOTOPT-004",
+      "YAP-BOTOPT-005",
+      "YAP-BOTOPT-006",
+      "YAP-BOTOPT-007",
+      "YAP-BOTOPT-008",
+      "YAP-BOTOPT-009",
+      "YAP-BOTOPT-010",
+      "YAP-BOTOPT-011",
+      "YAP-BOTOPT-012",
+      "YAP-BOTOPT-013",
+      "YAP-BOTOPT-014",
+      "YAP-BOTOPT-015",
+      "YAP-BOTOPT-016",
+      "YAP-BOTOPT-017",
+      "YAP-BOTOPT-018",
+      "YAP-BOTOPT-019",
+      "YAP-BOTOPT-020"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "c22dffeac3263dd62486ede575e474f17f70abe4fcf69b1e5b0148c265f0d7e5"
+  },
+  {
+    "id": "SCR-033",
+    "screenshot": "screenshots/current/35-server-supercharge.jpg",
+    "purpose": "Community boost quantities and levels",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Level targets; amount; monthly recurring terms; benefit tiers",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Choose quantity; review checkout",
+    "interaction": "No payment; distinguish monthly Supercharge from weekly promotion.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "SparkPage.tsx; catalog uses Meldiq rules",
+    "features": [
+      "YAP-EXPR-006",
+      "YAP-BILL-009",
+      "YAP-BILL-010"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "f3da866ed7ceacee6355fdc31e564d3290f6c2aa35dd867a97c997be612b69c2"
+  },
+  {
+    "id": "SCR-034",
+    "screenshot": "screenshots/current/36-server-promote.jpg",
+    "purpose": "Paid discovery placement",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Eligibility gate; weekly boosts; limited promoted slots",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Review eligible placement; begin purchase",
+    "interaction": "Research server unlisted; no purchase or visibility change.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "workspace/promote; billing",
+    "features": [
+      "YAP-BILL-011"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "4c57d21fbbe567ec2d35e8b20671f61948c6f17e6c5ca9bf77fffb59042f722b"
+  },
+  {
+    "id": "SCR-035",
+    "screenshot": "screenshots/current/37-server-partner.jpg",
+    "purpose": "Partner eligibility checklist",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Requirements; current values; disabled/ineligible application",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Apply after meeting requirements",
+    "interaction": "Private server is ineligible; no application.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "WorkspaceSetupCards.tsx; review flow",
+    "features": [
+      "YAP-COMM-028"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "09b1b4cdf0047108b689200a9184d9aea914609d63e03589ff404b18988aed00"
+  },
+  {
+    "id": "SCR-036",
+    "screenshot": "screenshots/current/38-events.jpg",
+    "purpose": "Community events empty state",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Events heading; empty explanation; create entry",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Open event draft",
+    "interaction": "Opened and returned from draft without publishing.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "MeetingsPage.tsx; exact recurrence parity unverified",
+    "features": [
+      "YAP-EVENT-001"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "81faa0bc39b522f1a854ca0ae50d8bc03b9c5e9119bf67f142886c786e35fa04"
+  },
+  {
+    "id": "SCR-037",
+    "screenshot": "screenshots/current/39-event-draft.jpg",
+    "purpose": "Scheduled event draft",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Title; voice/external place; local dates; weekly repeat; announcement; cover",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Configure draft; Cancel; Create when valid",
+    "interaction": "Draft inspected and cancelled; no event or notice created.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "MeetingsPage.tsx; backend meetings",
+    "features": [
+      "YAP-EVENT-002",
+      "YAP-EVENT-003",
+      "YAP-EVENT-004",
+      "YAP-EVENT-005",
+      "YAP-EVENT-006",
+      "YAP-EVENT-007"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "ba0089926e5ec2d1e8be109a239520560fef62919e4d58d7cee3b5733a8b78a7"
+  },
+  {
+    "id": "SCR-038",
+    "screenshot": "screenshots/current/40-full-profile.jpg",
+    "purpose": "Research account full profile",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Identity; joined dates; community role; edit/copy actions",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Return; edit profile; inspect roles",
+    "interaction": "Profile comments were not visible in this account despite policy documentation.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ProfileDialog.tsx; comments unverified",
+    "features": [
+      "YAP-PROFILE-014"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "8f342e3acc26cf193ba6be086b1867a84e97b99cf27bb0290c28c2f16bc0f69b"
+  },
+  {
+    "id": "SCR-039",
+    "screenshot": "screenshots/current/41-friends.jpg",
+    "purpose": "Friends dashboard with empty DM list",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Online/All/Pending/Blocked/Suggested; search; friend/group entries",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Find user; add friend; create group",
+    "interaction": "Account has no DMs; no unrelated recipient contacted.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "FriendsView.tsx; Sidebar.tsx",
+    "features": [
+      "YAP-SOCIAL-001",
+      "YAP-SOCIAL-002",
+      "YAP-SOCIAL-003",
+      "YAP-SOCIAL-008",
+      "YAP-SOCIAL-009"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "ceb75118ed1c9f21525c11d5a37feb57600e4b195f7cce80d91f883fba371316"
+  },
+  {
+    "id": "SCR-040",
+    "screenshot": "screenshots/current/42-find-people-empty.jpg",
+    "purpose": "Find-user query and no results",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Minimum query guidance; scoped search; no-result explanation",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Search friends/shared-server online users",
+    "interaction": "Synthetic unmatched query resolved; no request sent.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "SearchDialog.tsx; social.ts",
+    "features": [
+      "YAP-SOCIAL-004",
+      "YAP-SOCIAL-005"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "caafcbf77d626d064d4ba3477f0ed41f33fe22378a7bdc04b5f8a0363589f24a"
+  },
+  {
+    "id": "SCR-041",
+    "screenshot": "screenshots/current/43-group-prerequisite.jpg",
+    "purpose": "Group creation with no eligible friends",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Friend picker; remaining capacity; disabled Next; cancel",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Select up to nine friends; continue",
+    "interaction": "No controlled peer yet; Next stays unavailable when empty.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "NewGroupDialog.tsx",
+    "features": [
+      "YAP-SOCIAL-012",
+      "YAP-SOCIAL-013"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "20404079ca05bc9d1df2bf99f70965ed81798c3439280e00cf15781a9bf86dc7"
+  },
+  {
+    "id": "SCR-042",
+    "screenshot": "screenshots/current/44-add-friend.jpg",
+    "purpose": "Friend request draft",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Username; note; disabled send when empty",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Draft request and optional note",
+    "interaction": "No request sent; note visibility follows DM policy.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConnectionRequestViews.tsx",
+    "features": [
+      "YAP-SOCIAL-006",
+      "YAP-SOCIAL-007"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "23d05b0a2cf73a0f2aa8488796fea3e443bf59fbe175694095331e2c762c2a45"
+  },
+  {
+    "id": "SCR-043",
+    "screenshot": "screenshots/current/45-inbox.jpg",
+    "purpose": "Activity inbox For you empty state",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "For you/Mentions/Unreads; bulk mark-read; caught-up state",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Switch inbox scope; mark read",
+    "interaction": "For-you opened; unread count was not cleared or tested for correctness.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ActivityView.tsx; notification state",
+    "features": [
+      "YAP-NOTIFY-001",
+      "YAP-NOTIFY-002",
+      "YAP-NOTIFY-003",
+      "YAP-NOTIFY-004"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "4a5a6bb42e5484149792edfc0808347b3eeb55585efd7c9b964a9318cf5d379f"
+  },
+  {
+    "id": "SCR-044",
+    "screenshot": "screenshots/current/46-account-menu.jpg",
+    "purpose": "Account actions and multi-account submenu",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Profile edit/view; sound switch; shortcuts; add-account submenu",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Expand account switcher; open profile/settings",
+    "interaction": "Switcher expanded without adding or switching an account.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ProfileMenu.tsx; AccountActions.tsx",
+    "features": [
+      "YAP-AUTH-019"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "2477a7b6924c060e5cae59068de11e66649548209969a23272347f1fb4b36186"
+  },
+  {
+    "id": "SCR-045",
+    "screenshot": "screenshots/current/47-message-menu.jpg",
+    "purpose": "Own synthetic message context menu",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Quick reactions; reply/thread/edit/forward/copy/unread/translate/roles/pin/delete",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Inspect contextual actions",
+    "interaction": "Right-click opened and Escape dismissed; no message changed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "MessageItem.tsx; sync messaging domains",
+    "features": [
+      "YAP-MSG-007",
+      "YAP-MSG-010",
+      "YAP-MSG-011",
+      "YAP-MSG-012",
+      "YAP-MSG-013",
+      "YAP-MSG-014",
+      "YAP-MSG-015",
+      "YAP-MSG-017",
+      "YAP-MSG-018",
+      "YAP-BOT-011"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "f2265ae183dbac856fb429289c4abb4529fa34e968ad2c78d5afc2587a44040a"
+  },
+  {
+    "id": "SCR-046",
+    "screenshot": "screenshots/current/48-search.jpg",
+    "purpose": "Scoped search results for private fixtures",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Query; sender/scope controls; six synthetic marker results",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Run query; choose result; change filters",
+    "interaction": "Keyword query executed; individual rich filter semantics not tested.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "SearchPanel.tsx; universalSearch.ts",
+    "features": [
+      "YAP-MSG-030",
+      "YAP-SEARCH-001",
+      "YAP-SEARCH-002",
+      "YAP-SEARCH-003",
+      "YAP-SEARCH-004",
+      "YAP-SEARCH-005",
+      "YAP-SEARCH-006",
+      "YAP-SEARCH-007",
+      "YAP-SEARCH-008",
+      "YAP-SEARCH-009",
+      "YAP-SEARCH-010",
+      "YAP-SEARCH-011"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "4a6b47fa041c2797fa6510d0a7aafb274178b37ceac56a05fbe991d3207ccfcc"
+  },
+  {
+    "id": "SCR-047",
+    "screenshot": "screenshots/current/49-phone-chat.jpg",
+    "purpose": "Phone focused synthetic chat",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Compact header; timeline; composer; emoji/voice entries",
+    "layout": "Single phone column; focused chat or server list with bottom destinations.",
+    "actions": "Back; search; open composer overflow",
+    "interaction": "Actual 390x844 browser viewport checked; no physical-device claim.",
+    "responsive": "390x844 actual browser viewport; physical phone and soft keyboard UNVERIFIED.",
+    "equivalent": "TabBar.tsx; responsive.css; Composer.tsx",
+    "features": [
+      "YAP-SHELL-006",
+      "YAP-MSG-031",
+      "YAP-MEDIA-008",
+      "YAP-EXPR-001",
+      "YAP-RELEASE-006"
+    ],
+    "dimensions": [
+      390,
+      844
+    ],
+    "format": "JPEG",
+    "sha256": "e14166927638ed9b452b6e57d102ac8bd34c8375093b690afafbe581f4f0fe45"
+  },
+  {
+    "id": "SCR-048",
+    "screenshot": "screenshots/current/50-phone-composer.jpg",
+    "purpose": "Phone composer action menu",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "File; GIF; poll menu above compact composer",
+    "layout": "Single phone column; focused chat or server list with bottom destinations.",
+    "actions": "Open or dismiss options",
+    "interaction": "Open and Escape close checked without capture/upload/send.",
+    "responsive": "390x844 actual browser viewport; physical phone and soft keyboard UNVERIFIED.",
+    "equivalent": "Composer.tsx; ExpressionPicker.tsx",
+    "features": [
+      "YAP-SHELL-007",
+      "YAP-MEDIA-001",
+      "YAP-MEDIA-002",
+      "YAP-MEDIA-010",
+      "YAP-MEDIA-012"
+    ],
+    "dimensions": [
+      390,
+      844
+    ],
+    "format": "JPEG",
+    "sha256": "97a5037a857f78754709c155cf0d9f181fcd0e1f83fe6342cc6e1940a2a8d75f"
+  },
+  {
+    "id": "SCR-049",
+    "screenshot": "screenshots/current/51-phone-navigation.jpg",
+    "purpose": "Phone server list and primary destinations",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Rail; category list; Home/Servers/Settings bottom destinations",
+    "layout": "Single phone column; focused chat or server list with bottom destinations.",
+    "actions": "Open channel; navigate primary destinations",
+    "interaction": "Back from chat returns to list; 390x844 viewport confirmed.",
+    "responsive": "390x844 actual browser viewport; physical phone and soft keyboard UNVERIFIED.",
+    "equivalent": "Sidebar.tsx; TabBar.tsx",
+    "features": [
+      "YAP-SHELL-005"
+    ],
+    "dimensions": [
+      390,
+      844
+    ],
+    "format": "JPEG",
+    "sha256": "ce0414f8db5ae60a3327ac2d78e58469705b19a2408d8bf0f202f3c7715be8e7"
+  },
+  {
+    "id": "SCR-050",
+    "screenshot": "screenshots/current/52-tablet-chat.jpg",
+    "purpose": "Tablet synthetic conversation",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Desktop-style rail/channel column and conversation",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Navigate and inspect conversation controls",
+    "interaction": "DOM client width verified 768 and height 844; not a tablet device test.",
+    "responsive": "768x844 actual browser viewport; desktop-style rail observed.",
+    "equivalent": "responsive.css; Shell.tsx",
+    "features": [
+      "YAP-SHELL-008"
+    ],
+    "dimensions": [
+      768,
+      844
+    ],
+    "format": "JPEG",
+    "sha256": "eef67c498a12f9313c63e15ba89ff0f5dd0dc48e14a58299652f098c63ed2718"
+  },
+  {
+    "id": "SCR-051",
+    "screenshot": "screenshots/current/53-desktop-chat.jpg",
+    "purpose": "Desktop synthetic conversation",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Rail; channel column; full conversation header/composer",
+    "layout": "App rail and side column plus main content, or centered overlay/form as shown.",
+    "actions": "Inspect chat actions; search; open panels",
+    "interaction": "DOM client width verified 1440 and height 844.",
+    "responsive": "1440x844 actual browser viewport; full desktop controls observed.",
+    "equivalent": "Shell.tsx; ConversationView.tsx",
+    "features": [
+      "YAP-SHELL-001",
+      "YAP-SHELL-004",
+      "YAP-SHELL-009",
+      "YAP-MEDIA-009",
+      "YAP-EXPR-009"
+    ],
+    "dimensions": [
+      1440,
+      844
+    ],
+    "format": "JPEG",
+    "sha256": "7924242b219bf7a0f336b7b9202d5b19bd6e5797ade57f92423b2dcc613eddda"
+  },
+  {
+    "id": "SCR-052",
+    "screenshot": "screenshots/current/public-announcement.jpg",
+    "purpose": "Yapper is now Yapin\u2019 \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/announcement",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-008",
+      "YAP-AUTH-024",
+      "YAP-PROFILE-005",
+      "YAP-SOCIAL-015",
+      "YAP-MSG-004",
+      "YAP-MSG-005",
+      "YAP-CHANNEL-017",
+      "YAP-VOICE-019",
+      "YAP-MEDIA-007",
+      "YAP-EXPR-005",
+      "YAP-BOT-017"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "0e05f898a456d392ddb793fcbdb4358508b3dfab96ceb7614a8304d9e75ae100"
+  },
+  {
+    "id": "SCR-053",
+    "screenshot": "screenshots/current/public-api-bot.jpg",
+    "purpose": "Bot \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/bot",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-001",
+      "YAP-API-002",
+      "YAP-API-003",
+      "YAP-API-004",
+      "YAP-API-005",
+      "YAP-API-006",
+      "YAP-API-007",
+      "YAP-API-008",
+      "YAP-API-009"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "59eff22488ecd4ba2215e80f26acaba49f689311134cedaa13c3bde61e482646"
+  },
+  {
+    "id": "SCR-054",
+    "screenshot": "screenshots/current/public-api-changelog.jpg",
+    "purpose": "API changelog \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/changelog",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-BOT-020",
+      "YAP-BOT-021"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "9eb3aa63d88f3ede0b97a89c3608f47b0c3f7e10a69b1b67b5114ebe9483a758"
+  },
+  {
+    "id": "SCR-055",
+    "screenshot": "screenshots/current/public-api-channels.jpg",
+    "purpose": "Channels \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/channels",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-010",
+      "YAP-API-011",
+      "YAP-API-012",
+      "YAP-API-013",
+      "YAP-API-014",
+      "YAP-API-015",
+      "YAP-API-016",
+      "YAP-API-017",
+      "YAP-API-018",
+      "YAP-API-019",
+      "YAP-API-020",
+      "YAP-API-021",
+      "YAP-API-022",
+      "YAP-API-023"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "1f2a366fae8cc9d314837779b0751121e8e9884afbed3a9d44a848008111e66f"
+  },
+  {
+    "id": "SCR-056",
+    "screenshot": "screenshots/current/public-api-emojis.jpg",
+    "purpose": "Emojis \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/emojis",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-024",
+      "YAP-API-025",
+      "YAP-API-026",
+      "YAP-API-027",
+      "YAP-API-028"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "caafc947ebd6627ecdc175f72756332b89b28c7224f29057f9b76ebb06b8fdc8"
+  },
+  {
+    "id": "SCR-057",
+    "screenshot": "screenshots/current/public-api-events.jpg",
+    "purpose": "Bot events \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/events",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-DEV-007",
+      "YAP-API-029",
+      "YAP-BOTEVENT-001",
+      "YAP-BOTEVENT-002",
+      "YAP-BOTEVENT-003",
+      "YAP-BOTEVENT-004",
+      "YAP-BOTEVENT-005",
+      "YAP-BOTEVENT-006",
+      "YAP-BOTEVENT-007",
+      "YAP-BOTEVENT-008",
+      "YAP-BOTEVENT-009",
+      "YAP-BOTEVENT-010",
+      "YAP-BOTEVENT-011",
+      "YAP-BOTEVENT-012",
+      "YAP-BOTEVENT-013"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "5487d025025880a122086212642db382e9c210cb402692da5a2441ce15537616"
+  },
+  {
+    "id": "SCR-058",
+    "screenshot": "screenshots/current/public-api-interactions.jpg",
+    "purpose": "Interactions \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/interactions",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-030"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "5ff9881d04fd62a2c02351dfe79df8e706965e9bd13d633c263cc0ff642c80e9"
+  },
+  {
+    "id": "SCR-059",
+    "screenshot": "screenshots/current/public-api-messages.jpg",
+    "purpose": "Messages \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/messages",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-031",
+      "YAP-API-032",
+      "YAP-API-033",
+      "YAP-API-034",
+      "YAP-API-035",
+      "YAP-API-036",
+      "YAP-API-037",
+      "YAP-API-038",
+      "YAP-API-039",
+      "YAP-API-040",
+      "YAP-API-041"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "88c07b319bb257b82959554fd684cd58dd67e4c134b4a7046729cdbd89a36f5e"
+  },
+  {
+    "id": "SCR-060",
+    "screenshot": "screenshots/current/public-api-moderation.jpg",
+    "purpose": "Moderation \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/moderation",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-042",
+      "YAP-API-043",
+      "YAP-API-044",
+      "YAP-API-045",
+      "YAP-API-046",
+      "YAP-API-047",
+      "YAP-API-048"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "1c5433fd2060e9b4351841a5460e7817073392ce9d9e197461f1cc5db643febe"
+  },
+  {
+    "id": "SCR-061",
+    "screenshot": "screenshots/current/public-api-roles.jpg",
+    "purpose": "Roles \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/roles",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-049",
+      "YAP-API-050",
+      "YAP-API-051",
+      "YAP-API-052",
+      "YAP-API-053",
+      "YAP-API-054",
+      "YAP-API-055"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "8640177f7f8f8790fd47361d4f1aeb1fef8a19e4a5846120a6b57ea0e7570a70"
+  },
+  {
+    "id": "SCR-062",
+    "screenshot": "screenshots/current/public-api-scheduled-events.jpg",
+    "purpose": "Scheduled events \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/scheduled-events",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-EVENT-008",
+      "YAP-API-056",
+      "YAP-API-057"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "2bcf1ad6f87e4d0ae01e9924a0063fdc10375e5ba6a6e14e5a58ec218be69f3b"
+  },
+  {
+    "id": "SCR-063",
+    "screenshot": "screenshots/current/public-api-servers.jpg",
+    "purpose": "Servers \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/servers",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-058",
+      "YAP-API-059",
+      "YAP-API-060",
+      "YAP-API-061",
+      "YAP-API-062"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "807fca5d3d72ec3fe829e2d66330699da7794dd88cbc1da2335a394cceff084c"
+  },
+  {
+    "id": "SCR-064",
+    "screenshot": "screenshots/current/public-api-users.jpg",
+    "purpose": "Users \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/users",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-063",
+      "YAP-API-064"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "94182c430bba191c3af43cdfbc3f57c6b36302f7382119604733cc2094031135"
+  },
+  {
+    "id": "SCR-065",
+    "screenshot": "screenshots/current/public-api-versions.jpg",
+    "purpose": "Versions \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/versions",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-DEV-017",
+      "YAP-API-065",
+      "YAP-API-066"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "e3c195a78a3a2b00c007557a87bce710e334a63aba60d1e1c1d86d3dac8917b5"
+  },
+  {
+    "id": "SCR-066",
+    "screenshot": "screenshots/current/public-api-voice.jpg",
+    "purpose": "Voice \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/voice",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-067",
+      "YAP-API-068",
+      "YAP-API-069",
+      "YAP-API-070",
+      "YAP-API-071"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "90668c347458e45de705b96f1b56e7bb655360b693497cc3d0ff3258d0eff07d"
+  },
+  {
+    "id": "SCR-067",
+    "screenshot": "screenshots/current/public-api-webhooks.jpg",
+    "purpose": "Webhooks \u00b7 Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api/webhooks",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-API-072",
+      "YAP-API-073",
+      "YAP-API-074",
+      "YAP-API-075",
+      "YAP-API-076"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "64f68b5236ca263304b3d64bed033f692c5019973b6d1ff0821ffd25bbced764"
+  },
+  {
+    "id": "SCR-068",
+    "screenshot": "screenshots/current/public-bot-profile.jpg",
+    "purpose": "Add a bot",
+    "route": "https://www.yapin.gg/bot/2b71b8c3-a2b8-4dcc-96c9-47a89166e8c7",
+    "date": "2026-11-04",
+    "components": "Bot identity; publisher; usage count; Add to server",
+    "layout": "Public bot card with shared site navigation",
+    "actions": "Read bot profile; installation entry",
+    "interaction": "Profile observed; install and requested-permission consent not opened or granted.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "BotProfileDialog.tsx; developer/bot installation",
+    "features": [],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "606af1281a2e7cc4cfd648f770dc7b4f6343a193c09161890dd17b4f5b1d45df"
+  },
+  {
+    "id": "SCR-069",
+    "screenshot": "screenshots/current/public-bots-empty.jpg",
+    "purpose": "Bot directory unmatched search",
+    "route": "https://yapin.gg/bots",
+    "date": "2026-11-04",
+    "components": "Query; categories; sort; no-match feedback",
+    "layout": "Public directory with query/filter controls and results area",
+    "actions": "Change query/category/sort",
+    "interaction": "Unmatched query executed; installation and other filters not tested.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "DiscoverView.tsx; developer BotListingCard.tsx",
+    "features": [
+      "YAP-BOT-013"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "a6f6d69e908d2fdca9a0ad2a2079db754dd989a23b59c1b56da00dfcdbddc286"
+  },
+  {
+    "id": "SCR-070",
+    "screenshot": "screenshots/current/public-bots.jpg",
+    "purpose": "Bots for your server \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/bots",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-BOT-014"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "0caadb9caf06957dc76f2b14213ec85a3c0564639f887bb49b2aee4f140fae5b"
+  },
+  {
+    "id": "SCR-071",
+    "screenshot": "screenshots/current/public-bugs.jpg",
+    "purpose": "Bug Hunting \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/bugs",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "7bb3d656f4287ce91d5c6006a3a62ec958d7fa03e010cf5e4eab322d0ccdcc60"
+  },
+  {
+    "id": "SCR-072",
+    "screenshot": "screenshots/current/public-cancel.jpg",
+    "purpose": "Cancel a subscription \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/cancel",
+    "date": "2026-11-04",
+    "components": "Purpose explanation; eligibility or report/account fields; submission and policy links",
+    "layout": "Public form or eligibility column with header/footer",
+    "actions": "Read prerequisites; fill/submit only with authorization",
+    "interaction": "Form/documentation only; no purchase cancellation report proof or application submitted.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Billing/support/creator workflows; exact anonymous form parity UNVERIFIED",
+    "features": [
+      "YAP-WEB-014",
+      "YAP-BILL-005"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "6f680243d79fa4c56ab1c9dfb29732157ceea1580aa546f5d3069b90b4ca60bc"
+  },
+  {
+    "id": "SCR-073",
+    "screenshot": "screenshots/current/public-copyright.jpg",
+    "purpose": "Copyright and DMCA \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/copyright",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-016"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "dc5433bb8ab676657a7ee9a12d331557cde1f71b95bfe44aaaa1ccb44066ba28"
+  },
+  {
+    "id": "SCR-074",
+    "screenshot": "screenshots/current/public-creator.jpg",
+    "purpose": "Creator Center \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/creator",
+    "date": "2026-11-04",
+    "components": "Purpose explanation; eligibility or report/account fields; submission and policy links",
+    "layout": "Public form or eligibility column with header/footer",
+    "actions": "Read prerequisites; fill/submit only with authorization",
+    "interaction": "Form/documentation only; no purchase cancellation report proof or application submitted.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Billing/support/creator workflows; exact anonymous form parity UNVERIFIED",
+    "features": [
+      "YAP-PROFILE-025"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "589d994a7ac3a4b70d001e7d018ff949c65ddd70d607b96b71da7f15c4dc74e9"
+  },
+  {
+    "id": "SCR-075",
+    "screenshot": "screenshots/current/public-creators.jpg",
+    "purpose": "Creator Program \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/creators",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-010",
+      "YAP-PROFILE-024"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "58d52db7c855eb52d9e4809614ba1ad26ffd6c4d45c0db83a226f61979617dae"
+  },
+  {
+    "id": "SCR-076",
+    "screenshot": "screenshots/current/public-developers-api.jpg",
+    "purpose": "Bot API reference \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers/api",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-DEV-005"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "c561309d4899e1e86c8dbcdfdc0590730ace573b489762b322bdec10643e3b9e"
+  },
+  {
+    "id": "SCR-077",
+    "screenshot": "screenshots/current/public-developers.jpg",
+    "purpose": "Developers: make a bot \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/developers",
+    "date": "2026-11-04",
+    "components": "Reference navigation; endpoint groups; parameter/body/response/error tables; code examples",
+    "layout": "Long documentation column with endpoint sections",
+    "actions": "Search documentation; follow section/reference links",
+    "interaction": "Public documentation read; endpoints SDKs tokens and gateways not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Existing Meldiq API contracts and developer UI; exact bot parity UNVERIFIED",
+    "features": [
+      "YAP-BOT-018",
+      "YAP-BOT-019",
+      "YAP-BOT-022",
+      "YAP-DEV-002",
+      "YAP-DEV-003",
+      "YAP-DEV-004",
+      "YAP-DEV-006",
+      "YAP-DEV-008",
+      "YAP-DEV-009",
+      "YAP-DEV-012",
+      "YAP-DEV-013",
+      "YAP-DEV-014",
+      "YAP-DEV-016"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "76dbbf516d69eba10f21bab1c0dc4413715276fff3eeb874102d58e79a3de1d2"
+  },
+  {
+    "id": "SCR-078",
+    "screenshot": "screenshots/current/public-download.jpg",
+    "purpose": "Download Yapin\u2019 for Windows and Linux",
+    "route": "https://www.yapin.gg/download",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-005",
+      "YAP-VOICE-018",
+      "YAP-RELEASE-001",
+      "YAP-RELEASE-002",
+      "YAP-RELEASE-003",
+      "YAP-RELEASE-004"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "4ea35c15472a94a521218b25991c3fe91f95b4456bd5e455902e9aa128263059"
+  },
+  {
+    "id": "SCR-079",
+    "screenshot": "screenshots/current/public-fankit.jpg",
+    "purpose": "FanKit \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/fankit",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-011"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "ae912fc2e78f09823d1077c39335251c07a1b8d4d92891e4ccfc33c732dc651e"
+  },
+  {
+    "id": "SCR-080",
+    "screenshot": "screenshots/current/public-guidelines.jpg",
+    "purpose": "Community Guidelines \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/guidelines",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-017",
+      "YAP-MEDIA-011"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "86688db2cea6619208d5232535f2b8611fba15292500d702176cd6a12d642a2b"
+  },
+  {
+    "id": "SCR-081",
+    "screenshot": "screenshots/current/public-openapi.jpg",
+    "purpose": "Published OpenAPI schema",
+    "route": "https://www.yapin.gg/openapi.json",
+    "date": "2026-11-04",
+    "components": "Public machine-readable document",
+    "layout": "Browser text/JSON document viewport",
+    "actions": "Read published schema or disclosure metadata",
+    "interaction": "Read/parsed as documented; no runtime security assurance or authenticated operation.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Public docs/operating evidence; exact parity UNVERIFIED",
+    "features": [
+      "YAP-GATEWAY-001",
+      "YAP-GATEWAY-002",
+      "YAP-GATEWAY-003",
+      "YAP-GATEWAY-004",
+      "YAP-GATEWAY-005",
+      "YAP-GATEWAY-006",
+      "YAP-GATEWAY-007",
+      "YAP-GATEWAY-008",
+      "YAP-GATEWAY-009",
+      "YAP-GATEWAY-010"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "7d9f4c0b83d8c40b9e23e7b3e46ac1294da36e6f16dcea3c1df71d7ce00e9a7e"
+  },
+  {
+    "id": "SCR-082",
+    "screenshot": "screenshots/current/public-partners.jpg",
+    "purpose": "Yapin\u2019 Partners \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/partners",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-012"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "67c3130eaed70bc10354b2c6a4f5f6d72c83cfb44b65352917fea7b9a1ef44a1"
+  },
+  {
+    "id": "SCR-083",
+    "screenshot": "screenshots/current/public-plus.jpg",
+    "purpose": "Yapin\u2019 Plus \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/plus",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-MEDIA-003"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "9d63f1d27aa7b8b4b066fce52f727c70e60fe006de76bbcb776ba1175c5b40b2"
+  },
+  {
+    "id": "SCR-084",
+    "screenshot": "screenshots/current/public-privacy.jpg",
+    "purpose": "Privacy Policy \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/privacy",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-TRUST-005",
+      "YAP-TRUST-006"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "bd6bbf09d26c201801abc24d546b292b8786d14644d953fdddb0db7a3951abd1"
+  },
+  {
+    "id": "SCR-085",
+    "screenshot": "screenshots/current/public-remove-image.jpg",
+    "purpose": "Remove an intimate image \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/remove-image",
+    "date": "2026-11-04",
+    "components": "Purpose explanation; eligibility or report/account fields; submission and policy links",
+    "layout": "Public form or eligibility column with header/footer",
+    "actions": "Read prerequisites; fill/submit only with authorization",
+    "interaction": "Form/documentation only; no purchase cancellation report proof or application submitted.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Billing/support/creator workflows; exact anonymous form parity UNVERIFIED",
+    "features": [
+      "YAP-WEB-015"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "b8bb4715d062bdf1dfbfeac0b3fa8282b4d3cf621dff7c9e574bb777c0bf1a08"
+  },
+  {
+    "id": "SCR-086",
+    "screenshot": "screenshots/current/public-roadmap.jpg",
+    "purpose": "Roadmap: what\u2019s new and what\u2019s next \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/roadmap",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-007",
+      "YAP-AUTH-017",
+      "YAP-SOCIAL-011",
+      "YAP-MSG-024",
+      "YAP-CHANNEL-018",
+      "YAP-ROLE-007",
+      "YAP-ROLE-008",
+      "YAP-MOD-008",
+      "YAP-MOD-013",
+      "YAP-MOD-016",
+      "YAP-NOTIFY-007",
+      "YAP-NOTIFY-009",
+      "YAP-VOICE-014",
+      "YAP-VOICE-020",
+      "YAP-MEDIA-004",
+      "YAP-EXPR-010"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "26c46be1bd6413afdae4d513778a1ba8c44171b0e025375d6f95197878633312"
+  },
+  {
+    "id": "SCR-087",
+    "screenshot": "screenshots/current/public-security-json.jpg",
+    "purpose": "/security.json",
+    "route": "https://www.yapin.gg/security.json",
+    "date": "2026-11-04",
+    "components": "Public machine-readable document",
+    "layout": "Browser text/JSON document viewport",
+    "actions": "Read published schema or disclosure metadata",
+    "interaction": "Read/parsed as documented; no runtime security assurance or authenticated operation.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Public docs/operating evidence; exact parity UNVERIFIED",
+    "features": [],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "779044ab1c27c164116beffa2a17814e7417506aa7d85b274d3bd31fa12107d8"
+  },
+  {
+    "id": "SCR-088",
+    "screenshot": "screenshots/current/public-security-txt.jpg",
+    "purpose": "/.well-known/security.txt",
+    "route": "https://www.yapin.gg/.well-known/security.txt",
+    "date": "2026-11-04",
+    "components": "Public machine-readable document",
+    "layout": "Browser text/JSON document viewport",
+    "actions": "Read published schema or disclosure metadata",
+    "interaction": "Read/parsed as documented; no runtime security assurance or authenticated operation.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Public docs/operating evidence; exact parity UNVERIFIED",
+    "features": [],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "b683dc404a6129c66753889cbe07a539a746261ab54393b4e3f05d1f8bac477d"
+  },
+  {
+    "id": "SCR-089",
+    "screenshot": "screenshots/current/public-security.jpg",
+    "purpose": "Security \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/security",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-013",
+      "YAP-VOICE-028",
+      "YAP-MEDIA-005",
+      "YAP-TRUST-001",
+      "YAP-TRUST-002",
+      "YAP-TRUST-003",
+      "YAP-TRUST-004",
+      "YAP-RELEASE-005"
+    ],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "24d93e9e89f21cdd334dc91228c09a17eb4eba204cf900fa3107c7de4df17eb4"
+  },
+  {
+    "id": "SCR-090",
+    "screenshot": "screenshots/current/public-status.jpg",
+    "purpose": "Status \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/status",
+    "date": "2026-11-04",
+    "components": "Service health; ninety-day history; API chart; user timing percentile cohorts; incidents",
+    "layout": "Long status dashboard with service and time-series sections",
+    "actions": "Inspect metric/percentile and incident history",
+    "interaction": "Settled public operational snapshot observed; figures are the publisher's metrics, not this audit's benchmark.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Independent Meldiq status service",
+    "features": [
+      "YAP-WEB-009",
+      "YAP-OPS-001",
+      "YAP-OPS-002",
+      "YAP-OPS-003",
+      "YAP-OPS-004",
+      "YAP-OPS-005",
+      "YAP-OPS-006",
+      "YAP-OPS-007"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "7b5d5884df7a06279f59b5d794b8db4a7a79131e9b9e9701fc1f57aaa1fc278a"
+  },
+  {
+    "id": "SCR-091",
+    "screenshot": "screenshots/current/public-terms.jpg",
+    "purpose": "Terms of Service \u00b7 Yapin\u2019",
+    "route": "https://www.yapin.gg/terms",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "94f4595d98fefa26dd0cab2992d90536780cda2b5de7d626e84d3380ac44bd8a"
+  },
+  {
+    "id": "SCR-092",
+    "screenshot": "screenshots/current/public-tutorials.jpg",
+    "purpose": "Yapin\u2019 tutorials",
+    "route": "https://www.yapin.gg/tutorials",
+    "date": "2026-11-04",
+    "components": "Shared navigation; route-specific headings/content; CTA or FAQ; footer",
+    "layout": "Public content page with header and footer",
+    "actions": "Read content; follow route-specific links/controls",
+    "interaction": "Visible page read; downloads videos purchases and external submissions not executed.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Separate public website and relevant feature-register owner",
+    "features": [
+      "YAP-WEB-006"
+    ],
+    "dimensions": [
+      1384,
+      774
+    ],
+    "format": "JPEG",
+    "sha256": "65c9b1f38a773b8f4ae23e5f229ca7aac9069ccccb47a5463f2e330601177bb9"
+  },
+  {
+    "id": "SCR-093",
+    "screenshot": "screenshots/legacy/01-public-website/01-logged-out-home.jpg",
+    "purpose": "Public first-visit page: 01 logged out home",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Header hero product sections FAQ footer",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Open app; follow public links",
+    "interaction": "Actual public landing page after controlled logout. Login and authentication fields are not included. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "Public site workspace",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "503fe2f1f0488d00e85b675379d4db9f32f49cc737f770ae422aacd340fd0732"
+  },
+  {
+    "id": "SCR-094",
+    "screenshot": "screenshots/legacy/03-dashboard/01-friends-empty-state.jpg",
+    "purpose": "Friends and social dashboard: 01 friends empty state",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Rail; direct-message list; friend tabs",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Search friends; create group; add friend",
+    "interaction": "Empty friends state and navigation; no controlled second participant was available. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "FriendsView.tsx; social.ts",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "eae93e3aaa209c84ff3c7e113decf588c4a37be11ea63774cd35b5d89041028a"
+  },
+  {
+    "id": "SCR-095",
+    "screenshot": "screenshots/legacy/04-community/01-empty-lobby.jpg",
+    "purpose": "Community management and discovery: 01 empty lobby",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Community navigation; settings/editor/content panels",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure server; browse discovery; preview lobby",
+    "interaction": "Existing empty lobby, showing owner setup entry; not a saved custom lobby. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/community; src/ui/workspace; src/ui/lobby",
+    "features": [
+      "YAP-COMM-014"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "f62afc6b4378a089765e33f5e895cbe6ed2560443defe62c37bba3bfe44bac79"
+  },
+  {
+    "id": "SCR-096",
+    "screenshot": "screenshots/legacy/04-community/02-lobby-editor-templates.jpg",
+    "purpose": "Community management and discovery: 02 lobby editor templates",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Community navigation; settings/editor/content panels",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure server; browse discovery; preview lobby",
+    "interaction": "Template selection and editor controls; changes cancelled. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/community; src/ui/workspace; src/ui/lobby",
+    "features": [
+      "YAP-COMM-015",
+      "YAP-COMM-016",
+      "YAP-LOBBY-001",
+      "YAP-LOBBY-002",
+      "YAP-LOBBY-003",
+      "YAP-LOBBY-004",
+      "YAP-LOBBY-005",
+      "YAP-LOBBY-006",
+      "YAP-LOBBY-007",
+      "YAP-LOBBY-008",
+      "YAP-LOBBY-009",
+      "YAP-LOBBY-010",
+      "YAP-LOBBY-011",
+      "YAP-LOBBY-012",
+      "YAP-LOBBY-013",
+      "YAP-LOBBY-014",
+      "YAP-LOBBY-015",
+      "YAP-LOBBY-016",
+      "YAP-LOBBY-017"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "da654868f4fd6422f8d9d32faf8cc97aab6d10f4b39957b861cc12234fba0245"
+  },
+  {
+    "id": "SCR-097",
+    "screenshot": "screenshots/legacy/04-community/03-server-profile-and-safety.jpg",
+    "purpose": "Community management and discovery: 03 server profile and safety",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Community navigation; settings/editor/content panels",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure server; browse discovery; preview lobby",
+    "interaction": "Identity and safety configuration surface; thresholds are UI claims. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/community; src/ui/workspace; src/ui/lobby",
+    "features": [
+      "YAP-COMM-003",
+      "YAP-COMM-013"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "fb62d7eb36cef3ed9b9bc7c21ccdabe2a56a81bca950a2761ed40a794666f9e7"
+  },
+  {
+    "id": "SCR-098",
+    "screenshot": "screenshots/legacy/04-community/04-discovery.jpg",
+    "purpose": "Community management and discovery: 04 discovery",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Community navigation; settings/editor/content panels",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure server; browse discovery; preview lobby",
+    "interaction": "Discovery navigation and listing presentation; no external community joined during this test. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/community; src/ui/workspace; src/ui/lobby",
+    "features": [
+      "YAP-COMM-005",
+      "YAP-COMM-006"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "941767e2ac6dca6ef8673ddb6bda3560ce40caa1a0b3569fc198cf68a57fbfe7"
+  },
+  {
+    "id": "SCR-099",
+    "screenshot": "screenshots/legacy/04-community/05-research-server-created-empty.jpg",
+    "purpose": "Community management and discovery: 05 research server created empty",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Community navigation; settings/editor/content panels",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure server; browse discovery; preview lobby",
+    "interaction": "Approved blank test server before synthetic fixtures; Discovery off was subsequently saved. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/community; src/ui/workspace; src/ui/lobby",
+    "features": [
+      "YAP-COMM-001"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "33adf379ed80e5626b19078089fa2c554250b9b64564704e178490938ca5019a"
+  },
+  {
+    "id": "SCR-100",
+    "screenshot": "screenshots/legacy/04-community/06-discussion-sort-options.jpg",
+    "purpose": "Community management and discovery: 06 discussion sort options",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Community navigation; settings/editor/content panels",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure server; browse discovery; preview lobby",
+    "interaction": "Discussion sort choices; a synthetic tagged post was later created. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/community; src/ui/workspace; src/ui/lobby",
+    "features": [
+      "YAP-CHANNEL-014",
+      "YAP-CHANNEL-015"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "49d93127a7513a80e46a4aff5ac6374c4b33474de353686d0b253279434fa21e"
+  },
+  {
+    "id": "SCR-101",
+    "screenshot": "screenshots/legacy/05-messaging/02-synthetic-formatting-and-latest.jpg",
+    "purpose": "Synthetic conversation discussion or search: 02 synthetic formatting and latest",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Header timeline composer and contextual panel",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Read synthetic history; inspect discussion/search controls",
+    "interaction": "Synthetic content in the approved private research server; supports the named messaging workflow. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/chat; sync/engine.ts",
+    "features": [
+      "YAP-MSG-001",
+      "YAP-MSG-003",
+      "YAP-MSG-008"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "45d64a5414ef022b07eed474e948a1f9b3780a9d1d3c8305ecb5dd4a77aba47f"
+  },
+  {
+    "id": "SCR-102",
+    "screenshot": "screenshots/legacy/05-messaging/03-discussion-empty-state.jpg",
+    "purpose": "Synthetic conversation discussion or search: 03 discussion empty state",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Header timeline composer and contextual panel",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Read synthetic history; inspect discussion/search controls",
+    "interaction": "Synthetic content in the approved private research server; supports the named messaging workflow. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/chat; sync/engine.ts",
+    "features": [
+      "YAP-CHANNEL-003"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "86c9f690d7eff4bf2435aab76947bcf3fc7badf41463d3a826aa84e6818493d4"
+  },
+  {
+    "id": "SCR-103",
+    "screenshot": "screenshots/legacy/05-messaging/04-synthetic-discussion-post.jpg",
+    "purpose": "Synthetic conversation discussion or search: 04 synthetic discussion post",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Header timeline composer and contextual panel",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Read synthetic history; inspect discussion/search controls",
+    "interaction": "Synthetic content in the approved private research server; supports the named messaging workflow. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/chat; sync/engine.ts",
+    "features": [
+      "YAP-CHANNEL-013",
+      "YAP-CHANNEL-016"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "7566e67260bf26ca9efb241e8537582b6fe6bb02d611bb1bf706af6ba8d95c11"
+  },
+  {
+    "id": "SCR-104",
+    "screenshot": "screenshots/legacy/05-messaging/05-search-jump-synthetic.jpg",
+    "purpose": "Synthetic conversation discussion or search: 05 search jump synthetic",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Header timeline composer and contextual panel",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Read synthetic history; inspect discussion/search controls",
+    "interaction": "Synthetic content in the approved private research server; supports the named messaging workflow. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/chat; sync/engine.ts",
+    "features": [
+      "YAP-MSG-019",
+      "YAP-MSG-020",
+      "YAP-MSG-021",
+      "YAP-MSG-022",
+      "YAP-MSG-023"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "43d7822529d88b495291f81e3bd93c56c0f7464b2ddba0bc989de1965fdc1ce7"
+  },
+  {
+    "id": "SCR-105",
+    "screenshot": "screenshots/legacy/06-chat-loading/01-unread-announcements-open.jpg",
+    "purpose": "History loading and restoration scenario: 01 unread announcements open",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Public announcement unread opening, not a private conversation. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "bf66ed1102403f759685fcb2f9c9c6192d68d505269aece1c5ac91716421e3f1"
+  },
+  {
+    "id": "SCR-106",
+    "screenshot": "screenshots/legacy/06-chat-loading/02-announcements-latest-before-reload.jpg",
+    "purpose": "History loading and restoration scenario: 02 announcements latest before reload",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Latest announcement region before normal reload. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "e266ff3e88f6014e7d46fbdd7579949f467e980037f71006ca7aa1f675130cd5"
+  },
+  {
+    "id": "SCR-107",
+    "screenshot": "screenshots/legacy/06-chat-loading/03-announcements-after-reload.jpg",
+    "purpose": "History loading and restoration scenario: 03 announcements after reload",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Same channel/latest-content region after normal reload. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "fbc0ba165fba0b016526b1080864c4d6015dba2855654064826c4c6ea33c2d08"
+  },
+  {
+    "id": "SCR-108",
+    "screenshot": "screenshots/legacy/06-chat-loading/04-older-announcement-before-reload.jpg",
+    "purpose": "History loading and restoration scenario: 04 older announcement before reload",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Older announcement region before reload; paired with05. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "e92fb23e6de0de3ce350c1b73c1728615fefd7bfb2b68cb4d4db05101792f662"
+  },
+  {
+    "id": "SCR-109",
+    "screenshot": "screenshots/legacy/06-chat-loading/05-older-announcement-after-reload.jpg",
+    "purpose": "History loading and restoration scenario: 05 older announcement after reload",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Reload returned to latest-content region, losing the older position. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "832e00907cf23932f98fe04a2e0565f9ce2ceca62ce673885cb8e9bbfbfcd099"
+  },
+  {
+    "id": "SCR-110",
+    "screenshot": "screenshots/legacy/06-chat-loading/06-busy-general-latest.jpg",
+    "purpose": "History loading and restoration scenario: 06 busy general latest",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Busy public channel sample; not a full large-history performance benchmark. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "acbbe0bb64d9b6d011ee6a7c730d55a638fb5b2707bfd1053680ab7a1dc1e7f3"
+  },
+  {
+    "id": "SCR-111",
+    "screenshot": "screenshots/legacy/06-chat-loading/07-general-reading-history-incoming.jpg",
+    "purpose": "History loading and restoration scenario: 07 general reading history incoming",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Older public content remained visible as new-message count grew. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [
+      "YAP-MSG-027",
+      "YAP-MSG-028"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "c6420f14e4ae1d5a9a65793d69e3d3d308eb47c04e0cf5e1173373e6338bd8a7"
+  },
+  {
+    "id": "SCR-112",
+    "screenshot": "screenshots/legacy/06-chat-loading/10-general-older-controlled-before-switch.jpg",
+    "purpose": "History loading and restoration scenario: 10 general older controlled before switch",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Older reading state before the verified quick-switcher round trip. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [
+      "YAP-SHELL-003"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "760f91175bf6e9af6df410fac5c8a31b9f18f9f96d833f0ce2ce570d12c225ff"
+  },
+  {
+    "id": "SCR-113",
+    "screenshot": "screenshots/legacy/06-chat-loading/11-general-controlled-return.jpg",
+    "purpose": "History loading and restoration scenario: 11 general controlled return",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Verified return to public general displayed recent content instead of the old reading anchor. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "c739aa4b5d4d08453dea09ed034336da353bd79ad3540a762b0b5f27460693a5"
+  },
+  {
+    "id": "SCR-114",
+    "screenshot": "screenshots/legacy/06-chat-loading/12-network-older-history-payload.jpg",
+    "purpose": "History loading and restoration scenario: 12 network older history payload",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Ordinary older-history RPC payload with full timestamp cursor and50 limit; no authorization headers displayed. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [
+      "YAP-MSG-025",
+      "YAP-MSG-026"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "eaf8c03db226ad1d8322b9f869e5ab34192b6bcfede37ec84cf49a57572c501b"
+  },
+  {
+    "id": "SCR-115",
+    "screenshot": "screenshots/legacy/06-chat-loading/13-synthetic-hard-refresh-latest.jpg",
+    "purpose": "History loading and restoration scenario: 13 synthetic hard refresh latest",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Controlled hard refresh in the private test channel at the marker-C stage. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [
+      "YAP-MSG-029"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "800265434dcbe13d7b796672378bd31bd3d6d108bc3776d2c55cc9fd051b711b"
+  },
+  {
+    "id": "SCR-116",
+    "screenshot": "screenshots/legacy/06-chat-loading/14-synthetic-unread-divider.jpg",
+    "purpose": "History loading and restoration scenario: 14 synthetic unread divider",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Mark-unread on synthetic content produced a NEW divider. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [
+      "YAP-MSG-016"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "eb5927a39c48275c721d63a5c78c34d98050053e3dad6fe74bf72440113e4b77"
+  },
+  {
+    "id": "SCR-117",
+    "screenshot": "screenshots/legacy/06-chat-loading/15-synthetic-return-unread.jpg",
+    "purpose": "History loading and restoration scenario: 15 synthetic return unread",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Return after marking synthetic history unread; own-message scenario only. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "f9742ca811b4f535661c83cee392e4e235817de28b04408f72faa1a66d8d66be"
+  },
+  {
+    "id": "SCR-118",
+    "screenshot": "screenshots/legacy/06-chat-loading/16-longer-synthetic-unread-return.jpg",
+    "purpose": "History loading and restoration scenario: 16 longer synthetic unread return",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Later synthetic D/E/F history; viewport returned to latest rather than bringing unread B into view. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "3b4d17d9838ed5ddfe3d34a49525f5ff0fb9d1c968f19b14bda7bd443a0a900a"
+  },
+  {
+    "id": "SCR-119",
+    "screenshot": "screenshots/legacy/06-chat-loading/17-second-tab-private-restore.jpg",
+    "purpose": "History loading and restoration scenario: 17 second tab private restore",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Second Yapin tab retained authentication/server/channel; final settled latest pixel position was not established. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "43481ff1dffaa4dcdeb6e9db5eec0f9ab97f3f07d1eea5c59d760d5a345d6797"
+  },
+  {
+    "id": "SCR-120",
+    "screenshot": "screenshots/legacy/06-chat-loading/18-post-login-history.jpg",
+    "purpose": "History loading and restoration scenario: 18 post login history",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Reopening history-lab after user-assisted login left later Helper messages below view; marker F, emoji and GIF visible. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [
+      "YAP-AUTH-020",
+      "YAP-SHELL-011"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "91a25caf930f297d2d32ab7d9dc9b325a11de542e630133f8653c9e771feb890"
+  },
+  {
+    "id": "SCR-121",
+    "screenshot": "screenshots/legacy/06-chat-loading/19-post-login-manual-bottom.jpg",
+    "purpose": "History loading and restoration scenario: 19 post login manual bottom",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Conversation timeline unread marker or scroll position",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Reload; switch channel; jump to newest/target as caption describes",
+    "interaction": "Manual downward scroll exposed the later Helper reply, confirming it was below the initial viewport. A delayed Plus overlay appeared; dismissed without purchase. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "ConversationView.tsx; useReadingPosition.ts; history engine",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "6868fc1566e5643438bccb9f3118be82a3c8201096205fd9397b8e316b32d69f"
+  },
+  {
+    "id": "SCR-122",
+    "screenshot": "screenshots/legacy/07-voice-video/01-clips-duration-and-consent.jpg",
+    "purpose": "Voice/share/clip control surface: 01 clips duration and consent",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Call controls device/quality menu or consent panel",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect devices share tiers clips and mute state",
+    "interaction": "Personal clip duration and consent settings; distinct from the voice-report buffer. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/call; src/ui/call",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "c49b8e80098b86d5bc523148bfb5eb3403554ef17781e192c3096b9094fd9dd8"
+  },
+  {
+    "id": "SCR-123",
+    "screenshot": "screenshots/legacy/07-voice-video/02-share-quality-choices.jpg",
+    "purpose": "Voice/share/clip control surface: 02 share quality choices",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Call controls device/quality menu or consent panel",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect devices share tiers clips and mute state",
+    "interaction": "720p30 enabled and1080p60 subscription/community gate; cancelled before GoLive. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/call; src/ui/call",
+    "features": [
+      "YAP-VOICE-015",
+      "YAP-VOICE-016",
+      "YAP-VOICE-017"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "e668fd9b1c9f4ba8623d34d75cd4b925b70ff126527938dbc4f8035c8f83d2db"
+  },
+  {
+    "id": "SCR-124",
+    "screenshot": "screenshots/legacy/07-voice-video/03-muted-call-controls.jpg",
+    "purpose": "Voice/share/clip control surface: 03 muted call controls",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Call controls device/quality menu or consent panel",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect devices share tiers clips and mute state",
+    "interaction": "Sole-member muted connection controls, soundboard/activity entries and report-buffer disclosure. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/call; src/ui/call",
+    "features": [
+      "YAP-CHANNEL-004",
+      "YAP-VOICE-001",
+      "YAP-VOICE-002",
+      "YAP-VOICE-010",
+      "YAP-VOICE-011",
+      "YAP-VOICE-012",
+      "YAP-VOICE-013",
+      "YAP-VOICE-021",
+      "YAP-VOICE-022",
+      "YAP-VOICE-026",
+      "YAP-VOICE-027"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "8b5dc49814690b7ef0901753ede4ab0b5f113267dadc1d827c4dac6e78aee6b1"
+  },
+  {
+    "id": "SCR-125",
+    "screenshot": "screenshots/legacy/08-roles-permissions/01-default-permissions.jpg",
+    "purpose": "Role and permission editor: 01 default permissions",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Role hierarchy; matrix; override explanation",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure role display; inspect grants/inheritance",
+    "interaction": "Permission or role configuration UI; no second-account conflict/enforcement test. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "RoleEditor.tsx; PermissionsDialog.tsx",
+    "features": [
+      "YAP-ROLE-006",
+      "YAP-PERM-001",
+      "YAP-PERM-002",
+      "YAP-PERM-003",
+      "YAP-PERM-004",
+      "YAP-PERM-005",
+      "YAP-PERM-006",
+      "YAP-PERM-007",
+      "YAP-PERM-008",
+      "YAP-PERM-009",
+      "YAP-PERM-010",
+      "YAP-PERM-011",
+      "YAP-PERM-012",
+      "YAP-PERM-013",
+      "YAP-PERM-014",
+      "YAP-PERM-015",
+      "YAP-PERM-016",
+      "YAP-PERM-017",
+      "YAP-PERM-018",
+      "YAP-PERM-019",
+      "YAP-PERM-020",
+      "YAP-PERM-021",
+      "YAP-PERM-022",
+      "YAP-PERM-023",
+      "YAP-PERM-024",
+      "YAP-PERM-025",
+      "YAP-PERM-026",
+      "YAP-PERM-027",
+      "YAP-PERM-028",
+      "YAP-PERM-029",
+      "YAP-PERM-030",
+      "YAP-PERM-031",
+      "YAP-PERM-032"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "86a0b68fa2931d381a9853d51920fc5f378e982fcf2a6609df042b47ab676dd4"
+  },
+  {
+    "id": "SCR-126",
+    "screenshot": "screenshots/legacy/08-roles-permissions/02-role-gradient-editor.jpg",
+    "purpose": "Role and permission editor: 02 role gradient editor",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Role hierarchy; matrix; override explanation",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure role display; inspect grants/inheritance",
+    "interaction": "Synthetic role gradient editor; save/assignment/rendering verified in the private server. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "RoleEditor.tsx; PermissionsDialog.tsx",
+    "features": [
+      "YAP-ROLE-004"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "5ddba2b79e40b416d12f22a577aa2daab7c9e3289f093c2797740da69db54fc9"
+  },
+  {
+    "id": "SCR-127",
+    "screenshot": "screenshots/legacy/08-roles-permissions/03-category-inheritance.jpg",
+    "purpose": "Role and permission editor: 03 category inheritance",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Role hierarchy; matrix; override explanation",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Configure role display; inspect grants/inheritance",
+    "interaction": "Category permissions and inheritance explanation; enforcement not tested with another account. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "RoleEditor.tsx; PermissionsDialog.tsx",
+    "features": [
+      "YAP-CHANNEL-008",
+      "YAP-CHANNEL-009",
+      "YAP-GATE-001",
+      "YAP-GATE-002",
+      "YAP-GATE-003",
+      "YAP-GATE-004",
+      "YAP-GATE-005",
+      "YAP-GATE-006"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "c75a0226a693d9cda9250e1544720404153ab01d0b787d107d60a5a8f95b4e4e"
+  },
+  {
+    "id": "SCR-128",
+    "screenshot": "screenshots/legacy/09-bots-integrations/01-built-in-bots.jpg",
+    "purpose": "Bot catalog developer docs or command result: 01 built in bots",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Catalog or documentation; synthetic command message where captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect configuration/docs; only Helper help was executed",
+    "interaction": "Bot configuration/docs observation; only the private Helper command response was executed. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "workspace/bots; developer; officialBots.ts",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "8926092eafc5cb126b8f6fbc8c1fcc1d7875b90b1073c6c2a73339538db714ac"
+  },
+  {
+    "id": "SCR-129",
+    "screenshot": "screenshots/legacy/09-bots-integrations/02-public-developer-docs.jpg",
+    "purpose": "Bot catalog developer docs or command result: 02 public developer docs",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Catalog or documentation; synthetic command message where captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect configuration/docs; only Helper help was executed",
+    "interaction": "Bot configuration/docs observation; only the private Helper command response was executed. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "workspace/bots; developer; officialBots.ts",
+    "features": [
+      "YAP-DEV-010",
+      "YAP-DEV-011"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "576d70541a8aba7a19e46a43a5575a9bb2240607c85d271cf2f7b03b0c5f11cd"
+  },
+  {
+    "id": "SCR-130",
+    "screenshot": "screenshots/legacy/09-bots-integrations/03-directory-search-empty.jpg",
+    "purpose": "Bot catalog developer docs or command result: 03 directory search empty",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Catalog or documentation; synthetic command message where captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect configuration/docs; only Helper help was executed",
+    "interaction": "Bot configuration/docs observation; only the private Helper command response was executed. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "workspace/bots; developer; officialBots.ts",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "00382cd14d55fde5ff17157442b9d8da0bdc5e10891b42d63c04d2e709253c21"
+  },
+  {
+    "id": "SCR-131",
+    "screenshot": "screenshots/legacy/09-bots-integrations/04-helper-working-private.jpg",
+    "purpose": "Bot catalog developer docs or command result: 04 helper working private",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Catalog or documentation; synthetic command message where captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect configuration/docs; only Helper help was executed",
+    "interaction": "Actual Helper response to !help in the approved private server. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "workspace/bots; developer; officialBots.ts",
+    "features": [
+      "YAP-BOT-003",
+      "YAP-BOTOPT-003"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "3f115189b4c46922b4c9f3dc3e590f8253f3c25423c35ad725989a09b46e63eb"
+  },
+  {
+    "id": "SCR-132",
+    "screenshot": "screenshots/legacy/11-customization/01-profile-settings.jpg",
+    "purpose": "Profile expression or appearance option: 01 profile settings",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Personal customization UI or synthetic expression workflow; global styling previews were cancelled. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-PROFILE-015"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "38f3700ae5ec93e74513fbce1f69db7e8c93f66a22cec831d9cae28c2f1d5b7e"
+  },
+  {
+    "id": "SCR-133",
+    "screenshot": "screenshots/legacy/11-customization/02-appearance.jpg",
+    "purpose": "Profile expression or appearance option: 02 appearance",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Personal customization UI or synthetic expression workflow; global styling previews were cancelled. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "5f591d1a3b3a41f7a654497f8283edc9bf4f3527b94b20562d987a738be9408d"
+  },
+  {
+    "id": "SCR-134",
+    "screenshot": "screenshots/legacy/11-customization/03-dm-privacy-choices.jpg",
+    "purpose": "Profile expression or appearance option: 03 dm privacy choices",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Observed DM privacy alternatives; original shared-servers-and-friends value retained/restored. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-SOCIAL-010"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "4ecc7d47bc1e6ac2b95fd65f4f8d7d229b5e90c9704058d5c576fa06e113f08a"
+  },
+  {
+    "id": "SCR-135",
+    "screenshot": "screenshots/legacy/11-customization/04-decoration-library.jpg",
+    "purpose": "Profile expression or appearance option: 04 decoration library",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Personal customization UI or synthetic expression workflow; global styling previews were cancelled. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-LOOK-001",
+      "YAP-LOOK-002",
+      "YAP-LOOK-004",
+      "YAP-LOOK-005"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "7280a5aafa96546b8daf4e0ae4688545426c2d1f99734586e1cd872fd7fd0b1a"
+  },
+  {
+    "id": "SCR-136",
+    "screenshot": "screenshots/legacy/11-customization/05-decoration-live-preview.jpg",
+    "purpose": "Profile expression or appearance option: 05 decoration live preview",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Unsaved decoration preview in profile/chat/member contexts. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-LOOK-006"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "73bb32ec86ac92b0bd0ce05a8ed49dbc5a1773f765b1f4085306d4a666d0f370"
+  },
+  {
+    "id": "SCR-137",
+    "screenshot": "screenshots/legacy/11-customization/06-community-decoration-filters.jpg",
+    "purpose": "Profile expression or appearance option: 06 community decoration filters",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Personal customization UI or synthetic expression workflow; global styling previews were cancelled. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "a390d0c868cf689ceedace24f01137cb4c1db561e5fbcfe09c77a3dcf54ac2f6"
+  },
+  {
+    "id": "SCR-138",
+    "screenshot": "screenshots/legacy/11-customization/07-decoration-shards-gate.jpg",
+    "purpose": "Profile expression or appearance option: 07 decoration shards gate",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Priced item try-on and disabled purchase due to insufficient Shards; no purchase. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-LOOK-008"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "4d50d9289ed7ad4d1f11d79049467545c752077c963ad490ec9908af021450e6"
+  },
+  {
+    "id": "SCR-139",
+    "screenshot": "screenshots/legacy/11-customization/08-decoration-creator-guidance.jpg",
+    "purpose": "Profile expression or appearance option: 08 decoration creator guidance",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Artwork/format guidance; no protected artwork copied or submitted. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "e0cee33061c548c52e6cc4b757d19f532447a21ac1bda12da7fe9b351e8d2a40"
+  },
+  {
+    "id": "SCR-140",
+    "screenshot": "screenshots/legacy/11-customization/09-decoration-submission-fields.jpg",
+    "purpose": "Profile expression or appearance option: 09 decoration submission fields",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Empty creator submission form; no image or submission. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-LOOK-007"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "c21e144e358459766b1a13e13f40b92cadab121be9521c08adf1af3d6ac5e9be"
+  },
+  {
+    "id": "SCR-141",
+    "screenshot": "screenshots/legacy/11-customization/10-decoration-creator-price-range.jpg",
+    "purpose": "Profile expression or appearance option: 10 decoration creator price range",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Draft sale toggle exposed25\u20135000Shards pricing; form discarded. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-LOOK-009"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "d3973ff358e3125d37af57b4a028e34465ce5b5ca79174938bcded88ab373a96"
+  },
+  {
+    "id": "SCR-142",
+    "screenshot": "screenshots/legacy/11-customization/11-name-font-gradient-preview.jpg",
+    "purpose": "Profile expression or appearance option: 11 name font gradient preview",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Unsaved Pixel/gradient preview; original default style verified after dismissal. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-LOOK-011",
+      "YAP-LOOK-012"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "5de408b768fe12c8dffcfa3c87baea6a07f15ba631aa2b014fcd15a2045c39a2"
+  },
+  {
+    "id": "SCR-143",
+    "screenshot": "screenshots/legacy/11-customization/12-custom-emoji-and-cross-server.jpg",
+    "purpose": "Profile expression or appearance option: 12 custom emoji and cross server",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Original research_dot and a MINECRAFT emoji rendered in the private test channel on Free. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-EXPR-002",
+      "YAP-EXPR-003",
+      "YAP-EXPR-004"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "d05303f5d5dbb8d00b9e907119cf2416a8e4efcb20ccda531dfd67afa4a5f7e0"
+  },
+  {
+    "id": "SCR-144",
+    "screenshot": "screenshots/legacy/11-customization/13-gif-private-chat.jpg",
+    "purpose": "Profile expression or appearance option: 13 gif private chat",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "A searched KLIPY GIF sent immediately on selection in private synthetic chat. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-MEDIA-006",
+      "YAP-EXPR-007",
+      "YAP-EXPR-008"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "7656996824233710da4e7f2c8de42892a4a2a07547848a432047c7250235fb83"
+  },
+  {
+    "id": "SCR-145",
+    "screenshot": "screenshots/legacy/11-customization/14-custom-status-expiry.jpg",
+    "purpose": "Profile expression or appearance option: 14 custom status expiry",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Status text/emoji and six expiry choices; no status entered. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [
+      "YAP-SOCIAL-016",
+      "YAP-SOCIAL-017",
+      "YAP-NOTIFY-008"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "e1a985634e8552274397c3ca4e0d40509552a44ca310dde24bd3f1b2672764ed"
+  },
+  {
+    "id": "SCR-146",
+    "screenshot": "screenshots/legacy/11-customization/15-shards-selling-restrictions.jpg",
+    "purpose": "Profile expression or appearance option: 15 shards selling restrictions",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Profile controls preview or synthetic expression view",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Inspect/preview; use original synthetic emoji/GIF where captioned",
+    "interaction": "Creator70% share,age/Plus eligibility,grandfathered free wearers and non-cash/non-transfer restriction. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/settings; people; ExpressionPicker.tsx",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "797566bc0f0e3e926c22c1d227ef6e16c129a38fc4022476b56afaac3d29c82b"
+  },
+  {
+    "id": "SCR-147",
+    "screenshot": "screenshots/legacy/12-subscriptions/01-plus-plan.jpg",
+    "purpose": "Plus offer comparison: 01 plus plan",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Plan card benefit comparison and purchase entries",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Review plans/gifts; no checkout",
+    "interaction": "Observed plan comparison; no purchase or billing action. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Desktop only for this state; phone behavior UNVERIFIED. See current/49\u201353 for checked app breakpoints.",
+    "equivalent": "src/ui/mojo; billing",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "f9fddbd4258bd8a55821118647f0ea0f1e4cbd4f50b22291b28394117dbda969"
+  },
+  {
+    "id": "SCR-148",
+    "screenshot": "screenshots/legacy/13-mobile/01-lobby-phone-preview.jpg",
+    "purpose": "Responsive app or editor preview: 01 lobby phone preview",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Phone/tablet/desktop app arrangement as captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Navigate chat and composer; preview lobby",
+    "interaction": "Lobby editor phone preview only; not an actual viewport test. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Lobby editor phone preview only; not an actual viewport test. Browser emulation or editor preview only, as specified.",
+    "equivalent": "Shell.tsx; TabBar.tsx; responsive.css",
+    "features": [
+      "YAP-COMM-017"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "a9d7fecf6710e0bfac4fa7fa41d3db07de2a99e39be87d479c6c3e7b5c8bfc14"
+  },
+  {
+    "id": "SCR-149",
+    "screenshot": "screenshots/legacy/13-mobile/02-phone-390-social-navigation.jpg",
+    "purpose": "Responsive app or editor preview: 02 phone 390 social navigation",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Phone/tablet/desktop app arrangement as captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Navigate chat and composer; preview lobby",
+    "interaction": "Actual390\u00d7844 browser emulation with phone navigation. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Actual390\u00d7844 browser emulation with phone navigation. Browser emulation or editor preview only, as specified.",
+    "equivalent": "Shell.tsx; TabBar.tsx; responsive.css",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "b17b76e228844edd94e4c1cfd1be8d537861e74c3cdc1c7edadd6ec9408b86ef"
+  },
+  {
+    "id": "SCR-150",
+    "screenshot": "screenshots/legacy/13-mobile/03-phone-390-chat.jpg",
+    "purpose": "Responsive app or editor preview: 03 phone 390 chat",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Phone/tablet/desktop app arrangement as captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Navigate chat and composer; preview lobby",
+    "interaction": "Actual390\u00d7844 private synthetic chat header/composer. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Actual390\u00d7844 private synthetic chat header/composer. Browser emulation or editor preview only, as specified.",
+    "equivalent": "Shell.tsx; TabBar.tsx; responsive.css",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "892155a49fe3ade951724eed8afdf84e233371bf0b009400ff08e993448d445f"
+  },
+  {
+    "id": "SCR-151",
+    "screenshot": "screenshots/legacy/13-mobile/04-phone-composer-overflow.jpg",
+    "purpose": "Responsive app or editor preview: 04 phone composer overflow",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Phone/tablet/desktop app arrangement as captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Navigate chat and composer; preview lobby",
+    "interaction": "Phone composer overflow exposes file,GIF andpoll actions. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "Phone composer overflow exposes file,GIF andpoll actions. Browser emulation or editor preview only, as specified.",
+    "equivalent": "Shell.tsx; TabBar.tsx; responsive.css",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "2f1ad28ed7694399b777934a3b1b84417eb472ad1532d0d412e7b04578bbdf9b"
+  },
+  {
+    "id": "SCR-152",
+    "screenshot": "screenshots/legacy/13-mobile/05-tablet-768-chat.jpg",
+    "purpose": "Responsive app or editor preview: 05 tablet 768 chat",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Phone/tablet/desktop app arrangement as captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Navigate chat and composer; preview lobby",
+    "interaction": "768\u00d7844 viewport; desktop-style rail/header visible. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "768\u00d7844 viewport; desktop-style rail/header visible. Browser emulation or editor preview only, as specified.",
+    "equivalent": "Shell.tsx; TabBar.tsx; responsive.css",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "2ef41781005fba107aced4aa5955db6fff372443cb6f60b8fd4051d2d54dcbb0"
+  },
+  {
+    "id": "SCR-153",
+    "screenshot": "screenshots/legacy/13-mobile/06-laptop-1024-chat.jpg",
+    "purpose": "Responsive app or editor preview: 06 laptop 1024 chat",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Phone/tablet/desktop app arrangement as captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Navigate chat and composer; preview lobby",
+    "interaction": "1024\u00d7844 viewport comparison. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "1024\u00d7844 viewport comparison. Browser emulation or editor preview only, as specified.",
+    "equivalent": "Shell.tsx; TabBar.tsx; responsive.css",
+    "features": [],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "a3746ec8bcba60b99d2a05ecd4f5a665f044f6abc87448b033a5231eda528c2b"
+  },
+  {
+    "id": "SCR-154",
+    "screenshot": "screenshots/legacy/13-mobile/07-desktop-1440-chat.jpg",
+    "purpose": "Responsive app or editor preview: 07 desktop 1440 chat",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-01",
+    "components": "Phone/tablet/desktop app arrangement as captioned",
+    "layout": "Historical native Chrome capture; app columns or overlay/editor appropriate to this state.",
+    "actions": "Navigate chat and composer; preview lobby",
+    "interaction": "1440\u00d7844 viewport comparison; emulation later disabled. Historical observation only; see evidence/legacy for exact scope.",
+    "responsive": "1440\u00d7844 viewport comparison; emulation later disabled. Browser emulation or editor preview only, as specified.",
+    "equivalent": "Shell.tsx; TabBar.tsx; responsive.css",
+    "features": [
+      "YAP-SHELL-002"
+    ],
+    "dimensions": [
+      2400,
+      1514
+    ],
+    "format": "JPEG",
+    "sha256": "131dfa5ac8bf9b528f05a431c82d4d6633de980fb2d8033330dbb48326723666"
+  },
+  {
+    "id": "SCR-155",
+    "screenshot": "screenshots/meldiq/sign-in.jpg",
+    "purpose": "Meldiq current production sign-in chooser",
+    "route": "https://web.meldiq.app/",
+    "date": "2026-11-04",
+    "components": "Provider buttons; email/passkey; recovery; registration; appeal; legal/status footer",
+    "layout": "Centered responsive sign-in surface",
+    "actions": "Choose account method; open recovery/appeal",
+    "interaction": "Live UI observed; no credentials or production account writes.",
+    "responsive": "Default desktop viewport observed; phone sign-in not checked here.",
+    "equivalent": "Actual active Meldiq UI; AuthScreen.tsx",
+    "features": [],
+    "dimensions": [
+      1280,
+      720
+    ],
+    "format": "JPEG",
+    "sha256": "22546756f66d271cefcbfe9995ee13a2773e6eb85b2d43f47f313987bc5e91e0"
+  },
+  {
+    "id": "SCR-156",
+    "screenshot": "NONE \u2014 text evidence only",
+    "purpose": "Account security and privacy",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "2FA; passkeys; DM/group privacy; export; global logout; deletion",
+    "layout": "Account page or visitor auth form",
+    "actions": "Inspect security and account lifecycle controls",
+    "interaction": "Observed; no sensitive identity fields saved to screenshot. Evidence: evidence/03-account.txt",
+    "responsive": "UNVERIFIED",
+    "equivalent": "AccountSettingsPage.tsx; account safety",
+    "features": [],
+    "dimensions": null,
+    "format": null,
+    "sha256": null
+  },
+  {
+    "id": "SCR-157",
+    "screenshot": "NONE \u2014 text evidence only",
+    "purpose": "Expanded account-identification help",
+    "route": "https://yapin.gg/",
+    "date": "2026-11-04",
+    "components": "Recovery guidance within email-reset form",
+    "layout": "Account page or visitor auth form",
+    "actions": "Expand forgotten-email help",
+    "interaction": "Observed; no sensitive identity fields saved to screenshot. Evidence: evidence/24-forgot-email.txt",
+    "responsive": "UNVERIFIED",
+    "equivalent": "RecoverForms.tsx",
+    "features": [],
+    "dimensions": null,
+    "format": null,
+    "sha256": null
+  }
+]

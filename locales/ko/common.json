@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "음소거됨"
+  },
+  "password": {
+    "show": "비밀번호 표시",
+    "hide": "비밀번호 숨기기"
+  },
+  "navigation": {
+    "skipToContent": "본문으로 건너뛰기"
   }
 }

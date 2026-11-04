@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "音量を減らす"
+  },
+  "password": {
+    "show": "パスワードを表示",
+    "hide": "パスワードを隠す"
+  },
+  "navigation": {
+    "skipToContent": "メインコンテンツへ移動"
   }
 }

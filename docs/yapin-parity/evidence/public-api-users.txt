@@ -1,0 +1,202 @@
+Browser tab: 2, Title: "Users · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/users".
+1 AXWebArea Users · Bot API reference · Yapin’, URL: yapin.gg/developers/api/users
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Users, Value: 1
+				15 text Users
+			16 text Profiles and DMs.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-users-id
+				25 text GET
+				26 text /users/{id}
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/users#get-users-id
+				28 text A user’s public profile
+				29 text Auth :  Bot token JS: 
+				30 text bot.user()
+				31 text Python: 
+				32 text bot.user()
+				33 heading PARAMETERS, Value: 4
+					34 text PARAMETERS
+				35 table
+					36 row
+						37 cell
+							38 text NAME
+						39 cell
+							40 text TYPE
+						41 cell
+							42 text DESCRIPTION
+					43 row
+						44 cell
+							45 text {id}
+						46 cell
+							47 text string (uuid)
+						48 cell
+							49 text User id
+							50 container
+								51 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				52 heading RESPONSE200, Value: 4
+					53 text RESPONSE
+					54 text 200
+				55 text object
+				56 table
+					57 row
+						58 cell
+							59 text FIELD
+						60 cell
+							61 text TYPE
+						62 cell
+							63 text DESCRIPTION
+					64 row
+						65 cell
+							66 text user
+						67 cell
+							68 text object
+						69 cell
+							70 text The profile
+							71 button (collapsed) Fields, Secondary Actions: Expand
+								72 text Fields
+				73 button (collapsed) Example response, Secondary Actions: Expand
+					74 text Example response
+				75 heading ERRORS, Value: 4
+					76 text ERRORS
+				77 content list
+					78 container
+						79 AXListMarker • 
+						80 text 401 Missing or wrong token
+					81 container
+						82 AXListMarker • 
+						83 text 404 No such thing, or the bot can’t see it
+					84 container
+						85 AXListMarker • 
+						86 text 500 Something went wrong on our side
+					87 container
+						88 AXListMarker • 
+						89 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			90 container post-users-id-dm
+				91 text POST
+				92 text /users/{id}/dm
+				93 link Description: Link to this endpoint, Value: yapin.gg/developers/api/users#post-users-id-dm
+				94 text Open (or find) a DM with someone; their DM settings apply
+				95 text Auth :  Bot token JS: 
+				96 text bot.dm()
+				97 text Python: 
+				98 text bot.dm()
+				99 heading PARAMETERS, Value: 4
+					100 text PARAMETERS
+				101 table
+					102 row
+						103 cell
+							104 text NAME
+						105 cell
+							106 text TYPE
+						107 cell
+							108 text DESCRIPTION
+					109 row
+						110 cell
+							111 text {id}
+						112 cell
+							113 text string (uuid)
+						114 cell
+							115 text User id
+							116 container
+								117 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				118 heading RESPONSE200, Value: 4
+					119 text RESPONSE
+					120 text 200
+				121 text object
+				122 table
+					123 row
+						124 cell
+							125 text FIELD
+						126 cell
+							127 text TYPE
+						128 cell
+							129 text DESCRIPTION
+					130 row
+						131 cell
+							132 text channel_id
+						133 cell
+							134 text string (uuid)
+						135 cell
+							136 text The DM’s channel id
+							137 container
+								138 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+				139 button (collapsed) Example response, Secondary Actions: Expand
+					140 text Example response
+				141 heading ERRORS, Value: 4
+					142 text ERRORS
+				143 content list
+					144 container
+						145 AXListMarker • 
+						146 text 401 Missing or wrong token
+					147 container
+						148 AXListMarker • 
+						149 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					150 container
+						151 AXListMarker • 
+						152 text 404 No such thing, or the bot can’t see it
+					153 container
+						154 AXListMarker • 
+						155 text 500 Something went wrong on our side
+					156 container
+						157 AXListMarker • 
+						158 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			159 link Description: ← Back to Yapin’, Value: yapin.gg/
+			160 text  · 
+			161 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		162 container On this page
+			163 text ON THIS PAGE
+			164 content list
+				165 link Description: Overview, Value: yapin.gg/developers/api/users#top
+				166 link Description: GET /users/{id}, Value: yapin.gg/developers/api/users#get-users-id
+				167 link Description: POST /users/{id}/dm, Value: yapin.gg/developers/api/users#post-users-id-dm
+		168 text Yapin’
+		169 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		170 heading PRODUCT, Value: 4
+			171 text PRODUCT
+		172 content list
+			173 link Description: Download, Value: yapin.gg/download
+			174 link Description: Developers, Value: yapin.gg/developers
+			175 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			176 link Description: Creator Program, Value: yapin.gg/creators
+			177 link Description: FanKit, Value: yapin.gg/fankit
+			178 link Description: Roadmap, Value: yapin.gg/roadmap
+			179 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			180 link Description: Bugs, Value: yapin.gg/bugs
+			181 link Description: Status, Value: yapin.gg/status
+		182 heading COMMUNITY, Value: 4
+			183 text COMMUNITY
+		184 content list
+			185 link Description: Guidelines, Value: yapin.gg/guidelines
+			186 link Description: Tutorials, Value: yapin.gg/tutorials
+			187 link Description: Bots, Value: yapin.gg/bots
+			188 link Description: Partners, Value: yapin.gg/partners
+		189 heading LEGAL, Value: 4
+			190 text LEGAL
+		191 content list
+			192 link Description: Terms, Value: yapin.gg/terms
+			193 link Description: Privacy, Value: yapin.gg/privacy
+			194 link Description: Copyright, Value: yapin.gg/copyright
+			195 link Description: Security, Value: yapin.gg/security
+			196 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			197 link Description: Contact, Value: mailto:hello@yapin.gg
+		198 text © 2026 Yapper Media LLC. Free to use.
+		199 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Users · Bot API reference · Yapin’, URL: yapin.gg/developers/api/users

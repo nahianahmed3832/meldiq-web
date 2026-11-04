@@ -1,0 +1,70 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Share your screen
+							21 heading Share your screen, Value: 2
+								22 text Share your screen
+							23 text Pick a quality, then choose what to share.
+							24 Stream quality
+								25 radio button 720p 30 fps Good for most stuff, Value: 1
+									26 text 720p
+									27 text 30 fps
+									28 text Good for most stuff
+								29 radio button (disabled) 1080p 60 fps Plus or Supercharge Lv2, Value: 0
+									30 image
+									31 text 1080p 60 fps Plus or Supercharge Lv2
+							32 image
+							33 text Want 1080p 60fps?
+							34 button Get Plus
+							35 text WHAT IS IT
+							36 What you're sharing
+								37 radio button Game Smooth motion comes first, Value: 0
+									38 image
+									39 text Game
+									40 text Smooth motion comes first
+								41 radio button Text and apps Sharp text comes first, Value: 1
+							42 button Cancel
+							43 button Go Live
+			44 container
+				45 tab group
+					46 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						47 button Close
+					48 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 246 MB, Value: on
+						49 button Close
+					50 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						51 button Close
+			52 button New Tab
+	53 close button
+	54 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	55 minimize button
+56 menu bar
+	57 Chrome
+	58 File
+	59 Edit
+	60 View
+	61 History
+	62 Bookmarks
+	63 Profiles
+	64 Tab
+	65 Window
+	66 Help
+
+The focused UI element is 43 button Go Live

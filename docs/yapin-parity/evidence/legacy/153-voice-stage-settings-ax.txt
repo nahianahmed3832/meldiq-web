@@ -1,0 +1,82 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Edit channel
+							21 heading Edit channel, Value: 2
+								22 text Edit channel
+							23 tab group
+								24 tab (selected) Overview, Value: 1
+								25 tab (settable, integer) Permissions, Value: 0
+							26 text CHANNEL NAME
+							27 text field (settable) CHANNEL NAME, Value: General
+							28 text CATEGORY
+							29 combo box (settable) CATEGORY, Value: Voice channels
+								30 text Voice channels
+							31 container
+								32 text Private Channel
+								33 image Private channel
+								34 text Only the roles you pick (plus the owner and server managers) can see and use it.
+								35 checkbox Value: 0, Private Channel Private channel Only the roles you pick (plus the owner and server managers) can see and use it.
+							36 container
+								37 text Stage For Q&As and events. People join as listeners and can't talk until a mod brings them up. They can raise a hand to ask. People with Mute Members can always talk.
+								38 checkbox Value: 0, Stage For Q&As and events. People join as listeners and can't talk until a mod brings them up. They can raise a hand to ask. People with Mute Members can always talk.
+							39 container
+								40 text Text only No pictures, files or GIFs in this channel, except from managers and mods. Keep an images channel next to it.
+								41 checkbox Value: 0, Text only No pictures, files or GIFs in this channel, except from managers and mods. Keep an images channel next to it.
+							42 container
+								43 text No GIFs GIFs from the picker and GIF links are refused here. Pictures still work. People with Manage Messages are excepted.
+								44 checkbox Value: 0, No GIFs GIFs from the picker and GIF links are refused here. Pictures still work. People with Manage Messages are excepted.
+							45 container
+								46 text Read-only
+								47 image
+								48 text Everyone can read and react, but only the roles you pick (plus managers) can post. Great for #announcements.
+								49 checkbox Value: 0, Read-only Everyone can read and react, but only the roles you pick (plus managers) can post. Great for #announcements.
+							50 text Slowmode
+							51 text How long people wait between messages. Moderators aren't affected.
+							52 combo box (settable) Slowmode, Value: Off
+								53 text Off
+							54 button Cancel
+							55 button Save
+			56 container
+				57 tab group
+					58 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						59 button Close
+					60 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 246 MB, Value: on
+						61 button Close
+					62 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						63 button Close
+			64 button New Tab
+	65 close button
+	66 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	67 minimize button
+68 menu bar
+	69 Chrome
+	70 File
+	71 Edit
+	72 View
+	73 History
+	74 Bookmarks
+	75 Profiles
+	76 Tab
+	77 Window
+	78 Help
+
+The focused UI element is 27 text field (settable) CHANNEL NAME, Value: General

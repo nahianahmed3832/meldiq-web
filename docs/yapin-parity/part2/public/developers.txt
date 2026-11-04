@@ -1,0 +1,85 @@
+Browser tab: 6, Title: "Developers · Meldiq", URL: "https://meldiq.app/developers".
+1 AXWebArea Developers · Meldiq, URL: meldiq.app/developers
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/developers#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Developers, Value: meldiq.app/
+				16 text BUILD AROUND YOUR COMMUNITY
+				17 heading Useful tools. Clear boundaries., Value: 1
+					18 text Useful tools. Clear boundaries.
+				19 text Start with Meldiq’s bot tools and account permissions. This page is an overview, not an API or SDK reference.
+			20 container
+				21 text 01
+				22 heading Start with the app, Value: 2
+					23 text Start with the app
+				24 text Open Meldiq to check the bot and developer tools available to your account. Use the supported controls to create or manage a bot identity and review its permissions.
+				25 link Description: Open Meldiq, Value: web.meldiq.app/
+			26 container
+				27 text 02
+				28 heading Understand the limits, Value: 2
+					29 text Understand the limits
+				30 text Free and Plus accounts have different bot creation allowances. Community Bots+ is a separate product. Current published allowances and prices are on the pricing page.
+				31 link Description: Current plans and limits, Value: meldiq.app/pricing
+			32 container
+				33 text 03
+				34 heading Keep credentials private, Value: 2
+					35 text Keep credentials private
+				36 text Store bot credentials outside public repositories and client-side code. Give a bot the smallest set of community permissions it needs, and remove access when it is no longer used.
+				37 link Description: Security information, Value: meldiq.app/security
+			38 container
+				39 text 04
+				40 heading Need integration details?, Value: 2
+					41 text Need integration details?
+				42 text A public API and SDK reference is not published on this website. Check the tools in Meldiq or the current support contact before building against an undocumented endpoint.
+				43 link Description: Contact support, Value: meldiq.app/support
+			44 container
+				45 heading Make yourself at home., Value: 2
+					46 text Make yourself at home.
+				47 text Your next conversation is only a tab away.
+				48 link Description: Open Meldiq, Value: web.meldiq.app/
+		49 container
+			50 link Description: Meldiq home, Value: meldiq.app/
+			51 text Communities, direct messages and calls in one place.
+			52 link Description: Open Meldiq, Value: web.meldiq.app/
+			53 heading PRODUCT, Value: 2
+				54 text PRODUCT
+			55 link Description: Features, Value: meldiq.app/features
+			56 link Description: Pricing, Value: meldiq.app/pricing
+			57 link Description: Download, Value: meldiq.app/download
+			58 link Description: Developers, Value: meldiq.app/developers
+			59 link Description: Bots, Value: meldiq.app/bots
+			60 link Description: Roadmap, Value: meldiq.app/roadmap
+			61 link Description: Brand kit, Value: meldiq.app/brand
+			62 link Description: Service status, Value: status.meldiq.app/
+			63 heading COMMUNITY, Value: 2
+				64 text COMMUNITY
+			65 link Description: Find your community, Value: meldiq.app/community
+			66 link Description: Getting started, Value: meldiq.app/tutorials
+			67 link Description: Questions & answers, Value: meldiq.app/faq
+			68 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			69 link Description: Your account, Value: meldiq.app/account
+			70 link Description: Billing, Value: meldiq.app/account/billing
+			71 link Description: Contact support, Value: meldiq.app/support
+			72 heading LEGAL, Value: 2
+				73 text LEGAL
+			74 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			75 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			76 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			77 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			78 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			79 link Description: Security & encryption, Value: meldiq.app/security
+			80 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			81 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			82 link Description: Back to top ↑, Value: meldiq.app/developers#top
+
+The focused UI element is 1 AXWebArea Developers · Meldiq, URL: meldiq.app/developers

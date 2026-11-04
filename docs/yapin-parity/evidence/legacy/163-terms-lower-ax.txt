@@ -1,0 +1,309 @@
+Window: "Terms of Service · Yapin’", App: Google Chrome.
+0 standard window Terms of Service · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/terms, Secondary Actions: Raise
+	1 container Terms of Service · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/terms
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/terms, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Terms of Service · Yapin’, URL: yapin.gg/terms
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container (showing 51-151 of 151 items)
+								29 heading 9.3 Automatic renewal and cancellation, Value: 3
+									30 text 9.3 Automatic renewal and cancellation
+								31 text Yapin’ Plus, Server Plus, Supercharge and bot hosting renew automatically each month, and Boosts and Promoted placements each week, at the then-current price and your payment method is charged at the start of each billing period until you cancel. You can cancel online at any time (for Plus in User Settings → Yapin’ Plus → Manage subscription, for bot hosting in the bot’s hosting settings, for Server Plus, Supercharge, Boosts and Promoted placements through Stripe’s billing page or the Cancel button next to 
+								32 link yapin.gg/cancel
+								33 text ), or by emailing 
+								34 link [email redacted], Value: mailto:[email redacted]
+								35 text . Cancellation stops future renewals. You keep Plus, hosting or a placement until the end of the period you already paid for, and we don’t refund that period except as required by law or set out below. We’ll give you at least 30 days’ notice of any price increase, and it applies from your next billing period after that notice, so you can cancel before it does.
+								36 heading 9.4 Refunds, Value: 3
+									37 text 9.4 Refunds
+								38 text Except as required by law or described in these Terms, payments are non-refundable. We may give refunds or credits at our discretion; doing so once doesn’t oblige us to do it again. If a purchase failed because of our error (for example you were charged but didn’t receive the feature), email us and we will fix it or refund you.
+								39 heading 9.5 Right of withdrawal (EU, EEA, UK and Switzerland), Value: 3
+									40 text 9.5 Right of withdrawal (EU, EEA, UK and Switzerland)
+								41 text If you are a consumer living in the EU, the EEA, the UK or Switzerland, you have the right to withdraw from a purchase within 14 days of the contract without giving a reason. At checkout you’ll see a separate box, not ticked in advance and apart from accepting these Terms, that says: “Start [the feature] as soon as I pay. I understand that once it’s been fully used, I can’t get a refund for changing my mind.” Ticking it asks us to start providing the paid feature immediately, and we keep a record that you did. Because paid features start right away, you need to tick it to buy. If you then withdraw within the 14 days, we’ll refund you, minus a proportionate amount for the part of To withdraw from a subscription, use the  Withdraw from contract  button next to it in User Settings → Subscriptions: it ends at once and we refund the unused part. For anything else, or if you prefer, send a clear statement to 
+								42 link [email redacted], Value: mailto:[email redacted]
+								43 text  before the 14 days end. You may use this model form: “To Yapper Media LLC, 131 Continental Dr, Suite 305, Newark, DE 19713, United States, 
+								44 link [email redacted], Value: mailto:[email redacted]
+								45 text : I hereby give notice that I withdraw from my contract for the following service: [service], ordered on [date]. Name: [name]. Yapin’ username: [username]. Email used for payment: [email]. Date: [date].” We’ll refund you within 14 days of receiving your notice, using the same payment method.
+								46 heading 9.6 Promotion and Boost rules, Value: 3
+									47 text 9.6 Promotion and Boost rules
+								48 text Paid placement buys position in Discovery or the bot list only. It does not guarantee any number of views, joins, members or servers added, and does not exempt a server or bot from these Terms. Slots are limited and may be unavailable; when they are full, a new purchase may wait in a queue and starts when a slot is free, as shown at checkout. We may refuse, pause or end a placement for a server or bot that breaks these Terms or the law, is locked or banned, loses its verification, or changes its name or con
+								49 heading 9.7 Chargebacks and enforcement, Value: 3
+									50 text 9.7 Chargebacks and enforcement
+								51 text If you dispute a valid charge with your bank, we may suspend paid features or the account until it’s resolved. If your account or server is suspended or removed for breaking these Terms, you lose access to paid features without a refund, unless the law requires one. Paid features have no cash value, can’t be transferred or exchanged, and end if the Service ends (in which case we refund any unused prepaid period).
+								52 heading 9.8 Fraudulent payments, Value: 3
+									53 text 9.8 Fraudulent payments
+								54 text Payments made with stolen, borrowed or otherwise unauthorised cards or accounts, or used to promote scams, phishing or malware, lead to an immediate ban of every account involved, removal of the paid feature and of the server from Discovery, and no refund. We keep the payment and account records and may share them with our payment provider, the card holder’s bank and the authorities to investigate fraud.
+								55 heading 9.9 Sanctions, Value: 3
+									56 text 9.9 Sanctions
+								57 text You may not buy anything on Yapin’ if you are located in, or ordinarily resident in, a country or region under comprehensive EU, UN, UK or US sanctions, or are on a government list of restricted parties. We or our payment provider may block, cancel or refund payments, and close accounts, where we believe this applies.
+								58 heading 9.10 Bot hosting, Value: 3
+									59 text 9.10 Bot hosting
+								60 text Bot hosting runs code you upload. You are responsible for that code, what your bot does and any data it handles, exactly as in section 8, and it must not break these Terms or harm our systems or other users. We don’t promise any uptime: hosted bots may be restarted, moved or paused for maintenance, updates or security. If a renewal payment fails, your bot keeps running for a short grace period (currently 3 days) and is then stopped until you pay. If hosting ends, is cancelled or the bot is deleted, we stop 
+								61 heading 9.11 Shards and virtual items, Value: 3
+									62 text 9.11 Shards and virtual items
+								63 text Shards are an in-app currency you earn by using Yapin’ (for example by being active or inviting friends who join), and spend inside Yapin’ on things like community decorations and your account level. Shards and anything you get with them are a limited licence to use a feature of the Service; you don’t own them. They have no cash value, can’t be bought, sold, traded or exchanged for money or anything outside Yapin’, and can’t be sent to other people, except that buying a creator’s community decoration passes
+								64 heading 9.12 Creator Program, Value: 3
+									65 text 9.12 Creator Program
+								66 text If we run a Creator Program, verified creators can apply to it. Being accepted, your tier and every reward are up to us. Rewards are Yapin’ Plus time and badges only: they have no cash value, can’t be exchanged or transferred, and are not wages or payment for a job. Views you report must be real; content with bought, faked or botted views, or that breaks these Terms or the platform it is on, is rejected and can get you removed from the program. Content you make for the program is an advertisement for Yapin’, because you get something from us for it. You must say so clearly in the content itself, in the way the platform and the law where you live require (for example “#ad”, “sponsored” or the platform’s paid partnership label). You keep the rights to your content, and you let us link to it and show it on Yapin’ and our social accounts with credit to you. You can leave the program at any time. We may change or end the program, or remove you, at any  Getting a Creator badge also adds you to the Official Yapin’ Creators server. Its rules and these Terms apply there like in any server, and you can leave it any time; we won’t add you back.
+								67 heading 9.13 Yapin’ Partner servers, Value: 3
+									68 text 9.13 Yapin’ Partner servers
+								69 text Server owners can apply for Yapin’ Partner in Server Settings. The current requirements are shown there before you apply; today they include Supercharge level 2 or higher, a minimum number of members, active moderators, rules and verification set up, a server and owner account at least 10 days old, and a clean record (not shut down, hidden or warned by our staff in the last 90 days, an allowed server name and an owner who isn’t banned). Partners get a Partner badge next to the server’s name, the owner gets 
+								70 heading 10. Our intellectual property, Value: 2
+									71 text 10. Our intellectual property
+								72 text Yapin’, our name, logos, designs, software and everything we create belong to us or our licensors and are protected by law. We give you a personal, worldwide, revocable, non-exclusive, non-transferable licence to use the Service as these Terms allow. Our software includes open-source libraries that are covered by their own licences. You may not use our name or logos in a way that suggests we endorse or are affiliated with you without our written permission. We expressly reserve all rights to text and data mining of Yapin’ and the Content on it, including under Article 4(3) of the EU Copyright Directive (2019/790). Nobody may scrape, crawl or mine Yapin’, or use it to train AI models, without our written permission, except through the bot API as section 8 allows or where the law gives a right that can’t be reserved.
+								73 heading 11. Reporting illegal content and copyright, Value: 2
+									74 text 11. Reporting illegal content and copyright
+								75 heading 11.1 How to report, Value: 3
+									76 text 11.1 How to report
+								77 text Anyone, including people without an account, can report Content they believe is illegal, infringes their rights, or breaks these Terms, by using the report tools in the app or emailing 
+								78 link [email redacted], Value: mailto:[email redacted]
+								79 text . Please include: the exact location (link, server and channel, or a screenshot showing it), why you believe it is illegal or infringing (and, for illegal content, which law if you know it), your name and email address, and a statement that you believe in good faith that the information in your report is accurate and complete. You may report child sexual abuse material anonymously. We review reports promptly, carefully and objectively, and tell you what we decided where we can contact you.
+								80 heading 11.2 Copyright (including the US DMCA), Value: 3
+									81 text 11.2 Copyright (including the US DMCA)
+								82 text Our designated agent to receive notices of claimed copyright infringement, registered with the US Copyright Office (registration number DMCA-1084137), is: DMCA Agent, Yapper Media, LLC 300 Delaware Ave, Ste 210 #801, Wilmington, DE 19801, United States Phone: 717-470-8008 Email: 
+								83 link [email redacted], Value: mailto:[email redacted]
+								84 text Email is fastest; use the subject “Copyright notice”. Our copyright page (
+								85 link yapin.gg/copyright
+								86 text ) explains the process step by step. Notices sent elsewhere may be delayed. If you believe Content infringes your copyright, your notice must contain: (1) your physical or electronic signature; (2) identification of the copyrighted work; (3) identification of the infringing material and where it is on Yapin’; (4) your contact information; (5) a statement that you have a good faith belief that the use is not authorised by the copyright owner, its agent or the law; and (6) a statement, under penalty of perjur If your Content was removed and you believe that was a mistake or that you had the right to use it, you can send a counter-notice to the same address with: your signature; identification of the removed material and where it was; a statement under penalty of perjury that you have a good faith belief it was removed by mistake or misidentification; your name, address and phone number; and a statement that you consent to the jurisdiction of the federal district court for your address (or, if you are outside the Knowingly false notices or counter-notices can make you liable for damages. Repeat infringers.  Each valid copyright notice against your Content counts as a strike on your account (and, for a server owner, on the server where it was posted). If an account or server gets three strikes within 12 months, we will normally terminate it, and we may act sooner for serious or deliberate infringement. A strike is removed if a counter-notice succeeds or the notice is withdrawn. This applies to user accounts, bots and server owners alike. We may remove, lock or delete a whole server, not only individual message
+								87 heading 12. Moderation, enforcement and appeals, Value: 2
+									88 text 12. Moderation, enforcement and appeals
+								89 heading 12.1 What we can do, Value: 3
+									90 text 12.1 What we can do
+								91 text If we reasonably believe Content or conduct breaks these Terms or the law, or puts users, Yapin’ or others at risk, we may: remove or hide Content; restrict who can see it; demote or remove a server from Discovery; restrict features (such as uploads, messaging, voice or bots); issue warnings or timeouts; suspend or terminate accounts, servers or bots; withhold or end paid features as described in section 9; and keep information and share it with authorities where the law requires or allows it. When an accou
+								92 heading 12.2 Tools we use, Value: 3
+									93 text 12.2 Tools we use
+								94 text We use a mix of human review and automated tools to keep Yapin’ safe, including: automated checks of uploaded images, GIFs and videos that block sexual and abusive images and pictures our moderators already removed, with an AI model from our provider Anthropic taking a second look at images the first check flags before they are blocked, and also checking every picture in Yapin’ HQ and pictures from accounts less than a day old for graphic violence; automated checks that block dangerous file types and suspic
+								95 heading 12.3 Telling you why, Value: 3
+									96 text 12.3 Telling you why
+								97 text When we restrict your Content or account, we will tell you, where possible and lawful, what we did, why, which rule or law it was based on, whether automated tools were involved, and how to appeal. We may not notify you where that would be unlawful, would put someone at risk, or would help someone evade enforcement, for example in cases of child abuse, spam or fraud. In those cases we may also lock or restrict an account or server without warning, keeping its data, so that evidence isn’t destroyed before th
+								98 heading 12.4 Appeals, Value: 3
+									99 text 12.4 Appeals
+								100 text You can appeal any decision we make about your Content or account, and any decision on a report you made, for at least 6 months after the decision. If your account is banned, use the  Appeal  box on the ban screen; a blocked upload has its own appeal button. For anything else, email 
+								101 link [email redacted], Value: mailto:[email redacted]
+								102 text  with your username and what you are appealing. Appeals are reviewed by a person, not only by automated tools, and we’ll reverse decisions that turn out to be wrong. If you are in the EU you may also use a certified out-of-court dispute settlement body under Article 21 of the DSA, or go to court. Nothing here limits your right to complain to a regulator.
+								103 heading 12.5 Legal requests, Value: 3
+									104 text 12.5 Legal requests
+								105 text We respond to valid legal requests from authorities in line with applicable law. Authorities can send requests, emergency requests and requests to preserve data to 
+								106 link [email redacted], Value: mailto:[email redacted]
+								107 text  (our single point of contact, section 2), with “Legal request” or, if someone is in danger, “EMERGENCY” in the subject; see the 
+								108 link Privacy Policy, Value: yapin.gg/privacy#law-enforcement
+								109 text  for what to include. We may preserve and disclose information if we believe in good faith it is needed to comply with the law, to protect someone from death or serious harm, or to protect Yapin’ and its users. When we become aware of child sexual abuse material, we remove it, preserve it and the related account information, report it to the National Center for Missing & Exploited Children (NCMEC) and/or the competent authorities, and permanently ban the accounts involved. When we become aware of information suggesting a criminal offence that threatens someone’s life or safety has happened, is happening or is likely to happen, we promptly inform the police or judicial authorities of the country concerned, as Article 18 of the DSA requires. We comply with valid orders from authorities to act against illegal Content within the time they set.
+								110 heading 12.6 How Discovery ranks servers, Value: 3
+									111 text 12.6 How Discovery ranks servers
+								112 text Servers only appear in Discovery if their owner turns it on and they follow these Terms. Discovery is not personalised: everyone sees the same order for the same search. The main things that decide where a server appears are: (1) how many members it has; (2) whether it has a paid Boost, which raises its position by a fixed multiplier up to a set level; (3) paid Promoted placement, shown in separate slots that are labelled as promoted; (4) being a Yapin’ Partner (9.13), which adds a small, capped bump (about a fifth more, never enough to pin a server to the top, and never moving a paid Boost below its guaranteed place); and (5) when you search, whether the server’s name, description and tags match your search. Servers that break these Terms, are owned by banned accounts, or have names or descriptions that aren’t allowed are left out or moved down. The public bot list works the same way: only public bots appear, and everyone sees the same order. Bots are ordered by (1) how many servers they are in; (2) a paid Boost, which guarantees a place in the top 20, 10 or 5 (or keeps the bot where it is if it is already higher); (3) paid Promoted placement, shown in a separate row labelled as promoted above the list and hidden while you search or filter; and (4) when you search, whether the bot’s name and description match. Bots that break these Terms or are owned by banned accounts are left out.
+								113 heading 13. Voice, video and screen sharing, Value: 2
+									114 text 13. Voice, video and screen sharing
+								115 text Calls and screen shares are streamed live through our servers or providers and are not recorded by us. They are end-to-end encrypted: the audio and video are encrypted on your device with keys that only the people in the call (including any bot taking part) have, so we and our providers can’t listen in or watch while the service works as designed. Click the lock in a call to see a safety code; if everyone in the call sees the same code, nobody swapped keys on the way. Who is in a call, when, and for how long is not encrypted. Someone in the call can still hear, see or capture what you share, including through the report clips below, which their device makes after decrypting the call. When you report someone in a voice channel you can attach the last 30 seconds of the call audio your own device heard (never video or screen shares). The clip is stored privately with the report, only Yapin’ staff can listen to it, it is used only to handle that report, and it is deleted 30 days after the report is handled. By joining voice channels you accept that other members can attach clips like this when they report someone. You must not record, stream or share other people’s voice, video or screens without their consent where the law requires it. Yapin’ is not a replacement for a phone and cannot be used to contact emergency services.
+								116 heading 14. Third-party services and links, Value: 2
+									117 text 14. Third-party services and links
+								118 text Yapin’ may show or link to websites, apps, embeds, bots and services run by others. We don’t control them and aren’t responsible for their content, policies or practices. Your use of them is between you and them. GIF search is provided by KLIPY. The GIF picker shows no ads. Our Privacy Policy explains what KLIPY receives when you search.
+								119 heading 15. Changes to Yapin’, Value: 2
+									120 text 15. Changes to Yapin’
+								121 text Yapin’ is constantly developing. We may add, change, test, limit or remove features, including in test versions available only to some users. Test features may be unstable or disappear. We may stop offering Yapin’ entirely; if we do, we will try to give at least 30 days’ notice and let you download your data where reasonably possible, and refund any unused prepaid period of paid features.
+								122 heading 16. Changes to these Terms, Value: 2
+									123 text 16. Changes to these Terms
+								124 text We may update these Terms, for example to reflect changes in Yapin’, our business or the law. If a change materially affects you, we’ll tell you in the app or by email at least 30 days before it takes effect, unless the change is required by law or needed urgently to address security, fraud or user safety, in which case it may take effect sooner. If you don’t agree to the new Terms, you can stop using Yapin’ and delete your account before they take effect (and, for Yapin’ Plus, cancel and get a proportionate refund for any prepaid period after the change). If you keep using Yapin’ after the change takes effect, the new Terms apply.
+								125 heading 17. Ending your use of Yapin’, Value: 2
+									126 text 17. Ending your use of Yapin’
+								127 content list
+									128 container
+										129 AXListMarker • 
+										130 text You can stop using Yapin’ and delete your account at any time.
+									131 container
+										132 AXListMarker • 
+										133 text We may suspend or terminate your account, or your access to all or part of Yapin’, if you break these Terms or the law, if we are legally required to, if your use creates risk or legal exposure for us or other users, or if your account has been inactive for a long period. Where reasonable, we’ll give notice and a statement of reasons (section 12.3).
+									134 container
+										135 AXListMarker • 
+										136 text Sections that by their nature should continue after the Terms end will continue, including sections 5.2 (for the limited cases listed), 5.7, 5.8, 9.4 and 9.7, 10, and 18 to 24.
+								137 heading 18. Disclaimers, Value: 2
+									138 text 18. Disclaimers
+								139 text TO THE EXTENT PERMITTED BY LAW, YAPIN’ IS PROVIDED “AS IS” AND “AS AVAILABLE”, WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. WE DON’T PROMISE THAT YAPIN’ WILL BE UNINTERRUPTED, SECURE, ERROR-FREE OR FREE OF HARMFUL COMPONENTS, THAT CONTENT WILL BE STORED OR AVAILABLE, OR THAT ANY CONTENT, USER, SERVER OR BOT IS ACCURATE, SAFE OR LAWFUL. KEEP YOUR OWN COPIES OF ANYTHING IMPORTANT. TO THE EXTENT PERMITTED BY LAW, WE ARE NOT RESPONSIBLE FOR MONEY, CRYPTOCURRENCY, ITEMS, ACCOUNTS OR DATA YOU LOSE, OR FOR IDENTITY THEFT OR ACCOUNT TAKEOVER, THAT RESULTS FROM LINKS, FILES, BOTS, OFFERS, GIVEAWAYS OR TRADES FROM OTHER USERS, SERVERS OR THIRD PARTIES ON YAPIN’. NEVER SEND MONEY OR LOGIN DETAILS TO SOMEONE YOU MET ON YAPIN’. If you are a consumer in the EU, EEA, UK, Switzerland, Australia, New Zealand or another place where the law gives you statutory guarantees or rights about the quality of digital services that can’t be excluded, this section doesn’t limit those rights.
+								140 heading 19. Limitation of liability, Value: 2
+									141 text 19. Limitation of liability
+								142 text TO THE EXTENT PERMITTED BY LAW: (A) WE ARE NOT LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, GOODWILL OR OPPORTUNITY, ARISING OUT OF OR RELATING TO YAPIN’ OR THESE TERMS; (B) WE ARE NOT LIABLE FOR THE CONDUCT OR CONTENT OF OTHER USERS, SERVERS, BOTS OR THIRD PARTIES; AND (C) OUR TOTAL LIABILITY FOR ALL CLAIMS ARISING OUT OF OR RELATING TO YAPIN’ OR THESE TERMS IS LIMITED TO THE GREATER OF THE AMOUNT YOU PAID US IN THE 12 MONTHS BEFORE THE EVENT GIVING RISE TO THE CLAIM, OR 100 US DOLLARS (OR 100 EUROS IF YOU LIVE IN THE EU, EEA, UK OR SWITZERLAND). THESE LIMITS APPLY WHATEVER THE LEGAL THEORY, EVEN IF WE WERE TOLD THE DAMAGE WAS POSSIBLE. Nothing in these Terms limits or excludes liability for death or personal injury caused by negligence, for fraud or fraudulent misrepresentation, for intentional misconduct or gross negligence, or any other liability that can’t be limited or excluded by law. If you are a consumer in the EU, EEA, UK or Switzerland: we are responsible for loss or damage you suffer that is a foreseeable result of our breaking these Terms or our failing to use reasonable care and skill, as the law of your country provides. We aren’t responsible for loss that wasn’t foreseeable, and Yapin’ is for personal, non-commercial use, so we aren’t responsible to you for business losses.
+								143 heading 20. Indemnity, Value: 2
+									144 text 20. Indemnity
+								145 text To the extent permitted by law, you will defend, indemnify and hold harmless us and the people who help run Yapin’ from any claims, losses, liabilities and costs (including reasonable legal fees) brought by a third party arising from your Content, your bot, your use of Yapin’ or your breach of these Terms or the law. This section does not apply to consumers to the extent the law of their country of residence doesn’t allow it.
+								146 heading 21. Disputes, arbitration and class action waiver (United States), Value: 2
+									147 text 21. Disputes, arbitration and class action waiver (United States)
+								148 heading 21.1 Try to resolve it with us first, Value: 3
+									149 text 21.1 Try to resolve it with us first
+								150 text Before starting any claim, you agree to email 
+								151 link [email redacted], Value: mailto:[email redacted]
+								152 text  with your name, username, a description of the dispute and what you want. We’ll do the same with you. Both of us will try in good faith to resolve it informally for 60 days. This is required before arbitration or court (except for small claims).
+								153 heading 21.2 Arbitration, Value: 3
+									154 text 21.2 Arbitration
+								155 text If you live in the United States, you and we agree that any dispute, claim or controversy arising out of or relating to these Terms or Yapin’ (a “Dispute”) will be resolved by binding individual arbitration instead of in court, except that either of us may (a) bring an individual claim in small claims court if it qualifies, and (b) seek an injunction in court to stop infringement or misuse of intellectual property or unauthorised access to the Service. The Federal Arbitration Act governs this section. The arbitration will be administered by the American Arbitration Association (“AAA”) under its Consumer Arbitration Rules, before one arbitrator, and may be held by video, phone, or written submissions. Fees are paid as the AAA rules provide. The arbitrator decides all issues, except that a court decides questions about the scope, enforceability and validity of the class action waiver and the mass arbitration procedure.
+								156 heading 21.3 Class action and jury trial waiver, Value: 3
+									157 text 21.3 Class action and jury trial waiver
+								158 text YOU AND WE MAY BRING CLAIMS AGAINST EACH OTHER ONLY ON AN INDIVIDUAL BASIS, AND NOT AS A PLAINTIFF OR CLASS MEMBER IN ANY CLASS, COLLECTIVE, CONSOLIDATED OR REPRESENTATIVE PROCEEDING. YOU AND WE WAIVE ANY RIGHT TO A JURY TRIAL. The arbitrator may award relief only to the individual party and only as needed for that party’s claim. If this waiver is found unenforceable for a claim, that claim will be decided by a court, not in arbitration, after any individual arbitration has finished.
+								159 heading 21.4 Mass arbitration, Value: 3
+									160 text 21.4 Mass arbitration
+								161 text If 25 or more similar Disputes are filed against us by the same or coordinated counsel, they will be administered in batches of up to 50 under the AAA Mass Arbitration Supplementary Rules, and one arbitrator will be appointed for each batch. Filing fees and statutes of limitation are paused while batching takes place.
+								162 heading 21.5 Time to bring claims, Value: 3
+									163 text 21.5 Time to bring claims
+								164 text To the extent permitted by law, any claim must be brought within one year after it arose, or it is permanently barred.
+								165 heading 21.6 Opt-out, Value: 3
+									166 text 21.6 Opt-out
+								167 text You can opt out of this arbitration agreement by emailing 
+								168 link [email redacted], Value: mailto:[email redacted]
+								169 text , subject “Arbitration opt-out”, with your name and username, within 30 days after you first accept these Terms. Opting out doesn’t affect any other part of these Terms.
+								170 heading 21.7 If arbitration doesn’t apply, Value: 3
+									171 text 21.7 If arbitration doesn’t apply
+								172 text If you opt out, or if this section doesn’t apply or is found unenforceable, Disputes will be decided by the state or federal courts with jurisdiction where you live, unless the law allows another venue.
+								173 heading 22. Governing law and courts (everywhere), Value: 2
+									174 text 22. Governing law and courts (everywhere)
+								175 text These Terms and any Dispute are governed by the laws of the State of Delaware, United States, and applicable US federal law, excluding conflict of law rules and the UN Convention on Contracts for the International Sale of Goods. However:
+								176 content list
+									177 container
+										178 AXListMarker • 
+										179 text If you are a consumer in the EU, EEA, UK or Switzerland, you keep the protection of the mandatory laws of the country where you live, and you may bring proceedings in the courts of that country or in the state or federal courts located in Delaware. We may bring proceedings against you only in the courts of the country where you live. If you live in Scotland or Northern Ireland, you may also bring proceedings in your local courts.
+									180 container
+										181 AXListMarker • 
+										182 text If you live in the United States, section 21 applies, and the Federal Arbitration Act and applicable US federal law govern section 21.
+									183 container
+										184 AXListMarker • 
+										185 text Everywhere else, Disputes will be decided by the state or federal courts located in Delaware, unless the mandatory law of the country where you live gives you the right to bring them in your local courts or apply its law.
+								186 heading 23. Region-specific terms, Value: 2
+									187 text 23. Region-specific terms
+								188 content list
+									189 container
+										190 AXListMarker • 
+										191 text California:  Under California Civil Code §1789.3, California users may contact the Complaint Assistance Unit of the Division of Consumer Services of the California Department of Consumer Affairs in writing at 1625 North Market Blvd., Suite N 112, Sacramento, CA 95834, or by phone at (800) 952-5210. You waive California Civil Code §1542 to the extent it would apply to claims against us that you don’t know about, to the extent permitted by law.
+									192 container
+										193 AXListMarker • 
+										194 text New Jersey:  Nothing in sections 18 to 20 limits rights you have under New Jersey law that can’t be limited.
+									195 container
+										196 AXListMarker • 
+										197 text United Kingdom:  Under the Online Safety Act 2023 you can complain to us about illegal content, about Content harmful to children, about our use of moderation tools, or about action we took against you, using the report tools or 
+										198 link [email redacted], Value: mailto:[email redacted]
+										199 text . We will handle these complaints under section 12.
+									200 container
+										201 AXListMarker • 
+										202 text Australia and New Zealand:  Our services come with guarantees that can’t be excluded under the Australian Consumer Law and the New Zealand Consumer Guarantees Act. Sections 18 to 20 apply only to the extent those laws permit.
+									203 container
+										204 AXListMarker • 
+										205 text Anywhere else:  if the law where you live gives you rights or protections that these Terms try to exclude and can’t be excluded, those rights still apply.
+								206 heading 24. General, Value: 2
+									207 text 24. General
+								208 content list
+									209 container
+										210 AXListMarker • 
+										211 text Entire agreement.  These Terms (including the documents in section 1) are the whole agreement between you and us about Yapin’ and replace any earlier agreement.
+									212 container
+										213 AXListMarker • 
+										214 text Severability.  If any part of these Terms is found invalid or unenforceable, it will be limited to the minimum extent needed and the rest stays in force.
+									215 container
+										216 AXListMarker • 
+										217 text No waiver.  If we don’t enforce a right, that isn’t a waiver of it.
+									218 container
+										219 AXListMarker • 
+										220 text Assignment.  You can’t transfer your rights or obligations under these Terms. We may transfer ours, for example to a company we set up to run Yapin’ or to a buyer of Yapin’, as long as your rights aren’t reduced. If that happens we’ll tell you.
+									221 container
+										222 AXListMarker • 
+										223 text Force majeure.  We aren’t responsible for delays or failures caused by events beyond our reasonable control, such as outages of our providers, internet failures, attacks, disasters or government action.
+									224 container
+										225 AXListMarker • 
+										226 text No third-party beneficiaries.  Only you and we can enforce these Terms, except where the law says otherwise.
+									227 container
+										228 AXListMarker • 
+										229 text Electronic communications.  You agree to receive notices and communications from us electronically, in the app or by email, and that these satisfy any legal requirement for written communications. Notices to us must be sent to 
+										230 link [email redacted], Value: mailto:[email redacted]
+										231 text .
+									232 container
+										233 AXListMarker • 
+										234 text Language.  These Terms are written in English. If we provide a translation and it conflicts with the English version, the English version wins, unless the law where you live requires otherwise.
+									235 container
+										236 AXListMarker • 
+										237 text Export control.  You must comply with all export control and sanctions laws that apply to your use of Yapin’.
+									238 container
+										239 AXListMarker • 
+										240 text Headings are for convenience only.
+								241 heading 25. Contact, Value: 2
+									242 text 25. Contact
+								243 text Questions, reports, appeals, refunds, legal notices and requests from authorities: 
+								244 link [email redacted], Value: mailto:[email redacted]
+								245 text . By post: Yapper Media LLC, 131 Continental Dr, Suite 305, Newark, DE 19713, United States. Copyright notices: our DMCA agent at 
+								246 link [email redacted], Value: mailto:[email redacted]
+								247 text  or the postal address in section 11.2.
+								248 link ← Back to Yapin’, Value: yapin.gg/
+								249 text  · 
+								250 link Remove an intimate image, Value: yapin.gg/remove-image
+							251 text Yapin’
+							252 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							253 heading Product, Value: 4
+								254 text Product
+							255 content list
+								256 link Download, Value: yapin.gg/download
+								257 link Developers, Value: yapin.gg/developers
+								258 link Yapin’ Plus, Value: yapin.gg/plus
+								259 link Creator Program, Value: yapin.gg/creators
+								260 link Roadmap, Value: yapin.gg/roadmap
+								261 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								262 link Bugs, Value: yapin.gg/bugs
+								263 link Status, Value: yapin.gg/status
+							264 heading Community, Value: 4
+								265 text Community
+							266 content list
+								267 link Guidelines, Value: yapin.gg/guidelines
+								268 link Tutorials, Value: yapin.gg/tutorials
+								269 link Bots, Value: yapin.gg/bots
+							270 heading Legal, Value: 4
+								271 text Legal
+							272 content list
+								273 link Terms, Value: yapin.gg/terms
+								274 link Privacy, Value: yapin.gg/privacy
+								275 link Copyright, Value: yapin.gg/copyright
+								276 link Cancel a subscription, Value: yapin.gg/cancel
+								277 link Contact, Value: mailto:[email redacted]
+							278 text © 2026 Yapper Media LLC. Free to use.
+			279 container
+				280 tab group
+					281 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						282 button Close
+					283 tab (settable, boolean) (23) Yapin’ - Memory usage - 337 MB, Value: off
+						284 button Close
+					285 tab (selected, settable, boolean) Terms of Service · Yapin’ - Memory usage - 123 MB, Value: on
+						286 button Close
+			287 button New Tab
+	288 close button
+	289 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	290 minimize button
+291 menu bar
+	292 Chrome
+	293 File
+	294 Edit
+	295 View
+	296 History
+	297 Bookmarks
+	298 Profiles
+	299 Tab
+	300 Window
+	301 Help
+
+Selected text: ```
+13.
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

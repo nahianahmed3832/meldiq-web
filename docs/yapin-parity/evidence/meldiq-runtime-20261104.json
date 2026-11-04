@@ -1,0 +1,250 @@
+{
+  "observedAt": "2026-11-04T04:56:36.088192+00:00",
+  "mode": "read-only; no database queries; no deployments",
+  "containers": [
+    {
+      "name": "griip-internal-messaging-api-1",
+      "image": "griip-internal-messaging-api:0.76.1-pg-b9e6f005-locales-cc61eb40-5facb4c",
+      "imageId": "sha256:6fe6ef9beb98aa14d2cc3e264d1392a0e76ba6aefe26ba9029342950f2f67f03",
+      "status": "running",
+      "health": "healthy",
+      "modes": {
+        "DATABASE_MODE": "supabase",
+        "NODE_ENV": "production",
+        "S3_REGION": "eu-central-1"
+      },
+      "configured": {
+        "DATABASE_URL": false,
+        "POSTGRES_URL": false,
+        "SUPABASE_URL": false,
+        "MONGODB_URI": false,
+        "REDIS_URL": true,
+        "S3_BUCKET": true,
+        "S3_ENDPOINT": false,
+        "LIVEKIT_URL": false,
+        "SES_REGION": true,
+        "SMTP_HOST": true,
+        "FCM_PROJECT_ID": true,
+        "PAYPAL_CLIENT_ID": true,
+        "STRIPE_SECRET_KEY": false
+      },
+      "composeWorkdir": "/opt/griip-internal-messaging",
+      "mountDestinations": [
+        "/run/meldiq-db/acceptance.json",
+        "/data",
+        "/host-metrics",
+        "/run/meldiq-db/root.crt"
+      ]
+    },
+    {
+      "name": "griip-internal-messaging-redis-1",
+      "image": "redis:8-alpine@sha256:21090af93f8324db2f0f0f4f38a7c60369d47d917e000c3423d89d2ae2883537",
+      "imageId": "sha256:21090af93f8324db2f0f0f4f38a7c60369d47d917e000c3423d89d2ae2883537",
+      "status": "running",
+      "health": "healthy",
+      "modes": {},
+      "configured": {
+        "DATABASE_URL": false,
+        "POSTGRES_URL": false,
+        "SUPABASE_URL": false,
+        "MONGODB_URI": false,
+        "REDIS_URL": true,
+        "S3_BUCKET": false,
+        "S3_ENDPOINT": false,
+        "LIVEKIT_URL": false,
+        "SES_REGION": false,
+        "SMTP_HOST": false,
+        "FCM_PROJECT_ID": false,
+        "PAYPAL_CLIENT_ID": false,
+        "STRIPE_SECRET_KEY": false
+      },
+      "composeWorkdir": "/opt/griip-internal-messaging",
+      "mountDestinations": [
+        "/usr/local/etc/redis/redis.conf",
+        "/run/secrets/meldiq_redis_acl"
+      ]
+    },
+    {
+      "name": "griip-internal-messaging-livekit-1",
+      "image": "livekit/livekit-server:v1.13.10",
+      "imageId": "sha256:89ca9ce0791e18d6e03bf6e2c49ceb27e1c754eae8bd50c989386c1a5963791a",
+      "status": "running",
+      "health": null,
+      "modes": {},
+      "configured": {
+        "DATABASE_URL": false,
+        "POSTGRES_URL": false,
+        "SUPABASE_URL": false,
+        "MONGODB_URI": false,
+        "REDIS_URL": false,
+        "S3_BUCKET": false,
+        "S3_ENDPOINT": false,
+        "LIVEKIT_URL": false,
+        "SES_REGION": false,
+        "SMTP_HOST": false,
+        "FCM_PROJECT_ID": false,
+        "PAYPAL_CLIENT_ID": false,
+        "STRIPE_SECRET_KEY": false
+      },
+      "composeWorkdir": "/opt/griip-internal-messaging",
+      "mountDestinations": [
+        "/etc/livekit/livekit.yaml"
+      ]
+    },
+    {
+      "name": "griip-internal-messaging-ntfy-1",
+      "image": "binwiederhier/ntfy:v2.31.1@sha256:91bb7fa607b02006c119bb4a31032923b414a713a032ecb40f0c5d6bfd5b7e40",
+      "imageId": "sha256:91bb7fa607b02006c119bb4a31032923b414a713a032ecb40f0c5d6bfd5b7e40",
+      "status": "running",
+      "health": "healthy",
+      "modes": {},
+      "configured": {
+        "DATABASE_URL": false,
+        "POSTGRES_URL": false,
+        "SUPABASE_URL": false,
+        "MONGODB_URI": false,
+        "REDIS_URL": false,
+        "S3_BUCKET": false,
+        "S3_ENDPOINT": false,
+        "LIVEKIT_URL": false,
+        "SES_REGION": false,
+        "SMTP_HOST": false,
+        "FCM_PROJECT_ID": false,
+        "PAYPAL_CLIENT_ID": false,
+        "STRIPE_SECRET_KEY": false
+      },
+      "composeWorkdir": "/opt/griip-internal-messaging",
+      "mountDestinations": [
+        "/etc/ntfy/server.yml",
+        "/var/cache/ntfy",
+        "/var/lib/ntfy"
+      ]
+    }
+  ],
+  "configuredSettingNames": [
+    "LIVEKIT_API_KEY",
+    "PAYPAL_ADVANCED_CHECKOUT_ENABLED",
+    "S3_PREFIX",
+    "LIVEKIT_API_URL",
+    "SUPABASE_DATABASE_PROJECT_REF",
+    "S3_ACCESS_KEY_ID",
+    "SUPABASE_AUTH_PUBLISHABLE_KEY",
+    "S3_PREVIOUS_DESKTOP_UPLOADS",
+    "PAYPAL_BOTS_PRODUCT_ID",
+    "SOCIAL_AUTH_WEB_ORIGIN",
+    "PAYPAL_VAULT_ENABLED",
+    "FCM_PROJECT_ID",
+    "S3_USE_LEGACY_WEB_UPLOAD_PROXY",
+    "SUPABASE_DATABASE_URL",
+    "PAYPAL_PLUS_PLAN_ID",
+    "SUPABASE_AUTH_URL",
+    "PAYPAL_PLUS_PRODUCT_ID",
+    "LIVEKIT_USE_EXTERNAL_IP",
+    "S3_REGION",
+    "LIVEKIT_RTC_TCP_PORT",
+    "LIVEKIT_PUBLIC_URL",
+    "PAYPAL_CLIENT_ID",
+    "SES_SECRET_ACCESS_KEY",
+    "PAYPAL_BOTS_PLUS_PLAN_ID",
+    "SES_ACCESS_KEY_ID",
+    "LIVEKIT_API_SECRET",
+    "SES_REGION",
+    "PAYPAL_GIFTS_ENABLED",
+    "PAYPAL_CLIENT_SECRET",
+    "S3_SECRET_ACCESS_KEY",
+    "PAYPAL_ENVIRONMENT",
+    "SOCIAL_AUTH_PUBLIC_ORIGIN",
+    "PAYPAL_SPARKS_ENABLED",
+    "S3_BUCKET",
+    "PAYPAL_MERCHANT_COUNTRY",
+    "PAYPAL_SUBSCRIPTIONS_APPROVED",
+    "LIVEKIT_SIGNAL_HOST_PORT",
+    "SUPABASE_DB_CA_FILE",
+    "PAYPAL_CARD_RECURRING_ENABLED",
+    "SOCIAL_AUTH_PROVIDERS",
+    "SUPABASE_PRODUCTION_ACCEPTANCE_FILE",
+    "PAYPAL_MERCHANT_ID",
+    "SUPABASE_DATABASE_POOL_SIZE",
+    "FCM_SERVICE_ACCOUNT_FILE",
+    "LIVEKIT_RTC_UDP_PORT",
+    "LIVEKIT_NODE_IP",
+    "PAYPAL_WEBHOOK_ID"
+  ],
+  "runtimePackage": {
+    "name": "meldiq-server",
+    "version": "0.76.1",
+    "engines": {
+      "node": ">=22"
+    },
+    "dependencies": {
+      "@aws-sdk/client-s3": "3.1144.0",
+      "@aws-sdk/client-sesv2": "3.1144.0",
+      "@aws-sdk/s3-request-presigner": "3.1144.0",
+      "@fastify/rate-limit": "11.2.1",
+      "@fastify/websocket": "11.3.4",
+      "@hpke/core": "1.9.0",
+      "@simplewebauthn/server": "14.0.2",
+      "better-sqlite3": "13.0.3",
+      "fastify": "5.12.7",
+      "ioredis": "6.0.0",
+      "jose": "^6.2.14",
+      "livekit-server-sdk": "2.19.1",
+      "mongodb": "7.7.0",
+      "nodemailer": "10.3.1",
+      "pg": "^8.23.1",
+      "saxes": "^6.0.0",
+      "sharp": "^0.35.5",
+      "stripe": "23.0.0",
+      "zod": "4.6.7"
+    }
+  },
+  "symlinks": {
+    "/opt/meldiq-web/current": "/opt/meldiq-web/releases/0.5.0-beta-ui-standardization-3cc3c03",
+    "/opt/meldiq-admin/current": "/opt/meldiq-admin/releases/1.7.0-plus-361ea0f"
+  },
+  "backendPackage": {
+    "name": "meldiq-server",
+    "version": "0.70.0",
+    "engines": {
+      "node": ">=22"
+    },
+    "dependencies": {
+      "@aws-sdk/client-s3": "3.1144.0",
+      "@aws-sdk/client-sesv2": "3.1144.0",
+      "@aws-sdk/s3-request-presigner": "3.1144.0",
+      "@fastify/rate-limit": "11.2.1",
+      "@fastify/websocket": "11.3.4",
+      "@hpke/core": "1.9.0",
+      "@simplewebauthn/server": "14.0.2",
+      "better-sqlite3": "13.0.3",
+      "fastify": "5.12.7",
+      "livekit-server-sdk": "2.19.1",
+      "mongodb": "7.7.0",
+      "nodemailer": "10.0.14",
+      "stripe": "23.0.0",
+      "zod": "3.25.76"
+    }
+  },
+  "webConfig": {
+    "apiBase": "",
+    "wsUrl": null,
+    "environment": "production"
+  },
+  "health": {
+    "ok": true,
+    "version": "0.76.1",
+    "time": 1793768196700,
+    "livekit": true,
+    "mongodb": null,
+    "postgres": true,
+    "databaseMode": "supabase",
+    "redis": true
+  },
+  "backupTimers": [
+    "Wed 2026-11-04 04:56:54 UTC      17s Wed 2026-11-04 04:56:24 UTC      12s ago meldiq-host-metrics.timer               meldiq-host-metrics.service",
+    "Wed 2026-11-04 04:57:05 UTC      28s Wed 2026-11-04 04:56:05 UTC      31s ago meldiq-api-performance.timer            meldiq-api-performance.service",
+    "Wed 2026-11-04 04:57:30 UTC      53s Wed 2026-11-04 04:56:30 UTC       6s ago meldiq-status-timing.timer              meldiq-status-timing.service",
+    "Thu 2026-11-05 03:24:44 UTC      22h Wed 2026-11-04 03:25:56 UTC 1h 30min ago meldiq-encrypted-backup.timer           meldiq-encrypted-backup.service",
+    "Thu 2026-11-05 04:21:57 UTC      23h Wed 2026-11-04 04:19:46 UTC    36min ago meldiq-storage-cleanup.timer            meldiq-storage-cleanup.service"
+  ]
+}

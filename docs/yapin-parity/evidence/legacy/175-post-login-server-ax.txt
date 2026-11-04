@@ -1,0 +1,111 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq Research - Private Test
+								25 button Meldiq
+								26 container
+									27 button Yapin' Headquarters
+									28 text 10
+								29 container
+									30 button MINECRAFT
+									31 text 13
+								32 button Create a server
+								33 button Discover servers
+							34 container
+								35 button Meldiq Research - Private Test
+								36 button Lobby OFF
+								37 button Invite people
+								38 button TEXT CHANNELS
+								39 button Create channel in this category, Help: Create channel here
+								40 pop up button More options for Text channels, Help: More
+									41 image
+								42 button general
+								43 button Edit channel
+								44 button Delete channel, Help: Delete
+								45 button history-lab
+								46 button VOICE CHANNELS
+								47 button Create channel in this category, Help: Create channel here
+								48 pop up button More options for Voice channels, Help: More
+									49 image
+								50 button General
+								51 button RESEARCH
+								52 button Create channel in this category, Help: Create channel here
+								53 pop up button More options for Research, Help: More
+									54 image
+								55 button Discussion ideas-lab
+								56 pop up button nahian Online, Help: Your account
+									57 text nahian
+									58 text Online
+								59 button Inbox
+								60 button Settings
+								61 button Log out
+							62 container
+								63 image
+								64 button general
+								65 button Mute
+								66 button Threads
+								67 button Pinned messages
+								68 button Media
+								69 button Members
+								70 button Search Meldiq Research - Private Test, Help: Search this server
+								71 container Loading messages
+								72 container
+									73 button Send a file
+									74 text entry area (settable) Message #general
+									75 button Create a poll
+									76 button GIF
+									77 button Emoji
+									78 button Record a voice message
+									79 button (disabled) Send
+								80 content list Members
+									81 heading RESEARCH MEMBER - 1, Value: 3
+										82 text RESEARCH MEMBER - 1
+									83 button nahian Server owner
+							84 button Getting started
+			85 container
+				86 tab group
+					87 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						88 button Close
+					89 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 215 MB, Value: on
+						90 button Close
+					91 tab (settable, boolean) (1) Meldiq - Memory usage - 213 MB, Value: off
+						92 button Close
+			93 button New Tab
+	94 close button
+	95 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	96 minimize button
+97 menu bar
+	98 Chrome
+	99 File
+	100 Edit
+	101 View
+	102 History
+	103 Bookmarks
+	104 Profiles
+	105 Tab
+	106 Window
+	107 Help
+
+The focused UI element is 74 text entry area (settable) Message #general

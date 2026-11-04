@@ -1,0 +1,115 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 heading Promote your server, Value: 2
+								44 text Promote your server
+							45 text Get Meldiq in front of more people on Discovery.
+							46 text DISCOVERY RANK
+							47 text Not listed
+							48 container
+								49 heading Boost, Value: 3
+									50 text Boost
+								51 text weekly  ·  climb the Discovery list Servers need 5 members to be listed. A boost lists you right away.
+								52 text BOOST
+								53 container
+									54 text # 109
+								55 text on Discovery
+								56 text Boosted label
+								57 container
+									58 text $3.99  /  week
+								59 button Get Boost
+								60 text SUPER BOOST
+								61 container
+									62 text # 54
+								63 text on Discovery
+								64 text Boosted label
+								65 container
+									66 text $7.99  /  week
+								67 button Get Super Boost
+								68 text MOST POPULAR
+								69 text MEGA BOOST
+								70 container
+									71 text # 24
+								72 text on Discovery
+								73 text Gold Mega label
+								74 container
+									75 text $12.99  /  week
+								76 button Get Mega Boost
+								77 text Guaranteed top 100, top 50 or top 20 (bigger servers land even higher). Only your biggest boost counts; a boost renews every week until you cancel it in Settings > Subscriptions.
+							78 container
+								79 text PROMOTED
+								80 heading The top row of Discovery, Value: 3
+									81 text The top row of Discovery
+								82 text Above every boosted server, the first thing people see when they open Discovery.
+								83 content list
+									84 text ~14,788 people browse Discovery each week
+									85 text Only 4 spots, all shown at once
+									86 text Live views, clicks and joins
+								87 text All taken
+								88 text $29.99  /  week
+								89 button Book next spot
+								90 text Renews every week until you cancel it in Settings > Subscriptions. You keep the spot until the end of the week you paid for. Starts Nov 3, 02:09 PM
+							91 text Paid servers follow the same rules as everyone else. A server that's locked, renamed to something blocked, or removed for breaking the rules stops showing, with no refund.
+							92 button Close
+			93 container
+				94 tab group
+					95 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						96 button Close
+			97 button New Tab
+	98 close button
+	99 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	100 minimize button
+101 menu bar
+	102 Chrome
+	103 File
+	104 Edit
+	105 View
+	106 History
+	107 Bookmarks
+	108 Profiles
+	109 Tab
+	110 Window
+	111 Help
+
+The focused UI element is 28 button Promote

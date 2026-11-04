@@ -860,5 +860,11 @@
     "accountDescription": "Email, account standing, data export, and account deletion.",
     "notificationsDescription": "Desktop alerts, sound, notification pauses, and shortcuts to conversation preferences.",
     "appearanceDescription": "Themes, colors, message layout, media previews, and chat gestures."
+  },
+  "foundation": {
+    "profileSections": "Profile sections",
+    "profileSectionsDescription": "Choose which sections appear and their order. Your audience settings still apply.",
+    "resetSections": "Reset section changes",
+    "saveSections": "Save sections"
   }
 }

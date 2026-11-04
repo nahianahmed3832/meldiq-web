@@ -1,0 +1,171 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container Edit channel
+							21 heading Edit channel, Value: 2
+								22 text Edit channel
+							23 tab group
+								24 tab (settable, integer) Overview, Value: 0
+								25 tab (selected) Permissions, Value: 1
+								26 tab (settable, integer) Webhooks, Value: 0
+							27 text Allow or deny stuff just here. Anything left neutral uses the server’s role settings.
+							28 list box Roles
+								29 text ROLES
+								30 text (selected) @everyone
+							31 text @everyone
+							32 text field (settable) Search permissions
+							33 text GENERAL
+							34 text View Channel
+							35 text See this channel and read what’s in it.
+							36 View Channel
+								37 radio button Deny, Value: 0
+									38 image
+								39 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									40 image
+								41 radio button Allow, Value: 0
+									42 image
+							43 text TEXT
+							44 text Send Messages
+							45 text Post here.
+							46 Send Messages
+								47 radio button Deny, Value: 0
+									48 image
+								49 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									50 image
+								51 radio button Allow, Value: 0
+									52 image
+							53 text Add Reactions
+							54 text Add new reactions. Without it people can still click ones already there.
+							55 Add Reactions
+								56 radio button Deny, Value: 0
+									57 image
+								58 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									59 image
+								60 radio button Allow, Value: 0
+									61 image
+							62 text Attach Files
+							63 text Upload pictures, videos and audio.
+							64 Attach Files
+								65 radio button Deny, Value: 0
+									66 image
+								67 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									68 image
+								69 radio button Allow, Value: 0
+									70 image
+							71 text Send Voice Messages
+							72 text Record and send voice messages here.
+							73 Send Voice Messages
+								74 radio button Deny, Value: 0
+									75 image
+								76 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									77 image
+								78 radio button Allow, Value: 0
+									79 image
+							80 text Embed Links
+							81 text Post links.
+							82 Embed Links
+								83 radio button Deny, Value: 0
+									84 image
+								85 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									86 image
+								87 radio button Allow, Value: 0
+									88 image
+							89 text Use Big Text
+							90 text Post headings (# text) here.
+							91 Use Big Text
+								92 radio button Deny, Value: 0
+									93 image
+								94 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									95 image
+								96 radio button Allow, Value: 0
+									97 image
+							98 text Mention @everyone
+							99 text Ping everyone who can see this channel.
+							100 Mention @everyone
+								101 radio button Deny, Value: 0
+									102 image
+								103 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									104 image
+								105 radio button Allow, Value: 0
+									106 image
+							107 text Manage Messages
+							108 text Delete and pin anyone’s messages here, and skip slowmode.
+							109 Manage Messages
+								110 radio button Deny, Value: 0
+									111 image
+								112 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									113 image
+								114 radio button Allow, Value: 0
+									115 image
+							116 text Create Threads
+							117 text Start threads from this channel.
+							118 Create Threads
+								119 radio button Deny, Value: 0
+									120 image
+								121 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									122 image
+								123 radio button Allow, Value: 0
+									124 image
+							125 text Send Messages in Threads
+							126 text Reply in this channel’s threads (or this forum’s posts).
+							127 Send Messages in Threads
+								128 radio button Deny, Value: 0
+									129 image
+								130 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									131 image
+								132 radio button Allow, Value: 0
+									133 image
+							134 text Manage Threads
+							135 text Close, lock, pin, rename, move and delete threads here.
+							136 Manage Threads
+								137 radio button Deny, Value: 0
+									138 image
+								139 radio button Neutral, Help: Neutral (use the role’s normal setting), Value: 1
+									140 image
+								141 radio button Allow, Value: 0
+									142 image
+							143 button Cancel
+							144 button Save
+			145 container
+				146 tab group
+					147 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 204 MB, Value: on
+						148 button Close
+			149 button New Tab
+	150 close button
+	151 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	152 minimize button
+153 menu bar
+	154 Chrome
+	155 File
+	156 Edit
+	157 View
+	158 History
+	159 Bookmarks
+	160 Profiles
+	161 Tab
+	162 Window
+	163 Help
+
+Selected text: ```
+￼
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

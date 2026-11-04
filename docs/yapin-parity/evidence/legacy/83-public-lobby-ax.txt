@@ -1,0 +1,178 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 text Yapin’
+							22 container Servers
+								23 button Direct messages
+								24 button Meldiq
+								25 container
+									26 button Yapin' Headquarters
+									27 text 15
+								28 container
+									29 button MINECRAFT
+									30 text 13
+								31 button Create a server
+								32 button Discover servers
+							33 container
+								34 button Yapin' Headquarters Yapin’ Partner 3
+									35 text Yapin' Headquarters
+									36 button Yapin’ Partner
+									37 text 3
+								38 button Lobby
+								39 button Invite people
+								40 button New here? Read the rules
+								41 button Dismiss
+								42 container
+									43 button Rules rules
+									44 button announcements @5
+									45 button staff-announcements @8
+									46 button faq
+									47 button add-app-to-phone
+									48 button staff-application
+									49 button giveaways @2
+									50 button hall-of-shame
+									51 button general
+									52 button media
+									53 button yapin-fanart
+									54 button international-chat
+									55 button memes
+									56 button gaming
+									57 button promote-your-server
+									58 button pets
+									59 button suggestions-new
+									60 button emoji-suggestions
+									61 button feedback
+									62 button Stage QnA
+									63 button General
+									64 button wakfuonyt
+									65 button Sayori LIVE
+									66 button Cyn
+									67 button ✦︎buckmi✦︎ LIVE
+									68 button Eman
+									69 button jr
+									70 button 🌸Choccy🌸
+									71 button creatorofpi
+									72 button 𝚋𝚞𝚗𝚗𝚢 ^⌯ . ⌯^
+									73 button DivineArtist LIVE
+									74 button sosa. LIVE
+									75 button white.heat
+									76 button totakeke
+									77 button ___________________
+									78 button Guest616
+									79 button Gaming
+									80 button Yap
+									81 button yap 2
+									82 button yap 3
+								83 pop up button nahian Online, Help: Your account
+									84 text nahian
+									85 text Online
+								86 button Inbox
+								87 button Settings
+								88 button Log out
+							89 container
+								90 container
+									91 heading YAPIN' HEADQUARTERS Yapin’ Partner, Value: 1
+										92 text YAPIN' HEADQUARTERS
+										93 button Yapin’ Partner
+									94 text The official Yapin' server. News first, giveaways, and 100k+ people to yap with. 106,797  members 823 online
+									95 text Lv 3
+								96 text The Official Yapper Server
+								97 button Read the rules
+								98 button Say hi
+								99 heading ABOUT, Value: 2
+									100 text ABOUT
+								101 text The official home of Yapin'. 100k+ people yapping,
+								102 heading LIVE NOW, Value: 2
+									103 text LIVE NOW
+								104 button General 15 in voice +10
+								105 heading MAIN CHANNELS, Value: 2
+									106 text MAIN CHANNELS
+								107 button general Active now
+								108 button announcements Active 6h ago
+								109 button giveaways Active 2h ago
+								110 button gaming Active 28m ago
+								111 button memes Active 45m ago
+								112 button promote-your-server Active 4m ago
+								113 heading GIVEAWAYS, Value: 2
+									114 text GIVEAWAYS
+								115 button PLUS SUBSCRIPTION. Hosted by <@573b2de3-4bc3-4f32-857f-c23679f81473> 1 winner · Ends in 21h 35m Enter
+								116 heading FAQ, Value: 2
+									117 text FAQ
+								118 button Is this the official Yapin' server?
+								119 text Yep, this is HQ, run by the Yapin' team. Announcements posted here are the real ones.
+								120 button Where do I get help?
+								121 button How do I suggest a feature?
+								122 button Can I promote my server?
+								123 button How do I become staff?
+								124 button How do giveaways work?
+								125 button What's Yapin' Plus?
+								126 button Can I make my own bot?
+								127 button How do I get Yapin' on my phone?
+								128 button Someone's breaking the rules, what do I do?
+								129 heading RULES, Value: 2
+									130 text RULES
+								131 text Give them a read before you post.
+								132 button Read the rules
+								133 heading PICK YOUR PINGS, Value: 2
+									134 text PICK YOUR PINGS
+								135 text 📢  Announcements 🎁  Giveaways 🛠️  Updates 🎉  Events 📊  Polls
+								136 button Choose pings
+								137 heading WHO RUNS IT, Value: 2
+									138 text WHO RUNS IT
+								139 button Someone Owner
+								140 button Tripex Yapin' Management
+								141 button greninja Yapin' Management
+								142 button Firefox Head Moderator
+								143 button Someone Head Moderator
+								144 button Someone Head Moderator
+								145 button 怠竜 Tearyū Head Moderator
+								146 button Fura「FwkZPoulet」 Head Moderator
+								147 button SHY 𑣲. Head Moderator
+								148 button Yuki Head Moderator
+								149 button Someone Moderator
+								150 button ! Ascension Moderator
+							151 button Getting started
+			152 container
+				153 tab group
+					154 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						155 button Close
+					156 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 173 MB, Value: on
+						157 button Close
+					158 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						159 button Close
+			160 button New Tab
+	161 close button
+	162 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	163 minimize button
+164 menu bar
+	165 Chrome
+	166 File
+	167 Edit
+	168 View
+	169 History
+	170 Bookmarks
+	171 Profiles
+	172 Tab
+	173 Window
+	174 Help
+
+The focused UI element is 26 button Yapin' Headquarters

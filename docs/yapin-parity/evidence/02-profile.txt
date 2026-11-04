@@ -1,0 +1,179 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			7 container My Profile sections
+				8 button Identity
+				9 button Looks
+				10 button About
+				11 button Privacy
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		26 heading My Profile, Value: 2
+			27 text My Profile
+		28 text Give your profile a fresh look
+		29 text A frame around your picture: built-in ones, or made by artists.
+		30 button Browse
+		31 container pe-identity
+			32 text IDENTITY
+			33 container
+				34 text Username
+				35 text field (settable) Username, Value: <redacted>
+				36 text Your old name stays yours for 7 days. Display name
+				37 text field (settable) Display name, ID: set-display
+				38 text Pronouns
+				39 text field (settable) Pronouns, ID: set-pronouns
+		40 container pe-looks
+			41 text LOOKS
+			42 container
+				43 text Profile picture PNG, JPG, GIF or WebP. On iPhone, pick GIFs from Files. Upload picture
+				44 button Upload picture
+				45 text Banner Crop and zoom it, or drag the banner in the preview. Upload banner
+				46 button Upload banner
+			47 container
+				48 text Server tag
+				49 checkbox None ✓, Value: 1
+					50 text None
+					51 text ✓
+				52 checkbox MC MINECRAFT, Value: 0
+					53 text MC
+					54 text MINECRAFT
+				55 checkbox YAP Yapin' Headquarters, Value: 0
+					56 text YAP
+					57 text Yapin' Headquarters
+				58 text Badge
+				59 checkbox None ✓, Value: 1
+					60 text None
+					61 text ✓
+				62 text This one shows next to your name in chat and the member list. Your profile card shows all of them. None hides them everywhere.
+				63 pop up button Avatar decoration None
+					64 text Avatar decoration
+					65 text None
+				66 pop up button Profile effect None
+					67 text Profile effect
+					68 text None
+				69 pop up button Name banner None
+					70 text Name banner
+					71 text None
+				72 pop up button nahian Name style Default font · no colour
+					73 text nahian
+					74 text Name style
+					75 text Default font · no colour
+			76 container
+				77 text Profile theme Colours your profile card, its banner (when you have no picture) and your voice tile.
+				78 container Main colour
+					79 color well (settable) Description: Main colour, Value: #9b59ff
+				80 button (disabled) + Second, Help: Pick a main colour first
+				81 button (disabled) None
+				82 button Sunset
+				83 button Ocean
+				84 button Grape
+				85 button Mint
+				86 button Midnight
+				87 button Cherry
+				88 button Gold
+				89 button Aurora
+				90 button Rose
+				91 button Forest
+				92 button Neon
+				93 button Candy
+		94 container pe-about
+			95 text ABOUT
+			96 container
+				97 text About me
+				98 text entry area (settable) About me, ID: set-bio
+				99 text 300 left
+				100 text Links
+				101 button + Add link
+				102 text Connections
+				103 button Connect Steam Show your Steam name, games and achievements on your profile
+					104 text Connect Steam
+					105 text Show your Steam name, games and achievements on your profile
+				106 text You sign in on Steam’s own page. We never see your Steam password.
+				107 button Connect AniList Show your favourite anime and what you’re watching
+					108 text Connect AniList
+					109 text Show your favourite anime and what you’re watching
+				110 text You sign in on AniList’s own page. We never see your password.
+				111 button Connect Last.fm Show your top artists, tracks and what’s playing
+					112 text Connect Last.fm
+					113 text Show your top artists, tracks and what’s playing
+				114 text You sign in on Last.fm’s own page. We never see your password.
+				115 button Connect Trakt Show the movies and shows you watch and rate
+					116 text Connect Trakt
+					117 text Show the movies and shows you watch and rate
+				118 text You sign in on Trakt’s own page. We never see your password.
+		119 container pe-privacy
+			120 text PRIVACY
+			121 container
+				122 text Suggest me to people with similar interests
+				123 text Shows you under Friends, Suggested for people who share your games, anime, music, movies or servers. Hidden connections never count.
+				124 checkbox (settable, integer) Value: 1, Description: Suggest me to people with similar interests Shows you under Friends, Suggested for people who share your games, anime, music, movies or servers. Hidden connections never count.
+				125 text Hide me from leaderboards
+				126 text You won’t show up on any leaderboard.
+				127 checkbox (settable, integer) Description: Hide me from leaderboards You won’t show up on any leaderboard., Value: 0
+		128 container
+			129 text PREVIEW
+			130 container
+				131 heading nahian, Value: 2
+					132 text nahian
+				133 container
+					134 text @ nahian
+				135 button 0, Help: Level 0
+				136 text Yapin’ since Oct 26, 2026
+			137 text PROFILE SECTIONS Pick what shows on your profile and in what order.
+			138 button Description: Drag About me to reorder, or press the arrow keys, Help: Drag to reorder
+			139 container
+				140 checkbox (settable, integer) Description: About me, Value: 1
+				141 text About me
+			142 button (disabled) Move up
+			143 button Move down
+			144 button Description: Drag Interests to reorder, or press the arrow keys, Help: Drag to reorder
+			145 container
+				146 checkbox (settable, integer) Description: Interests, Value: 1
+				147 text Interests
+			148 button Move up
+			149 button Move down
+			150 button Description: Drag Links to reorder, or press the arrow keys, Help: Drag to reorder
+			151 container
+				152 checkbox (settable, integer) Description: Links, Value: 1
+				153 text Links
+			154 button Move up
+			155 button Move down
+			156 button Description: Drag Wearing to reorder, or press the arrow keys, Help: Drag to reorder
+			157 container
+				158 checkbox (settable, integer) Description: Wearing, Value: 0
+				159 text Wearing
+			160 button Move up
+			161 button Move down
+			162 button Description: Drag Yapin’ since to reorder, or press the arrow keys, Help: Drag to reorder
+			163 container
+				164 checkbox (settable, integer) Description: Yapin’ since, Value: 1
+				165 text Yapin’ since
+			166 button Move up
+			167 button Move down
+			168 button Description: Drag Comments to reorder, or press the arrow keys, Help: Drag to reorder
+			169 container
+				170 checkbox (settable, integer) Description: Comments, Value: 1
+				171 text Comments
+			172 button Move up
+			173 button (disabled) Move down
+		174 button Close
+			175 image
+
+The focused UI element is 3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand

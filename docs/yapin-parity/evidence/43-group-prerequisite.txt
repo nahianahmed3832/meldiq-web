@@ -1,0 +1,13 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container Create a group
+		2 heading Create a group, Value: 2
+			3 text Create a group
+		4 text Pick who’s in it (up to 9 friends).
+		5 text field (settable) Friend username
+		6 text You can add 9 more.
+		7 text No friends yet. Add some from the Friends page.
+		8 button Cancel
+		9 button (disabled) Next
+
+The focused UI element is 5 text field (settable) Friend username

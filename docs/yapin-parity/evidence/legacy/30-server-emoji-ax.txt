@@ -1,0 +1,75 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 heading Emoji, Value: 2
+								44 text Emoji
+							45 text Add up to 50 emojis. Everyone in this server can use them anywhere on Yapin’, other servers and DMs too.
+							46 button Upload emoji
+							47 text 0 / 50 used
+							48 text Supercharge level 1 gets 100 emoji slots.
+							49 container
+								50 text No emojis yet Upload one and it shows up in everyone's emoji picker.
+								51 button Upload emoji
+							52 button Close
+			53 container
+				54 tab group
+					55 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 129 MB, Value: on
+						56 button Close
+			57 button New Tab
+	58 close button
+	59 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	60 minimize button
+61 menu bar
+	62 Chrome
+	63 File
+	64 Edit
+	65 View
+	66 History
+	67 Bookmarks
+	68 Profiles
+	69 Tab
+	70 Window
+	71 Help
+
+The focused UI element is 31 button Emoji

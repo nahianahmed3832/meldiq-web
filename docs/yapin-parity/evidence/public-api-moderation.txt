@@ -1,0 +1,716 @@
+Browser tab: 2, Title: "Moderation · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/moderation".
+1 AXWebArea Moderation · Bot API reference · Yapin’, URL: yapin.gg/developers/api/moderation
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Moderation, Value: 1
+				15 text Moderation
+			16 text Kick, ban, time out, nicknames, invites.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container patch-servers-id-members-uid
+				25 text PATCH
+				26 text /servers/{id}/members/{uid}
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/moderation#patch-servers-id-members-uid
+				28 text Set a nickname
+				29 text Auth :  Bot token  +  Manage Nicknames JS: 
+				30 text bot.setNickname()
+				31 text Python: 
+				32 text bot.set_nickname()
+				33 heading PARAMETERS, Value: 4
+					34 text PARAMETERS
+				35 table
+					36 row
+						37 cell
+							38 text NAME
+						39 cell
+							40 text TYPE
+						41 cell
+							42 text DESCRIPTION
+					43 row
+						44 cell
+							45 text {id}
+						46 cell
+							47 text string (uuid)
+						48 cell
+							49 text Server id
+							50 container
+								51 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					52 row
+						53 cell
+							54 text {uid}
+						55 cell
+							56 text string (uuid)
+						57 cell
+							58 text User id
+							59 container
+								60 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				61 heading REQUEST BODY, Value: 4
+					62 text REQUEST BODY
+				63 text object
+				64 table
+					65 row
+						66 cell
+							67 text FIELD
+						68 cell
+							69 text TYPE
+						70 cell
+							71 text DESCRIPTION
+					72 row
+						73 cell
+							74 text nickname
+						75 cell
+							76 text string
+						77 cell
+							78 text Up to 32 characters; "" clears it  ( up to 32 characters )
+							79 container
+								80 text Example :  "Sammy"
+				81 button (collapsed) Example request, Secondary Actions: Expand
+					82 text Example request
+				83 heading RESPONSE200, Value: 4
+					84 text RESPONSE
+					85 text 200
+				86 text Ok
+				87 table
+					88 row
+						89 cell
+							90 text FIELD
+						91 cell
+							92 text TYPE
+						93 cell
+							94 text DESCRIPTION
+					95 row
+						96 cell
+							97 text ok
+						98 cell
+							99 text true
+						100 cell
+							101 text Done
+							102 container
+								103 text Example :  true
+				104 button (collapsed) Example response, Secondary Actions: Expand
+					105 text Example response
+				106 heading ERRORS, Value: 4
+					107 text ERRORS
+				108 content list
+					109 container
+						110 AXListMarker • 
+						111 text 400 Bad input: the error says what’s wrong
+					112 container
+						113 AXListMarker • 
+						114 text 401 Missing or wrong token
+					115 container
+						116 AXListMarker • 
+						117 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					118 container
+						119 AXListMarker • 
+						120 text 404 No such thing, or the bot can’t see it
+					121 container
+						122 AXListMarker • 
+						123 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					124 container
+						125 AXListMarker • 
+						126 text 500 Something went wrong on our side
+					127 container
+						128 AXListMarker • 
+						129 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			130 container post-servers-id-kick
+				131 text POST
+				132 text /servers/{id}/kick
+				133 link Description: Link to this endpoint, Value: yapin.gg/developers/api/moderation#post-servers-id-kick
+				134 text Kick someone (also drops them from voice)
+				135 text Auth :  Bot token  +  Kick Members JS: 
+				136 text bot.kick()
+				137 text Python: 
+				138 text bot.kick()
+				139 heading PARAMETERS, Value: 4
+					140 text PARAMETERS
+				141 table
+					142 row
+						143 cell
+							144 text NAME
+						145 cell
+							146 text TYPE
+						147 cell
+							148 text DESCRIPTION
+					149 row
+						150 cell
+							151 text {id}
+						152 cell
+							153 text string (uuid)
+						154 cell
+							155 text Server id
+							156 container
+								157 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				158 heading REQUEST BODY, Value: 4
+					159 text REQUEST BODY
+				160 text object
+				161 table
+					162 row
+						163 cell
+							164 text FIELD
+						165 cell
+							166 text TYPE
+						167 cell
+							168 text DESCRIPTION
+					169 row
+						170 cell
+							171 text user_id
+						172 cell
+							173 text string (uuid)
+						174 cell
+							175 text The person
+							176 container
+								177 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				178 button (collapsed) Example request, Secondary Actions: Expand
+					179 text Example request
+				180 heading RESPONSE200, Value: 4
+					181 text RESPONSE
+					182 text 200
+				183 text Ok
+				184 table
+					185 row
+						186 cell
+							187 text FIELD
+						188 cell
+							189 text TYPE
+						190 cell
+							191 text DESCRIPTION
+					192 row
+						193 cell
+							194 text ok
+						195 cell
+							196 text true
+						197 cell
+							198 text Done
+							199 container
+								200 text Example :  true
+				201 button (collapsed) Example response, Secondary Actions: Expand
+					202 text Example response
+				203 heading ERRORS, Value: 4
+					204 text ERRORS
+				205 content list
+					206 container
+						207 AXListMarker • 
+						208 text 400 Bad input: the error says what’s wrong
+					209 container
+						210 AXListMarker • 
+						211 text 401 Missing or wrong token
+					212 container
+						213 AXListMarker • 
+						214 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					215 container
+						216 AXListMarker • 
+						217 text 404 No such thing, or the bot can’t see it
+					218 container
+						219 AXListMarker • 
+						220 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					221 container
+						222 AXListMarker • 
+						223 text 500 Something went wrong on our side
+					224 container
+						225 AXListMarker • 
+						226 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			227 container get-servers-id-bans
+				228 text GET
+				229 text /servers/{id}/bans
+				230 link Description: Link to this endpoint, Value: yapin.gg/developers/api/moderation#get-servers-id-bans
+				231 text Bans, newest first
+				232 text Auth :  Bot token  +  Ban Members JS: 
+				233 text bot.bans()
+				234 text Python: 
+				235 text bot.bans()
+				236 heading PARAMETERS, Value: 4
+					237 text PARAMETERS
+				238 table
+					239 row
+						240 cell
+							241 text NAME
+						242 cell
+							243 text TYPE
+						244 cell
+							245 text DESCRIPTION
+					246 row
+						247 cell
+							248 text {id}
+						249 cell
+							250 text string (uuid)
+						251 cell
+							252 text Server id
+							253 container
+								254 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				255 heading RESPONSE200, Value: 4
+					256 text RESPONSE
+					257 text 200
+				258 text object
+				259 table
+					260 row
+						261 cell
+							262 text FIELD
+						263 cell
+							264 text TYPE
+						265 cell
+							266 text DESCRIPTION
+					267 row
+						268 cell
+							269 text bans
+						270 cell
+							271 text Ban[]
+						272 cell
+							273 text Bans
+							274 button (collapsed) Fields of Ban, Secondary Actions: Expand
+								275 text Fields of Ban
+				276 button (collapsed) Example response, Secondary Actions: Expand
+					277 text Example response
+				278 heading ERRORS, Value: 4
+					279 text ERRORS
+				280 content list
+					281 container
+						282 AXListMarker • 
+						283 text 401 Missing or wrong token
+					284 container
+						285 AXListMarker • 
+						286 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					287 container
+						288 AXListMarker • 
+						289 text 500 Something went wrong on our side
+					290 container
+						291 AXListMarker • 
+						292 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			293 container post-servers-id-bans
+				294 text POST
+				295 text /servers/{id}/bans
+				296 link Description: Link to this endpoint, Value: yapin.gg/developers/api/moderation#post-servers-id-bans
+				297 text Ban someone (also drops them from voice)
+				298 text Auth :  Bot token  +  Ban Members JS: 
+				299 text bot.ban()
+				300 text Python: 
+				301 text bot.ban()
+				302 heading PARAMETERS, Value: 4
+					303 text PARAMETERS
+				304 table
+					305 row
+						306 cell
+							307 text NAME
+						308 cell
+							309 text TYPE
+						310 cell
+							311 text DESCRIPTION
+					312 row
+						313 cell
+							314 text {id}
+						315 cell
+							316 text string (uuid)
+						317 cell
+							318 text Server id
+							319 container
+								320 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				321 heading REQUEST BODY, Value: 4
+					322 text REQUEST BODY
+				323 text object
+				324 table
+					325 row
+						326 cell
+							327 text FIELD
+						328 cell
+							329 text TYPE
+						330 cell
+							331 text DESCRIPTION
+					332 row
+						333 cell
+							334 text user_id
+						335 cell
+							336 text string (uuid)
+						337 cell
+							338 text The person
+							339 container
+								340 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				341 button (collapsed) Example request, Secondary Actions: Expand
+					342 text Example request
+				343 heading RESPONSE200, Value: 4
+					344 text RESPONSE
+					345 text 200
+				346 text Ok
+				347 table
+					348 row
+						349 cell
+							350 text FIELD
+						351 cell
+							352 text TYPE
+						353 cell
+							354 text DESCRIPTION
+					355 row
+						356 cell
+							357 text ok
+						358 cell
+							359 text true
+						360 cell
+							361 text Done
+							362 container
+								363 text Example :  true
+				364 button (collapsed) Example response, Secondary Actions: Expand
+					365 text Example response
+				366 heading ERRORS, Value: 4
+					367 text ERRORS
+				368 content list
+					369 container
+						370 AXListMarker • 
+						371 text 400 Bad input: the error says what’s wrong
+					372 container
+						373 AXListMarker • 
+						374 text 401 Missing or wrong token
+					375 container
+						376 AXListMarker • 
+						377 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					378 container
+						379 AXListMarker • 
+						380 text 404 No such thing, or the bot can’t see it
+					381 container
+						382 AXListMarker • 
+						383 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					384 container
+						385 AXListMarker • 
+						386 text 500 Something went wrong on our side
+					387 container
+						388 AXListMarker • 
+						389 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			390 container delete-servers-id-bans-uid
+				391 text DELETE
+				392 text /servers/{id}/bans/{uid}
+				393 link Description: Link to this endpoint, Value: yapin.gg/developers/api/moderation#delete-servers-id-bans-uid
+				394 text Unban
+				395 text Auth :  Bot token  +  Ban Members JS: 
+				396 text bot.unban()
+				397 text Python: 
+				398 text bot.unban()
+				399 heading PARAMETERS, Value: 4
+					400 text PARAMETERS
+				401 table
+					402 row
+						403 cell
+							404 text NAME
+						405 cell
+							406 text TYPE
+						407 cell
+							408 text DESCRIPTION
+					409 row
+						410 cell
+							411 text {id}
+						412 cell
+							413 text string (uuid)
+						414 cell
+							415 text Server id
+							416 container
+								417 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					418 row
+						419 cell
+							420 text {uid}
+						421 cell
+							422 text string (uuid)
+						423 cell
+							424 text User id
+							425 container
+								426 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				427 heading RESPONSE200, Value: 4
+					428 text RESPONSE
+					429 text 200
+				430 text Ok
+				431 table
+					432 row
+						433 cell
+							434 text FIELD
+						435 cell
+							436 text TYPE
+						437 cell
+							438 text DESCRIPTION
+					439 row
+						440 cell
+							441 text ok
+						442 cell
+							443 text true
+						444 cell
+							445 text Done
+							446 container
+								447 text Example :  true
+				448 button (collapsed) Example response, Secondary Actions: Expand
+					449 text Example response
+				450 heading ERRORS, Value: 4
+					451 text ERRORS
+				452 content list
+					453 container
+						454 AXListMarker • 
+						455 text 400 Bad input: the error says what’s wrong
+					456 container
+						457 AXListMarker • 
+						458 text 401 Missing or wrong token
+					459 container
+						460 AXListMarker • 
+						461 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					462 container
+						463 AXListMarker • 
+						464 text 404 No such thing, or the bot can’t see it
+					465 container
+						466 AXListMarker • 
+						467 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					468 container
+						469 AXListMarker • 
+						470 text 500 Something went wrong on our side
+					471 container
+						472 AXListMarker • 
+						473 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			474 container post-servers-id-timeouts
+				475 text POST
+				476 text /servers/{id}/timeouts
+				477 link Description: Link to this endpoint, Value: yapin.gg/developers/api/moderation#post-servers-id-timeouts
+				478 text Time someone out; minutes 0 clears it
+				479 text Auth :  Bot token  +  Timeout Members JS: 
+				480 text bot.timeout()
+				481 text Python: 
+				482 text bot.timeout()
+				483 heading PARAMETERS, Value: 4
+					484 text PARAMETERS
+				485 table
+					486 row
+						487 cell
+							488 text NAME
+						489 cell
+							490 text TYPE
+						491 cell
+							492 text DESCRIPTION
+					493 row
+						494 cell
+							495 text {id}
+						496 cell
+							497 text string (uuid)
+						498 cell
+							499 text Server id
+							500 container
+								501 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				502 heading REQUEST BODY, Value: 4
+					503 text REQUEST BODY
+				504 text object
+				505 table
+					506 row
+						507 cell
+							508 text FIELD
+						509 cell
+							510 text TYPE
+						511 cell
+							512 text DESCRIPTION
+					513 row
+						514 cell
+							515 text user_id
+						516 cell
+							517 text string (uuid)
+						518 cell
+							519 text Who
+							520 container
+								521 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					522 row
+						523 cell
+							524 text minutes
+							525 text optional
+						526 cell
+							527 text integer
+						528 cell
+							529 text How long (default 10, up to 28 days)  ( 0 to 40320 )
+							530 container
+								531 text Example :  10
+					532 row
+						533 cell
+							534 text reason
+							535 text optional
+						536 cell
+							537 text string
+						538 cell
+							539 text Shown in the audit log  ( up to 200 characters )
+							540 container
+								541 text Example :  "Spam"
+				542 button (collapsed) Example request, Secondary Actions: Expand
+					543 text Example request
+				544 heading RESPONSE200, Value: 4
+					545 text RESPONSE
+					546 text 200
+				547 text object
+				548 table
+					549 row
+						550 cell
+							551 text FIELD
+						552 cell
+							553 text TYPE
+						554 cell
+							555 text DESCRIPTION
+					556 row
+						557 cell
+							558 text ok
+						559 cell
+							560 text true
+						561 cell
+							562 text Done
+							563 container
+								564 text Example :  true
+					565 row
+						566 cell
+							567 text minutes
+						568 cell
+							569 text integer
+						570 cell
+							571 text Minutes set
+							572 container
+								573 text Example :  10
+				574 button (collapsed) Example response, Secondary Actions: Expand
+					575 text Example response
+				576 heading ERRORS, Value: 4
+					577 text ERRORS
+				578 content list
+					579 container
+						580 AXListMarker • 
+						581 text 400 Bad input: the error says what’s wrong
+					582 container
+						583 AXListMarker • 
+						584 text 401 Missing or wrong token
+					585 container
+						586 AXListMarker • 
+						587 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					588 container
+						589 AXListMarker • 
+						590 text 404 No such thing, or the bot can’t see it
+					591 container
+						592 AXListMarker • 
+						593 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					594 container
+						595 AXListMarker • 
+						596 text 500 Something went wrong on our side
+					597 container
+						598 AXListMarker • 
+						599 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			600 container get-servers-id-invites
+				601 text GET
+				602 text /servers/{id}/invites
+				603 link Description: Link to this endpoint, Value: yapin.gg/developers/api/moderation#get-servers-id-invites
+				604 text The server’s invites
+				605 text Auth :  Bot token  +  Manage Server In testing : 
+				606 text bot_invite_tracking
+				607 text JS: 
+				608 text bot.invites()
+				609 text Python: 
+				610 text bot.invites()
+				611 heading PARAMETERS, Value: 4
+					612 text PARAMETERS
+				613 table
+					614 row
+						615 cell
+							616 text NAME
+						617 cell
+							618 text TYPE
+						619 cell
+							620 text DESCRIPTION
+					621 row
+						622 cell
+							623 text {id}
+						624 cell
+							625 text string (uuid)
+						626 cell
+							627 text Server id
+							628 container
+								629 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				630 heading RESPONSE200, Value: 4
+					631 text RESPONSE
+					632 text 200
+				633 text object
+				634 table
+					635 row
+						636 cell
+							637 text FIELD
+						638 cell
+							639 text TYPE
+						640 cell
+							641 text DESCRIPTION
+					642 row
+						643 cell
+							644 text invites
+						645 cell
+							646 text Invite[]
+						647 cell
+							648 text Invites, newest first
+							649 button (collapsed) Fields of Invite, Secondary Actions: Expand
+								650 text Fields of Invite
+				651 button (collapsed) Example response, Secondary Actions: Expand
+					652 text Example response
+				653 heading ERRORS, Value: 4
+					654 text ERRORS
+				655 content list
+					656 container
+						657 AXListMarker • 
+						658 text 401 Missing or wrong token
+					659 container
+						660 AXListMarker • 
+						661 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					662 container
+						663 AXListMarker • 
+						664 text 500 Something went wrong on our side
+					665 container
+						666 AXListMarker • 
+						667 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			668 link Description: ← Back to Yapin’, Value: yapin.gg/
+			669 text  · 
+			670 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		671 container On this page
+			672 text ON THIS PAGE
+			673 content list
+				674 link Description: Overview, Value: yapin.gg/developers/api/moderation#top
+				675 link Description: PATCH /servers/{id}/members/{uid}, Value: yapin.gg/developers/api/moderation#patch-servers-id-members-uid
+				676 link Description: POST /servers/{id}/kick, Value: yapin.gg/developers/api/moderation#post-servers-id-kick
+				677 link Description: GET /servers/{id}/bans, Value: yapin.gg/developers/api/moderation#get-servers-id-bans
+				678 link Description: POST /servers/{id}/bans, Value: yapin.gg/developers/api/moderation#post-servers-id-bans
+				679 link Description: DELETE /servers/{id}/bans/{uid}, Value: yapin.gg/developers/api/moderation#delete-servers-id-bans-uid
+				680 link Description: POST /servers/{id}/timeouts, Value: yapin.gg/developers/api/moderation#post-servers-id-timeouts
+				681 link Description: GET /servers/{id}/invites, Value: yapin.gg/developers/api/moderation#get-servers-id-invites
+		682 text Yapin’
+		683 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		684 heading PRODUCT, Value: 4
+			685 text PRODUCT
+		686 content list
+			687 link Description: Download, Value: yapin.gg/download
+			688 link Description: Developers, Value: yapin.gg/developers
+			689 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			690 link Description: Creator Program, Value: yapin.gg/creators
+			691 link Description: FanKit, Value: yapin.gg/fankit
+			692 link Description: Roadmap, Value: yapin.gg/roadmap
+			693 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			694 link Description: Bugs, Value: yapin.gg/bugs
+			695 link Description: Status, Value: yapin.gg/status
+		696 heading COMMUNITY, Value: 4
+			697 text COMMUNITY
+		698 content list
+			699 link Description: Guidelines, Value: yapin.gg/guidelines
+			700 link Description: Tutorials, Value: yapin.gg/tutorials
+			701 link Description: Bots, Value: yapin.gg/bots
+			702 link Description: Partners, Value: yapin.gg/partners
+		703 heading LEGAL, Value: 4
+			704 text LEGAL
+		705 content list
+			706 link Description: Terms, Value: yapin.gg/terms
+			707 link Description: Privacy, Value: yapin.gg/privacy
+			708 link Description: Copyright, Value: yapin.gg/copyright
+			709 link Description: Security, Value: yapin.gg/security
+			710 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			711 link Description: Contact, Value: mailto:hello@yapin.gg
+		712 text © 2026 Yapper Media LLC. Free to use.
+		713 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Moderation · Bot API reference · Yapin’, URL: yapin.gg/developers/api/moderation

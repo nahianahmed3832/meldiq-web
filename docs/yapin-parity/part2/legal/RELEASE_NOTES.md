@@ -1,0 +1,19 @@
+# Policy preparation and release contract
+
+Owner decisions received in this chat on 4 November 2026 (Asia/Shanghai): minimum age 13+; operator GRIIPBUDDY LLC, Wyoming; monitored contact `contact@griipbuddy.com`; business mailing address `1021 E Lincolnway, Cheyenne, WY 82001, Laramie, US`. The policies render Laramie as Laramie County, as supplied; no claim is made that this address is a registered-agent address.
+
+[Terms](TERMS_OF_SERVICE.md) and [Privacy](PRIVACY_POLICY.md) are original prepared copy, revision `2026-11-04.1`. No mandatory arbitration, class waiver, seller settlement, new subscription, or discontinued plan was introduced. Purchases follow their disclosed checkout terms and mandatory consumer rights. The owner supplied the corporate details; corporate registration and mailbox deliverability were not independently verified.
+
+The live site still presents the earlier draft. These files are **not published**. Part 4 must integrate both with the public site's existing legal layout and support contacts, verify every policy link, publish an effective date, and present the exact released revision for acceptance. Do not record acceptance of this draft as acceptance of a currently live revision.
+
+The Part 2 UI now requires an explicit 13+ declaration with Terms agreement and Privacy acknowledgement before registration or first identity setup. It collects no birth date for this step. The existing account API does **not** yet store a versioned policy acceptance or enforce an age rule across email, provider, operator, and older-native registration paths. This is an explicit release requirement, not an accepted server control. Add a versioned, durable account-level record with server time, accepted Terms revision, Privacy notice revision, minimum-age declaration, and entry path; validate all public new-account paths before creating an account. Keep existing users and native sign-in working; advertise a capability, version the new registration contract, and coordinate native upgrades instead of silently breaking old clients. Do not collect full birth dates or identity documents solely to populate that record.
+
+Privacy publication also requires confirming provider coverage (including FCM), actual log/call and billing retention, deletion behavior and backup expiration, and any international-transfer or jurisdiction-specific requirements. The live policy currently states 36,500-day call/audit retention and contains outdated blanket encryption/push statements. The prepared copy avoids replacing these with unverified shorter periods or broader security claims. Publish a measured retention table with the final release. No infrastructure or retention configuration was changed here.
+
+Legal drafting references checked on 4 November 2026:
+
+- [FTC COPPA FAQ](https://www.ftc.gov/business-guidance/resources/complying-coppa-frequently-asked-questions): a general-audience service's knowledge of under-13 collection can trigger COPPA; simply declaring a 13+ minimum does not establish compliance.
+- [FTC COPPA six-step guidance](https://www.ftc.gov/business-guidance/resources/childrens-online-privacy-protection-rule-six-step-compliance-plan-your-business): audience and data practices matter; a colorful mascot alone does not settle the audience classification.
+- [FTC negative-option enforcement guidance](https://www.ftc.gov/news-events/news/press-releases/2021/10/ftc-ramp-enforcement-against-illegal-dark-patterns-trick-or-trap-consumers-subscriptions): clear material terms, informed authorization, and workable cancellation. This is not a claim that a particular later rule is currently in effect.
+
+These are working business policies, not a legal opinion or certification of compliance. Before publication, review them for Meldiq's actual audience, markets, processing, billing, and mandatory local protections.

@@ -1,0 +1,170 @@
+{"height":844,"width":1440}
+Browser tab: 4, Title: "Yapin’ · Free chat with servers, voice and screen sharing", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 text (32) Yapin’
+		38 text Yapin’
+		39 container Servers
+			40 button Direct messages
+			41 container
+				42 button Meldiq Research - Private Test
+				43 button Meldiq
+				44 button Yapin' Headquarters
+				45 text 10
+				46 button MINECRAFT
+				47 text 22
+			48 button Create a server
+			49 button Discover servers
+				50 image
+		51 container
+			52 button Meldiq Research - Private Test Events
+				53 text Meldiq Research - Private Test
+				54 button Events
+			55 button Lobby OFF
+				56 image
+				57 text Lobby
+				58 text OFF
+			59 button Invite people
+				60 image
+				61 text Invite people
+			62 button (expanded) TEXT CHANNELS, Secondary Actions: Collapse
+				63 image
+				64 text TEXT CHANNELS
+			65 button Description: Create channel in this category, Help: Create channel here
+				66 image
+			67 pop up button Description: More options for Text channels, Help: More
+				68 image
+			69 container
+				70 button general
+					71 image
+					72 text general
+				73 button history-lab
+					74 image
+					75 text history-lab
+				76 button Edit channel
+					77 image
+				78 button Description: Delete channel, Help: Delete
+					79 image
+			80 button (expanded) VOICE CHANNELS, Secondary Actions: Collapse
+				81 image
+				82 text VOICE CHANNELS
+			83 button Description: Create channel in this category, Help: Create channel here
+				84 image
+			85 pop up button Description: More options for Voice channels, Help: More
+				86 image
+			87 button General
+				88 image
+				89 text General
+			90 button (expanded) RESEARCH, Secondary Actions: Collapse
+				91 image
+				92 text RESEARCH
+			93 button Description: Create channel in this category, Help: Create channel here
+				94 image
+			95 pop up button Description: More options for Research, Help: More
+				96 image
+			97 button Discussion ideas-lab
+				98 image Discussion
+				99 text ideas-lab
+			100 pop up button (collapsed) nahian Online, Help: Your account, Secondary Actions: Expand
+				101 text nahian
+				102 text Online
+			103 button (collapsed) Description: Inbox, Secondary Actions: Expand
+			104 button Settings
+				105 image
+			106 button Log out
+				107 image
+		3 container
+			151 image
+			152 button history-lab
+			8 button Mute
+				111 image
+			112 button (collapsed) Description: Threads, Secondary Actions: Expand
+				113 image
+			10 button Pinned messages
+				114 image
+			115 button Media
+				116 image
+			117 button Members
+				118 image
+			119 button Search Meldiq Research - Private Test, Help: Search this server
+				120 image
+				121 text Search Meldiq Research - Private Test
+			12 container
+				13 image
+				14 heading Welcome to #history-lab!, Value: 3
+					122 text Welcome to #history-lab!
+				123 text This is the start of the  # history-lab  channel. Sunday, November 1, 2026
+				15 button nahian's profile
+				16 button nahian
+				124 text Nov 1, 2026 11:31 AM
+				17 container
+					125 text Research marker A — start of synthetic history.  Bold ,  italic ,  code , and 
+					18 link Description: example, Help: https://example.com, Value: example.com/
+					126 text .
+				127 text Research marker E — later synthetic history block.
+01 · Later block for unread and reload observations.
+02 · Later block for unread and reload observations.
+03 · Later block for unread and reload observations.
+04 · Later block for unread and reload observations.
+05 · Later block for unread and reload observations.
+06 · Later block for unread and reload observations.
+07 · Later block for unread and reload observations.
+08 · Later block for unread and reload observations.
+09 · Later block for unread and reload observations.
+10 · Later block for unread and reload observations.
+11 · Later block for unread and reload observations.
+12 · Later block for unread and reload observations.
+13 · Later block for unread and reload observations.
+14 · Later block for unread and reload observations.
+15 · Later block for unread and reload observations.
+16 · Later block for unread and reload observations.
+17 · Later block for unread and reload observations.
+18 · Later block for unread and reload observations.
+19 · Later block for unread and reload observations.
+20 · Later block for unread and reload observations.
+21 · Later block for unread and reload observations.
+22 · Later block for unread and reload observations.
+				128 button (collapsed) Show more, Secondary Actions: Expand
+				129 text Research marker F — final latest-message marker for the controlled unread and reload tests.
+				19 button Private synthetic thread 1 message · 3d
+					130 text Private synthetic thread
+					131 text 1 message
+					132 text  · 
+					133 text 3d
+				20 checkbox Description: 👍 1 reaction, Value: 1
+					21 image 👍
+					134 text 1
+				22 button Add reaction
+				23 button nahian's profile
+				24 button nahian
+				135 text Nov 1, 2026 11:51 AM
+				136 image Description: :research_dot:, Help: :research_dot: from Meldiq Research - Private Test
+				137 image Description: :creeper:, Help: :creeper: from MINECRAFT
+				25 button Open picture
+				26 checkbox Description: Star GIF, Help: Add to favourites, Value: 0
+					27 image
+				28 button nahian's profile
+				29 button nahian
+				138 text Nov 1, 2026 12:00 PM
+				139 text !help
+				30 button Helper's profile
+				31 button Helper
+				140 container Description: Yapin’ bot, Help: Made and run by Yapin’
+				141 text Nov 1, 2026 12:00 PM
+				142 container
+					143 text Helper commands !8ball question  ·  !roll  or  !roll 2d6  ·  !flip  ·  !choose a | b | c  ·  !afk reason  ·  !rank  ·  !top
+			32 container
+				33 button Send a file
+					34 image
+				35 text entry area (settable)
+				144 button Create a poll
+					145 image
+				146 button GIF
+				36 button Emoji
+					37 image
+				147 button Record a voice message
+					148 image
+				149 button (disabled) Send
+					150 image
+
+The focused UI element is 35 text entry area (settable)

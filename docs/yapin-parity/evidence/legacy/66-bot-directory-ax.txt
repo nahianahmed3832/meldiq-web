@@ -1,0 +1,174 @@
+Window: "Bots for your server · Yapin’", App: Google Chrome.
+0 standard window Bots for your server · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/bots, Secondary Actions: Raise
+	1 container Bots for your server · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/bots
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/bots, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Bots for your server · Yapin’, URL: yapin.gg/bots
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container (showing 0-100 of 479 items)
+								29 heading Bots, Value: 1
+									30 text Bots
+								31 text Bots made by people on Yapin’ and checked by us before they show up here. Add one to a server you manage.
+								32 text field (settable) Search bots
+								33 pop up button Sort, Value: Most used
+									34 (selected) Most used
+								35 toggle button All, Value: 1
+								36 toggle button Moderation, Value: 0
+								37 toggle button Fun, Value: 0
+								38 toggle button Games, Value: 0
+								39 toggle button Utility, Value: 0
+								40 toggle button Music, Value: 0
+								41 toggle button Economy, Value: 0
+								42 toggle button Social, Value: 0
+								43 toggle button AI, Value: 0
+								44 toggle button Other, Value: 0
+								45 text SapphireLite
+								46 text BOT
+								47 text by wakfuonyt
+								48 button Add
+								49 text All-in-one bot! can even search for your favorite minecraft server :3 Moderation
+								50 text 386 servers
+								51 link Support server, Value: yapin.gg/invite/sapphire
+								52 text Arcane
+								53 text BOT
+								54 text by OfficialScarour
+								55 button Add
+								56 text LOTS OF COMMANDS! works flawlessly, Moderation, Utilities, Fun and more! I Dashboard: https://arcanebot.vercel.app Moderation
+								57 text 344 servers
+								58 link Support server, Value: yapin.gg/invite/Arcane
+								59 text Welcomerr
+								60 text BOT
+								61 text by ~ | 𝑯𝒆𝒂𝒍𝒆𝒓 〆 ??
+								62 button Add
+								63 text Welcomer is a fully customizable welcome and member management bot built for Yapper servers. It is designed to be universal, meaning it can be added to any server and configured independently by each server's owner without requiring any code changes. Moderation
+								64 text 269 servers
+								65 link Support server, Value: yapin.gg/invite/welcomer
+								66 text TextToYap
+								67 text MEGA BOOSTED
+								68 text BOT
+								69 text by ! WilliamThe4rd
+								70 button Add
+								71 text Text To Yap is Yappers first and best TTS Bot! Music
+								72 text 19 servers
+								73 link Support server, Value: yapin.gg/invite/alts
+								74 text Economy
+								75 text BOT
+								76 text by Pacticle
+								77 button Add
+								78 text 💰 Economy Bot for your server. Commands like /gamble, /balance, and /deposit. 24/7 hosting with best plan. **Most fun in competitive and fun servers! ** Add now! Economy
+								79 text 210 servers
+								80 link Support server, Value: yapin.gg/invite/rankednames
+								81 text Yapboard
+								82 text BOT
+								83 text by elixar
+								84 button Add
+								85 text Yapboard is the perfect bot to advertise your yapin server! Other
+								86 text 172 servers
+								87 text Counter
+								88 text BOT
+								89 text by Loz
+								90 button Add
+								91 text A counting game for your server! Take turns posting the next number, avoid mistakes, and work together to beat your high score. Count together, beat your record, and don’t break the streak! ✅ Independent counting games in every channel ❤️ Custom chances and refill timers Fun
+								92 text 169 servers
+								93 link Support server, Value: yapin.gg/invite/Counter
+								94 text Altifier
+								95 text BOT
+								96 text by ! WilliamThe4rd
+								97 button Add
+								98 text Catch Alts & Block VPN's with Altifier! Website: https://altifier.net/ Support: https://yapper.website/invite/alts Moderation
+								99 text 155 servers
+								100 link Support server, Value: yapin.gg/invite/alts
+								101 text NoPing
+								102 text BOT
+								103 text by VrBlacklight
+								104 button Add
+								105 text NoPing is a simple ping protection bot that helps stop people from constantly pinging certain members. It warns users when they ping a non pingable member, with customizable warning messages and bypass options! Utility
+								106 text 122 servers
+								107 text Vigil
+								108 text BOOSTED
+								109 text BOT
+								110 text by Bot dev
+								111 button Add
+								112 text Its a Dev bot that has many commands to help your comunity safe Moderation
+								113 text 5 servers
+								114 text deadsec
+								115 text BOT
+								116 text by seewounds
+								117 button Add
+								118 text NEEDS HIGH ROLES, @ICT for help Server-side peacekeeper. Kicks, mutes, purges spam, keeps automod sharp. 50 commands. /help Moderation
+								119 text 120 servers
+							120 text Yapin’
+							121 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							122 heading Product, Value: 4
+								123 text Product
+							124 content list
+								125 link Download, Value: yapin.gg/download
+								126 link Developers, Value: yapin.gg/developers
+								127 link Yapin’ Plus, Value: yapin.gg/plus
+								128 link Creator Program, Value: yapin.gg/creators
+								129 link Roadmap, Value: yapin.gg/roadmap
+								130 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								131 link Bugs, Value: yapin.gg/bugs
+								132 link Status, Value: yapin.gg/status
+							133 heading Community, Value: 4
+								134 text Community
+							135 content list
+								136 link Guidelines, Value: yapin.gg/guidelines
+								137 link Tutorials, Value: yapin.gg/tutorials
+								138 link Bots, Value: yapin.gg/bots
+							139 heading Legal, Value: 4
+								140 text Legal
+							141 content list
+								142 link Terms, Value: yapin.gg/terms
+								143 link Privacy, Value: yapin.gg/privacy
+								144 link Copyright, Value: yapin.gg/copyright
+								145 link Cancel a subscription, Value: yapin.gg/cancel
+								146 link Contact, Value: mailto:[email redacted]
+							147 text © 2026 Yapper Media LLC. Free to use.
+			148 container
+				149 tab group
+					150 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						151 button Close
+					152 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						153 button Close
+					154 tab (selected, settable, boolean) Bots for your server · Yapin’ - Memory usage - 283 MB, Value: on
+						155 button Close
+			156 button New Tab
+	157 close button
+	158 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	159 minimize button
+160 menu bar
+	161 Chrome
+	162 File
+	163 Edit
+	164 View
+	165 History
+	166 Bookmarks
+	167 Profiles
+	168 Tab
+	169 Window
+	170 Help
+
+The focused UI element is 19 HTML content Bots for your server · Yapin’, URL: yapin.gg/bots

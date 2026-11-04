@@ -1,0 +1,311 @@
+Browser tab: 2, Title: "Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api".
+1 AXWebArea Bot API reference · Yapin’, URL: yapin.gg/developers/api
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Bot API reference, Value: 1
+				15 text Bot API reference
+			16 text Every endpoint and event with its full schema, made from the same code the API runs on. Send Authorization: Bot <token> on every call; JSON in, JSON out.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 heading Base URLs, Value: 2, ID: base
+				25 text Base URLs
+			26 table
+				27 row
+					28 cell
+						29 text https://bots.yapper.website/api/bot/v1
+					30 cell
+						31 text Our own API host. Use this one
+				32 row
+					33 cell
+						34 text https://www.yapin.gg/api/bot/v1
+					35 cell
+						36 text The website: same API and token. The SDKs switch here for 10 minutes when the API host can’t be reached
+			37 heading Versioning, Value: 2, ID: versioning
+				38 text Versioning
+			39 text Current version: 1.3.0 (the path stays /v1). Every answer carries X-Yapin-API-Version (the version) and X-Yapin-Build (the build that answered). GET /version tells you both plus the newest SDK versions, no token needed. Inside v1 we only add things: new endpoints, new fields, new events. Your bot should ignore fields it doesn’t know. Anything that would break a working bot gets a new /v2 path, announced ahead of time, and v1 keeps working. Every change is listed in the changelog. Features marked “In testing” work on test servers only and can still change.
+			40 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			41 heading Endpoint groups, Value: 2, ID: groups
+				42 text Endpoint groups
+			43 container bot
+				44 heading Bot 9 endpoints, Value: 3
+					45 link Description: Bot, Value: yapin.gg/developers/api/bot
+					46 text 9 endpoints
+				47 text The bot’s own profile, status and slash commands.
+				48 content list
+					49 link Description: GET /me, Value: yapin.gg/developers/api/bot
+					50 link Description: PATCH /me, Value: yapin.gg/developers/api/bot
+					51 link Description: PUT /me/avatar, Value: yapin.gg/developers/api/bot
+					52 link Description: DELETE /me/avatar, Value: yapin.gg/developers/api/bot
+					53 link Description: PUT /me/banner, Value: yapin.gg/developers/api/bot
+					54 link Description: DELETE /me/banner, Value: yapin.gg/developers/api/bot
+					55 link Description: PUT /me/status, Value: yapin.gg/developers/api/bot
+					56 link Description: GET /commands, Value: yapin.gg/developers/api/bot
+					57 link Description: PUT /commands, Value: yapin.gg/developers/api/bot
+			58 container events
+				59 heading Events 1 endpoint, Value: 3
+					60 link Description: Events, Value: yapin.gg/developers/api/events
+					61 text 1 endpoint
+				62 text Getting events by long poll. The gateway and webhooks deliver the same events.
+				63 content list
+					64 link Description: GET /events, Value: yapin.gg/developers/api/events
+			65 container servers
+				66 heading Servers 5 endpoints, Value: 3
+					67 link Description: Servers, Value: yapin.gg/developers/api/servers
+					68 text 5 endpoints
+				69 text Servers the bot is in, their members and counts.
+				70 content list
+					71 link Description: GET /servers, Value: yapin.gg/developers/api/servers
+					72 link Description: GET /servers/{id}, Value: yapin.gg/developers/api/servers
+					73 link Description: GET /servers/{id}/counts, Value: yapin.gg/developers/api/servers
+					74 link Description: GET /servers/{id}/members, Value: yapin.gg/developers/api/servers
+					75 link Description: GET /servers/{id}/members/{uid}, Value: yapin.gg/developers/api/servers
+			76 container channels
+				77 heading Channels 14 endpoints, Value: 3
+					78 link Description: Channels, Value: yapin.gg/developers/api/channels
+					79 text 14 endpoints
+				80 text Channels and categories: list, create, edit, permission overrides.
+				81 content list
+					82 link Description: GET /channels, Value: yapin.gg/developers/api/channels
+					83 link Description: GET /servers/{id}/channels, Value: yapin.gg/developers/api/channels
+					84 link Description: POST /servers/{id}/channels, Value: yapin.gg/developers/api/channels
+					85 link Description: GET /channels/{id}, Value: yapin.gg/developers/api/channels
+					86 link Description: PATCH /channels/{id}, Value: yapin.gg/developers/api/channels
+					87 link Description: DELETE /channels/{id}, Value: yapin.gg/developers/api/channels
+					88 link Description: GET /channels/{id}/permissions, Value: yapin.gg/developers/api/channels
+					89 link Description: PUT /channels/{id}/permissions/{role}, Value: yapin.gg/developers/api/channels
+					90 link Description: DELETE /channels/{id}/permissions/{role}, Value: yapin.gg/developers/api/channels
+					91 link Description: POST /servers/{id}/categories, Value: yapin.gg/developers/api/channels
+					92 link Description: PATCH /servers/{id}/categories/{cid}, Value: yapin.gg/developers/api/channels
+					93 link Description: DELETE /servers/{id}/categories/{cid}, Value: yapin.gg/developers/api/channels
+					94 link Description: PUT /servers/{id}/categories/{cid}/permissions/{role}, Value: yapin.gg/developers/api/channels
+					95 link Description: DELETE /servers/{id}/categories/{cid}/permissions/{role}, Value: yapin.gg/developers/api/channels
+			96 container messages
+				97 heading Messages 11 endpoints, Value: 3
+					98 link Description: Messages, Value: yapin.gg/developers/api/messages
+					99 text 11 endpoints
+				100 text Read, send, edit, delete, pin and react.
+				101 content list
+					102 link Description: GET /channels/{id}/messages, Value: yapin.gg/developers/api/messages
+					103 link Description: POST /channels/{id}/messages, Value: yapin.gg/developers/api/messages
+					104 link Description: GET /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages
+					105 link Description: PATCH /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages
+					106 link Description: DELETE /channels/{id}/messages/{mid}, Value: yapin.gg/developers/api/messages
+					107 link Description: POST /channels/{id}/messages/bulk-delete, Value: yapin.gg/developers/api/messages
+					108 link Description: PUT /channels/{id}/messages/{mid}/pin, Value: yapin.gg/developers/api/messages
+					109 link Description: DELETE /channels/{id}/messages/{mid}/pin, Value: yapin.gg/developers/api/messages
+					110 link Description: GET /channels/{id}/messages/{mid}/reactions, Value: yapin.gg/developers/api/messages
+					111 link Description: PUT /channels/{id}/messages/{mid}/reactions/{emoji}, Value: yapin.gg/developers/api/messages
+					112 link Description: DELETE /channels/{id}/messages/{mid}/reactions/{emoji}, Value: yapin.gg/developers/api/messages
+			113 container interactions
+				114 heading Interactions 1 endpoint, Value: 3
+					115 link Description: Interactions, Value: yapin.gg/developers/api/interactions
+					116 text 1 endpoint
+				117 text Answering button clicks.
+				118 content list
+					119 link Description: POST /interactions/{id}/{token}/callback, Value: yapin.gg/developers/api/interactions
+			120 container roles
+				121 heading Roles 7 endpoints, Value: 3
+					122 link Description: Roles, Value: yapin.gg/developers/api/roles
+					123 text 7 endpoints
+				124 text Create and edit roles, hand them out (role management is in testing).
+				125 content list
+					126 link Description: GET /servers/{id}/roles, Value: yapin.gg/developers/api/roles
+					127 link Description: POST /servers/{id}/roles, Value: yapin.gg/developers/api/roles
+					128 link Description: PATCH /servers/{id}/roles/everyone, Value: yapin.gg/developers/api/roles
+					129 link Description: PATCH /servers/{id}/roles/{rid}, Value: yapin.gg/developers/api/roles
+					130 link Description: DELETE /servers/{id}/roles/{rid}, Value: yapin.gg/developers/api/roles
+					131 link Description: PUT /servers/{id}/members/{uid}/roles/{rid}, Value: yapin.gg/developers/api/roles
+					132 link Description: DELETE /servers/{id}/members/{uid}/roles/{rid}, Value: yapin.gg/developers/api/roles
+			133 container moderation
+				134 heading Moderation 7 endpoints, Value: 3
+					135 link Description: Moderation, Value: yapin.gg/developers/api/moderation
+					136 text 7 endpoints
+				137 text Kick, ban, time out, nicknames, invites.
+				138 content list
+					139 link Description: PATCH /servers/{id}/members/{uid}, Value: yapin.gg/developers/api/moderation
+					140 link Description: POST /servers/{id}/kick, Value: yapin.gg/developers/api/moderation
+					141 link Description: GET /servers/{id}/bans, Value: yapin.gg/developers/api/moderation
+					142 link Description: POST /servers/{id}/bans, Value: yapin.gg/developers/api/moderation
+					143 link Description: DELETE /servers/{id}/bans/{uid}, Value: yapin.gg/developers/api/moderation
+					144 link Description: POST /servers/{id}/timeouts, Value: yapin.gg/developers/api/moderation
+					145 link Description: GET /servers/{id}/invites, Value: yapin.gg/developers/api/moderation
+			146 container emojis
+				147 heading Emojis 5 endpoints, Value: 3
+					148 link Description: Emojis, Value: yapin.gg/developers/api/emojis
+					149 text 5 endpoints
+				150 text A server’s custom emojis: list, add, rename, delete (in testing).
+				151 content list
+					152 link Description: GET /channels/{id}/messages/{mid}/emojis, Value: yapin.gg/developers/api/emojis
+					153 link Description: GET /servers/{id}/emojis, Value: yapin.gg/developers/api/emojis
+					154 link Description: POST /servers/{id}/emojis, Value: yapin.gg/developers/api/emojis
+					155 link Description: PATCH /servers/{id}/emojis/{eid}, Value: yapin.gg/developers/api/emojis
+					156 link Description: DELETE /servers/{id}/emojis/{eid}, Value: yapin.gg/developers/api/emojis
+			157 container voice
+				158 heading Voice 5 endpoints, Value: 3
+					159 link Description: Voice, Value: yapin.gg/developers/api/voice
+					160 text 5 endpoints
+				161 text Who is in voice, moving people, and the bot joining a call.
+				162 content list
+					163 link Description: GET /servers/{id}/voice, Value: yapin.gg/developers/api/voice
+					164 link Description: POST /servers/{id}/voice/move, Value: yapin.gg/developers/api/voice
+					165 link Description: POST /servers/{id}/voice/disconnect, Value: yapin.gg/developers/api/voice
+					166 link Description: POST /servers/{id}/voice/join, Value: yapin.gg/developers/api/voice
+					167 link Description: POST /servers/{id}/voice/leave, Value: yapin.gg/developers/api/voice
+			168 container webhooks
+				169 heading Webhooks 5 endpoints, Value: 3
+					170 link Description: Webhooks, Value: yapin.gg/developers/api/webhooks
+					171 text 5 endpoints
+				172 text Channel webhooks the bot makes, and posting through them with a name and picture per message (PluralKit style, in testing).
+				173 content list
+					174 link Description: GET /channels/{id}/webhooks, Value: yapin.gg/developers/api/webhooks
+					175 link Description: POST /channels/{id}/webhooks, Value: yapin.gg/developers/api/webhooks
+					176 link Description: GET /webhooks, Value: yapin.gg/developers/api/webhooks
+					177 link Description: POST /webhooks/{id}, Value: yapin.gg/developers/api/webhooks
+					178 link Description: DELETE /webhooks/{id}, Value: yapin.gg/developers/api/webhooks
+			179 container scheduled-events
+				180 heading Scheduled events 2 endpoints, Value: 3
+					181 link Description: Scheduled events, Value: yapin.gg/developers/api/scheduled-events
+					182 text 2 endpoints
+				183 text Server events with RSVP (in testing).
+				184 content list
+					185 link Description: GET /servers/{id}/events, Value: yapin.gg/developers/api/scheduled-events
+					186 link Description: POST /servers/{id}/events, Value: yapin.gg/developers/api/scheduled-events
+			187 container users
+				188 heading Users 2 endpoints, Value: 3
+					189 link Description: Users, Value: yapin.gg/developers/api/users
+					190 text 2 endpoints
+				191 text Profiles and DMs.
+				192 content list
+					193 link Description: GET /users/{id}, Value: yapin.gg/developers/api/users
+					194 link Description: POST /users/{id}/dm, Value: yapin.gg/developers/api/users
+			195 container versions
+				196 heading Versions 2 endpoints, Value: 3
+					197 link Description: Versions, Value: yapin.gg/developers/api/versions
+					198 text 2 endpoints
+				199 text Which API and SDK versions are live, and what changed. No token needed.
+				200 content list
+					201 link Description: GET /version, Value: yapin.gg/developers/api/versions
+					202 link Description: GET /changelog, Value: yapin.gg/developers/api/versions
+			203 heading Events, Value: 2, ID: events
+				204 text Events
+			205 text Each event’s full payload, with examples:
+			206 link Description: Events reference, Value: yapin.gg/developers/api/events
+			207 link Description: message, Value: yapin.gg/developers/api/events
+			208 link Description: dm_message, Value: yapin.gg/developers/api/events
+			209 link Description: member_join, Value: yapin.gg/developers/api/events
+			210 link Description: member_leave, Value: yapin.gg/developers/api/events
+			211 link Description: reaction_add, Value: yapin.gg/developers/api/events
+			212 link Description: reaction_remove, Value: yapin.gg/developers/api/events
+			213 link Description: voice_join, Value: yapin.gg/developers/api/events
+			214 link Description: voice_leave, Value: yapin.gg/developers/api/events
+			215 link Description: command, Value: yapin.gg/developers/api/events
+			216 link Description: interaction, Value: yapin.gg/developers/api/events
+			217 link Description: invite_create, Value: yapin.gg/developers/api/events
+			218 link Description: invite_delete, Value: yapin.gg/developers/api/events
+			219 link Description: test, Value: yapin.gg/developers/api/events
+			220 heading Errors, Value: 2, ID: errors
+				221 text Errors
+			222 text Errors look like { "error": "…" }, sometimes with retry_after. The status code says what kind:
+			223 content list
+				224 container
+					225 AXListMarker • 
+					226 text 400 Bad input: the error says what’s wrong
+				227 container
+					228 AXListMarker • 
+					229 text 401 Missing or wrong token
+				230 container
+					231 AXListMarker • 
+					232 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+				233 container
+					234 AXListMarker • 
+					235 text 404 No such thing, or the bot can’t see it
+				236 container
+					237 AXListMarker • 
+					238 text 409 They’re not in voice (or in a voice channel the bot can’t see)
+				239 container
+					240 AXListMarker • 
+					241 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+				242 container
+					243 AXListMarker • 
+					244 text 500 Something went wrong on our side
+				245 container
+					246 AXListMarker • 
+					247 text 501 Voice isn’t set up on this server
+				248 container
+					249 AXListMarker • 
+					250 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			251 link Description: ← Back to Yapin’, Value: yapin.gg/
+			252 text  · 
+			253 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		254 container On this page
+			255 text ON THIS PAGE
+			256 content list
+				257 link Description: Overview, Value: yapin.gg/developers/api
+				258 link Description: Base URLs, Value: yapin.gg/developers/api
+				259 link Description: Versioning, Value: yapin.gg/developers/api
+				260 link Description: Endpoint groups, Value: yapin.gg/developers/api
+				261 link Description: Bot, Value: yapin.gg/developers/api
+				262 link Description: Events, Value: yapin.gg/developers/api
+				263 link Description: Servers, Value: yapin.gg/developers/api
+				264 link Description: Channels, Value: yapin.gg/developers/api
+				265 link Description: Messages, Value: yapin.gg/developers/api
+				266 link Description: Interactions, Value: yapin.gg/developers/api
+				267 link Description: Roles, Value: yapin.gg/developers/api
+				268 link Description: Moderation, Value: yapin.gg/developers/api
+				269 link Description: Emojis, Value: yapin.gg/developers/api
+				270 link Description: Voice, Value: yapin.gg/developers/api
+				271 link Description: Webhooks, Value: yapin.gg/developers/api
+				272 link Description: Scheduled events, Value: yapin.gg/developers/api
+				273 link Description: Users, Value: yapin.gg/developers/api
+				274 link Description: Versions, Value: yapin.gg/developers/api
+				275 link Description: Events, Value: yapin.gg/developers/api
+				276 link Description: Errors, Value: yapin.gg/developers/api
+		277 text Yapin’
+		278 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		279 heading PRODUCT, Value: 4
+			280 text PRODUCT
+		281 content list
+			282 link Description: Download, Value: yapin.gg/download
+			283 link Description: Developers, Value: yapin.gg/developers
+			284 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			285 link Description: Creator Program, Value: …
+			286 link Description: FanKit, Value: …
+			287 link Description: Roadmap, Value: …
+			288 link Description: Yapper is now Yapin’, Value: …
+			289 link Description: Bugs, Value: …
+			290 link Description: Status, Value: …
+		291 heading COMMUNITY, Value: 4
+			292 text COMMUNITY
+		293 content list
+			294 link Description: Guidelines, Value: …
+			295 link Description: Tutorials, Value: …
+			296 link Description: Bots, Value: …
+			297 link Description: Partners, Value: …
+		298 heading LEGAL, Value: 4
+			299 text LEGAL
+		300 content list
+			301 link Description: Terms, Value: …
+			302 link Description: Privacy, Value: …
+			303 link Description: Copyright, Value: …
+			304 link Description: Security, Value: …
+			305 link Description: Cancel a subscription, Value: …
+			306 link Description: Contact, Value: …
+		307 text © 2026 Yapper Media LLC. Free to use.
+		308 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Bot API reference · Yapin’, URL: yapin.gg/developers/api

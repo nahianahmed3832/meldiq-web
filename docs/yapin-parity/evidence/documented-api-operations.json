@@ -1,0 +1,610 @@
+[
+  {
+    "anchor": "get-me",
+    "method": "GET",
+    "path": "/me",
+    "url": "https://yapin.gg/developers/api/bot#get-me",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "patch-me",
+    "method": "PATCH",
+    "path": "/me",
+    "url": "https://yapin.gg/developers/api/bot#patch-me",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "put-me-avatar",
+    "method": "PUT",
+    "path": "/me/avatar",
+    "url": "https://yapin.gg/developers/api/bot#put-me-avatar",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-me-avatar",
+    "method": "DELETE",
+    "path": "/me/avatar",
+    "url": "https://yapin.gg/developers/api/bot#delete-me-avatar",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "put-me-banner",
+    "method": "PUT",
+    "path": "/me/banner",
+    "url": "https://yapin.gg/developers/api/bot#put-me-banner",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-me-banner",
+    "method": "DELETE",
+    "path": "/me/banner",
+    "url": "https://yapin.gg/developers/api/bot#delete-me-banner",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "put-me-status",
+    "method": "PUT",
+    "path": "/me/status",
+    "url": "https://yapin.gg/developers/api/bot#put-me-status",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-commands",
+    "method": "GET",
+    "path": "/commands",
+    "url": "https://yapin.gg/developers/api/bot#get-commands",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "put-commands",
+    "method": "PUT",
+    "path": "/commands",
+    "url": "https://yapin.gg/developers/api/bot#put-commands",
+    "file": "public-api-bot.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-channels",
+    "method": "GET",
+    "path": "/channels",
+    "url": "https://yapin.gg/developers/api/channels#get-channels",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-servers-id-channels",
+    "method": "GET",
+    "path": "/servers/{id}/channels",
+    "url": "https://yapin.gg/developers/api/channels#get-servers-id-channels",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-servers-id-channels",
+    "method": "POST",
+    "path": "/servers/{id}/channels",
+    "url": "https://yapin.gg/developers/api/channels#post-servers-id-channels",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-channels-id",
+    "method": "GET",
+    "path": "/channels/{id}",
+    "url": "https://yapin.gg/developers/api/channels#get-channels-id",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "patch-channels-id",
+    "method": "PATCH",
+    "path": "/channels/{id}",
+    "url": "https://yapin.gg/developers/api/channels#patch-channels-id",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-channels-id",
+    "method": "DELETE",
+    "path": "/channels/{id}",
+    "url": "https://yapin.gg/developers/api/channels#delete-channels-id",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-channels-id-permissions",
+    "method": "GET",
+    "path": "/channels/{id}/permissions",
+    "url": "https://yapin.gg/developers/api/channels#get-channels-id-permissions",
+    "file": "public-api-channels.txt",
+    "testing": true
+  },
+  {
+    "anchor": "put-channels-id-permissions-role",
+    "method": "PUT",
+    "path": "/channels/{id}/permissions/{role}",
+    "url": "https://yapin.gg/developers/api/channels#put-channels-id-permissions-role",
+    "file": "public-api-channels.txt",
+    "testing": true
+  },
+  {
+    "anchor": "delete-channels-id-permissions-role",
+    "method": "DELETE",
+    "path": "/channels/{id}/permissions/{role}",
+    "url": "https://yapin.gg/developers/api/channels#delete-channels-id-permissions-role",
+    "file": "public-api-channels.txt",
+    "testing": true
+  },
+  {
+    "anchor": "post-servers-id-categories",
+    "method": "POST",
+    "path": "/servers/{id}/categories",
+    "url": "https://yapin.gg/developers/api/channels#post-servers-id-categories",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "patch-servers-id-categories-cid",
+    "method": "PATCH",
+    "path": "/servers/{id}/categories/{cid}",
+    "url": "https://yapin.gg/developers/api/channels#patch-servers-id-categories-cid",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-servers-id-categories-cid",
+    "method": "DELETE",
+    "path": "/servers/{id}/categories/{cid}",
+    "url": "https://yapin.gg/developers/api/channels#delete-servers-id-categories-cid",
+    "file": "public-api-channels.txt",
+    "testing": false
+  },
+  {
+    "anchor": "put-servers-id-categories-cid-permissions-role",
+    "method": "PUT",
+    "path": "/servers/{id}/categories/{cid}/permissions/{role}",
+    "url": "https://yapin.gg/developers/api/channels#put-servers-id-categories-cid-permissions-role",
+    "file": "public-api-channels.txt",
+    "testing": true
+  },
+  {
+    "anchor": "delete-servers-id-categories-cid-permissions-role",
+    "method": "DELETE",
+    "path": "/servers/{id}/categories/{cid}/permissions/{role}",
+    "url": "https://yapin.gg/developers/api/channels#delete-servers-id-categories-cid-permissions-role",
+    "file": "public-api-channels.txt",
+    "testing": true
+  },
+  {
+    "anchor": "get-channels-id-messages-mid-emojis",
+    "method": "GET",
+    "path": "/channels/{id}/messages/{mid}/emojis",
+    "url": "https://yapin.gg/developers/api/emojis#get-channels-id-messages-mid-emojis",
+    "file": "public-api-emojis.txt",
+    "testing": true
+  },
+  {
+    "anchor": "get-servers-id-emojis",
+    "method": "GET",
+    "path": "/servers/{id}/emojis",
+    "url": "https://yapin.gg/developers/api/emojis#get-servers-id-emojis",
+    "file": "public-api-emojis.txt",
+    "testing": true
+  },
+  {
+    "anchor": "post-servers-id-emojis",
+    "method": "POST",
+    "path": "/servers/{id}/emojis",
+    "url": "https://yapin.gg/developers/api/emojis#post-servers-id-emojis",
+    "file": "public-api-emojis.txt",
+    "testing": true
+  },
+  {
+    "anchor": "patch-servers-id-emojis-eid",
+    "method": "PATCH",
+    "path": "/servers/{id}/emojis/{eid}",
+    "url": "https://yapin.gg/developers/api/emojis#patch-servers-id-emojis-eid",
+    "file": "public-api-emojis.txt",
+    "testing": true
+  },
+  {
+    "anchor": "delete-servers-id-emojis-eid",
+    "method": "DELETE",
+    "path": "/servers/{id}/emojis/{eid}",
+    "url": "https://yapin.gg/developers/api/emojis#delete-servers-id-emojis-eid",
+    "file": "public-api-emojis.txt",
+    "testing": true
+  },
+  {
+    "anchor": "get-events",
+    "method": "GET",
+    "path": "/events",
+    "url": "https://yapin.gg/developers/api/events#get-events",
+    "file": "public-api-events.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-interactions-id-token-callback",
+    "method": "POST",
+    "path": "/interactions/{id}/{token}/callback",
+    "url": "https://yapin.gg/developers/api/interactions#post-interactions-id-token-callback",
+    "file": "public-api-interactions.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-channels-id-messages",
+    "method": "GET",
+    "path": "/channels/{id}/messages",
+    "url": "https://yapin.gg/developers/api/messages#get-channels-id-messages",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-channels-id-messages",
+    "method": "POST",
+    "path": "/channels/{id}/messages",
+    "url": "https://yapin.gg/developers/api/messages#post-channels-id-messages",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-channels-id-messages-mid",
+    "method": "GET",
+    "path": "/channels/{id}/messages/{mid}",
+    "url": "https://yapin.gg/developers/api/messages#get-channels-id-messages-mid",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "patch-channels-id-messages-mid",
+    "method": "PATCH",
+    "path": "/channels/{id}/messages/{mid}",
+    "url": "https://yapin.gg/developers/api/messages#patch-channels-id-messages-mid",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-channels-id-messages-mid",
+    "method": "DELETE",
+    "path": "/channels/{id}/messages/{mid}",
+    "url": "https://yapin.gg/developers/api/messages#delete-channels-id-messages-mid",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-channels-id-messages-bulk-delete",
+    "method": "POST",
+    "path": "/channels/{id}/messages/bulk-delete",
+    "url": "https://yapin.gg/developers/api/messages#post-channels-id-messages-bulk-delete",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "put-channels-id-messages-mid-pin",
+    "method": "PUT",
+    "path": "/channels/{id}/messages/{mid}/pin",
+    "url": "https://yapin.gg/developers/api/messages#put-channels-id-messages-mid-pin",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-channels-id-messages-mid-pin",
+    "method": "DELETE",
+    "path": "/channels/{id}/messages/{mid}/pin",
+    "url": "https://yapin.gg/developers/api/messages#delete-channels-id-messages-mid-pin",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-channels-id-messages-mid-reactions",
+    "method": "GET",
+    "path": "/channels/{id}/messages/{mid}/reactions",
+    "url": "https://yapin.gg/developers/api/messages#get-channels-id-messages-mid-reactions",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "put-channels-id-messages-mid-reactions-emoji",
+    "method": "PUT",
+    "path": "/channels/{id}/messages/{mid}/reactions/{emoji}",
+    "url": "https://yapin.gg/developers/api/messages#put-channels-id-messages-mid-reactions-emoji",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-channels-id-messages-mid-reactions-emoji",
+    "method": "DELETE",
+    "path": "/channels/{id}/messages/{mid}/reactions/{emoji}",
+    "url": "https://yapin.gg/developers/api/messages#delete-channels-id-messages-mid-reactions-emoji",
+    "file": "public-api-messages.txt",
+    "testing": false
+  },
+  {
+    "anchor": "patch-servers-id-members-uid",
+    "method": "PATCH",
+    "path": "/servers/{id}/members/{uid}",
+    "url": "https://yapin.gg/developers/api/moderation#patch-servers-id-members-uid",
+    "file": "public-api-moderation.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-servers-id-kick",
+    "method": "POST",
+    "path": "/servers/{id}/kick",
+    "url": "https://yapin.gg/developers/api/moderation#post-servers-id-kick",
+    "file": "public-api-moderation.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-servers-id-bans",
+    "method": "GET",
+    "path": "/servers/{id}/bans",
+    "url": "https://yapin.gg/developers/api/moderation#get-servers-id-bans",
+    "file": "public-api-moderation.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-servers-id-bans",
+    "method": "POST",
+    "path": "/servers/{id}/bans",
+    "url": "https://yapin.gg/developers/api/moderation#post-servers-id-bans",
+    "file": "public-api-moderation.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-servers-id-bans-uid",
+    "method": "DELETE",
+    "path": "/servers/{id}/bans/{uid}",
+    "url": "https://yapin.gg/developers/api/moderation#delete-servers-id-bans-uid",
+    "file": "public-api-moderation.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-servers-id-timeouts",
+    "method": "POST",
+    "path": "/servers/{id}/timeouts",
+    "url": "https://yapin.gg/developers/api/moderation#post-servers-id-timeouts",
+    "file": "public-api-moderation.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-servers-id-invites",
+    "method": "GET",
+    "path": "/servers/{id}/invites",
+    "url": "https://yapin.gg/developers/api/moderation#get-servers-id-invites",
+    "file": "public-api-moderation.txt",
+    "testing": true
+  },
+  {
+    "anchor": "get-servers-id-roles",
+    "method": "GET",
+    "path": "/servers/{id}/roles",
+    "url": "https://yapin.gg/developers/api/roles#get-servers-id-roles",
+    "file": "public-api-roles.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-servers-id-roles",
+    "method": "POST",
+    "path": "/servers/{id}/roles",
+    "url": "https://yapin.gg/developers/api/roles#post-servers-id-roles",
+    "file": "public-api-roles.txt",
+    "testing": true
+  },
+  {
+    "anchor": "patch-servers-id-roles-everyone",
+    "method": "PATCH",
+    "path": "/servers/{id}/roles/everyone",
+    "url": "https://yapin.gg/developers/api/roles#patch-servers-id-roles-everyone",
+    "file": "public-api-roles.txt",
+    "testing": true
+  },
+  {
+    "anchor": "patch-servers-id-roles-rid",
+    "method": "PATCH",
+    "path": "/servers/{id}/roles/{rid}",
+    "url": "https://yapin.gg/developers/api/roles#patch-servers-id-roles-rid",
+    "file": "public-api-roles.txt",
+    "testing": true
+  },
+  {
+    "anchor": "delete-servers-id-roles-rid",
+    "method": "DELETE",
+    "path": "/servers/{id}/roles/{rid}",
+    "url": "https://yapin.gg/developers/api/roles#delete-servers-id-roles-rid",
+    "file": "public-api-roles.txt",
+    "testing": true
+  },
+  {
+    "anchor": "put-servers-id-members-uid-roles-rid",
+    "method": "PUT",
+    "path": "/servers/{id}/members/{uid}/roles/{rid}",
+    "url": "https://yapin.gg/developers/api/roles#put-servers-id-members-uid-roles-rid",
+    "file": "public-api-roles.txt",
+    "testing": false
+  },
+  {
+    "anchor": "delete-servers-id-members-uid-roles-rid",
+    "method": "DELETE",
+    "path": "/servers/{id}/members/{uid}/roles/{rid}",
+    "url": "https://yapin.gg/developers/api/roles#delete-servers-id-members-uid-roles-rid",
+    "file": "public-api-roles.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-servers-id-events",
+    "method": "GET",
+    "path": "/servers/{id}/events",
+    "url": "https://yapin.gg/developers/api/scheduled-events#get-servers-id-events",
+    "file": "public-api-scheduled-events.txt",
+    "testing": true
+  },
+  {
+    "anchor": "post-servers-id-events",
+    "method": "POST",
+    "path": "/servers/{id}/events",
+    "url": "https://yapin.gg/developers/api/scheduled-events#post-servers-id-events",
+    "file": "public-api-scheduled-events.txt",
+    "testing": true
+  },
+  {
+    "anchor": "get-servers",
+    "method": "GET",
+    "path": "/servers",
+    "url": "https://yapin.gg/developers/api/servers#get-servers",
+    "file": "public-api-servers.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-servers-id",
+    "method": "GET",
+    "path": "/servers/{id}",
+    "url": "https://yapin.gg/developers/api/servers#get-servers-id",
+    "file": "public-api-servers.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-servers-id-counts",
+    "method": "GET",
+    "path": "/servers/{id}/counts",
+    "url": "https://yapin.gg/developers/api/servers#get-servers-id-counts",
+    "file": "public-api-servers.txt",
+    "testing": true
+  },
+  {
+    "anchor": "get-servers-id-members",
+    "method": "GET",
+    "path": "/servers/{id}/members",
+    "url": "https://yapin.gg/developers/api/servers#get-servers-id-members",
+    "file": "public-api-servers.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-servers-id-members-uid",
+    "method": "GET",
+    "path": "/servers/{id}/members/{uid}",
+    "url": "https://yapin.gg/developers/api/servers#get-servers-id-members-uid",
+    "file": "public-api-servers.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-users-id",
+    "method": "GET",
+    "path": "/users/{id}",
+    "url": "https://yapin.gg/developers/api/users#get-users-id",
+    "file": "public-api-users.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-users-id-dm",
+    "method": "POST",
+    "path": "/users/{id}/dm",
+    "url": "https://yapin.gg/developers/api/users#post-users-id-dm",
+    "file": "public-api-users.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-version",
+    "method": "GET",
+    "path": "/version",
+    "url": "https://yapin.gg/developers/api/versions#get-version",
+    "file": "public-api-versions.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-changelog",
+    "method": "GET",
+    "path": "/changelog",
+    "url": "https://yapin.gg/developers/api/versions#get-changelog",
+    "file": "public-api-versions.txt",
+    "testing": false
+  },
+  {
+    "anchor": "get-servers-id-voice",
+    "method": "GET",
+    "path": "/servers/{id}/voice",
+    "url": "https://yapin.gg/developers/api/voice#get-servers-id-voice",
+    "file": "public-api-voice.txt",
+    "testing": true
+  },
+  {
+    "anchor": "post-servers-id-voice-move",
+    "method": "POST",
+    "path": "/servers/{id}/voice/move",
+    "url": "https://yapin.gg/developers/api/voice#post-servers-id-voice-move",
+    "file": "public-api-voice.txt",
+    "testing": true
+  },
+  {
+    "anchor": "post-servers-id-voice-disconnect",
+    "method": "POST",
+    "path": "/servers/{id}/voice/disconnect",
+    "url": "https://yapin.gg/developers/api/voice#post-servers-id-voice-disconnect",
+    "file": "public-api-voice.txt",
+    "testing": true
+  },
+  {
+    "anchor": "post-servers-id-voice-join",
+    "method": "POST",
+    "path": "/servers/{id}/voice/join",
+    "url": "https://yapin.gg/developers/api/voice#post-servers-id-voice-join",
+    "file": "public-api-voice.txt",
+    "testing": true
+  },
+  {
+    "anchor": "post-servers-id-voice-leave",
+    "method": "POST",
+    "path": "/servers/{id}/voice/leave",
+    "url": "https://yapin.gg/developers/api/voice#post-servers-id-voice-leave",
+    "file": "public-api-voice.txt",
+    "testing": true
+  },
+  {
+    "anchor": "get-channels-id-webhooks",
+    "method": "GET",
+    "path": "/channels/{id}/webhooks",
+    "url": "https://yapin.gg/developers/api/webhooks#get-channels-id-webhooks",
+    "file": "public-api-webhooks.txt",
+    "testing": true
+  },
+  {
+    "anchor": "post-channels-id-webhooks",
+    "method": "POST",
+    "path": "/channels/{id}/webhooks",
+    "url": "https://yapin.gg/developers/api/webhooks#post-channels-id-webhooks",
+    "file": "public-api-webhooks.txt",
+    "testing": true
+  },
+  {
+    "anchor": "get-webhooks",
+    "method": "GET",
+    "path": "/webhooks",
+    "url": "https://yapin.gg/developers/api/webhooks#get-webhooks",
+    "file": "public-api-webhooks.txt",
+    "testing": false
+  },
+  {
+    "anchor": "post-webhooks-id",
+    "method": "POST",
+    "path": "/webhooks/{id}",
+    "url": "https://yapin.gg/developers/api/webhooks#post-webhooks-id",
+    "file": "public-api-webhooks.txt",
+    "testing": true
+  },
+  {
+    "anchor": "delete-webhooks-id",
+    "method": "DELETE",
+    "path": "/webhooks/{id}",
+    "url": "https://yapin.gg/developers/api/webhooks#delete-webhooks-id",
+    "file": "public-api-webhooks.txt",
+    "testing": true
+  }
+]

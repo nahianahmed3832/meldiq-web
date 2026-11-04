@@ -1,0 +1,146 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 text (23) Yapin’
+							22 text Yapin’
+							23 container Servers
+								24 button Direct messages
+								25 button Meldiq Research - Private Test
+								26 button Meldiq
+								27 container
+									28 button Yapin' Headquarters
+									29 text 10
+								30 container
+									31 button MINECRAFT
+									32 text 13
+								33 button Create a server
+								34 button Discover servers
+							35 container
+								36 button Meldiq Research - Private Test
+								37 button Lobby OFF
+								38 button Invite people
+								39 button TEXT CHANNELS
+								40 button Create channel in this category, Help: Create channel here
+								41 pop up button More options for Text channels, Help: More
+									42 image
+								43 button general
+								44 button history-lab
+								45 button VOICE CHANNELS
+								46 button Create channel in this category, Help: Create channel here
+								47 pop up button More options for Voice channels, Help: More
+									48 image
+								49 container
+									50 button General
+									51 button Open chat in General, Help: Open chat
+									52 button Edit channel
+									53 button Delete channel, Help: Delete
+								54 button nahian
+								55 button RESEARCH
+								56 button Create channel in this category, Help: Create channel here
+								57 pop up button More options for Research, Help: More
+									58 image
+								59 button Discussion ideas-lab
+								60 button Voice Connected End-to-end encrypted, show safety code 00:46 General / Meldiq Research - Private Test
+									61 text Voice Connected
+									62 button End-to-end encrypted, show safety code, Help: End-to-end encrypted. Voice and screen shares are encrypted on your device with keys only the people in the call have. Click for the safety code.
+									63 text 00:46
+									64 text General / Meldiq Research - Private Test
+								65 button Connection: weak. Ping: 353 ms
+								66 toggle button AI noise suppression, Help: Noise suppression is on, Value: 1
+									67 image
+								68 text Last 30s kept for reports
+								69 text Heads up Voice channels keep the last 30 seconds of audio on each person’s own device, in memory only. If someone reports a person in the call, they can attach it, so your voice may be in a report. Video and screen shares aren’t included. Only Yapin’ staff hear it, and it’s deleted 30 days after the report is handled.
+								70 button Got it
+								71 button Unmute
+								72 button Deafen
+								73 button Share your screen
+								74 button Disconnect
+								75 pop up button nahian Online, Help: Your account
+									76 text nahian
+									77 text Online
+								78 button Inbox
+								79 button Settings
+								80 button Log out
+							81 container
+								82 image
+								83 text General 00:46
+								84 image Connection: weak. Ping: 353 ms
+								85 button End-to-end encrypted, show safety code, Help: End-to-end encrypted. Voice and screen shares are encrypted on your device with keys only the people in the call have. Click for the safety code.
+								86 toggle button Open chat, Value: 0
+									87 image
+								88 container
+									89 button nahian's profile
+									90 text nahian
+									91 image
+								92 button Invite to Voice
+								93 text RECENTLY TALKED
+								94 text Nobody has talked since you joined.
+								95 text Last 30s of voice kept on devices for reports
+								96 toggle button Mute, Help: Unmute, Value: 1
+									97 image
+								98 toggle button Deafen, Value: 0
+									99 image
+								100 button Call devices
+								101 toggle button Share screen, Help: Share your screen, Value: 0
+									102 image
+								103 toggle button Soundboard, Value: 1
+									104 image
+								105 button Clip, Help: Clip the last few seconds (⌥+C)
+								106 button Activities
+								107 button Disconnect
+								108 text Soundboard
+								109 toggle button Mute soundboard, Help: Mute soundboard for me, Value: 0
+									110 image
+								111 button Add sound
+								112 button Close
+								113 text field (settable) Emoji, Value: 🔊
+								114 text field (settable) Sound name, Placeholder: Name
+								115 text Choose file
+								116 button Choose file: No file chosen
+								117 button (disabled) Add
+								118 text MP3/OGG/WAV, up to 6s and 512 KB.
+							119 button Getting started
+			120 container
+				121 tab group
+					122 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						123 button Close
+					124 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 246 MB, Value: on
+						125 button Close
+					126 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						127 button Close
+			128 button New Tab
+	129 close button
+	130 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	131 minimize button
+132 menu bar
+	133 Chrome
+	134 File
+	135 Edit
+	136 View
+	137 History
+	138 Bookmarks
+	139 Profiles
+	140 Tab
+	141 Window
+	142 Help
+
+The focused UI element is 111 button Add sound

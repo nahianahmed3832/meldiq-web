@@ -860,5 +860,11 @@
     "accountDescription": "E-mail, stav účtu, export dat a odstranění účtu.",
     "notificationsDescription": "Oznámení na ploše, zvuky, pozastavení oznámení a zkratky k předvolbám konverzací.",
     "appearanceDescription": "Motivy, barvy, rozložení zpráv, náhledy médií a gesta chatu."
+  },
+  "foundation": {
+    "profileSections": "Části profilu",
+    "profileSectionsDescription": "Vyberte viditelné části a jejich pořadí. Nastavení okruhu uživatelů zůstává v platnosti.",
+    "resetSections": "Vrátit změny částí",
+    "saveSections": "Uložit části"
   }
 }

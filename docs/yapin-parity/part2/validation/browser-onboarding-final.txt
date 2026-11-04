@@ -1,0 +1,4 @@
+Running 2 tests using 1 worker
+  ✓  1 [chromium] › e2e/part2-foundation.spec.ts:13:1 › fresh registration enforces consent, verifies email, and resumes real profile/preferences setup (38.7s)
+  ✓  2 [phone-width] › e2e/part2-foundation.spec.ts:13:1 › fresh registration enforces consent, verifies email, and resumes real profile/preferences setup (40.2s)
+  2 passed (2.0m)

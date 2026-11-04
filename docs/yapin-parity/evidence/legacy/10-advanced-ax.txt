@@ -1,0 +1,77 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading Advanced, Value: 2
+								40 text Advanced
+							41 container
+								42 text Developer Mode Adds Copy Server, Channel, Category, Message and User ID to right-click menus, for building bots with the Yapin’ API.
+								43 checkbox Value: 0, Developer Mode Adds Copy Server, Channel, Category, Message and User ID to right-click menus, for building bots with the Yapin’ API.
+							44 container
+								45 text Making a bot? See the 
+								46 link developer docs, Value: yapin.gg/developers
+								47 text .
+							48 container
+								49 text Join the staff team 18+ only
+							50 text Help moderate Yapper: reports, spam and raids.
+							51 button Apply for staff
+							52 text TRUSTED SITES
+							53 text Links to sites you trust open without asking. You haven't trusted any yet.
+							54 button Close
+			55 container
+				56 tab group
+					57 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						58 button Close
+			59 button New Tab
+	60 close button
+	61 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	62 minimize button
+63 menu bar
+	64 Chrome
+	65 File
+	66 Edit
+	67 View
+	68 History
+	69 Bookmarks
+	70 Profiles
+	71 Tab
+	72 Window
+	73 Help
+
+The focused UI element is 32 button Advanced

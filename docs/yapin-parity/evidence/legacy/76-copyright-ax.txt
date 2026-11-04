@@ -1,0 +1,147 @@
+Window: "Copyright and DMCA · Yapin’", App: Google Chrome.
+0 standard window Copyright and DMCA · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/copyright, Secondary Actions: Raise
+	1 container Copyright and DMCA · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/copyright
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/copyright, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Copyright and DMCA · Yapin’, URL: yapin.gg/copyright
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 heading Copyright and DMCA, Value: 1
+									30 text Copyright and DMCA
+								31 text LAST UPDATED  30 OCTOBER 2026 Found your work on Yapin’ without your permission? Here’s how to get it taken down, and what to do if your own post was removed by mistake.
+								32 heading Our DMCA agent, Value: 2
+									33 text Our DMCA agent
+								34 text Copyright notices go to our designated agent, registered with the US Copyright Office (registration number DMCA-1084137 ): DMCA Agent, Yapper Media, LLC 300 Delaware Ave, Ste 210 #801, Wilmington, DE 19801, United States Phone:  717-470-8008 Email: 
+								35 link [email redacted], Value: mailto:[email redacted]
+								36 text Email is fastest. Put “Copyright notice” in the subject. The phone number is for the agent’s records; we can’t take notices by phone. Other reports (abuse, illegal content, privacy) go through the in-app report button or
+								37 link the contacts in our Terms, Value: yapin.gg/terms
+								38 text , not this address.
+								39 heading Sending a takedown notice, Value: 2
+									40 text Sending a takedown notice
+								41 text Your notice needs all of this, or we may not be able to act on it:
+								42 content list
+									43 container
+										44 AXListMarker 1. 
+										45 text Your physical or electronic signature (typing your full name works).
+									46 container
+										47 AXListMarker 2. 
+										48 text The work you own: what it is, and a link to it if it’s online.
+									49 container
+										50 AXListMarker 3. 
+										51 text Where it is on Yapin’: a message link (right-click the message, Copy message link), or the server, channel and username. Don’t attach the file itself.
+									52 container
+										53 AXListMarker 4. 
+										54 text Your name, postal address, phone number and email.
+									55 container
+										56 AXListMarker 5. 
+										57 text A statement that you believe in good faith that the use isn’t allowed by the copyright owner, its agent or the law.
+									58 container
+										59 AXListMarker 6. 
+										60 text A statement that the information in your notice is accurate and, under penalty of perjury, that you own the copyright or are allowed to act for the owner.
+								61 text We remove or disable the content, tell the person who posted it, and send them a copy of your notice (we may hide your email and phone number). Knowingly false notices can make you liable for damages, so think about fair use first.
+								62 heading If your post was removed, Value: 2
+									63 text If your post was removed
+								64 text If you think it was a mistake, or you had the right to post it, you can send a counter-notice to the same agent with:
+								65 content list
+									66 container
+										67 AXListMarker 1. 
+										68 text Your physical or electronic signature.
+									69 container
+										70 AXListMarker 2. 
+										71 text What was removed and where it was before.
+									72 container
+										73 AXListMarker 3. 
+										74 text A statement, under penalty of perjury, that you believe in good faith it was removed by mistake or misidentification.
+									75 container
+										76 AXListMarker 4. 
+										77 text Your name, address and phone number.
+									78 container
+										79 AXListMarker 5. 
+										80 text A statement that you consent to the jurisdiction of the federal district court for your address (or, outside the US, any judicial district where we can be found), and that you’ll accept service from the person who sent the original notice.
+								81 text We forward it to the person who sent the notice. Unless they tell us within 10 to 14 business days that they’ve gone to court, we may put your content back.
+								82 heading Repeat infringers, Value: 2
+									83 text Repeat infringers
+								84 text Each valid notice counts as a strike on the account that posted the content, and for server owners on the server too. Three strikes within 12 months normally means the account or server is closed. Strikes go away when a counter-notice succeeds or the notice is withdrawn. Full rules are in section 11.2 of the
+								85 link Terms of Service, Value: yapin.gg/terms
+								86 text .
+								87 heading Outside the US, Value: 2
+									88 text Outside the US
+								89 text You don’t need to use the DMCA. Anyone, anywhere, can report content that infringes their rights with the same details, and we handle it under our Terms and the law that applies (for example the EU Digital Services Act).
+								90 link ← Back to Yapin’, Value: yapin.gg/
+								91 text  · 
+								92 link Remove an intimate image, Value: yapin.gg/remove-image
+							93 text Yapin’
+							94 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							95 heading Product, Value: 4
+								96 text Product
+							97 content list
+								98 link Download, Value: yapin.gg/download
+								99 link Developers, Value: yapin.gg/developers
+								100 link Yapin’ Plus, Value: yapin.gg/plus
+								101 link Creator Program, Value: yapin.gg/creators
+								102 link Roadmap, Value: yapin.gg/roadmap
+								103 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								104 link Bugs, Value: yapin.gg/bugs
+								105 link Status, Value: yapin.gg/status
+							106 heading Community, Value: 4
+								107 text Community
+							108 content list
+								109 link Guidelines, Value: yapin.gg/guidelines
+								110 link Tutorials, Value: yapin.gg/tutorials
+								111 link Bots, Value: yapin.gg/bots
+							112 heading Legal, Value: 4
+								113 text Legal
+							114 content list
+								115 link Terms, Value: yapin.gg/terms
+								116 link Privacy, Value: yapin.gg/privacy
+								117 link Copyright, Value: yapin.gg/copyright
+								118 link Cancel a subscription, Value: yapin.gg/cancel
+								119 link Contact, Value: mailto:[email redacted]
+							120 text © 2026 Yapper Media LLC. Free to use.
+			121 container
+				122 tab group
+					123 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						124 button Close
+					125 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						126 button Close
+					127 tab (selected, settable, boolean) Copyright and DMCA · Yapin’ - Memory usage - 291 MB, Value: on
+						128 button Close
+			129 button New Tab
+	130 close button
+	131 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	132 minimize button
+133 menu bar
+	134 Chrome
+	135 File
+	136 Edit
+	137 View
+	138 History
+	139 Bookmarks
+	140 Profiles
+	141 Tab
+	142 Window
+	143 Help
+
+The focused UI element is 19 HTML content Copyright and DMCA · Yapin’, URL: yapin.gg/copyright

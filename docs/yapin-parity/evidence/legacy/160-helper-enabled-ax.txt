@@ -1,0 +1,133 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ RESEARCH - PRIVATE TEST
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 heading Bots, Value: 2
+								44 text Bots
+							45 container
+								46 text Made by Yapin’, run by Yapin’.  Free.  Flip a switch and they're in, nothing to host.
+							47 container
+								48 button Welcomer BOT
+								49 text The friendly face at the door
+								50 checkbox 0
+								51 text Off ·  FREE  · tap for details
+							52 container
+								53 button Helper BOT
+								54 text Game night host
+								55 checkbox 1
+								56 text On  · tap for settings
+							57 container
+								58 button Levels BOT
+								59 text Rewards the regulars
+								60 checkbox 0
+								61 text Off ·  FREE  · tap for details
+							62 container
+								63 button Logger BOT
+								64 text Remembers everything for the mods
+								65 checkbox 0
+								66 text Off ·  FREE  · tap for details
+							67 container
+								68 button Starboard BOT
+								69 text The hall of fame
+								70 checkbox 0
+								71 text Off ·  FREE  · tap for details
+							72 container
+								73 button Giveaways BOT
+								74 text Prizes on a timer
+								75 checkbox 0
+								76 text Off ·  FREE  · tap for details
+							77 container
+								78 button Tickets BOT
+								79 text Private help channels
+								80 checkbox 0
+								81 text Off ·  FREE  · tap for details
+							82 container
+								83 button Alerts BOT
+								84 text New video? Everyone knows
+								85 checkbox 0
+								86 text Off ·  FREE  · tap for details
+							87 container
+								88 button Wordy BOT
+								89 text One word a day
+								90 checkbox 0
+								91 text Off ·  FREE  · tap for details
+							92 container
+								93 button Your own bot
+								94 text Build one in 5 minutes, no hosting Tap to start
+							95 text Bots+
+							96 text PLUS
+							97 text Optional extras: role rewards, XP boosts, custom commands, goodbyes, a separate member log, custom starboard emoji, bigger giveaways. $3.99/month for the whole server. The bots stay free either way.
+							98 container
+								99 text Renews every month at $3.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+								100 link yapin.gg/cancel
+								101 text .
+							102 button Get Bots+ · $3.99/mo
+							103 text ALSO BUILT IN
+							104 container
+								105 text Reaction roles React to get a role FREE Right-click (or hold) any message →  Reaction roles… , then pick which emoji gives which role.
+							106 button Close
+			107 container
+				108 tab group
+					109 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						110 button Close
+					111 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 337 MB, Value: on
+						112 button Close
+					113 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						114 button Close
+			115 button New Tab
+	116 close button
+	117 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	118 minimize button
+119 menu bar
+	120 Chrome
+	121 File
+	122 Edit
+	123 View
+	124 History
+	125 Bookmarks
+	126 Profiles
+	127 Tab
+	128 Window
+	129 Help
+
+The focused UI element is 19 HTML content (23) Yapin’, URL: yapin.gg/

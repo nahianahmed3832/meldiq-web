@@ -17,6 +17,8 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { squareJpeg } from "../workspace/photo";
 import { useAction, useLoad } from "../workspace/useLoad";
 import { ProfileStyleCard } from "./ProfileStyleCard";
+import { ProfileSectionsCard } from "./ProfileSectionsCard";
+import { StatePanel } from "../components/StatePanel";
 /** My Profile: the editor, with your profile card previewed beside it (the reference's layout, 2026-10-29). */
 export function ProfilePage() {
   useLocaleRender();
@@ -50,6 +52,7 @@ function ProfileEditor() {
   const nameStyles = useOrbit((s) => s.server?.features.includes("name-styles") ?? false);
   // API 0.65.0: an old username stays yours for 7 days; a name someone else holds is refused (409, said below).
   const usernameHolds = useOrbit((s) => s.server?.features.includes("username-holds") ?? false);
+  const layoutOffered = useOrbit((s) => s.server?.features.includes("profile-layout") ?? false);
   const [saved, setSaved] = useState(false);
   const save = useAction();
   const photo = useAction();
@@ -87,12 +90,22 @@ function ProfileEditor() {
   }, [p]);
   const updateDraft = useProfileDraft()?.update;
   useEffect(
-    () => updateDraft?.({ displayName: form.displayName, username: form.username, pronouns: form.pronouns, aboutMe: form.aboutMe }),
-    [form.displayName, form.username, form.pronouns, form.aboutMe, updateDraft],
+    () => updateDraft?.({ displayName: form.displayName, username: form.username, pronouns: form.pronouns, aboutMe: form.aboutMe, links }),
+    [form.displayName, form.username, form.pronouns, form.aboutMe, links, updateDraft],
   );
   const dirty = shown.current !== null && (JSON.stringify(form) !== JSON.stringify(shown.current) || JSON.stringify(links) !== JSON.stringify(shownLinks.current));
   useUnsavedChanges(dirty);
   if (!me) return null;
+  if (!p)
+    return (
+      <StatePanel title={profile.error ?? l10n("common.status.loading")} loading={profile.loading} error={!!profile.error}>
+        {profile.error && (
+          <button type="button" className="btn btn-secondary" onClick={profile.reload}>
+            {l10n("common.actions.retry")}
+          </button>
+        )}
+      </StatePanel>
+    );
   const field = (k: keyof typeof form) => ({
     value: form[k],
     onChange: (e: {
@@ -372,6 +385,7 @@ function ProfileEditor() {
             </form>
           </section>
           <CommunityProfileCard aboutMe={form.aboutMe} pronouns={form.pronouns} />
+          {layoutOffered && p && <ProfileSectionsCard profile={p} onSaved={() => setVersion((value) => value + 1)} />}
         </div>
         <ProfilePreviewCard />
       </div>

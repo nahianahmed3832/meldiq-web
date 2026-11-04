@@ -1,0 +1,764 @@
+Browser tab: 2, Title: "Bot · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/bot".
+1 AXWebArea Bot · Bot API reference · Yapin’, URL: yapin.gg/developers/api/bot
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Bot, Value: 1
+				15 text Bot
+			16 text The bot’s own profile, status and slash commands.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-me
+				25 text GET
+				26 text /me
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#get-me
+				28 text The bot itself
+				29 text Auth :  Bot token JS: 
+				30 text bot.start()
+				31 text Python: 
+				32 text bot.run()
+				33 heading RESPONSE200, Value: 4
+					34 text RESPONSE
+					35 text 200
+				36 text object
+				37 table
+					38 row
+						39 cell
+							40 text FIELD
+						41 cell
+							42 text TYPE
+						43 cell
+							44 text DESCRIPTION
+					45 row
+						46 cell
+							47 text id
+						48 cell
+							49 text string (uuid)
+						50 cell
+							51 text Bot user id
+							52 container
+								53 text Example :  "6f1c2b8e-4d0a-4c1e-9a7b-3e5f8d2c1a90"
+					54 row
+						55 cell
+							56 text username
+						57 cell
+							58 text string
+						59 cell
+							60 text Handle
+							61 container
+								62 text Example :  "quizbot"
+					63 row
+						64 cell
+							65 text display_name
+						66 cell
+							67 text string | null
+						68 cell
+							69 text Display name
+							70 container
+								71 text Example :  "Quiz Bot"
+					72 row
+						73 cell
+							74 text avatar_path
+						75 cell
+							76 text string | null
+						77 cell
+							78 text A path, not a link: https://files.yapper.website/avatars/<path>. A path starting with / is on the website. null: none
+					79 row
+						80 cell
+							81 text banner_path
+						82 cell
+							83 text string | null
+						84 cell
+							85 text A path, not a link: https://files.yapper.website/banners/<path>. A path starting with / is on the website. null: none
+					86 row
+						87 cell
+							88 text bio
+						89 cell
+							90 text string | null
+						91 cell
+							92 text About me
+							93 container
+								94 text Example :  "I run quizzes"
+					95 row
+						96 cell
+							97 text created_at
+						98 cell
+							99 text string (date-time)
+						100 cell
+							101 text When it was made
+							102 container
+								103 text Example :  "2026-11-01T18:30:00.000Z"
+					104 row
+						105 cell
+							106 text avatar_url
+						107 cell
+							108 text string | null
+						109 cell
+							110 text Full avatar link
+					111 row
+						112 cell
+							113 text banner_url
+						114 cell
+							115 text string | null
+						116 cell
+							117 text Full banner link
+					118 row
+						119 cell
+							120 text bot
+						121 cell
+							122 text object
+						123 cell
+							124 text The bot entry
+							125 button (collapsed) Fields, Secondary Actions: Expand
+								126 text Fields
+				127 button (collapsed) Example response, Secondary Actions: Expand
+					128 text Example response
+				129 heading ERRORS, Value: 4
+					130 text ERRORS
+				131 content list
+					132 container
+						133 AXListMarker • 
+						134 text 401 Missing or wrong token
+					135 container
+						136 AXListMarker • 
+						137 text 500 Something went wrong on our side
+					138 container
+						139 AXListMarker • 
+						140 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			141 container patch-me
+				142 text PATCH
+				143 text /me
+				144 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#patch-me
+				145 text Change display name or bio
+				146 text Auth :  Bot token JS: 
+				147 text bot.setProfile()
+				148 text Python: 
+				149 text bot.set_profile()
+				150 heading REQUEST BODY, Value: 4
+					151 text REQUEST BODY
+				152 text object
+				153 table
+					154 row
+						155 cell
+							156 text FIELD
+						157 cell
+							158 text TYPE
+						159 cell
+							160 text DESCRIPTION
+					161 row
+						162 cell
+							163 text display_name
+							164 text optional
+						165 cell
+							166 text string
+						167 cell
+							168 text Up to 32 characters  ( up to 32 characters )
+							169 container
+								170 text Example :  "Quiz Bot"
+					171 row
+						172 cell
+							173 text bio
+							174 text optional
+						175 cell
+							176 text string
+						177 cell
+							178 text Up to 300 characters  ( up to 300 characters )
+							179 container
+								180 text Example :  "I run quizzes"
+				181 button (collapsed) Example request, Secondary Actions: Expand
+					182 text Example request
+				183 heading RESPONSE200, Value: 4
+					184 text RESPONSE
+					185 text 200
+				186 text BotProfile
+				187 table
+					188 row
+						189 cell
+							190 text FIELD
+						191 cell
+							192 text TYPE
+						193 cell
+							194 text DESCRIPTION
+					195 row
+						196 cell
+							197 text id
+						198 cell
+							199 text string (uuid)
+						200 cell
+							201 text Bot user id
+							202 container
+								203 text Example :  "6f1c2b8e-4d0a-4c1e-9a7b-3e5f8d2c1a90"
+					204 row
+						205 cell
+							206 text username
+						207 cell
+							208 text string
+						209 cell
+							210 text Handle
+							211 container
+								212 text Example :  "quizbot"
+					213 row
+						214 cell
+							215 text display_name
+						216 cell
+							217 text string | null
+						218 cell
+							219 text Display name
+							220 container
+								221 text Example :  "Quiz Bot"
+					222 row
+						223 cell
+							224 text avatar_path
+						225 cell
+							226 text string | null
+						227 cell
+							228 text A path, not a link: https://files.yapper.website/avatars/<path>. A path starting with / is on the website. null: none
+					229 row
+						230 cell
+							231 text banner_path
+						232 cell
+							233 text string | null
+						234 cell
+							235 text A path, not a link: https://files.yapper.website/banners/<path>. A path starting with / is on the website. null: none
+					236 row
+						237 cell
+							238 text bio
+						239 cell
+							240 text string | null
+						241 cell
+							242 text About me
+				243 button (collapsed) Example response, Secondary Actions: Expand
+					244 text Example response
+				245 heading ERRORS, Value: 4
+					246 text ERRORS
+				247 content list
+					248 container
+						249 AXListMarker • 
+						250 text 400 Bad input: the error says what’s wrong
+					251 container
+						252 AXListMarker • 
+						253 text 401 Missing or wrong token
+					254 container
+						255 AXListMarker • 
+						256 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					257 container
+						258 AXListMarker • 
+						259 text 404 No such thing, or the bot can’t see it
+					260 container
+						261 AXListMarker • 
+						262 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					263 container
+						264 AXListMarker • 
+						265 text 500 Something went wrong on our side
+					266 container
+						267 AXListMarker • 
+						268 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			269 container put-me-avatar
+				270 text PUT
+				271 text /me/avatar
+				272 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#put-me-avatar
+				273 text Set the profile picture
+				274 text Auth :  Bot token JS: 
+				275 text bot.setAvatar()
+				276 text Python: 
+				277 text bot.set_avatar()
+				278 heading REQUEST BODY, Value: 4
+					279 text REQUEST BODY
+				280 text The picture itself (PNG, JPG, GIF or WebP, up to 8 MB), or multipart/form-data with it in "file"
+				281 heading RESPONSE200, Value: 4
+					282 text RESPONSE
+					283 text 200
+				284 text Image
+				285 table
+					286 row
+						287 cell
+							288 text FIELD
+						289 cell
+							290 text TYPE
+						291 cell
+							292 text DESCRIPTION
+					293 row
+						294 cell
+							295 text path
+						296 cell
+							297 text string
+						298 cell
+							299 text Stored path
+							300 container
+								301 text Example :  "avatars/6f1c2b8e/r2-1730480000.webp"
+					302 row
+						303 cell
+							304 text url
+						305 cell
+							306 text string (uri)
+						307 cell
+							308 text Full link
+							309 container
+								310 text Example :  "https://files.yapper.website/avatars/6f1c2b8e/r2-1730480…
+				311 button (collapsed) Example response, Secondary Actions: Expand
+					312 text Example response
+				313 heading ERRORS, Value: 4
+					314 text ERRORS
+				315 content list
+					316 container
+						317 AXListMarker • 
+						318 text 400 Bad input: the error says what’s wrong
+					319 container
+						320 AXListMarker • 
+						321 text 401 Missing or wrong token
+					322 container
+						323 AXListMarker • 
+						324 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					325 container
+						326 AXListMarker • 
+						327 text 404 No such thing, or the bot can’t see it
+					328 container
+						329 AXListMarker • 
+						330 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					331 container
+						332 AXListMarker • 
+						333 text 500 Something went wrong on our side
+					334 container
+						335 AXListMarker • 
+						336 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			337 container delete-me-avatar
+				338 text DELETE
+				339 text /me/avatar
+				340 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#delete-me-avatar
+				341 text Remove the profile picture
+				342 text Auth :  Bot token
+				343 heading RESPONSE200, Value: 4
+					344 text RESPONSE
+					345 text 200
+				346 text Ok
+				347 table
+					348 row
+						349 cell
+							350 text FIELD
+						351 cell
+							352 text TYPE
+						353 cell
+							354 text DESCRIPTION
+					355 row
+						356 cell
+							357 text ok
+						358 cell
+							359 text true
+						360 cell
+							361 text Done
+							362 container
+								363 text Example :  true
+				364 button (collapsed) Example response, Secondary Actions: Expand
+					365 text Example response
+				366 heading ERRORS, Value: 4
+					367 text ERRORS
+				368 content list
+					369 container
+						370 AXListMarker • 
+						371 text 401 Missing or wrong token
+					372 container
+						373 AXListMarker • 
+						374 text 500 Something went wrong on our side
+					375 container
+						376 AXListMarker • 
+						377 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			378 container put-me-banner
+				379 text PUT
+				380 text /me/banner
+				381 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#put-me-banner
+				382 text Set the banner
+				383 text Auth :  Bot token JS: 
+				384 text bot.setBanner()
+				385 text Python: 
+				386 text bot.set_banner()
+				387 heading REQUEST BODY, Value: 4
+					388 text REQUEST BODY
+				389 text The picture itself (PNG, JPG, GIF or WebP, up to 10 MB), or multipart/form-data with it in "file"
+				390 heading RESPONSE200, Value: 4
+					391 text RESPONSE
+					392 text 200
+				393 text Image
+				394 table
+					395 row
+						396 cell
+							397 text FIELD
+						398 cell
+							399 text TYPE
+						400 cell
+							401 text DESCRIPTION
+					402 row
+						403 cell
+							404 text path
+						405 cell
+							406 text string
+						407 cell
+							408 text Stored path
+							409 container
+								410 text Example :  "avatars/6f1c2b8e/r2-1730480000.webp"
+					411 row
+						412 cell
+							413 text url
+						414 cell
+							415 text string (uri)
+						416 cell
+							417 text Full link
+							418 container
+								419 text Example :  "https://files.yapper.website/avatars/6f1c2b8e/r2-1730480…
+				420 button (collapsed) Example response, Secondary Actions: Expand
+					421 text Example response
+				422 heading ERRORS, Value: 4
+					423 text ERRORS
+				424 content list
+					425 container
+						426 AXListMarker • 
+						427 text 400 Bad input: the error says what’s wrong
+					428 container
+						429 AXListMarker • 
+						430 text 401 Missing or wrong token
+					431 container
+						432 AXListMarker • 
+						433 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					434 container
+						435 AXListMarker • 
+						436 text 404 No such thing, or the bot can’t see it
+					437 container
+						438 AXListMarker • 
+						439 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					440 container
+						441 AXListMarker • 
+						442 text 500 Something went wrong on our side
+					443 container
+						444 AXListMarker • 
+						445 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			446 container delete-me-banner
+				447 text DELETE
+				448 text /me/banner
+				449 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#delete-me-banner
+				450 text Remove the banner
+				451 text Auth :  Bot token
+				452 heading RESPONSE200, Value: 4
+					453 text RESPONSE
+					454 text 200
+				455 text Ok
+				456 table
+					457 row
+						458 cell
+							459 text FIELD
+						460 cell
+							461 text TYPE
+						462 cell
+							463 text DESCRIPTION
+					464 row
+						465 cell
+							466 text ok
+						467 cell
+							468 text true
+						469 cell
+							470 text Done
+							471 container
+								472 text Example :  true
+				473 button (collapsed) Example response, Secondary Actions: Expand
+					474 text Example response
+				475 heading ERRORS, Value: 4
+					476 text ERRORS
+				477 content list
+					478 container
+						479 AXListMarker • 
+						480 text 401 Missing or wrong token
+					481 container
+						482 AXListMarker • 
+						483 text 500 Something went wrong on our side
+					484 container
+						485 AXListMarker • 
+						486 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			487 container put-me-status
+				488 text PUT
+				489 text /me/status
+				490 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#put-me-status
+				491 text Status and activity line (kept while the bot is online)
+				492 text Auth :  Bot token JS: 
+				493 text bot.setStatus()
+				494 text Python: 
+				495 text bot.set_status()
+				496 heading REQUEST BODY, Value: 4
+					497 text REQUEST BODY
+				498 text object
+				499 table
+					500 row
+						501 cell
+							502 text FIELD
+						503 cell
+							504 text TYPE
+						505 cell
+							506 text DESCRIPTION
+					507 row
+						508 cell
+							509 text status
+							510 text optional
+						511 cell
+							512 text "online" | "idle" | "dnd"
+						513 cell
+							514 text Dot colour; anything else counts as online
+							515 container
+								516 text Example :  "online"
+					517 row
+						518 cell
+							519 text activity
+							520 text optional
+						521 cell
+							522 text string | null
+						523 cell
+							524 text Activity line, up to 60 characters  ( up to 60 characters )
+							525 container
+								526 text Example :  "Playing trivia"
+				527 button (collapsed) Example request, Secondary Actions: Expand
+					528 text Example request
+				529 heading RESPONSE200, Value: 4
+					530 text RESPONSE
+					531 text 200
+				532 text object
+				533 table
+					534 row
+						535 cell
+							536 text FIELD
+						537 cell
+							538 text TYPE
+						539 cell
+							540 text DESCRIPTION
+					541 row
+						542 cell
+							543 text ok
+						544 cell
+							545 text true
+						546 cell
+							547 text Done
+							548 container
+								549 text Example :  true
+					550 row
+						551 cell
+							552 text status
+						553 cell
+							554 text "online" | "idle" | "dnd"
+						555 cell
+							556 text Status now
+							557 container
+								558 text Example :  "online"
+					559 row
+						560 cell
+							561 text activity
+						562 cell
+							563 text string | null
+						564 cell
+							565 text Activity now
+							566 container
+								567 text Example :  "Playing trivia"
+				568 button (collapsed) Example response, Secondary Actions: Expand
+					569 text Example response
+				570 heading ERRORS, Value: 4
+					571 text ERRORS
+				572 content list
+					573 container
+						574 AXListMarker • 
+						575 text 400 Bad input: the error says what’s wrong
+					576 container
+						577 AXListMarker • 
+						578 text 401 Missing or wrong token
+					579 container
+						580 AXListMarker • 
+						581 text 500 Something went wrong on our side
+					582 container
+						583 AXListMarker • 
+						584 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			585 container get-commands
+				586 text GET
+				587 text /commands
+				588 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#get-commands
+				589 text The bot’s slash commands
+				590 text Auth :  Bot token
+				591 heading RESPONSE200, Value: 4
+					592 text RESPONSE
+					593 text 200
+				594 text object
+				595 table
+					596 row
+						597 cell
+							598 text FIELD
+						599 cell
+							600 text TYPE
+						601 cell
+							602 text DESCRIPTION
+					603 row
+						604 cell
+							605 text commands
+						606 cell
+							607 text Command[]
+						608 cell
+							609 text Commands, by name
+							610 button (collapsed) Fields of Command, Secondary Actions: Expand
+								611 text Fields of Command
+				612 button (collapsed) Example response, Secondary Actions: Expand
+					613 text Example response
+				614 heading ERRORS, Value: 4
+					615 text ERRORS
+				616 content list
+					617 container
+						618 AXListMarker • 
+						619 text 401 Missing or wrong token
+					620 container
+						621 AXListMarker • 
+						622 text 500 Something went wrong on our side
+					623 container
+						624 AXListMarker • 
+						625 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			626 container put-commands
+				627 text PUT
+				628 text /commands
+				629 link Description: Link to this endpoint, Value: yapin.gg/developers/api/bot#put-commands
+				630 text Replace all slash commands (up to 100)
+				631 text Auth :  Bot token JS: 
+				632 text bot.reload(), bot.start()
+				633 text Python: 
+				634 text bot.sync_commands()
+				635 heading REQUEST BODY, Value: 4
+					636 text REQUEST BODY
+				637 text object
+				638 table
+					639 row
+						640 cell
+							641 text FIELD
+						642 cell
+							643 text TYPE
+						644 cell
+							645 text DESCRIPTION
+					646 row
+						647 cell
+							648 text commands
+						649 cell
+							650 text object[]
+						651 cell
+							652 text The full list  ( up to 100 items )
+							653 button (collapsed) Fields, Secondary Actions: Expand
+								654 text Fields
+					655 row
+						656 cell
+							657 text interactions
+							658 text optional
+						659 cell
+							660 text boolean
+						661 cell
+							662 text true: when someone picks one of these from the / menu, send it as a command event (not a chat message) and let the bot answer through the interaction callback. Left out or false: commands come as message events, as before (flag bot_slash_interactions)
+							663 container
+								664 text Example :  true
+				665 button (collapsed) Example request, Secondary Actions: Expand
+					666 text Example request
+				667 heading RESPONSE200, Value: 4
+					668 text RESPONSE
+					669 text 200
+				670 text object
+				671 table
+					672 row
+						673 cell
+							674 text FIELD
+						675 cell
+							676 text TYPE
+						677 cell
+							678 text DESCRIPTION
+					679 row
+						680 cell
+							681 text ok
+						682 cell
+							683 text true
+						684 cell
+							685 text Done
+							686 container
+								687 text Example :  true
+					688 row
+						689 cell
+							690 text commands
+						691 cell
+							692 text Command[]
+						693 cell
+							694 text Saved list
+							695 button (collapsed) Fields of Command, Secondary Actions: Expand
+								696 text Fields of Command
+				697 button (collapsed) Example response, Secondary Actions: Expand
+					698 text Example response
+				699 heading ERRORS, Value: 4
+					700 text ERRORS
+				701 content list
+					702 container
+						703 AXListMarker • 
+						704 text 400 Bad input: the error says what’s wrong
+					705 container
+						706 AXListMarker • 
+						707 text 401 Missing or wrong token
+					708 container
+						709 AXListMarker • 
+						710 text 500 Something went wrong on our side
+					711 container
+						712 AXListMarker • 
+						713 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			714 link Description: ← Back to Yapin’, Value: yapin.gg/
+			715 text  · 
+			716 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		717 container On this page
+			718 text ON THIS PAGE
+			719 content list
+				720 link Description: Overview, Value: yapin.gg/developers/api/bot#top
+				721 link Description: GET /me, Value: yapin.gg/developers/api/bot#get-me
+				722 link Description: PATCH /me, Value: yapin.gg/developers/api/bot#patch-me
+				723 link Description: PUT /me/avatar, Value: yapin.gg/developers/api/bot#put-me-avatar
+				724 link Description: DELETE /me/avatar, Value: yapin.gg/developers/api/bot#delete-me-avatar
+				725 link Description: PUT /me/banner, Value: yapin.gg/developers/api/bot#put-me-banner
+				726 link Description: DELETE /me/banner, Value: yapin.gg/developers/api/bot#delete-me-banner
+				727 link Description: PUT /me/status, Value: yapin.gg/developers/api/bot#put-me-status
+				728 link Description: GET /commands, Value: yapin.gg/developers/api/bot#get-commands
+				729 link Description: PUT /commands, Value: yapin.gg/developers/api/bot#put-commands
+		730 text Yapin’
+		731 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		732 heading PRODUCT, Value: 4
+			733 text PRODUCT
+		734 content list
+			735 link Description: Download, Value: yapin.gg/download
+			736 link Description: Developers, Value: yapin.gg/developers
+			737 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			738 link Description: Creator Program, Value: yapin.gg/creators
+			739 link Description: FanKit, Value: yapin.gg/fankit
+			740 link Description: Roadmap, Value: yapin.gg/roadmap
+			741 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			742 link Description: Bugs, Value: yapin.gg/bugs
+			743 link Description: Status, Value: yapin.gg/status
+		744 heading COMMUNITY, Value: 4
+			745 text COMMUNITY
+		746 content list
+			747 link Description: Guidelines, Value: yapin.gg/guidelines
+			748 link Description: Tutorials, Value: yapin.gg/tutorials
+			749 link Description: Bots, Value: yapin.gg/bots
+			750 link Description: Partners, Value: yapin.gg/partners
+		751 heading LEGAL, Value: 4
+			752 text LEGAL
+		753 content list
+			754 link Description: Terms, Value: yapin.gg/terms
+			755 link Description: Privacy, Value: yapin.gg/privacy
+			756 link Description: Copyright, Value: yapin.gg/copyright
+			757 link Description: Security, Value: yapin.gg/security
+			758 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			759 link Description: Contact, Value: mailto:hello@yapin.gg
+		760 text © 2026 Yapper Media LLC. Free to use.
+		761 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Bot · Bot API reference · Yapin’, URL: yapin.gg/developers/api/bot

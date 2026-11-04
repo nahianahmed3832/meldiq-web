@@ -1,3 +1,4 @@
+import { PasswordInput } from "../components/PasswordInput";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -59,7 +60,7 @@ export function ReauthScreen({ engine, onSignOut }: { engine: Engine; onSignOut:
         )}
         <div className="field">
           <label htmlFor="ra-password">{t("common_password")}</label>
-          <input id="ra-password" className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
+          <PasswordInput id="ra-password" className="input" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
         </div>
         {code !== null && (
           <div className="field">

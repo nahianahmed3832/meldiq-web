@@ -1,0 +1,104 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 button Close
+							22 text Levels BOT Rewards the regulars Off
+							23 checkbox Off, Value: 0
+							24 text Hypes people up when they level, otherwise keeps quiet. Can’t be farmed: one gain a minute.
+							25 content list
+								26 text 15 to 25 XP per message, once a minute
+								27 text Level = √(XP ÷ 100)
+								28 text !rank and !top
+								29 text Level-ups announced where they chat
+							30 text Levels
+							31 text BOT
+							32 text 🎉  @nahian  just reached  level 5 ! TOP CHATTERS HERE 1 nahian lvl 0 · 18 XP Levels+
+							33 text PLUS
+							34 table
+								35 row
+									36 column header
+										37 text FREE
+									38 column header
+										39 text LEVELS+
+								40 row
+									41 cell
+										42 text XP for chatting, !rank, !top
+									43 cell
+										44 image Yes
+									45 cell
+										46 image Yes
+								47 row
+									48 cell
+										49 text Level-up announcements
+									50 cell
+										51 image Yes
+									52 cell
+										53 image Yes
+								54 row
+									55 cell
+										56 text XP boost
+									57 cell
+										58 text 1×
+									59 cell
+										60 text 1.5× or 2×
+								61 row
+									62 cell
+										63 text Role rewards at chosen levels
+									64 cell
+										65 container No
+											66 text ✕
+									67 cell
+										68 text up to 20
+								69 row
+									70 cell
+										71 text Your own level-up message
+									72 cell
+										73 container No
+											74 text ✕
+									75 cell
+										76 image Yes
+							77 button Get Bots+ · $3.99/mo
+							78 text Renews every month at $3.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+							79 link yapin.gg/cancel
+							80 text . Bots+ is one subscription for this server: it unlocks the Plus extras of every Yapin’ bot together. Saved
+							81 button (disabled) Save
+			82 container
+				83 tab group
+					84 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 151 MB, Value: on
+						85 button Close
+			86 button New Tab
+	87 close button
+	88 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	89 minimize button
+90 menu bar
+	91 Chrome
+	92 File
+	93 Edit
+	94 View
+	95 History
+	96 Bookmarks
+	97 Profiles
+	98 Tab
+	99 Window
+	100 Help
+
+The focused UI element is 23 checkbox Off, Value: 0

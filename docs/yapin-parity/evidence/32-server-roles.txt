@@ -1,0 +1,50 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Roles, Value: 2
+				29 text Roles
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		87 container
+			88 text Roles Group your members and hand out permissions. Members use the colour of their highest role.
+			89 button Create role
+			90 button Default permissions @everyone · applies to all server members ›
+				91 text Default permissions
+				92 text @everyone · applies to all server members
+				93 text ›
+			94 text Drag to reorder, or use the arrows. ROLES - 1 MEMBERS
+			95 button Research Member
+			96 text 1
+			97 button (disabled) Description: Move Research Member up, Help: Move up
+			98 button (disabled) Description: Move Research Member down, Help: Move down
+			99 button Edit
+				100 image
+		85 button Close
+			86 image
+
+The focused UI element is 19 button Roles

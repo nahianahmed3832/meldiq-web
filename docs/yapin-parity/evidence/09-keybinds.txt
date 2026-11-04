@@ -1,0 +1,120 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Keybinds, Value: 2
+			177 text Keybinds
+		178 container
+			179 text Click a shortcut and press the keys you want. Esc cancels. Saved on this device.  ⌘ /  shows them anywhere.
+		180 button See all shortcuts
+		181 text Quick switcher: jump to any channel, DM or server
+		182 button Change shortcut: Quick switcher: jump to any channel, DM or server
+			183 text ⌘
+			184 text K
+		185 button Off, Help: Turn this shortcut off
+		186 text Previous channel
+		187 button Change shortcut: Previous channel
+			188 text ⌥
+			189 text ↑
+		190 button Off, Help: Turn this shortcut off
+		191 text Next channel
+		192 button Change shortcut: Next channel
+			193 text ⌥
+			194 text ↓
+		195 button Off, Help: Turn this shortcut off
+		196 text Previous unread channel
+		197 button Change shortcut: Previous unread channel
+			198 text ⌥
+			199 text Shift
+			200 text ↑
+		201 button Off, Help: Turn this shortcut off
+		202 text Next unread channel
+		203 button Change shortcut: Next unread channel
+			204 text ⌥
+			205 text Shift
+			206 text ↓
+		207 button Off, Help: Turn this shortcut off
+		208 text Edit your last message (when the message box is empty)
+		209 button Change shortcut: Edit your last message (when the message box is empty)
+			210 text ↑
+		211 button Off, Help: Turn this shortcut off
+		212 text Mark this server as read
+		213 button Change shortcut: Mark this server as read
+			214 text Shift
+			215 text Esc
+		216 button Off, Help: Turn this shortcut off
+		217 text Mute / unmute in a call
+		218 button Change shortcut: Mute / unmute in a call
+			219 text ⌘
+			220 text Shift
+			221 text M
+		222 button Off, Help: Turn this shortcut off
+		223 text Deafen / undeafen in a call
+		224 button Change shortcut: Deafen / undeafen in a call
+			225 text ⌘
+			226 text Shift
+			227 text D
+		228 button Off, Help: Turn this shortcut off
+		229 text Clip the last few seconds of a call or stream
+		230 button Change shortcut: Clip the last few seconds of a call or stream
+			231 text ⌥
+			232 text C
+		233 button Off, Help: Turn this shortcut off
+		234 text Show the list of shortcuts
+		235 button Change shortcut: Show the list of shortcuts
+			236 text ⌘
+			237 text /
+		238 button Off, Help: Turn this shortcut off
+		239 text ALWAYS ON Reload (desktop app)
+		240 text ⌘
+		241 text R
+		242 text /
+		243 text F5
+		244 text Start typing anywhere and it goes into the message box
+		245 text Any letter
+		246 text New line
+		247 text Shift
+		248 text Enter
+		249 text Cancel a reply or an edit; then close the side panel; then mark the chat read and jump to the newest message
+		250 text Esc
+		251 text Scroll the chat, even while typing
+		252 text PageUp
+		253 text /
+		254 text PageDown
+		255 text Delete a message without the confirm
+		256 text Shift
+		257 text click Delete
+		258 text Bold (on selected text)
+		259 text ⌘
+		260 text B
+		261 text Italic
+		262 text ⌘
+		263 text I
+		264 text Underline
+		265 text ⌘
+		266 text U
+		267 text Code
+		268 text ⌘
+		269 text E
+		174 button Close
+			175 image
+
+The focused UI element is 18 button Keybinds

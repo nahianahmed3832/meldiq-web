@@ -860,5 +860,11 @@
     "accountDescription": "メール、アカウントの状態、データのエクスポート、アカウントの削除。",
     "notificationsDescription": "デスクトップ通知、サウンド、通知の一時停止、会話設定へのショートカット。",
     "appearanceDescription": "テーマ、色、メッセージの表示、メディアのプレビュー、チャット操作。"
+  },
+  "foundation": {
+    "profileSections": "プロフィールの項目",
+    "profileSectionsDescription": "表示する項目と順序を選びます。公開範囲の設定は引き続き適用されます。",
+    "resetSections": "項目の変更を元に戻す",
+    "saveSections": "項目を保存"
   }
 }

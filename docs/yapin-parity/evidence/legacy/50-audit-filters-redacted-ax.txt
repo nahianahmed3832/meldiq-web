@@ -1,0 +1,151 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 text (28) Yapin’
+							22 text Yapin’
+							23 container Servers
+								24 button Direct messages
+								25 button Meldiq
+								26 container
+									27 button Yapin' Headquarters
+									28 text 15
+								29 container
+									30 button MINECRAFT
+									31 text 13
+								32 button Create a server
+								33 button Discover servers
+							34 container
+								35 button Meldiq
+								36 button Lobby
+								37 button Invite people
+								38 text TEXT CHANNELS
+								39 button Create text channel, Help: Create channel
+								40 button general
+								41 text VOICE CHANNELS
+								42 button Create voice channel
+								43 button General
+								44 pop up button nahian Online, Help: Your account
+									45 text nahian
+									46 text Online
+								47 button Inbox
+								48 button Settings
+								49 button Log out
+							50 container
+								51 button Customize
+								52 container
+									53 text Me
+									54 heading Meldiq, Value: 1
+										55 text Meldiq
+									56 text 1  member 1 online
+								57 heading NOTHING HERE YET, Value: 2
+									58 text NOTHING HERE YET
+								59 text Your lobby is still bare. Three quick things make it feel like home:
+								60 button Write an intro
+								61 button Pick main channels
+								62 button Add a FAQ
+								63 text Looks, colours and the order of the cards are in Customize too.
+								64 heading JUMP IN, Value: 2
+									65 text JUMP IN
+								66 button general
+								67 container
+									68 heading WHO RUNS IT, Value: 2
+										69 text WHO RUNS IT
+									70 button nahian Owner
+							71 button Getting started
+							72 container
+								73 combo box (settable) Search settings
+								74 text MELDIQ
+								75 button Server profile
+								76 button Lobby
+								77 button Theme
+								78 button Channels
+								79 button Supercharge
+								80 button Promote
+								81 button Yapin’ Partner
+								82 text EXPRESSION
+								83 button Emoji
+								84 text APPS
+								85 button Bots
+								86 text PEOPLE
+								87 button Members
+								88 button Roles
+								89 button Ping roles
+								90 button Onboarding
+								91 button Bans
+								92 text MODERATION
+								93 button Reports
+								94 button Audit log
+								95 heading Audit log, Value: 2
+									96 text Audit log
+								97 text Who changed what in this server. Kept for 90 days.
+								98 pop up button Filter by action
+								99 combo box (settable) Filter by person, Value: Everyone
+									100 text Everyone
+								101 button (disabled) nahian deleted the new role role Oct 30
+								102 button nahian changed the server settings Oct 30
+								103 button (disabled) nahian made the invite [code omitted] Oct 30
+								104 button (disabled) nahian deleted the webhook Captain Hook Oct 30
+								105 button (disabled) nahian made the webhook Captain Hook Oct 30
+								106 button (disabled) nahian deleted the webhook Captain Hook Oct 30
+								107 button (disabled) nahian made the webhook Captain Hook Oct 30
+								108 button (disabled) nahian made the new role role Oct 30
+								109 button nahian changed the server settings Oct 30
+								110 button (disabled) nahian changed the server lobby Oct 30
+								111 button (disabled) nahian made the #General channel Oct 30
+								112 button (disabled) nahian made the #general channel Oct 30
+								113 button Close
+							114 text field (settable) Search options, Placeholder: Search
+							115 list box
+								116 text (selected) All actions
+								117 text Channels
+								118 text Roles
+								119 text Roles given or taken
+								120 text Bans
+								121 text Unbans
+								122 text Kicks
+								123 text Timeouts
+								124 text Server settings
+								125 text Invites
+								126 text Bots
+								127 text Webhooks
+								128 text Voice
+			129 container
+				130 tab group
+					131 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 204 MB, Value: on
+						132 button Close
+			133 button New Tab
+	134 close button
+	135 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	136 minimize button
+137 menu bar
+	138 Chrome
+	139 File
+	140 Edit
+	141 View
+	142 History
+	143 Bookmarks
+	144 Profiles
+	145 Tab
+	146 Window
+	147 Help
+
+The focused UI element is 114 text field (settable) Search options, Placeholder: Search

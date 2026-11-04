@@ -1,0 +1,149 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Sounds, Value: 2
+			177 text Sounds
+		178 container
+			179 text SOUND VOLUME 80%
+		180 slider (settable, integer) SOUND VOLUME 80%, Value: 80, ID: sfx-vol
+		181 text How loud the app’s own sounds are. Calls and the soundboard have their own volume in Voice & Audio.
+		182 container
+			183 text Notification sounds Off: no ping for new messages. Same switch as in your status menu.
+			184 checkbox (settable, integer) Description: Notification sounds Off: no ping for new messages. Same switch as in your status menu., Value: 1
+		185 text CHAT
+		186 button Description: Play New message in a DM or a mention, Help: Play
+		187 container
+			188 text New message in a DM or a mention
+			189 checkbox (settable, integer) Description: New message in a DM or a mention, Value: 1
+		190 button Description: Play Message sent, Help: Play
+		191 container
+			192 text Message sent
+			193 checkbox (settable, integer) Description: Message sent, Value: 0
+		194 text CALLS
+		195 button Description: Play Incoming call, Help: Play
+		196 container
+			197 text Incoming call
+			198 checkbox (settable, integer) Description: Incoming call, Value: 1
+		199 button Description: Play Outgoing call ringing, Help: Play
+		200 container
+			201 text Outgoing call ringing
+			202 checkbox (settable, integer) Description: Outgoing call ringing, Value: 1
+		203 button Description: Play Call ended or not answered, Help: Play
+		204 container
+			205 text Call ended or not answered
+			206 checkbox (settable, integer) Description: Call ended or not answered, Value: 1
+		207 text VOICE
+		208 button Description: Play You join a voice channel, Help: Play
+		209 container
+			210 text You join a voice channel
+			211 checkbox (settable, integer) Description: You join a voice channel, Value: 1
+		212 button Description: Play You leave a voice channel, Help: Play
+		213 container
+			214 text You leave a voice channel
+			215 checkbox (settable, integer) Description: You leave a voice channel, Value: 1
+		216 button Description: Play Someone joins your call, Help: Play
+		217 container
+			218 text Someone joins your call
+			219 checkbox (settable, integer) Description: Someone joins your call, Value: 1
+		220 button Description: Play Someone leaves your call, Help: Play
+		221 container
+			222 text Someone leaves your call
+			223 checkbox (settable, integer) Description: Someone leaves your call, Value: 1
+		224 button Description: Play You were moved to another channel, Help: Play
+		225 container
+			226 text You were moved to another channel
+			227 checkbox (settable, integer) Description: You were moved to another channel, Value: 1
+		228 button Description: Play Connection lost, Help: Play
+		229 container
+			230 text Connection lost
+			231 checkbox (settable, integer) Description: Connection lost, Value: 1
+		232 button Description: Play Reconnected, Help: Play
+		233 container
+			234 text Reconnected
+			235 checkbox (settable, integer) Description: Reconnected, Value: 1
+		236 button Description: Play Mute, Help: Play
+		237 container
+			238 text Mute
+			239 checkbox (settable, integer) Description: Mute, Value: 1
+		240 button Description: Play Unmute, Help: Play
+		241 container
+			242 text Unmute
+			243 checkbox (settable, integer) Description: Unmute, Value: 1
+		244 button Description: Play Deafen, Help: Play
+		245 container
+			246 text Deafen
+			247 checkbox (settable, integer) Description: Deafen, Value: 1
+		248 button Description: Play Undeafen, Help: Play
+		249 container
+			250 text Undeafen
+			251 checkbox (settable, integer) Description: Undeafen, Value: 1
+		252 button Description: Play Push to talk pressed, Help: Play
+		253 container
+			254 text Push to talk pressed
+			255 checkbox (settable, integer) Description: Push to talk pressed, Value: 0
+		256 button Description: Play Push to talk released, Help: Play
+		257 container
+			258 text Push to talk released
+			259 checkbox (settable, integer) Description: Push to talk released, Value: 0
+		260 button Description: Play Invited to speak on a stage, Help: Play
+		261 container
+			262 text Invited to speak on a stage
+			263 checkbox (settable, integer) Description: Invited to speak on a stage, Value: 1
+		264 text STREAMS
+		265 button Description: Play You start sharing your screen, Help: Play
+		266 container
+			267 text You start sharing your screen
+			268 checkbox (settable, integer) Description: You start sharing your screen, Value: 1
+		269 button Description: Play You stop sharing your screen, Help: Play
+		270 container
+			271 text You stop sharing your screen
+			272 checkbox (settable, integer) Description: You stop sharing your screen, Value: 1
+		273 button Description: Play Someone starts a stream in your call, Help: Play
+		274 container
+			275 text Someone starts a stream in your call
+			276 checkbox (settable, integer) Description: Someone starts a stream in your call, Value: 1
+		277 button Description: Play Someone stops their stream, Help: Play
+		278 container
+			279 text Someone stops their stream
+			280 checkbox (settable, integer) Description: Someone stops their stream, Value: 1
+		281 button Description: Play You start watching a stream, Help: Play
+		282 container
+			283 text You start watching a stream
+			284 checkbox (settable, integer) Description: You start watching a stream, Value: 1
+		285 button Description: Play You stop watching a stream, Help: Play
+		286 container
+			287 text You stop watching a stream
+			288 checkbox (settable, integer) Description: You stop watching a stream, Value: 1
+		289 text OTHER
+		290 button Description: Play Clip saved, Help: Play
+		291 container
+			292 text Clip saved
+			293 checkbox (settable, integer) Description: Clip saved, Value: 1
+		294 button Description: Play Something went wrong, Help: Play
+		295 container
+			296 text Something went wrong
+			297 checkbox (settable, integer) Description: Something went wrong, Value: 1
+		298 button Reset to default
+		174 button Close
+			175 image
+
+The focused UI element is 17 button Sounds

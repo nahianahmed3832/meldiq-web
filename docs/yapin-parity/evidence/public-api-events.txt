@@ -1,0 +1,1577 @@
+Browser tab: 2, Title: "Bot events · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/events".
+1 AXWebArea Bot events · Bot API reference · Yapin’, URL: yapin.gg/developers/api/events
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Events, Value: 1
+				15 text Events
+			16 text What a bot gets when things happen, with every field of every payload.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 heading Getting events, Value: 2, ID: delivery
+				25 text Getting events
+			26 text The same events come three ways. Each has an id that only goes up: keep the last one you handled.
+			27 content list
+				28 container
+					29 AXListMarker • 
+					30 text Gateway (fastest): a WebSocket to wss://rt.yapper.website/bot. Event frames carry one event in d.
+				31 container
+					32 AXListMarker • 
+					33 text Long poll: GET /events?after=<last id>&wait=25.
+					34 link Description: GET /events, Value: yapin.gg/developers/api/events#get-events
+				35 container
+					36 AXListMarker • 
+					37 text Event webhook: we POST { id, event, data } to your URL, signed in X-Yapper-Signature.
+			38 table
+				39 row
+					40 cell
+						41 text GATEWAY FRAME
+					42 cell
+						43 text FROM
+					44 cell
+						45 text EXAMPLE
+				46 row
+					47 cell
+						48 text hello
+					49 cell
+						50 text Yapin’
+					51 cell
+						52 text {"op":"hello","heartbeat_interval":30000}
+				53 row
+					54 cell
+						55 text identify
+						56 text events: only these types (up to 50), optional
+					57 cell
+						58 text your bot
+					59 cell
+						60 text {"op":"identify","token":"yb_…","events":["message","inte…
+				61 row
+					62 cell
+						63 text resume
+						64 text Carry on after the last event id you handled
+					65 cell
+						66 text your bot
+					67 cell
+						68 text {"op":"resume","token":"yb_…","seq":4812}
+				69 row
+					70 cell
+						71 text ready
+						72 text requests: API calls over this socket are on for the bot (flag bot_gateway_requests)
+					73 cell
+						74 text Yapin’
+					75 cell
+						76 text {"op":"ready","bot":{"id":"6f1c2b8e-4d0a-4c1e-9a7b-3e5f8d…
+				77 row
+					78 cell
+						79 text event
+						80 text d is one item of GET /events (components.schemas.Event)
+					81 cell
+						82 text Yapin’
+					83 cell
+						84 text {"op":"event","s":4812,"t":"message","d":{"id":4812,"type…
+				85 row
+					86 cell
+						87 text heartbeat
+					88 cell
+						89 text your bot
+					90 cell
+						91 text {"op":"heartbeat"}
+				92 row
+					93 cell
+						94 text heartbeat_ack
+					95 cell
+						96 text Yapin’
+					97 cell
+						98 text {"op":"heartbeat_ack","seq":4812}
+				99 row
+					100 cell
+						101 text presence
+						102 text Send after PUT /me/status so the dot changes at once (the SDKs do). No answer
+					103 cell
+						104 text your bot
+					105 cell
+						106 text {"op":"presence","status":"dnd","activity":"Playing trivia"}
+				107 row
+					108 cell
+						109 text request
+						110 text Only when ready said requests: true. An API call with this bot’s token: same rules, limits and answers as HTTPS. JSON bodies only (files over HTTPS), not /events. Up to 8 at once and 100 per 10 s per socket
+					111 cell
+						112 text your bot
+					113 cell
+						114 text {"op":"request","id":"1","method":"POST","path":"/channel…
+				115 row
+					116 cell
+						117 text response
+						118 text The answer to the request with the same id: the HTTP status and JSON body (retry_after on 429)
+					119 cell
+						120 text Yapin’
+					121 cell
+						122 text {"op":"response","id":"1","status":200,"body":{"message":…
+			123 container get-events
+				124 text GET
+				125 text /events
+				126 link Description: Link to this endpoint, Value: yapin.gg/developers/api/events#get-events
+				127 text Long-poll for events, up to 100 a call (also keeps the bot online)
+				128 text Auth :  Bot token JS: 
+				129 text bot.start()
+				130 text Python: 
+				131 text bot.run()
+				132 text Commands older than 15 minutes and expired button clicks are skipped; the cursor still moves past them. The gateway is faster: see /developers#gateway.
+				133 heading PARAMETERS, Value: 4
+					134 text PARAMETERS
+				135 table
+					136 row
+						137 cell
+							138 text NAME
+						139 cell
+							140 text TYPE
+						141 cell
+							142 text DESCRIPTION
+					143 row
+						144 cell
+							145 text ?after
+							146 text optional
+						147 cell
+							148 text integer
+						149 cell
+							150 text Last event id you saw. 0 answers at once with no events and the newest id as last (start from now)
+							151 container
+								152 text Example :  4811
+					153 row
+						154 cell
+							155 text ?wait
+							156 text optional
+						157 cell
+							158 text integer
+						159 cell
+							160 text Seconds to wait for something to happen  ( 0 to 25 )
+							161 container
+								162 text Example :  25
+					163 row
+						164 cell
+							165 text ?max_age
+							166 text optional
+						167 cell
+							168 text integer
+						169 cell
+							170 text Skip events older than this many seconds  ( 0 to 86400 )
+							171 container
+								172 text Example :  300
+				173 heading RESPONSE200, Value: 4
+					174 text RESPONSE
+					175 text 200
+				176 text object
+				177 table
+					178 row
+						179 cell
+							180 text FIELD
+						181 cell
+							182 text TYPE
+						183 cell
+							184 text DESCRIPTION
+					185 row
+						186 cell
+							187 text events
+						188 cell
+							189 text Event[]
+						190 cell
+							191 text Events, oldest first
+							192 button (collapsed) Fields of Event_message, Secondary Actions: Expand
+								193 text Fields of Event_message
+							194 button (collapsed) Fields of Event_dm_message, Secondary Actions: Expand
+								195 text Fields of Event_dm_message
+							196 button (collapsed) Fields of Event_member_join, Secondary Actions: Expand
+								197 text Fields of Event_member_join
+							198 button (collapsed) Fields of Event_member_leave, Secondary Actions: Expand
+								199 text Fields of Event_member_leave
+							200 button (collapsed) Fields of Event_reaction_add, Secondary Actions: Expand
+								201 text Fields of Event_reaction_add
+							202 button (collapsed) Fields of Event_reaction_remove, Secondary Actions: Expand
+								203 text Fields of Event_reaction_remove
+							204 button (collapsed) Fields of Event_voice_join, Secondary Actions: Expand
+								205 text Fields of Event_voice_join
+							206 button (collapsed) Fields of Event_voice_leave, Secondary Actions: Expand
+								207 text Fields of Event_voice_leave
+							208 button (collapsed) Fields of Event_command, Secondary Actions: Expand
+								209 text Fields of Event_command
+							210 button (collapsed) Fields of Event_interaction, Secondary Actions: Expand
+								211 text Fields of Event_interaction
+							212 button (collapsed) Fields of Event_invite_create, Secondary Actions: Expand
+								213 text Fields of Event_invite_create
+							214 button (collapsed) Fields of Event_invite_delete, Secondary Actions: Expand
+								215 text Fields of Event_invite_delete
+							216 button (collapsed) Fields of Event_test, Secondary Actions: Expand
+								217 text Fields of Event_test
+					218 row
+						219 cell
+							220 text last
+						221 cell
+							222 text integer
+						223 cell
+							224 text Pass this as after next time
+							225 container
+								226 text Example :  4812
+				227 button (collapsed) Example response, Secondary Actions: Expand
+					228 text Example response
+				229 heading ERRORS, Value: 4
+					230 text ERRORS
+				231 content list
+					232 container
+						233 AXListMarker • 
+						234 text 401 Missing or wrong token
+					235 container
+						236 AXListMarker • 
+						237 text 500 Something went wrong on our side
+					238 container
+						239 AXListMarker • 
+						240 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			241 heading Event payloads, Value: 2, ID: payloads
+				242 text Event payloads
+			243 container message
+				244 text EVENT
+				245 text message
+				246 link Description: Link to this event, Value: yapin.gg/developers/api/events#message
+				247 text Someone posted in a server channel the bot can see (not the bot’s own messages, not DMs)
+				248 text Sent to your event webhook as { id, event: "message", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_message.
+				249 heading DATA, Value: 4
+					250 text DATA
+				251 table
+					252 row
+						253 cell
+							254 text FIELD
+						255 cell
+							256 text TYPE
+						257 cell
+							258 text DESCRIPTION
+					259 row
+						260 cell
+							261 text id
+						262 cell
+							263 text string (uuid)
+						264 cell
+							265 text Message id
+							266 container
+								267 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+					268 row
+						269 cell
+							270 text channel_id
+						271 cell
+							272 text string (uuid)
+						273 cell
+							274 text Channel id
+							275 container
+								276 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					277 row
+						278 cell
+							279 text channel_name
+						280 cell
+							281 text string | null
+						282 cell
+							283 text Channel name
+							284 container
+								285 text Example :  "general"
+					286 row
+						287 cell
+							288 text server_id
+						289 cell
+							290 text string (uuid)
+						291 cell
+							292 text Server id
+							293 container
+								294 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					295 row
+						296 cell
+							297 text author_id
+						298 cell
+							299 text string (uuid)
+						300 cell
+							301 text Who sent it
+							302 container
+								303 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					304 row
+						305 cell
+							306 text author
+						307 cell
+							308 text string | null
+						309 cell
+							310 text Username of the sender
+							311 container
+								312 text Example :  "sam"
+					313 row
+						314 cell
+							315 text content
+						316 cell
+							317 text string
+						318 cell
+							319 text Text
+							320 container
+								321 text Example :  "/roll 2d6"
+					322 row
+						323 cell
+							324 text attachment
+						325 cell
+							326 text string | null
+						327 cell
+							328 text Attachment path
+					329 row
+						330 cell
+							331 text reply_to_id
+						332 cell
+							333 text string (uuid) | null
+						334 cell
+							335 text Message it answers
+					336 row
+						337 cell
+							338 text created_at
+						339 cell
+							340 text string (date-time)
+						341 cell
+							342 text When
+							343 container
+								344 text Example :  "2026-11-01T18:30:00.000Z"
+					345 row
+						346 cell
+							347 text author_bot
+						348 cell
+							349 text boolean
+						350 cell
+							351 text Sent by another bot or a webhook: skip these so two bots don’t answer each other forever
+							352 container
+								353 text Example :  false
+					354 row
+						355 cell
+							356 text mentioned
+						357 cell
+							358 text boolean
+						359 cell
+							360 text The message mentions this bot (<@bot id>)
+							361 container
+								362 text Example :  false
+					363 row
+						364 cell
+							365 text command
+							366 text optional
+						367 cell
+							368 text string
+						369 cell
+							370 text One of this bot’s commands, without / or ! (only when it starts with one)
+							371 container
+								372 text Example :  "roll"
+					373 row
+						374 cell
+							375 text args
+							376 text optional
+						377 cell
+							378 text string
+						379 cell
+							380 text Text after the command, "" for none
+							381 container
+								382 text Example :  "2d6"
+					383 row
+						384 cell
+							385 text command_for
+							386 text optional
+						387 cell
+							388 text string (uuid)[]
+						389 cell
+							390 text Someone picked a bot for a shared command (/fish @Bot). Not your id: don’t answer
+				391 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					392 text Example (long poll and gateway)
+				393 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					394 text Example (event webhook body)
+			395 container dm_message
+				396 text EVENT
+				397 text dm_message
+				398 link Description: Link to this event, Value: yapin.gg/developers/api/events#dm_message
+				399 text Someone DMed the bot
+				400 text In testing : 
+				401 text bot_dm_events
+				402 text Commands aren’t parsed in DMs: read content yourself In testing (flag bot_dm_events). Sent to your event webhook as { id, event: "dm_message", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_dm_message.
+				403 heading DATA, Value: 4
+					404 text DATA
+				405 table
+					406 row
+						407 cell
+							408 text FIELD
+						409 cell
+							410 text TYPE
+						411 cell
+							412 text DESCRIPTION
+					413 row
+						414 cell
+							415 text id
+						416 cell
+							417 text string (uuid)
+						418 cell
+							419 text Message id
+							420 container
+								421 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+					422 row
+						423 cell
+							424 text channel_id
+						425 cell
+							426 text string (uuid)
+						427 cell
+							428 text The DM’s channel id
+							429 container
+								430 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					431 row
+						432 cell
+							433 text server_id
+						434 cell
+							435 text null
+						436 cell
+							437 text Always null
+					438 row
+						439 cell
+							440 text dm
+						441 cell
+							442 text true
+						443 cell
+							444 text Always true
+							445 container
+								446 text Example :  true
+					447 row
+						448 cell
+							449 text dm_channel_id
+						450 cell
+							451 text string (uuid)
+						452 cell
+							453 text Same as channel_id
+							454 container
+								455 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					456 row
+						457 cell
+							458 text is_dm
+						459 cell
+							460 text true
+						461 cell
+							462 text Same as dm
+							463 container
+								464 text Example :  true
+					465 row
+						466 cell
+							467 text author_id
+						468 cell
+							469 text string (uuid)
+						470 cell
+							471 text Who sent it
+							472 container
+								473 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					474 row
+						475 cell
+							476 text author
+						477 cell
+							478 text string | null
+						479 cell
+							480 text Username of the sender
+							481 container
+								482 text Example :  "sam"
+					483 row
+						484 cell
+							485 text author_name
+						486 cell
+							487 text string | null
+						488 cell
+							489 text Display name, or username
+							490 container
+								491 text Example :  "Sam"
+					492 row
+						493 cell
+							494 text content
+						495 cell
+							496 text string
+						497 cell
+							498 text Text
+							499 container
+								500 text Example :  "help"
+					501 row
+						502 cell
+							503 text attachment
+						504 cell
+							505 text string | null
+						506 cell
+							507 text First attachment path
+					508 row
+						509 cell
+							510 text attachments
+						511 cell
+							512 text object[]
+						513 cell
+							514 text Files ([] when none)
+							515 button (collapsed) Fields, Secondary Actions: Expand
+								516 text Fields
+					517 row
+						518 cell
+							519 text reply_to_id
+						520 cell
+							521 text string (uuid) | null
+						522 cell
+							523 text Message it answers
+					524 row
+						525 cell
+							526 text created_at
+						527 cell
+							528 text string (date-time)
+						529 cell
+							530 text When
+							531 container
+								532 text Example :  "2026-11-01T18:30:00.000Z"
+					533 row
+						534 cell
+							535 text author_bot
+						536 cell
+							537 text boolean
+						538 cell
+							539 text Sent by a bot or webhook
+							540 container
+								541 text Example :  false
+				542 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					543 text Example (long poll and gateway)
+				544 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					545 text Example (event webhook body)
+			546 container member_join
+				547 text EVENT
+				548 text member_join
+				549 link Description: Link to this event, Value: yapin.gg/developers/api/events#member_join
+				550 text Someone joined a server the bot is in (not sent for bots)
+				551 text Sent to your event webhook as { id, event: "member_join", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_member_join.
+				552 heading DATA, Value: 4
+					553 text DATA
+				554 table
+					555 row
+						556 cell
+							557 text FIELD
+						558 cell
+							559 text TYPE
+						560 cell
+							561 text DESCRIPTION
+					562 row
+						563 cell
+							564 text server_id
+						565 cell
+							566 text string (uuid)
+						567 cell
+							568 text Server id
+							569 container
+								570 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					571 row
+						572 cell
+							573 text channel_id
+						574 cell
+							575 text null
+						576 cell
+							577 text Always null
+					578 row
+						579 cell
+							580 text user_id
+						581 cell
+							582 text string (uuid)
+						583 cell
+							584 text Who joined
+							585 container
+								586 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					587 row
+						588 cell
+							589 text username
+						590 cell
+							591 text string | null
+						592 cell
+							593 text Their username
+							594 container
+								595 text Example :  "sam"
+					596 row
+						597 cell
+							598 text joined_at
+						599 cell
+							600 text string (date-time)
+						601 cell
+							602 text When
+							603 container
+								604 text Example :  "2026-11-01T18:30:00.000Z"
+					605 row
+						606 cell
+							607 text member_count
+						608 cell
+							609 text integer
+						610 cell
+							611 text Members now
+							612 container
+								613 text Example :  129
+					614 row
+						615 cell
+							616 text invite_code
+							617 text optional
+						618 cell
+							619 text string | null
+						620 cell
+							621 text Invite used (Manage Server bots, flag bot_invite_tracking)
+							622 container
+								623 text Example :  "gamenight"
+					624 row
+						625 cell
+							626 text inviter_id
+							627 text optional
+						628 cell
+							629 text string (uuid) | null
+						630 cell
+							631 text Who made that invite
+							632 container
+								633 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				634 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					635 text Example (long poll and gateway)
+				636 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					637 text Example (event webhook body)
+			638 container member_leave
+				639 text EVENT
+				640 text member_leave
+				641 link Description: Link to this event, Value: yapin.gg/developers/api/events#member_leave
+				642 text Someone left, or was kicked or banned
+				643 text Sent to your event webhook as { id, event: "member_leave", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_member_leave.
+				644 heading DATA, Value: 4
+					645 text DATA
+				646 table
+					647 row
+						648 cell
+							649 text FIELD
+						650 cell
+							651 text TYPE
+						652 cell
+							653 text DESCRIPTION
+					654 row
+						655 cell
+							656 text server_id
+						657 cell
+							658 text string (uuid)
+						659 cell
+							660 text Server id
+							661 container
+								662 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					663 row
+						664 cell
+							665 text channel_id
+						666 cell
+							667 text null
+						668 cell
+							669 text Always null
+					670 row
+						671 cell
+							672 text user_id
+						673 cell
+							674 text string (uuid)
+						675 cell
+							676 text Who left
+							677 container
+								678 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					679 row
+						680 cell
+							681 text username
+						682 cell
+							683 text string | null
+						684 cell
+							685 text Their username
+							686 container
+								687 text Example :  "sam"
+					688 row
+						689 cell
+							690 text joined_at
+						691 cell
+							692 text null
+						693 cell
+							694 text Always null
+					695 row
+						696 cell
+							697 text member_count
+						698 cell
+							699 text integer
+						700 cell
+							701 text Members now
+							702 container
+								703 text Example :  127
+				704 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					705 text Example (long poll and gateway)
+				706 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					707 text Example (event webhook body)
+			708 container reaction_add
+				709 text EVENT
+				710 text reaction_add
+				711 link Description: Link to this event, Value: yapin.gg/developers/api/events#reaction_add
+				712 text Someone reacted to a message the bot can see (in DMs: only on the bot’s own messages)
+				713 text Sent to your event webhook as { id, event: "reaction_add", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_reaction_add.
+				714 heading DATA, Value: 4
+					715 text DATA
+				716 table
+					717 row
+						718 cell
+							719 text FIELD
+						720 cell
+							721 text TYPE
+						722 cell
+							723 text DESCRIPTION
+					724 row
+						725 cell
+							726 text message_id
+						727 cell
+							728 text string (uuid)
+						729 cell
+							730 text Message id
+							731 container
+								732 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+					733 row
+						734 cell
+							735 text channel_id
+						736 cell
+							737 text string (uuid)
+						738 cell
+							739 text Channel id
+							740 container
+								741 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					742 row
+						743 cell
+							744 text server_id
+						745 cell
+							746 text string (uuid) | null
+						747 cell
+							748 text Server id (null in a DM)
+							749 container
+								750 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					751 row
+						752 cell
+							753 text user_id
+						754 cell
+							755 text string (uuid)
+						756 cell
+							757 text Who reacted
+							758 container
+								759 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					760 row
+						761 cell
+							762 text username
+						763 cell
+							764 text string | null
+						765 cell
+							766 text Their username
+							767 container
+								768 text Example :  "sam"
+					769 row
+						770 cell
+							771 text emoji
+						772 cell
+							773 text string
+						774 cell
+							775 text Unicode, or "<:name:id>"
+							776 container
+								777 text Example :  "👍"
+					778 row
+						779 cell
+							780 text message_author_id
+						781 cell
+							782 text string (uuid)
+						783 cell
+							784 text Who wrote the message
+							785 container
+								786 text Example :  "6f1c2b8e-4d0a-4c1e-9a7b-3e5f8d2c1a90"
+					787 row
+						788 cell
+							789 text dm
+							790 text optional
+						791 cell
+							792 text true
+						793 cell
+							794 text Only in DMs (flag bot_dm_events)
+							795 container
+								796 text Example :  true
+					797 row
+						798 cell
+							799 text dm_channel_id
+							800 text optional
+						801 cell
+							802 text string (uuid)
+						803 cell
+							804 text Same as channel_id, only in DMs
+							805 container
+								806 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					807 row
+						808 cell
+							809 text is_dm
+							810 text optional
+						811 cell
+							812 text true
+						813 cell
+							814 text Same as dm, only in DMs
+							815 container
+								816 text Example :  true
+				817 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					818 text Example (long poll and gateway)
+				819 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					820 text Example (event webhook body)
+			821 container reaction_remove
+				822 text EVENT
+				823 text reaction_remove
+				824 link Description: Link to this event, Value: yapin.gg/developers/api/events#reaction_remove
+				825 text Someone took a reaction back
+				826 text Sent to your event webhook as { id, event: "reaction_remove", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_reaction_remove.
+				827 heading DATA, Value: 4
+					828 text DATA
+				829 table
+					830 row
+						831 cell
+							832 text FIELD
+						833 cell
+							834 text TYPE
+						835 cell
+							836 text DESCRIPTION
+					837 row
+						838 cell
+							839 text message_id
+						840 cell
+							841 text string (uuid)
+						842 cell
+							843 text Message id
+							844 container
+								845 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+					846 row
+						847 cell
+							848 text channel_id
+						849 cell
+							850 text string (uuid)
+						851 cell
+							852 text Channel id
+							853 container
+								854 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					855 row
+						856 cell
+							857 text server_id
+						858 cell
+							859 text string (uuid) | null
+						860 cell
+							861 text Server id (null in a DM)
+							862 container
+								863 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					864 row
+						865 cell
+							866 text user_id
+						867 cell
+							868 text string (uuid)
+						869 cell
+							870 text Who reacted
+							871 container
+								872 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					873 row
+						874 cell
+							875 text username
+						876 cell
+							877 text string | null
+						878 cell
+							879 text Their username
+							880 container
+								881 text Example :  "sam"
+					882 row
+						883 cell
+							884 text emoji
+						885 cell
+							886 text string
+						887 cell
+							888 text Unicode, or "<:name:id>"
+							889 container
+								890 text Example :  "👍"
+					891 row
+						892 cell
+							893 text message_author_id
+						894 cell
+							895 text string (uuid)
+						896 cell
+							897 text Who wrote the message
+							898 container
+								899 text Example :  "6f1c2b8e-4d0a-4c1e-9a7b-3e5f8d2c1a90"
+					900 row
+						901 cell
+							902 text dm
+							903 text optional
+						904 cell
+							905 text true
+						906 cell
+							907 text Only in DMs (flag bot_dm_events)
+							908 container
+								909 text Example :  true
+					910 row
+						911 cell
+							912 text dm_channel_id
+							913 text optional
+						914 cell
+							915 text string (uuid)
+						916 cell
+							917 text Same as channel_id, only in DMs
+							918 container
+								919 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					920 row
+						921 cell
+							922 text is_dm
+							923 text optional
+						924 cell
+							925 text true
+						926 cell
+							927 text Same as dm, only in DMs
+							928 container
+								929 text Example :  true
+				930 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					931 text Example (long poll and gateway)
+				932 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					933 text Example (event webhook body)
+			934 container voice_join
+				935 text EVENT
+				936 text voice_join
+				937 link Description: Link to this event, Value: yapin.gg/developers/api/events#voice_join
+				938 text Someone joined a voice channel the bot can see
+				939 text In testing : 
+				940 text bot_voice
+				941 text In testing (flag bot_voice). Sent to your event webhook as { id, event: "voice_join", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_voice_join.
+				942 heading DATA, Value: 4
+					943 text DATA
+				944 table
+					945 row
+						946 cell
+							947 text FIELD
+						948 cell
+							949 text TYPE
+						950 cell
+							951 text DESCRIPTION
+					952 row
+						953 cell
+							954 text user_id
+						955 cell
+							956 text string (uuid)
+						957 cell
+							958 text Who
+							959 container
+								960 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					961 row
+						962 cell
+							963 text channel_id
+						964 cell
+							965 text string (uuid)
+						966 cell
+							967 text Voice channel
+							968 container
+								969 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+					970 row
+						971 cell
+							972 text server_id
+						973 cell
+							974 text string (uuid)
+						975 cell
+							976 text Server id
+							977 container
+								978 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				979 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					980 text Example (long poll and gateway)
+				981 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					982 text Example (event webhook body)
+			983 container voice_leave
+				984 text EVENT
+				985 text voice_leave
+				986 link Description: Link to this event, Value: yapin.gg/developers/api/events#voice_leave
+				987 text Someone left a voice channel (a move is a leave plus a join)
+				988 text In testing : 
+				989 text bot_voice
+				990 text In testing (flag bot_voice). Sent to your event webhook as { id, event: "voice_leave", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_voice_leave.
+				991 heading DATA, Value: 4
+					992 text DATA
+				993 table
+					994 row
+						995 cell
+							996 text FIELD
+						997 cell
+							998 text TYPE
+						999 cell
+							1000 text DESCRIPTION
+					1001 row
+						1002 cell
+							1003 text user_id
+						1004 cell
+							1005 text string (uuid)
+						1006 cell
+							1007 text Who
+							1008 container
+								1009 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					1010 row
+						1011 cell
+							1012 text channel_id
+						1013 cell
+							1014 text string (uuid)
+						1015 cell
+							1016 text Voice channel
+							1017 container
+								1018 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+					1019 row
+						1020 cell
+							1021 text server_id
+						1022 cell
+							1023 text string (uuid)
+						1024 cell
+							1025 text Server id
+							1026 container
+								1027 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				1028 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					1029 text Example (long poll and gateway)
+				1030 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					1031 text Example (event webhook body)
+			1032 container command
+				1033 text EVENT
+				1034 text command
+				1035 link Description: Link to this event, Value: yapin.gg/developers/api/events#command
+				1036 text Someone picked one of the bot’s slash commands from the / menu (bots that sent PUT /commands with interactions: true). Nothing is posted in chat: answer through the interaction callback within 15 minutes
+				1037 text In testing : 
+				1038 text bot_slash_interactions
+				1039 text In testing (flag bot_slash_interactions). Sent to your event webhook as { id, event: "command", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_command.
+				1040 heading DATA, Value: 4
+					1041 text DATA
+				1042 table
+					1043 row
+						1044 cell
+							1045 text FIELD
+						1046 cell
+							1047 text TYPE
+						1048 cell
+							1049 text DESCRIPTION
+					1050 row
+						1051 cell
+							1052 text id
+						1053 cell
+							1054 text string (uuid)
+						1055 cell
+							1056 text Interaction id
+							1057 container
+								1058 text Example :  "3af4a815-6e3d-4c9f-a0b1-7d5e4f6c3b1a"
+					1059 row
+						1060 cell
+							1061 text token
+						1062 cell
+							1063 text string
+						1064 cell
+							1065 text One-off token for the callback (48 hex characters)
+							1066 container
+								1067 text Example :  "9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a3928"
+					1068 row
+						1069 cell
+							1070 text command
+						1071 cell
+							1072 text string
+						1073 cell
+							1074 text The command, without the /
+							1075 container
+								1076 text Example :  "roll"
+					1077 row
+						1078 cell
+							1079 text args
+						1080 cell
+							1081 text string
+						1082 cell
+							1083 text Text after the command, "" for none
+							1084 container
+								1085 text Example :  "2d6"
+					1086 row
+						1087 cell
+							1088 text channel_id
+						1089 cell
+							1090 text string (uuid)
+						1091 cell
+							1092 text Channel id
+							1093 container
+								1094 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					1095 row
+						1096 cell
+							1097 text server_id
+						1098 cell
+							1099 text string (uuid)
+						1100 cell
+							1101 text Server id
+							1102 container
+								1103 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					1104 row
+						1105 cell
+							1106 text user_id
+						1107 cell
+							1108 text string (uuid)
+						1109 cell
+							1110 text Who used it
+							1111 container
+								1112 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					1113 row
+						1114 cell
+							1115 text username
+						1116 cell
+							1117 text string | null
+						1118 cell
+							1119 text Their username
+							1120 container
+								1121 text Example :  "sam"
+					1122 row
+						1123 cell
+							1124 text expires_at
+						1125 cell
+							1126 text string (date-time)
+						1127 cell
+							1128 text Answer before this
+							1129 container
+								1130 text Example :  "2026-11-01T18:30:00.000Z"
+				1131 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					1132 text Example (long poll and gateway)
+				1133 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					1134 text Example (event webhook body)
+			1135 container interaction
+				1136 text EVENT
+				1137 text interaction
+				1138 link Description: Link to this event, Value: yapin.gg/developers/api/events#interaction
+				1139 text Someone clicked one of the bot’s buttons, picked in its select menu or sent its modal. Answer within 15 minutes
+				1140 text Sent to your event webhook as { id, event: "interaction", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_interaction.
+				1141 heading DATA, Value: 4
+					1142 text DATA
+				1143 table
+					1144 row
+						1145 cell
+							1146 text FIELD
+						1147 cell
+							1148 text TYPE
+						1149 cell
+							1150 text DESCRIPTION
+					1151 row
+						1152 cell
+							1153 text id
+						1154 cell
+							1155 text string (uuid)
+						1156 cell
+							1157 text Interaction id
+							1158 container
+								1159 text Example :  "3af4a815-6e3d-4c9f-a0b1-7d5e4f6c3b1a"
+					1160 row
+						1161 cell
+							1162 text token
+						1163 cell
+							1164 text string
+						1165 cell
+							1166 text One-off token for the callback (48 hex characters)
+							1167 container
+								1168 text Example :  "9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a3928"
+					1169 row
+						1170 cell
+							1171 text type
+						1172 cell
+							1173 text "button" | "select" | "modal_submit"
+						1174 cell
+							1175 text button: a click. select: a pick in a select menu (flag bot_selects). modal_submit: a modal sent back (flag bot_modals)
+							1176 container
+								1177 text Example :  "button"
+					1178 row
+						1179 cell
+							1180 text custom_id
+						1181 cell
+							1182 text string
+						1183 cell
+							1184 text The button’s, menu’s or modal’s custom_id
+							1185 container
+								1186 text Example :  "join"
+					1187 row
+						1188 cell
+							1189 text values
+							1190 text optional
+						1191 cell
+							1192 text string[] | { [key]: string | string[] }
+						1193 cell
+							1194 text select and modal_submit only
+					1195 row
+						1196 cell
+							1197 text message_id
+						1198 cell
+							1199 text string (uuid)
+						1200 cell
+							1201 text The clicked message
+							1202 container
+								1203 text Example :  "f7c1d5e2-3b0a-4f6c-9d8e-4a2b1c3f0e87"
+					1204 row
+						1205 cell
+							1206 text channel_id
+						1207 cell
+							1208 text string (uuid)
+						1209 cell
+							1210 text Channel id
+							1211 container
+								1212 text Example :  "c41f8a2b-7e6d-4b3c-9a1e-0f5d2c8b7e43"
+					1213 row
+						1214 cell
+							1215 text server_id
+						1216 cell
+							1217 text string (uuid)
+						1218 cell
+							1219 text Server id
+							1220 container
+								1221 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					1222 row
+						1223 cell
+							1224 text user_id
+						1225 cell
+							1226 text string (uuid)
+						1227 cell
+							1228 text Who clicked, picked or sent it
+							1229 container
+								1230 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					1231 row
+						1232 cell
+							1233 text username
+						1234 cell
+							1235 text string | null
+						1236 cell
+							1237 text Their username
+							1238 container
+								1239 text Example :  "sam"
+					1240 row
+						1241 cell
+							1242 text expires_at
+						1243 cell
+							1244 text string (date-time)
+						1245 cell
+							1246 text Answer before this
+							1247 container
+								1248 text Example :  "2026-11-01T18:30:00.000Z"
+				1249 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					1250 text Example (long poll and gateway)
+				1251 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					1252 text Example (event webhook body)
+			1253 container invite_create
+				1254 text EVENT
+				1255 text invite_create
+				1256 link Description: Link to this event, Value: yapin.gg/developers/api/events#invite_create
+				1257 text Someone made an invite (Manage Server bots)
+				1258 text In testing : 
+				1259 text bot_invite_tracking
+				1260 text In testing (flag bot_invite_tracking). Sent to your event webhook as { id, event: "invite_create", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_invite_create.
+				1261 heading DATA, Value: 4
+					1262 text DATA
+				1263 table
+					1264 row
+						1265 cell
+							1266 text FIELD
+						1267 cell
+							1268 text TYPE
+						1269 cell
+							1270 text DESCRIPTION
+					1271 row
+						1272 cell
+							1273 text server_id
+						1274 cell
+							1275 text string (uuid)
+						1276 cell
+							1277 text Server id
+							1278 container
+								1279 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					1280 row
+						1281 cell
+							1282 text channel_id
+						1283 cell
+							1284 text null
+						1285 cell
+							1286 text Always null
+					1287 row
+						1288 cell
+							1289 text code
+						1290 cell
+							1291 text string
+						1292 cell
+							1293 text Invite code
+							1294 container
+								1295 text Example :  "gamenight"
+					1296 row
+						1297 cell
+							1298 text inviter_id
+						1299 cell
+							1300 text string (uuid)
+						1301 cell
+							1302 text Who made it
+							1303 container
+								1304 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					1305 row
+						1306 cell
+							1307 text uses
+						1308 cell
+							1309 text integer
+						1310 cell
+							1311 text Times used
+							1312 container
+								1313 text Example :  0
+					1314 row
+						1315 cell
+							1316 text max_uses
+						1317 cell
+							1318 text 0
+						1319 cell
+							1320 text Always 0 (no limit)
+							1321 container
+								1322 text Example :  0
+					1323 row
+						1324 cell
+							1325 text expires_at
+						1326 cell
+							1327 text null
+						1328 cell
+							1329 text Always null (no expiry)
+					1330 row
+						1331 cell
+							1332 text vanity
+						1333 cell
+							1334 text boolean
+						1335 cell
+							1336 text The custom link
+							1337 container
+								1338 text Example :  false
+					1339 row
+						1340 cell
+							1341 text created_at
+						1342 cell
+							1343 text string (date-time)
+						1344 cell
+							1345 text When
+							1346 container
+								1347 text Example :  "2026-11-01T18:30:00.000Z"
+				1348 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					1349 text Example (long poll and gateway)
+				1350 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					1351 text Example (event webhook body)
+			1352 container invite_delete
+				1353 text EVENT
+				1354 text invite_delete
+				1355 link Description: Link to this event, Value: yapin.gg/developers/api/events#invite_delete
+				1356 text Someone deleted an invite (Manage Server bots)
+				1357 text In testing : 
+				1358 text bot_invite_tracking
+				1359 text In testing (flag bot_invite_tracking). Sent to your event webhook as { id, event: "invite_delete", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_invite_delete.
+				1360 heading DATA, Value: 4
+					1361 text DATA
+				1362 table
+					1363 row
+						1364 cell
+							1365 text FIELD
+						1366 cell
+							1367 text TYPE
+						1368 cell
+							1369 text DESCRIPTION
+					1370 row
+						1371 cell
+							1372 text server_id
+						1373 cell
+							1374 text string (uuid)
+						1375 cell
+							1376 text Server id
+							1377 container
+								1378 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					1379 row
+						1380 cell
+							1381 text channel_id
+						1382 cell
+							1383 text null
+						1384 cell
+							1385 text Always null
+					1386 row
+						1387 cell
+							1388 text code
+						1389 cell
+							1390 text string
+						1391 cell
+							1392 text Invite code
+							1393 container
+								1394 text Example :  "gamenight"
+					1395 row
+						1396 cell
+							1397 text inviter_id
+						1398 cell
+							1399 text string (uuid)
+						1400 cell
+							1401 text Who made it
+							1402 container
+								1403 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					1404 row
+						1405 cell
+							1406 text uses
+						1407 cell
+							1408 text integer
+						1409 cell
+							1410 text Times used
+							1411 container
+								1412 text Example :  4
+					1413 row
+						1414 cell
+							1415 text max_uses
+						1416 cell
+							1417 text 0
+						1418 cell
+							1419 text Always 0 (no limit)
+							1420 container
+								1421 text Example :  0
+					1422 row
+						1423 cell
+							1424 text expires_at
+						1425 cell
+							1426 text null
+						1427 cell
+							1428 text Always null (no expiry)
+					1429 row
+						1430 cell
+							1431 text vanity
+						1432 cell
+							1433 text boolean
+						1434 cell
+							1435 text The custom link
+							1436 container
+								1437 text Example :  false
+					1438 row
+						1439 cell
+							1440 text created_at
+						1441 cell
+							1442 text string (date-time)
+						1443 cell
+							1444 text When
+							1445 container
+								1446 text Example :  "2026-11-01T18:30:00.000Z"
+				1447 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					1448 text Example (long poll and gateway)
+				1449 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					1450 text Example (event webhook body)
+			1451 container test
+				1452 text EVENT
+				1453 text test
+				1454 link Description: Link to this event, Value: yapin.gg/developers/api/events#test
+				1455 text The “Send test event” button in Settings → Developer
+				1456 text Sent to your event webhook as { id, event: "test", data }, signed in X-Yapper-Signature (sha256 HMAC of the body with your webhook secret). The long poll and the gateway send the same data as components.schemas.Event_test.
+				1457 heading DATA, Value: 4
+					1458 text DATA
+				1459 table
+					1460 row
+						1461 cell
+							1462 text FIELD
+						1463 cell
+							1464 text TYPE
+						1465 cell
+							1466 text DESCRIPTION
+					1467 row
+						1468 cell
+							1469 text bot
+						1470 cell
+							1471 text string
+						1472 cell
+							1473 text Bot name
+							1474 container
+								1475 text Example :  "Quiz Bot"
+					1476 row
+						1477 cell
+							1478 text by
+						1479 cell
+							1480 text string (uuid)
+						1481 cell
+							1482 text Owner who pressed it
+							1483 container
+								1484 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					1485 row
+						1486 cell
+							1487 text at
+						1488 cell
+							1489 text string (date-time)
+						1490 cell
+							1491 text When
+							1492 container
+								1493 text Example :  "2026-11-01T18:30:00.000Z"
+					1494 row
+						1495 cell
+							1496 text hello
+						1497 cell
+							1498 text string
+						1499 cell
+							1500 text A greeting
+							1501 container
+								1502 text Example :  "If you can read this, your bot is wired up."
+					1503 row
+						1504 cell
+							1505 text channel_id
+						1506 cell
+							1507 text null
+						1508 cell
+							1509 text Always null
+					1510 row
+						1511 cell
+							1512 text server_id
+						1513 cell
+							1514 text null
+						1515 cell
+							1516 text Always null
+				1517 button (collapsed) Example (long poll and gateway), Secondary Actions: Expand
+					1518 text Example (long poll and gateway)
+				1519 button (collapsed) Example (event webhook body), Secondary Actions: Expand
+					1520 text Example (event webhook body)
+			1521 link Description: ← Back to Yapin’, Value: yapin.gg/
+			1522 text  · 
+			1523 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		1524 container On this page
+			1525 text ON THIS PAGE
+			1526 content list
+				1527 link Description: Overview, Value: yapin.gg/developers/api/events#top
+				1528 link Description: Getting events, Value: yapin.gg/developers/api/events#delivery
+				1529 link Description: GET /events, Value: yapin.gg/developers/api/events#get-events
+				1530 link Description: message, Value: yapin.gg/developers/api/events#message
+				1531 link Description: dm_message, Value: yapin.gg/developers/api/events#dm_message
+				1532 link Description: member_join, Value: yapin.gg/developers/api/events#member_join
+				1533 link Description: member_leave, Value: yapin.gg/developers/api/events#member_leave
+				1534 link Description: reaction_add, Value: yapin.gg/developers/api/events#reaction_add
+				1535 link Description: reaction_remove, Value: yapin.gg/developers/api/events#reaction_remove
+				1536 link Description: voice_join, Value: yapin.gg/developers/api/events#voice_join
+				1537 link Description: voice_leave, Value: yapin.gg/developers/api/events#voice_leave
+				1538 link Description: command, Value: yapin.gg/developers/api/events#command
+				1539 link Description: interaction, Value: yapin.gg/developers/api/events#interaction
+				1540 link Description: invite_create, Value: yapin.gg/developers/api/events#invite_create
+				1541 link Description: invite_delete, Value: yapin.gg/developers/api/events#invite_delete
+				1542 link Description: test, Value: yapin.gg/developers/api/events#test
+		1543 text Yapin’
+		1544 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		1545 heading PRODUCT, Value: 4
+			1546 text PRODUCT
+		1547 content list
+			1548 link Description: Download, Value: yapin.gg/download
+			1549 link Description: Developers, Value: yapin.gg/developers
+			1550 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			1551 link Description: Creator Program, Value: yapin.gg/creators
+			1552 link Description: FanKit, Value: yapin.gg/fankit
+			1553 link Description: Roadmap, Value: yapin.gg/roadmap
+			1554 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			1555 link Description: Bugs, Value: yapin.gg/bugs
+			1556 link Description: Status, Value: yapin.gg/status
+		1557 heading COMMUNITY, Value: 4
+			1558 text COMMUNITY
+		1559 content list
+			1560 link Description: Guidelines, Value: yapin.gg/guidelines
+			1561 link Description: Tutorials, Value: yapin.gg/tutorials
+			1562 link Description: Bots, Value: yapin.gg/bots
+			1563 link Description: Partners, Value: yapin.gg/partners
+		1564 heading LEGAL, Value: 4
+			1565 text LEGAL
+		1566 content list
+			1567 link Description: Terms, Value: yapin.gg/terms
+			1568 link Description: Privacy, Value: yapin.gg/privacy
+			1569 link Description: Copyright, Value: yapin.gg/copyright
+			1570 link Description: Security, Value: yapin.gg/security
+			1571 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			1572 link Description: Contact, Value: mailto:hello@yapin.gg
+		1573 text © 2026 Yapper Media LLC. Free to use.
+		1574 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Bot events · Bot API reference · Yapin’, URL: yapin.gg/developers/api/events

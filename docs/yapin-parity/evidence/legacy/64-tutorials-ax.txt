@@ -1,0 +1,274 @@
+Window: "Yapin’ tutorials", App: Google Chrome.
+0 standard window Yapin’ tutorials - Google Chrome - Nahian, URL: yapin.gg/tutorials, Secondary Actions: Raise
+	1 container Yapin’ tutorials - Google Chrome - Nahian, URL: yapin.gg/tutorials
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/tutorials, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Yapin’ tutorials, URL: yapin.gg/tutorials
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 container
+									30 text HOW TO
+									31 heading Yapin’ tutorials, Value: 1
+										32 text Yapin’ tutorials
+									33 text Quick videos, under a minute each. Find what you need and hit play.
+								34 search text field (settable) Search tutorials
+								35 heading Your profile, Value: 2
+									36 text Your profile
+								37 container
+									38 container Video player
+										39 container Unable to play media.
+										40 button Play
+										41 container
+											42 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											43 button Play
+											44 text 0:00  /  0:00
+											45 button Mute
+											46 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											47 button Fullscreen
+									48 text Custom colour theme Paint the whole app in your own colours.
+								49 container
+									50 container Video player
+										51 container Unable to play media.
+										52 button Play
+										53 container
+											54 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											55 button Play
+											56 text 0:00  /  0:00
+											57 button Mute
+											58 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											59 button Fullscreen
+									60 text Profile colours Give your profile card a colour or a gradient.
+								61 container
+									62 container Video player
+										63 container Unable to play media.
+										64 button Play
+										65 container
+											66 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											67 button Play
+											68 text 0:00  /  0:00
+											69 button Mute
+											70 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											71 button Fullscreen
+									72 text Avatar decoration Add a frame around your pfp: yours or one an artist made.
+								73 container
+									74 container Video player
+										75 container Unable to play media.
+										76 button Play
+										77 container
+											78 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											79 button Play
+											80 text 0:00  /  0:00
+											81 button Mute
+											82 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											83 button Fullscreen
+									84 text Temporary profile picture Swap your pfp for a while, it changes back by itself.
+								85 container
+									86 container Video player
+										87 container Unable to play media.
+										88 button Play
+										89 container
+											90 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											91 button Play
+											92 text 0:00  /  0:00
+											93 button Mute
+											94 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											95 button Fullscreen
+									96 text Pick your badge Choose which badge shows next to your name.
+								97 heading Your server, Value: 2
+									98 text Your server
+								99 container
+									100 container Video player
+										101 container Unable to play media.
+										102 button Play
+										103 container
+											104 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											105 button Play
+											106 text 0:00  /  0:00
+											107 button Mute
+											108 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											109 button Fullscreen
+									110 text Server theme Give your server its own look.
+								111 container
+									112 container Video player
+										113 container Unable to play media.
+										114 button Play
+										115 container
+											116 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											117 button Play
+											118 text 0:00  /  0:00
+											119 button Mute
+											120 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											121 button Fullscreen
+									122 text Server tag A short tag members can wear next to their name.
+								123 container
+									124 container Video player
+										125 container Unable to play media.
+										126 button Play
+										127 container
+											128 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											129 button Play
+											130 text 0:00  /  0:00
+											131 button Mute
+											132 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											133 button Fullscreen
+									134 text Custom invite link yapin.gg/invite/yourname instead of random letters.
+								135 container
+									136 container Video player
+										137 container Unable to play media.
+										138 button Play
+										139 container
+											140 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											141 button Play
+											142 text 0:00  /  0:00
+											143 button Mute
+											144 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											145 button Fullscreen
+									146 text Import from Discord Bring your channels and roles over in one go.
+								147 container
+									148 container Video player
+										149 container Unable to play media.
+										150 button Play
+										151 container
+											152 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											153 button Play
+											154 text 0:00  /  0:00
+											155 button Mute
+											156 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											157 button Fullscreen
+									158 text Automatic roles Give new members a role the moment they join.
+								159 container
+									160 container Video player
+										161 container Unable to play media.
+										162 button Play
+										163 container
+											164 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											165 button Play
+											166 text 0:00  /  0:00
+											167 button Mute
+											168 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											169 button Fullscreen
+									170 text Channel and category permissions Decide who can see and talk where.
+								171 container
+									172 container Video player
+										173 container Unable to play media.
+										174 button Play
+										175 container
+											176 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											177 button Play
+											178 text 0:00  /  0:00
+											179 button Mute
+											180 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											181 button Fullscreen
+									182 text Raid protection Lock the server fast when a raid hits.
+								183 container
+									184 container Video player
+										185 container Unable to play media.
+										186 button Play
+										187 container
+											188 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											189 button Play
+											190 text 0:00  /  0:00
+											191 button Mute
+											192 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											193 button Fullscreen
+									194 text Server folders Group your servers in the sidebar.
+								195 container
+									196 container Video player
+										197 container Unable to play media.
+										198 button Play
+										199 container
+											200 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											201 button Play
+											202 text 0:00  /  0:00
+											203 button Mute
+											204 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											205 button Fullscreen
+									206 text Built-in bots Bots that come with Yapin’, nothing to host.
+								207 container
+									208 container Video player
+										209 container Unable to play media.
+										210 button Play
+										211 container
+											212 slider Seek, Value: 0, Details: 0:00 of 0:00, Secondary Actions: Increment, Decrement
+											213 button Play
+											214 text 0:00  /  0:00
+											215 button Mute
+											216 slider Volume, Value: 1, Secondary Actions: Increment, Decrement
+											217 button Fullscreen
+									218 text Reaction roles Let people pick roles by reacting to a message.
+								219 link ← Back to Yapin’, Value: yapin.gg/
+							220 text Yapin’
+							221 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							222 heading Product, Value: 4
+								223 text Product
+							224 content list
+								225 link Download, Value: yapin.gg/download
+								226 link Developers, Value: yapin.gg/developers
+								227 link Yapin’ Plus, Value: yapin.gg/plus
+								228 link Creator Program, Value: yapin.gg/creators
+								229 link Roadmap, Value: yapin.gg/roadmap
+								230 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								231 link Bugs, Value: yapin.gg/bugs
+								232 link Status, Value: yapin.gg/status
+							233 heading Community, Value: 4
+								234 text Community
+							235 content list
+								236 link Guidelines, Value: yapin.gg/guidelines
+								237 link Tutorials, Value: yapin.gg/tutorials
+								238 link Bots, Value: yapin.gg/bots
+							239 heading Legal, Value: 4
+								240 text Legal
+							241 content list
+								242 link Terms, Value: yapin.gg/terms
+								243 link Privacy, Value: yapin.gg/privacy
+								244 link Copyright, Value: yapin.gg/copyright
+								245 link Cancel a subscription, Value: yapin.gg/cancel
+								246 link Contact, Value: mailto:[email redacted]
+							247 text © 2026 Yapper Media LLC. Free to use.
+			248 container
+				249 tab group
+					250 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						251 button Close
+					252 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						253 button Close
+					254 tab (selected, settable, boolean) Yapin’ tutorials - Memory usage - 379 MB, Value: on
+						255 button Close
+			256 button New Tab
+	257 close button
+	258 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	259 minimize button
+260 menu bar
+	261 Chrome
+	262 File
+	263 Edit
+	264 View
+	265 History
+	266 Bookmarks
+	267 Profiles
+	268 Tab
+	269 Window
+	270 Help
+
+The focused UI element is 19 HTML content Yapin’ tutorials, URL: yapin.gg/tutorials

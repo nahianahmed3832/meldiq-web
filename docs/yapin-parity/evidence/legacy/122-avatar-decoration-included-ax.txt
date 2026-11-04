@@ -1,0 +1,111 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Change avatar decoration
+							21 heading Change avatar decoration, Value: 2
+								22 text Change avatar decoration
+							23 container Decoration set
+								24 toggle button Included, Value: 1
+								25 toggle button Community, Value: 0
+							26 button Make a decoration
+							27 container
+								28 container Show
+									29 toggle button All, Value: 1
+									30 toggle button ★ Favorites, Value: 0
+									31 toggle button Pictures, Value: 0
+									32 toggle button Effects, Value: 0
+								33 toggle button None ✓, Value: 1
+									34 text None
+									35 text ✓
+								36 toggle button Flames, Value: 0
+								37 toggle button Favorite Flames, Help: Add to favorites, Value: 0
+								38 toggle button Crown, Value: 0
+								39 toggle button Favorite Crown, Help: Add to favorites, Value: 0
+								40 toggle button Halo, Value: 0
+								41 toggle button Favorite Halo, Help: Add to favorites, Value: 0
+								42 toggle button Horns, Value: 0
+								43 toggle button Favorite Horns, Help: Add to favorites, Value: 0
+								44 toggle button Cat ears, Value: 0
+								45 toggle button Favorite Cat ears, Help: Add to favorites, Value: 0
+								46 toggle button Wings, Value: 0
+								47 toggle button Favorite Wings, Help: Add to favorites, Value: 0
+								48 toggle button Headphones, Value: 0
+								49 toggle button Favorite Headphones, Help: Add to favorites, Value: 0
+								50 toggle button Laurel, Value: 0
+								51 toggle button Favorite Laurel, Help: Add to favorites, Value: 0
+								52 toggle button Snow, Value: 0
+								53 toggle button Favorite Snow, Help: Add to favorites, Value: 0
+								54 toggle button Hearts, Value: 0
+								55 toggle button Favorite Hearts, Help: Add to favorites, Value: 0
+								56 toggle button Stars, Value: 0
+								57 toggle button Favorite Stars, Help: Add to favorites, Value: 0
+								58 toggle button Lightning, Value: 0
+								59 toggle button Favorite Lightning, Help: Add to favorites, Value: 0
+								60 toggle button Glow, Help: A soft pulse in your accent colour, Value: 0
+								61 toggle button Favorite Glow, Help: Add to favorites, Value: 0
+								62 toggle button Rainbow, Help: A slowly spinning rainbow ring, Value: 0
+								63 toggle button Favorite Rainbow, Help: Add to favorites, Value: 0
+								64 toggle button Fire, Help: Flickering orange and red, Value: 0
+								65 toggle button Favorite Fire, Help: Add to favorites, Value: 0
+								66 toggle button Ice, Help: Cool blue shimmer, Value: 0
+								67 toggle button Favorite Ice, Help: Add to favorites, Value: 0
+								68 toggle button Gold, Help: Shiny gold ring, Value: 0
+								69 toggle button Favorite Gold, Help: Add to favorites, Value: 0
+								70 toggle button Sparkle, Help: Little twinkles around you, Value: 0
+								71 toggle button Favorite Sparkle, Help: Add to favorites, Value: 0
+								72 toggle button Galaxy, Help: A slow purple swirl with stars, Value: 0
+								73 toggle button Favorite Galaxy, Help: Add to favorites, Value: 0
+								74 toggle button Neon, Help: Cyan and magenta, humming, Value: 0
+								75 toggle button Favorite Neon, Help: Add to favorites, Value: 0
+								76 toggle button Heartbeat, Help: Pink, with hearts floating up, Value: 0
+								77 toggle button Favorite Heartbeat, Help: Add to favorites, Value: 0
+								78 toggle button Toxic, Help: Radioactive green, Value: 0
+								79 toggle button Favorite Toxic, Help: Add to favorites, Value: 0
+							80 container
+								81 text NO DECORATION
+								82 text None
+							83 button Cancel
+							84 button (disabled) Apply
+			85 container
+				86 tab group
+					87 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						88 button Close
+					89 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 219 MB, Value: on
+						90 button Close
+					91 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						92 button Close
+			93 button New Tab
+	94 close button
+	95 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	96 minimize button
+97 menu bar
+	98 Chrome
+	99 File
+	100 Edit
+	101 View
+	102 History
+	103 Bookmarks
+	104 Profiles
+	105 Tab
+	106 Window
+	107 Help
+
+The focused UI element is 24 toggle button Included, Value: 1

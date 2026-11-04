@@ -1,0 +1,73 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container Edit channel
+							21 heading Edit channel, Value: 2
+								22 text Edit channel
+							23 tab group
+								24 tab (selected) Overview, Value: 1
+								25 tab (settable, integer) Permissions, Value: 0
+								26 tab (settable, integer) Webhooks, Value: 0
+							27 text CHANNEL NAME
+							28 text field (settable) CHANNEL NAME, Value: general
+							29 container
+								30 text Private Channel
+								31 image Private channel
+								32 text Only the roles you pick (plus the owner and server managers) can see and use it.
+								33 checkbox Value: 0, Private Channel Private channel Only the roles you pick (plus the owner and server managers) can see and use it.
+							34 container
+								35 text Text only No pictures, files or GIFs in this channel, except from managers and mods. Keep an images channel next to it.
+								36 checkbox Value: 0, Text only No pictures, files or GIFs in this channel, except from managers and mods. Keep an images channel next to it.
+							37 container
+								38 text No GIFs GIFs from the picker and GIF links are refused here. Pictures still work. People with Manage Messages are excepted.
+								39 checkbox Value: 0, No GIFs GIFs from the picker and GIF links are refused here. Pictures still work. People with Manage Messages are excepted.
+							40 container
+								41 text Read-only
+								42 image
+								43 text Everyone can read and react, but only the roles you pick (plus managers) can post. Great for #announcements.
+								44 checkbox Value: 0, Read-only Everyone can read and react, but only the roles you pick (plus managers) can post. Great for #announcements.
+							45 text Slowmode
+							46 text How long people wait between messages. Moderators aren't affected.
+							47 combo box (settable) Slowmode, Value: Off
+								48 text Off
+							49 button Cancel
+							50 button Save
+			51 container
+				52 tab group
+					53 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 204 MB, Value: on
+						54 button Close
+			55 button New Tab
+	56 close button
+	57 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	58 minimize button
+59 menu bar
+	60 Chrome
+	61 File
+	62 Edit
+	63 View
+	64 History
+	65 Bookmarks
+	66 Profiles
+	67 Tab
+	68 Window
+	69 Help
+
+The focused UI element is 28 text field (settable) CHANNEL NAME, Value: general

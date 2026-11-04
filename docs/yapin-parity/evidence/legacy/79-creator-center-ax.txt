@@ -1,0 +1,271 @@
+Window: "Creator Center · Yapin’", App: Google Chrome.
+0 standard window Creator Center · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/creator, Secondary Actions: Raise
+	1 container Creator Center · Yapin’ - Google Chrome - Nahian, URL: yapin.gg/creator
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg/creator, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content Creator Center · Yapin’, URL: yapin.gg/creator
+						20 container
+							21 container Main
+								22 link Yapin’, Value: yapin.gg/
+								23 content list
+									24 link Download, Value: yapin.gg/download
+									25 link Developers, Value: yapin.gg/developers
+									26 link Plus, Value: yapin.gg/plus
+								27 link Open Yapin’, Value: yapin.gg/
+							28 container
+								29 text CREATOR CENTER
+								30 heading Make Yapin’ content. Earn Plus and badges., Value: 1
+									31 text Make Yapin’ content. Earn Plus and badges.
+								32 text Make videos or posts about Yapin’, send them in, get Plus and badges. Join and send things in right here. Only for content about Yapin’. The video, short, stream or post has to be about Yapin’ or really use it. Other content, and applications with nothing to do with Yapin’, get turned down, and faking it can cost you your verified badge.
+								33 link Join the program, Value: yapin.gg/creator#status
+							34 container
+								35 text HOW IT WORKS
+								36 heading Three steps., Value: 2
+									37 text Three steps.
+								38 text 1
+								39 text Verify your channel
+								40 text YouTube, TikTok, Twitch, Instagram or X. 1,000+ followers. So we know the channel is yours.
+								41 text 2
+								42 text Apply
+								43 text One button and your follower count. We look at your channel and answer within a day or two.
+								44 text 3
+								45 text Post about Yapin’, send it in
+								46 text Paste the link. We read the title and the views ourselves. Each piece pays Plus, your total earns badges, and your invite link pays on top.
+								47 text YOUR STATUS
+								48 heading Join in two steps, Value: 2
+									49 text Join in two steps
+								50 content list
+									51 container
+										52 text 1 Verify your channel YouTube, TikTok, Twitch, Instagram or X, with 1,000+ followers. So we know it’s yours. Are you a YouTuber, streamer or creator? Get a badge so nobody can impersonate you. We need a link to your channel, a screenshot with your follower count, and a line in your channel bio that points back here. First, put this in your channel bio or description
+										53 container
+											54 text yapin:  nahian
+										55 button Copy
+										56 text That's how we know the channel is really yours. Anyone can copy a profile picture and a name, but only the owner can edit the bio. Leave it there until you get the badge. Applications without it are rejected. To qualify you need 1,000+ followers or subscribers on the platform you're applying with. Your proof screenshot must show the follower count. Smaller channels are rejected, so apply once you're there. Your Yapin’ name has to match the channel. Set your username or display name to the same name as your social media account before applying. Applications under a different name are rejected. Once you're verified you can change your display name whenever you want, but a new username that doesn't match removes the badge. PLATFORM
+										57 combo box (settable) PLATFORM, Value: YouTube
+											58 text YouTube
+										59 text CHANNEL / ACCOUNT NAME
+										60 text field (settable) CHANNEL / ACCOUNT NAME, Placeholder: e.g. Antic983 (without the @)
+										61 text LINK TO IT
+										62 text field (settable) LINK TO IT, Placeholder: https://youtube.com/@…
+										63 text ANYTHING ELSE WE SHOULD KNOW
+										64 text entry area (settable) ANYTHING ELSE WE SHOULD KNOW, Placeholder: Optional
+										65 text PROOF SCREENSHOT (MUST SHOW YOUR FOLLOWER COUNT) Add screenshot
+										66 button Add screenshot: No file chosen
+										67 text “yapin: nahian” is in my channel bio
+										68 text We open your channel and check before approving.
+										69 checkbox “yapin: nahian” is in my channel bio We open your channel and check before approving., Value: 0
+										70 button (disabled) Apply for verification
+									71 container
+										72 text 2 Apply Your follower count, one button. We check the channel you verified. No videos yet: those come after you’re in.
+								73 text Approved: the Creator badge, and this page turns into your dashboard. Plus comes from your content and your invite link.
+								74 text REWARDS
+								75 heading What you get., Value: 2
+									76 text What you get.
+								77 text WHEN YOU JOIN
+								78 content list
+									79 text The Creator badge
+									80 text Your own invite link
+									81 container
+										82 text Approved as Pro: 3 months of Plus
+									83 container
+										84 text Approved as Elite: 6 months of Plus
+								85 text FOR EVERY VIDEO YOU SEND IN
+								86 content list
+									87 container
+										88 text 10K views 1 month of Plus
+									89 container
+										90 text 50K views 2 months of Plus
+									91 container
+										92 text 200K views 4 months of Plus
+									93 container
+										94 text 1M views 8 months of Plus
+								95 text Shorts, TikToks and Reels: 25K / 125K / 500K / 2.5M views.
+								96 container
+									97 text AS YOUR TOTAL VIEWS GROW
+									98 button How badges work
+								99 content list
+									100 container
+										101 text 100k Pro Creator badge
+									102 container
+										103 text 500k Elite Creator badge + Partner badge
+								104 text Video views. Shorts, TikToks and Reels need 5×: 500K / 2.5M short views. A mix adds up. Badges only move up.
+								105 text Views count at the moment we check the piece. Plus stacks on what you already have.
+								106 text Top creators
+								107 heading Who’s making the most noise., Value: 2
+									108 text Who’s making the most noise.
+								109 content list
+									110 container
+										111 text 1 Antic 165K  views  ·  1 piece
+									112 container
+										113 text 2 thi 100K  views  ·  1 piece
+									114 container
+										115 text 3 B-Rice 68K  views  ·  2 pieces
+									116 container
+										117 text 4 Zyfanity 66K  views  ·  1 piece
+									118 container
+										119 text 5 ItzLupicoX 30K  views  ·  3 pieces
+									120 container
+										121 text 6 Kiasack 2K  views  ·  1 piece
+									122 container
+										123 text 7 Mako ⌤ 2K  views  ·  1 piece
+									124 container
+										125 text 8 BE4OR 1K  views  ·  2 pieces
+									126 container
+										127 text 9 Yuta 926  views  ·  1 piece
+									128 container
+										129 text 10 FrvityLoopzXD 823  views  ·  2 pieces
+								130 text Creator kit
+								131 heading Everything you need to make something., Value: 2
+									132 text Everything you need to make something.
+								133 heading  Ideas that do well, Value: 2
+									134 text Ideas that do well
+								135 content list
+									136 text “Discord sucks now, so I switched to Yapin’”
+									137 text “Discord finally has competition”
+									138 text “Why everyone’s leaving Discord”
+									139 text “I tried the app that wants to replace Discord”
+									140 text “I moved my whole Discord server in 1 minute”
+									141 text “Discord vs Yapin’: which one actually wins?”
+									142 text Short: “Stop paying $10 for Nitro”
+									143 text Short: “This Discord alternative is actually good”
+								144 heading  Logos, Value: 2
+									145 text Logos
+								146 link Logo Logo Wordmark, on light, Value: yapin.gg/brand/yapin-logo.svg
+								147 link Logo (white) Logo (white) Wordmark, on dark, Value: yapin.gg/brand/yapin-logo-white.svg
+								148 link Mark Mark The bear, for overlays, Value: yapin.gg/brand/yapper-mark.svg
+								149 link App icon App icon Rounded tile, Value: yapin.gg/brand/yapper-app-icon.svg
+								150 text Use them in thumbnails, overlays and intros. Don’t pass your channel off as an official Yapin’ one.
+								151 heading  The short version of Yapin’, Value: 2
+									152 text The short version of Yapin’
+								153 content list
+									154 text A Discord-like chat app that’s free to run a community on: servers, voice, screen share, bots, no paywall on the basics.
+									155 text Plus is $4.99 a month, not $10: bigger uploads, 1080p60 screen share, long messages, name styles.
+									156 text Import a Discord server in a minute: channels, categories, roles, emojis come along.
+									157 text Your own bots run on Yapin’ for free. Bot hosting, Components, a public bot directory.
+									158 text Small team, fast: features people ask for ship in days. Say what your audience wants in Yapin’ HQ.
+								159 text Program terms
+								160 heading The rules, in plain words., Value: 2
+									161 text The rules, in plain words.
+								162 content list
+									163 text You need a verified, public channel with 1,000+ followers or subscribers that has posted in the last 60 days. Private accounts and channels that stopped posting are turned down. Verification is in Settings or right here.
+									164 text Stay active: send in at least one piece about Yapin’ every 30 days. 30 days with nothing sent in (counted from the day you were approved, or your last piece) and you’re out of the program. You can apply again, and Plus you already got stays.
+									165 text This program is only for content about Yapin’. Content counts when Yapin’ is the subject of it or a real part of it: a video about Yapin’, a short showing it, a stream where you use it, a post that talks about it. A link in a bio, a passing mention or a comment doesn’t count.
+									166 text It has to be yours, published on the channel you verified with. Reuploads, other people’s content, bought views or botted numbers get you removed from the program.
+									167 text A false application or a false claim about a piece (a video that isn’t about Yapin’, made-up views, a channel that isn’t yours) can also take away your verified badge, not just the program.
+									168 text Rewards go by the views a piece has when we look at it. You tell us the number, we open the link and check. If what we see is different, what we see counts.
+									169 text Each video counts once, for one person, however the link is written. You can have 3 pieces waiting at a time. Pieces under the first step of the ladder are approved and count toward your badge, but don’t pay Plus.
+									170 text A YouTube Short is short-form even if you paste it as a normal watch link. We check.
+									171 text Plus from the program stacks on top of any Plus you already have. It isn’t paid out in money and can’t be moved to another account.
+									172 text Badges move up on their own as your approved views grow: Pro Creator at 100k video views or 500k short views, Elite Creator at 500k or 2.5M, and a mix of both adds up. They don’t move down. Breaking the Community Guidelines or these rules can cost you the badge and the program; Plus you already got stays until it runs out.
+									173 text We may change the ladder and the thresholds. Changes apply to pieces sent in after the change, never to ones already approved.
+									174 text Your invite link counts the accounts made through it. A sign-up counts once the account is 7 days old and was active on 3 days. Each one that counts pays 10 Shards. Accounts on your own device or network don’t count, and making or buying accounts ends the program for you.
+									175 container
+										176 text Review takes a day or two. You see the result on this page, in Settings, Creator Program, and as a ping in the app. Questions:  [email redacted]  or Yapin’ HQ.
+								177 text These sit on top of the 
+								178 link Terms of Service, Value: yapin.gg/terms
+								179 text  and the 
+								180 link Community Guidelines, Value: yapin.gg/guidelines
+								181 text .
+								182 heading Questions, Value: 2
+									183 text Questions
+								184 content list
+									185 container
+										186 heading What if I’m on two platforms?, Value: 3
+											187 button What if I’m on two platforms?
+										188 text Verify with the bigger one. Content from any platform counts once you’re in, as long as it’s really yours; the short-form or long-form scale follows the link.
+									189 container
+										190 heading Why do shorts need more views?, Value: 3
+											191 button Why do shorts need more views?
+										192 text A TikTok or Shorts view is a few seconds, a video view is minutes. For Plus a short needs 2.5× the views of a video (25k vs 10k for the first month). For badges it is 5×: Pro Creator is 100k video views or 500k short views, and a mix adds up.
+									193 container
+										194 heading Do views keep counting after approval?, Value: 3
+											195 button Do views keep counting after approval?
+										196 text No. What the piece has when we approve it is what it pays. Send pieces in once they’ve had a few days to grow.
+									197 container
+										198 heading Can I lose my badge?, Value: 3
+											199 button Can I lose my badge?
+										200 text Only by breaking the rules above. Growing slower doesn’t move you down.
+									201 container
+										202 heading How long does review take?, Value: 3
+											203 button How long does review take?
+										204 text Usually a day or two. The result shows here, in Settings, and the app pings you the next time you open it.
+									205 container
+										206 heading Where do I put the invite link?, Value: 3
+											207 button Where do I put the invite link?
+										208 text In the video description, your bio, a pinned comment, your Discord. Anyone who makes an account within 30 days of clicking it is yours. Your link stays the same if you change your username.
+									209 container
+										210 heading Why does an invite take a week to count?, Value: 3
+											211 button Why does an invite take a week to count?
+										212 text So we only pay for real people. Once the account is 7 days old and was active on 3 days, it counts. Open this page and the numbers update.
+									213 container
+										214 heading Can I use the Yapin’ logo?, Value: 3
+											215 button Can I use the Yapin’ logo?
+										216 text Yes, that’s what the kit below is for. Thumbnails, overlays, intros: go for it. Just don’t make it look like an official Yapin’ account.
+							217 text Yapin’
+							218 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							219 heading Product, Value: 4
+								220 text Product
+							221 content list
+								222 link Download, Value: yapin.gg/download
+								223 link Developers, Value: yapin.gg/developers
+								224 link Yapin’ Plus, Value: yapin.gg/plus
+								225 link Creator Program, Value: yapin.gg/creators
+								226 link Roadmap, Value: yapin.gg/roadmap
+								227 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								228 link Bugs, Value: yapin.gg/bugs
+								229 link Status, Value: yapin.gg/status
+							230 heading Community, Value: 4
+								231 text Community
+							232 content list
+								233 link Guidelines, Value: yapin.gg/guidelines
+								234 link Tutorials, Value: yapin.gg/tutorials
+								235 link Bots, Value: yapin.gg/bots
+							236 heading Legal, Value: 4
+								237 text Legal
+							238 content list
+								239 link Terms, Value: yapin.gg/terms
+								240 link Privacy, Value: yapin.gg/privacy
+								241 link Copyright, Value: yapin.gg/copyright
+								242 link Cancel a subscription, Value: yapin.gg/cancel
+								243 link Contact, Value: mailto:[email redacted]
+							244 text © 2026 Yapper Media LLC. Free to use.
+			245 container
+				246 tab group
+					247 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						248 button Close
+					249 tab (settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: off
+						250 button Close
+					251 tab (selected, settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: on
+						252 button Close
+			253 button New Tab
+	254 close button
+	255 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	256 minimize button
+257 menu bar
+	258 Chrome
+	259 File
+	260 Edit
+	261 View
+	262 History
+	263 Bookmarks
+	264 Profiles
+	265 Tab
+	266 Window
+	267 Help
+
+The focused UI element is 19 HTML content Creator Center · Yapin’, URL: yapin.gg/creator

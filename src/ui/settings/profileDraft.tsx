@@ -1,5 +1,7 @@
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import type { ProfileStyle } from "../../api/schemas";
+import type { ProfileLayout } from "../../api/profileSchemas";
+import type { ProfileLink } from "../../sync/profile";
 
 /** What the profile preview shows while you edit: the typed fields and the style picks not yet back from the server. */
 export interface ProfileDraft {
@@ -8,6 +10,8 @@ export interface ProfileDraft {
   pronouns: string;
   aboutMe: string;
   style: ProfileStyle | null;
+  links: ProfileLink[];
+  layout?: ProfileLayout | null;
 }
 
 interface ProfileDraftValue {
@@ -15,7 +19,7 @@ interface ProfileDraftValue {
   update: (change: Partial<ProfileDraft>) => void;
 }
 
-const EMPTY: ProfileDraft = { displayName: "", username: "", pronouns: "", aboutMe: "", style: null };
+const EMPTY: ProfileDraft = { displayName: "", username: "", pronouns: "", aboutMe: "", style: null, links: [] };
 
 const Ctx = createContext<ProfileDraftValue | null>(null);
 

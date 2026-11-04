@@ -1,0 +1,90 @@
+Window: "Yapin’", App: Google Chrome.
+0 standard window Yapin’ - Google Chrome (Incognito), URL: yapin.gg/, Secondary Actions: Raise
+	1 container Yapin’ - Google Chrome (Incognito), URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Third-party cookies blocked
+					11 button Bookmark this tab
+				12 button Incognito
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+			15 container
+				16 scroll area
+					17 HTML content Yapin’, URL: yapin.gg/
+						18 container
+							19 container
+								20 pop up button English, Help: Language
+								21 button Switch to light mode, Help: Light mode
+							22 container
+								23 button ‹ Back
+								24 text Yapin’
+								25 heading Create an account, Value: 1
+									26 text Create an account
+								27 text It’s free. Like, actually free.
+								28 container “使用 Google 账号登录”按钮
+									29 HTML content Sign In - Google Accounts, URL: accounts.google.com/gsi/button?[query redacted]
+										30 button Sign up with Google. Opens in new tab
+								31 text OR EMAIL
+								32 email (settable) EMAIL
+								33 text USERNAME
+								34 text field (settable) USERNAME
+								35 text PASSWORD
+								36 secure text field (settable) PASSWORD
+								37 button Show password
+								38 text BIRTHDAY
+								39 combo box (settable) Birth month, Value: Month
+									40 text Month
+								41 combo box (settable) Birth year, Value: Year
+									42 text Year
+								43 text We don’t save this, it’s just a check.
+								44 checkbox I agree to the Terms of Service and Privacy Policy., Value: 0
+								45 text I agree to the 
+								46 link Terms of Service, Value: yapin.gg/terms
+								47 text  and 
+								48 link Privacy Policy, Value: yapin.gg/privacy
+								49 text . Emails can take a few minutes. Check spam too, and don't sign up twice.
+								50 container Widget containing a Cloudflare security challenge
+									51 HTML content Checking your Browser…, URL: challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/av0/rch/d5e4j/0x4AAAAAAFWfX7_m-mPSuire/auto/fbE/new/flexible?lang=auto
+										52 container
+											53 checkbox Verify you are human, Value: 0
+											54 link Cloudflare, opens in a new tab, Value: cloudflare.com/products/turnstile/?utm_source=turnstile&utm_campaign=widget
+											55 link Privacy, opens in a new tab, Value: cloudflare.com/privacypolicy/
+											56 text •
+											57 link Help, opens in a new tab, Value: challenges.cloudflare.com/cdn-cgi/challenge-platform/help
+								58 button Sign up
+								59 text Already yapping? 
+								60 button Log in
+								61 link Terms, Value: yapin.gg/terms
+								62 text  · 
+								63 link Privacy, Value: yapin.gg/privacy
+								64 text  ·
+								65 link Guidelines, Value: yapin.gg/guidelines
+								66 text  ·
+								67 link Bugs, Value: yapin.gg/bugs
+			68 container
+				69 tab group
+					70 tab (selected, settable, boolean) Yapin’ - Memory usage - 366 MB, Value: on
+						71 button Close
+			72 button New Tab
+	73 close button
+	74 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	75 minimize button
+76 menu bar
+	77 Chrome
+	78 File
+	79 Edit
+	80 View
+	81 History
+	82 Bookmarks
+	83 Profiles
+	84 Tab
+	85 Window
+	86 Help
+
+The focused UI element is 60 button Log in

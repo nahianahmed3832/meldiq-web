@@ -1,3 +1,4 @@
+import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import path from "node:path";
 import fs from "node:fs";
@@ -19,7 +20,8 @@ test("authenticator sign-in unlocks the real encrypted backup without another em
   await page.getByRole("button", { name: "Create an account" }).click();
   await page.getByLabel("Your name").fill("Linear Sign In");
   await page.getByLabel("Email", { exact: true }).fill(email);
-  await page.getByLabel("Password").fill(password);
+  await page.getByLabel("Password", { exact: true }).fill(password);
+  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
   await page.getByRole("button", { name: "Create account" }).click();
   await page.getByRole("heading", { name: "Check your email" }).waitFor();
   await page.getByLabel("Code").fill(await emailedCode(email, "verify"));
@@ -27,6 +29,7 @@ test("authenticator sign-in unlocks the real encrypted backup without another em
   await page.getByRole("button", { name: "Set up encryption", exact: true }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+  await finishWelcome(page);
   await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
   // The real API enables TOTP and the browser's automatic password-encrypted backup remains untouched.
   const headers = { "content-type": "application/json", "x-orbit-test-ip": testAddress() };

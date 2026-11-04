@@ -54,5 +54,15 @@
     "android": "Get Meldiq for Android",
     "title": "Meldiq invitation",
     "hint": "Not signed in yet? Sign in or create an account first: you''ll come back to this community."
+  },
+  "foundation": {
+    "welcomeBody": "A few details make this space yours. You can change them in Settings.",
+    "profileBody": "Choose how people see you. Your email stays private.",
+    "preferencesBody": "Choose a comfortable look and your language.",
+    "startBody": "Find your people, join a community, or make one of your own.",
+    "ready": "Your space is ready.",
+    "finish": "Start exploring",
+    "onDevice": "Appearance choices apply to this browser.",
+    "permissions": "Meldiq asks for microphone, camera, or notification permission when you use a feature that needs it."
   }
 }

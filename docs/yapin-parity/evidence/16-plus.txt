@@ -1,0 +1,171 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Yapin’ Plus, Value: 2
+			189 text Yapin’ Plus
+		177 container
+			190 text YAPIN’ PLUS More room. More reach.
+			191 text More Yapin’. Everything you need to chat is free. Plus is the big files, the sharp streams, the lounge and the badge. $4.99 /month Cancel any time
+			178 button Get Plus for $4.99/month
+		179 button Gift Plus to someone
+		180 heading What you get, Value: 3
+			192 text What you get
+		193 container
+			194 text 100 MB uploads Full clips, big GIFs, whole albums. Free is 10 MB.
+		195 container
+			196 text 1080p 60 fps screen share Crisp, smooth streams for everyone watching. Free is 720p 30 fps.
+		197 container
+			198 text 1 free supercharge Boost any server you love: more emoji slots, bigger uploads and better voice for everyone there.
+		199 container
+			200 text Plus badge A Plus tag next to your name that shows you keep the lights on. Hide it any time.
+		201 container
+			202 text 4000 character messages Twice the room for long stories, patch notes or a whole recipe. Edits too.
+		203 container
+			204 text The Plus lounge in Yapin’ HQ A pink Plus role and #plus-chat in Yapin’ HQ, where staff hang out and early looks drop first.
+		205 container
+			206 text 10 bots, reviewed first Up to 10 bots instead of 2, and directory reviews skip the queue.
+		207 container
+			208 text Post media anywhere in HQ Pics, videos and clips in any Yapin’ HQ channel, not just #media.
+		209 container
+			210 text Priority verification Your creator verification gets reviewed first. Same rules, just faster.
+		211 container
+			212 text Polls in Yapin’ HQ Start polls in HQ without being verified.
+		213 table
+			214 row
+				215 cell
+					216 text PERK
+				217 cell
+					218 text FREE
+				219 cell
+					220 text PLUS
+			221 row
+				222 cell
+					223 text 100 MB uploads
+				224 cell
+					225 text 10 MB
+				226 cell
+					227 text 100 MB
+			228 row
+				229 cell
+					230 text 1080p 60 fps screen share
+				231 cell
+					232 text 720p 30 fps
+				233 cell
+					234 text 1080p 60 fps
+			235 row
+				236 cell
+					237 text 1 free supercharge
+				238 cell
+					239 text Paid
+				240 cell
+					241 text 1 included
+			242 row
+				243 cell
+					244 text Plus badge
+				245 cell
+					246 text No badge
+				247 cell
+					248 text Yes, hide it any time
+			249 row
+				250 cell
+					251 text 4000 character messages
+				252 cell
+					253 text 2000
+				254 cell
+					255 text 4000
+			256 row
+				257 cell
+					258 text The Plus lounge in Yapin’ HQ
+				259 cell
+					260 text No
+				261 cell
+					262 text Plus role and #plus-chat
+			263 row
+				264 cell
+					265 text 10 bots, reviewed first
+				266 cell
+					267 text 2 bots
+				268 cell
+					269 text 10 bots
+			270 row
+				271 cell
+					272 text Post media anywhere in HQ
+				273 cell
+					274 text #media only
+				275 cell
+					276 text Any channel
+			277 row
+				278 cell
+					279 text Priority verification
+				280 cell
+					281 text Normal queue
+				282 cell
+					283 text First in line
+			284 row
+				285 cell
+					286 text Polls in Yapin’ HQ
+				287 cell
+					288 text Verified only
+				289 cell
+					290 text Yes
+			291 row
+				292 cell
+					293 text Price
+				294 cell
+					295 text $0
+				296 cell
+					297 text $4.99/month
+		181 text Why charge for anything?
+		298 text Yapin’ has no investors, so servers, storage and voice come out of our own pocket. Emojis, animated avatars, themes, voice, screen share and polls are free and stay free. Plus pays for the stuff that costs us more as you use it, like big files and sharp streams.
+		299 text Still free for everyone: Animated avatars and emojis, decorations and profile effects, your emojis in every server, themes, voice, screen share, polls, video uploads, verification, unlimited servers.
+		182 container Plus badges
+			183 heading Your badge levels up, Value: 3
+				300 text Your badge levels up
+			301 text Stay subscribed and your PLUS badge grows with you
+			302 progress indicator Description: Plus streak, Value: 0
+			303 container
+				304 text PLUS Bronze 1 month in a row After 1 month
+			305 container
+				306 text PLUS Silver 3 months in a row After 3 months
+			307 container
+				308 text PLUS Gold 6 months in a row After 6 months
+			309 container
+				310 text PLUS Frost 1 year in a row After 1 year
+			311 container
+				312 text PLUS Ruby 2 years in a row After 2 years
+			313 container
+				314 text PLUS Emerald 3 years in a row After 3 years
+			315 container
+				316 text PLUS Amethyst 5 years in a row After 5 years
+		184 button Get Plus for $4.99/month
+		185 container
+			317 text Renews every month at $4.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+			186 link yapin.gg/cancel
+			318 text .
+		187 container plus-gift
+			319 text Gift Plus to someone
+			320 text One payment, straight onto their account, with a note that it came from you. 1 month, 3 months or a year.
+			188 button Gift
+		174 button Close
+			175 image
+
+The focused UI element is 25 button Yapin’ Plus

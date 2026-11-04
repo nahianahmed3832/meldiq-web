@@ -1,0 +1,173 @@
+Browser tab: 2, Title: "Yapin’ Plus · Yapin’", URL: "https://www.yapin.gg/plus".
+1 AXWebArea Yapin’ Plus · Yapin’, URL: yapin.gg/plus
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text YAPIN’ PLUS
+			14 heading More room. More reach. More Yapin’., Value: 1
+				15 text More room.
+				16 text More reach.
+				17 text More Yapin’.
+			18 text Yapin’ is free and stays free. Plus is for the people who want the big files, the sharp streams, the lounge and the badge, and who like keeping Yapin’ running. $4.99 /month Cancel any time. No tiers, no add-ons, one price.
+			19 button (disabled) Loading…
+			20 link Description: Gift Plus to a friend, Value: yapin.gg/plus#gift
+		21 container
+			22 container perks
+				23 text WHAT YOU GET
+				24 heading Every perk, nothing hidden., Value: 2
+					25 text Every perk, nothing hidden.
+				26 container
+					27 text 100 MB uploads Full clips, big GIFs, whole albums. Free is 10 MB.
+				28 container
+					29 text 1080p 60 fps screen share Crisp, smooth streams for everyone watching. Free is 720p 30 fps.
+				30 container
+					31 text 1 free supercharge Boost any server you love: more emoji slots, bigger uploads and better voice for everyone there.
+				32 container
+					33 text Plus badge A Plus tag next to your name that shows you keep the lights on. Hide it any time.
+				34 container
+					35 text 4000 character messages Twice the room for long stories, patch notes or a whole recipe. Edits too.
+				36 container
+					37 text The Plus lounge in Yapin’ HQ A pink Plus role and #plus-chat in Yapin’ HQ, where staff hang out and early looks drop first.
+				38 container
+					39 text 10 bots, reviewed first Up to 10 bots instead of 2, and directory reviews skip the queue.
+				40 container
+					41 text Post media anywhere in HQ Pics, videos and clips in any Yapin’ HQ channel, not just #media.
+				42 container
+					43 text Priority verification Your creator verification gets reviewed first. Same rules, just faster.
+				44 container
+					45 text Polls in Yapin’ HQ Start polls in HQ without being verified.
+			46 text SIDE BY SIDE
+			47 heading Free vs Plus, Value: 2
+				48 text Free vs Plus
+			49 table
+				50 row
+					51 cell
+						52 text PERK
+					53 cell
+						54 text FREE
+					55 cell
+						56 text PLUS
+				57 row
+					58 cell
+						59 text 100 MB uploads
+					60 cell
+						61 text 10 MB
+					62 cell
+						63 text 100 MB
+				64 row
+					65 cell
+						66 text 1080p 60 fps screen share
+					67 cell
+						68 text 720p 30 fps
+					69 cell
+						70 text 1080p 60 fps
+				71 row
+					72 cell
+						73 text 1 free supercharge
+					74 cell
+						75 text Paid
+					76 cell
+						77 text 1 included
+				78 row
+					79 cell
+						80 text Plus badge
+					81 cell
+						82 text No badge
+					83 cell
+						84 text Yes, hide it any time
+				85 row
+					86 cell
+						87 text 4000 character messages
+					88 cell
+						89 text 2000
+					90 cell
+						91 text 4000
+				92 row
+					93 cell
+						94 text The Plus lounge in Yapin’ HQ
+					95 cell
+						96 text No
+					97 cell
+						98 text Plus role and #plus-chat
+				99 row
+					100 cell
+						101 text 10 bots, reviewed first
+					102 cell
+						103 text 2 bots
+					104 cell
+						105 text 10 bots
+				106 row
+					107 cell
+						108 text Post media anywhere in HQ
+					109 cell
+						110 text #media only
+					111 cell
+						112 text Any channel
+				113 row
+					114 cell
+						115 text Priority verification
+					116 cell
+						117 text Normal queue
+					118 cell
+						119 text First in line
+				120 row
+					121 cell
+						122 text Polls in Yapin’ HQ
+					123 cell
+						124 text Verified only
+					125 cell
+						126 text Yes
+				127 row
+					128 cell
+						129 text Price
+					130 cell
+						131 text $0
+					132 cell
+						133 text $4.99/month
+			134 text Still free for everyone: Animated avatars and emojis, decorations and profile effects, your emojis in every server, themes, voice, screen share, polls, video uploads, verification, unlimited servers.
+			135 heading Ready when you are., Value: 2
+				136 text Ready when you are.
+			137 text $4.99 a month keeps Yapin’ running and gives you the good stuff.
+			138 button (disabled) Loading…
+		139 text Yapin’
+		140 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		141 heading PRODUCT, Value: 4
+			142 text PRODUCT
+		143 content list
+			144 link Description: Download, Value: yapin.gg/download
+			145 link Description: Developers, Value: yapin.gg/developers
+			146 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			147 link Description: Creator Program, Value: yapin.gg/creators
+			148 link Description: FanKit, Value: yapin.gg/fankit
+			149 link Description: Roadmap, Value: yapin.gg/roadmap
+			150 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			151 link Description: Bugs, Value: yapin.gg/bugs
+			152 link Description: Status, Value: yapin.gg/status
+		153 heading COMMUNITY, Value: 4
+			154 text COMMUNITY
+		155 content list
+			156 link Description: Guidelines, Value: yapin.gg/guidelines
+			157 link Description: Tutorials, Value: yapin.gg/tutorials
+			158 link Description: Bots, Value: yapin.gg/bots
+			159 link Description: Partners, Value: yapin.gg/partners
+		160 heading LEGAL, Value: 4
+			161 text LEGAL
+		162 content list
+			163 link Description: Terms, Value: yapin.gg/terms
+			164 link Description: Privacy, Value: yapin.gg/privacy
+			165 link Description: Copyright, Value: yapin.gg/copyright
+			166 link Description: Security, Value: yapin.gg/security
+			167 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			168 link Description: Contact, Value: mailto:hello@yapin.gg
+		169 text © 2026 Yapper Media LLC. Free to use.
+		170 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Yapin’ Plus · Yapin’, URL: yapin.gg/plus

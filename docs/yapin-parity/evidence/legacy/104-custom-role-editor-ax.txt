@@ -1,0 +1,114 @@
+Window: "Yapin’ · Free chat with servers, voice and screen sharing", App: Google Chrome.
+0 standard window Yapin’ · Free chat with servers, voice and screen sharing - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container Yapin’ · Free chat with servers, voice and screen sharing - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container
+							21 combo box (settable) Search settings
+							22 text MELDIQ RESEARCH - PRIVATE TEST
+							23 button Server profile
+							24 button Lobby
+							25 button Theme
+							26 button Channels
+							27 button Supercharge
+							28 button Promote
+							29 button Yapin’ Partner
+							30 text EXPRESSION
+							31 button Emoji
+							32 text APPS
+							33 button Bots
+							34 text PEOPLE
+							35 button Members
+							36 button Roles
+							37 button Ping roles
+							38 button Onboarding
+							39 button Bans
+							40 text MODERATION
+							41 button Reports
+							42 button Audit log
+							43 button Back
+							44 button Create role
+							45 button new role
+							46 button @everyone
+							47 text EDIT ROLE - NEW ROLE
+							48 button Copy role ID, Help: d960fb24-0973-40c7-879a-c446a7212400
+							49 button Delete role
+							50 button Display
+							51 button Permissions
+							52 button Manage Members
+							53 text ROLE NAME
+							54 text field (settable) ROLE NAME, Value: new role
+							55 text ROLE COLOUR
+							56 text Members use the colour of the highest role they have on the roles list.
+							57 button #9b59ff
+							58 button #ff6b4a
+							59 button #f5b544
+							60 button #3fcf82
+							61 button #2bb3a3
+							62 button #3a8dff
+							63 button #e5487f
+							64 button #99aab5
+							65 container Custom colour
+								66 color well ✎, Value: rgb 0.60784 0.34902 1.00000 1
+								67 text ✎
+							68 text field (settable) Role color hex value, Value: #9b59ff, Placeholder: #rrggbb
+							69 button Remove colour
+							70 text Fade into a second colour (optional):
+							71 container Gradient end
+								72 color well ✎, Value: rgb 0.60784 0.34902 1.00000 1
+								73 text ✎
+							74 text field (settable) Gradient end hex value, Placeholder: #rrggbb
+							75 text new role
+							76 text GIVE THIS ROLE AUTOMATICALLY
+							77 button Nobody
+							78 button Everyone in the server
+							79 button Everyone who joined before a date
+							80 text Automatic roles are for looks (colour, badge in the list). They can’t carry permissions.
+							81 container
+								82 text Let anyone @mention this role People with Mention @everyone can always ping it.
+								83 checkbox Let anyone @mention this role People with Mention @everyone can always ping it., Value: 0
+							84 container
+								85 text Changes are saved when you press Save
+								86 button (disabled) Save
+							87 button Close
+			88 container
+				89 tab group
+					90 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						91 button Close
+					92 tab (selected, settable, boolean) Yapin’ · Free chat with servers, voice and screen sharing - Memory usage - 225 MB, Value: on
+						93 button Close
+					94 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						95 button Close
+			96 button New Tab
+	97 close button
+	98 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	99 minimize button
+100 menu bar
+	101 Chrome
+	102 File
+	103 Edit
+	104 View
+	105 History
+	106 Bookmarks
+	107 Profiles
+	108 Tab
+	109 Window
+	110 Help
+
+The focused UI element is 19 HTML content (23) Yapin’, URL: yapin.gg/

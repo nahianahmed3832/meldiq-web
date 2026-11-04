@@ -1,0 +1,173 @@
+Browser tab: 2, Title: "Roadmap: what’s new and what’s next · Yapin’", URL: "https://www.yapin.gg/roadmap".
+1 AXWebArea Roadmap: what’s new and what’s next · Yapin’, URL: yapin.gg/roadmap
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text PRODUCT
+			14 heading Roadmap, Value: 1
+				15 text Roadmap
+			16 text LAST UPDATED  30 OCTOBER 2026 What we shipped, what is being tested in a few servers right now, and what is next. Plans change; this page follows.
+		17 container
+			18 heading Shipped lately, Value: 2
+				19 text Shipped lately
+			20 content list
+				21 container
+					22 AXListMarker • 
+					23 text Better calls: faster joins, a mic and speaker menu, input sensitivity, connection bars, clearer voice and media key controls
+				24 container
+					25 AXListMarker • 
+					26 text Yapin’ Partner: well-run servers with Supercharge level 2 or higher can apply for a Partner badge and a small Discover boost
+				27 container
+					28 AXListMarker • 
+					29 text Upload limits per hour and per day, so attachments stay for chatting (Plus gets more)
+				30 container
+					31 AXListMarker • 
+					32 text Server lobby: a landing page for your server, now with leaderboards and feeds
+				33 container
+					34 AXListMarker • 
+					35 text Global leaderboards: messages, voice time, Shards, gifts and invites
+				36 container
+					37 AXListMarker • 
+					38 text Quiz polls with a right answer, and a list of who voted for what
+				39 container
+					40 AXListMarker • 
+					41 text Search filters: mentions:, pinned:true, during: and has:embed, sound or poll
+				42 container
+					43 AXListMarker • 
+					44 text Ping roles: pick the notification roles you want from the server menu or lobby
+				45 container
+					46 AXListMarker • 
+					47 text Click a role mention to see who has the role
+				48 container
+					49 AXListMarker • 
+					50 text Any colour you want for server folders
+				51 container
+					52 AXListMarker • 
+					53 text Masked links: put a link behind your own text with [text](link)
+				54 container
+					55 AXListMarker • 
+					56 text Notification settings per channel: every message, mentions only or nothing
+				57 container
+					58 AXListMarker • 
+					59 text Report a whole server straight to the Yapin’ team
+				60 container
+					61 AXListMarker • 
+					62 text Sign in with a passkey or with Google
+				63 container
+					64 AXListMarker • 
+					65 text 2FA backup codes, and a way back in if you lose your phone
+				66 container
+					67 AXListMarker • 
+					68 text Yapin’ in Spanish, German, French and Brazilian Portuguese
+				69 container
+					70 AXListMarker • 
+					71 text Shorter profile cards: mutuals on one line, long lists tucked away
+				72 container
+					73 AXListMarker • 
+					74 text Voice log for server mods: who joined, left or got moved in voice
+				75 container
+					76 AXListMarker • 
+					77 text Missed call notices in DMs
+				78 container
+					79 AXListMarker • 
+					80 text Discussions: forum channels with posts, tags, search, a gallery view, pinning, locking and following
+				81 container
+					82 AXListMarker • 
+					83 text Threads you can start from any message
+				84 container
+					85 AXListMarker • 
+					86 text AI noise suppression in calls: keyboards, fans and background voices cut out
+				87 container
+					88 AXListMarker • 
+					89 text Stage channels for Q&As: raise your hand and mods bring you up to talk
+				90 container
+					91 AXListMarker • 
+					92 text Join applications: servers can ask people to apply before they get in
+				93 container
+					94 AXListMarker • 
+					95 text Decorations: star your favorites and filter by favorites, owned, pictures or effects
+				96 container
+					97 AXListMarker • 
+					98 text Safer DMs: a safety card at the start of every DM, and you pick who can add you to group chats
+				99 container
+					100 AXListMarker • 
+					101 text Login with Yapin’ for other apps, and Add App on bot profiles
+			102 heading In testing, Value: 2
+				103 text In testing
+			104 text On for a few test servers first. If nothing breaks, everyone gets it.
+			105 content list
+				106 container
+					107 AXListMarker • 
+					108 text Profile effects made by community artists
+				109 container
+					110 AXListMarker • 
+					111 text Name banners: a strip behind your name in the member list and DMs
+				112 container
+					113 AXListMarker • 
+					114 text The Yapin’ phone app
+				115 container
+					116 AXListMarker • 
+					117 text Extra limits for brand-new accounts, to slow down spam
+			118 heading Next, Value: 2
+				119 text Next
+			120 content list
+				121 container
+					122 AXListMarker • 
+					123 text Thread settings per channel
+				124 container
+					125 AXListMarker • 
+					126 text Role icons
+				127 container
+					128 AXListMarker • 
+					129 text Stickers
+				130 container
+					131 AXListMarker • 
+					132 text Video calls with camera
+			133 text Ideas or requests? Tell us in the Yapin’ HQ server, or in the 
+			134 link Description: Developers server, Value: yapin.gg/invite/developers
+			135 text  for bot things.
+			136 link Description: ← Back to Yapin’, Value: yapin.gg/
+			137 text  · 
+			138 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		139 text Yapin’
+		140 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		141 heading PRODUCT, Value: 4
+			142 text PRODUCT
+		143 content list
+			144 link Description: Download, Value: yapin.gg/download
+			145 link Description: Developers, Value: yapin.gg/developers
+			146 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			147 link Description: Creator Program, Value: yapin.gg/creators
+			148 link Description: FanKit, Value: yapin.gg/fankit
+			149 link Description: Roadmap, Value: yapin.gg/roadmap
+			150 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			151 link Description: Bugs, Value: yapin.gg/bugs
+			152 link Description: Status, Value: yapin.gg/status
+		153 heading COMMUNITY, Value: 4
+			154 text COMMUNITY
+		155 content list
+			156 link Description: Guidelines, Value: yapin.gg/guidelines
+			157 link Description: Tutorials, Value: yapin.gg/tutorials
+			158 link Description: Bots, Value: yapin.gg/bots
+			159 link Description: Partners, Value: yapin.gg/partners
+		160 heading LEGAL, Value: 4
+			161 text LEGAL
+		162 content list
+			163 link Description: Terms, Value: yapin.gg/terms
+			164 link Description: Privacy, Value: yapin.gg/privacy
+			165 link Description: Copyright, Value: yapin.gg/copyright
+			166 link Description: Security, Value: yapin.gg/security
+			167 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			168 link Description: Contact, Value: mailto:hello@yapin.gg
+		169 text © 2026 Yapper Media LLC. Free to use.
+		170 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Roadmap: what’s new and what’s next · Yapin’, URL: yapin.gg/roadmap

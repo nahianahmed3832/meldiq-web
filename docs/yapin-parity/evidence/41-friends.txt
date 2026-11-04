@@ -1,0 +1,58 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 text (32) Yapin’
+		3 text Yapin’
+		4 container Servers
+			5 button Direct messages
+			6 container
+				7 button Meldiq Research - Private Test
+				8 button Meldiq
+				9 button Yapin' Headquarters
+				10 text 10
+				11 button MINECRAFT
+				12 text 22
+			13 button Create a server
+			14 button Discover servers
+				15 image
+		16 container
+			17 text Direct messages
+			18 button Friends
+				19 image
+				20 text Friends
+			21 button Find people
+				22 image
+				23 text Find people
+			24 button Create group
+				25 image
+				26 text Create group
+			27 text DIRECT MESSAGES
+			28 button New message
+				29 image
+			30 text No DMs yet
+			31 text Add a friend, then say hi.
+			32 button Find friends
+			33 pop up button (collapsed) nahian Online, Help: Your account, Secondary Actions: Expand
+				34 text nahian
+				35 text Online
+			36 button (collapsed) Description: Inbox, Secondary Actions: Expand
+			37 button Settings
+				38 image
+			39 button Log out
+				40 image
+		41 container
+			42 image
+			43 text Friends
+			44 button Online
+			45 button All
+			46 button Pending
+			47 button Blocked
+			48 button Suggested
+			49 button Add Friend
+			50 text field (settable) Search friends
+			51 text ONLINE - 0
+			52 text Nobody’s online right now
+			53 text Your friends are taking a break. Say hi and they’ll see it later.
+			54 button Add Friend
+
+The focused UI element is 5 button Direct messages

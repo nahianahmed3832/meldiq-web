@@ -1,0 +1,84 @@
+Browser tab: 6, Title: "Brand kit · Meldiq", URL: "https://meldiq.app/brand".
+1 AXWebArea Brand kit · Meldiq, URL: meldiq.app/brand
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/brand#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Brand kit, Value: meldiq.app/
+				16 text SAY HELLO TO MELDIQ
+				17 heading A familiar face for your space., Value: 1
+					18 text A familiar face for your space.
+				19 text The Meldiq name, wordmark and Meldling companion help people recognize the app and its communities.
+			20 container Brand assets
+				21 container
+					22 text WORDMARK meldiq . Meldiq · Community messaging
+				23 container
+					24 text MELDLING
+					25 image Meldling, the Meldiq community companion
+					26 link Description: Download PNG ↓, Value: meldiq.app/meldling-512.png
+			27 container
+				28 text 01
+				29 heading The name, Value: 2
+					30 text The name
+				31 text Write Meldiq with a capital M in prose. Our lowercase wordmark includes a dot. Keep enough space around the mark so it remains easy to recognize.
+			32 container
+				33 text 02
+				34 heading Meet Meldling, Value: 2
+					35 text Meet Meldling
+				36 text Meldling is Meldiq’s community companion. Use the original artwork without stretching, recoloring or adding elements that make it hard to recognize.
+			37 container
+				38 text 03
+				39 heading Keep the context clear, Value: 2
+					40 text Keep the context clear
+				41 text When describing a community or integration, clearly identify who operates it. Using a brand asset does not imply endorsement, partnership or official status. Meldiq’s brand assets remain the property of their owner.
+				42 link Description: Ask about brand usage, Value: meldiq.app/support
+			43 container
+				44 heading Make yourself at home., Value: 2
+					45 text Make yourself at home.
+				46 text Your next conversation is only a tab away.
+				47 link Description: Open Meldiq, Value: web.meldiq.app/
+		48 container
+			49 link Description: Meldiq home, Value: meldiq.app/
+			50 text Communities, direct messages and calls in one place.
+			51 link Description: Open Meldiq, Value: web.meldiq.app/
+			52 heading PRODUCT, Value: 2
+				53 text PRODUCT
+			54 link Description: Features, Value: meldiq.app/features
+			55 link Description: Pricing, Value: meldiq.app/pricing
+			56 link Description: Download, Value: meldiq.app/download
+			57 link Description: Developers, Value: meldiq.app/developers
+			58 link Description: Bots, Value: meldiq.app/bots
+			59 link Description: Roadmap, Value: meldiq.app/roadmap
+			60 link Description: Brand kit, Value: meldiq.app/brand
+			61 link Description: Service status, Value: status.meldiq.app/
+			62 heading COMMUNITY, Value: 2
+				63 text COMMUNITY
+			64 link Description: Find your community, Value: meldiq.app/community
+			65 link Description: Getting started, Value: meldiq.app/tutorials
+			66 link Description: Questions & answers, Value: meldiq.app/faq
+			67 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			68 link Description: Your account, Value: meldiq.app/account
+			69 link Description: Billing, Value: meldiq.app/account/billing
+			70 link Description: Contact support, Value: meldiq.app/support
+			71 heading LEGAL, Value: 2
+				72 text LEGAL
+			73 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			74 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			75 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			76 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			77 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			78 link Description: Security & encryption, Value: meldiq.app/security
+			79 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			80 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			81 link Description: Back to top ↑, Value: meldiq.app/brand#top
+
+The focused UI element is 1 AXWebArea Brand kit · Meldiq, URL: meldiq.app/brand

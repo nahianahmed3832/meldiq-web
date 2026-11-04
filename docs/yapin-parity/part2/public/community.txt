@@ -1,0 +1,92 @@
+Browser tab: 6, Title: "Community · Meldiq", URL: "https://meldiq.app/community".
+1 AXWebArea Community · Meldiq, URL: meldiq.app/community
+	2 container top
+		3 link Description: Skip to content, Value: meldiq.app/community#main
+		4 container
+			5 link Description: Meldiq home, Value: meldiq.app/
+			6 container Description: Main navigation, ID: navigation
+				7 link Description: Download, Value: meldiq.app/download
+				8 link Description: Features, Value: meldiq.app/features
+				9 link Description: Developers, Value: meldiq.app/developers
+				10 link Description: Plus, Value: meldiq.app/pricing
+				11 button Switch to light mode
+				12 link Description: Sign in, Value: web.meldiq.app/
+		13 container main
+			14 container
+				15 link Description: Home / Community, Value: meldiq.app/
+				16 text A PLACE TO BELONG
+				17 heading Bring your people together., Value: 1
+					18 text Bring your people together.
+				19 text Find a community around the things you enjoy, or make a space for the people you already know.
+			20 container
+				21 container Illustrative Meldiq discover preview with sample content
+				22 text Illustrative Meldiq preview · Sample content
+			23 container
+				24 text 01
+				25 heading Find your corner, Value: 2
+					26 text Find your corner
+				27 text Open Discover in Meldiq to explore public communities. Search for a name or topic, read the community’s rules and find a conversation you want to join.
+				28 link Description: Explore in Meldiq, Value: web.meldiq.app/
+			29 container
+				30 text 02
+				31 heading Build a space of your own, Value: 2
+					32 text Build a space of your own
+				33 text Create a public or invite-only community. Give each conversation a home with categories, text channels, forums and voice rooms.
+				34 content list
+					35 text Share invitations with your group
+					36 text Set up roles and channel permissions
+					37 text Give announcements and community rules their own space
+				38 link Description: Getting started, Value: meldiq.app/tutorials
+			39 container
+				40 text 03
+				41 heading Make it welcoming, Value: 2
+					42 text Make it welcoming
+				43 text Clear expectations and a little moderation help people feel at home. Set your rules, choose moderators and use reports, slow mode and invitation controls when you need them.
+				44 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			45 container
+				46 text 04
+				47 heading Support the whole community, Value: 2
+					48 text Support the whole community
+				49 text Meldiq Spark adds community benefits separately from your account subscription. Review current levels, prices and purchase terms before boosting.
+				50 link Description: Explore Sparks, Value: meldiq.app/pricing#spark-heading
+			51 container
+				52 heading Make yourself at home., Value: 2
+					53 text Make yourself at home.
+				54 text Your next conversation is only a tab away.
+				55 link Description: Open Meldiq, Value: web.meldiq.app/
+		56 container
+			57 link Description: Meldiq home, Value: meldiq.app/
+			58 text Communities, direct messages and calls in one place.
+			59 link Description: Open Meldiq, Value: web.meldiq.app/
+			60 heading PRODUCT, Value: 2
+				61 text PRODUCT
+			62 link Description: Features, Value: meldiq.app/features
+			63 link Description: Pricing, Value: meldiq.app/pricing
+			64 link Description: Download, Value: meldiq.app/download
+			65 link Description: Developers, Value: meldiq.app/developers
+			66 link Description: Bots, Value: meldiq.app/bots
+			67 link Description: Roadmap, Value: meldiq.app/roadmap
+			68 link Description: Brand kit, Value: meldiq.app/brand
+			69 link Description: Service status, Value: status.meldiq.app/
+			70 heading COMMUNITY, Value: 2
+				71 text COMMUNITY
+			72 link Description: Find your community, Value: meldiq.app/community
+			73 link Description: Getting started, Value: meldiq.app/tutorials
+			74 link Description: Questions & answers, Value: meldiq.app/faq
+			75 link Description: Community guidelines, Value: meldiq.app/legal/acceptable-use
+			76 link Description: Your account, Value: meldiq.app/account
+			77 link Description: Billing, Value: meldiq.app/account/billing
+			78 link Description: Contact support, Value: meldiq.app/support
+			79 heading LEGAL, Value: 2
+				80 text LEGAL
+			81 link Description: Terms of Service, Value: meldiq.app/legal/terms
+			82 link Description: Privacy Policy, Value: meldiq.app/legal/privacy
+			83 link Description: Meldiq Plus terms, Value: meldiq.app/legal/billing
+			84 link Description: Acceptable use, Value: meldiq.app/legal/acceptable-use
+			85 link Description: Account deletion & your data, Value: meldiq.app/legal/account-deletion
+			86 link Description: Security & encryption, Value: meldiq.app/security
+			87 link Description: Cancel Meldiq Plus, Value: meldiq.app/legal/billing#cancel
+			88 text © 2026 GRIIPBUDDY LLC. Core messaging is free. Your people are welcome.
+			89 link Description: Back to top ↑, Value: meldiq.app/community#top
+
+The focused UI element is 1 AXWebArea Community · Meldiq, URL: meldiq.app/community

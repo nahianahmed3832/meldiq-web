@@ -1,0 +1,144 @@
+Browser tab: 2, Title: "Status · Yapin’", URL: "https://www.yapin.gg/status".
+1 AXWebArea Status · Yapin’, URL: yapin.gg/status
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 heading Yapin’ Status, Value: 1
+				14 text Yapin’ Status
+			15 text All Systems Operational
+			16 container Components
+				17 text Uptime over the past 90 days Checked Nov 4, 1:26 PM
+				18 text Website
+				19 text Operational
+				20 container Website, last 90 days
+				21 text 90 days ago 86.82% uptime Today
+				22 text API
+				23 text Operational
+				24 container API, last 90 days
+				25 text 90 days ago 98.09% uptime Today
+				26 text Realtime
+				27 text Operational
+				28 container Realtime, last 90 days
+				29 text 90 days ago 98.27% uptime Today
+				30 text Voice and video
+				31 text Operational
+				32 container Voice and video, last 90 days
+				33 text 90 days ago 95.40% uptime Today
+				34 text Bot API
+				35 text Operational
+				36 container Bot API, last 90 days
+				37 text 90 days ago 94.88% uptime Today
+				38 text Database
+				39 text Operational
+				40 container Database, last 90 days
+				41 text 90 days ago 100.00% uptime Today
+			74 container API response time
+				75 text API response time, last 24 hours now 156 ms · average 215 ms
+				76 image Average 215 ms
+				77 text 24 hours ago Peak 3666 ms Now
+			78 container Speed
+				79 text Speed for real users, last 7 days
+				80 container Which number
+					81 checkbox Typical, Value: 0
+					82 checkbox Slowest 5%, Value: 1
+				83 text Desktop Phone Update released
+				84 text App start
+				85 text Desktop 37.5 s Phone 5.1 s
+				86 image App start: desktop 37.5 s, phone 5.1 s
+				87 text 7 days ago Peak 73.1 s Now
+				88 text API
+				89 text Desktop 3.5 s Phone 1.6 s
+				90 image API: desktop 3.5 s, phone 1.6 s
+				91 text 7 days ago Peak 9.9 s Now
+				92 text Realtime connect
+				93 text Desktop 1.8 s Phone 2.6 s
+				94 image Realtime connect: desktop 1.8 s, phone 2.6 s
+				95 text 7 days ago Peak 14.5 s Now
+				96 text Measured in the app for a sample of sessions. Only totals, nothing about any one person. Updated hourly.
+			97 container Past incidents
+				98 heading Past incidents, Value: 2
+					99 text Past incidents
+				100 heading Nov 4, 2026, Value: 4
+					101 text Nov 4, 2026
+				102 text No incidents reported.
+				103 heading Nov 3, 2026, Value: 4
+					104 text Nov 3, 2026
+				105 text No incidents reported.
+				106 heading Nov 2, 2026, Value: 4
+					107 text Nov 2, 2026
+				108 text No incidents reported.
+				109 heading Nov 1, 2026, Value: 4
+					110 text Nov 1, 2026
+				111 text No incidents reported.
+				112 heading Oct 31, 2026, Value: 4
+					113 text Oct 31, 2026
+				114 text No incidents reported.
+				115 heading Oct 30, 2026, Value: 4
+					116 text Oct 30, 2026
+				117 text No incidents reported.
+				118 heading Oct 29, 2026, Value: 4
+					119 text Oct 29, 2026
+				120 text No incidents reported.
+				121 heading Oct 28, 2026, Value: 4
+					122 text Oct 28, 2026
+				123 text No incidents reported.
+				124 heading Oct 27, 2026, Value: 4
+					125 text Oct 27, 2026
+				126 text No incidents reported.
+				127 heading Oct 26, 2026, Value: 4
+					128 text Oct 26, 2026
+				129 text No incidents reported.
+				130 heading Oct 25, 2026, Value: 4
+					131 text Oct 25, 2026
+				132 text No incidents reported.
+				133 heading Oct 24, 2026, Value: 4
+					134 text Oct 24, 2026
+				135 text No incidents reported.
+				136 heading Oct 23, 2026, Value: 4
+					137 text Oct 23, 2026
+				138 text No incidents reported.
+				139 heading Oct 22, 2026, Value: 4
+					140 text Oct 22, 2026
+				141 text No incidents reported.
+		42 text Yapin’
+		43 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		44 heading PRODUCT, Value: 4
+			45 text PRODUCT
+		46 content list
+			47 link Description: Download, Value: yapin.gg/download
+			48 link Description: Developers, Value: yapin.gg/developers
+			49 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			50 link Description: Creator Program, Value: yapin.gg/creators
+			51 link Description: FanKit, Value: yapin.gg/fankit
+			52 link Description: Roadmap, Value: yapin.gg/roadmap
+			53 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			54 link Description: Bugs, Value: yapin.gg/bugs
+			55 link Description: Status, Value: yapin.gg/status
+		56 heading COMMUNITY, Value: 4
+			57 text COMMUNITY
+		58 content list
+			59 link Description: Guidelines, Value: yapin.gg/guidelines
+			60 link Description: Tutorials, Value: yapin.gg/tutorials
+			61 link Description: Bots, Value: yapin.gg/bots
+			62 link Description: Partners, Value: yapin.gg/partners
+		63 heading LEGAL, Value: 4
+			64 text LEGAL
+		65 content list
+			66 link Description: Terms, Value: yapin.gg/terms
+			67 link Description: Privacy, Value: yapin.gg/privacy
+			68 link Description: Copyright, Value: yapin.gg/copyright
+			69 link Description: Security, Value: yapin.gg/security
+			70 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			71 link Description: Contact, Value: mailto:hello@yapin.gg
+		72 text © 2026 Yapper Media LLC. Free to use.
+		73 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Status · Yapin’, URL: yapin.gg/status

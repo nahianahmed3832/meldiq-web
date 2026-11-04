@@ -1,0 +1,212 @@
+{
+  "updated": "2026-11-02",
+  "contact": "hello@yapin.gg",
+  "bounty": "coming, not live yet",
+  "database_rules": "https://github.com/Yapper-Media-LLC/yapper-db",
+  "log": [
+    {
+      "id": "public-security-log",
+      "reported": "2026-11-02",
+      "reporter": "a community member (Reddit)",
+      "title": "Fixes only showed up in a changelog",
+      "report": "Fixes for things the community raised were only visible in a changelog. Reported issues should be written up publicly.",
+      "change": "This page. Every reported security or privacy issue gets an entry: what was reported, what we changed and when. There is a JSON copy too so you can diff it.",
+      "shipped": null,
+      "status": "with this page",
+      "links": [
+        {
+          "label": "security.json",
+          "href": "/security.json"
+        }
+      ]
+    },
+    {
+      "id": "private-access-wording",
+      "reported": "2026-11-02",
+      "reporter": "us",
+      "title": "Privacy policy now says who can read private messages",
+      "report": "The privacy policy didn’t say clearly that the owner has full database access, or that we use AI tools to run and fix Yapin’.",
+      "change": "New “Who can read private messages” section: moderators can’t read DMs they aren’t in (the database blocks it), the owner can, direct database reads aren’t logged, and Claude (through Anthropic’s API) can see data when we use it on a bug or incident. No code or database change.",
+      "shipped": null,
+      "status": "waiting for a release",
+      "links": [
+        {
+          "label": "Privacy Policy",
+          "href": "/privacy#private-access"
+        }
+      ]
+    },
+    {
+      "id": "live-schema-dump",
+      "reported": "2026-10-28",
+      "reporter": "follow-up to the Reddit thread",
+      "title": "Tests against the real live schema",
+      "report": "The first public copy only replayed migrations with stand-ins, so it didn’t prove the live database behaves the same.",
+      "change": "Published a schema-only dump of the live database (no rows) and run-tests.sh, which restores it in Postgres 17 with Docker, checks every function body and policy matches live, and runs the DM privacy, private data, server privacy and report tests.",
+      "shipped": "2026-10-30",
+      "links": [
+        {
+          "label": "yapper-db commit d7cb9ed",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/commit/d7cb9ed6afdbcd8c09b460297a1f73a6e30278d8"
+        }
+      ]
+    },
+    {
+      "id": "public-db-repo",
+      "reported": "2026-10-28",
+      "reporter": "a community member (Reddit)",
+      "title": "Database access rules made public",
+      "report": "Asked to see the rules that keep DMs and private channels private, instead of taking our word for it.",
+      "change": "Published every migration, every access policy, every security definer function and who may call it, and the SQL tests, at github.com/Yapper-Media-LLC/yapper-db. Linked from the privacy policy and security.txt.",
+      "shipped": "2026-10-28",
+      "links": [
+        {
+          "label": "yapper-db commit ed6e440",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/commit/ed6e440e081c7659df0f64070b1a689b6d6fa6fa"
+        }
+      ]
+    },
+    {
+      "id": "yapper-exposed-copy",
+      "reported": "2026-10-28",
+      "reporter": "an independent write-up (yapper.exposed)",
+      "title": "Marketing promised more than the terms backed up",
+      "report": "Our pages said things like “encrypted” without saying messages aren’t end to end encrypted, called everything free without naming Plus, mentioned GIF ads that were switched off and listed analytics we no longer use.",
+      "change": "Homepage and FAQ now say messages are not end to end encrypted, name Plus and its price, and the call encryption line mentions that key checks aren’t shown yet. Terms and privacy dropped the switched off GIF ads and the old analytics line.",
+      "shipped": "2026-10-28"
+    },
+    {
+      "id": "privacy-policy-gdpr",
+      "reported": "2026-10-25",
+      "reporter": "a user’s GDPR data request",
+      "title": "Privacy policy didn’t match what the code does",
+      "report": "Answering a data request showed gaps: some automated checks, IP logs, a cookie and some retention periods weren’t in the policy, and the data export missed some of your data.",
+      "change": "Rewrote the privacy policy to list every automated check, IP log, the device cookie and how long each is kept. Download your data now includes linked accounts, interests, Shards, device and network hashes, sign-up IPs and AI image reviews. Old device rows and sign-up logs are deleted on a schedule. GIF share calls stopped sending a stable user hash.",
+      "shipped": "2026-10-25",
+      "links": [
+        {
+          "label": "migration 525",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/525_safety_data_retention.sql"
+        }
+      ]
+    },
+    {
+      "id": "security-review-2",
+      "reported": "2026-10-25",
+      "reporter": "a second AI code review we ran (not an outside audit)",
+      "title": "Bot scope, OAuth revoke race, billing, suggestions privacy",
+      "report": "Bots could react to, pin or edit messages by id outside the channel they were given. A revoked OAuth grant could race a token exchange. Payments could be booked twice or lost on a retry. Friend suggestions could keep showing someone after they made a connection private.",
+      "change": "Bot API checks the message is in the channel. OAuth exchange and revoke share a lock and old codes stop working after a revoke. The Stripe webhook books each payment once and retries failures. Suggestions forget people as soon as their privacy changes.",
+      "shipped": "2026-10-25",
+      "links": [
+        {
+          "label": "migration 491",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/491_oauth_grant_lock.sql"
+        },
+        {
+          "label": "migration 493",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/493_billing_durable.sql"
+        },
+        {
+          "label": "migration 503",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/503_match_cache_privacy.sql"
+        }
+      ]
+    },
+    {
+      "id": "security-review-1",
+      "reported": "2026-10-24",
+      "reporter": "an AI code review we ran (not an outside audit)",
+      "title": "Nine fixes from a source code review",
+      "report": "Read Message History off wasn’t enforced, admin routes didn’t ask for 2FA, a bad frame could crash the realtime server, uploads could be swapped after the scan, an image library had known bugs, plus smaller issues in the API box, bot runner and app links.",
+      "change": "Read Message History is enforced in the database and search. Admin routes need 2FA like the database does. Realtime checks every frame and logs people out when their token expires. Uploads are scanned in a staging spot and only the exact scanned file goes public. Library updated, file permissions tightened, app link handling stricter.",
+      "shipped": "2026-10-24",
+      "links": [
+        {
+          "label": "migration 460",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/460_security_audit_oct24.sql"
+        }
+      ]
+    },
+    {
+      "id": "steam-links-bulk",
+      "reported": "2026-10-24",
+      "reporter": "a community member (via a moderator)",
+      "title": "Linked Steam accounts readable in bulk",
+      "report": "Any signed in account could list every linked Steam account (Steam id, name, games and hours) in one request.",
+      "change": "You can now only read the linked accounts of people whose profile card you can open anyway (yourself, friends, people you share a DM or server with). Same fix for other linked sites.",
+      "shipped": "2026-10-24",
+      "links": [
+        {
+          "label": "migration 458",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/458_links_rls_scope.sql"
+        }
+      ]
+    },
+    {
+      "id": "flags-privacy",
+      "reported": "2026-10-19",
+      "reporter": "a community member (Discord)",
+      "title": "Feature flags leaked test group ids",
+      "report": "The feature flag list was readable by anyone, signed out too, and handed every signed in user the user and server ids in each test group.",
+      "change": "You only get the flags that are on for you. The flag table is admin only and live updates only send the flag name.",
+      "shipped": "2026-10-19",
+      "links": [
+        {
+          "label": "migration 269",
+          "href": "https://github.com/Yapper-Media-LLC/yapper-db/blob/main/supabase/migrations/269_flags_privacy.sql"
+        }
+      ]
+    }
+  ],
+  "known_limits": [
+    {
+      "title": "Messages aren’t end to end encrypted",
+      "text": "Messages are encrypted on the way and at rest, but not end to end. Calls and screen shares are."
+    },
+    {
+      "title": "The owner has database access",
+      "text": "Moderators can’t read DMs they aren’t in, but the owner has full database access, DMs included. Direct database reads aren’t logged.",
+      "href": "/privacy#private-access",
+      "linkLabel": "Who can read private messages"
+    },
+    {
+      "title": "No call key check in the app yet",
+      "text": "Calls are end to end encrypted, but the app doesn’t show a safety code yet, so you can’t check that nobody swapped keys on the way. It’s built and being tested."
+    },
+    {
+      "title": "The Android app is an APK for now",
+      "text": "Until the store listing is live, the Android app is handed out as an APK outside the store. An audit of the APK is in progress."
+    },
+    {
+      "title": "No outside audit",
+      "text": "Nobody outside Yapper has audited the code or the database yet. The database rules and tests are public so you can check them yourself."
+    }
+  ],
+  "release_checks": [
+    {
+      "title": "SQL tests",
+      "text": "Every database change runs its tests in a real Postgres (PGlite), and the public live schema tests run with run-tests.sh."
+    },
+    {
+      "title": "Typecheck",
+      "text": "The whole app has to typecheck before anything is pushed."
+    },
+    {
+      "title": "Smoke test",
+      "text": "A production build is started and loaded in a browser. It has to mount the app with no page errors."
+    },
+    {
+      "title": "Performance check",
+      "text": "After a release we check database load and slow queries, since slow startup queries took the site down before."
+    },
+    {
+      "title": "Image scanning",
+      "text": "Uploads are scanned before they go public, and only the exact file that was scanned is published."
+    },
+    {
+      "title": "Database review",
+      "text": "Every change to the access rules gets a separate review for permission holes before it ships."
+    }
+  ]
+}

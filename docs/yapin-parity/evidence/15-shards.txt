@@ -1,0 +1,100 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container User settings
+			3 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+			4 text USER SETTINGS
+			5 button My Account
+			6 button My Profile
+			12 text APP SETTINGS
+			13 button Appearance
+			14 button Chat
+			15 button Language
+			16 button Voice & Audio
+			17 button Sounds
+			18 button Keybinds
+			19 button Advanced
+			20 button Developer
+			21 button Subscriptions
+			22 button Creators
+			23 button Leaderboards
+			24 button Shards
+			25 button Yapin’ Plus
+		176 heading Shards, Value: 2
+			177 text Shards
+		178 text YOUR SHARDS 15 +0 today  ·  15 earned in all 0 ACCOUNT LEVEL 85 more for level 1
+		179 button (disabled) Level up for 100
+			180 text Level up for 100
+		181 text Yapin’ Plus members earn  1.5x Shards  from everything: chatting, streaks, invites and quests.
+		182 button See Plus
+		216 heading QUESTS1 ready to claim, Value: 3
+			217 text QUESTS 1 ready to claim
+		218 text Today
+		219 text New ones every day at midnight UTC
+		220 text Talk in 3 chats
+		221 text Send a message in 3 different chats today 10 Not yet
+		222 text React to 3 messages
+		223 text React to 3 messages from other people today 5 Not yet
+		224 text Reply to someone
+		225 text Reply to someone else's message today 5 Not yet
+		226 text Getting started
+		227 text One time each
+		228 text Make your profile yours
+		229 text Add an avatar and an About me 25 Not yet
+		230 text Make a friend
+		231 text Have a friend request accepted, or accept one 25 Not yet
+		232 text Join 3 servers
+		233 text Be in 3 servers at once 25
+		234 button Claim
+		235 text Dress up your avatar
+		236 text Wear an avatar decoration 15 Not yet
+		237 text Link Steam
+		238 text Link your Steam account on your profile 50 Not yet
+		239 text Link AniList
+		240 text Link your AniList account on your profile 50 Not yet
+		241 text Link Trakt
+		242 text Link your Trakt account on your profile 50 Not yet
+		243 text Link Last.fm
+		244 text Sign in with Last.fm on your profile 50 Not yet
+		245 text Lock it down
+		246 text Turn on two-factor sign-in 50 Not yet
+		183 heading EARN SHARDS, Value: 3
+			184 text EARN SHARDS
+		185 text Show up
+		186 text +5 a day Send a message anywhere today.
+		187 text Chat
+		188 text +5 per 4 min 0 of 25 today · 4 more active minutes for +5
+		189 text Keep a streak
+		190 text +30 every 7 days
+		191 image 0 of 7 days
+		192 text Be active today to start one.
+		193 text Invite friends
+		194 text +100 each Share any of your server invites with someone new. You get it once they’ve stuck around for 7 days. 0  paid 0  waiting up to 10 a month
+		195 text Your account needs to be a day old to earn. Lots of messages in one minute count once, so just chat normally.
+		196 heading SPEND SHARDS, Value: 3
+			197 text SPEND SHARDS
+		198 text Level up
+		199 text 100 Your level shows on your profile as a ring. The colour changes every 10 levels. 1 10 20 30 40 50 60 70 80 90
+		200 text Decorations
+		201 text Set by the artist Buy community decorations for your avatar. Most of what you pay goes straight to the artist who made it.
+		202 button Browse decorations
+		203 button Leaderboards Top yappers by messages, voice, Shards, gifts and more. See where you rank. ›
+			204 text Leaderboards
+			205 text Top yappers by messages, voice, Shards, gifts and more. See where you rank.
+			206 text ›
+		207 heading SELL YOUR DECORATIONS, Value: 3
+			208 text SELL YOUR DECORATIONS
+		209 text Make a decoration and sell it for Shards
+		210 text Pick a price from 25 to 5,000 when you upload it, or later under Your decorations. You get 70% of every sale. People already wearing a free one keep it if you add a price. Selling needs an account 5 days old, or Plus.
+		211 button Make or sell one
+		212 heading HISTORY, Value: 3
+			213 text HISTORY
+		247 text NOV 1
+		248 text Chatting + 5 Active today + 5
+		249 text OCT 29
+		250 text Active today + 5
+		215 text Shards can’t be bought, sold for money or sent to other people. See the Terms, section 9.11.
+		174 button Close
+			175 image
+
+The focused UI element is 24 button Shards

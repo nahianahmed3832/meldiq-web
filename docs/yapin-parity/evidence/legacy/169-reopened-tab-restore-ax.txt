@@ -1,0 +1,1 @@
+INVALID YAPIN TAB-REOPEN TEST: Chrome restored an unrelated older Meldiq window. The original Yapin tab remained available, recovered through Window menu. Do not count this attempt as evidence for Yapin closed-tab restoration or browser restart. No message content retained.

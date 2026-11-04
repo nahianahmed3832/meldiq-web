@@ -1,0 +1,148 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 container User settings
+								22 combo box (settable) Search settings
+								23 text USER SETTINGS
+								24 button My Account
+								25 button My Profile
+								26 text APP SETTINGS
+								27 button Appearance
+								28 button Chat
+								29 button Language
+								30 button Voice & Audio
+								31 button Keybinds
+								32 button Advanced
+								33 button Developer
+								34 button Subscriptions
+								35 button Creators
+								36 button Leaderboards
+								37 button Shards
+								38 button Yapin’ Plus
+							39 heading Appearance, Value: 2
+								40 text Appearance
+							41 text THEME
+							42 toggle button Dark ✓, Value: 1
+								43 image
+								44 text Dark
+								45 text ✓
+							46 toggle button Light, Value: 0
+								47 image
+								48 text Light
+							49 text COLOUR THEMES
+							50 text Tint the whole app. Free, obviously.
+							51 toggle button None ✓, Value: 1
+								52 text None
+								53 text ✓
+							54 toggle button Mint Apple, Value: 0
+							55 toggle button Citrus Sherbert, Value: 0
+							56 toggle button Retro Raincloud, Value: 0
+							57 toggle button Hanami, Value: 0
+							58 toggle button Sunrise, Value: 0
+							59 toggle button Cotton Candy, Value: 0
+							60 toggle button Lofi Vibes, Value: 0
+							61 toggle button Desert Khaki, Value: 0
+							62 toggle button Sunset, Value: 0
+							63 toggle button Chroma Glow, Value: 0
+							64 toggle button Forest, Value: 0
+							65 toggle button Crimson Moon, Value: 0
+							66 toggle button Midnight Blurple, Value: 0
+							67 toggle button Mars, Value: 0
+							68 toggle button Dusk, Value: 0
+							69 toggle button Under the Sea, Value: 0
+							70 toggle button Strawberry Lemonade, Value: 0
+							71 toggle button Aurora, Value: 0
+							72 toggle button Neon Nights, Value: 0
+							73 toggle button Deep Ocean, Value: 0
+							74 text Custom theme
+							75 text Two colours, or add a third. Then set how strong it is.
+							76 container First colour
+								77 color well First colour, Value: rgb 1.00000 0.41961 0.29020 1
+							78 container Second colour
+								79 color well Second colour, Value: rgb 0.60784 0.34902 1.00000 1
+							80 button +, Help: Add a third colour
+							81 text Intensity
+							82 slider (disabled) Theme intensity, Value: 75, Secondary Actions: Increment, Decrement
+							83 container
+								84 text 75 %
+							85 text SERVER COLOURS
+							86 container
+								87 text Use a server's own colours Show a server's colours while you're in it. Turn off to always keep yours.
+								88 checkbox Value: 1, Use a server's own colours Show a server's colours while you're in it. Turn off to always keep yours.
+							89 text SERVER LIST
+							90 container
+								91 text Unread DMs in the server list People who just messaged you show up as bubbles under Home. Turn off if they pile up.
+								92 checkbox Value: 1, Unread DMs in the server list People who just messaged you show up as bubbles under Home. Turn off if they pile up.
+							93 text PROFILES
+							94 text Show profile colors in side panels
+							95 text Header only keeps their colors on the banner and avatar, so the DM panel matches the app.
+							96 Show profile colors in side panels
+								97 radio button Full, Value: 0
+								98 radio button Header only, Value: 1
+							99 text TOP BAR
+							100 container
+								101 text Hide the top bar Drops the thin Yapin’ strip at the very top. Handy if your window already has its own title bar. This device only.
+								102 checkbox Value: 0, Hide the top bar Drops the thin Yapin’ strip at the very top. Handy if your window already has its own title bar. This device only.
+							103 text CHAT
+							104 text Message density
+							105 text Compact fits more on screen, Spacious gives everything room to breathe.
+							106 Message density
+								107 radio button Cozy, Value: 1
+								108 radio button Compact, Value: 0
+								109 radio button Spacious, Value: 0
+							110 text CHAT FONT SIZE
+							111 slider CHAT FONT SIZE, Value: 16, Secondary Actions: Increment, Decrement
+							112 container
+								113 text 16 px
+							114 text SPACE BETWEEN MESSAGE GROUPS
+							115 slider SPACE BETWEEN MESSAGE GROUPS, Value: 16, Secondary Actions: Increment, Decrement
+							116 container
+								117 text 16 px
+							118 text MOTION
+							119 text Reduce motion
+							120 text Turns animations down to simple fades. Auto follows your device setting.
+							121 Reduce motion
+								122 radio button Auto, Value: 1
+								123 radio button On, Value: 0
+								124 radio button Off, Value: 0
+							125 button Close
+			126 container
+				127 tab group
+					128 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 109 MB, Value: on
+						129 button Close
+			130 button New Tab
+	131 close button
+	132 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	133 minimize button
+134 menu bar
+	135 Chrome
+	136 File
+	137 Edit
+	138 View
+	139 History
+	140 Bookmarks
+	141 Profiles
+	142 Tab
+	143 Window
+	144 Help
+
+The focused UI element is 27 button Appearance

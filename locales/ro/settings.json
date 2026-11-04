@@ -860,5 +860,11 @@
     "accountDescription": "E-mail, starea contului, exportul datelor și ștergerea contului.",
     "notificationsDescription": "Alerte desktop, sunete, pauze ale notificărilor și scurtături către preferințele conversațiilor.",
     "appearanceDescription": "Teme, culori, aspectul mesajelor, previzualizări media și gesturi de chat."
+  },
+  "foundation": {
+    "profileSections": "Secțiunile profilului",
+    "profileSectionsDescription": "Alege secțiunile vizibile și ordinea lor. Setările de audiență rămân valabile.",
+    "resetSections": "Resetează modificările secțiunilor",
+    "saveSections": "Salvează secțiunile"
   }
 }

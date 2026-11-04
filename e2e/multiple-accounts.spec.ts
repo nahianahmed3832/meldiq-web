@@ -1,3 +1,4 @@
+import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import { expect, type Page, test } from "@playwright/test";
 import { emailedCode } from "./mail";
@@ -14,12 +15,14 @@ async function createAccount(page: Page, name: string) {
   await page.getByLabel("Your name", { exact: true }).fill(name);
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
+  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));
   await page.getByRole("button", { name: "Confirm", exact: true }).click();
   await page.getByRole("button", { name: "Set up encryption", exact: true }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+  await finishWelcome(page);
   await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
   return email;
 }
@@ -82,6 +85,7 @@ test("two real account sessions survive switching, cancellation, reload and logo
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private message only for Alice");
   await expect(page.getByRole("log", { name: "Messages" })).not.toContainText("Private message only for Bob");
   await page.reload();
+  await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private message only for Alice");
   const stillSignedIn = await fetch(`${process.env.ORBIT_E2E_API}/v2/account/sessions`, { headers: { authorization: bob.token, "x-orbit-test-ip": testAddress() } });
   expect(stillSignedIn.ok).toBe(true);
@@ -97,6 +101,7 @@ test("two real account sessions survive switching, cancellation, reload and logo
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private message only for Bob");
   expect(revoked).toHaveLength(1);
   await page.reload();
+  await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private message only for Bob");
   await openAccounts(page, isMobile);
   await expect(page.getByRole(isMobile ? "button" : "menuitemradio", { name: /Alice Saved/ })).toHaveCount(0);

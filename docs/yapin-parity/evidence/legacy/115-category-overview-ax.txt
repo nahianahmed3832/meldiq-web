@@ -1,0 +1,69 @@
+Window: "(23) Yapin’", App: Google Chrome.
+0 standard window (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (23) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (23) Yapin’, URL: yapin.gg/
+						20 container Edit category
+							21 heading Edit category, Value: 2
+								22 text Edit category
+							23 tab group
+								24 tab (selected) Overview, Value: 1
+								25 tab (settable, integer) Permissions, Value: 0
+							26 container
+								27 text CATEGORY NAME
+								28 text field (settable) CATEGORY NAME, Value: Research, Placeholder: Information
+							29 text ORDER
+							30 text Drag to rearrange the categories.
+							31 text Text channels
+							32 button (disabled) Move up
+							33 button Move down
+							34 text Voice channels
+							35 button Move up
+							36 button Move down
+							37 text Research
+							38 button Move up
+							39 button (disabled) Move down
+							40 button Remove
+							41 button Cancel
+							42 button Save
+			43 container
+				44 tab group
+					45 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						46 button Close
+					47 tab (selected, settable, boolean) (23) Yapin’ - Memory usage - 214 MB, Value: on
+						48 button Close
+					49 tab (settable, boolean) Creator Center · Yapin’ - Memory usage - 445 MB, Value: off
+						50 button Close
+			51 button New Tab
+	52 close button
+	53 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	54 minimize button
+55 menu bar
+	56 Chrome
+	57 File
+	58 Edit
+	59 View
+	60 History
+	61 Bookmarks
+	62 Profiles
+	63 Tab
+	64 Window
+	65 Help
+
+The focused UI element is 28 text field (settable) CATEGORY NAME, Value: Research, Placeholder: Information

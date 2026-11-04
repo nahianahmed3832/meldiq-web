@@ -1,0 +1,88 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container
+							21 button Close
+							22 text Alerts BOT New video? Everyone knows Off
+							23 checkbox Off, Value: 0
+							24 text Quick and loud, but only when it matters. Posts once per upload, never the old stuff.
+							25 content list
+								26 text Watches YouTube channels for new uploads
+								27 text Posts the link in your channel, with a preview
+								28 text Pings a role if you want
+								29 text Your own message: {creator}, {title}, {url}
+							30 text Alerts
+							31 text BOT
+							32 text 📣  Your fave creator  just posted:  The video everyone will talk about https://www.youtube.com/watch?v=… Turn it on, then add the YouTube channels to watch. Alerts+
+							33 text PLUS
+							34 table
+								35 row
+									36 column header
+										37 text FREE
+									38 column header
+										39 text ALERTS+
+								40 row
+									41 cell
+										42 text New YouTube uploads posted for you
+									43 cell
+										44 image Yes
+									45 cell
+										46 image Yes
+								47 row
+									48 cell
+										49 text Role ping and your own message
+									50 cell
+										51 image Yes
+									52 cell
+										53 image Yes
+								54 row
+									55 cell
+										56 text YouTube channels to watch
+									57 cell
+										58 text up to 3
+									59 cell
+										60 text up to 25
+							61 button Get Bots+ · $3.99/mo
+							62 text Renews every month at $3.99 until you cancel. Cancel any time in Settings, Subscriptions or at 
+							63 link yapin.gg/cancel
+							64 text . Bots+ is one subscription for this server: it unlocks the Plus extras of every Yapin’ bot together. Saved
+							65 button (disabled) Save
+			66 container
+				67 tab group
+					68 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 151 MB, Value: on
+						69 button Close
+			70 button New Tab
+	71 close button
+	72 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	73 minimize button
+74 menu bar
+	75 Chrome
+	76 File
+	77 Edit
+	78 View
+	79 History
+	80 Bookmarks
+	81 Profiles
+	82 Tab
+	83 Window
+	84 Help
+
+The focused UI element is 23 checkbox Off, Value: 0

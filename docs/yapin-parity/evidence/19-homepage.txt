@@ -1,0 +1,133 @@
+Window: "Yapin’", App: Google Chrome.
+0 standard window Yapin’ - Google Chrome (Incognito), URL: yapin.gg/, Secondary Actions: Raise
+	1 container Yapin’ - Google Chrome (Incognito), URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Bookmark this tab
+				11 button Incognito
+				12 pop up button Chrome
+			13 toolbar Bookmarks
+			14 container
+				15 scroll area
+					16 HTML content Yapin’, URL: yapin.gg/
+						17 container
+							18 container Main
+								19 link Yapin’, Value: yapin.gg/#top
+								20 content list
+									21 link Download, Value: yapin.gg/download
+									22 link Developers, Value: yapin.gg/developers
+									23 link Plus, Value: yapin.gg/plus
+								24 button Switch to light mode, Help: Light mode
+								25 button Log in
+							26 container
+								27 heading Your group chat, with room to hang out., Value: 1
+									28 text Your group chat,
+									29 text with room to hang out.
+								30 text Yapin’ is where your friends and communities talk, call and share their screens. Free to use, including a lot of the stuff other apps charge for. Plus is optional.
+								31 button Open Yapin’ in your browser
+								32 link Download the desktop app, Value: yapin.gg/download
+								33 container
+									34 text 778 people online now · Free, no card
+								35 image The Yapin’ client showing a server with text channels, voice channels and a members list.
+							36 container
+								37 text DISCOVER
+								38 heading Find your people, Value: 2
+									39 text Find your people
+								40 text Public servers you can search by name, topic or tag. One click to join, or start your own for your crew, with text channels and voice side by side and as many servers as you want.
+								41 image The Yapin’ Discover page showing the official Yapin’ Headquarters server.
+							42 container
+								43 image The Yapin’ client showing the Direct Messages screen with friends and groups.
+								44 text DIRECT MESSAGES
+								45 heading One list, everyone you talk to, Value: 2
+									46 text One list, everyone you talk to
+								47 text Friends, groups and DMs in a single column. See who is online at a glance instead of opening a profile to find out.
+							48 container
+								49 heading Come yap., Value: 2
+									50 text Come yap.
+								51 text Making an account takes a minute. No card, no trial. Chatting is free and stays free; Plus is an optional extra.
+								52 button Open Yapin’ in your browser
+								53 link Download the desktop app, Value: yapin.gg/download
+								54 text Free · No credit card · Runs in your browser
+							55 container
+								56 heading Questions., Value: 2
+									57 text Questions.
+								58 content list
+									59 container
+										60 heading Is Yapin’ really free?, Value: 3
+											61 button Is Yapin’ really free?
+										62 text Yes, chatting, calls, screen share, animated avatars and emojis, your emojis in every server, profile themes and video uploads are free. Plus ($4.99 a month) is optional: longer messages, bigger uploads and 1080p60 streams. Nothing you need to chat is held back.
+									63 container
+										64 heading What platforms does it support?, Value: 3
+											65 button What platforms does it support?
+										66 text The browser (phones too: Add to Home Screen gives you an app icon) and the desktop app for Windows and Linux. Your account, servers and message history are the same everywhere, and the desktop app is the better experience for voice.
+									67 container
+										68 heading What can bots do?, Value: 3
+											69 button What can bots do?
+										70 text Built-in bots cover welcoming, levels and tickets, and the bot list has community bots we checked by hand. Developers can write their own in plain HTTPS or with our JavaScript and Python SDKs, run them on their own computer or let us host them. Docs at yapin.gg/developers.
+									71 container
+										72 heading Is it in my language?, Value: 3
+											73 button Is it in my language?
+										74 text Yes: English, Spanish, German, French and Brazilian Portuguese. Pick yours in Settings, Language, or on the sign-in page.
+									75 container
+										76 heading How does it handle my data?, Value: 3
+											77 button How does it handle my data?
+										78 text Messages are encrypted in transit and at rest, but not end-to-end: our servers can see them so safety checks can run. Only the people in a DM can read it in the app. Automated safety checks scan messages for spam and abuse, and staff only look when something is reported or flagged. No data selling, no ad profiles.
+							79 text Yapin’
+							80 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+							81 heading PRODUCT, Value: 4
+								82 text PRODUCT
+							83 content list
+								84 link Download, Value: yapin.gg/download
+								85 link Developers, Value: yapin.gg/developers
+								86 link Yapin’ Plus, Value: yapin.gg/plus
+								87 link Creator Program, Value: yapin.gg/creators
+								88 link FanKit, Value: yapin.gg/fankit
+								89 link Roadmap, Value: yapin.gg/roadmap
+								90 link Yapper is now Yapin’, Value: yapin.gg/announcement
+								91 link Bugs, Value: yapin.gg/bugs
+								92 link Status, Value: yapin.gg/status
+							93 heading COMMUNITY, Value: 4
+								94 text COMMUNITY
+							95 content list
+								96 link Guidelines, Value: yapin.gg/guidelines
+								97 link Tutorials, Value: yapin.gg/tutorials
+								98 link Bots, Value: yapin.gg/bots
+								99 link Partners, Value: yapin.gg/partners
+							100 heading LEGAL, Value: 4
+								101 text LEGAL
+							102 content list
+								103 link Terms, Value: yapin.gg/terms
+								104 link Privacy, Value: yapin.gg/privacy
+								105 link Copyright, Value: yapin.gg/copyright
+								106 link Security, Value: yapin.gg/security
+								107 link Cancel a subscription, Value: yapin.gg/cancel
+								108 link Contact, Value: mailto:hello@yapin.gg
+							109 text © 2026 Yapper Media LLC. Free to use.
+							110 text Made for people who talk.
+			111 container
+				112 tab group
+					113 tab (selected, settable, boolean) Yapin’ - Memory usage - 154 MB, Value: on
+						114 button Close
+			115 button New Tab
+	116 close button
+	117 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	118 minimize button
+119 menu bar
+	120 Chrome
+	121 File
+	122 Edit
+	123 View
+	124 History
+	125 Bookmarks
+	126 Profiles
+	127 Tab
+	128 Window
+	129 Help
+
+The focused UI element is 16 HTML content Yapin’, URL: yapin.gg/

@@ -1,0 +1,102 @@
+Browser tab: 2, Title: "Creator Center · Yapin’", URL: "https://www.yapin.gg/creator".
+1 AXWebArea Creator Center · Yapin’, URL: yapin.gg/creator
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text CREATOR CENTER
+			14 heading Make Yapin’ content. Earn Plus and badges., Value: 1
+				15 text Make Yapin’ content.
+				16 text Earn Plus and badges.
+			17 text Make videos or posts about Yapin’, send them in, get Plus and badges. Join and send things in right here. Only for content about Yapin’. The video, short, stream or post has to be about Yapin’ or really use it. Other content, and applications with nothing to do with Yapin’, get turned down, and faking it can cost you your verified badge.
+			18 link Description: Join the program, Value: yapin.gg/creator#status
+		19 container
+			20 text HOW IT WORKS
+			21 heading Three steps., Value: 2
+				22 text Three steps.
+			23 text 1
+			24 text Verify your channel
+			25 text YouTube, TikTok, Twitch, Instagram or X. 1,000+ followers. So we know the channel is yours.
+			26 text 2
+			27 text Apply
+			28 text One button and your follower count. We look at your channel and answer within a day or two.
+			29 text 3
+			30 text Post about Yapin’, send it in
+			31 text Paste the link. We read the title and the views ourselves. Each piece pays Plus, your total earns badges, and your invite link pays on top.
+			32 container status
+				33 text YOUR STATUS
+				34 container Loading…
+			35 container rewards
+				36 text REWARDS
+				37 heading What you get., Value: 2
+					38 text What you get.
+				39 text WHEN YOU JOIN
+				40 content list
+					41 text The Creator badge
+					42 text Your own invite link
+					43 container
+						44 text Approved as Pro: 3 months of Plus
+					45 container
+						46 text Approved as Elite: 6 months of Plus
+				47 text FOR EVERY VIDEO YOU SEND IN
+				48 content list
+					49 container
+						50 text 10K views 1 month of Plus
+					51 container
+						52 text 50K views 2 months of Plus
+					53 container
+						54 text 200K views 4 months of Plus
+					55 container
+						56 text 1M views 8 months of Plus
+				57 text Shorts, TikToks and Reels: 25K / 125K / 500K / 2.5M views.
+				58 container
+					59 text AS YOUR TOTAL VIEWS GROW
+					60 button (collapsed) Description: How badges work, Secondary Actions: Expand
+				61 content list
+					62 container
+						63 text 100k Pro Creator badge
+					64 container
+						65 text 500k Elite Creator badge + Partner badge
+				66 text Video views. Shorts, TikToks and Reels need 5×: 500K / 2.5M short views. A mix adds up. Badges only move up.
+				67 text Views count at the moment we check the piece. Plus stacks on what you already have.
+		68 text Yapin’
+		69 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		70 heading PRODUCT, Value: 4
+			71 text PRODUCT
+		72 content list
+			73 link Description: Download, Value: yapin.gg/download
+			74 link Description: Developers, Value: yapin.gg/developers
+			75 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			76 link Description: Creator Program, Value: yapin.gg/creators
+			77 link Description: FanKit, Value: yapin.gg/fankit
+			78 link Description: Roadmap, Value: yapin.gg/roadmap
+			79 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			80 link Description: Bugs, Value: yapin.gg/bugs
+			81 link Description: Status, Value: yapin.gg/status
+		82 heading COMMUNITY, Value: 4
+			83 text COMMUNITY
+		84 content list
+			85 link Description: Guidelines, Value: yapin.gg/guidelines
+			86 link Description: Tutorials, Value: yapin.gg/tutorials
+			87 link Description: Bots, Value: yapin.gg/bots
+			88 link Description: Partners, Value: yapin.gg/partners
+		89 heading LEGAL, Value: 4
+			90 text LEGAL
+		91 content list
+			92 link Description: Terms, Value: yapin.gg/terms
+			93 link Description: Privacy, Value: yapin.gg/privacy
+			94 link Description: Copyright, Value: yapin.gg/copyright
+			95 link Description: Security, Value: yapin.gg/security
+			96 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			97 link Description: Contact, Value: mailto:hello@yapin.gg
+		98 text © 2026 Yapper Media LLC. Free to use.
+		99 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Creator Center · Yapin’, URL: yapin.gg/creator

@@ -1,0 +1,74 @@
+[
+  {
+    "file": "screenshots/home-chromium.jpg",
+    "dimensions": [
+      768,
+      1024
+    ],
+    "sha256": "2cc97e10a18c164539043ba08e19886436c6ac8164e260b0d83a325511baaee3",
+    "scope": "local synthetic built-Web fixture"
+  },
+  {
+    "file": "screenshots/home-phone-width.jpg",
+    "dimensions": [
+      2216,
+      1024
+    ],
+    "sha256": "85b6649ef1a6ebf3c9d8c78332b549c7a6f58c322ba706727808738140feb452",
+    "scope": "local synthetic built-Web fixture"
+  },
+  {
+    "file": "screenshots/profile-chromium.jpg",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "9154e3cb6ff1d69d017b8caa078a3669b039457906a7caeafe066f6a98f38a9a",
+    "scope": "local synthetic built-Web fixture"
+  },
+  {
+    "file": "screenshots/profile-phone-width.jpg",
+    "dimensions": [
+      1082,
+      2202
+    ],
+    "sha256": "32ebdeda1e55188fb0eba9cb837a7b4e49ca22bd8522222dcb47440fa97868f7",
+    "scope": "local synthetic built-Web fixture"
+  },
+  {
+    "file": "screenshots/public-terms.jpg",
+    "dimensions": [
+      1280,
+      720
+    ],
+    "sha256": "44645c44a2c837bdd007aa6730cd56d748d27d20b4a6df5a8dd5eda013023fce",
+    "scope": "read-only live public Terms"
+  },
+  {
+    "file": "screenshots/registration-desktop.jpg",
+    "dimensions": [
+      1280,
+      720
+    ],
+    "sha256": "80ff501fc26d8e2ce4df320b48d2c47920bbe570b2d1a3afe2c2e8c1d90e0a2b",
+    "scope": "local synthetic built-Web fixture"
+  },
+  {
+    "file": "screenshots/welcome-chromium.jpg",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "6048719165b95b25a5fb7c726eb08891f60a556c3160025da544b153a4e40285",
+    "scope": "local synthetic built-Web fixture"
+  },
+  {
+    "file": "screenshots/welcome-phone-width.jpg",
+    "dimensions": [
+      1082,
+      2202
+    ],
+    "sha256": "69a61aed4441452397b434c62595c9dae059aa798e4bb56dda5564c358d9280e",
+    "scope": "local synthetic built-Web fixture"
+  }
+]

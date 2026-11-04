@@ -1,0 +1,91 @@
+Browser tab: 2, Title: "Remove an intimate image · Yapin’", URL: "https://www.yapin.gg/remove-image".
+1 AXWebArea Remove an intimate image · Yapin’, URL: yapin.gg/remove-image
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text LEGAL
+			14 heading Remove an intimate image, Value: 1
+				15 text Remove an intimate image
+			16 text LAST UPDATED  20 OCTOBER 2026 Was a nude, sexual or intimate image or video of you shared on Yapin’ without your consent, real or AI-made? Tell us where it is and we’ll take it down within 48 hours.
+		17 container
+			18 content list
+				19 container
+					20 AXListMarker • 
+					21 text You don’t need a Yapin’ account, a police report or proof that you own the picture.
+				22 container
+					23 AXListMarker • 
+					24 text Don’t send us the image itself. Just tell us where it is: a message link, a profile, a server.
+				25 container
+					26 AXListMarker • 
+					27 text You can ask for yourself, or for someone else if you’re allowed to act for them (for example a parent or a lawyer).
+				28 container
+					29 AXListMarker • 
+					30 text We’ll remove the reported content and copies of it we can find on Yapin’, and email you when it’s done.
+			31 text If someone is threatening to share images of you, or a child is involved, contact the police too. In the US you can also use 
+			32 link Description: Take It Down, Value: takeitdown.ncmec.org/
+			33 text  from NCMEC.
+			34 text WHO IS IN THE IMAGE?
+			35 radio button (settable, integer) Description: Me, Value: 1
+			36 radio button (settable, integer) Description: Someone I’m allowed to act for, Value: 0
+			37 text YOUR NAME
+			38 text field (settable) YOUR NAME, ID: ri-name
+			39 text EMAIL WE CAN REACH YOU AT
+			40 text field (settable) EMAIL WE CAN REACH YOU AT
+			41 text WHERE IS IT? (ONE PER LINE)
+			42 text entry area (settable) WHERE IS IT? (ONE PER LINE), ID: ri-links
+			43 text ANYTHING THAT HELPS US FIND IT (OPTIONAL)
+			44 text entry area (settable) ANYTHING THAT HELPS US FIND IT (OPTIONAL), ID: ri-details
+			45 container
+				46 checkbox (settable, integer) Value: 0, Description: I believe in good faith that this intimate image or video was shared without the consent of the person in it, and I am that person or allowed to act for them.
+				47 text I believe in good faith that this intimate image or video was shared without the consent of the person in it, and I am that person or allowed to act for them.
+			48 text SIGN BY TYPING YOUR FULL NAME
+			49 text field (settable) SIGN BY TYPING YOUR FULL NAME, ID: ri-sign
+			50 button (disabled) Send removal request
+			51 text Trouble with the form? Email 
+			52 link Description: hello@yapin.gg, Value: mailto:hello@yapin.gg
+			53 text  with “Intimate image removal” in the subject.
+			54 link Description: ← Back to Yapin’, Value: yapin.gg/
+			55 text  · 
+			56 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		57 text Yapin’
+		58 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		59 heading PRODUCT, Value: 4
+			60 text PRODUCT
+		61 content list
+			62 link Description: Download, Value: yapin.gg/download
+			63 link Description: Developers, Value: yapin.gg/developers
+			64 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			65 link Description: Creator Program, Value: yapin.gg/creators
+			66 link Description: FanKit, Value: yapin.gg/fankit
+			67 link Description: Roadmap, Value: yapin.gg/roadmap
+			68 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			69 link Description: Bugs, Value: yapin.gg/bugs
+			70 link Description: Status, Value: yapin.gg/status
+		71 heading COMMUNITY, Value: 4
+			72 text COMMUNITY
+		73 content list
+			74 link Description: Guidelines, Value: yapin.gg/guidelines
+			75 link Description: Tutorials, Value: yapin.gg/tutorials
+			76 link Description: Bots, Value: yapin.gg/bots
+			77 link Description: Partners, Value: yapin.gg/partners
+		78 heading LEGAL, Value: 4
+			79 text LEGAL
+		80 content list
+			81 link Description: Terms, Value: yapin.gg/terms
+			82 link Description: Privacy, Value: yapin.gg/privacy
+			83 link Description: Copyright, Value: yapin.gg/copyright
+			84 link Description: Security, Value: yapin.gg/security
+			85 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			86 link Description: Contact, Value: mailto:hello@yapin.gg
+		87 text © 2026 Yapper Media LLC. Free to use.
+		88 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Remove an intimate image · Yapin’, URL: yapin.gg/remove-image

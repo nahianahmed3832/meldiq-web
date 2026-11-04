@@ -1,0 +1,137 @@
+Browser tab: 2, Title: "FanKit · Yapin’", URL: "https://www.yapin.gg/fankit".
+1 AXWebArea FanKit · Yapin’, URL: yapin.gg/fankit
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container
+			13 text YAPIN’ FANKIT
+			14 heading Make something about Yapin’., Value: 1
+				15 text Make something
+				16 text about Yapin’.
+			17 text Logos, badges and colours for thumbnails, overlays and fan art. Free to use in anything you make about Yapin’.
+			18 link Description: Download all (zip), Value: yapin.gg/fankit/yapin-fankit.zip
+			19 link Description: Creator Program, Value: yapin.gg/creators
+		20 container
+			21 container logos
+				22 text LOGOS
+				23 heading The bear and the wordmark., Value: 2
+					24 text The bear and the wordmark.
+				25 image Wordmark
+				26 text Wordmark
+				27 text For light backgrounds
+				28 link Description: SVG, Value: yapin.gg/fankit/logos/svg/yapin-wordmark-dark.svg
+				29 link Description: PNG 512, Value: yapin.gg/fankit/logos/png/yapin-wordmark-dark-512.png
+				30 link Description: PNG 1024, Value: yapin.gg/fankit/logos/png/yapin-wordmark-dark-1024.png
+				31 link Description: PNG 2048, Value: yapin.gg/fankit/logos/png/yapin-wordmark-dark-2048.png
+				32 image Wordmark (light)
+				33 text Wordmark (light)
+				34 text For dark backgrounds
+				35 link Description: SVG, Value: yapin.gg/fankit/logos/svg/yapin-wordmark-light.svg
+				36 link Description: PNG 512, Value: yapin.gg/fankit/logos/png/yapin-wordmark-light-512.png
+				37 link Description: PNG 1024, Value: yapin.gg/fankit/logos/png/yapin-wordmark-light-1024.png
+				38 link Description: PNG 2048, Value: yapin.gg/fankit/logos/png/yapin-wordmark-light-2048.png
+				39 image Wordmark (white)
+				40 text Wordmark (white)
+				41 text For orange and photos
+				42 link Description: SVG, Value: yapin.gg/fankit/logos/svg/yapin-wordmark-white.svg
+				43 link Description: PNG 512, Value: yapin.gg/fankit/logos/png/yapin-wordmark-white-512.png
+				44 link Description: PNG 1024, Value: yapin.gg/fankit/logos/png/yapin-wordmark-white-1024.png
+				45 link Description: PNG 2048, Value: yapin.gg/fankit/logos/png/yapin-wordmark-white-2048.png
+				46 image The bear
+				47 text The bear
+				48 text Our logo on its own
+				49 link Description: SVG, Value: yapin.gg/fankit/logos/svg/yapin-bear.svg
+				50 link Description: PNG 512, Value: yapin.gg/fankit/logos/png/yapin-bear-512.png
+				51 link Description: PNG 1024, Value: yapin.gg/fankit/logos/png/yapin-bear-1024.png
+				52 link Description: PNG 2048, Value: yapin.gg/fankit/logos/png/yapin-bear-2048.png
+				53 image The bear (white)
+				54 text The bear (white)
+				55 text For orange and photos
+				56 link Description: SVG, Value: yapin.gg/fankit/logos/svg/yapin-bear-white.svg
+				57 link Description: PNG 512, Value: yapin.gg/fankit/logos/png/yapin-bear-white-512.png
+				58 link Description: PNG 1024, Value: yapin.gg/fankit/logos/png/yapin-bear-white-1024.png
+				59 link Description: PNG 2048, Value: yapin.gg/fankit/logos/png/yapin-bear-white-2048.png
+				60 image App icon
+				61 text App icon
+				62 text The rounded tile from your home screen
+				63 link Description: SVG, Value: yapin.gg/fankit/logos/svg/yapin-app-icon.svg
+				64 link Description: PNG 512, Value: yapin.gg/fankit/logos/png/yapin-app-icon-512.png
+				65 link Description: PNG 1024, Value: yapin.gg/fankit/logos/png/yapin-app-icon-1024.png
+				66 link Description: PNG 2048, Value: yapin.gg/fankit/logos/png/yapin-app-icon-2048.png
+				67 text PNGs are see-through and sized by width. SVGs stay sharp at any size.
+			68 container badges
+				69 text BADGES
+				70 heading The badges people know., Value: 2
+					71 text The badges people know.
+				72 image Plus
+				73 text Plus
+				74 text Yapin’ Plus members
+				75 link Description: SVG, Value: yapin.gg/fankit/badges/badge-plus.svg
+				76 link Description: PNG 512, Value: yapin.gg/fankit/badges/badge-plus-512.png
+				77 image Partner
+				78 text Partner
+				79 text Partner servers and their owners
+				80 link Description: SVG, Value: yapin.gg/fankit/badges/badge-partner.svg
+				81 link Description: PNG 512, Value: yapin.gg/fankit/badges/badge-partner-512.png
+				82 image Creator
+				83 text Creator
+				84 text Creator Program
+				85 link Description: SVG, Value: yapin.gg/fankit/badges/badge-creator.svg
+				86 link Description: PNG 512, Value: yapin.gg/fankit/badges/badge-creator-512.png
+				87 image Pro Creator
+				88 text Pro Creator
+				89 text Creator Program, tier 2
+				90 link Description: SVG, Value: yapin.gg/fankit/badges/badge-pro-creator.svg
+				91 link Description: PNG 512, Value: yapin.gg/fankit/badges/badge-pro-creator-512.png
+				92 image Elite Creator
+				93 text Elite Creator
+				94 text Creator Program, tier 3
+				95 link Description: SVG, Value: yapin.gg/fankit/badges/badge-elite-creator.svg
+				96 link Description: PNG 512, Value: yapin.gg/fankit/badges/badge-elite-creator-512.png
+				97 text Show them as they are. Don’t put a badge on someone who doesn’t have it.
+			98 heading Made something?, Value: 2
+				99 text Made something?
+			100 text Videos and posts about Yapin’ can earn you a Creator badge and free Plus.
+			101 link Description: Join the Creator Program, Value: yapin.gg/creators
+			102 link Description: Download all (zip), Value: yapin.gg/fankit/yapin-fankit.zip
+		103 text Yapin’
+		104 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		105 heading PRODUCT, Value: 4
+			106 text PRODUCT
+		107 content list
+			108 link Description: Download, Value: yapin.gg/download
+			109 link Description: Developers, Value: yapin.gg/developers
+			110 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			111 link Description: Creator Program, Value: yapin.gg/creators
+			112 link Description: FanKit, Value: yapin.gg/fankit
+			113 link Description: Roadmap, Value: yapin.gg/roadmap
+			114 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			115 link Description: Bugs, Value: yapin.gg/bugs
+			116 link Description: Status, Value: yapin.gg/status
+		117 heading COMMUNITY, Value: 4
+			118 text COMMUNITY
+		119 content list
+			120 link Description: Guidelines, Value: yapin.gg/guidelines
+			121 link Description: Tutorials, Value: yapin.gg/tutorials
+			122 link Description: Bots, Value: yapin.gg/bots
+			123 link Description: Partners, Value: yapin.gg/partners
+		124 heading LEGAL, Value: 4
+			125 text LEGAL
+		126 content list
+			127 link Description: Terms, Value: yapin.gg/terms
+			128 link Description: Privacy, Value: yapin.gg/privacy
+			129 link Description: Copyright, Value: yapin.gg/copyright
+			130 link Description: Security, Value: yapin.gg/security
+			131 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			132 link Description: Contact, Value: mailto:hello@yapin.gg
+		133 text © 2026 Yapper Media LLC. Free to use.
+		134 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea FanKit · Yapin’, URL: yapin.gg/fankit

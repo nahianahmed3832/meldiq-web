@@ -1,0 +1,56 @@
+Browser tab: 2, Title: "Add a bot", URL: "https://www.yapin.gg/bot/2b71b8c3-a2b8-4dcc-96c9-47a89166e8c7".
+1 AXWebArea Add a bot, URL: yapin.gg/bot/2b71b8c3-a2b8-4dcc-96c9-47a89166e8c7
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		45 container
+			46 heading SapphireLite BOT, Value: 1
+				47 text SapphireLite
+				48 text BOT
+			49 text by wakfuonyt
+			50 text In 413 servers
+			51 text All-in-one bot! Cutest bot ever made, add it now! :3
+			52 button Add to server
+			53 link Description: More bots, Value: yapin.gg/bots
+			54 text Bots only see and post in servers a manager adds them to, and follow the same rules as people.
+		13 text Yapin’
+		14 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		15 heading PRODUCT, Value: 4
+			16 text PRODUCT
+		17 content list
+			18 link Description: Download, Value: yapin.gg/download
+			19 link Description: Developers, Value: yapin.gg/developers
+			20 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			21 link Description: Creator Program, Value: yapin.gg/creators
+			22 link Description: FanKit, Value: yapin.gg/fankit
+			23 link Description: Roadmap, Value: yapin.gg/roadmap
+			24 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			25 link Description: Bugs, Value: yapin.gg/bugs
+			26 link Description: Status, Value: yapin.gg/status
+		27 heading COMMUNITY, Value: 4
+			28 text COMMUNITY
+		29 content list
+			30 link Description: Guidelines, Value: yapin.gg/guidelines
+			31 link Description: Tutorials, Value: yapin.gg/tutorials
+			32 link Description: Bots, Value: yapin.gg/bots
+			33 link Description: Partners, Value: yapin.gg/partners
+		34 heading LEGAL, Value: 4
+			35 text LEGAL
+		36 content list
+			37 link Description: Terms, Value: yapin.gg/terms
+			38 link Description: Privacy, Value: yapin.gg/privacy
+			39 link Description: Copyright, Value: yapin.gg/copyright
+			40 link Description: Security, Value: yapin.gg/security
+			41 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			42 link Description: Contact, Value: mailto:hello@yapin.gg
+		43 text © 2026 Yapper Media LLC. Free to use.
+		44 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Add a bot, URL: yapin.gg/bot/2b71b8c3-a2b8-4dcc-96c9-47a89166e8c7

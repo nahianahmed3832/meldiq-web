@@ -1,0 +1,31 @@
+{
+  "observedAt": "2026-11-04T05:11:38.594628+00:00",
+  "flags": {
+    "DATABASE_MODE": "supabase",
+    "APP_ENV": "production",
+    "SUPABASE_DATABASE_POOL_SIZE": "6",
+    "PAYPAL_ENVIRONMENT": "live",
+    "PAYPAL_ADVANCED_CHECKOUT_ENABLED": "false",
+    "PAYPAL_VAULT_ENABLED": "false",
+    "PAYPAL_CARD_RECURRING_ENABLED": "false",
+    "PAYPAL_SUBSCRIPTIONS_APPROVED": "true",
+    "PAYPAL_GIFTS_ENABLED": "true",
+    "PAYPAL_SPARKS_ENABLED": "true",
+    "SOCIAL_AUTH_PROVIDERS": "google,discord",
+    "S3_REGION": "eu-central-1",
+    "S3_USE_LEGACY_WEB_UPLOAD_PROXY": "true",
+    "ATTACHMENT_KEEP_FOREVER": "true"
+  },
+  "singleApiContainer": true,
+  "supabaseDatabaseRegion": "eu-central-1",
+  "web": {
+    "environment": "production",
+    "supabaseMigration": false,
+    "firebaseConfigured": false,
+    "sameOriginApi": true,
+    "defaultWebSocket": true
+  },
+  "siteRoot": "/opt/meldiq-site/releases/site-20261103T181028Z-a07de9ec4e",
+  "nativeTransportConfigured": false,
+  "federationConfiguredSettingNames": []
+}

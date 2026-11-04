@@ -88,5 +88,12 @@
   },
   "states": {
     "muted": "Sessiz"
+  },
+  "password": {
+    "show": "Parolayı göster",
+    "hide": "Parolayı gizle"
+  },
+  "navigation": {
+    "skipToContent": "Ana içeriğe geç"
   }
 }

@@ -1,0 +1,42 @@
+Browser tab: 1, Title: "Yapin’", URL: "https://www.yapin.gg/".
+0 AXWebArea (32) Yapin’, URL: yapin.gg/
+	1 container
+		2 container Server settings
+			3 text Meldiq Research - Private Test
+			4 text OVERVIEW
+			5 button Overview
+			6 button Theme
+			7 button Channels
+			8 text COMMUNITY
+			9 button Lobby
+			10 button Emoji
+			11 button Onboarding
+			12 button Ping roles
+			13 text SAFETY
+			14 button Safety
+			15 button Reports
+			16 button Audit log
+			17 text MEMBERS
+			18 button Members
+			19 button Roles
+			20 button Bans
+			21 text APPS
+			22 button Bots
+			23 text PLUS
+			24 button Supercharge
+			25 button Promote
+			26 button Yapin’ Partner
+		27 container
+			28 heading Yapin’ Partner, Value: 2
+				29 text Yapin’ Partner
+			30 combo box (collapsed, settable) Description: Search settings, Secondary Actions: Expand
+		87 text Partners are big, well-run servers we love. They get a Partner badge next to the server name, and the owner gets the Partner badge on their profile.
+		88 heading Requirements, Value: 3
+			89 text Requirements
+		90 text Supercharge level 2+ Level 0 1,000+ members 1 members Rules channel or onboarding None set 2+ active mods (last 30 days) 0 active Verification level Medium or higher Medium Server and owner 10+ days old 3 days Clean record (no staff action) All good
+		91 text Active mods are people other than the owner who banned, kicked, timed out or moderated voice in the last 30 days. A clean record means the server wasn’t shut down, hidden or warned by staff in the last 90 days, its name is allowed and the owner isn’t banned.
+		92 text Hit every requirement and you can apply right here.
+		85 button Close
+			86 image
+
+The focused UI element is 26 button Yapin’ Partner

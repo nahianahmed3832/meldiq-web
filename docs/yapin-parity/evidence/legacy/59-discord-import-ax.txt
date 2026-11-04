@@ -1,0 +1,75 @@
+Window: "(28) Yapin’", App: Google Chrome.
+0 standard window (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/, Secondary Actions: Raise
+	1 container (28) Yapin’ - Google Chrome - Nahian, URL: yapin.gg/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop up button View site information
+					9 text field (settable) Address and search bar, Value: yapin.gg, Placeholder: Search Google or type a URL
+					10 button Install Yapin’
+					11 button Bookmark this tab
+				12 button Verify it's you
+				13 pop up button Chrome
+			14 toolbar Bookmarks
+				15 toolbar Saved Tab Groups
+					16 button Tab groups
+			17 container
+				18 scroll area
+					19 HTML content (28) Yapin’, URL: yapin.gg/
+						20 container Import from Discord
+							21 heading Import from Discord, Value: 2
+								22 text Import from Discord
+							23 text Channels, categories, roles, emojis and the icon come over. People join with an invite.
+							24 container
+								25 button New server
+								26 button Import from Discord
+							27 container
+								28 content list
+									29 container
+										30 AXListMarker 1. 
+										31 text Invite Yapin’s bot to your Discord server: 
+										32 link open the invite, Value: discord.com/oauth2/authorize?client_id=1560718820853944461&scope=bot&permissions=1024
+										33 text . It only needs to view channels.
+									34 container
+										35 AXListMarker 2. 
+										36 text In Discord: User Settings → Advanced → Developer Mode on. Then right-click your server's icon →  Copy Server ID .
+									37 container
+										38 AXListMarker 3. 
+										39 text Paste it here.
+									40 container
+										41 AXListMarker 4. 
+										42 text Sign in with Discord so we can check the server is yours (you own it or have Manage Server).
+										43 button Connect Discord
+								44 text DISCORD SERVER ID
+								45 text field (settable) DISCORD SERVER ID, Placeholder: 123456789012345678
+								46 text NAME ON YAPIN’ (OPTIONAL, DEFAULTS TO THE DISCORD NAME)
+								47 text field (settable) NAME ON YAPIN’ (OPTIONAL, DEFAULTS TO THE DISCORD NAME), Placeholder: Same as on Discord
+								48 text Messages and members can't be copied (Discord doesn't allow it). Kick the bot from Discord afterwards if you like.
+							49 button Cancel
+							50 button (disabled) Import
+			51 container
+				52 tab group
+					53 tab (settable, boolean) New Tab - Memory usage - 72.0 MB, Value: off
+						54 button Close
+					55 tab (selected, settable, boolean) (28) Yapin’ - Memory usage - 97.0 MB, Value: on
+						56 button Close
+			57 button New Tab
+	58 close button
+	59 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	60 minimize button
+61 menu bar
+	62 Chrome
+	63 File
+	64 Edit
+	65 View
+	66 History
+	67 Bookmarks
+	68 Profiles
+	69 Tab
+	70 Window
+	71 Help
+
+The focused UI element is 26 button Import from Discord

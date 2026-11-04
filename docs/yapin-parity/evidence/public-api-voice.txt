@@ -1,0 +1,626 @@
+Browser tab: 2, Title: "Voice · Bot API reference · Yapin’", URL: "https://www.yapin.gg/developers/api/voice".
+1 AXWebArea Voice · Bot API reference · Yapin’, URL: yapin.gg/developers/api/voice
+	2 container
+		3 container Main
+			4 link Description: Yapin’, Value: yapin.gg/
+			5 content list
+				6 link Description: Download, Value: yapin.gg/download
+				7 link Description: Developers, Value: yapin.gg/developers
+				8 link Description: Plus, Value: yapin.gg/plus
+			9 button Description: Switch to light mode, Help: Light mode
+				10 image
+			11 link Description: Open Yapin’, Value: yapin.gg/
+		12 container top
+			13 text DEVELOPERS
+			14 heading Voice, Value: 1
+				15 text Voice
+			16 text Who is in voice, moving people, and the bot joining a call.
+			17 link Description: Download openapi.json OpenAPI 3.1 · v1.3.0, Value: yapin.gg/openapi.json
+			18 link Description: Reference, Value: yapin.gg/developers/api
+			19 link Description: Events, Value: yapin.gg/developers/api/events
+			20 link Description: Changelog, Value: yapin.gg/developers/api/changelog
+			21 link Description: Guide and SDKs, Value: yapin.gg/developers
+		22 container
+			23 search text field (settable) Search the API reference
+			24 container get-servers-id-voice
+				25 text GET
+				26 text /servers/{id}/voice
+				27 link Description: Link to this endpoint, Value: yapin.gg/developers/api/voice#get-servers-id-voice
+				28 text Who is in voice, for every voice channel the bot can see
+				29 text Auth :  Bot token In testing : 
+				30 text bot_voice
+				31 text Limit :  60 a minute JS: 
+				32 text bot.voice()
+				33 text Python: 
+				34 text bot.voice()
+				35 heading PARAMETERS, Value: 4
+					36 text PARAMETERS
+				37 table
+					38 row
+						39 cell
+							40 text NAME
+						41 cell
+							42 text TYPE
+						43 cell
+							44 text DESCRIPTION
+					45 row
+						46 cell
+							47 text {id}
+						48 cell
+							49 text string (uuid)
+						50 cell
+							51 text Server id
+							52 container
+								53 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				54 heading RESPONSE200, Value: 4
+					55 text RESPONSE
+					56 text 200
+				57 text object
+				58 table
+					59 row
+						60 cell
+							61 text FIELD
+						62 cell
+							63 text TYPE
+						64 cell
+							65 text DESCRIPTION
+					66 row
+						67 cell
+							68 text voice
+						69 cell
+							70 text VoiceChannel[]
+						71 cell
+							72 text Voice channels with people in them
+							73 button (collapsed) Fields of VoiceChannel, Secondary Actions: Expand
+								74 text Fields of VoiceChannel
+				75 button (collapsed) Example response, Secondary Actions: Expand
+					76 text Example response
+				77 heading ERRORS, Value: 4
+					78 text ERRORS
+				79 content list
+					80 container
+						81 AXListMarker • 
+						82 text 401 Missing or wrong token
+					83 container
+						84 AXListMarker • 
+						85 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					86 container
+						87 AXListMarker • 
+						88 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					89 container
+						90 AXListMarker • 
+						91 text 500 Something went wrong on our side
+					92 container
+						93 AXListMarker • 
+						94 text 501 Voice isn’t set up on this server
+					95 container
+						96 AXListMarker • 
+						97 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			98 container post-servers-id-voice-move
+				99 text POST
+				100 text /servers/{id}/voice/move
+				101 link Description: Link to this endpoint, Value: yapin.gg/developers/api/voice#post-servers-id-voice-move
+				102 text Move someone to another voice channel
+				103 text Auth :  Bot token  +  Move Members In testing : 
+				104 text bot_voice
+				105 text Limit :  30 a minute JS: 
+				106 text bot.moveMember()
+				107 text Python: 
+				108 text bot.move_member()
+				109 heading PARAMETERS, Value: 4
+					110 text PARAMETERS
+				111 table
+					112 row
+						113 cell
+							114 text NAME
+						115 cell
+							116 text TYPE
+						117 cell
+							118 text DESCRIPTION
+					119 row
+						120 cell
+							121 text {id}
+						122 cell
+							123 text string (uuid)
+						124 cell
+							125 text Server id
+							126 container
+								127 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				128 heading REQUEST BODY, Value: 4
+					129 text REQUEST BODY
+				130 text object
+				131 table
+					132 row
+						133 cell
+							134 text FIELD
+						135 cell
+							136 text TYPE
+						137 cell
+							138 text DESCRIPTION
+					139 row
+						140 cell
+							141 text user_id
+						142 cell
+							143 text string (uuid)
+						144 cell
+							145 text Who
+							146 container
+								147 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+					148 row
+						149 cell
+							150 text channel_id
+						151 cell
+							152 text string (uuid)
+						153 cell
+							154 text Where to
+							155 container
+								156 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+				157 button (collapsed) Example request, Secondary Actions: Expand
+					158 text Example request
+				159 heading RESPONSE200, Value: 4
+					160 text RESPONSE
+					161 text 200
+				162 text object
+				163 table
+					164 row
+						165 cell
+							166 text FIELD
+						167 cell
+							168 text TYPE
+						169 cell
+							170 text DESCRIPTION
+					171 row
+						172 cell
+							173 text ok
+						174 cell
+							175 text true
+						176 cell
+							177 text Done
+							178 container
+								179 text Example :  true
+					180 row
+						181 cell
+							182 text from
+						183 cell
+							184 text string (uuid)
+						185 cell
+							186 text Where they were
+							187 container
+								188 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+					189 row
+						190 cell
+							191 text channel_id
+						192 cell
+							193 text string (uuid)
+						194 cell
+							195 text Where they are now
+							196 container
+								197 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+				198 button (collapsed) Example response, Secondary Actions: Expand
+					199 text Example response
+				200 heading ERRORS, Value: 4
+					201 text ERRORS
+				202 content list
+					203 container
+						204 AXListMarker • 
+						205 text 400 Bad input: the error says what’s wrong
+					206 container
+						207 AXListMarker • 
+						208 text 401 Missing or wrong token
+					209 container
+						210 AXListMarker • 
+						211 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					212 container
+						213 AXListMarker • 
+						214 text 404 No such thing, or the bot can’t see it
+					215 container
+						216 AXListMarker • 
+						217 text 409 They’re not in voice (or in a voice channel the bot can’t see)
+					218 container
+						219 AXListMarker • 
+						220 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					221 container
+						222 AXListMarker • 
+						223 text 500 Something went wrong on our side
+					224 container
+						225 AXListMarker • 
+						226 text 501 Voice isn’t set up on this server
+					227 container
+						228 AXListMarker • 
+						229 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			230 container post-servers-id-voice-disconnect
+				231 text POST
+				232 text /servers/{id}/voice/disconnect
+				233 link Description: Link to this endpoint, Value: yapin.gg/developers/api/voice#post-servers-id-voice-disconnect
+				234 text Drop someone from voice
+				235 text Auth :  Bot token  +  Move Members In testing : 
+				236 text bot_voice
+				237 text Limit :  30 a minute JS: 
+				238 text bot.disconnectMember()
+				239 text Python: 
+				240 text bot.disconnect_member()
+				241 heading PARAMETERS, Value: 4
+					242 text PARAMETERS
+				243 table
+					244 row
+						245 cell
+							246 text NAME
+						247 cell
+							248 text TYPE
+						249 cell
+							250 text DESCRIPTION
+					251 row
+						252 cell
+							253 text {id}
+						254 cell
+							255 text string (uuid)
+						256 cell
+							257 text Server id
+							258 container
+								259 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				260 heading REQUEST BODY, Value: 4
+					261 text REQUEST BODY
+				262 text object
+				263 table
+					264 row
+						265 cell
+							266 text FIELD
+						267 cell
+							268 text TYPE
+						269 cell
+							270 text DESCRIPTION
+					271 row
+						272 cell
+							273 text user_id
+						274 cell
+							275 text string (uuid)
+						276 cell
+							277 text The person
+							278 container
+								279 text Example :  "0b7e3c55-9f2d-4e8a-b1c4-7d6a5e3f2b18"
+				280 button (collapsed) Example request, Secondary Actions: Expand
+					281 text Example request
+				282 heading RESPONSE200, Value: 4
+					283 text RESPONSE
+					284 text 200
+				285 text object
+				286 table
+					287 row
+						288 cell
+							289 text FIELD
+						290 cell
+							291 text TYPE
+						292 cell
+							293 text DESCRIPTION
+					294 row
+						295 cell
+							296 text ok
+						297 cell
+							298 text true
+						299 cell
+							300 text Done
+							301 container
+								302 text Example :  true
+					303 row
+						304 cell
+							305 text channel_id
+						306 cell
+							307 text string (uuid)
+						308 cell
+							309 text The voice channel they were in
+							310 container
+								311 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+				312 button (collapsed) Example response, Secondary Actions: Expand
+					313 text Example response
+				314 heading ERRORS, Value: 4
+					315 text ERRORS
+				316 content list
+					317 container
+						318 AXListMarker • 
+						319 text 400 Bad input: the error says what’s wrong
+					320 container
+						321 AXListMarker • 
+						322 text 401 Missing or wrong token
+					323 container
+						324 AXListMarker • 
+						325 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					326 container
+						327 AXListMarker • 
+						328 text 409 They’re not in voice (or in a voice channel the bot can’t see)
+					329 container
+						330 AXListMarker • 
+						331 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					332 container
+						333 AXListMarker • 
+						334 text 500 Something went wrong on our side
+					335 container
+						336 AXListMarker • 
+						337 text 501 Voice isn’t set up on this server
+					338 container
+						339 AXListMarker • 
+						340 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			341 container post-servers-id-voice-join
+				342 text POST
+				343 text /servers/{id}/voice/join
+				344 link Description: Link to this endpoint, Value: yapin.gg/developers/api/voice#post-servers-id-voice-join
+				345 text A LiveKit ticket so the bot can join a call and play audio (one track, hears nobody)
+				346 text Auth :  Bot token  +  Connect In testing : 
+				347 text bot_voice_join
+				348 text Limit :  10 joins and leaves a minute JS: 
+				349 text bot.joinVoice()
+				350 text Python: 
+				351 text bot.join_voice()
+				352 heading PARAMETERS, Value: 4
+					353 text PARAMETERS
+				354 table
+					355 row
+						356 cell
+							357 text NAME
+						358 cell
+							359 text TYPE
+						360 cell
+							361 text DESCRIPTION
+					362 row
+						363 cell
+							364 text {id}
+						365 cell
+							366 text string (uuid)
+						367 cell
+							368 text Server id
+							369 container
+								370 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				371 heading REQUEST BODY, Value: 4
+					372 text REQUEST BODY
+				373 text object
+				374 table
+					375 row
+						376 cell
+							377 text FIELD
+						378 cell
+							379 text TYPE
+						380 cell
+							381 text DESCRIPTION
+					382 row
+						383 cell
+							384 text channel_id
+						385 cell
+							386 text string (uuid)
+						387 cell
+							388 text Voice channel
+							389 container
+								390 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+				391 button (collapsed) Example request, Secondary Actions: Expand
+					392 text Example request
+				393 heading RESPONSE200, Value: 4
+					394 text RESPONSE
+					395 text 200
+				396 text object
+				397 table
+					398 row
+						399 cell
+							400 text FIELD
+						401 cell
+							402 text TYPE
+						403 cell
+							404 text DESCRIPTION
+					405 row
+						406 cell
+							407 text url
+						408 cell
+							409 text string
+						410 cell
+							411 text LiveKit server
+							412 container
+								413 text Example :  "wss://lk.yapper.website"
+					414 row
+						415 cell
+							416 text token
+						417 cell
+							418 text string
+						419 cell
+							420 text LiveKit token, good for 60 seconds
+							421 container
+								422 text Example :  "eyJhbGciOi…"
+					423 row
+						424 cell
+							425 text channel_id
+						426 cell
+							427 text string (uuid)
+						428 cell
+							429 text Voice channel
+							430 container
+								431 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+					432 row
+						433 cell
+							434 text server_id
+						435 cell
+							436 text string (uuid)
+						437 cell
+							438 text Server id
+							439 container
+								440 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+					441 row
+						442 cell
+							443 text e2ee
+						444 cell
+							445 text boolean
+						446 cell
+							447 text The call is end-to-end encrypted: hand out your media key like the SDKs do
+							448 container
+								449 text Example :  false
+					450 row
+						451 cell
+							452 text voice_muted
+						453 cell
+							454 text boolean
+						455 cell
+							456 text The bot joins muted
+							457 container
+								458 text Example :  false
+					459 row
+						460 cell
+							461 text expires_in
+						462 cell
+							463 text integer
+						464 cell
+							465 text Seconds the ticket can be used to connect
+							466 container
+								467 text Example :  60
+				468 button (collapsed) Example response, Secondary Actions: Expand
+					469 text Example response
+				470 heading ERRORS, Value: 4
+					471 text ERRORS
+				472 content list
+					473 container
+						474 AXListMarker • 
+						475 text 400 Bad input: the error says what’s wrong
+					476 container
+						477 AXListMarker • 
+						478 text 401 Missing or wrong token
+					479 container
+						480 AXListMarker • 
+						481 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					482 container
+						483 AXListMarker • 
+						484 text 404 No such thing, or the bot can’t see it
+					485 container
+						486 AXListMarker • 
+						487 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					488 container
+						489 AXListMarker • 
+						490 text 500 Something went wrong on our side
+					491 container
+						492 AXListMarker • 
+						493 text 501 Voice isn’t set up on this server
+					494 container
+						495 AXListMarker • 
+						496 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			497 container post-servers-id-voice-leave
+				498 text POST
+				499 text /servers/{id}/voice/leave
+				500 link Description: Link to this endpoint, Value: yapin.gg/developers/api/voice#post-servers-id-voice-leave
+				501 text Take the bot out of voice in this server
+				502 text Auth :  Bot token In testing : 
+				503 text bot_voice_join
+				504 text Limit :  10 joins and leaves a minute JS: 
+				505 text bot.leaveVoice()
+				506 text Python: 
+				507 text bot.leave_voice()
+				508 heading PARAMETERS, Value: 4
+					509 text PARAMETERS
+				510 table
+					511 row
+						512 cell
+							513 text NAME
+						514 cell
+							515 text TYPE
+						516 cell
+							517 text DESCRIPTION
+					518 row
+						519 cell
+							520 text {id}
+						521 cell
+							522 text string (uuid)
+						523 cell
+							524 text Server id
+							525 container
+								526 text Example :  "a3d9e1f0-5b7c-4a2e-8f6d-1c0b9e8d7a65"
+				527 heading RESPONSE200, Value: 4
+					528 text RESPONSE
+					529 text 200
+				530 text object
+				531 table
+					532 row
+						533 cell
+							534 text FIELD
+						535 cell
+							536 text TYPE
+						537 cell
+							538 text DESCRIPTION
+					539 row
+						540 cell
+							541 text ok
+						542 cell
+							543 text true
+						544 cell
+							545 text Done
+							546 container
+								547 text Example :  true
+					548 row
+						549 cell
+							550 text channel_id
+						551 cell
+							552 text string (uuid) | null
+						553 cell
+							554 text The channel it left
+							555 container
+								556 text Example :  "d52a9b3c-8f7e-4c4d-0b2f-1a6e3d9c8f54"
+				557 button (collapsed) Example response, Secondary Actions: Expand
+					558 text Example response
+				559 heading ERRORS, Value: 4
+					560 text ERRORS
+				561 content list
+					562 container
+						563 AXListMarker • 
+						564 text 401 Missing or wrong token
+					565 container
+						566 AXListMarker • 
+						567 text 403 Not allowed: the bot isn’t in that server, its roles lack the permission, or the feature isn’t on there yet
+					568 container
+						569 AXListMarker • 
+						570 text 429 Slow down. When waiting helps, Retry-After (and retry_after) says how many seconds; without it, waiting won’t help
+					571 container
+						572 AXListMarker • 
+						573 text 500 Something went wrong on our side
+					574 container
+						575 AXListMarker • 
+						576 text 501 Voice isn’t set up on this server
+					577 container
+						578 AXListMarker • 
+						579 text 503 Yapin’ is busy and nothing was done: retry after Retry-After seconds
+			580 link Description: ← Back to Yapin’, Value: yapin.gg/
+			581 text  · 
+			582 link Description: Remove an intimate image, Value: yapin.gg/remove-image
+		583 container On this page
+			584 text ON THIS PAGE
+			585 content list
+				586 link Description: Overview, Value: yapin.gg/developers/api/voice#top
+				587 link Description: GET /servers/{id}/voice, Value: yapin.gg/developers/api/voice#get-servers-id-voice
+				588 link Description: POST /servers/{id}/voice/move, Value: yapin.gg/developers/api/voice#post-servers-id-voice-move
+				589 link Description: POST /servers/{id}/voice/disconnect, Value: yapin.gg/developers/api/voice#post-servers-id-voice-disconnect
+				590 link Description: POST /servers/{id}/voice/join, Value: yapin.gg/developers/api/voice#post-servers-id-voice-join
+				591 link Description: POST /servers/{id}/voice/leave, Value: yapin.gg/developers/api/voice#post-servers-id-voice-leave
+		592 text Yapin’
+		593 text A free chat app for communities that talk. Servers, channels, DMs and voice.
+		594 heading PRODUCT, Value: 4
+			595 text PRODUCT
+		596 content list
+			597 link Description: Download, Value: yapin.gg/download
+			598 link Description: Developers, Value: yapin.gg/developers
+			599 link Description: Yapin’ Plus, Value: yapin.gg/plus
+			600 link Description: Creator Program, Value: yapin.gg/creators
+			601 link Description: FanKit, Value: yapin.gg/fankit
+			602 link Description: Roadmap, Value: yapin.gg/roadmap
+			603 link Description: Yapper is now Yapin’, Value: yapin.gg/announcement
+			604 link Description: Bugs, Value: yapin.gg/bugs
+			605 link Description: Status, Value: yapin.gg/status
+		606 heading COMMUNITY, Value: 4
+			607 text COMMUNITY
+		608 content list
+			609 link Description: Guidelines, Value: yapin.gg/guidelines
+			610 link Description: Tutorials, Value: yapin.gg/tutorials
+			611 link Description: Bots, Value: yapin.gg/bots
+			612 link Description: Partners, Value: yapin.gg/partners
+		613 heading LEGAL, Value: 4
+			614 text LEGAL
+		615 content list
+			616 link Description: Terms, Value: yapin.gg/terms
+			617 link Description: Privacy, Value: yapin.gg/privacy
+			618 link Description: Copyright, Value: yapin.gg/copyright
+			619 link Description: Security, Value: yapin.gg/security
+			620 link Description: Cancel a subscription, Value: yapin.gg/cancel
+			621 link Description: Contact, Value: mailto:hello@yapin.gg
+		622 text © 2026 Yapper Media LLC. Free to use.
+		623 text Made for people who talk.
+
+The focused UI element is 1 AXWebArea Voice · Bot API reference · Yapin’, URL: yapin.gg/developers/api/voice
