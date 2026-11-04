@@ -9,7 +9,7 @@ import { newPhone } from "./phone";
  */
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium: the rail and hover");
 
-test("daily navigation is in the rail and Saved stays in the profile menu", async ({ page }) => {
+test("daily navigation stays accessible beside the compact community rail", async ({ page }) => {
   const alice = await newPhone("cfalice", "Alice Rahman");
   const bob = await newPhone("cfbob", "Bob Chen");
   await alice.req("POST", "/v1/orgs", { name: "First Lab" });
@@ -20,15 +20,17 @@ test("daily navigation is in the rail and Saved stays in the profile menu", asyn
 
   const rail = page.getByRole("navigation", { name: "Home, communities, create and discover" });
   await expect(rail).toBeVisible();
-  for (const name of ["Home", "Messages", "Activity"]) await expect(rail.getByRole("link", { name, exact: true })).toHaveCount(1);
+  await expect(rail.getByRole("link", { name: "Messages", exact: true })).toHaveCount(1);
+  const shortcuts = page.locator(".sidebar-primary");
+  for (const name of ["Home", "Activity"]) await expect(shortcuts.getByRole("link", { name, exact: true })).toBeVisible();
 
   await rail.getByRole("link", { name: /^Messages/ }).click();
   await expect(page).toHaveURL(/\/dms$/);
   await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();
 
-  // Activity has one primary rail destination. Saved is secondary in the profile menu.
+  // Activity stays above the channel list. Saved is secondary in the profile menu.
   const profileButton = page.locator(".user-panel-me:visible");
-  await rail.getByRole("link", { name: "Activity", exact: true }).click();
+  await shortcuts.getByRole("link", { name: "Activity", exact: true }).click();
   await expect(page).toHaveURL(/\/activity$/);
   await profileButton.click();
   await page.getByRole("menuitem", { name: /^Saved for later/ }).click();

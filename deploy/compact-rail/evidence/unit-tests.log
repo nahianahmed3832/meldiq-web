@@ -1,0 +1,9 @@
+
+ RUN  v4.1.12 /private/tmp/meldiq-compact-rail-release
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  19:41:18
+   Duration  194ms (transform 69ms, setup 84ms, import 33ms, tests 6ms, environment 0ms)
+

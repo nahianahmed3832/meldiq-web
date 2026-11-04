@@ -20,13 +20,10 @@ import { GroupAvatar } from "../components/OrgAvatar";
 import { LookAvatar } from "../people/NameStyle";
 import { capCount } from "../unread";
 import { useT } from "../../i18n";
-import { PRIMARY_NAVIGATION, primaryDestinationActive } from "./navigation";
-import { mentionCount } from "../selectors";
 import type { ShellDialog } from "./Shell";
 /**
- * The rail, top to bottom: the mascot (Home and messages: the DM list), the communities with their rolled-up unread
- * state, then round Create and Discover. Activity and Later live in the top bar and the sidebar (community-first brief
- * §G); their routes are unchanged. Phones show it on the Home tab beside the channels, as the Android app does (brief v4
+ * The rail, top to bottom: the mascot (Home and messages: the DM list), unread people, the communities with their rolled-up unread
+ * state, then round Create and Discover. Home and Activity live above the channel list; Later is in the profile menu. Phones show it on the Home tab beside the channels, as the Android app does (brief v4
  * §18), without the mascot and message bubbles: Messages is a tab there.
  */
 export function Rail({ orgId, section, onDialog }: { orgId: string | null; section: Section; onDialog: (d: ShellDialog) => void }) {
@@ -34,7 +31,6 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   const orgs = useRailOrgs();
   // Unread DMs and people waiting for an answer to their connection request.
   const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
-  const mentions = useOrbit(mentionCount);
   const t = useT();
   const home = section === "dms" || section === "friends";
   const discovering = section === "discover";
@@ -119,23 +115,6 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
           </span>
         )}
       </a>
-      {PRIMARY_NAVIGATION.filter((item) => item.section === "home" || item.section === "activity").map((item) => (
-        <a
-          key={item.section}
-          className="rail-round rail-primary"
-          href={`/${item.section}`}
-          aria-current={primaryDestinationActive(item, section) ? "page" : undefined}
-          aria-label={t(item.labelKey)}
-          title={t(item.labelKey)}
-        >
-          <item.icon size={21} aria-hidden="true" />
-          {item.section === "activity" && mentions > 0 && (
-            <span className="count accent" aria-hidden="true">
-              {capCount(mentions)}
-            </span>
-          )}
-        </a>
-      ))}
       <RailDmBubbles />
       <div className="rail-sep" />
       {orgs.length > 0 && (
@@ -144,7 +123,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
             it.kind === "org" ? (
               byId.get(it.id) && (
                 // Direct messages belong to no community, so none is selected there (as on Discord).
-                <CommunityButton key={it.id} org={byId.get(it.id)!} selected={!home && !discovering && it.id === orgId} size={44} onDialog={onDialog} drag={{ group: null, into: folders }} />
+                <CommunityButton key={it.id} org={byId.get(it.id)!} selected={!home && !discovering && it.id === orgId} size={48} onDialog={onDialog} drag={{ group: null, into: folders }} />
               )
             ) : (
               <RailFolderItem
