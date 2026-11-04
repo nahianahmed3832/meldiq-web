@@ -3,6 +3,54 @@
   "routes": [
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/bots/{botId}/permission-review"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/events"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bots/{botId}/permissions"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/developer/bots/{id}/permissions"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/bots/{botId}/permissions"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/bots/{botId}/permissions"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/channels/{channelId}/messages/{messageId}/reactions"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/channels/{channelId}/messages/{messageId}/reactions/{emoji}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/channels/{channelId}/messages/{messageId}/reactions/{emoji}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/channels/{channelId}/messages/{messageId}/pin"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/channels/{channelId}/messages/{messageId}/pin"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/channels/{channelId}/messages/bulk-delete"
+    },
+    {
+      "method": "GET",
       "path": "/v1/orgs/{orgId}/partner-application"
     },
     {
@@ -2240,9 +2288,239 @@
     {
       "method": "PUT",
       "path": "/v2/developer/bots/{id}/listing"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/bot/users/me"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/users/me/avatar-media"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/users/me/avatar-media"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/users/me/profile-banner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/users/me/profile-banner"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/channels"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/channels"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/conversations/{id}/messages"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/conversations/{id}/message-collections"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/conversations/{id}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/bot/conversations/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/conversations/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/conversations/{id}/overwrites"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/conversations/{id}/overwrites"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/users/me/presence"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/categories"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/categories"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/bot/categories/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/categories/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/categories/{id}/overwrites"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/categories/{id}/overwrites"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/roles"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/roles"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/bot/roles/{roleId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/roles/{roleId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/orgs/{orgId}/roles/everyone"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/roles/{roleId}/members/{userId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/roles/{roleId}/members/{userId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/members"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/members/{userId}/profile"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/bot/orgs/{orgId}/members/{userId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/orgs/{orgId}/members/{userId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/orgs/{orgId}/members/{userId}/nickname"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/bans"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/bans"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/orgs/{orgId}/bans/{userId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/orgs/{orgId}/members/{userId}/timeout"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/invites"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/invites"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/expressions"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/expressions"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/bot/expressions/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/expressions/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/meetings"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/meetings"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/meetings/{id}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/meetings/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/meetings/{id}/cancel"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/channels/{channelId}/webhooks"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/channels/{channelId}/webhooks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/bot/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}/token"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/orgs/{orgId}/voice/members/{userId}/mute"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/orgs/{orgId}/voice/members/{userId}/disconnect"
     }
   ],
   "errors": {
+    "bot_cursor_expired": [
+      410
+    ],
+    "bot_events_unavailable": [
+      503
+    ],
     "account_link_required": [
       409
     ],

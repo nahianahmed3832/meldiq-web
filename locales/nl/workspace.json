@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Alle antwoorden verwijderen? Het oorspronkelijke bericht blijft staan.",
     "threadDeletePost": "Dit forumbericht en alle antwoorden verwijderen?",
     "threadResume": "Verwijderen hervatten"
+  },
+  "botAccess": {
+    "requested": "Aangevraagde toegang",
+    "approved": "Goedgekeurde toegang",
+    "notice": "Nieuwe toegang vereist goedkeuring van de community. Beperkingen van rollen en kanalen blijven gelden.",
+    "none": "Geen extra toegang aangevraagd."
   }
 }

@@ -237,7 +237,7 @@
     "stale": "Başka biri bu rolü değiştirdi. En son sürümü inceleyip tekrar deneyin.",
     "stale_preferences": "Bu tercihler başka bir cihazda değişti. Değişikliği bu kopyaya uygulayın ve tekrar deneyin.",
     "stale_reminder": "Bu hatırlatma başka bir cihazda değiştirildi.",
-    "stale_revision": "Birisi bu toplantıyı değiştirdi. Yeniden yükle ve tekrar dene.",
+    "stale_revision": "Bu ayarlar değişti. Kaydetmeden önce yenileyip gözden geçirin.",
     "storage_full": "Yeni hesaplar için dosya depolama şu anda dolu. Daha sonra tekrar deneyin.",
     "storage_unavailable": "Sunucu fotoğrafı depolayamadı. Bir dakika sonra tekrar dene.",
     "template_exists": "Bu toplulukta zaten bir şablon var. Yenisini yapmak için senkronize et veya sil.",

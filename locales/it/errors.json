@@ -237,7 +237,7 @@
     "stale": "Qualcun altro ha cambiato questo ruolo. Controlla la versione più recente e riprova.",
     "stale_preferences": "Queste preferenze sono state modificate su un altro dispositivo. Applica la modifica a questa copia e riprova.",
     "stale_reminder": "Questo promemoria è stato modificato su un altro dispositivo.",
-    "stale_revision": "Qualcuno ha cambiato questo incontro nel frattempo. Ricaricalo e riprova.",
+    "stale_revision": "Queste impostazioni sono cambiate. Aggiorna e controlla prima di salvare.",
     "storage_full": "Lo spazio di archiviazione per i nuovi account è al momento pieno. Riprova più tardi.",
     "storage_unavailable": "Il server non è riuscito a memorizzare la foto. Riprova tra un attimo.",
     "template_exists": "Questa comunità ha già un template. Sincronizzala o eliminala per crearne una nuova.",

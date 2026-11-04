@@ -237,7 +237,7 @@
     "stale": "Ktoś inny zmienił tę rolę. Sprawdź najnowszą wersję i spróbuj ponownie.",
     "stale_preferences": "Te preferencje zostały zmienione na innym urządzeniu. Zastosuj zmianę do tej kopii i spróbuj ponownie.",
     "stale_reminder": "To przypomnienie zmieniło się na innym urządzeniu.",
-    "stale_revision": "Ktoś w międzyczasie zmienił to spotkanie. Przeładuj i spróbuj ponownie.",
+    "stale_revision": "Te ustawienia się zmieniły. Odśwież je i sprawdź przed zapisaniem.",
     "storage_full": "Magazyn plików dla nowych kont jest teraz pełny. Spróbuj ponownie później.",
     "storage_unavailable": "Serwer nie mógł zapisać zdjęcia. Spróbuj ponownie za chwilę.",
     "template_exists": "Ta społeczność już posiada szablon. Zsynchronizuj go lub usuń, aby utworzyć nowy.",

@@ -237,7 +237,7 @@
     "stale": "Někdo jiný změnil tuto roli. Zkontrolujte nejnovější verzi a zkuste to znovu.",
     "stale_preferences": "Tyto předvolby se změnily na jiném zařízení. Použijte změnu na tuto kopii a zkuste to znovu.",
     "stale_reminder": "Tato připomínka se změnila na jiném zařízení.",
-    "stale_revision": "Někdo mezitím změnil toto setkání. Znovu načtěte a zkuste to znovu.",
+    "stale_revision": "Tato nastavení se změnila. Před uložením je obnovte a zkontrolujte.",
     "storage_full": "Úložiště souborů pro nové účty je právě plné. Zkuste to prosím později.",
     "storage_unavailable": "Server nemohl fotografii uložit. Zkuste to prosím později.",
     "template_exists": "Tato komunita již má šablonu. Synchronizujte ji nebo ji smažte a vytvořte novou.",

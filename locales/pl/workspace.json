@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Usunąć wszystkie odpowiedzi? Wiadomość początkowa pozostanie.",
     "threadDeletePost": "Usunąć ten wpis forum i wszystkie odpowiedzi?",
     "threadResume": "Wznów usuwanie"
+  },
+  "botAccess": {
+    "requested": "Wnioskowany dostęp",
+    "approved": "Zatwierdzony dostęp",
+    "notice": "Nowy dostęp wymaga zgody społeczności. Ograniczenia ról i kanałów nadal obowiązują.",
+    "none": "Nie poproszono o dodatkowy dostęp."
   }
 }

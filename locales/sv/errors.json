@@ -237,7 +237,7 @@
     "stale": "Någon annan har ändrat denna roll. Kontrollera den senaste versionen och försök igen.",
     "stale_preferences": "Dessa inställningar har ändrats på en annan enhet. Använd din ändring på den här kopian och försök igen.",
     "stale_reminder": "Den här påminnelsen har ändrats på en annan enhet.",
-    "stale_revision": "Någon har ändrat detta möte under tiden. Ladda om den och försök igen.",
+    "stale_revision": "Inställningarna har ändrats. Uppdatera och granska dem innan du sparar.",
     "storage_full": "Fillagringsutrymmet för nya konton är fullt just nu. Försök igen senare.",
     "storage_unavailable": "Servern kunde inte lagra bilden. Försök igen om en stund.",
     "template_exists": "Denna grupp har redan en mall. Synkronisera den eller ta bort den för att skapa en ny.",

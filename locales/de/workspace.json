@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Alle Antworten löschen? Die ursprüngliche Nachricht bleibt erhalten.",
     "threadDeletePost": "Diesen Forenbeitrag und alle Antworten löschen?",
     "threadResume": "Löschen fortsetzen"
+  },
+  "botAccess": {
+    "requested": "Angeforderter Zugriff",
+    "approved": "Genehmigter Zugriff",
+    "notice": "Neuer Zugriff erfordert die Zustimmung der Community. Rollen- und Kanalbeschränkungen gelten weiterhin.",
+    "none": "Kein zusätzlicher Zugriff angefordert."
   }
 }

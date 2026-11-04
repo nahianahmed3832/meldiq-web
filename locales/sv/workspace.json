@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Radera alla svar? Ursprungsmeddelandet finns kvar.",
     "threadDeletePost": "Radera foruminlägget och alla svar?",
     "threadResume": "Fortsätt radera"
+  },
+  "botAccess": {
+    "requested": "Begärd åtkomst",
+    "approved": "Godkänd åtkomst",
+    "notice": "Ny åtkomst kräver communityns godkännande. Begränsningar för roller och kanaler gäller fortfarande.",
+    "none": "Ingen ytterligare åtkomst har begärts."
   }
 }

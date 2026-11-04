@@ -11,6 +11,7 @@ import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
 import { CommunityBotsCard } from "./bots/CommunityBotsCard";
+import { BotPermissions } from "../developer/BotPermissions";
 import { type BotProfile, botProfile, installBot, removeBot } from "../../sync/bots";
 import { directory } from "../../sync/workspaces";
 import { AlsoBuiltIn, OfficialBotsSection, useOfficialBotsOffered } from "./bots/OfficialBotsSection";
@@ -48,6 +49,7 @@ function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
   const reload = () => setRev((r) => r + 1);
   // Community parity E: the community bot directory (bot-directory).
   const directoryOn = useOrbit((s) => s.server?.features.includes(DISCOVERY_FEATURES.botDirectory) ?? false);
+  const permissionsOn = useOrbit((s) => s.server?.features.includes("bot-permissions") ?? false);
   return (
     <>
       <AddBot orgId={orgId} onAdded={reload} />
@@ -65,24 +67,27 @@ function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
         )}
         <ul className="ws-list">
           {installed.map((b) => (
-            <li key={b.id} className="ws-row">
-              <Bot size={18} className="faint" />
-              <span className="lines grow">
-                <span className="ellipsis">
-                  {b.displayName} <BotTag />
+            <li key={b.id} className="dev-item">
+              <div className="ws-row">
+                <Bot size={18} className="faint" />
+                <span className="lines grow">
+                  <span className="ellipsis">
+                    {b.displayName} <BotTag />
+                  </span>
+                  <small>@{b.username}</small>
                 </span>
-                <small>@{b.username}</small>
-              </span>
-              <button
-                className="btn btn-danger-quiet btn-sm"
-                disabled={remove.busy}
-                onClick={async () => {
-                  if (await confirmAction(uiText("workspace.interface.remove_value0_from_value1_505f4b4", { value0: b.displayName, value1: detail.org.name })))
-                    void remove.act(() => removeBot(engine, orgId, b.id).then(reload));
-                }}
-              >
-                <Trash2 size={14} /> {l10n("common.actions.remove")}
-              </button>
+                <button
+                  className="btn btn-danger-quiet btn-sm"
+                  disabled={remove.busy}
+                  onClick={async () => {
+                    if (await confirmAction(uiText("workspace.interface.remove_value0_from_value1_505f4b4", { value0: b.displayName, value1: detail.org.name })))
+                      void remove.act(() => removeBot(engine, orgId, b.id).then(reload));
+                  }}
+                >
+                  <Trash2 size={14} /> {l10n("common.actions.remove")}
+                </button>
+              </div>
+              {permissionsOn && <BotPermissions botId={b.id} orgId={orgId} />}
             </li>
           ))}
         </ul>

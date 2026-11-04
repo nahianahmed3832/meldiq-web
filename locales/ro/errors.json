@@ -237,7 +237,7 @@
     "stale": "Altcineva a schimbat acest rol. Verificați cea mai recentă versiune și încercați din nou.",
     "stale_preferences": "Aceste preferințe s-au modificat pe un alt dispozitiv. Aplicați modificarea la această copie și încercați din nou.",
     "stale_reminder": "Acest memento s-a modificat pe un alt dispozitiv.",
-    "stale_revision": "Cineva a schimbat între timp această întâlnire. Reîncărcați-l și încercați din nou.",
+    "stale_revision": "Aceste setări s-au schimbat. Reîmprospătează și verifică înainte de a salva.",
     "storage_full": "Spațiul de stocare pentru fișiere pentru conturile noi este plin în acest moment. Încercați din nou mai târziu.",
     "storage_unavailable": "Serverul nu a putut stoca fotografia. Încercați din nou mai târziu.",
     "template_exists": "Această comunitate are deja un șablon. Sincronizează-l sau șterge-l pentru a crea unul nou.",

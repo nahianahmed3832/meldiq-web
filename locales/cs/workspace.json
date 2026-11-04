@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Smazat všechny odpovědi? Původní zpráva zůstane.",
     "threadDeletePost": "Smazat tento příspěvek fóra a všechny odpovědi?",
     "threadResume": "Pokračovat v mazání"
+  },
+  "botAccess": {
+    "requested": "Požadovaný přístup",
+    "approved": "Schválený přístup",
+    "notice": "Nový přístup vyžaduje schválení komunity. Omezení rolí a kanálů nadále platí.",
+    "none": "Nebyl požadován žádný další přístup."
   }
 }

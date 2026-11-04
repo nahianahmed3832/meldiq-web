@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "모든 답글을 삭제할까요? 원본 메시지는 유지됩니다.",
     "threadDeletePost": "이 포럼 게시물과 모든 답글을 삭제할까요?",
     "threadResume": "삭제 계속"
+  },
+  "botAccess": {
+    "requested": "요청한 접근 권한",
+    "approved": "승인된 접근 권한",
+    "notice": "새 접근 권한은 커뮤니티의 승인이 필요합니다. 역할과 채널 제한은 계속 적용됩니다.",
+    "none": "추가 접근 권한 요청이 없습니다."
   }
 }

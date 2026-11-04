@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "刪除所有回覆？原始訊息將保留。",
     "threadDeletePost": "刪除此論壇貼文及所有回覆？",
     "threadResume": "繼續刪除"
+  },
+  "botAccess": {
+    "requested": "申請的存取權限",
+    "approved": "已核准的存取權限",
+    "notice": "新增存取權限須經社群核准。角色與頻道限制仍然適用。",
+    "none": "未申請其他存取權限。"
   }
 }

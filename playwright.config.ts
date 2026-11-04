@@ -114,7 +114,8 @@ export default defineConfig({
     ...(process.env.ORBIT_E2E_BUILD === "1"
       ? [
           {
-            command: `npm run -s build && node scripts/web-server.ts dist ${WEB_PORT}`,
+            // Reuse only an export just built from this checkout; useful when changing test interception alone.
+            command: process.env.ORBIT_E2E_PREBUILT === "1" ? `node scripts/web-server.ts dist ${WEB_PORT}` : `npm run -s build && node scripts/web-server.ts dist ${WEB_PORT}`,
             url: `http://127.0.0.1:${WEB_PORT}`,
             reuseExistingServer: false,
             timeout: 300_000,

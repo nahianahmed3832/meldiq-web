@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "删除所有回复？原始消息将保留。",
     "threadDeletePost": "删除此论坛帖子及所有回复？",
     "threadResume": "继续删除"
+  },
+  "botAccess": {
+    "requested": "申请的访问权限",
+    "approved": "已批准的访问权限",
+    "notice": "新增访问权限需经社区批准。角色和频道限制仍然适用。",
+    "none": "未申请其他访问权限。"
   }
 }

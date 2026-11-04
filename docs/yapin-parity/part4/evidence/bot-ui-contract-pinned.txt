@@ -1,0 +1,15 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_web
+
+(node:79770) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+contract: 486 web calls (392 decode) reach 432 of the server's 628 routes; 387 decodes against 337 fixtures
+frames the engine ignores: activity, org.alert, pong
+decoded web routes with no fixture: DELETE /v2/billing/payment-methods/{id}, GET /v2/billing/card-subscriptions, GET /v2/billing/card-subscriptions/quote, GET /v2/billing/payment-methods, POST /v1/orgs/{orgId}/promote/boost, POST /v1/orgs/{orgId}/promote/promoted, POST /v2/billing/card-subscriptions, POST /v2/billing/card-subscriptions/{id}/cancel, POST /v2/billing/gifts/preview, POST /v2/billing/gifts/{id}/resend, POST /v2/billing/payment-methods/setups, POST /v2/billing/payment-methods/setups/{id}/complete, POST /v2/collectible-purchases/{id}/confirm, POST /v2/platform/appeals/email/start, PUT /v2/billing/card-subscriptions/{id}/payment-method
+allowlisted: 0
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  01:11:53
+   Duration  2.95s (transform 377ms, setup 61ms, import 1.63s, tests 1.10s, environment 0ms)
+

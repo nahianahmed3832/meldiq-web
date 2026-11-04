@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Delete every reply in this thread? The parent message will remain.",
     "threadDeletePost": "Delete this forum post and every reply?",
     "threadResume": "Resume deletion"
+  },
+  "botAccess": {
+    "requested": "Requested access",
+    "approved": "Approved access",
+    "notice": "New access requires community approval. Roles and channel restrictions still apply.",
+    "none": "No additional access requested."
   }
 }

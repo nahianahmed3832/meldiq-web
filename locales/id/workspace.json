@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Hapus semua balasan? Pesan induk tetap ada.",
     "threadDeletePost": "Hapus kiriman forum ini dan semua balasan?",
     "threadResume": "Lanjutkan penghapusan"
+  },
+  "botAccess": {
+    "requested": "Akses yang diminta",
+    "approved": "Akses yang disetujui",
+    "notice": "Akses baru memerlukan persetujuan komunitas. Pembatasan peran dan kanal tetap berlaku.",
+    "none": "Tidak ada permintaan akses tambahan."
   }
 }

@@ -1,235 +1,227 @@
 {
-  "complete": false,
+  "complete": true,
   "errors": [],
-  "englishKeys": 6292,
+  "englishKeys": 6296,
   "coverage": {
     "en": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "source"
     },
     "bn": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "hi": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "ur": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "zh-CN": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "zh-TW": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "ja": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "ko": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "id": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "vi": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "th": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "ar": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "tr": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "pt-BR": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "es-419": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "es-ES": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "fr": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "de": {
-      "translated": 6291,
-      "total": 6292,
-      "percent": 99.98,
+      "translated": 6296,
+      "total": 6296,
+      "percent": 100,
       "missing": [],
-      "untranslated": [
-        "workspace.part3.quiz"
-      ],
+      "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "it": {
-      "translated": 6291,
-      "total": 6292,
-      "percent": 99.98,
+      "translated": 6296,
+      "total": 6296,
+      "percent": 100,
       "missing": [],
-      "untranslated": [
-        "workspace.part3.quiz"
-      ],
+      "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "nl": {
-      "translated": 6291,
-      "total": 6292,
-      "percent": 99.98,
+      "translated": 6296,
+      "total": 6296,
+      "percent": 100,
       "missing": [],
-      "untranslated": [
-        "workspace.part3.quiz"
-      ],
+      "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "pl": {
-      "translated": 6291,
-      "total": 6292,
-      "percent": 99.98,
+      "translated": 6296,
+      "total": 6296,
+      "percent": 100,
       "missing": [],
-      "untranslated": [
-        "workspace.part3.quiz"
-      ],
+      "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "ru": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "uk": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "ro": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "sv": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "cs": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "el": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],
       "nativeReview": "awaiting-native-review"
     },
     "pt-PT": {
-      "translated": 6292,
-      "total": 6292,
+      "translated": 6296,
+      "total": 6296,
       "percent": 100,
       "missing": [],
       "untranslated": [],

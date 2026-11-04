@@ -12,6 +12,7 @@ import { ApiError } from "../../api/client";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
 import { BotListingCard } from "./BotListingCard";
+import { BotPermissions } from "./BotPermissions";
 import { createBot, deleteBot, type DeveloperBot, developerBots, rotateBotToken, updateBot } from "../../sync/developer";
 import { CopyButton, SecretBox } from "../components/CopyButton";
 import { Toggle } from "../components/Toggle";
@@ -130,6 +131,7 @@ function BotRow({ bot, onChanged, onSecret }: { bot: DeveloperBot; onChanged: ()
   const run = (fn: () => Promise<unknown>) => void act.act(fn).then((ok) => ok && onChanged());
   // Community parity E: list a public bot in Community bots (bot-directory).
   const directoryOn = useOrbit((s) => s.server?.features.includes(DISCOVERY_FEATURES.botDirectory) ?? false);
+  const permissionsOn = useOrbit((s) => s.server?.features.includes("bot-permissions") ?? false);
   return (
     <li className="dev-item">
       <div className="ws-row">
@@ -214,6 +216,7 @@ function BotRow({ bot, onChanged, onSecret }: { bot: DeveloperBot; onChanged: ()
         </div>
       )}
       {directoryOn && <BotListingCard botId={bot.id} botName={bot.displayName} isPublic={bot.public} />}
+      {permissionsOn && <BotPermissions botId={bot.id} />}
     </li>
   );
 }

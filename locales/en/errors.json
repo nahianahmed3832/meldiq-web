@@ -237,7 +237,7 @@
     "stale": "Someone else changed this role. Review the latest version and try again.",
     "stale_preferences": "These preferences changed on another device. Apply your change to this copy and try again.",
     "stale_reminder": "This reminder changed on another device.",
-    "stale_revision": "Someone changed this meeting meanwhile. Reload it and try again.",
+    "stale_revision": "These settings changed. Refresh and review them before saving.",
     "storage_full": "File storage for new accounts is full right now. Try again later.",
     "storage_unavailable": "The server couldn''t store the photo. Try again in a moment.",
     "template_exists": "This community already has a template. Sync it or delete it to make a new one.",

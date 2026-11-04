@@ -237,7 +237,7 @@
     "stale": "Jemand anderes hat diese Rolle geändert. Überprüfen Sie die neueste Version und versuchen Sie es erneut.",
     "stale_preferences": "Diese Einstellungen wurden auf einem anderen Gerät geändert. Wenden Sie die Änderung auf diese Kopie an und versuchen Sie es erneut.",
     "stale_reminder": "Diese Erinnerung wurde auf einem anderen Gerät geändert.",
-    "stale_revision": "Jemand hat dieses Treffen inzwischen geändert. Laden Sie es neu und versuchen Sie es erneut.",
+    "stale_revision": "Diese Einstellungen wurden geändert. Aktualisiere und prüfe sie vor dem Speichern.",
     "storage_full": "Der Dateispeicher für neue Konten ist derzeit voll. Bitte versuchen Sie es später noch einmal.",
     "storage_unavailable": "Der Server konnte das Foto nicht speichern. Bitte versuchen Sie es in 2 Sekunden erneut.",
     "template_exists": "Diese Community hat bereits eine Vorlage. Synchronisieren Sie es oder löschen Sie es, um ein neues zu erstellen.",

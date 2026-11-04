@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Ștergi toate răspunsurile? Mesajul inițial va rămâne.",
     "threadDeletePost": "Ștergi această postare de forum și toate răspunsurile?",
     "threadResume": "Reia ștergerea"
+  },
+  "botAccess": {
+    "requested": "Acces solicitat",
+    "approved": "Acces aprobat",
+    "notice": "Accesul nou necesită aprobarea comunității. Restricțiile rolurilor și canalelor se aplică în continuare.",
+    "none": "Nu s-a solicitat acces suplimentar."
   }
 }

@@ -4,7 +4,7 @@
   "validation": {
     "postgresqlSuites": 10,
     "postgresqlPassed": 48,
-    "typecheck": "PASS"
+    "typecheck": "FAILED_THEN_CORRECTED_AT_996f803d"
   },
   "migrations": {
     "20261104002600_bot_platform_permissions.sql": "519d27beb94e66f25dc623064c87e32c25db52b665417343f8731ebe16d31477",
@@ -20,5 +20,6 @@
     "hot-path/capacity measurements",
     "whole-register reconciliation and complete staging release gates"
   ],
-  "productionChanged": false
+  "productionChanged": false,
+  "correction": "The captured typecheck contained two gateway frame-union typing errors. The 48 runtime checks passed, but the original PASS label was incorrect. Current corrected typecheck exited 0; see bot-current-types-corrected.txt."
 }

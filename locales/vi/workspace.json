@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Xóa mọi câu trả lời? Tin nhắn gốc sẽ được giữ lại.",
     "threadDeletePost": "Xóa bài đăng diễn đàn này và mọi câu trả lời?",
     "threadResume": "Tiếp tục xóa"
+  },
+  "botAccess": {
+    "requested": "Quyền truy cập được yêu cầu",
+    "approved": "Quyền truy cập đã duyệt",
+    "notice": "Quyền truy cập mới cần được cộng đồng phê duyệt. Các giới hạn của vai trò và kênh vẫn áp dụng.",
+    "none": "Không có yêu cầu quyền truy cập bổ sung."
   }
 }

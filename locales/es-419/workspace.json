@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "¿Eliminar todas las respuestas? El mensaje original permanecerá.",
     "threadDeletePost": "¿Eliminar esta publicación del foro y todas las respuestas?",
     "threadResume": "Reanudar eliminación"
+  },
+  "botAccess": {
+    "requested": "Acceso solicitado",
+    "approved": "Acceso aprobado",
+    "notice": "El acceso nuevo requiere la aprobación de la comunidad. Las restricciones de roles y canales siguen vigentes.",
+    "none": "No se solicitó acceso adicional."
   }
 }

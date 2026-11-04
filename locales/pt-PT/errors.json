@@ -237,7 +237,7 @@
     "stale": "Alguém mudou esse papel. Verifique a versão mais recente e tente novamente.",
     "stale_preferences": "Essas preferências foram alteradas em outro dispositivo. Aplique a alteração a esta cópia e tente novamente.",
     "stale_reminder": "Este lembrete foi alterado em outro dispositivo.",
-    "stale_revision": "Alguém mudou esta reunião entretanto. Recarrega-o e tenta novamente.",
+    "stale_revision": "Estas definições foram alteradas. Atualize e reveja antes de guardar.",
     "storage_full": "O armazenamento de ficheiros para novas contas está cheio agora. Tente novamente mais tarde.",
     "storage_unavailable": "O servidor não conseguiu armazenar a foto. Tente novamente em alguns segundos.",
     "template_exists": "Esta comunidade já tem um modelo. Sincronize-o ou exclua-o para criar um novo.",

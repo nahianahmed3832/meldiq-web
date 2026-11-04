@@ -2086,5 +2086,11 @@
     "threadDeleteReplies": "Tüm yanıtlar silinsin mi? Ana mesaj kalacak.",
     "threadDeletePost": "Bu forum gönderisi ve tüm yanıtlar silinsin mi?",
     "threadResume": "Silmeye devam et"
+  },
+  "botAccess": {
+    "requested": "İstenen erişim",
+    "approved": "Onaylanan erişim",
+    "notice": "Yeni erişim için topluluk onayı gerekir. Rol ve kanal kısıtlamaları geçerliliğini korur.",
+    "none": "Ek erişim istenmedi."
   }
 }

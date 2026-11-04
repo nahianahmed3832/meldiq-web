@@ -237,7 +237,7 @@
     "stale": "Quelqu''un d''autre a changé ce rôle. Vérifiez la dernière version et réessayez.",
     "stale_preferences": "Ces préférences ont été modifiées sur un autre appareil. Appliquez votre modification à cette copie et réessayez.",
     "stale_reminder": "Ce rappel a été modifié sur un autre appareil.",
-    "stale_revision": "Quelqu''un a changé cette réunion entre-temps. Rechargez-le et essayez à nouveau.",
+    "stale_revision": "Ces paramètres ont changé. Actualisez et vérifiez-les avant d’enregistrer.",
     "storage_full": "Le stockage de fichiers pour les nouveaux comptes est plein en ce moment. Veuillez réessayer plus tard.",
     "storage_unavailable": "Le serveur n''a pas pu stocker la photo. Veuillez réessayer dans quelques instants.",
     "template_exists": "Cette communauté a déjà un modèle. Synchronisez-le ou supprimez-le pour en créer un nouveau.",
