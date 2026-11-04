@@ -1,0 +1,105 @@
+{
+  "status": "passed",
+  "testedAt": "2026-11-04T16:18:23.652Z",
+  "results": [
+    {
+      "browser": "chromium",
+      "width": 390,
+      "theme": "light",
+      "icons": 33,
+      "sizes": 5,
+      "offline": true,
+      "networkRequests": 0,
+      "pageErrors": 0,
+      "geometryMatchesSource": true,
+      "screenshot": "chromium-390-light.png"
+    },
+    {
+      "browser": "chromium",
+      "width": 390,
+      "theme": "dark",
+      "icons": 33,
+      "sizes": 5,
+      "offline": true,
+      "networkRequests": 0,
+      "pageErrors": 0,
+      "geometryMatchesSource": true,
+      "screenshot": "chromium-390-dark.png"
+    },
+    {
+      "browser": "chromium",
+      "width": 1440,
+      "theme": "light",
+      "icons": 33,
+      "sizes": 5,
+      "offline": true,
+      "networkRequests": 0,
+      "pageErrors": 0,
+      "geometryMatchesSource": true,
+      "screenshot": "chromium-1440-light.png"
+    },
+    {
+      "browser": "chromium",
+      "width": 1440,
+      "theme": "dark",
+      "icons": 33,
+      "sizes": 5,
+      "offline": true,
+      "networkRequests": 0,
+      "pageErrors": 0,
+      "geometryMatchesSource": true,
+      "screenshot": "chromium-1440-dark.png"
+    },
+    {
+      "browser": "webkit",
+      "width": 390,
+      "theme": "light",
+      "icons": 33,
+      "sizes": 5,
+      "offline": true,
+      "networkRequests": 0,
+      "pageErrors": 0,
+      "geometryMatchesSource": true,
+      "screenshot": "webkit-390-light.png"
+    },
+    {
+      "browser": "webkit",
+      "width": 390,
+      "theme": "dark",
+      "icons": 33,
+      "sizes": 5,
+      "offline": true,
+      "networkRequests": 0,
+      "pageErrors": 0,
+      "geometryMatchesSource": true,
+      "screenshot": "webkit-390-dark.png"
+    },
+    {
+      "browser": "webkit",
+      "width": 1440,
+      "theme": "light",
+      "icons": 33,
+      "sizes": 5,
+      "offline": true,
+      "networkRequests": 0,
+      "pageErrors": 0,
+      "geometryMatchesSource": true,
+      "screenshot": "webkit-1440-light.png"
+    },
+    {
+      "browser": "webkit",
+      "width": 1440,
+      "theme": "dark",
+      "icons": 33,
+      "sizes": 5,
+      "offline": true,
+      "networkRequests": 0,
+      "pageErrors": 0,
+      "geometryMatchesSource": true,
+      "screenshot": "webkit-1440-dark.png"
+    }
+  ],
+  "adapterBytes": 7809,
+  "adapterGzipBytes": 2543,
+  "dependenciesAdded": 0
+}

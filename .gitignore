@@ -20,3 +20,6 @@ public/sw.js.map
 # Standalone-page locale assets are derived from the committed dictionaries.
 public/public-locale.js
 public/locales/
+
+# Python icon tooling bytecode
+__pycache__/

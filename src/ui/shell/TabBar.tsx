@@ -1,3 +1,4 @@
+import { Icon } from "../icons/Icon";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { useOrbit } from "../../application/orbit";
@@ -22,7 +23,7 @@ export function TabBar({ section, hidden }: { section: Section; hidden: boolean 
     ...PRIMARY_NAVIGATION.filter((item) => item.section !== "discover").map((item) => ({
       key: item.section,
       label: t(item.labelKey),
-      icon: <item.icon size={21} />,
+      icon: <Icon name={item.icon} size={24} />,
       count: item.section === "dms" ? dms : item.section === "activity" ? mentions : 0,
     })),
     // You (as the Android app): your avatar, its dot your connection; your account, Saved and every setting.

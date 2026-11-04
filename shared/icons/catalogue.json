@@ -1,0 +1,886 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "tokens": {
+    "viewBox": "0 0 24 24",
+    "strokeWidth": 2,
+    "linecap": "round",
+    "linejoin": "round",
+    "sizes": [
+      16,
+      18,
+      20,
+      24,
+      32
+    ],
+    "webTouchTarget": 44,
+    "androidTouchTarget": 48,
+    "states": {
+      "inactive": "inherit secondary foreground",
+      "active": "inherit accent foreground",
+      "hover": "parent interactive hover",
+      "disabled": "opacity 0.38; parent disables interaction"
+    },
+    "directionality": "Preserve glyph geometry; layout follows locale. Directional actions require a reviewed mapping."
+  },
+  "icons": [
+    {
+      "id": "navigation.home",
+      "collection": "Lucide",
+      "originalName": "house",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/house",
+      "svg": "svg/house.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "navigation.home",
+        "desktop": {
+          "renderer": "navigation.home",
+          "native": "platform-conventions"
+        },
+        "android": "mi_navigation_home"
+      }
+    },
+    {
+      "id": "navigation.messages",
+      "collection": "Lucide",
+      "originalName": "messages-square",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/messages-square",
+      "svg": "svg/messages-square.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "navigation.messages",
+        "desktop": {
+          "renderer": "navigation.messages",
+          "native": "platform-conventions"
+        },
+        "android": "mi_navigation_messages"
+      }
+    },
+    {
+      "id": "navigation.activity",
+      "collection": "Lucide",
+      "originalName": "bell",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/bell",
+      "svg": "svg/bell.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "navigation.activity",
+        "desktop": {
+          "renderer": "navigation.activity",
+          "native": "platform-conventions"
+        },
+        "android": "mi_navigation_activity"
+      }
+    },
+    {
+      "id": "navigation.discover",
+      "collection": "Lucide",
+      "originalName": "compass",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/compass",
+      "svg": "svg/compass.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "navigation.discover",
+        "desktop": {
+          "renderer": "navigation.discover",
+          "native": "platform-conventions"
+        },
+        "android": "mi_navigation_discover"
+      }
+    },
+    {
+      "id": "navigation.profile",
+      "collection": "Lucide",
+      "originalName": "circle-user-round",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/circle-user-round",
+      "svg": "svg/circle-user-round.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "navigation.profile",
+        "desktop": {
+          "renderer": "navigation.profile",
+          "native": "platform-conventions"
+        },
+        "android": "mi_navigation_profile"
+      }
+    },
+    {
+      "id": "communication.send",
+      "collection": "Lucide",
+      "originalName": "send",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/send",
+      "svg": "svg/send.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "communication.send",
+        "desktop": {
+          "renderer": "communication.send",
+          "native": "platform-conventions"
+        },
+        "android": "mi_communication_send"
+      }
+    },
+    {
+      "id": "communication.voice",
+      "collection": "Lucide",
+      "originalName": "mic",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/mic",
+      "svg": "svg/mic.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "communication.voice",
+        "desktop": {
+          "renderer": "communication.voice",
+          "native": "platform-conventions"
+        },
+        "android": "mi_communication_voice"
+      }
+    },
+    {
+      "id": "communication.video",
+      "collection": "Lucide",
+      "originalName": "video",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/video",
+      "svg": "svg/video.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "communication.video",
+        "desktop": {
+          "renderer": "communication.video",
+          "native": "platform-conventions"
+        },
+        "android": "mi_communication_video"
+      }
+    },
+    {
+      "id": "community.members",
+      "collection": "Lucide",
+      "originalName": "users-round",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/users-round",
+      "svg": "svg/users-round.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "community.members",
+        "desktop": {
+          "renderer": "community.members",
+          "native": "platform-conventions"
+        },
+        "android": "mi_community_members"
+      }
+    },
+    {
+      "id": "community.roles",
+      "collection": "Lucide",
+      "originalName": "shield-check",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/shield-check",
+      "svg": "svg/shield-check.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "community.roles",
+        "desktop": {
+          "renderer": "community.roles",
+          "native": "platform-conventions"
+        },
+        "android": "mi_community_roles"
+      }
+    },
+    {
+      "id": "files.upload",
+      "collection": "Lucide",
+      "originalName": "upload",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/upload",
+      "svg": "svg/upload.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "files.upload",
+        "desktop": {
+          "renderer": "files.upload",
+          "native": "platform-conventions"
+        },
+        "android": "mi_files_upload"
+      }
+    },
+    {
+      "id": "files.download",
+      "collection": "Lucide",
+      "originalName": "download",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/download",
+      "svg": "svg/download.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "files.download",
+        "desktop": {
+          "renderer": "files.download",
+          "native": "platform-conventions"
+        },
+        "android": "mi_files_download"
+      }
+    },
+    {
+      "id": "settings.general",
+      "collection": "Lucide",
+      "originalName": "settings2",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/settings2",
+      "svg": "svg/settings2.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.general",
+        "desktop": {
+          "renderer": "settings.general",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_general"
+      }
+    },
+    {
+      "id": "status.online",
+      "collection": "Lucide",
+      "originalName": "circle-check",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/circle-check",
+      "svg": "svg/circle-check.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "status.online",
+        "desktop": {
+          "renderer": "status.online",
+          "native": "platform-conventions"
+        },
+        "android": "mi_status_online"
+      }
+    },
+    {
+      "id": "status.away",
+      "collection": "Lucide",
+      "originalName": "clock",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/clock",
+      "svg": "svg/clock.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "status.away",
+        "desktop": {
+          "renderer": "status.away",
+          "native": "platform-conventions"
+        },
+        "android": "mi_status_away"
+      }
+    },
+    {
+      "id": "settings.account",
+      "collection": "Lucide",
+      "originalName": "user-round",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/user-round",
+      "svg": "svg/user-round.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.account",
+        "desktop": {
+          "renderer": "settings.account",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_account"
+      }
+    },
+    {
+      "id": "settings.profile",
+      "collection": "Lucide",
+      "originalName": "user-round-pen",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/user-round-pen",
+      "svg": "svg/user-round-pen.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.profile",
+        "desktop": {
+          "renderer": "settings.profile",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_profile"
+      }
+    },
+    {
+      "id": "settings.security",
+      "collection": "Lucide",
+      "originalName": "shield",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/shield",
+      "svg": "svg/shield.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.security",
+        "desktop": {
+          "renderer": "settings.security",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_security"
+      }
+    },
+    {
+      "id": "settings.devices",
+      "collection": "Lucide",
+      "originalName": "smartphone",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/smartphone",
+      "svg": "svg/smartphone.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.devices",
+        "desktop": {
+          "renderer": "settings.devices",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_devices"
+      }
+    },
+    {
+      "id": "settings.membership",
+      "collection": "Lucide",
+      "originalName": "sparkles",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/sparkles",
+      "svg": "svg/sparkles.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.membership",
+        "desktop": {
+          "renderer": "settings.membership",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_membership"
+      }
+    },
+    {
+      "id": "settings.spark",
+      "collection": "Lucide",
+      "originalName": "gem",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/gem",
+      "svg": "svg/gem.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.spark",
+        "desktop": {
+          "renderer": "settings.spark",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_spark"
+      }
+    },
+    {
+      "id": "settings.appearance",
+      "collection": "Lucide",
+      "originalName": "palette",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/palette",
+      "svg": "svg/palette.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.appearance",
+        "desktop": {
+          "renderer": "settings.appearance",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_appearance"
+      }
+    },
+    {
+      "id": "settings.voice",
+      "collection": "Lucide",
+      "originalName": "headset",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/headset",
+      "svg": "svg/headset.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.voice",
+        "desktop": {
+          "renderer": "settings.voice",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_voice"
+      }
+    },
+    {
+      "id": "settings.notifications",
+      "collection": "Lucide",
+      "originalName": "bell-ring",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/bell-ring",
+      "svg": "svg/bell-ring.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.notifications",
+        "desktop": {
+          "renderer": "settings.notifications",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_notifications"
+      }
+    },
+    {
+      "id": "settings.shortcuts",
+      "collection": "Lucide",
+      "originalName": "keyboard",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/keyboard",
+      "svg": "svg/keyboard.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.shortcuts",
+        "desktop": {
+          "renderer": "settings.shortcuts",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_shortcuts"
+      }
+    },
+    {
+      "id": "settings.advanced",
+      "collection": "Lucide",
+      "originalName": "sliders-horizontal",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/sliders-horizontal",
+      "svg": "svg/sliders-horizontal.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.advanced",
+        "desktop": {
+          "renderer": "settings.advanced",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_advanced"
+      }
+    },
+    {
+      "id": "settings.developer",
+      "collection": "Lucide",
+      "originalName": "code-xml",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/code-xml",
+      "svg": "svg/code-xml.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.developer",
+        "desktop": {
+          "renderer": "settings.developer",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_developer"
+      }
+    },
+    {
+      "id": "settings.creators",
+      "collection": "Lucide",
+      "originalName": "clapperboard",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/clapperboard",
+      "svg": "svg/clapperboard.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.creators",
+        "desktop": {
+          "renderer": "settings.creators",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_creators"
+      }
+    },
+    {
+      "id": "settings.leaderboards",
+      "collection": "Lucide",
+      "originalName": "trophy",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/trophy",
+      "svg": "svg/trophy.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.leaderboards",
+        "desktop": {
+          "renderer": "settings.leaderboards",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_leaderboards"
+      }
+    },
+    {
+      "id": "settings.level",
+      "collection": "Lucide",
+      "originalName": "crown",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/crown",
+      "svg": "svg/crown.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.level",
+        "desktop": {
+          "renderer": "settings.level",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_level"
+      }
+    },
+    {
+      "id": "settings.messages",
+      "collection": "Lucide",
+      "originalName": "message-circle",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/message-circle",
+      "svg": "svg/message-circle.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.messages",
+        "desktop": {
+          "renderer": "settings.messages",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_messages"
+      }
+    },
+    {
+      "id": "settings.gifts",
+      "collection": "Lucide",
+      "originalName": "gift",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/gift",
+      "svg": "svg/gift.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.gifts",
+        "desktop": {
+          "renderer": "settings.gifts",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_gifts"
+      }
+    },
+    {
+      "id": "settings.invites",
+      "collection": "Lucide",
+      "originalName": "user-round-plus",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/user-round-plus",
+      "svg": "svg/user-round-plus.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "settings.invites",
+        "desktop": {
+          "renderer": "settings.invites",
+          "native": "platform-conventions"
+        },
+        "android": "mi_settings_invites"
+      }
+    }
+  ]
+}

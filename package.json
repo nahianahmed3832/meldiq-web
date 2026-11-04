@@ -29,7 +29,9 @@
     "test:social-browser": "node scripts/test-social-auth-browser.mjs",
     "i18n:audit": "node scripts/i18n/audit.mjs",
     "i18n:check": "node scripts/i18n/check.mjs",
-    "i18n:validate": "node scripts/i18n/check.mjs --structure-only"
+    "i18n:validate": "node scripts/i18n/check.mjs --structure-only",
+    "icons:check": "python3 scripts/icons/generate.py --check",
+    "icons:generate": "python3 scripts/icons/generate.py"
   },
   "dependencies": {
     "@hpke/core": "1.9.0",
