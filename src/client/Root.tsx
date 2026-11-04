@@ -13,7 +13,6 @@ import { followVisualViewport } from "../application/viewport";
 import { guardInspectorKeys } from "../application/inspectGuard";
 import { installLegacyCurves } from "../crypto/legacyCurves";
 import { App } from "../ui/App";
-import { ServiceStatusNotice } from "../ui/components/ServiceStatusNotice";
 import { ConfigError } from "../ui/StatusScreens";
 import { LocalizationProvider } from "../i18n/Provider";
 import { prepareLocale, resolveLanguage } from "../i18n";
@@ -77,7 +76,6 @@ export default function Root() {
     <StrictMode>
       <LocalizationProvider>
         <div id="root">
-          <ServiceStatusNotice />
           <App />
         </div>
       </LocalizationProvider>
