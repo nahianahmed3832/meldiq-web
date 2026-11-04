@@ -11,7 +11,7 @@ import type { MenuEntry } from "../components/Overlay";
 import { Dialog } from "../components/Overlay";
 import { NicknameDialog } from "../community/NicknameDialog";
 import { useAction } from "./useLoad";
-import { ErrorLine } from "./WorkspaceView";
+import { ErrorLine } from "../components/SettingsCard";
 /** The member menu's community parity A items: a nickname for them, and a voice ban. */
 export type MemberParityDialog = "nickname" | "voiceBan";
 interface EntriesInput {

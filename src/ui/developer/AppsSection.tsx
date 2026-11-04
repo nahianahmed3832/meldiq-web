@@ -1,3 +1,4 @@
+import { confirmAction } from "../components/ConfirmationDialog";
 import { SERVER_REFERENCE } from "../../i18n/syntax";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
@@ -169,8 +170,8 @@ function AppRow({ app, onChanged, onSecret }: { app: DeveloperApp; onChanged: ()
         <button
           className="btn btn-ghost btn-sm"
           disabled={act.busy}
-          onClick={() => {
-            if (!window.confirm(uiText("workspace.interface.replace_value0_s_client_secret_the_current_one_stops_working_at_o_1c57d14", { value0: app.name }))) return;
+          onClick={async () => {
+            if (!(await confirmAction(uiText("workspace.interface.replace_value0_s_client_secret_the_current_one_stops_working_at_o_1c57d14", { value0: app.name })))) return;
             void act.act(async () => onSecret((await rotateAppSecret(engine, app.id)).clientSecret));
           }}
         >
@@ -179,8 +180,8 @@ function AppRow({ app, onChanged, onSecret }: { app: DeveloperApp; onChanged: ()
         <button
           className="btn btn-danger-quiet btn-sm"
           disabled={act.busy}
-          onClick={() => {
-            if (window.confirm(uiText("workspace.interface.delete_value0_everyone_signed_in_to_it_with_meldiq_is_signed_out_3eeffc9", { value0: app.name })))
+          onClick={async () => {
+            if (await confirmAction(uiText("workspace.interface.delete_value0_everyone_signed_in_to_it_with_meldiq_is_signed_out_3eeffc9", { value0: app.name })))
               void act.act(() => deleteApp(engine, app.id).then(onChanged));
           }}
         >

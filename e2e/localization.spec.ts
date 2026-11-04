@@ -16,7 +16,7 @@ async function shot(page: Page, name: string) {
   const directory = process.env.ORBIT_E2E_SHOTS;
   if (directory) {
     fs.mkdirSync(directory, { recursive: true });
-    await page.screenshot({ path: path.join(directory, name + ".png"), fullPage: true });
+    await page.screenshot({ animations: "disabled", path: path.join(directory, name + ".png"), fullPage: true });
   }
 }
 
@@ -81,7 +81,7 @@ test("switching keeps messaging connected, preserves content and syncs another d
   const second = await secondContext.newPage();
   await second.addInitScript(() => localStorage.setItem("meldiq.introSeen", "1"));
   await link(second, alice);
-  await page.goto("/settings/appearance");
+  await page.goto("/settings/language");
   await expect(page.locator("button.lang-picker")).toBeVisible();
   const baseline = await page.evaluate(() => (window as unknown as { localeSocketCounts: unknown }).localeSocketCounts);
   for (const locale of locales) {
@@ -118,22 +118,18 @@ test("switching keeps messaging connected, preserves content and syncs another d
   await bob.disconnect();
 });
 
-test("the profile menu opens a keyboard-accessible language dialog and restores focus", async ({ page, isMobile }) => {
+test("the profile language shortcut opens the authoritative language settings", async ({ page, isMobile }) => {
   const alice = await newPhone("localeprofile", "Alice Rahman");
   await link(page, alice);
   if (isMobile) await page.goto("/settings/you");
   const trigger = isMobile ? page.locator(".you-card").getByRole("button", { name: "Status", exact: true }) : page.locator(".user-panel-me:visible").first();
   await trigger.click();
-  const language = page.getByRole("menuitem", { name: "Language", exact: true });
-  await language.focus();
+  await page.getByRole("menuitem", { name: "Language", exact: true }).focus();
   await page.keyboard.press("Enter");
-  await expect(page.locator(".language-search input")).toBeFocused();
+  await expect(page).toHaveURL(/\/settings\/language$/);
   await expect(page.getByRole("menu")).toHaveCount(0);
-  await page.keyboard.press("Escape");
-  await expect(page.locator(".language-dialog")).toHaveCount(0);
-  await expect(trigger).toBeFocused();
-  await trigger.click();
-  await page.getByRole("menuitem", { name: "Language", exact: true }).click();
+  await page.locator("button.lang-picker").click();
+  await expect(page.locator(".language-search input")).toBeFocused();
   await page.getByRole("option", { name: "اردو", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "ur");
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");

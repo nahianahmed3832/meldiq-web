@@ -3,9 +3,9 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { InviteToMeldiqCard, MojoPromoCard } from "./DmPromos";
+import { InviteToMeldiqCard } from "./DmPromos";
 import { navigate, useRoute } from "../../application/router";
-import { Archive, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Plus, Search, Trash2, UserRoundPlus } from "lucide-react";
+import { Archive, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Plus, Trash2, UserRoundPlus } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -328,7 +328,6 @@ export function DmHub({ onDialog }: { onDialog: (kind: "requests" | "connections
   return (
     <>
       <InviteToMeldiqCard />
-      <MojoPromoCard />
       <nav className="dm-hub" aria-label={uiText("calls.interface.people_7db2089")}>
         {hasConnections && (
           <button
@@ -348,12 +347,6 @@ export function DmHub({ onDialog }: { onDialog: (kind: "requests" | "connections
             <span className="grow">{t("side_message_requests", { n: waiting })}</span>
           </button>
         )}
-        <button className="dm-hub-item" onClick={() => onDialog("new")}>
-          <Search size={20} aria-hidden="true" />
-          <span className="grow">
-            <Localized k="workspace.interface.find_people_17a85d8" />
-          </span>
-        </button>
         <button className="dm-hub-item" onClick={() => onDialog("newGroup")}>
           <UserRoundPlus size={20} aria-hidden="true" />
           <span className="grow">

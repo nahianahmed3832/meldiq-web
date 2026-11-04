@@ -65,7 +65,7 @@ test("with Meldiq closed, a wake-up shows who wrote and their newest message, an
   await deliverPush(context, page);
   const viewer = await context.newPage();
   await viewer.goto(origin() + "/#/settings/notifications");
-  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "2 new messages: call me", tag: `orbit-web:${dm}`, url: `/dms/c/${dm}` });
+  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "New messages: 2: call me", tag: `orbit-web:${dm}`, url: `/dms/c/${dm}` });
   // A click (the service worker tells the open page where to go): the conversation opens, once the app is running.
   await expect(viewer.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await viewer.waitForTimeout(500);

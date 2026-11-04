@@ -3,38 +3,23 @@ import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
 import { syncPlusReminderPreference } from "../../application/plusSupport";
+import { BugReportsCard } from "./AccountExtrasCards";
 import { NotificationOverview } from "./NotificationOverview";
-import { AccessibilityCard, VibesCard } from "./AppearanceExtras";
+import { VibesCard } from "./AppearanceExtras";
 import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { APP_VERSION } from "../../application/env";
 import { serverHost } from "../../application/config";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import {
-  LIST_PREVIEWS,
-  MESSAGE_LAYOUTS,
-  type Palette,
-  PALETTES,
-  type Prefs,
-  QUICK_REACTIONS,
-  setPrefs,
-  TEXT_SIZES,
-  type TextSize,
-  THEMES,
-  TIME_FORMATS,
-  usePrefs,
-  volumeOf,
-} from "../../application/prefs";
+import { LIST_PREVIEWS, MESSAGE_LAYOUTS, type Palette, PALETTES, type Prefs, QUICK_REACTIONS, setPrefs, THEMES, TIME_FORMATS, usePrefs, volumeOf } from "../../application/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { BackgroundNotifications } from "./BackgroundNotifications";
 import { type ChimeState, chimeState, playChime, unlockChime } from "../../application/messageChime";
 import { type StringKey, useT } from "../../i18n";
 import { InstallSetting } from "./InstallButton";
-import { LanguagePicker } from "../components/LanguagePicker";
 const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark", black: "ap_black" } as const satisfies Record<Prefs["theme"], StringKey>;
 const PALETTE_KEY = { meldiq: "ap_meldiq", midnight: "ap_midnight", charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
-const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
 export function NotificationsPage() {
   useLocaleRender();
   const engine = useEngine();
@@ -128,23 +113,6 @@ export function NotificationsPage() {
           <Toggle label={t("nt_ring")} checked={prefs.callRingtone} onChange={(v) => setPrefs({ callRingtone: v })} />
         </div>
       </div>
-      <h1 style={{ fontSize: 17, marginTop: 8 }}>{t("nt_conversations")}</h1>
-      <div className="card">
-        <div className="setting">
-          <div className="lines">
-            <strong>{t("nt_receipts")}</strong>
-            <small>{t("nt_receipts_sub")}</small>
-          </div>
-          <Toggle label={t("nt_receipts")} checked={prefs.readReceipts} onChange={(v) => setPrefs({ readReceipts: v })} />
-        </div>
-        <div className="setting">
-          <div className="lines">
-            <strong>{t("nt_typing")}</strong>
-            <small>{t("nt_typing_sub")}</small>
-          </div>
-          <Toggle label={t("nt_typing")} checked={prefs.typing} onChange={(v) => setPrefs({ typing: v })} />
-        </div>
-      </div>
     </>
   );
 }
@@ -211,13 +179,6 @@ export function AppearancePage() {
       <div className="card">
         <div className="setting">
           <div className="lines">
-            <strong>{t("lang_label")}</strong>
-            <small>{t("lang_note")}</small>
-          </div>
-          <LanguagePicker />
-        </div>
-        <div className="setting">
-          <div className="lines">
             <strong>{t("ap_theme")}</strong>
             <small>{t("ap_theme_sub")}</small>
           </div>
@@ -243,19 +204,6 @@ export function AppearancePage() {
                   <i />
                 </span>
                 {t(PALETTE_KEY[p])}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="setting">
-          <div className="lines">
-            <strong>{t("ap_text_size")}</strong>
-            <small>{t("ap_text_size_sub")}</small>
-          </div>
-          <div className="segmented" role="group" aria-label={t("ap_text_size")}>
-            {TEXT_SIZES.map((ts) => (
-              <button key={ts} aria-pressed={prefs.textSize === ts} onClick={() => setPrefs({ textSize: ts })}>
-                {t(SIZE_KEY[ts])}
               </button>
             ))}
           </div>
@@ -301,13 +249,6 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>{t("ap_animoji")}</strong>
-            <small>{t("ap_animoji_sub")}</small>
-          </div>
-          <Toggle label={t("ap_animoji")} checked={prefs.animatedEmoji} onChange={(v) => setPrefs({ animatedEmoji: v })} />
-        </div>
-        <div className="setting">
-          <div className="lines">
             <strong>{t("ap_autophoto")}</strong>
             <small>{t("ap_autophoto_sub")}</small>
           </div>
@@ -350,13 +291,6 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>{t("ap_links")}</strong>
-            <small>{t("ap_links_sub")}</small>
-          </div>
-          <Toggle label={t("ap_links")} checked={prefs.askBeforeLinks} onChange={(v) => setPrefs({ askBeforeLinks: v })} />
-        </div>
-        <div className="setting">
-          <div className="lines">
             <strong>{t("ap_media")}</strong>
             <small>{t("ap_media_sub")}</small>
           </div>
@@ -377,7 +311,6 @@ export function AppearancePage() {
           <Toggle label={t("ap_enter")} checked={prefs.enterToSend} onChange={(v) => setPrefs({ enterToSend: v })} />
         </div>
       </div>
-      <AccessibilityCard />
       <VibesCard />
     </>
   );
@@ -448,6 +381,7 @@ export function AboutPage() {
           </div>
         </div>
       </div>
+      <BugReportsCard />
       <p className="faint" style={{ fontSize: 12.5 }}>
         <Localized
           k="settings.interface.meldiq_web_0_1_0_plus_jakarta_sans_is_used_under_the_sil_open_fon_7a2c148"

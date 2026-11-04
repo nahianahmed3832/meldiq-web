@@ -7,7 +7,7 @@ import { useEngine } from "../../application/orbit";
 import { liftVoiceBan, voiceBans } from "../../sync/communitySafety";
 import { shortWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /** Bans › "Voice bans - N" (community parity A2): people kept out of voice channels, who can still read and chat. */
 export function VoiceBansCard({ orgId }: { orgId: string }) {
   useLocaleRender();

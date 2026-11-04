@@ -12,7 +12,7 @@ import { PAUSE_CHOICES, running } from "../../sync/reports";
 import { Toggle } from "../components/Toggle";
 import { shortWhen, untilWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 import { VoiceBansCard } from "./VoiceBansCard";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 const MAX_QUESTIONS = 5;

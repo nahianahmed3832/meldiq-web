@@ -2,17 +2,24 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { KeyRound, Laptop, LogOut, Smartphone, Trash2 } from "lucide-react";
+import { KeyRound, Laptop, Smartphone, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import type { Device } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { listDevices, revokeDevice, signOut, SignOutUnconfirmed } from "../../sync/account";
+import { listDevices, revokeDevice } from "../../sync/account";
 import { BlockedPeople, MessagingSettings, PrivacySettings } from "./PrivacyPage";
 import { LeaveManyCard } from "./PrivacyExtras";
+import { AuthenticationSettings } from "./AccountSettingsPage";
+import { SessionsCard } from "./SessionsCard";
+import { AccountApi } from "../../auth/accountApi";
+import { ConnectedAccountsCard } from "./ConnectedAccountsCard";
+import { ConnectionsCard } from "./ConnectionsCard";
+import { LogOutEverywhereCard } from "./AccountExtrasCards";
+import { ConversationPrivacy, LinkSafetySettings } from "./SpecializedPages";
 import { AuthorizedAppsCard } from "./AuthorizedAppsCard";
 import { Dialog } from "../components/Overlay";
 import { relative } from "../format";
-export function DevicesPage() {
+export function DevicesPage({ onSignedOut }: { onSignedOut: () => void }) {
   useLocaleRender();
   const l10n = useLocalization();
   const engine = useEngine();
@@ -32,7 +39,7 @@ export function DevicesPage() {
   return (
     <>
       <div>
-        <h1>{l10n("settings.devices")}</h1>
+        <h1>{l10n("settings.navigation.devices")}</h1>
         <p className="muted" style={{ margin: "6px 0 0" }}>
           <Localized k="settings.interface.every_phone_and_browser_signed_in_to_your_account_each_shows_the_42d5ec0" />
         </p>
@@ -73,6 +80,15 @@ export function DevicesPage() {
           </div>
         ))}
       </div>
+      {engine.device.account && (
+        <>
+          <SessionsCard accounts={new AccountApi(engine.api)} />
+          <ConnectedAccountsCard />
+          <LogOutEverywhereCard onSignedOut={onSignedOut} />
+        </>
+      )}
+      <ConnectionsCard />
+      <AuthorizedAppsCard />
       {remove && (
         <Dialog
           title={uiText("settings.interface.remove_value0_bc43ab8", { value0: remove.name })}
@@ -107,34 +123,17 @@ export function DevicesPage() {
     </>
   );
 }
-export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
+/** All personal privacy and security controls; account actions are shared by the settings sidebar. */
+export function SecurityPage() {
   useLocaleRender();
-  const l10n = useLocalization();
+  const t = useLocalization();
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
-  const [confirm, setConfirm] = useState<"ask" | "unconfirmed" | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [reason, setReason] = useState("");
   if (!me) return null;
-  /**
-   * [force]: even if the server can't confirm (asked first). Nothing needs backing up first: the server keeps every
-   * message (API 0.57.0).
-   */
-  const doSignOut = (force: boolean) => {
-    setBusy(true);
-    signOut(engine, force, true)
-      .then(onSignedOut)
-      .catch((e: unknown) => {
-        if (e instanceof SignOutUnconfirmed) {
-          setReason(e.message);
-          setConfirm("unconfirmed");
-        } else engine.notice("error", e instanceof Error ? e.message : uiText("settings.interface.couldn_t_sign_out_f3c366a"));
-      })
-      .finally(() => setBusy(false));
-  };
   return (
     <>
-      <h1>{l10n("settings.settings_security")}</h1>
+      <h1>{t("settings.settings_security")}</h1>
+      <AuthenticationSettings />
       <div className="card">
         <div className="setting">
           <KeyRound size={20} className="faint" />
@@ -145,27 +144,23 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
             <small>
               <Localized k="settings.interface.what_your_other_device_showed_when_it_approved_this_browser_6d6b6c7" />
             </small>
-            <span className="fingerprint" style={{ fontSize: 13 }}>
-              {me.deviceFingerprint}
-            </span>
+            <span className="fingerprint">{me.deviceFingerprint}</span>
           </div>
         </div>
       </div>
       <MessagingSettings />
-      <LeaveManyCard />
+      <ConversationPrivacy />
       <PrivacySettings />
       <BlockedPeople />
-      <AuthorizedAppsCard />
-      <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 10 }}>
+      <LinkSafetySettings />
+      <LeaveManyCard />
+      <div className="card setting-card">
         <strong>
           <Localized k="settings.interface.where_your_data_lives_594b837" />
         </strong>
-        <ul className="muted" style={{ margin: 0, paddingInlineStart: 18, display: "grid", gap: 6, fontSize: 13.5 }}>
+        <ul className="muted">
           <li>
             <Localized k="settings.interface.your_messages_files_and_settings_are_stored_on_meldiq_s_servers_s_85736bf" />
-          </li>
-          <li>
-            <Localized k="settings.interface.this_browser_keeps_only_what_signs_it_in_nothing_to_back_up_and_n_3396ca5" />
           </li>
           <li>
             {engine.device.account
@@ -174,66 +169,6 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
           </li>
         </ul>
       </div>
-      <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 12 }}>
-        <div>
-          <strong>
-            <Localized k="settings.interface.sign_out_of_this_browser_e6e2e83" />
-          </strong>
-          <p className="muted" style={{ margin: "4px 0 0", fontSize: 13.5 }}>
-            <Localized k="settings.interface.this_browser_leaves_your_account_and_forgets_its_sign_in_your_cha_0412bce" />
-          </p>
-        </div>
-        <div>
-          <button className="btn btn-secondary" onClick={() => setConfirm("ask")} disabled={busy}>
-            <LogOut size={16} /> {l10n("auth.signOut")}
-          </button>
-        </div>
-      </div>
-      {confirm === "ask" && (
-        <Dialog
-          title={uiText("settings.interface.sign_out_of_this_browser_123427e")}
-          onClose={() => setConfirm(null)}
-          footer={
-            <>
-              <button className="btn btn-secondary" onClick={() => setConfirm(null)}>
-                {l10n("common.actions.cancel")}
-              </button>
-              <button className="btn btn-primary" disabled={busy} onClick={() => doSignOut(false)}>
-                {busy ? uiText("settings.interface.signing_out_08c6bd3") : l10n("auth.signOut")}
-              </button>
-            </>
-          }
-        >
-          <div className="dialog-body">
-            <p style={{ margin: 0 }}>
-              <Localized k="settings.interface.your_chats_stay_on_meldiq_s_servers_and_are_all_there_when_you_si_2871532" />
-            </p>
-          </div>
-        </Dialog>
-      )}
-      {confirm === "unconfirmed" && (
-        <Dialog
-          title={uiText("settings.interface.the_server_couldn_t_confirm_255c134")}
-          onClose={() => setConfirm(null)}
-          footer={
-            <>
-              <button className="btn btn-secondary" onClick={() => setConfirm(null)}>
-                <Localized k="settings.interface.stay_signed_in_b0a1ca8" />
-              </button>
-              <button className="btn btn-danger" disabled={busy} onClick={() => doSignOut(true)}>
-                <Localized k="settings.interface.sign_out_anyway_bb14a8b" />
-              </button>
-            </>
-          }
-        >
-          <div className="dialog-body">
-            <p style={{ margin: 0 }}>{reason}.</p>
-            <p className="muted" style={{ margin: 0 }}>
-              <Localized k="settings.interface.if_you_sign_out_now_the_server_still_lists_this_browser_as_a_devi_22be59f" />
-            </p>
-          </div>
-        </Dialog>
-      )}
     </>
   );
 }

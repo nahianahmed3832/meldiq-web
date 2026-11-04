@@ -12,7 +12,6 @@ import {
   ArrowDown,
   ArrowUp,
   Bell,
-  BellDot,
   BookText,
   BellOff,
   Eye,
@@ -33,7 +32,7 @@ import { memo, type MouseEvent, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, useRoute } from "../../application/router";
 import type { ConversationLocal } from "../../model/types";
-import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
+import { newSectionId, placeOf, workspaceOf } from "../../sync/navPrefs";
 import { GroupAvatar } from "../components/OrgAvatar";
 import { LookAvatar, LookName } from "../people/NameStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
@@ -41,29 +40,6 @@ import { conversationTitle, dmPeer, members, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
 import { usePrefs } from "../../application/prefs";
 import { useT } from "../../i18n";
-const LEVELS: {
-  level: NotifyLevel;
-  label: string;
-}[] = [
-  {
-    level: "all",
-    get label() {
-      return uiText("messaging.interface.all_new_messages_0bd334d");
-    },
-  },
-  {
-    level: "mentions",
-    get label() {
-      return uiText("messaging.interface.mentions_only_78732e1");
-    },
-  },
-  {
-    level: "none",
-    get label() {
-      return uiText("workspace.interface.off_muted_686a4e8");
-    },
-  },
-];
 /**
  * One conversation in the sidebar. Its menu (the … button, or right-click) arranges it as on the phone's long-press:
  * star, move to a section, order, notification level (synced to every device), mark read or unread and archive (this
@@ -258,7 +234,6 @@ function RowMenu({
   const [naming, setNaming] = useState(false);
   if (!c) return null;
   const place = prefs ? placeOf(prefs, id) : { k: "default" as const };
-  const level = levelOf(prefs, id, c.categoryId);
   const sections = prefs?.sections ?? [];
   const arrange = (op: Parameters<typeof engine.arrange>[1]) => void engine.arrange(id, op);
   const entries: MenuEntry[] = [
@@ -321,13 +296,7 @@ function RowMenu({
         ]
       : []),
     "separator",
-    { heading: l10n("settings.notifications") },
-    ...LEVELS.map((l) => ({
-      label: l.label,
-      icon: l.level === "all" ? <Bell size={16} /> : l.level === "mentions" ? <BellDot size={16} /> : <BellOff size={16} />,
-      checked: level === l.level,
-      onSelect: () => arrange({ op: "notify", conversationId: id, level: l.level }),
-    })),
+    { label: l10n("settings.notifications"), icon: <Bell size={16} />, onSelect: () => navigate({ section: isPeople(c) ? "dms" : "home", conversationId: id, panel: "details" }) },
     "separator",
     unread
       ? { label: l10n("notifications.markRead"), icon: <Eye size={16} />, onSelect: () => void engine.setUnreadLocally(id, false) }

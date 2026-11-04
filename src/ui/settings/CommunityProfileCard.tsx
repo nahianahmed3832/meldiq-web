@@ -4,6 +4,7 @@ import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
+import { useUnsavedChanges } from "../components/UnsavedChanges";
 import { communityProfile, emptyCommunityProfile, saveCommunityProfile, zCommunityProfile, type CommunityProfile } from "../../sync/communityProfile";
 import { useAction, useLoad } from "../workspace/useLoad";
 import { THEME_PRESETS, themeBackground } from "../people/profileTheme";
@@ -49,6 +50,7 @@ function CommunityProfileEditor({ orgId, aboutMe, pronouns }: { orgId: string; a
   const [text, setText] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
   const action = useAction();
+  useUnsavedChanges(draft !== null);
   const p = draft ?? { ...emptyCommunityProfile, ...loaded.data?.profile };
   const change = (patch: Partial<CommunityProfile>) => {
     setRev((r) => r ?? loaded.data?.rev ?? 0);

@@ -11,7 +11,7 @@ import { createInvitation, invitations, revokeInvitation } from "../../sync/work
 import { invitableRoles, roleName } from "../../sync/workspaceRules";
 import { shortWhen, untilWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 import { QrCode } from "../components/QrCode";
 import { inviteLink } from "../../sync/inviteCodes";
 import { EXPIRY, InviteShare, USES } from "./InviteLink";

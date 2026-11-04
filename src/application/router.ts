@@ -1,4 +1,5 @@
 import Router from "next/router";
+import { hasUnsavedChanges, requestNavigation } from "./navigationGuard";
 import { useSyncExternalStore } from "react";
 
 /**
@@ -24,6 +25,8 @@ export type SettingsPage =
   | "notifications"
   | "calls"
   | "appearance"
+  | "accessibility"
+  | "language"
   | "storage"
   | "security"
   | "about"
@@ -68,7 +71,10 @@ export type WorkspacePage =
   | "sparks"
   | "promote"
   // Community parity batch B: the lobby's settings (community-lobby).
-  | "lobby";
+  | "lobby"
+  | "discovery"
+  | "integrations"
+  | "notifications";
 
 export interface Route {
   section: Section;
@@ -91,6 +97,8 @@ const PAGES: SettingsPage[] = [
   "notifications",
   "calls",
   "appearance",
+  "accessibility",
+  "language",
   "storage",
   "security",
   "about",
@@ -133,6 +141,9 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "sparks",
   "promote",
   "lobby",
+  "discovery",
+  "integrations",
+  "notifications",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 
@@ -184,6 +195,7 @@ export function routeHref(r: Partial<Route> & { section: Section }): string {
 export const ROUTE_EVENT = "meldiq:route";
 /** History entries this app made (Next.js's own router leaves entries without its marker alone). */
 const STATE = { meldiq: 1 };
+let historyIndex = 0;
 
 export function navigate(r: Partial<Route> & { section: Section }, replace = false): void {
   go(routeHref(r), replace);
@@ -192,9 +204,13 @@ export function navigate(r: Partial<Route> & { section: Section }, replace = fal
 /** Goes to a path of this app (a link, a notification): history, then the screens follow. */
 export function go(href: string, replace = false): void {
   if (`${location.pathname}${location.search}` === href && !location.hash) return;
-  if (replace) history.replaceState(STATE, "", href);
-  else history.pushState(STATE, "", href);
-  window.dispatchEvent(new Event(ROUTE_EVENT));
+  requestNavigation(() => {
+    if (!replace) historyIndex += 1;
+    const state = { ...STATE, meldiqIndex: historyIndex };
+    if (replace) history.replaceState(state, "", href);
+    else history.pushState(state, "", href);
+    window.dispatchEvent(new Event(ROUTE_EVENT));
+  });
 }
 
 /** A path of this app from a link or notification, or null for anything else (another site, a file, a malformed one). */
@@ -221,6 +237,39 @@ export function appHref(raw: string, origin = location.origin): string | null {
  * app's paths move within the page instead of loading it again (modifier keys, other targets and downloads keep the browser's own behaviour).
  */
 export function startRouting(): () => void {
+  historyIndex = typeof history.state?.meldiqIndex === "number" ? history.state.meldiqIndex : 0;
+  history.replaceState({ ...STATE, meldiqIndex: historyIndex }, "");
+  let restoring = false;
+  let replaying = false;
+  // Restore the current history entry while a draft confirmation is open. Discard replays the original Back/Forward
+  // movement, preserving the history stack instead of manufacturing replacement entries.
+  const onPop = (event: PopStateEvent) => {
+    const index: unknown = event.state?.meldiqIndex;
+    if (typeof index !== "number") return;
+    if (restoring) {
+      restoring = false;
+      event.stopImmediatePropagation();
+      return;
+    }
+    if (replaying) {
+      replaying = false;
+      historyIndex = index;
+      return;
+    }
+    const delta = historyIndex - index;
+    if (!delta || !hasUnsavedChanges()) {
+      historyIndex = index;
+      return;
+    }
+    event.stopImmediatePropagation();
+    restoring = true;
+    history.go(delta);
+    requestNavigation(() => {
+      replaying = true;
+      history.go(-delta);
+    });
+  };
+  window.addEventListener("popstate", onPop, true);
   // The message viewport owns its position after data renders, including Back/Forward and reload.
   const scrollRestoration = history.scrollRestoration;
   history.scrollRestoration = "manual";
@@ -248,6 +297,7 @@ export function startRouting(): () => void {
   Router.events.on("routeChangeComplete", afterNext);
   Router.events.on("hashChangeComplete", afterNext); // what it reports when only the "#…" part differs
   return () => {
+    window.removeEventListener("popstate", onPop, true);
     history.scrollRestoration = scrollRestoration;
     document.removeEventListener("click", onClick);
     window.removeEventListener("hashchange", legacy);

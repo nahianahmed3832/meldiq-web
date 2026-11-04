@@ -1,3 +1,4 @@
+import { confirmAction } from "../components/ConfirmationDialog";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -11,7 +12,7 @@ import { directory } from "../../sync/workspaces";
 import { Avatar } from "../components/Avatar";
 import { Dialog } from "../components/Overlay";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /**
  * Community settings › Pins (API 0.64.0, server docs/PROFILE_PINS.md): the community's own pins, which its owners and
  * admins make and give to members; members wear them on their profile. Every member can see the pins and who has each.
@@ -73,8 +74,8 @@ export function PinsPage({ detail }: { detail: OrgAdminDetail }) {
                   aria-label={uiText("organization.interface.delete_value0_8782b77", { value0: p.name })}
                   title={l10n("common.actions.delete")}
                   disabled={remove.busy}
-                  onClick={() => {
-                    if (!window.confirm(uiText("workspace.interface.delete_value0_it_comes_off_everyone_who_has_it_445f1b2", { value0: p.name }))) return;
+                  onClick={async () => {
+                    if (!(await confirmAction(uiText("workspace.interface.delete_value0_it_comes_off_everyone_who_has_it_445f1b2", { value0: p.name })))) return;
                     void remove.act(() => deletePin(engine, orgId, p.id)).then((ok) => ok && reload());
                   }}
                 >

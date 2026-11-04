@@ -5,7 +5,8 @@ import { useT as useLocalization } from "../../i18n";
 import { Ban, Pencil, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
-import { useEngine } from "../../application/orbit";
+import { EditChannelDialog } from "../community/ChannelDialogs";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { searchPeople } from "../../sync/account";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { addConversationMember, directory, updateConversation } from "../../sync/workspaces";
@@ -24,13 +25,14 @@ export function EditConversationButton({ c }: { c: Conversation }) {
   useLocaleRender();
   const l10n = useLocalization();
   const [open, setOpen] = useState(false);
+  const community = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
   if (c.type === "DM" || !c.canManage) return null;
   return (
     <>
       <button className="btn btn-secondary btn-sm" style={{ justifySelf: "start" }} onClick={() => setOpen(true)}>
         <Pencil size={14} /> {l10n("common.actions.edit")} {c.type === "CHANNEL" ? uiText("messaging.interface.channel_69e3656") : uiText("messaging.interface.group_ad936fc")}
       </button>
-      {open && <EditConversationDialog c={c} onClose={() => setOpen(false)} />}
+      {open && (c.type === "CHANNEL" && community ? <EditChannelDialog channel={c} onClose={() => setOpen(false)} /> : <EditConversationDialog c={c} onClose={() => setOpen(false)} />)}
     </>
   );
 }

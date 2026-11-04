@@ -42,11 +42,12 @@ describe("community settings rail", () => {
       "overview",
       "guide",
       "theme",
+      "discovery",
       "channels",
       "rules",
       "sparks",
       "expressions",
-      "bots",
+      "integrations",
       "people",
       "roles",
       "onboarding",
@@ -63,7 +64,7 @@ describe("community settings rail", () => {
 
   it("keeps pages from people who can't use them and servers without the feature", () => {
     expect(keys(ALL_FEATURES, member)).toEqual(["overview", "theme", "channels", "sparks", "people", "onboarding", "pins", "meetings"]);
-    expect(keys([], owner)).toEqual(["overview", "channels", "people", "roles", "invitations", "audit", "usage"]);
+    expect(keys([], owner)).toEqual(["overview", "discovery", "channels", "people", "roles", "invitations", "audit", "usage"]);
   });
 
   it("shows only the open pages while permissions load", () => {
@@ -76,9 +77,10 @@ describe("community settings rail", () => {
     expect(keys([...ALL_FEATURES, PARITY_FEATURES.promote], member)).not.toContain("promote");
   });
 
-  it("opens old Security actions links on Profile", () => {
-    expect(communityRailKey("security")).toBe("overview");
-    expect(communityPageTitle("security")).toBe("Profile");
+  it("keeps safety links on Moderation and bot links on Integrations", () => {
+    expect(communityRailKey("security")).toBe("security");
+    expect(communityRailKey("bots")).toBe("integrations");
+    expect(communityPageTitle("security")).toBe("Moderation");
     expect(communityPageTitle("guide")).toBe("Home");
     expect(communityPageTitle("expressions")).toBe("Emoji & stickers");
   });

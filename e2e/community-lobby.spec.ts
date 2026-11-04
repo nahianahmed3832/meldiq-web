@@ -11,7 +11,7 @@ import { newPhone } from "./phone";
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium");
 const SHOTS = process.env.ORBIT_E2E_SHOTS;
 const shot = async (page: Page, name: string) => {
-  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${name}.png`) });
+  if (SHOTS) await page.screenshot({ animations: "disabled", path: path.join(SHOTS, `${name}.png`) });
 };
 
 test("the lobby: first visit, the live editor, templates and its settings page", async ({ page }) => {
@@ -25,10 +25,10 @@ test("the lobby: first visit, the live editor, templates and its settings page",
 
   // Opening the community the first time lands on its lobby; an editor sees where to start.
   await expect(page).toHaveURL(/\/lobby$/);
-  // Seen now: Home stays Home after that.
+  // Without a previously visited channel, Home returns to the configured lobby.
   await page.goto("/home");
-  await expect(page.getByText(/what's happening in Night Owls/)).toBeVisible();
-  await expect(page).toHaveURL(/\/home$/);
+  await expect(page.getByRole("region", { name: "Night Owls lobby" })).toBeVisible();
+  await expect(page).toHaveURL(/\/lobby$/);
   await page.getByRole("button", { name: "Lobby", exact: true }).click();
   const lobby = page.getByRole("region", { name: "Night Owls lobby" });
   await expect(lobby.getByRole("heading", { level: 1, name: "Night Owls" })).toBeVisible();

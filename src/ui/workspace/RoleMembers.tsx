@@ -9,7 +9,7 @@ import { assignRole, type Role, roleMembers, unassignRole } from "../../sync/rol
 import { directory } from "../../sync/workspaces";
 import { Avatar } from "../components/Avatar";
 import { useAction, useLoad } from "./useLoad";
-import { ErrorLine } from "./WorkspaceView";
+import { ErrorLine } from "../components/SettingsCard";
 interface RoleMembersListProps {
   orgId: string;
   role: Role;

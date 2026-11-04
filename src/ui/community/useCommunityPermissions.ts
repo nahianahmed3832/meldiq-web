@@ -44,9 +44,9 @@ export function permissionsOf(d: OrgAdminDetail | null): CommunityPermissions {
 }
 
 /** The community's detail for its menus, loaded again whenever the community changes (the org list refreshes then). */
-export function useCommunityDetail(orgId: string | null): { detail: OrgAdminDetail | null; perms: CommunityPermissions; reload: () => void } {
+export function useCommunityDetail(orgId: string | null): { detail: OrgAdminDetail | null; perms: CommunityPermissions; reload: () => void; loading: boolean; error: string | null } {
   const engine = useEngine();
   const org = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId) ?? null) : null));
   const loaded = useLoad(() => (orgId && org ? workspaceDetail(engine, orgId) : Promise.resolve(null)), [engine, orgId, org]);
-  return { detail: loaded.data, perms: permissionsOf(loaded.data), reload: loaded.reload };
+  return { detail: loaded.data, perms: permissionsOf(loaded.data), reload: loaded.reload, loading: loaded.loading, error: loaded.error };
 }

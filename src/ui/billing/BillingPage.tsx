@@ -49,6 +49,10 @@ export function BillingPage() {
         setError(uiText("billing.interface.paypal_status_could_not_refresh_showing_the_last_verified_billing_e3b0f3a"));
       }
       await engine.mojo.refresh();
+      if (engine.state.get().mojo.billing?.provider !== "paypal") {
+        setHistory(null);
+        return;
+      }
       const result = await engine.api.json("GET", "/v2/billing/paypal/history", zPayPalHistory);
       setHistory(result);
     } catch (e) {
@@ -81,6 +85,18 @@ export function BillingPage() {
       await refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : uiText("billing.interface.cancellation_could_not_be_confirmed_your_subscription_may_still_r_c4d21ea"));
+    } finally {
+      setBusy(false);
+    }
+  };
+  const openPortal = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const url = await engine.mojo.portal();
+      if (url) window.location.assign(url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : uiText("billing.interface.couldn_t_open_the_payment_page_nothing_was_charged_679d717"));
     } finally {
       setBusy(false);
     }
@@ -165,6 +181,11 @@ export function BillingPage() {
             </small>
           )}
         </div>
+        {sub && !paypal && billing?.portal && (
+          <button className="btn btn-secondary" disabled={busy || !online} onClick={() => void openPortal()}>
+            {uiText("billing.interface.manage_subscription_9041c6a")}
+          </button>
+        )}
         {sub && paypal && !pending && !ending && (
           <button className="btn btn-secondary" disabled={busy || !online} onClick={() => setCanceling({ id: latest?.id, name: "Plus", until: sub.currentPeriodEnd ?? null })}>
             <Localized k="billing.interface.cancel_renewal_9dd5e86" />
@@ -277,69 +298,71 @@ export function BillingPage() {
       <Orders />
       <CardSubscriptionManagement />
       {paypal && <SavedCards />}
-      <section className="checkout-card" aria-labelledby="purchase-history-title">
-        <h2 id="purchase-history-title">
-          <Localized k="billing.interface.purchase_history_3cbb596" />
-        </h2>
-        {busy && !history && (
-          <p role="status">
-            <Localized k="billing.interface.loading_purchases_f703be9" />
-          </p>
-        )}
-        {history && !history.transactions.length && (
-          <p className="muted">
-            <Localized k="billing.interface.your_purchases_and_transaction_references_will_appear_here_fb89fa4" />
-          </p>
-        )}
-        {!!history?.transactions.length && (
-          <div className="billing-table-wrap">
-            <table className="billing-table">
-              <thead>
-                <tr>
-                  <th>
-                    <Localized k="billing.interface.purchase_5b5e9c6" />
-                  </th>
-                  <th>
-                    <Localized k="billing.interface.amount_49e96d7" />
-                  </th>
-                  <th>
-                    <Localized k="billing.interface.status_920e413" />
-                  </th>
-                  <th>
-                    <Localized k="billing.interface.reference_71bf909" />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.transactions.map((p) => (
-                  <tr key={p.id}>
-                    <td>
-                      <strong>{billingProduct(p.product)}</strong>
-                      <small>
-                        <Localized k="billing.interface.paypal_0cf1dcd" slots={[date(p.createdAt)]} />
-                      </small>
-                    </td>
-                    <td>
-                      {money(p.amountMinor, p.currency)} {p.currency}
-                    </td>
-                    <td>
-                      {billingState(p.status)}
-                      {p.refundStatus !== "none" && (
-                        <small>
-                          <Localized k="billing.interface.refund_3d925e5" slots={[p.refundStatus]} />
-                        </small>
-                      )}
-                    </td>
-                    <td>
-                      <code>{p.providerRef ?? p.id}</code>
-                    </td>
+      {paypal && (
+        <section className="checkout-card" aria-labelledby="purchase-history-title">
+          <h2 id="purchase-history-title">
+            <Localized k="billing.interface.purchase_history_3cbb596" />
+          </h2>
+          {busy && !history && (
+            <p role="status">
+              <Localized k="billing.interface.loading_purchases_f703be9" />
+            </p>
+          )}
+          {history && !history.transactions.length && (
+            <p className="muted">
+              <Localized k="billing.interface.your_purchases_and_transaction_references_will_appear_here_fb89fa4" />
+            </p>
+          )}
+          {!!history?.transactions.length && (
+            <div className="billing-table-wrap">
+              <table className="billing-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <Localized k="billing.interface.purchase_5b5e9c6" />
+                    </th>
+                    <th>
+                      <Localized k="billing.interface.amount_49e96d7" />
+                    </th>
+                    <th>
+                      <Localized k="billing.interface.status_920e413" />
+                    </th>
+                    <th>
+                      <Localized k="billing.interface.reference_71bf909" />
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+                </thead>
+                <tbody>
+                  {history.transactions.map((p) => (
+                    <tr key={p.id}>
+                      <td>
+                        <strong>{billingProduct(p.product)}</strong>
+                        <small>
+                          <Localized k="billing.interface.paypal_0cf1dcd" slots={[date(p.createdAt)]} />
+                        </small>
+                      </td>
+                      <td>
+                        {money(p.amountMinor, p.currency)} {p.currency}
+                      </td>
+                      <td>
+                        {billingState(p.status)}
+                        {p.refundStatus !== "none" && (
+                          <small>
+                            <Localized k="billing.interface.refund_3d925e5" slots={[p.refundStatus]} />
+                          </small>
+                        )}
+                      </td>
+                      <td>
+                        <code>{p.providerRef ?? p.id}</code>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      )}
       <section className="checkout-card" aria-labelledby="subscription-history-title">
         <h2 id="subscription-history-title">
           <Localized k="billing.interface.subscription_history_3c441ed" slots={[<Clock3 size={18} aria-hidden="true" />]} />

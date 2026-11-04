@@ -8,7 +8,7 @@ import { useEngine } from "../../application/orbit";
 import { usageMetricLabel, usageLimitLabel, isBytes, workspacePlan, workspaceUsage, type WorkspaceUsage } from "../../sync/usage";
 import { bytes } from "../format";
 import { useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /** Community › Usage (android UsageScreen): people, channels, files and any server-wide limits, counted by the server. */
 export function UsagePage({ detail }: { detail: OrgAdminDetail }) {
   useLocaleRender();

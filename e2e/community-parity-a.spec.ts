@@ -10,7 +10,7 @@ import { newPhone } from "./phone";
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium");
 const SHOTS = process.env.ORBIT_E2E_SHOTS;
 const shot = async (page: Page, name: string) => {
-  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${name}.png`) });
+  if (SHOTS) await page.screenshot({ animations: "disabled", path: path.join(SHOTS, `${name}.png`) });
 };
 
 test("community menu order, Lock popover, and the settings window's rail", async ({ page }) => {
@@ -42,7 +42,7 @@ test("community menu order, Lock popover, and the settings window's rail", async
   await page.getByRole("menu", { name: "Parity Lab" }).getByRole("menuitem", { name: "Community settings" }).click();
   const window = page.getByRole("dialog", { name: "Parity Lab settings" });
   await expect(window).toBeVisible();
-  await expect(window.getByRole("heading", { level: 1, name: "Profile" })).toBeVisible();
+  await expect(window.getByRole("heading", { level: 1, name: "Overview" })).toBeVisible();
   const rail = window.getByRole("navigation", { name: "Community settings" });
   await expect(rail.getByRole("group", { name: "Parity Lab" })).toBeVisible();
   await expect(rail.getByRole("group", { name: "People" }).getByRole("button", { name: "Members" })).toBeVisible();
@@ -57,13 +57,13 @@ test("community menu order, Lock popover, and the settings window's rail", async
 
   // An old Security actions link opens the window on Profile, at its safety section.
   await page.goto("/workspace/security");
-  await expect(page.getByRole("dialog", { name: "Parity Lab settings" }).getByRole("heading", { level: 1, name: "Profile" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Parity Lab settings" }).getByRole("heading", { level: 1, name: "Moderation" })).toBeVisible();
   await shot(page, "window-security-link");
 
   // Phones: full screen, the rail a row of pages.
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/workspace/roles");
   await expect(page.getByRole("heading", { level: 1, name: "Roles" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Community settings" }).getByRole("button", { name: "Members" })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Community settings page" })).toBeVisible();
   await shot(page, "phone-roles");
 });

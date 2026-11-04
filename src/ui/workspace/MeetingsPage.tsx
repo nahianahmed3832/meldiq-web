@@ -31,7 +31,7 @@ import { directory } from "../../sync/workspaces";
 import { voiceRooms } from "../selectors";
 import { Dialog } from "../components/Overlay";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 const zone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 /**
  * Workspace › Meetings (android round 7 C5 MeetingsScreen): scheduled meetings in the workspace's voice rooms. Joining

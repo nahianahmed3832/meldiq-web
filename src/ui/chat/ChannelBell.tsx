@@ -2,15 +2,15 @@ import { Bell, BellOff, BellRing, Check, Timer } from "lucide-react";
 import type { Conversation } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { MUTE_CHOICES } from "../../sync/communityRules";
-import { mutedUntil, type NotifyLevel, parentLevel, workspaceOf } from "../../sync/navPrefs";
+import { mutedUntil, NOTIFY_LEVELS, parentLevel, workspaceOf } from "../../sync/navPrefs";
 import { clock, dayLabel, sameDay } from "../format";
 import { type MenuEntry, Menu, useMenu } from "../components/Overlay";
 import { useT } from "../../i18n";
+import { NOTIFICATION_LEVEL_LABELS } from "../components/NotificationLevelSelect";
 
 /** The chosen level's tick, or the same space without one, so the labels line up. */
 const tick = (on: boolean) => (on ? <Check size={16} /> : <span style={{ width: 16, flexShrink: 0 }} aria-hidden="true" />);
 
-const LEVEL_KEY = { all: "bell_all", mentions: "bell_mentions", none: "bell_nothing" } as const satisfies Record<NotifyLevel, string>;
 const MUTE_KEY: Record<string, "bell_15m" | "bell_1h" | "bell_3h" | "bell_8h" | "bell_24h" | "bell_until_on"> = {
   [15 * 60_000]: "bell_15m",
   [3_600_000]: "bell_1h",
@@ -65,9 +65,9 @@ export function ChannelBell({ c }: { c: Conversation }) {
         ]),
     "separator",
     { heading: t("bell_notifications") },
-    { label: t("bell_default", { level: t(LEVEL_KEY[parent]) }), checked: own === null, icon: tick(own === null), onSelect: () => arrange({ op: "notifyReset", conversationId: c.id }) },
-    ...(["all", "mentions", "none"] as const).map((level) => ({
-      label: t(LEVEL_KEY[level]),
+    { label: t("bell_default", { level: NOTIFICATION_LEVEL_LABELS[parent] }), checked: own === null, icon: tick(own === null), onSelect: () => arrange({ op: "notifyReset", conversationId: c.id }) },
+    ...NOTIFY_LEVELS.map((level) => ({
+      label: NOTIFICATION_LEVEL_LABELS[level],
       checked: own === level,
       icon: tick(own === level),
       onSelect: () => arrange({ op: "notify", conversationId: c.id, level, categoryId: c.categoryId ?? null }),

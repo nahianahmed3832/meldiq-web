@@ -21,14 +21,14 @@ afterEach(() => {
 });
 
 describe("preferences", () => {
-  it("defaults to the dark theme, the Meldiq palette and the side panels open", async () => {
+  it("defaults to the dark theme, the navy palette and the side panels open", async () => {
     const { getPrefs } = await loadWith(undefined);
-    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "meldiq", memberList: true, dmProfile: true });
+    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "midnight", memberList: true, dmProfile: true });
   });
 
-  it("moves a former default (indigo, charcoal) to Meldiq, and keeps either one the person picked", async () => {
-    expect((await loadWith({ palette: "indigo" })).getPrefs().palette).toBe("meldiq");
-    expect((await loadWith({ palette: "charcoal" })).getPrefs().palette).toBe("meldiq");
+  it("keeps every existing valid palette when the product default changes", async () => {
+    expect((await loadWith({ palette: "indigo" })).getPrefs().palette).toBe("indigo");
+    expect((await loadWith({ palette: "charcoal" })).getPrefs().palette).toBe("charcoal");
     expect((await loadWith({ palette: "indigo", paletteChosen: true })).getPrefs().palette).toBe("indigo");
     expect((await loadWith({ palette: "charcoal", paletteChosen: true })).getPrefs().palette).toBe("charcoal");
     expect((await loadWith({ palette: "plum" })).getPrefs().palette).toBe("plum");
@@ -51,7 +51,7 @@ describe("preferences", () => {
 
   it("falls back to the defaults for an unknown or tampered theme or palette", async () => {
     const { getPrefs } = await loadWith({ theme: 'x" onload="', palette: "neon", textSize: "huge" });
-    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "meldiq", textSize: "default" });
+    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "midnight", textSize: "default" });
   });
 
   it("moves the old default (system, never picked) to dark, and keeps a theme someone picked, black included", async () => {
@@ -62,6 +62,6 @@ describe("preferences", () => {
 
   it("gives browsers that stored preferences before palettes existed the default palette", async () => {
     const { getPrefs } = await loadWith({ theme: "light", notifications: true });
-    expect(getPrefs()).toMatchObject({ theme: "light", palette: "meldiq", notifications: true });
+    expect(getPrefs()).toMatchObject({ theme: "light", palette: "midnight", notifications: true });
   });
 });

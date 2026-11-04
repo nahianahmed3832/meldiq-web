@@ -3,7 +3,7 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { Archive, ArchiveRestore, Hash, Lock, Megaphone, Plus } from "lucide-react";
+import { Archive, ArchiveRestore, Hash, Lock, Megaphone, Plus, Settings } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
@@ -13,7 +13,13 @@ import { joinChannel } from "../../sync/account";
 import { type ChannelKind, type ChannelScope, createChannel, updateConversation, workspaceChannels } from "../../sync/workspaces";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { CreateChannelDialog } from "../community/CreateChannelDialog";
+import { EditChannelDialog } from "../community/ChannelDialogs";
+import { categoriesOf } from "../community/panelData";
+import { permissionsOf } from "../community/useCommunityPermissions";
+import { PermissionsDialog } from "../community/PermissionsDialog";
+import { confirmAction } from "../components/ConfirmationDialog";
+import { Card, ErrorLine } from "../components/SettingsCard";
 export const KIND_TEXT: Record<
   ChannelKind,
   {
@@ -58,14 +64,31 @@ export function ChannelsPage({ detail }: { detail: OrgAdminDetail }) {
   const orgId = detail.org.id;
   const [version, setVersion] = useState(0);
   const manager = detail.permissions.canCreateChannels || detail.permissions.canManageOrg;
+  const community = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
+  const categories = useOrbit((s) => categoriesOf(s, orgId));
+  const [creating, setCreating] = useState(false);
+  // Scope-based workspaces retain their branch/team channel workflow on older deployments.
+  const scoped = detail.branches.length > 0 || detail.teams.length > 0;
+  const sharedEditor = community && !scoped;
   const list = useLoad(() => workspaceChannels(engine, orgId, manager), [engine, orgId, manager, version, detail]);
   const reload = () => setVersion((v) => v + 1);
   const live = (list.data ?? []).filter((c) => !c.archived);
   const archived = (list.data ?? []).filter((c) => c.archived && c.canManage);
   return (
     <div className="ws-page">
-      {detail.permissions.canCreateChannels && <NewChannel detail={detail} onCreated={reload} />}
-      <Card title={l10n("organization.channels")} sub={uiText("organization.interface.channels_you_can_see_in_this_community_9a58d01")}>
+      {detail.permissions.canCreateChannels && !sharedEditor && <NewChannel detail={detail} onCreated={reload} />}
+      <Card
+        title={l10n("organization.channels")}
+        sub={uiText("organization.interface.channels_you_can_see_in_this_community_9a58d01")}
+        actions={
+          detail.permissions.canCreateChannels && sharedEditor ? (
+            <button className="btn btn-primary btn-sm" onClick={() => setCreating(true)}>
+              <Plus size={16} />
+              {uiText("organization.interface.create_channel_f0f8831")}
+            </button>
+          ) : undefined
+        }
+      >
         <ErrorLine text={list.error} />
         <ul className="ws-list" aria-label={l10n("organization.channels")} aria-busy={list.loading}>
           {live.map((c) => (
@@ -78,6 +101,18 @@ export function ChannelsPage({ detail }: { detail: OrgAdminDetail }) {
           )}
         </ul>
       </Card>
+      {creating && (
+        <CreateChannelDialog
+          orgId={orgId}
+          categories={categories}
+          categoryId={null}
+          canCreateTop={permissionsOf(detail).canCreateTop}
+          onClose={() => {
+            setCreating(false);
+            reload();
+          }}
+        />
+      )}
       {archived.length > 0 && (
         <Card title={uiText("organization.interface.archived_channels_5da01c5")} sub={uiText("organization.interface.read_only_for_everyone_restoring_brings_a_channel_back_as_it_was_c2c1941")}>
           <ul className="ws-list" aria-label={uiText("organization.interface.archived_channels_5da01c5")}>
@@ -96,6 +131,9 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
   const act = useAction();
   const isRules = useOrbit((s) => !!c.orgId && s.orgs.find((o) => o.id === c.orgId)?.rulesChannel?.channelId === c.id);
   const kind = (c.kind ?? "PUBLIC") as ChannelKind;
+  const community = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
+  const [editing, setEditing] = useState(false);
+  const [access, setAccess] = useState(false);
   return (
     <li className="ws-row">
       <span className="faint">
@@ -134,7 +172,7 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
         <span className="status-badge">
           <Localized k="organization.rules_title" />
         </span>
-      ) : c.canManageAccess && !c.archived ? (
+      ) : c.canManageAccess && !c.archived && !community ? (
         <select
           className="input input-sm"
           aria-label={uiText("organization.interface.access_for_value0_9e236a9", { value0: c.name })}
@@ -151,6 +189,37 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
       ) : (
         <span className="status-badge">{KIND_TEXT[kind]?.label ?? uiText("workspace.interface.public_591935b")}</span>
       )}
+      {c.canManage && community && !c.archived && (
+        <button className="btn btn-secondary btn-sm" aria-label={uiText("organization.interface.edit_value0_ba63e4b", { value0: c.name ?? "" })} onClick={() => setEditing(true)}>
+          <Settings size={15} />
+          {uiText("common.actions.edit")}
+        </button>
+      )}
+      {editing && (
+        <EditChannelDialog
+          channel={c}
+          onClose={() => {
+            setEditing(false);
+            onChanged();
+          }}
+        />
+      )}
+      {community && c.canManageAccess && !c.canManage && !c.archived && c.orgId && (
+        <button className="btn btn-secondary btn-sm" onClick={() => setAccess(true)}>
+          {uiText("organization.interface.manage_channel_access_712a23d")}
+        </button>
+      )}
+      {access && c.orgId && (
+        <PermissionsDialog
+          orgId={c.orgId}
+          target={{ type: "channel", id: c.id }}
+          title={c.name ?? ""}
+          onClose={() => {
+            setAccess(false);
+            onChanged();
+          }}
+        />
+      )}
       {c.canManage &&
         (c.archived ? (
           <button className="btn btn-ghost btn-sm" disabled={act.busy} onClick={() => void act.act(() => updateConversation(engine, c.id, { archived: false }).then(onChanged))}>
@@ -160,7 +229,10 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
           <button
             className="btn btn-ghost btn-sm"
             disabled={act.busy}
-            onClick={() => void act.act(() => updateConversation(engine, c.id, { archived: true }).then(onChanged))}
+            onClick={async () => {
+              if (await confirmAction(uiText("organization.interface.archive_value0_70e6dbe", { value0: c.name })))
+                void act.act(() => updateConversation(engine, c.id, { archived: true }).then(onChanged));
+            }}
             aria-label={uiText("organization.interface.archive_value0_70e6dbe", { value0: c.name })}
           >
             <Archive size={14} />

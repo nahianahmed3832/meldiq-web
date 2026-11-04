@@ -57,7 +57,7 @@ async function newAccount(page: Page, name: string): Promise<string> {
 test("two-step sign-in: turn it on with an authenticator code, then a new browser's sign-in asks for one", async ({ page, browser }) => {
   test.setTimeout(120_000);
   const email = await newAccount(page, "Tess Two");
-  await page.goto("/settings/account");
+  await page.goto("/settings/security");
   const card = page.locator(".setting-card").filter({ hasText: "Two-step sign-in" });
   await card.getByRole("button", { name: "Turn on" }).click();
   await expect(card.getByRole("note")).toContainText("Android app can't ask for these codes yet");
@@ -108,6 +108,7 @@ test("change the email with a code, report a bug, and see standing", async ({ pa
   await page.locator(".account-card").getByRole("button", { name: "Reveal" }).click();
   await expect(page.locator(".account-card")).toContainText(next);
 
+  await page.goto("/settings/about");
   await page.getByRole("button", { name: "Report a bug" }).click();
   const bug = page.getByRole("dialog", { name: "Report a bug" });
   await bug.getByLabel("What's wrong, in a few words").fill("Menu stays open");

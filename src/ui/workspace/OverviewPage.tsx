@@ -19,29 +19,22 @@ import { OrgAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
 import { animatedUpload, squareJpeg } from "./photo";
 import { useAction } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { useUnsavedChanges } from "../components/UnsavedChanges";
+import { Card, ErrorLine } from "../components/SettingsCard";
 import { GuestPolicyCard } from "./WorkspaceSetupCards";
-import { AccessCard, JoinQuestionsCard } from "./ModerationPages";
-import { ProfileSafety } from "./ProfileSafety";
 import { ProfileExtrasCards } from "./ProfileExtrasCards";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 import { SETTINGS_LIMITS } from "../../sync/communitySettings";
 import { DeleteCommunityDialog } from "../community/DeleteCommunityDialog";
-import { TicketsSection } from "../community/tickets/TicketsCard";
-import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
-import { DiscoveryCard } from "./discovery/DiscoveryCard";
-import { TemplateCard } from "./discovery/TemplateCard";
 interface OverviewPageProps {
   detail: OrgAdminDetail;
   onChanged: () => void;
-  /** Opened from an old Security actions link: show the safety section. */
-  focusSafety?: boolean;
 }
 /**
  * Community settings › Profile (the reference's server profile): details, tag, who can find and join, safety, then
  * ownership and membership. A community's accent and banner live on Theme; older team servers keep them here.
  */
-export function OverviewPage({ detail, onChanged, focusSafety = false }: OverviewPageProps) {
+export function OverviewPage({ detail, onChanged }: OverviewPageProps) {
   useLocaleRender();
   const { org, permissions: can, stats } = detail;
   const features = useOrbit((s) => s.server?.features ?? []);
@@ -75,12 +68,6 @@ export function OverviewPage({ detail, onChanged, focusSafety = false }: Overvie
       {!community && features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
       {features.includes("community-tags") && <TagCard detail={detail} onChanged={onChanged} />}
       {community && can.canManageOrg && features.includes(PARITY_FEATURES.settings) && <ProfileExtrasCards detail={detail} onChanged={onChanged} />}
-      {community && can.canManageOrg && features.includes(DISCOVERY_FEATURES.templates) && <TemplateCard orgId={org.id} communityName={org.name} />}
-      {community && <AccessCard detail={detail} />}
-      {community && can.canManageOrg && features.includes(DISCOVERY_FEATURES.listing) && <DiscoveryCard orgId={org.id} />}
-      {community && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
-      {community && <ProfileSafety detail={detail} focused={focusSafety} />}
-      {community && <TicketsSection detail={detail} />}
       {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
       {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}
       {features.includes("communities") && !features.includes("community-channels") && <KindCard detail={detail} onChanged={onChanged} />}
@@ -158,6 +145,7 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
     setDescription(org.description ?? "");
   }, [org.name, org.description]);
   const dirty = name.trim() !== org.name || (description.trim() || null) !== (org.description ?? null);
+  useUnsavedChanges(dirty);
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;

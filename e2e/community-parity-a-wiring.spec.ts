@@ -11,7 +11,7 @@ import { newPhone, testAddress } from "./phone";
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium");
 const SHOTS = process.env.ORBIT_E2E_SHOTS;
 const shot = async (page: Page, name: string) => {
-  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${name}.png`) });
+  if (SHOTS) await page.screenshot({ animations: "disabled", path: path.join(SHOTS, `${name}.png`) });
 };
 
 test.beforeEach(async ({ context }) => {
@@ -23,9 +23,9 @@ test("owner: safety and lock, roles with @everyone, theme tint, create channel o
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Wiring Lab" });
   await alice.connect();
   await link(page, alice);
-  await page.goto("/workspace/overview");
+  await page.goto("/workspace/security");
   const window = page.getByRole("dialog", { name: "Wiring Lab settings" });
-  await expect(window.getByRole("heading", { level: 1, name: "Profile" })).toBeVisible();
+  await expect(window.getByRole("heading", { level: 1, name: "Moderation" })).toBeVisible();
 
   // Safety: lock for 15 minutes, then unlock; the verification level and the new-account gate.
   const raid = window.getByRole("region", { name: "Raid protection" });

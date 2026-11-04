@@ -1,6 +1,6 @@
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
-import { CheckCheck, Compass, LogIn, MessageSquarePlus, Plus, Settings2, UsersRound } from "lucide-react";
+import { CheckCheck, Compass, LogIn, MessageSquarePlus, Plus, UsersRound } from "lucide-react";
 import { useRef, useState } from "react";
 import { useScrollStrip } from "../components/scrollStrip";
 import { type DragItem, useDragSort } from "../components/dragSort";
@@ -20,6 +20,8 @@ import { GroupAvatar } from "../components/OrgAvatar";
 import { LookAvatar } from "../people/NameStyle";
 import { capCount } from "../unread";
 import { useT } from "../../i18n";
+import { PRIMARY_NAVIGATION, primaryDestinationActive } from "./navigation";
+import { mentionCount } from "../selectors";
 import type { ShellDialog } from "./Shell";
 /**
  * The rail, top to bottom: the mascot (Home and messages: the DM list), the communities with their rolled-up unread
@@ -32,10 +34,11 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   const orgs = useRailOrgs();
   // Unread DMs and people waiting for an answer to their connection request.
   const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
+  const mentions = useOrbit(mentionCount);
   const t = useT();
   const home = section === "dms" || section === "friends";
   const discovering = section === "discover";
-  const homeLabel = `${t("rail_home")}${dms ? `, ${t("nav_unread", { n: dms })}` : ""}`;
+  const homeLabel = `${t("nav_messages")}${dms ? `, ${t("nav_unread", { n: dms })}` : ""}`;
   const strip = useRef<HTMLElement>(null);
   useScrollStrip(strip, `${section}:${orgId}`);
   const engine = useEngine();
@@ -105,12 +108,10 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
       icon: <UsersRound size={16} />,
       onSelect: () => onDialog({ kind: "newGroup" }),
     },
-    "separator",
-    { label: t("settings.title"), icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },
   ];
   return (
     <nav className="rail" aria-label={t("rail_label")} ref={strip}>
-      <a className="rail-home" href="/dms" aria-current={home ? "page" : undefined} aria-label={homeLabel} title={t("rail_home")} {...opener("home")}>
+      <a className="rail-home" href="/dms" aria-current={home ? "page" : undefined} aria-label={homeLabel} title={t("nav_messages")} {...opener("home")}>
         <img className="rail-mascot" src="/meldling-96.webp" srcSet="/meldling-96.webp 96w, /meldling-192.webp 192w" sizes="46px" width={46} height={46} alt="" draggable={false} />
         {dms > 0 && (
           <span className="count accent" aria-hidden="true">
@@ -118,6 +119,23 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
           </span>
         )}
       </a>
+      {PRIMARY_NAVIGATION.filter((item) => item.section === "home" || item.section === "activity").map((item) => (
+        <a
+          key={item.section}
+          className="rail-round rail-primary"
+          href={`/${item.section}`}
+          aria-current={primaryDestinationActive(item, section) ? "page" : undefined}
+          aria-label={t(item.labelKey)}
+          title={t(item.labelKey)}
+        >
+          <item.icon size={21} aria-hidden="true" />
+          {item.section === "activity" && mentions > 0 && (
+            <span className="count accent" aria-hidden="true">
+              {capCount(mentions)}
+            </span>
+          )}
+        </a>
+      ))}
       <RailDmBubbles />
       <div className="rail-sep" />
       {orgs.length > 0 && (
@@ -150,7 +168,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
       </a>
       <div className="rail-spacer" />
       {menu.anchor && which && (
-        <Menu anchor={menu.anchor} point={menu.point} label={which === "home" ? t("rail_home") : t("rail_create")} onClose={menu.close} entries={which === "home" ? homeEntries : createEntries} />
+        <Menu anchor={menu.anchor} point={menu.point} label={which === "home" ? t("nav_messages") : t("rail_create")} onClose={menu.close} entries={which === "home" ? homeEntries : createEntries} />
       )}
     </nav>
   );

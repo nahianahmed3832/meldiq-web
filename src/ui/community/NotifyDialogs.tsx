@@ -5,22 +5,13 @@ import { ArrowDown, ArrowUp, Eye, EyeOff, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { moved, type PanelChannel } from "../../sync/communityRules";
-import { communityLevel, countsEveryone, type NotifyLevel, PERSONAL } from "../../sync/navPrefs";
+import { communityLevel, countsEveryone, type NotifyLevel, NOTIFY_LEVELS, PERSONAL } from "../../sync/navPrefs";
 import { Dialog } from "../components/Overlay";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { Toggle } from "../components/Toggle";
 import { orderedOrgs } from "./panelData";
-export const LEVEL_NAME: Record<NotifyLevel, string> = {
-  get all() {
-    return uiText("notifications.bell_all");
-  },
-  get mentions() {
-    return uiText("organization.interface.only_mentions_887bff0");
-  },
-  get none() {
-    return uiText("notifications.bell_nothing");
-  },
-};
+export { NOTIFICATION_LEVEL_LABELS as LEVEL_NAME } from "../components/NotificationLevelSelect";
+import { NOTIFICATION_LEVEL_LABELS as LEVEL_NAME } from "../components/NotificationLevelSelect";
 const LEVEL_HINT: Record<NotifyLevel, string> = {
   get all() {
     return uiText("organization.interface.every_new_message_notifies_you_8c6c019");
@@ -32,13 +23,13 @@ const LEVEL_HINT: Record<NotifyLevel, string> = {
     return uiText("organization.interface.nothing_notifies_you_except_a_mention_of_you_by_name_9df0687");
   },
 };
-const LEVELS: NotifyLevel[] = ["all", "mentions", "none"];
+const LEVELS = NOTIFY_LEVELS;
 /**
  * A community's notification settings (batch B2, android CommunityNotificationsSheet): the level its channels follow,
  * Ignore @everyone, and the channels with a level of their own. Kept in the community's preferences document, so every
  * device of the person agrees; decided on the device (the server never sees the messages).
  */
-export function CommunityNotificationsDialog({ orgId, name, onClose }: { orgId: string; name: string; onClose: () => void }) {
+export function CommunityNotificationSettings({ orgId }: { orgId: string }) {
   useLocaleRender();
   const engine = useEngine();
   const prefs = useOrbit((s) => s.nav[orgId]);
@@ -51,57 +42,56 @@ export function CommunityNotificationsDialog({ orgId, name, onClose }: { orgId: 
   );
   // The level chosen, not a timed mute's "Nothing" (the menu's Mute community shows that).
   const level = prefs?.community?.level ?? "all";
-  const change = (op: Parameters<typeof engine.nav.change>[1]) => void engine.nav.change(orgId, op);
+  const change = (op: Parameters<typeof engine.nav.change>[1]) =>
+    void engine.nav.change(orgId, op).catch((e: unknown) => engine.notice("error", e instanceof Error ? e.message : uiText("organization.interface.couldn_t_change_notifications_9c82a42")));
   return (
-    <Dialog title={uiText("organization.interface.notifications_value0_b8eb80a", { value0: name })} onClose={onClose}>
-      <div className="dialog-body">
-        <div role="radiogroup" aria-label={uiText("organization.interface.community_notifications_6da776f")} style={{ display: "grid", gap: 2 }}>
-          {LEVELS.map((l) => (
-            <button key={l} role="radio" aria-checked={level === l} className="list-row" aria-pressed={level === l} onClick={() => change({ op: "community", level: l })}>
-              <span className="lines">
-                <span style={{ fontWeight: 600 }}>{LEVEL_NAME[l]}</span>
-                <small>{LEVEL_HINT[l]}</small>
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="setting">
-          <span className="lines">
-            <strong>
-              <Localized k="organization.interface.ignore_everyone_91a3c1f" />
-            </strong>
-            <small>
-              <Localized k="organization.interface.everyone_in_this_community_counts_as_an_ordinary_message_no_menti_e419d78" />
-            </small>
-          </span>
-          <Toggle checked={!countsEveryone(prefs)} onChange={(on) => change({ op: "community", suppressEveryone: on })} label={uiText("organization.interface.ignore_everyone_91a3c1f")} />
-        </div>
-        <h3 className="ws-subhead">
-          <Localized k="organization.interface.channels_with_their_own_level_a0a5b2f" />
-        </h3>
-        {overrides.length === 0 ? (
-          <p className="faint" style={{ margin: 0 }}>
-            <Localized k="organization.interface.none_set_one_from_a_channel_s_menu_b45a359" />
-          </p>
-        ) : (
-          <ul className="ws-list">
-            {overrides.map((o) => (
-              <li key={o.id} className="ws-row">
-                <span className="grow ellipsis">#{o.name}</span>
-                <span className="faint">{LEVEL_NAME[o.level]}</span>
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => change({ op: "notifyReset", conversationId: o.id })}
-                  aria-label={uiText("organization.interface.value0_follows_the_community_again_96c45ba", { value0: o.name })}
-                >
-                  <Localized k="organization.interface.follow_community_47366e9" slots={[<RotateCcw size={14} />]} />
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+    <div className="card setting-card">
+      <div role="radiogroup" aria-label={uiText("organization.interface.community_notifications_6da776f")} style={{ display: "grid", gap: 2 }}>
+        {LEVELS.map((l) => (
+          <button key={l} role="radio" aria-checked={level === l} className="list-row" aria-pressed={level === l} onClick={() => change({ op: "community", level: l })}>
+            <span className="lines">
+              <span style={{ fontWeight: 600 }}>{LEVEL_NAME[l]}</span>
+              <small>{LEVEL_HINT[l]}</small>
+            </span>
+          </button>
+        ))}
       </div>
-    </Dialog>
+      <div className="setting">
+        <span className="lines">
+          <strong>
+            <Localized k="organization.interface.ignore_everyone_91a3c1f" />
+          </strong>
+          <small>
+            <Localized k="organization.interface.everyone_in_this_community_counts_as_an_ordinary_message_no_menti_e419d78" />
+          </small>
+        </span>
+        <Toggle checked={!countsEveryone(prefs)} onChange={(on) => change({ op: "community", suppressEveryone: on })} label={uiText("organization.interface.ignore_everyone_91a3c1f")} />
+      </div>
+      <h3 className="ws-subhead">
+        <Localized k="organization.interface.channels_with_their_own_level_a0a5b2f" />
+      </h3>
+      {overrides.length === 0 ? (
+        <p className="faint" style={{ margin: 0 }}>
+          <Localized k="organization.interface.none_set_one_from_a_channel_s_menu_b45a359" />
+        </p>
+      ) : (
+        <ul className="ws-list">
+          {overrides.map((o) => (
+            <li key={o.id} className="ws-row">
+              <span className="grow ellipsis">#{o.name}</span>
+              <span className="faint">{LEVEL_NAME[o.level]}</span>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={() => change({ op: "notifyReset", conversationId: o.id })}
+                aria-label={uiText("organization.interface.value0_follows_the_community_again_96c45ba", { value0: o.name })}
+              >
+                <Localized k="organization.interface.follow_community_47366e9" slots={[<RotateCcw size={14} />]} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 /** A category's own level (batch B3): its channels follow it unless they have their own. */

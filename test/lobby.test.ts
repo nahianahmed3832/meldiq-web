@@ -253,7 +253,7 @@ describe("community settings with the lobby", () => {
   it("puts Lobby where Home was and keeps the guide reachable", () => {
     const keys = visibleCommunityRail(["community-guide", LOBBY_FEATURE], owner).map((p) => [p.key, p.label]);
     expect(keys.slice(0, 3)).toEqual([
-      ["overview", "Profile"],
+      ["overview", "Overview"],
       ["lobby", "Lobby"],
       ["guide", "Community guide"],
     ]);

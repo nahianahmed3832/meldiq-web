@@ -22,7 +22,7 @@ import { untilWhen } from "../format";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /** The member directory: roles, titles and removals, offered by the server's rules (server/src/roles.ts). */
 export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
   useLocaleRender();

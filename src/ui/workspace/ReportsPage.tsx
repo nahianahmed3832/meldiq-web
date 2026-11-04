@@ -9,7 +9,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { communityReports, REASON_LABEL, type ReportReason, setReportStatus } from "../../sync/reports";
 import { bytes, shortWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /**
  * Reports (batch B4, android ReportsScreen): Open and Closed. Each shows the reason, who was reported, where, what the
  * reporter's app shared and their note, and never who reported. Mark as handled or dismiss with a note; reopen. A

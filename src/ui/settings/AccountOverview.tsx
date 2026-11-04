@@ -8,12 +8,12 @@ import { ApiError } from "../../api/client";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { AccountSafetyApi, maskEmail } from "../../sync/accountSafety";
-import { myProfile, updateMyProfile } from "../../sync/profile";
+import { myProfile } from "../../sync/profile";
 import { usePhoto } from "../components/photos";
 import { Dialog } from "../components/Overlay";
 import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
 import { useLoad } from "../workspace/useLoad";
-type Editing = "displayName" | "username" | "email" | null;
+type Editing = "email" | null;
 /**
  * Settings › My Account, top (the reference's account card, 2026-10-28): your banner, avatar, name and username with
  * Edit profile; then display name, username and email, each with Edit, the email hidden until Reveal. Changing the
@@ -26,7 +26,6 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
   const me = useOrbit((s) => s.me);
   const photoRev = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const emailChange = useOrbit((s) => s.server?.features.includes("email-change") ?? false);
-  const usernameHolds = useOrbit((s) => s.server?.features.includes("username-holds") ?? false);
   const profilesRev = useOrbit((s) => s.profilesRev);
   const profile = useLoad(() => myProfile(engine), [engine, profilesRev]);
   const look = useUserLook(me?.userId ?? "");
@@ -68,9 +67,9 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
               </span>
             )
           }
-          onEdit={() => setEditing("displayName")}
+          onEdit={() => navigate({ section: "settings", settingsPage: "profile" })}
         />
-        <Row label={l10n("auth.username")} value={me.username} onEdit={() => setEditing("username")} />
+        <Row label={l10n("auth.username")} value={me.username} onEdit={() => navigate({ section: "settings", settingsPage: "profile" })} />
         <Row
           label={l10n("auth.email")}
           value={
@@ -85,32 +84,6 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
           onEdit={emailChange ? () => setEditing("email") : undefined}
         />
       </div>
-      {editing === "displayName" && (
-        <TextEdit
-          title={uiText("settings.interface.change_your_display_name_05c151c")}
-          label={uiText("settings.interface.display_name_2b7f6a8")}
-          initial={displayName}
-          max={64}
-          hint={uiText("settings.interface.what_people_see_it_doesn_t_have_to_be_unique_e592eee")}
-          onSave={(v) => updateMyProfile(engine, { displayName: v })}
-          onClose={() => setEditing(null)}
-        />
-      )}
-      {editing === "username" && (
-        <TextEdit
-          title={uiText("settings.interface.change_your_username_dc9cbaa")}
-          label={l10n("auth.username")}
-          initial={me.username}
-          max={32}
-          hint={
-            usernameHolds
-              ? uiText("settings.interface.letters_digits_dots_and_underscores_you_can_change_it_once_an_hou_9c43bef")
-              : uiText("settings.interface.letters_digits_dots_and_underscores_you_can_change_it_once_an_hou_5d0eff0")
-          }
-          onSave={(v) => updateMyProfile(engine, { username: v.replace(/^@/, "") })}
-          onClose={() => setEditing(null)}
-        />
-      )}
       {editing === "email" && <EmailChangeDialog current={email} onClose={() => setEditing(null)} onChanged={onEmailChanged} />}
     </div>
   );
@@ -130,48 +103,6 @@ function Row({ label, value, onEdit }: { label: string; value: React.ReactNode; 
         </button>
       )}
     </div>
-  );
-}
-function TextEdit(p: { title: string; label: string; initial: string; max: number; hint: string; onSave: (v: string) => Promise<unknown>; onClose: () => void }) {
-  useLocaleRender();
-  const l10n = useLocalization();
-  const [value, setValue] = useState(p.initial);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    const v = value.trim();
-    if (!v || v === p.initial) return p.onClose();
-    setBusy(true);
-    setError(null);
-    p.onSave(v)
-      .then(p.onClose)
-      .catch((err: unknown) => setError(err instanceof ApiError ? err.message : uiText("settings.interface.couldn_t_save_try_again_3194939")))
-      .finally(() => setBusy(false));
-  };
-  return (
-    <Dialog title={p.title} onClose={p.onClose}>
-      <form className="dialog-body" onSubmit={submit} noValidate>
-        <label className="field">
-          <span>{p.label}</span>
-          <input className="input" value={value} maxLength={p.max} onChange={(e) => setValue(e.target.value)} disabled={busy} data-autofocus />
-        </label>
-        <small className="faint">{p.hint}</small>
-        {error && (
-          <div className="banner danger" role="alert">
-            {error}
-          </div>
-        )}
-        <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
-          <button type="button" className="btn btn-secondary" onClick={p.onClose}>
-            {l10n("common.actions.cancel")}
-          </button>
-          <button className="btn btn-primary" disabled={busy}>
-            {busy ? l10n("common.common_saving") : l10n("common.actions.save")}
-          </button>
-        </div>
-      </form>
-    </Dialog>
   );
 }
 /** Changing the email: the password and the new address, then the code sent there. */

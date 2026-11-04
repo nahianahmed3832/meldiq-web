@@ -31,7 +31,7 @@ test("in DMs no community is selected, and a community in the rail opens its cha
 
   // As on Discord: the mascot at the top of the rail opens the direct messages; there's no separate DMs button.
   await expect(rail.getByRole("link", { name: /^DMs/ })).toHaveCount(0);
-  await rail.getByRole("link", { name: /^Home and messages/ }).click();
+  await rail.getByRole("link", { name: /^Messages/ }).click();
   await expect(page).toHaveURL(/\/dms$/);
   await expect(selected).toHaveCount(0);
   await expect(sidebar.getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();

@@ -23,7 +23,7 @@ import {
 import { POSTING_FEATURES } from "../../../sync/posting/api";
 import { Toggle } from "../../components/Toggle";
 import { useLoad } from "../useLoad";
-import { Card, ErrorLine } from "../WorkspaceView";
+import { Card, ErrorLine } from "../../components/SettingsCard";
 import { BotIcon, GetBotsPlusButton, PlusChip } from "./BotParts";
 import { BotWindow } from "./BotWindow";
 /** Whether this server runs Meldiq's official bots. */

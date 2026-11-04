@@ -10,7 +10,7 @@ import { type AuditPage as Page, auditLog } from "../../sync/roles";
 import { directory } from "../../sync/workspaces";
 import { fullTime } from "../format";
 import { useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /** The older servers' filters (workspaces with apps and branches). */
 const LEGACY_FILTERS: {
   action: string | null;

@@ -1,3 +1,4 @@
+import { confirmAction } from "../components/ConfirmationDialog";
 import { SERVER_REFERENCE } from "../../i18n/syntax";
 import { countLabel } from "../../i18n/counts";
 import { useLocaleRender } from "../../i18n/Localized";
@@ -183,8 +184,8 @@ function BotRow({ bot, onChanged, onSecret }: { bot: DeveloperBot; onChanged: ()
           <button
             className="btn btn-ghost btn-sm"
             disabled={act.busy}
-            onClick={() => {
-              if (!window.confirm(uiText("workspace.interface.replace_value0_s_token_the_current_one_stops_working_at_once_80621ab", { value0: bot.displayName }))) return;
+            onClick={async () => {
+              if (!(await confirmAction(uiText("workspace.interface.replace_value0_s_token_the_current_one_stops_working_at_once_80621ab", { value0: bot.displayName })))) return;
               void act.act(async () => onSecret((await rotateBotToken(engine, bot.id)).token));
             }}
           >
@@ -193,8 +194,8 @@ function BotRow({ bot, onChanged, onSecret }: { bot: DeveloperBot; onChanged: ()
           <button
             className="btn btn-danger-quiet btn-sm"
             disabled={act.busy}
-            onClick={() => {
-              if (window.confirm(uiText("workspace.interface.delete_value0_it_leaves_every_community_and_what_it_sent_shows_as_364bd31", { value0: bot.displayName })))
+            onClick={async () => {
+              if (await confirmAction(uiText("workspace.interface.delete_value0_it_leaves_every_community_and_what_it_sent_shows_as_364bd31", { value0: bot.displayName })))
                 run(() => deleteBot(engine, bot.id));
             }}
           >

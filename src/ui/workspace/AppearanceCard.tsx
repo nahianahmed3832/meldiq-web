@@ -12,7 +12,8 @@ import { ACCENT_CLASS, ACCENT_PRESETS, accentBand, accentStyle, isAccent } from 
 import { OrgAvatar } from "../components/OrgAvatar";
 import { usePhoto } from "../components/photos";
 import { animatedUpload, bannerJpeg } from "./photo";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { useUnsavedChanges } from "../components/UnsavedChanges";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /** What the banner will be after Save: unchanged, a new picture (its bytes, a JPEG or an animated GIF/WebP, and a preview URL), or none. */
 type BannerDraft =
   | {
@@ -54,6 +55,7 @@ export function AppearanceCard({ detail, onChanged }: { detail: OrgAdminDetail; 
   useEffect(() => () => void (banner.kind === "new" && URL.revokeObjectURL(banner.url)), [banner]);
   const hexOk = hex === "" || isAccent(hex);
   const dirty = accent !== org.accent || banner.kind !== "keep";
+  useUnsavedChanges(dirty && canEdit);
   const bannerUrl = banner.kind === "new" ? banner.url : banner.kind === "remove" ? null : currentBanner;
   const choose = (v: string | null) => {
     setAccent(v);

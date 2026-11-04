@@ -9,7 +9,7 @@ import { useEngine } from "../../application/orbit";
 import { communitySettings, linkProblem, saveCommunitySettings, SETTINGS_LIMITS, slugLockedReason, slugProblem } from "../../sync/communitySettings";
 import { inviteLink } from "../../sync/inviteCodes";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 interface ProfileExtrasProps {
   detail: OrgAdminDetail;
   onChanged: () => void;

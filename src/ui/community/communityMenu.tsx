@@ -27,10 +27,11 @@ import { SparkDialog } from "../mojo/SparkDialog";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
+import { requestNavigation } from "../../application/navigationGuard";
 import { navigate, type WorkspacePage } from "../../application/router";
 import { MUTE_CHOICES } from "../../sync/communityRules";
 import { OFFICIAL_BOTS_FEATURE } from "../../sync/officialBots";
-import { communityMutedUntil, countsEveryone, MUTE_FOREVER, type NotifyLevel } from "../../sync/navPrefs";
+import { communityMutedUntil, MUTE_FOREVER } from "../../sync/navPrefs";
 import type { MenuEntry } from "../components/Overlay";
 import { clock, dayLabel, sameDay } from "../format";
 import { markAllReadTargets } from "../selectors";
@@ -45,10 +46,10 @@ import { lockEntry } from "./lockMenu";
 import { type LockChoice, lockCommunity, PARITY_FEATURES } from "../../sync/communityParity";
 import { OnboardingFlow } from "./OnboardingFinish";
 import type { Engine } from "../../sync/engine";
-import { ArrangeRailDialog, CommunityNotificationsDialog, LEVEL_NAME } from "./NotifyDialogs";
+import { ArrangeRailDialog } from "./NotifyDialogs";
 import { categoriesOf, orderedOrgs } from "./panelData";
 import type { CommunityPermissions } from "./useCommunityPermissions";
-type MenuDialog = "notifications" | "channel" | "category" | "arrange" | "leave" | "delete" | "nickname" | "sparks" | "ticket" | "onboarding" | null;
+type MenuDialog = "channel" | "category" | "arrange" | "leave" | "delete" | "nickname" | "sparks" | "ticket" | "onboarding" | null;
 type NavChange = (op: Parameters<Engine["nav"]["change"]>[1]) => void;
 /** The per-browser "Hide muted channels" switch for a community (android CommunityViewPrefs: this device only). */
 export const hideMutedKey = (orgId: string) => `::hide-muted:${orgId}`;
@@ -96,17 +97,17 @@ export function useCommunityMenu(
   };
   const preferences = features.includes("community-preferences");
   const muted = communityMutedUntil(nav);
-  const level: NotifyLevel = nav?.community?.level ?? "all";
   // Community parity A2: a real lock (no joins, only moderators chat); older servers fall back to Security actions'
   // join pause. Both go to the same people (Edit community or Ban).
   const realLock = features.includes(PARITY_FEATURES.safety);
   const canLock = (realLock || features.includes("security-actions")) && (perms.canManageOrg || perms.canBan);
   const lockedUntil = realLock ? (org.lockedUntil ?? null) : org.invitesPausedUntil;
   const settingsOn = features.includes(PARITY_FEATURES.settings);
-  const openSettings = (page: WorkspacePage) => {
-    setPrefs({ orgId });
-    navigate({ section: "workspace", workspacePage: page });
-  };
+  const openSettings = (page: WorkspacePage) =>
+    requestNavigation(() => {
+      setPrefs({ orgId });
+      navigate({ section: "workspace", workspacePage: page });
+    });
   const lock = (choice: LockChoice) =>
     void lockCommunity(engine, orgId, choice, realLock).catch(() => engine.notice("error", uiText("organization.interface.couldn_t_lock_the_community_try_again_678dfbe")));
   const unlock = () => void lockCommunity(engine, orgId, null, realLock).catch(() => engine.notice("error", uiText("organization.interface.couldn_t_unlock_the_community_try_again_55a45ac")));
@@ -194,11 +195,7 @@ export function useCommunityMenu(
       icon: <RotateCcw size={16} />,
       onSelect: () => setDialog("onboarding"),
     });
-  if (preferences)
-    entries.push(
-      muteEntry(muted, change),
-      notificationsEntry(level, nav, change, () => setDialog("notifications")),
-    );
+  if (preferences) entries.push(muteEntry(muted, change), { label: l10n("notifications.bell_label"), icon: <Bell size={16} />, onSelect: () => openSettings("notifications") });
   entries.push(
     "separator",
     {
@@ -286,7 +283,6 @@ export function useCommunityMenu(
   const close = () => setDialog(null);
   const dialogs = (
     <>
-      {dialog === "notifications" && <CommunityNotificationsDialog orgId={org.id} name={org.name} onClose={close} />}
       {dialog === "channel" && <CreateChannelDialog orgId={org.id} categories={categories} categoryId={null} canCreateTop={perms.canCreateTop} onClose={close} />}
       {dialog === "category" && <CategoryNameDialog orgId={org.id} category={null} onClose={close} />}
       {dialog === "arrange" && <ArrangeRailDialog onClose={close} />}
@@ -317,33 +313,5 @@ function muteEntry(muted: number | null, change: NavChange): MenuEntry {
     },
     icon: <BellOff size={16} />,
     submenu: MUTE_CHOICES.map((m) => ({ label: m.label, onSelect: () => change({ op: "community", mutedUntil: m.ms === null ? MUTE_FOREVER : Date.now() + m.ms }) })),
-  };
-}
-/** Notification settings: the community's default level, @everyone, and the full dialog. */
-function notificationsEntry(level: NotifyLevel, nav: Parameters<typeof countsEveryone>[0], change: NavChange, more: () => void): MenuEntry {
-  return {
-    get label() {
-      return uiText("notifications.bell_label");
-    },
-    icon: <Bell size={16} />,
-    hint: LEVEL_NAME[level],
-    submenu: [
-      ...(["all", "mentions", "none"] as const).map((l) => ({ label: LEVEL_NAME[l], checked: level === l, onSelect: () => change({ op: "community", level: l }) })),
-      "separator" as const,
-      {
-        get label() {
-          return uiText("organization.interface.ignore_everyone_91a3c1f");
-        },
-        toggle: true,
-        checked: !countsEveryone(nav),
-        onSelect: () => change({ op: "community", suppressEveryone: countsEveryone(nav) }),
-      },
-      {
-        get label() {
-          return uiText("organization.interface.more_settings_e771015");
-        },
-        onSelect: more,
-      },
-    ],
   };
 }

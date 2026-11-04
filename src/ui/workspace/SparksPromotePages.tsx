@@ -5,7 +5,7 @@ import { Gem } from "lucide-react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { navigate } from "../../application/router";
 import { SparkGoal } from "../mojo/SparkGoal";
-import { Card } from "./WorkspaceView";
+import { Card } from "../components/SettingsCard";
 /**
  * Community settings › Sparks (the reference's boost page, Meldiq Spark): the community's level and goal, which opens
  * the Sparks dialog where anyone can give one, and the way to your own Sparks.

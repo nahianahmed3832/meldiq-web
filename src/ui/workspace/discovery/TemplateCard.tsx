@@ -1,3 +1,4 @@
+import { confirmAction } from "../../components/ConfirmationDialog";
 import { countLabel } from "../../../i18n/counts";
 import { useLocaleRender } from "../../../i18n/Localized";
 import { text as uiText } from "../../../i18n";
@@ -12,7 +13,7 @@ import { templateLink } from "../../../sync/discovery/rules";
 import { CopyButton } from "../../components/CopyButton";
 import { relative } from "../../format";
 import { useAction, useLoad } from "../useLoad";
-import { Card, ErrorLine } from "../WorkspaceView";
+import { Card, ErrorLine } from "../../components/SettingsCard";
 const TEMPLATE_NAME_MAX = 100;
 /**
  * Profile › Community template (community parity E, feature template-links; the reference's "Create template link"):
@@ -38,8 +39,8 @@ export function TemplateCard({ orgId, communityName }: { orgId: string; communit
           template={template}
           busy={act.busy}
           onSync={() => void act.act(async () => setTemplate(await syncTemplate(engine, orgId)))}
-          onDelete={() => {
-            if (!window.confirm(uiText("workspace.interface.delete_the_template_its_link_stops_working_communities_already_ma_47bbede"))) return;
+          onDelete={async () => {
+            if (!(await confirmAction(uiText("workspace.interface.delete_the_template_its_link_stops_working_communities_already_ma_47bbede")))) return;
             void act.act(async () => {
               await deleteTemplate(engine, orgId);
               setTemplate(null);

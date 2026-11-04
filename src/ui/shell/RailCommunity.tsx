@@ -7,6 +7,7 @@ import { useCommunityMenu } from "../community/communityMenu";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { setPrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
+import { requestNavigation } from "../../application/navigationGuard";
 import { ACCENT_CLASS, accentStyle } from "../community/accent";
 import { useCommunityThemes } from "../community/useCommunityThemes";
 import { OrgAvatar } from "../components/OrgAvatar";
@@ -56,7 +57,7 @@ export function CommunityButton({
   const t = useT();
   const menu = useMenu();
   // The permissions behind the menu's items load only once it opens (one request per right-click, not per icon).
-  const { perms } = useCommunityDetail(menu.anchor ? o.id : null);
+  const { detail, perms, error } = useCommunityDetail(menu.anchor ? o.id : null);
   const community = useCommunityMenu(o.id, perms, onDialog);
   const marker = unreadMarker(o.unread, o.mentions, false);
   // A call on in one of its channels (2026-10-28): a speaker at the icon's corner, red while someone shares a screen.
@@ -64,10 +65,11 @@ export function CommunityButton({
   const ownColors = useCommunityThemes().on;
   const accent = ownColors ? o.accent : null;
   const label = `${o.name}${live.live ? (live.sharing ? uiText("organization.interface.someone_is_live_6b49bda") : uiText("organization.interface.a_call_is_on_3a26014")) : ""}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
-  const openIt = () => {
-    setPrefs({ orgId: o.id });
-    navigate({ section: "home" });
-  };
+  const openIt = () =>
+    requestNavigation(() => {
+      setPrefs({ orgId: o.id });
+      navigate({ section: "home" });
+    });
   return (
     <>
       <button
@@ -95,7 +97,27 @@ export function CommunityButton({
           </span>
         )}
       </button>
-      {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={o.name} onClose={menu.close} entries={community.entries} />}
+      {menu.anchor && (
+        <Menu
+          anchor={menu.anchor}
+          point={menu.point}
+          label={o.name}
+          onClose={menu.close}
+          entries={
+            detail || error
+              ? community.entries
+              : [
+                  {
+                    custom: (
+                      <p className="side-quiet" role="status">
+                        {t("common.status.loading")}
+                      </p>
+                    ),
+                  },
+                ]
+          }
+        />
+      )}
       {community.dialogs}
     </>
   );

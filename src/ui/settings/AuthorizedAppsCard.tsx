@@ -1,3 +1,4 @@
+import { confirmAction } from "../components/ConfirmationDialog";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -61,8 +62,8 @@ export function AuthorizedAppsCard() {
               <button
                 className="btn btn-ghost btn-sm"
                 disabled={act.busy}
-                onClick={() => {
-                  if (window.confirm(uiText("settings.interface.revoke_value0_s_access_it_s_signed_out_at_once_989375c", { value0: g.app.name })))
+                onClick={async () => {
+                  if (await confirmAction(uiText("settings.interface.revoke_value0_s_access_it_s_signed_out_at_once_989375c", { value0: g.app.name })))
                     void act.act(() => revokeGrant(engine, g.app.id).then(() => setVersion((v) => v + 1)));
                 }}
               >

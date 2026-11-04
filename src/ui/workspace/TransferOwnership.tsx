@@ -10,7 +10,7 @@ import { transferOwnership } from "../../sync/roles";
 import { directory } from "../../sync/workspaces";
 import { Dialog } from "../components/Overlay";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /**
  * Handing the workspace to someone else (server docs/WORKSPACE_ROLES.md §3, owners only): a member (not a guest) becomes
  * the owner after you type the workspace's exact name; you become an admin. The server checks all of it again.

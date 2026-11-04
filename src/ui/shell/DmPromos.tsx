@@ -2,11 +2,10 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { Check, Copy, Sparkles, UserRoundPlus } from "lucide-react";
+import { Check, Copy, UserRoundPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { useEngine, useOrbit } from "../../application/orbit";
-import { navigate } from "../../application/router";
+import { useEngine } from "../../application/orbit";
 const zReferral = z.object({ available: z.boolean(), code: z.string(), invited: z.number(), daysEach: z.number() });
 type Referral = z.infer<typeof zReferral>;
 /** Your invite link to Meldiq itself: the web app's sign-up with your invite code (server docs/BILLING.md › invite links). */
@@ -76,26 +75,5 @@ export function InviteToMeldiqCard() {
         {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />} {copied ? l10n("common.common_copied") : uiText("workspace.interface.invite_1fd9ae1")}
       </button>
     </section>
-  );
-}
-/** Meldiq Plus in the messages list: what it adds, for the Free plan; your plan, for subscribers. */
-export function MojoPromoCard() {
-  useLocaleRender();
-  const plan = useOrbit((s) => s.mojo.me?.plan ?? null);
-  const name = useOrbit((s) => s.mojo.me?.perks.name ?? null);
-  const enabled = useOrbit((s) => s.server?.features.includes("mojo") ?? false);
-  if (!enabled || plan === null || plan === "free") return null;
-  return (
-    <button className="mojo-promo" onClick={() => navigate({ section: "settings", settingsPage: "mojo" })}>
-      <span className="mojo-perk-icon" aria-hidden="true">
-        <Sparkles size={18} />
-      </span>
-      <span className="lines grow">
-        <strong>{uiText("workspace.interface.you_have_value0_d65c988", { value0: name ?? "Meldiq Plus" })}</strong>
-        <small>
-          <Localized k="workspace.interface.thanks_for_keeping_meldiq_going_see_your_perks_69581ab" />
-        </small>
-      </span>
-    </button>
   );
 }

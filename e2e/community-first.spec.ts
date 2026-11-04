@@ -9,7 +9,7 @@ import { newPhone } from "./phone";
  */
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium: the rail and hover");
 
-test("the mascot, the top bar, Create and Discover replace the old rail entries", async ({ page }) => {
+test("daily navigation is in the rail and Saved stays in the profile menu", async ({ page }) => {
   const alice = await newPhone("cfalice", "Alice Rahman");
   const bob = await newPhone("cfbob", "Bob Chen");
   await alice.req("POST", "/v1/orgs", { name: "First Lab" });
@@ -19,19 +19,16 @@ test("the mascot, the top bar, Create and Discover replace the old rail entries"
   await page.goto("/home");
 
   const rail = page.getByRole("navigation", { name: "Home, communities, create and discover" });
-  for (const old of [/^DMs/, /^Activity/, /^Later/]) await expect(rail.getByRole("link", { name: old })).toHaveCount(0);
+  await expect(rail).toBeVisible();
+  for (const name of ["Home", "Messages", "Activity"]) await expect(rail.getByRole("link", { name, exact: true })).toHaveCount(1);
 
-  await rail.getByRole("link", { name: /^Home and messages/ }).click();
+  await rail.getByRole("link", { name: /^Messages/ }).click();
   await expect(page).toHaveURL(/\/dms$/);
   await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();
 
-  // Activity and Saved for later are in the profile menu (2026-10-28: the user panel keeps microphone, headphones and
-  // Settings, as in the reference). Desktop has no top bar to repeat them (the floating redesign's brand strip).
-  // The floating user panel belongs to the app shell, outside the conversation list.
-  const profileButton = page.getByRole("button", { name: /Your profile and settings/ });
-  await expect(page.locator(".topbar")).toBeHidden();
-  await profileButton.click();
-  await page.getByRole("menuitem", { name: /^Activity/ }).click();
+  // Activity has one primary rail destination. Saved is secondary in the profile menu.
+  const profileButton = page.locator(".user-panel-me:visible");
+  await rail.getByRole("link", { name: "Activity", exact: true }).click();
   await expect(page).toHaveURL(/\/activity$/);
   await profileButton.click();
   await page.getByRole("menuitem", { name: /^Saved for later/ }).click();

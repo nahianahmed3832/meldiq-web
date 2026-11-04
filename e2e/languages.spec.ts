@@ -16,7 +16,7 @@ async function pick(page: Page, name: string) {
 
 const SHOTS = process.env.ORBIT_E2E_SHOTS;
 const shot = async (page: Page, name: string) => {
-  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${name}.png`) });
+  if (SHOTS) await page.screenshot({ animations: "disabled", path: path.join(SHOTS, `${name}.png`) });
 };
 
 test.beforeEach(async ({ context }) => {
@@ -48,13 +48,13 @@ test("the language is chosen before signing in, kept after a reload, and changed
   const alice = await newPhone("alice", "Alice Rahman");
   await pick(page, "English");
   await link(page, alice);
-  await page.goto("/settings/appearance");
+  await page.goto("/settings/language");
   await pick(page, "বাংলা");
-  await expect(page.getByRole("heading", { name: "চেহারা" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ভাষা" })).toBeVisible();
   if (!isMobile) await expect(page.locator(".settings-nav")).toContainText("বিজ্ঞপ্তি");
   await page.locator("button.lang-picker").first().click();
   await page.locator(".language-list").getByRole("option").first().click();
-  await expect(page.getByRole("heading", { name: "Appearance" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Language", exact: true })).toBeVisible();
 
   // A conversation in Chinese (round 2): the day, the message box and the message menu.
   const bob = await newPhone("bob", "Bob Chen");

@@ -15,6 +15,7 @@ import { PARITY_FEATURES } from "../../sync/communityParity";
 import { channelTypeOf, deleteConfirmed, moveToCategory, SLOWMODE_CHOICES } from "../../sync/communityRules";
 import { Dialog } from "../components/Overlay";
 import { Toggle } from "../components/Toggle";
+import { useUnsavedChanges } from "../components/UnsavedChanges";
 import { type ChannelDialogTab, ChannelDialogTabs } from "./webhooks/ChannelDialogTabs";
 import { useWebhooksAllowed } from "./webhooks/useWebhooksAllowed";
 import { WebhooksTab } from "./webhooks/WebhooksTab";
@@ -55,6 +56,16 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
   // Community parity C: Webhooks next to the channel's settings, for people who manage them.
   const webhooks = useWebhooksAllowed(channel);
   const [tab, setTab] = useState<ChannelDialogTab>("overview");
+  const originalOptions = { ...NO_OPTIONS, ...(channel.options ?? {}), posterRoleIds: channel.options?.posterRoleIds ?? [] };
+  useUnsavedChanges(
+    name !== (channel.name ?? "") ||
+      topic !== (channel.topic ?? "") ||
+      slowmode !== channel.slowmodeSec ||
+      forum !== (channel.format === "forum") ||
+      guidelines !== (channel.guidelines ?? "") ||
+      JSON.stringify(tags) !== JSON.stringify(channel.forumTags.map((t) => ({ id: t.id, name: t.name }))) ||
+      JSON.stringify(options) !== JSON.stringify(originalOptions),
+  );
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return setError(uiText("organization.interface.a_channel_needs_a_name_8f7d314"));

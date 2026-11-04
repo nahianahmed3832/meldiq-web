@@ -12,7 +12,7 @@ import { installBot } from "../../../sync/bots";
 import { type BotSort, botDirectory } from "../../../sync/discovery/api";
 import { BOT_CATEGORY_TEXT, BOT_CHIPS, BOT_SORTS, type BotChip, chipCategory, DISCOVERY_LIMITS } from "../../../sync/discovery/rules";
 import { useAction, useLoad } from "../useLoad";
-import { Card, ErrorLine } from "../WorkspaceView";
+import { Card, ErrorLine } from "../../components/SettingsCard";
 /** How long typing pauses before the search runs. */
 const SEARCH_DELAY_MS = 300;
 interface CommunityBotsCardProps {

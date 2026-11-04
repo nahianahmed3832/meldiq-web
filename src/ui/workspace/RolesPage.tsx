@@ -18,7 +18,7 @@ import { EveryoneDialog } from "./EveryoneDialog";
 import { RoleEditor } from "./RoleEditor";
 import { RoleMembersList } from "./RoleMembers";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /** Custom roles highest first (a lower position is higher; roles without one keep the server's order). */
 export function orderedRoles(roles: readonly Role[]): Role[] {
   return roles

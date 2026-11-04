@@ -12,7 +12,7 @@ test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile,
 test.describe.configure({ timeout: 180_000 });
 const SHOTS = process.env.ORBIT_E2E_SHOTS;
 const shot = async (page: Page, name: string) => {
-  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${name}.png`) });
+  if (SHOTS) await page.screenshot({ animations: "disabled", path: path.join(SHOTS, `${name}.png`) });
 };
 
 test.beforeEach(async ({ context }) => {
@@ -89,7 +89,7 @@ test("webhook posts, Make a post, reaction roles and tickets", async ({ page }) 
   await expect(page.getByRole("article", { name: "Rules", exact: true })).toBeVisible();
 
   // Tickets: switch on in Profile, add a panel, then open one from the community menu.
-  await page.goto("/workspace/overview");
+  await page.goto("/workspace/integrations");
   const tickets = page.getByRole("region", { name: "Tickets" });
   await tickets.getByRole("button", { name: "Add a panel" }).click();
   await tickets.getByLabel("Name").fill("Support");

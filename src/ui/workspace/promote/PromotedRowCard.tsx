@@ -9,7 +9,7 @@ import { useEngine } from "../../../application/orbit";
 import { bookPromoted } from "../../../sync/discovery/api";
 import { PHASE_TEXT, price, recordPhase, weekText } from "../../../sync/discovery/promote";
 import { OrgAvatar } from "../../components/OrgAvatar";
-import { Card } from "../WorkspaceView";
+import { Card } from "../../components/SettingsCard";
 import type { PromoteBuy } from "./usePromoteBuy";
 interface PromotedRowCardProps {
   orgId: string;

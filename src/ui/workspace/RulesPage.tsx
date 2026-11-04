@@ -3,7 +3,7 @@ import { formatUiNumber } from "../../i18n/format";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { ArrowDown, ArrowUp, Minus, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine } from "../../application/orbit";
 import { useT } from "../../i18n";
@@ -13,7 +13,8 @@ import { Toggle } from "../components/Toggle";
 import { CreateChannelDialog } from "../community/CreateChannelDialog";
 import { RulesList } from "../community/RulesViews";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { useUnsavedChanges } from "../components/UnsavedChanges";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /**
  * Community settings › Rules (API 0.65.0, feature rules-channel): which channel is the rules channel, the numbered rules
  * with a title and an optional description, and whether members agree to them before posting or reacting. People who
@@ -31,9 +32,15 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
   const [rules, setRules] = useState<RuleDraft[]>([]);
   const [saved, setSaved] = useState(false);
   const [creating, setCreating] = useState(false);
+  const baseline = useRef("");
   const save = useAction();
   useEffect(() => {
     if (!current.data) return;
+    baseline.current = JSON.stringify({
+      channelId: current.data.channelId,
+      required: current.data.required,
+      rules: current.data.rules.map((r) => ({ id: r.id, title: r.title, description: r.description ?? "" })),
+    });
     setChannelId(current.data.channelId ?? "");
     setRequired(current.data.required);
     setRules(current.data.rules.map((r) => ({ id: r.id, title: r.title, description: r.description ?? "" })));
@@ -41,6 +48,7 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
   // A rules channel is a text or announcement channel everyone can see (the server says the same).
   const options = (channels.data ?? []).filter((c) => !c.voice && c.format !== "forum" && c.kind !== "PRIVATE");
   const settings = { channelId: channelId || null, required, rules };
+  useUnsavedChanges(!!baseline.current && baseline.current !== JSON.stringify(settings));
   const problem = rulesProblem(settings);
   const edit = (i: number, change: Partial<RuleDraft>) => {
     setSaved(false);
@@ -153,6 +161,11 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
             onClick={() =>
               void save.act(async () => {
                 const view = await saveCommunityRules(engine, orgId, settings);
+                baseline.current = JSON.stringify({
+                  channelId: view.channelId,
+                  required: view.required,
+                  rules: view.rules.map((r) => ({ id: r.id, title: r.title, description: r.description ?? "" })),
+                });
                 setRules(view.rules.map((x) => ({ id: x.id, title: x.title, description: x.description ?? "" })));
                 setSaved(true);
               })

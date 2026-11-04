@@ -8,7 +8,7 @@ import { useEngine } from "../../application/orbit";
 import { communitySettings, saveCommunitySettings } from "../../sync/communitySettings";
 import { Toggle } from "../components/Toggle";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 interface OnboardingGateCardProps {
   orgId: string;
   /** The community's channels, for the starting channel (public text and announcement channels only). */

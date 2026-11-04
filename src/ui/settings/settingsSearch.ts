@@ -8,63 +8,89 @@ type SettingInfo = {
 /** Search routes to the existing settings pages; availability is filtered by the caller's features and permissions. */
 export const SETTINGS_INFO: Partial<Record<SettingsPage, SettingInfo>> = {
   account: {
-    scope: "Your account",
-    get description() {
-      return uiText("settings.interface.email_password_and_account_recovery_d701c4f");
+    get scope() {
+      return uiText("settings.interface.your_account_dbb5f63");
     },
-    keywords: "login sign in delete recovery codes google apple discord connected accounts",
+    get description() {
+      return uiText("settings.navigation.accountDescription");
+    },
+    get keywords() {
+      return "email account standing export delete";
+    },
   },
   profile: {
-    scope: "Your global profile",
+    get scope() {
+      return uiText("settings.interface.your_global_profile_a8b2ad8");
+    },
     get description() {
       return uiText("settings.interface.avatar_banner_name_style_decoration_and_bio_e335b90");
     },
-    keywords: "photo picture pronouns badge tag identity color colour font animation",
+    get keywords() {
+      return uiText("settings.interface.photo_picture_pronouns_badge_tag_identity_color_colour_font_anima_683febe");
+    },
   },
   security: {
-    scope: "Your account",
-    get description() {
-      return uiText("settings.interface.privacy_encryption_and_account_protection_bec055a");
+    get scope() {
+      return uiText("settings.interface.your_account_dbb5f63");
     },
-    keywords: "keys recovery safety block passkey",
+    get description() {
+      return uiText("settings.navigation.privacyDescription");
+    },
+    get keywords() {
+      return `${uiText("settings.interface.keys_recovery_safety_block_passkey_c1beb23")} password sign in read receipts typing trusted websites links`;
+    },
   },
   devices: {
-    scope: "Your account",
-    get description() {
-      return uiText("settings.interface.manage_signed_in_devices_and_link_a_browser_7030ae7");
+    get scope() {
+      return uiText("settings.interface.your_account_dbb5f63");
     },
-    keywords: "sessions phone approve sign out",
+    get description() {
+      return uiText("settings.navigation.connectionsDescription");
+    },
+    get keywords() {
+      return `${uiText("settings.interface.sessions_phone_approve_sign_out_1d6be76")} Google Apple Discord OAuth Spotify Steam connections`;
+    },
   },
   gifts: {
-    scope: "Your account",
+    get scope() {
+      return uiText("settings.interface.your_account_dbb5f63");
+    },
     get description() {
       return uiText("settings.interface.send_receive_and_redeem_plus_gifts_615c2bd");
     },
     keywords: "gift friend email link present credit redeem",
   },
   mojo: {
-    scope: "Your account",
+    get scope() {
+      return uiText("settings.interface.your_account_dbb5f63");
+    },
     get description() {
       return uiText("settings.interface.meldiq_plus_plans_benefits_and_gifts_9f17a89");
     },
-    keywords: "subscription plus free billing payment upload limit",
+    get keywords() {
+      return uiText("settings.interface.subscription_plus_free_billing_payment_upload_limit_b0be184");
+    },
   },
   spark: {
-    scope: "Community boosts",
+    get scope() {
+      return uiText("settings.interface.community_boosts_ecc7e1a");
+    },
     get description() {
       return uiText("settings.interface.manage_sparks_and_community_benefits_2a334dc");
     },
-    keywords: "boost level subscription",
+    get keywords() {
+      return uiText("settings.interface.boost_level_subscription_81b0772");
+    },
   },
   appearance: {
     get scope() {
       return uiText("settings.interface.this_browser_101f4d9");
     },
     get description() {
-      return uiText("settings.interface.themes_colors_text_size_and_message_layout_f30d673");
+      return uiText("settings.navigation.appearanceDescription");
     },
     get keywords() {
-      return uiText("settings.interface.colour_color_font_dark_light_contrast_background_language_emoji_a_65ff089");
+      return "colour color dark light background palette theme layout previews gestures media";
     },
   },
   calls: {
@@ -83,11 +109,38 @@ export const SETTINGS_INFO: Partial<Record<SettingsPage, SettingInfo>> = {
       return uiText("settings.interface.this_browser_101f4d9");
     },
     get description() {
-      return uiText("settings.interface.desktop_alerts_sounds_read_receipts_and_typing_237db41");
+      return uiText("settings.navigation.notificationsDescription");
     },
     get keywords() {
       return uiText("settings.interface.mute_chime_volume_privacy_unread_mentions_groups_ringtone_1680cbe");
     },
+  },
+  accessibility: {
+    get scope() {
+      return uiText("settings.interface.this_browser_101f4d9");
+    },
+    get description() {
+      return uiText("settings.navigation.accessibilityDescription");
+    },
+    keywords: "text size font density spacing reduce motion animation high contrast comfort",
+  },
+  language: {
+    get scope() {
+      return uiText("settings.interface.your_account_dbb5f63");
+    },
+    get description() {
+      return uiText("settings.navigation.languageDescription");
+    },
+    keywords: "language locale translation region English Bangla বাংলা العربية 中文",
+  },
+  billing: {
+    get scope() {
+      return uiText("settings.interface.your_account_dbb5f63");
+    },
+    get description() {
+      return uiText("settings.navigation.billingDescription");
+    },
+    keywords: "subscription Plus Free PayPal payment invoices receipts cancel renew checkout",
   },
   shortcuts: {
     get scope() {

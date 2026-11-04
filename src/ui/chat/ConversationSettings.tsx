@@ -6,38 +6,14 @@ import { BellOff, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
-import { levelOf, type NotifyLevel, workspaceOf } from "../../sync/navPrefs";
+import { NotificationLevelSelect } from "../components/NotificationLevelSelect";
 import { removeConversationMember } from "../../sync/workspaces";
-const LEVELS: {
-  level: NotifyLevel;
-  label: string;
-}[] = [
-  {
-    level: "all",
-    get label() {
-      return uiText("messaging.interface.all_new_messages_0bd334d");
-    },
-  },
-  {
-    level: "mentions",
-    get label() {
-      return uiText("messaging.interface.mentions_only_78732e1");
-    },
-  },
-  {
-    level: "none",
-    get label() {
-      return uiText("messaging.interface.off_ca7981b");
-    },
-  },
-];
 /** Notifications (synced to every device of the person) and leaving a group. */
 export function ConversationSettings({ conversationId }: { conversationId: string }) {
   useLocaleRender();
   const l10n = useLocalization();
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[conversationId]);
-  const level = useOrbit((s) => levelOf(s.nav[workspaceOf(c?.orgId ?? null)], conversationId, c?.categoryId ?? null));
   const [confirm, setConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   if (!c) return null;
@@ -60,13 +36,7 @@ export function ConversationSettings({ conversationId }: { conversationId: strin
             <BellOff size={14} /> {l10n("settings.notifications")}
           </span>
         </span>
-        <select className="input input-sm" value={level} onChange={(e) => void engine.arrange(conversationId, { op: "notify", conversationId, level: e.target.value as NotifyLevel })}>
-          {LEVELS.map((l) => (
-            <option key={l.level} value={l.level}>
-              {l.label}
-            </option>
-          ))}
-        </select>
+        <NotificationLevelSelect conversation={c} />
         <span className="hint">
           <Localized k="messaging.interface.applies_on_all_your_devices_a_mention_of_you_still_notifies_when_3cfafd7" />
         </span>

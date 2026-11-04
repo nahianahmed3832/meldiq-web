@@ -4,7 +4,7 @@
  * Structure:
  *  1. Scale: type, radii, spacing, motion, elevation shape (palette-independent).
  *  2. Neutrals: surfaces, text, borders and states, shared by every palette.
- *  3. Palettes: the colour plates (charcoal, the default: neutral greys like Discord's; indigo, from the logo's
+ *  3. Palettes: the colour plates (midnight, the default: navy with cyan/blue/violet accents; indigo, from the logo's
  *     cyan → blue → violet ribbon; plum; amber).
  *     A palette sets only brand hues: the frame (rail and top bar), the sidebar tint, the accent and its soft and text
  *     forms, mentions, badges and the brand gradient. `data-palette` on <html> picks one (src/application/prefs.ts).
@@ -65,7 +65,7 @@
   --topbar-h: 64px;
   /* Desktop: the slim brand strip across the top of the window. */
   --brandbar-h: 34px;
-  --sidebar-w: 300px;
+  --sidebar-w: 280px;
   /* The black frame between floating panels. */
   --frame-gap: 10px;
 
@@ -273,7 +273,7 @@
   /* ── 3. Palettes ──────────────────────────────────────────────────────── */
 
   /*
-   * Indigo (default): the logo's blue-violet. Frame deep indigo, sidebar lavender mist, accent indigo, badges cyan.
+   * Indigo: the logo's blue-violet. Frame deep indigo, sidebar lavender mist, accent indigo, badges cyan.
    * The accent is Meldiq's one brand indigo, #4b4fc9 (dark mode #8b93ff), the same as Android's Graphite palette and the
    * account emails (meldiq docs/product/MELDIQ_2_DECISIONS.md §3).
    */
@@ -366,12 +366,11 @@
   }
 
   /*
-   * Meldiq (the default, floating redesign 2026-10-28): a near-black frame, charcoal panels floating on it with soft
+   * Meldiq (the floating redesign 2026-10-28): a near-black frame, charcoal panels floating on it with soft
    * borders, and one restrained lime for selection, focus, primary actions and unread. Mentions of you keep a warm pink so
    * they read apart from unread. Light mode keeps the shape (white panels on a pale frame) with a deeper lime for text.
-   * Before a page's preferences apply there's no data-palette: Meldiq too.
+   * Existing choices retain this palette after the product default changes.
    */
-  :root:not([data-palette]),
   :root[data-palette="meldiq"] {
     --bg: light-dark(#ececec, #040404);
     --surface: light-dark(#ffffff, #141414);
@@ -454,10 +453,11 @@
   }
 
   /*
-   * Midnight (the default from the community-first design 2026-10-26 until the floating redesign 2026-10-28): deep navy
+   * Midnight (the default for new browsers): deep navy
    * surfaces, the logo's cyan → blue → violet for selection, focus and actions, pink only for mentions of you, and white
    * marks for unread.
    */
+  :root:not([data-palette]),
   :root[data-palette="midnight"] {
     --bg: light-dark(#f4f6fb, #0b1020);
     --surface: light-dark(#ffffff, #10172b);

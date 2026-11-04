@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-04",
+  "unit": {
+    "filesPassed": 140,
+    "testsPassed": 957,
+    "testsSkipped": 1
+  },
+  "typecheck": "passed",
+  "lint": "passed",
+  "productionBuild": "passed",
+  "localization": {
+    "locales": 28,
+    "keysPerLocale": 6211,
+    "coveragePercent": 100,
+    "structuralErrors": 0,
+    "missingMessages": 0,
+    "untranslatedMessages": 0,
+    "hardcodedCandidates": 0
+  },
+  "productionRegression": {
+    "initialTotal": 56,
+    "initialPassed": 53,
+    "initialFailed": 3,
+    "allInitialFailuresPassedOnFinalRerun": true
+  },
+  "finalTargetedChromium": {
+    "passed": 13,
+    "failed": 0
+  },
+  "finalAdditionalBrowsers": {
+    "passed": 24,
+    "failed": 0,
+    "projects": ["firefox", "webkit", "phone-width", "iphone-width"]
+  },
+  "responsiveSizes": [
+    [320, 568],
+    [360, 800],
+    [375, 812],
+    [390, 844],
+    [412, 915],
+    [430, 932],
+    [768, 1024],
+    [1024, 768],
+    [1280, 800],
+    [1440, 900]
+  ],
+  "formatting": {
+    "touchedFiles": "passed",
+    "repositoryWide": "pre-existing failures",
+    "unrelatedFiles": [
+      "src/application/tabBadge.ts",
+      "src/ui/chat/ConversationView.tsx",
+      "src/ui/chat/SearchPanel.tsx",
+      "src/ui/community/RulesViews.tsx",
+      "src/ui/community/webhooks/BoxEditor.tsx",
+      "src/ui/lobby/CardEditor.tsx",
+      "src/ui/mojo/CharLimit.tsx",
+      "src/ui/shell/TabIndicators.tsx",
+      "src/ui/shell/VoiceRooms.tsx",
+      "src/ui/workspace/bots/AlertsWatches.tsx",
+      "test/history-read-receipts.test.ts",
+      "test/live-key-backup.test.ts",
+      "test/outgoing-recovery.test.ts",
+      "test/supabase-migration.test.ts",
+      "scripts/supabase/backup-restore-staging.mjs",
+      "scripts/supabase/check-migrations.mjs",
+      "scripts/supabase/copy-real-rehearsal.mjs",
+      "scripts/supabase/hosted-smoke.mjs",
+      "scripts/supabase/install-auth-restore-runtime.mjs",
+      "scripts/supabase/provision-runtime.mjs",
+      "scripts/supabase/rehearse-staging.mjs",
+      "scripts/supabase/staging.mjs",
+      "scripts/supabase/validate-real-rehearsal.mjs",
+      "scripts/web-server.ts"
+    ]
+  },
+  "diffWhitespace": "passed",
+  "apiTestVersion": "0.76.1",
+  "limitations": [
+    "PayPal SDK/API flows are mocked; no live charges or settlement verification.",
+    "No physical-device acceptance test.",
+    "Translations verified automatically; native-speaker review not performed.",
+    "No production deployment."
+  ]
+}

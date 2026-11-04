@@ -1,3 +1,4 @@
+import { confirmAction } from "../components/ConfirmationDialog";
 import { formatUiNumber } from "../../i18n/format";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
@@ -14,7 +15,7 @@ import { type BotProfile, botProfile, installBot, removeBot } from "../../sync/b
 import { directory } from "../../sync/workspaces";
 import { AlsoBuiltIn, OfficialBotsSection, useOfficialBotsOffered } from "./bots/OfficialBotsSection";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 const BOT_ID = /^[A-Za-z0-9_-]{1,64}$/;
 /**
  * Community settings › Bots (API 0.65.0 batch B): add a bot by its ID after seeing who it is and who made it, and remove
@@ -75,8 +76,8 @@ function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
               <button
                 className="btn btn-danger-quiet btn-sm"
                 disabled={remove.busy}
-                onClick={() => {
-                  if (window.confirm(uiText("workspace.interface.remove_value0_from_value1_505f4b4", { value0: b.displayName, value1: detail.org.name })))
+                onClick={async () => {
+                  if (await confirmAction(uiText("workspace.interface.remove_value0_from_value1_505f4b4", { value0: b.displayName, value1: detail.org.name })))
                     void remove.act(() => removeBot(engine, orgId, b.id).then(reload));
                 }}
               >

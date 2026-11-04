@@ -13,7 +13,7 @@ import { RoleDisplayTab, type RoleDraft, ROLE_COLORS } from "./RoleDisplayTab";
 import { RoleMembersList } from "./RoleMembers";
 import { PermissionChecklist } from "./RolePermissionsTab";
 import { useAction } from "./useLoad";
-import { ErrorLine } from "./WorkspaceView";
+import { ErrorLine } from "../components/SettingsCard";
 type Tab = "display" | "permissions" | "members";
 const dayInput = (ms: number | null | undefined) => (ms ? new Date(ms).toISOString().slice(0, 10) : "");
 const dayMs = (day: string) => (day ? Date.parse(`${day}T00:00:00Z`) : null);

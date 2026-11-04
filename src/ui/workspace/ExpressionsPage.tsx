@@ -12,7 +12,7 @@ import { CustomEmojiImage } from "../community/CustomEmoji";
 import { Dialog } from "../components/Overlay";
 import { bytes, shortWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /**
  * Emoji & stickers (batch B9, android ExpressionsScreen): Emoji · n/50 and Stickers · n/20, each with Upload (a picture
  * named `:like_this:`), rename and remove. For people who can manage emoji and stickers; every member can use them.

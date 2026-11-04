@@ -1,5 +1,3 @@
-import fs from "node:fs";
-const arCalls = JSON.parse(fs.readFileSync(new URL("../locales/ar/calls.json", import.meta.url), "utf8"));
 import { expect, test } from "@playwright/test";
 import { nativePeerMissing, placeCall } from "./callPeer";
 import { link } from "./link";
@@ -26,7 +24,7 @@ test("changing language preserves an active encrypted video call", async ({ page
     const before = call.media.received.audio.frames;
     // The application's own in-page route protocol preserves the running engine and media session.
     await page.evaluate(() => {
-      history.pushState({ meldiq: 1 }, "", "/settings/appearance");
+      history.pushState({ meldiq: 1 }, "", "/settings/language");
       dispatchEvent(new Event("meldiq:route"));
     });
     await page.locator("button.lang-picker").first().click();
@@ -34,7 +32,7 @@ test("changing language preserves an active encrypted video call", async ({ page
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
     await expect(page.locator(".language-dialog")).toHaveCount(0);
     if (await page.locator(".settings-window-close").isVisible()) await page.locator(".settings-window-close").click();
-    await page.getByRole("button", { name: arCalls.interface.show_the_call_b1c171a, exact: true }).first().click();
+    await page.getByRole("button", { name: "Show the call", exact: true }).first().click();
     await expect(stage).toBeVisible();
     expect(await video.evaluate((element: HTMLVideoElement) => (element.srcObject as MediaStream).getVideoTracks()[0].id)).toBe(trackId);
     const time = await video.evaluate((element: HTMLVideoElement) => element.currentTime);

@@ -11,7 +11,7 @@ import { discoverySettings, saveDiscoverySettings } from "../../../sync/discover
 import { DISCOVERY_LIMITS, parseTags, unlistedText } from "../../../sync/discovery/rules";
 import { Toggle } from "../../components/Toggle";
 import { useAction, useLoad } from "../useLoad";
-import { Card, ErrorLine } from "../WorkspaceView";
+import { Card, ErrorLine } from "../../components/SettingsCard";
 /**
  * Profile › Discovery (community parity E, feature discovery-listing; the reference's "Show in Discovery"): whether a
  * public community shows in Discover, what the 5-member rule means for it right now, the card's one-line description

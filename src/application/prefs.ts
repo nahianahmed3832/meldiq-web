@@ -96,7 +96,7 @@ export interface Prefs {
   memberList: boolean;
   /** Direct messages show the other person's profile beside the messages, on screens wide enough for it. */
   dmProfile: boolean;
-  /** The person picked a colour plate themselves; until then the default applies (indigo, then charcoal, now meldiq). */
+  /** The person explicitly picked a colour plate. Existing valid plates remain intact when the default changes. */
   paletteChosen: boolean;
   timeFormat: TimeFormat;
   listPreview: ListPreview;
@@ -147,7 +147,7 @@ const defaults: Prefs = {
   highContrast: false,
   lineSpacing: "normal",
   language: "system",
-  palette: "meldiq",
+  palette: "midnight",
   textSize: "default",
   messageLayout: "stream",
   animatedEmoji: true,
@@ -283,17 +283,9 @@ export function volumeOf(v: unknown): number {
   return typeof v === "number" && Number.isFinite(v) ? Math.round(Math.min(100, Math.max(0, v))) : defaults.soundVolume;
 }
 
-/** Earlier defaults (indigo, then charcoal until the community-first design): saved by every browser that saved anything. */
-const FORMER_DEFAULTS: readonly Palette[] = ["indigo", "charcoal"];
-
-/**
- * The stored colour plate. A former default counts as a choice only once the person picked a plate themselves
- * (Appearance › Colour); otherwise the current default, Meldiq (black, charcoal and lime), applies.
- */
+/** Existing valid choices stay intact when the product default changes. */
 export function paletteOf(stored: { palette?: unknown; paletteChosen?: unknown }): Palette {
-  const palette = PALETTES.find((p) => p === stored.palette);
-  if (!palette) return defaults.palette;
-  return FORMER_DEFAULTS.includes(palette) && stored.paletteChosen !== true ? defaults.palette : palette;
+  return PALETTES.find((p) => p === stored.palette) ?? defaults.palette;
 }
 
 const permitted = (): boolean => typeof Notification !== "undefined" && Notification.permission === "granted";

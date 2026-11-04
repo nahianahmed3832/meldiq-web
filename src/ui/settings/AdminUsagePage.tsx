@@ -8,7 +8,7 @@ import { type AdminUsage, adminUsage, isBytes, LIMIT_LABEL, setWorkspaceLimits }
 import { Dialog } from "../components/Overlay";
 import { bytes, dayLabel } from "../format";
 import { useAction, useLoad } from "../workspace/useLoad";
-import { ErrorLine } from "../workspace/WorkspaceView";
+import { ErrorLine } from "../components/SettingsCard";
 type Workspace = AdminUsage["workspaces"][number];
 const PERIODS = [7, 30, 90] as const;
 /** The measured figures shown per workspace in the list (the rest are in its dialog). */

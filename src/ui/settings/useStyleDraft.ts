@@ -1,3 +1,4 @@
+import { useUnsavedChanges } from "../components/UnsavedChanges";
 import { text as uiText } from "../../i18n";
 import { previewLegacyStyle } from "../../sync/collectibles";
 import { useMemo, useRef, useState } from "react";
@@ -19,6 +20,7 @@ export function useStyleDraft(engine: Engine, server: ProfileStyle, onSaved: () 
     undo.current = [];
     setError(null);
   };
+  useUnsavedChanges(Object.keys(pending).length > 0);
   return {
     style: useMemo(() => previewLegacyStyle(server, pending), [server, pending]),
     error,

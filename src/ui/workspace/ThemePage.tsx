@@ -11,7 +11,8 @@ import { saveCommunitySettings } from "../../sync/communitySettings";
 import { ACCENT_CLASS, ACCENT_PRESETS, accentStyle, isAccent, tintStyle } from "../community/accent";
 import { AppearanceCard } from "./AppearanceCard";
 import { useAction } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { useUnsavedChanges } from "../components/UnsavedChanges";
+import { Card, ErrorLine } from "../components/SettingsCard";
 interface ThemePageProps {
   detail: OrgAdminDetail;
   onChanged: () => void;
@@ -46,6 +47,7 @@ function TintCard({ detail, onChanged }: ThemePageProps) {
     setHex(v ?? "");
   };
   const hexOk = hex === "" || isAccent(hex);
+  useUnsavedChanges(tint !== stored || !hexOk);
   return (
     <Card title={uiText("workspace.interface.background_tint_4988e0f")} sub={uiText("workspace.interface.a_light_wash_of_colour_behind_this_community_s_channels_members_c_19c9adb")}>
       <div className={`tint-preview${org.accent ? ` ${ACCENT_CLASS}` : ""}`} style={{ ...accentStyle(org.accent), ...tintStyle(tint) }} aria-label={uiText("organization.interface.preview_324b134")}>

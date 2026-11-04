@@ -42,6 +42,8 @@ import { Notices } from "./Notices";
 import { SettingsWindow } from "./SettingsWindow";
 import { Rail } from "./Rail";
 import { Sidebar } from "./Sidebar";
+import { ConfirmationDialog } from "../components/ConfirmationDialog";
+import { UnsavedChangesDialog } from "../components/UnsavedChanges";
 import { TabBar } from "./TabBar";
 import { TopBar } from "./TopBar";
 import { ConnectionBanner } from "./ConnectionBanner";
@@ -316,7 +318,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   if (route.section === "oauth") return <ConsentPage />;
   let full = null;
   if (route.section === "settings") full = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
-  else if (route.section === "workspace") full = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
+  else if (route.section === "workspace") full = <WorkspaceView key={orgId} orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
   // Settings and administration load on first use, keeping the first page load small.
   if (full) full = <Suspense fallback={<section className="main" aria-busy="true" />}>{full}</Suspense>;
   let main;
@@ -370,6 +372,8 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       )}
       <TabBar section={route.section} hidden={!!route.conversationId || route.section === "workspace" || (route.section === "settings" && route.settingsPage !== "you")} />
       <Notices />
+      <UnsavedChangesDialog />
+      <ConfirmationDialog />
       {!phone && !settings && <UserPanel />}
       <PlusSupportNotice blocked={!!dialog || !!profile || drawer} />
       <PlusRenewalNotice blocked={!!dialog || !!profile || drawer} />

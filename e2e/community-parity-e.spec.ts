@@ -13,7 +13,7 @@ test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile,
 test.describe.configure({ timeout: 240_000 });
 const SHOTS = process.env.ORBIT_E2E_SHOTS;
 const shot = async (page: Page, name: string) => {
-  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${name}.png`) });
+  if (SHOTS) await page.screenshot({ animations: "disabled", path: path.join(SHOTS, `${name}.png`) });
 };
 
 test.beforeEach(async ({ context }) => {
@@ -50,7 +50,7 @@ test("Discover, Profile's Discovery and template, template links, Promote and th
   await shot(page, "discover-tag");
 
   // Profile: Discovery (listed now) and Create template link.
-  await page.goto("/workspace/overview");
+  await page.goto("/workspace/discovery");
   const discovery = page.getByRole("region", { name: "Discovery" });
   await expect(discovery.getByText("Listed in Discover now.")).toBeVisible();
   await expect(discovery.getByLabel("Tags")).toHaveValue("pixel art, gamedev");

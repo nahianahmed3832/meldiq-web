@@ -1,11 +1,11 @@
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
-import { AtSign, House } from "lucide-react";
 import { useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
 import { mentionCount, unreadPeopleCount } from "../selectors";
 import { useIncomingRequestCount } from "../people/connectionRequests";
 import { useT } from "../../i18n";
+import { PRIMARY_NAVIGATION, primaryDestinationActive } from "./navigation";
 import { capCount } from "../unread";
 import { LookAvatar } from "../people/NameStyle";
 /** Phones: the bottom tab bar (hidden inside a conversation, like the phone app). */
@@ -19,10 +19,12 @@ export function TabBar({ section, hidden }: { section: Section; hidden: boolean 
   const photoRev = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const online = useOrbit((s) => s.connection === "online");
   const tabs = [
-    { key: "home" as const, label: t("nav_home"), icon: <House size={21} />, count: 0 },
-    // The mascot is the messages entry here too (community-first brief §G).
-    { key: "dms" as const, label: t("nav_messages"), icon: <img className="tab-mascot" src="/meldling-96.webp" width={24} height={24} alt="" draggable={false} />, count: dms },
-    { key: "activity" as const, label: t("nav_activity"), icon: <AtSign size={21} />, count: mentions },
+    ...PRIMARY_NAVIGATION.filter((item) => item.section !== "discover").map((item) => ({
+      key: item.section,
+      label: t(item.labelKey),
+      icon: <item.icon size={21} />,
+      count: item.section === "dms" ? dms : item.section === "activity" ? mentions : 0,
+    })),
     // You (as the Android app): your avatar, its dot your connection; your account, Saved and every setting.
     {
       key: "settings" as const,
@@ -37,7 +39,9 @@ export function TabBar({ section, hidden }: { section: Section; hidden: boolean 
         <button
           key={t.key}
           aria-current={
-            section === t.key || (t.key === "home" && section === "lobby") || (t.key === "settings" && section === "later") || (t.key === "dms" && section === "friends") ? "page" : undefined
+            (t.key === "settings" ? section === "settings" || section === "later" : PRIMARY_NAVIGATION.some((item) => item.section === t.key && primaryDestinationActive(item, section)))
+              ? "page"
+              : undefined
           }
           onClick={() => navigate(t.key === "settings" ? { section: "settings", settingsPage: "you" } : { section: t.key })}
         >

@@ -6,7 +6,7 @@ import type { PromoteView } from "../../../api/discoverySchemas";
 import { useEngine } from "../../../application/orbit";
 import { buyBoost } from "../../../sync/discovery/api";
 import { boostOfTier, dayText, guaranteeText, knownTiers, PHASE_TEXT, POPULAR_TIER, price, recordPhase, TIER_TEXT } from "../../../sync/discovery/promote";
-import { Card } from "../WorkspaceView";
+import { Card } from "../../components/SettingsCard";
 import type { PromoteBuy } from "./usePromoteBuy";
 interface BoostCardsProps {
   orgId: string;

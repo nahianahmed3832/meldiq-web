@@ -100,7 +100,6 @@ export function LanguagePreferenceCard() {
   return (
     <div className="card language-preference">
       <div>
-        <h2>{t("common.language.label")}</h2>
         <p className="muted">{t("common.language.note")}</p>
       </div>
       <LanguagePicker />

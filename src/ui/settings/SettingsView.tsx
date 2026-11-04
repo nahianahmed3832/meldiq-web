@@ -2,9 +2,9 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useAccountActions } from "../shell/AccountActions";
-import { ArrowRightLeft, LogOut, Activity, BarChart3, Bookmark, ChevronLeft, ChevronRight, Laptop, Search, Gift, X } from "lucide-react";
+import { ArrowRightLeft, LogOut, Bookmark, ChevronLeft, ChevronRight, Laptop } from "lucide-react";
 import { useState } from "react";
-import { matchesSetting, SETTINGS_INFO } from "./settingsSearch";
+import { SETTINGS_INFO } from "./settingsSearch";
 import { ShortcutsPage } from "./ShortcutsPage";
 import { AdvancedPage } from "./AdvancedPage";
 import { CallsPage } from "./CallsPage";
@@ -14,11 +14,11 @@ import { useLoad } from "../workspace/useLoad";
 import { ServiceHealthPage } from "./ServiceHealthPage";
 import { AdminUsagePage } from "./AdminUsagePage";
 import { navigate, type SettingsPage } from "../../application/router";
-import { AppearancePage, NotificationsPage } from "./PreferencePages";
+import { AboutPage, AppearancePage, NotificationsPage } from "./PreferencePages";
 import { AccountSettingsPage } from "./AccountSettingsPage";
 import { DevicesPage, SecurityPage } from "./AccountPages";
 import { ProfilePage } from "./ProfilePage";
-import { type StringKey, useT } from "../../i18n";
+import { useT } from "../../i18n";
 import { YouCard } from "./YouCard";
 import { InstallButton } from "./InstallButton";
 import { CheckoutPage } from "../billing/CheckoutPage";
@@ -27,125 +27,29 @@ import { BillingPage } from "../billing/BillingPage";
 import { MojoPage } from "../mojo/MojoPage";
 import { SparkPage } from "../mojo/SparkPage";
 import { PointsPage } from "../points/PointsPage";
-import { SettingsIcon } from "../components/SettingsIcon";
+import { SettingsNavigation, SettingsUnavailable } from "../components/SettingsNavigation";
+import { personalSettingsAvailable, personalSettingsGroups } from "./settingsCatalog";
+import { AccessibilityPage, LanguagePage } from "./SpecializedPages";
+import { StoragePage } from "./StoragePage";
 import { LeaderboardsPage } from "../leaderboards/LeaderboardsPage";
 import { CreatorsPage } from "../creators/CreatorsPage";
 import { DeveloperPage } from "../developer/DeveloperPage";
-/** [features]: the page shows when the server has any of them. */
-type PageEntry = {
-  key: SettingsPage;
-  label: StringKey;
-  icon: React.ReactNode;
-  features?: string[];
-};
 const NO_FEATURES: string[] = [];
-/** The reference's two groups (2026-10-28): you and your account, then how the app looks and behaves here. */
-const USER_PAGES: PageEntry[] = [
-  { key: "account", label: "settings_account", icon: <SettingsIcon name="account" /> },
-  { key: "profile", label: "settings_profile", icon: <SettingsIcon name="profile" /> },
-  { key: "security", label: "settings_security", icon: <SettingsIcon name="security" /> },
-  { key: "devices", label: "settings_devices", icon: <SettingsIcon name="devices" /> },
-  { key: "gifts", label: "settings_gifts", icon: <Gift size={17} /> },
-  // Meldiq Plus (server docs/MOJO.md): with the account, not pushed anywhere else.
-  {
-    key: "mojo",
-    label: "settings_mojo",
-    icon: <SettingsIcon name="mojo" />,
-  },
-  // Meldiq Spark: its own page (2026-10-28), boosting the communities you love.
-  {
-    key: "spark",
-    label: "settings_spark",
-    icon: <SettingsIcon name="spark" />,
-  },
-];
-const APP_PAGES: PageEntry[] = [
-  {
-    key: "appearance",
-    label: "settings_appearance",
-    icon: <SettingsIcon name="appearance" />,
-  },
-  {
-    key: "calls",
-    label: "settings_calls",
-    icon: <SettingsIcon name="voice" />,
-  },
-  {
-    key: "notifications",
-    label: "settings_notifications",
-    icon: <SettingsIcon name="notifications" />,
-  },
-  {
-    key: "shortcuts",
-    label: "settings_shortcuts",
-    icon: <SettingsIcon name="shortcuts" />,
-  },
-  // API 0.65.0: points, quests and account levels (Gem is Spark's).
-  {
-    key: "leaderboards",
-    label: "settings_leaderboards",
-    icon: <SettingsIcon name="leaderboards" />,
-  },
-  {
-    key: "points",
-    label: "settings_points",
-    icon: <SettingsIcon name="embers" />,
-    features: ["points"],
-  },
-  {
-    key: "advanced",
-    label: "settings_advanced",
-    icon: <SettingsIcon name="advanced" />,
-  },
-  // API 0.65.0 batch B: bots and "Log in with Meldiq" apps.
-  {
-    key: "developer",
-    label: "settings_developer",
-    icon: <SettingsIcon name="developer" />,
-    features: ["bots", "oauth-apps"],
-  },
-  // API 0.65.0 batch B: the creator programme.
-  {
-    key: "creators",
-    label: "settings_creators",
-    icon: <SettingsIcon name="creators" />,
-    features: ["creator-program"],
-  },
-];
 export function SettingsView({ page: requestedPage, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
   useLocaleRender();
-  const page = requestedPage === "storage" || requestedPage === "about" ? "profile" : requestedPage;
+  const page = requestedPage;
   const engine = useEngine();
   const accountAction = useAccountActions();
   const [query, setQuery] = useState("");
   // Service health and workspace usage are for platform administrators only (android round 7 C1, C7); the server checks again.
-  const admin = useLoad(() => isPlatformAdmin(engine).catch(() => false), [engine]).data === true;
+  const administration = useLoad(() => isPlatformAdmin(engine).catch(() => false), [engine]);
+  const admin = administration.data === true;
   const t = useT();
   const features = useOrbit((s) => s.server?.features ?? NO_FEATURES);
-  const named = (list: PageEntry[]) => list.filter((p) => !p.features || p.features.some((f) => features.includes(f))).map((p) => ({ ...p, label: t(p.label) }));
-  const groups: {
-    title: string;
-    pages: {
-      key: SettingsPage;
-      label: string;
-      icon: React.ReactNode;
-    }[];
-  }[] = [
-    { title: t("settings_user_group"), pages: named(USER_PAGES) },
-    { title: t("settings_app_group"), pages: named(APP_PAGES) },
-    ...(admin
-      ? [
-          {
-            title: t("admin.title"),
-            pages: [
-              { key: "health" as const, label: t("admin.health"), icon: <Activity size={17} /> },
-              { key: "usage" as const, label: t("admin.usage"), icon: <BarChart3 size={17} /> },
-            ],
-          },
-        ]
-      : []),
-  ];
-  const filtered = groups.map((g) => ({ ...g, pages: g.pages.filter((p) => matchesSetting(p.key, p.label, query)) })).filter((g) => g.pages.length);
+  const serverKnown = useOrbit((s) => s.server !== null);
+  const loadingAccess = !serverKnown || ((page === "health" || page === "usage") && administration.loading);
+  const groups = personalSettingsGroups(features, admin);
+  const available = personalSettingsAvailable(page, features, admin);
   const scope = SETTINGS_INFO[page === "you" ? "profile" : page];
   return (
     <section className="main main-split" aria-label={t("settings.title")} style={{ display: "flex", flexDirection: "column" }}>
@@ -173,50 +77,14 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
             <span className="grow">{t("top_saved")}</span>
             <ChevronRight size={16} className="faint you-only" aria-hidden="true" />
           </button>
-          <div className="settings-search">
-            <Search size={16} aria-hidden="true" />
-            <input
-              type="search"
-              aria-label={uiText("settings.interface.search_settings_255b076")}
-              placeholder={uiText("settings.interface.search_settings_255b076")}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDownCapture={(e) => {
-                if (e.key === "Escape" && query) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setQuery("");
-                }
-              }}
-            />
-            {query && (
-              <button className="icon-btn" aria-label={uiText("settings.interface.clear_settings_search_63c62e1")} onClick={() => setQuery("")}>
-                <X size={14} />
-              </button>
-            )}
-          </div>
-          <div className="settings-nav-pages">
-            {query && !filtered.length && (
-              <p className="faint settings-search-empty" role="status">
-                <Localized k="settings.interface.no_settings_found_for_try_a_different_word_f3ce051" slots={[query]} />
-              </p>
-            )}
-            {filtered.map((g) => (
-              <div key={g.title} role="group" aria-label={g.title} className="settings-nav-group">
-                <div className="settings-nav-title">{g.title}</div>
-                {g.pages.map((p) => (
-                  <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "settings", settingsPage: p.key })}>
-                    <span className="glyph">{p.icon}</span>
-                    <span className="grow settings-search-result">
-                      <span>{p.label}</span>
-                      {query && <small>{SETTINGS_INFO[p.key]?.description}</small>}
-                    </span>
-                    <ChevronRight size={16} className="faint you-only" aria-hidden="true" />
-                  </button>
-                ))}
-              </div>
-            ))}
-          </div>
+          <SettingsNavigation
+            groups={groups}
+            current={page === "you" ? "profile" : page === "checkout" ? "billing" : page}
+            query={query}
+            onQuery={setQuery}
+            label={uiText("settings.interface.search_settings_255b076")}
+            onSelect={(key) => navigate({ section: "settings", settingsPage: key })}
+          />
           <div className="settings-account-actions">
             <button className="side-item" onClick={() => accountAction("switch")}>
               <span className="glyph">
@@ -243,7 +111,7 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
           </div>
         </nav>
         <div className="settings-page scroll">
-          <div className={`inner${page === "leaderboards" || page === "mojo" || page === "spark" || page === "profile" || page === "billing" || page === "checkout" ? " wide" : ""}`}>
+          <div key={page} className={`inner${page === "leaderboards" || page === "mojo" || page === "spark" || page === "profile" || page === "billing" || page === "checkout" ? " wide" : ""}`}>
             <button className="settings-back" aria-label={uiText("settings.interface.back_to_settings_dc9c609")} onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>
@@ -253,26 +121,35 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
                 <span>{scope.description}</span>
               </p>
             )}
-            {(page === "profile" || page === "you") && <ProfilePage />}
-            {page === "account" && <AccountSettingsPage onSignedOut={onSignedOut} />}
-            {page === "devices" && <DevicesPage />}
-            {page === "notifications" && <NotificationsPage />}
-            {page === "calls" && <CallsPage />}
-            {page === "appearance" && <AppearancePage />}
-            {page === "security" && <SecurityPage onSignedOut={onSignedOut} />}
-            {page === "advanced" && <AdvancedPage />}
-            {page === "shortcuts" && <ShortcutsPage />}
-            {page === "health" && <ServiceHealthPage />}
-            {page === "usage" && <AdminUsagePage />}
-            {page === "checkout" && <CheckoutPage />}
-            {page === "gifts" && <GiftsPage />}
-            {page === "billing" && <BillingPage />}
-            {page === "mojo" && <MojoPage />}
-            {page === "spark" && <SparkPage />}
-            {page === "leaderboards" && <LeaderboardsPage />}
-            {page === "points" && <PointsPage />}
-            {page === "creators" && <CreatorsPage />}
-            {page === "developer" && <DeveloperPage />}
+            {!available && (loadingAccess ? <div className="skeleton" aria-busy="true" style={{ height: 160 }} /> : <SettingsUnavailable />)}
+            {available && (
+              <>
+                {(page === "profile" || page === "you") && <ProfilePage />}
+                {page === "account" && <AccountSettingsPage onSignedOut={onSignedOut} />}
+                {page === "devices" && <DevicesPage onSignedOut={onSignedOut} />}
+                {page === "notifications" && <NotificationsPage />}
+                {page === "calls" && <CallsPage />}
+                {page === "appearance" && <AppearancePage />}
+                {page === "accessibility" && <AccessibilityPage />}
+                {page === "language" && <LanguagePage />}
+                {page === "storage" && <StoragePage />}
+                {page === "about" && <AboutPage />}
+                {page === "security" && <SecurityPage />}
+                {page === "advanced" && <AdvancedPage />}
+                {page === "shortcuts" && <ShortcutsPage />}
+                {page === "health" && <ServiceHealthPage />}
+                {page === "usage" && <AdminUsagePage />}
+                {page === "checkout" && <CheckoutPage />}
+                {page === "billing" && <BillingPage />}
+                {page === "gifts" && <GiftsPage />}
+                {page === "mojo" && <MojoPage />}
+                {page === "spark" && <SparkPage />}
+                {page === "leaderboards" && <LeaderboardsPage />}
+                {page === "points" && <PointsPage />}
+                {page === "creators" && <CreatorsPage />}
+                {page === "developer" && <DeveloperPage />}
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { CommunityProfileCard } from "./CommunityProfileCard";
 import { ProfileDraftProvider, useProfileDraft } from "./profileDraft";
 import { ProfilePreviewCard } from "./ProfilePreviewCard";
 import type { ProfileLink } from "../../sync/profile";
+import { useUnsavedChanges } from "../components/UnsavedChanges";
 import { AtSign, Camera, Check, Copy, X } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -16,7 +17,6 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { squareJpeg } from "../workspace/photo";
 import { useAction, useLoad } from "../workspace/useLoad";
 import { ProfileStyleCard } from "./ProfileStyleCard";
-import { ConnectionsCard } from "./ConnectionsCard";
 /** My Profile: the editor, with your profile card previewed beside it (the reference's layout, 2026-10-29). */
 export function ProfilePage() {
   useLocaleRender();
@@ -90,6 +90,8 @@ function ProfileEditor() {
     () => updateDraft?.({ displayName: form.displayName, username: form.username, pronouns: form.pronouns, aboutMe: form.aboutMe }),
     [form.displayName, form.username, form.pronouns, form.aboutMe, updateDraft],
   );
+  const dirty = shown.current !== null && (JSON.stringify(form) !== JSON.stringify(shown.current) || JSON.stringify(links) !== JSON.stringify(shownLinks.current));
+  useUnsavedChanges(dirty);
   if (!me) return null;
   const field = (k: keyof typeof form) => ({
     value: form[k],
@@ -173,6 +175,11 @@ function ProfileEditor() {
           <Localized k="settings.interface.a_little_more_you_everywhere_you_show_up_a48feff" />
         </p>
       </header>
+      {dirty && (
+        <p className="unsaved-status" role="status">
+          {uiText("settings.navigation.unsaved")}
+        </p>
+      )}
       <div className="profile-columns">
         <div className="profile-main">
           {profileMedia ? <ProfileStyleCard nameStyles={nameStyles} pictureControls={photoControls} /> : photoControls}
@@ -365,7 +372,6 @@ function ProfileEditor() {
             </form>
           </section>
           <CommunityProfileCard aboutMe={form.aboutMe} pronouns={form.pronouns} />
-          <ConnectionsCard />
         </div>
         <ProfilePreviewCard />
       </div>

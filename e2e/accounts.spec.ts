@@ -72,7 +72,9 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(info).not.toContainText(email);
   await info.getByRole("button", { name: "Reveal" }).click();
   await expect(info).toContainText(email);
+  await page.goto("/settings/security");
   await expect(page.getByRole("heading", { name: "Password and authentication" })).toBeVisible();
+  await page.goto("/settings/account");
   await expect(page.getByRole("heading", { name: "Account", exact: true })).toBeVisible();
 
   // The session survives a reload (stored sealed); no password asked.

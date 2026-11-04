@@ -11,7 +11,7 @@ import { promoteView } from "../../../sync/discovery/api";
 import { dayText, rankText, TIER_TEXT } from "../../../sync/discovery/promote";
 import { DISCOVERY_LIMITS, unlistedText } from "../../../sync/discovery/rules";
 import { useLoad } from "../useLoad";
-import { Card, ErrorLine } from "../WorkspaceView";
+import { Card, ErrorLine } from "../../components/SettingsCard";
 import { BoostCards } from "./BoostCards";
 import { PromotedRowCard } from "./PromotedRowCard";
 import { type PromoteBuy, usePromoteBuy } from "./usePromoteBuy";

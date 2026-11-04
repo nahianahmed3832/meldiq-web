@@ -15,7 +15,7 @@ import { rolesOverview } from "../../../sync/roles";
 import { Toggle } from "../../components/Toggle";
 import { BotField } from "../../workspace/bots/BotParts";
 import { useLoad } from "../../workspace/useLoad";
-import { Card, ErrorLine } from "../../workspace/WorkspaceView";
+import { Card, ErrorLine } from "../../components/SettingsCard";
 import { categoriesOf, panelChannels } from "../panelData";
 import { OpenTicketsList } from "./OpenTicketsList";
 import { PanelEditor } from "./PanelEditor";

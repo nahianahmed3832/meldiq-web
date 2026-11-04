@@ -9,7 +9,7 @@ import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine } from "../../application/orbit";
 import { setCommunityTag } from "../../sync/workspaces";
 import { WornTagChip } from "../people/NameStyle";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 const TAG = /^[A-Z0-9]{2,4}$/;
 /**
  * Community settings › Appearance › Tag (API 0.46.0): 2 to 4 letters or digits members may wear beside their names

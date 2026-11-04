@@ -14,7 +14,7 @@ import { Toggle } from "../components/Toggle";
 import { untilWhen } from "../format";
 import { SecurityPage } from "./ModerationPages";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 interface ProfileSafetyProps {
   detail: OrgAdminDetail;
   /** Opened from an old Security actions link: scroll here. */

@@ -1,3 +1,4 @@
+import { confirmAction } from "../components/ConfirmationDialog";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -138,7 +139,7 @@ export function DecorationPicker({ me, photoRev, current, onPick }: DecorationPi
       s.status === "approved"
         ? uiText("settings.interface.take_value0_out_of_the_catalog_everyone_wearing_it_goes_back_to_n_7ff9363", { value0: s.name })
         : uiText("settings.interface.withdraw_value0_7a1e4d1", { value0: s.name });
-    if (!window.confirm(what)) return;
+    if (!(await confirmAction(what))) return;
     setError(null);
     try {
       await withdrawDecoration(engine, s.id);

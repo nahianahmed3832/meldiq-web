@@ -7,7 +7,7 @@ import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine } from "../../application/orbit";
 import { setGuestPolicy } from "../../sync/workspaceC5";
 import { useAction } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /** Guests (android round 7 C5): allowed or not, and the longest a guest may stay. A shorter maximum brings end dates forward. */
 export function GuestPolicyCard({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: () => void }) {
   useLocaleRender();

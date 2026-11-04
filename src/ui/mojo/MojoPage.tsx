@@ -93,7 +93,7 @@ export function MojoPage() {
     const price = planPrice(catalog, p.key);
     const current = me.plan === p.key;
     if (p.key === "free") return { label: current ? uiText("billing.interface.your_plan_d9ab76c") : uiText("billing.interface.always_free_0a635c3"), kind: "secondary", disabled: true };
-    if (current && paid && billing?.provider === "paypal")
+    if (current && paid)
       return {
         get label() {
           return uiText("billing.interface.manage_subscription_9041c6a");
@@ -101,13 +101,6 @@ export function MojoPage() {
         kind: "secondary",
         disabled: false,
         onClick: () => navigate({ section: "settings", settingsPage: "billing" }),
-      };
-    if (current && paid)
-      return {
-        label: busy === "portal" ? uiText("organization.interface.opening_c926c2c") : uiText("billing.interface.manage_subscription_9041c6a"),
-        kind: "secondary",
-        disabled: busy !== null || offline,
-        onClick: () => void open("portal", () => engine.mojo.portal()),
       };
     if (current && billing?.provider === "paypal" && price.onSale)
       return {

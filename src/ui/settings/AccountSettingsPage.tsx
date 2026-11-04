@@ -2,25 +2,22 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { ConnectedAccountsCard } from "./ConnectedAccountsCard";
 import { MigrationPreviewCard } from "./MigrationPreviewCard";
-import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
+import { KeyRound, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { AccountApi } from "../../auth/accountApi";
 import { canDeleteAccount, type DeletionProblem, deletionProblem, deletionProblemText } from "../../auth/deleteAccount";
 import { PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
 import { deleteAccount } from "../../sync/account";
-import { relative } from "../format";
-import { useAction, useLoad } from "../workspace/useLoad";
+import { useAction } from "../workspace/useLoad";
 import { KeyBackupCard } from "./KeyBackupCard";
 import { PasskeysCard } from "./PasskeysCard";
 import { RecoveryCodesCard } from "./RecoveryCodesCard";
 import { AccountOverview } from "./AccountOverview";
 import { StandingCard, TwoStepCard } from "./AccountSafetyCards";
-import { BugReportsCard, DataExportCard, LogOutEverywhereCard } from "./AccountExtrasCards";
+import { DataExportCard } from "./AccountExtrasCards";
 import { CreatorVerificationCard } from "./CreatorVerificationCard";
-import { LanguagePreferenceCard } from "../components/LanguagePicker";
 /**
  * The Orbit 2.0 account (docs/ORBIT_2_ARCHITECTURE §2): its email, the password, and where it's signed in. A browser
  * linked before 2.0 has no account here and is told how to get one.
@@ -57,11 +54,9 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
   const l10n = useLocalization();
   const engine = useEngine();
   const [email, setEmail] = useState(initialEmail);
-  const twoStep = useOrbit((s) => s.server?.features.includes("two-step") ?? false);
   return (
     <>
       <h1>{l10n("settings.settings_account")}</h1>
-      <LanguagePreferenceCard />
       <AccountOverview
         email={email}
         onEmailChanged={(next) => {
@@ -69,26 +64,13 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
           void engine.accountEmailChanged(next);
         }}
       />
-      <h2 className="settings-group">
-        <Localized k="settings.interface.password_and_authentication_7f183b0" />
-      </h2>
-      <ConnectedAccountsCard />
-      <MigrationPreviewCard />
-      <ChangePassword email={email} />
-      {twoStep && <TwoStepCard />}
-      <PasskeysCard />
-      <KeyBackupCard />
-      <RecoveryCodesCard />
       <StandingCard />
-      <BugReportsCard />
       <CreatorVerificationCard />
       <h2 className="settings-group">
         <Localized k="settings.interface.your_data_ee5ef73" />
       </h2>
       <DataExportCard />
       <h2 className="settings-group">{l10n("settings.account")}</h2>
-      <Sessions accounts={new AccountApi(engine.api)} />
-      <LogOutEverywhereCard onSignedOut={onSignedOut} />
       <DeleteAccount email={email} onDeleted={onSignedOut} />
     </>
   );
@@ -229,50 +211,23 @@ function ChangePassword({ email }: { email: string }) {
     </div>
   );
 }
-function Sessions({ accounts }: { accounts: AccountApi }) {
-  useLocaleRender();
-  const l10n = useLocalization();
-  const [version, setVersion] = useState(0);
-  const list = useLoad(() => accounts.sessions(), [version]);
-  const act = useAction();
+
+/** Authentication has one home under Privacy & Security. */
+export function AuthenticationSettings() {
+  const engine = useEngine();
+  const twoStep = useOrbit((s) => s.server?.features.includes("two-step") ?? false);
+  if (!engine.device.account) return null;
   return (
-    <div className="card" style={{ padding: 20, display: "grid", gap: 10 }}>
-      <h3 style={{ margin: 0 }}>
-        <Localized k="settings.interface.where_you_re_signed_in_4f81119" />
-      </h3>
-      <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-        <Localized k="settings.interface.sessions_of_your_account_signing_one_out_keeps_that_device_s_keys_28a967f" />
-      </p>
-      {(list.error || act.error) && (
-        <div className="banner danger" role="alert">
-          {list.error ?? act.error}
-        </div>
-      )}
-      <ul className="ws-list" aria-label={uiText("settings.interface.sessions_6fa3cbf")} aria-busy={list.loading}>
-        {(list.data ?? []).map((s) => (
-          <li key={s.id} className="ws-row">
-            <Laptop size={18} className="faint" />
-            <span className="lines grow">
-              <span className="ellipsis">{s.label ?? uiText("settings.interface.unnamed_device_6aba593")}</span>
-              <small>
-                <Localized
-                  k="settings.interface.signed_in_0623e9f"
-                  slots={[relative(s.createdAt), s.lastUsedAt ? uiText("settings.interface.last_used_value0_2556352", { value0: relative(s.lastUsedAt) }) : ""]}
-                />
-              </small>
-            </span>
-            {s.current ? (
-              <span className="status-badge status-active">
-                <Localized k="settings.interface.this_browser_101f4d9" />
-              </span>
-            ) : (
-              <button className="btn btn-ghost btn-sm" disabled={act.busy} onClick={() => void act.act(() => accounts.endSession(s.id).then(() => setVersion((v) => v + 1)))}>
-                <LogOut size={14} /> {l10n("auth.signOut")}
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <h2 className="settings-group">
+        <Localized k="settings.interface.password_and_authentication_7f183b0" />
+      </h2>
+      <MigrationPreviewCard />
+      <ChangePassword email={engine.device.account.email} />
+      {twoStep && <TwoStepCard />}
+      <PasskeysCard />
+      <KeyBackupCard />
+      <RecoveryCodesCard />
+    </>
   );
 }

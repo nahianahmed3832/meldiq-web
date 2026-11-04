@@ -58,7 +58,7 @@ test("add a passkey in Settings, sign in with it in another browser, then remove
   await first.getByRole("button", { name: "Open Meldiq" }).click();
   await expect(first.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
 
-  await first.goto(`${WEB}/settings/account`);
+  await first.goto(`${WEB}/settings/security`);
   const card = first.getByLabel("Passkeys", { exact: true });
   await expect(card).toContainText("Forget about your password");
   await card.getByRole("button", { name: "Add a passkey" }).click();

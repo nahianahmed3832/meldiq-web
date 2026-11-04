@@ -9,7 +9,7 @@ import { joinTicket, openTickets } from "../../../sync/posting/api";
 import { ticketError } from "../../../sync/posting/tickets";
 import { relative } from "../../format";
 import { useLoad } from "../../workspace/useLoad";
-import { Card, ErrorLine } from "../../workspace/WorkspaceView";
+import { Card, ErrorLine } from "../../components/SettingsCard";
 import { CloseTicketDialog } from "./TicketDialogs";
 /** Moderators' list of open tickets: who opened each, what about, and Open, Join or Close. */
 export function OpenTicketsList({ orgId }: { orgId: string }) {

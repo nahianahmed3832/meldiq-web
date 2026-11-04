@@ -12,7 +12,7 @@ import { workspaceChannels } from "../../sync/workspaces";
 import { Toggle } from "../components/Toggle";
 import { OnboardingDialog } from "../community/GuideOnboarding";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 import { OnboardingGateCard } from "./OnboardingGateCard";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 const MAX_ITEMS = 5;

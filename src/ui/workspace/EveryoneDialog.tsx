@@ -8,7 +8,7 @@ import { type EveryoneDefaults, type RolesOverview, setEveryone } from "../../sy
 import { Dialog } from "../components/Overlay";
 import { PermissionChecklist } from "./RolePermissionsTab";
 import { useAction } from "./useLoad";
-import { ErrorLine } from "./WorkspaceView";
+import { ErrorLine } from "../components/SettingsCard";
 interface EveryoneDialogProps {
   orgId: string;
   overview: RolesOverview;

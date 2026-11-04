@@ -18,7 +18,7 @@ import { requestLobbyEditor } from "../lobby/editorRequest";
 import { ChannelPicker, FaqEditor } from "../lobby/fieldEditors";
 import { toLobbyChannel } from "../lobby/lobbyContext";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "./WorkspaceView";
+import { Card, ErrorLine } from "../components/SettingsCard";
 /**
  * Community settings › Lobby (community parity B): whether members see the lobby, its About text, main channels, FAQ
  * and "who runs it". Everything else (look, templates, card order, buttons, the feed) is in the live editor on the
