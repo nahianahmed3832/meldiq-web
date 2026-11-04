@@ -1,0 +1,9 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_web
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  05:32:01
+   Duration  303ms (transform 56ms, setup 79ms, import 43ms, tests 22ms, environment 0ms)
+

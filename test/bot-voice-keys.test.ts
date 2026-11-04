@@ -37,6 +37,6 @@ describe("approved bot media key handoff", () => {
     const pair = await generateEncryptionKeys();
     const request = { botId: "bot", leaseId: "lease", publicKey: toB64(await rawX25519Public(pair.publicKey)), fingerprint: "0".repeat(64), manifestRev: 1, expiresAt: Date.now() + 60_000 };
     await expect(sealBotVoiceKey(request, "call", "channel", toB64(randomBytes(32)))).rejects.toThrow("fingerprint");
-    await expect(sealBotVoiceKey({ ...request, expiresAt: 1 }, "call", "channel", toB64(randomBytes(32)))).rejects.toThrow("Expired");
+    await expect(sealBotVoiceKey({ ...request, expiresAt: 1 }, "call", "channel", toB64(randomBytes(32)))).rejects.toThrow("expired");
   });
 });
