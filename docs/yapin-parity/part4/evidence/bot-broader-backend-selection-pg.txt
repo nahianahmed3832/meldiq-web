@@ -12,7 +12,9 @@
 (node:36626) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 (node:36626) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
-delivery_queue: 5/5   submitted_messages: 5/5   
+
+delivery_queue: 5/5
+submitted_messages: 5/5
 (node:36793) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 (node:36793) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
@@ -71,4 +73,3 @@ AssertionError: expected 401 to be 200 // Object.is equality
       Tests  2 failed | 115 passed | 1 skipped (118)
    Start at  06:44:30
    Duration  363.87s (transform 3.53s, setup 0ms, import 12.82s, tests 347.61s, environment 1ms)
-

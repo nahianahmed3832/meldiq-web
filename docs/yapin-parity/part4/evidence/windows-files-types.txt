@@ -5,4 +5,3 @@
 
 > meldiq-web@0.5.0-beta typecheck
 > tsc -b
-

@@ -143,46 +143,46 @@ node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
 in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
 ✓ 3209 modules transformed.
 rendering chunks...
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/common.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/auth.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/onboarding.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/workspace.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/messaging.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/calls.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/files.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/organization.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/settings.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/notifications.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/billing.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/errors.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/admin.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
 
-[plugin vite:reporter] 
+[plugin vite:reporter]
 (!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/application/accountSwitch.ts is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/application/webPush.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/ui/shell/AccountActions.tsx, dynamic import will not move module into another chunk.
 
 computing gzip size...

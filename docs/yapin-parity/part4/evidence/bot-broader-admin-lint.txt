@@ -1,4 +1,3 @@
 
 > meldiq-admin@1.7.0 lint
 > eslint .
-

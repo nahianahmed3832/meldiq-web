@@ -10,7 +10,9 @@
 (node:38418) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 (node:38418) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
-delivery_queue: 5/5   submitted_messages: 5/5   
+
+delivery_queue: 5/5
+submitted_messages: 5/5
 (node:38611) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 (node:38611) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
@@ -645,4 +647,3 @@ PostgreSQL API parity failure call sites (no request values):
       Tests  1908 passed | 23 skipped (1931)
    Start at  06:59:35
    Duration  827.76s (transform 5.09s, setup 0ms, import 164.88s, tests 632.08s, environment 13ms)
-
