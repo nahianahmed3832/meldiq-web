@@ -78,6 +78,30 @@
       "path": "/v2/bot/channels/{channelId}/messages/bulk-delete"
     },
     {
+      "method": "POST",
+      "path": "/v2/bot/voice"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/voice/{leaseId}/key"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/voice/{leaseId}/heartbeat"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/voice/{leaseId}/connected"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/voice/{leaseId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/calls/{callId}/bot-voice/{leaseId}/key"
+    },
+    {
       "method": "GET",
       "path": "/v1/orgs/{orgId}/partner-application"
     },

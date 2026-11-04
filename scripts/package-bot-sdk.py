@@ -26,7 +26,7 @@ def git(*arguments):
 if git('cat-file', '-t', pin).strip() != b'commit':
     raise SystemExit('The pinned API revision is not a commit')
 files = {}
-sdk = ['README.md', 'javascript/package.json', 'javascript/index.mjs', 'javascript/transport.mjs', 'javascript/gateway.mjs', 'python/meldiq_bot.py', 'examples/commands.mjs', 'examples/commands.py']
+sdk = ['README.md', 'javascript/package.json', 'javascript/index.mjs', 'javascript/transport.mjs', 'javascript/gateway.mjs', 'javascript/voice.mjs', 'python/meldiq_bot.py', 'examples/commands.mjs', 'examples/commands.py', 'examples/voice-listener.mjs']
 for name in sdk:
     files[name] = git('show', f'{pin}:server/sdk/{name}')
 for name in ['openapi.json', 'bot-gateway.schema.json']:

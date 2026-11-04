@@ -2,6 +2,7 @@ import { text as uiText } from "../i18n";
 import { ScreenShareUnavailable } from "./screenShareSupport";
 import { type ApiClient, ApiError } from "../api/client";
 import { type Call, zCallGrant, zCallList, zCallRes } from "../api/schemas";
+import { sealBotVoiceKey } from "./botVoiceKeys";
 import type { Payload } from "../protocol/payload";
 import type { AppState, Store } from "../state/store";
 import { IdentityChangedError } from "../sync/outbox";
@@ -84,6 +85,8 @@ const ERROR_SHOWN_MS = 4000;
  * messages. Without the key it refuses to join; there is no unencrypted fallback (docs/ORBIT_WEB_CALLS.md).
  */
 export class CallManager {
+  private readonly sharedWithBots = new Set<string>();
+  private readonly botKeyRequests = new Map<string, Promise<void>>();
   private readonly keys = new CallKeyRing();
   private readonly pacer: KeyRequestPacer;
   /** Calls this browser already rang, answered, declined or ended: ring recovery never re-rings them. */
@@ -413,6 +416,7 @@ export class CallManager {
     },
   ): Promise<void> {
     const current = call.id === this.state.callId;
+    if (current && call.voiceRoom && event !== "ended") void this.shareBotKeys(call);
     if (current && call.voiceRoom && event !== "ended") this.patch({ voiceRoom: true, hands: call.hands });
     switch (event) {
       case "moderated":
@@ -491,7 +495,37 @@ export class CallManager {
   /** A `call_invite` whose envelope signature proved its sender; [call] is the server's record (null: unknown). */
   onInvite(callId: string, conversationId: string, senderUserId: string, key: string, call: Call | null): KeyVerdict {
     const refused = judgeKey(call, conversationId, senderUserId);
-    return refused ?? this.keys.accept({ callId, conversationId, fromUserId: senderUserId, key });
+    const verdict = refused ?? this.keys.accept({ callId, conversationId, fromUserId: senderUserId, key });
+    if (call && ["accepted", "duplicate"].includes(verdict) && callId === this.state.callId) void this.shareBotKeys(call);
+    return verdict;
+  }
+  private async shareBotKeys(call: Call): Promise<void> {
+    const key = this.keys.get(call.id);
+    if (
+      !key ||
+      !call.voiceRoom ||
+      call.state !== "ACTIVE" ||
+      call.id !== this.state.callId ||
+      !call.participants?.some((participant) => participant.userId === this.host.me.userId && participant.deviceId === this.host.me.deviceId)
+    )
+      return;
+    for (const request of call.botVoice ?? []) {
+      if (request.expiresAt <= this.now() || this.sharedWithBots.has(request.leaseId) || this.botKeyRequests.has(request.leaseId)) continue;
+      const operation = (async () => {
+        const packet = await sealBotVoiceKey(request, call.id, call.conversationId, key.key);
+        if (call.id !== this.state.callId) return;
+        await this.host.api.call("POST", `/v1/calls/${encodeURIComponent(call.id)}/bot-voice/${encodeURIComponent(request.leaseId)}/key`, { body: packet });
+        this.sharedWithBots.add(request.leaseId);
+        while (this.sharedWithBots.size > 128) this.sharedWithBots.delete(this.sharedWithBots.values().next().value!);
+      })()
+        .catch(() => {
+          /* Current lease heartbeat reannounces an unanswered request for a bounded retry. */
+        })
+        .finally(() => {
+          this.botKeyRequests.delete(request.leaseId);
+        });
+      this.botKeyRequests.set(request.leaseId, operation);
+    }
   }
   /**
    * A late joiner asks for a call's key: this account answers as the call's creator, or in a voice room while connected
@@ -698,6 +732,8 @@ export class CallManager {
   }
   // ───────────────────────── ending ─────────────────────────
   private finish(reason: string, notifyServer: boolean): void {
+    this.sharedWithBots.clear();
+    this.botKeyRequests.clear();
     const s = this.state;
     if (s.phase === "idle" || s.phase === "ended") return;
     this.markHandled(s.callId);

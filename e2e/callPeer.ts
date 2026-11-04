@@ -52,13 +52,17 @@ export class NativeMedia {
   private timer: ReturnType<typeof setInterval> | undefined;
 
   private constructor(private readonly room: any) {}
+  get isConnected(): boolean {
+    return this.room.isConnected;
+  }
 
-  static async join(media: { url: string; token: string }, key: string, video: boolean): Promise<NativeMedia> {
+  static async join(media: { url: string; token: string }, key: string, video: boolean, options: { beforePublish?: () => Promise<void> } = {}): Promise<NativeMedia> {
     const lk = await rtc();
     const room = new lk.Room();
     const peer = new NativeMedia(room);
     room.on(lk.RoomEvent.TrackSubscribed, (track: any) => peer.count(lk, track));
     await room.connect(media.url, media.token, { autoSubscribe: true, dynacast: false, encryption: { keyProviderOptions: { sharedKey: new TextEncoder().encode(key) } } });
+    await options.beforePublish?.();
     await peer.publish(lk, video);
     return peer;
   }

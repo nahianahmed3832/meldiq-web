@@ -540,6 +540,15 @@ export const zHistoryPage = z.object({
   more: z.boolean(),
 });
 
+export const zBotVoiceKeyRequest = z.object({
+  leaseId: z.string().min(1).max(64),
+  botId: z.string().min(1).max(64),
+  publicKey: z.string().regex(/^[A-Za-z0-9+/]{43}=$/),
+  fingerprint: z.string().regex(/^[a-f0-9]{64}$/),
+  manifestRev: z.number().int().positive(),
+  expiresAt: z.number().int().positive(),
+});
+export type BotVoiceKeyRequest = z.infer<typeof zBotVoiceKeyRequest>;
 export const zCall = z.object({
   id: z.string(),
   conversationId: z.string(),
@@ -571,6 +580,7 @@ export const zCall = z.object({
   voiceRoom: z.boolean().default(false),
   /** Voice rooms: who raised a hand, in order. */
   hands: z.array(z.string()).max(500).default([]),
+  botVoice: z.array(zBotVoiceKeyRequest).max(128).optional(),
   /** Live calls: people sharing their screen now, from the media server (servers from 2026-10-26 send it). */
   sharing: z.array(z.string()).max(500).default([]),
 });

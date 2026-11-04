@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-11-04T21:24:19.477960+00:00",
+  "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+  "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9",
+  "status": "existing active native community voice preview; broader platform and coordinated release still active",
+  "api": {
+    "nativeBotRegression": {
+      "files": 11,
+      "passed": 70
+    },
+    "administrationAndPolicy": {
+      "files": 3,
+      "passed": 16
+    },
+    "countsOverlap": true,
+    "typecheckExitCode": 0,
+    "cursorTestCorrection": "Opaque cursors can renew after a successful empty batch; assert the last successful checkpoint is retained and the failed event replays from the final cursor."
+  },
+  "web": {
+    "files": 149,
+    "passed": 996,
+    "skipped": 1,
+    "typecheckExitCode": 0,
+    "lintExitCode": 0,
+    "buildExitCode": 0,
+    "buildScope": "test-linking export; normal release export remains pending"
+  },
+  "browser": {
+    "passed": 8,
+    "flows": [
+      "pinned SDK download/guide/SHA-256",
+      "real encrypted native bot audio and observed SFU disconnection after revocation"
+    ],
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width"
+    ],
+    "screenshotsReviewed": [
+      "chromium",
+      "phone-width"
+    ]
+  },
+  "database": {
+    "scope": "fresh disposable loopback PostgreSQL; hosted Auth/Realtime stubs",
+    "migrations": 34,
+    "newMigration": "20261105003400_bot_media_evictions.sql",
+    "privateMetadataOnly": true
+  },
+  "sdk": {
+    "mode": "package",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "files": 12,
+    "bytes": 234283,
+    "sha256": "b5fb45f33467a67ae843ae2ad6f1e684cc6dc8f8ff9b020339cb35dec7b976f7"
+  },
+  "remaining": [
+    "bot initiation of empty voice rooms",
+    "Android and Windows encrypted key handoff/integration",
+    "remaining native adapter and event variants",
+    "bot attachment pipeline",
+    "capacity/performance and disaster restore",
+    "legal acceptance ledger",
+    "full coordinated staging and 568-row register reconciliation"
+  ],
+  "physicalDevices": "pending by explicit owner choice",
+  "production": "not deployed"
+}

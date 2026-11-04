@@ -20,7 +20,9 @@ test("the developer screen downloads the exact pinned first-party SDK and guide"
     expect(manifestResponse.ok()).toBe(true);
     const manifest = await manifestResponse.json();
     expect(manifest.apiCommit).toBe((await fs.readFile("test/contract-source.txt", "utf8")).trim());
-    expect(manifest.files).toHaveLength(10);
+    expect(manifest.files).toHaveLength(12);
+    expect(manifest.files.map((file: { path: string }) => file.path)).toContain("javascript/voice.mjs");
+    expect(manifest.files.map((file: { path: string }) => file.path)).toContain("examples/voice-listener.mjs");
     const [download] = await Promise.all([page.waitForEvent("download"), help.getByRole("link", { name: "Download · JavaScript / Python", exact: true }).click()]);
     expect(await download.failure()).toBeNull();
     expect(download.suggestedFilename()).toBe("meldiq-bot-sdk-preview.zip");

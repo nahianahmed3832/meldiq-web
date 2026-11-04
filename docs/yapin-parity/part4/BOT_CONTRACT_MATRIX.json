@@ -11,7 +11,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -27,7 +27,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -43,7 +43,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -59,7 +59,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -75,7 +75,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -91,7 +91,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -107,7 +107,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -122,7 +122,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -137,7 +137,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -152,7 +152,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -164,11 +164,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-012",
@@ -179,11 +181,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-013",
@@ -194,11 +198,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-014",
@@ -209,11 +215,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-015",
@@ -224,11 +232,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-016",
@@ -239,11 +249,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-017",
@@ -254,11 +266,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-018",
@@ -272,7 +286,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -284,11 +298,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-020",
@@ -299,11 +315,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-021",
@@ -314,11 +332,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-022",
@@ -329,11 +349,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-023",
@@ -347,7 +369,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -362,7 +384,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -374,11 +396,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-026",
@@ -389,11 +413,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Validated-media controller adapter exists; complete bot-authenticated upload and ownership workflow is still pending."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-027",
@@ -404,11 +430,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-028",
@@ -419,11 +447,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-029",
@@ -437,7 +467,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -452,7 +482,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -467,7 +497,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -484,7 +514,7 @@
       "part4/evidence/bot-components-sdk-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -499,7 +529,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -514,7 +544,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -529,7 +559,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -544,7 +574,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -559,7 +589,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -574,7 +604,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -589,7 +619,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -604,7 +634,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -619,7 +649,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -631,11 +661,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-043",
@@ -646,11 +678,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-044",
@@ -661,11 +695,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-045",
@@ -676,11 +712,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-046",
@@ -691,11 +729,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-047",
@@ -706,11 +746,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-048",
@@ -721,11 +763,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-049",
@@ -736,11 +780,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-050",
@@ -751,11 +797,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-051",
@@ -766,11 +814,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-052",
@@ -781,11 +831,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-053",
@@ -796,11 +848,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-054",
@@ -811,11 +865,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-055",
@@ -826,11 +882,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-056",
@@ -841,11 +899,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-057",
@@ -856,11 +916,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-058",
@@ -874,7 +936,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -886,11 +948,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-060",
@@ -904,7 +968,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -916,11 +980,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-062",
@@ -931,11 +997,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-063",
@@ -949,7 +1017,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -963,7 +1031,7 @@
       "part4/evidence/bot-dm-guard-final-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -978,7 +1046,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -992,7 +1060,7 @@
       "part4/evidence/bot-developer-current-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1006,7 +1074,7 @@
       "part4/evidence/bot-developer-current-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1018,7 +1086,7 @@
     "source": "",
     "evidence": [],
     "disposition": "APPROVED_DEFERRED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Prior explicit owner decision retains disconnect-only behavior; destination moves await destination/consent rules."
   },
   {
@@ -1033,32 +1101,40 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
     "id": "YAP-API-070",
     "reference": "POST /servers/{id}/voice/join",
     "verification": "UNVERIFIED_DOCS",
-    "nativeEquivalent": null,
-    "scope": "Active implementation. Bot-generated public X25519 key configuration, fingerprint display and exact-manifest manager review are implemented/tested. Media lease endpoints, encrypted key handoff, SFU participation and native-client qualification are not yet accepted; this row is not implemented by the key foundation alone.",
-    "source": "",
-    "evidence": [],
-    "disposition": "NOT_STARTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Not yet implemented/qualified."
+    "nativeEquivalent": "POST /v2/bot/voice",
+    "scope": "Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work.",
+    "source": "server/src/modules/bots/voice.ts; server/src/modules/calls/botMedia.ts; server/sdk/javascript/voice.mjs; Web src/call/botVoiceKeys.ts",
+    "evidence": [
+      "part4/evidence/bot-voice-platform-pg-final.txt",
+      "part4/evidence/bot-voice-sdk-browser-final.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real Chromium/Firefox/WebKit/phone-width encrypted native RTC audio and actual media disconnection after revocation pass. Control-plane races, expiry, restart/orphan cleanup, RLS and failed removal retry pass. Physical-device and complete platform acceptance remain pending."
   },
   {
     "id": "YAP-API-071",
     "reference": "POST /servers/{id}/voice/leave",
     "verification": "UNVERIFIED_DOCS",
-    "nativeEquivalent": null,
-    "scope": "Active implementation. Bot-generated public X25519 key configuration, fingerprint display and exact-manifest manager review are implemented/tested. Media lease endpoints, encrypted key handoff, SFU participation and native-client qualification are not yet accepted; this row is not implemented by the key foundation alone.",
-    "source": "",
-    "evidence": [],
-    "disposition": "NOT_STARTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Not yet implemented/qualified."
+    "nativeEquivalent": "DELETE /v2/bot/voice/:leaseId",
+    "scope": "Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work.",
+    "source": "server/src/modules/bots/voice.ts; server/src/modules/calls/botMedia.ts; server/sdk/javascript/voice.mjs; Web src/call/botVoiceKeys.ts",
+    "evidence": [
+      "part4/evidence/bot-voice-platform-pg-final.txt",
+      "part4/evidence/bot-voice-sdk-browser-final.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real Chromium/Firefox/WebKit/phone-width encrypted native RTC audio and actual media disconnection after revocation pass. Control-plane races, expiry, restart/orphan cleanup, RLS and failed removal retry pass. Physical-device and complete platform acceptance remain pending."
   },
   {
     "id": "YAP-API-072",
@@ -1069,11 +1145,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-073",
@@ -1084,11 +1162,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-074",
@@ -1101,7 +1181,7 @@
       "part4/evidence/bot-developer-current-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1116,7 +1196,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1128,11 +1208,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-BOTEVENT-001",
@@ -1146,7 +1228,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1160,7 +1242,7 @@
       "part4/evidence/bot-dm-guard-final-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1175,7 +1257,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1190,7 +1272,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1205,7 +1287,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1220,7 +1302,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1235,7 +1317,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1250,7 +1332,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1265,7 +1347,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1281,7 +1363,7 @@
       "part4/evidence/bot-components-browser-first.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real PostgreSQL privacy, concurrent retry/capacity, revocation, block/unblock, Unicode, offline retention and native-policy cases passed. Real browser workflow passed in Chromium/Firefox/WebKit/phone-width; phone-width is not a physical device."
   },
   {
@@ -1296,7 +1378,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1311,7 +1393,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1325,7 +1407,7 @@
       "part4/evidence/bot-developer-current-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1340,7 +1422,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1355,7 +1437,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1370,7 +1452,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1385,7 +1467,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1400,7 +1482,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1415,7 +1497,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1430,7 +1512,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1445,7 +1527,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1460,7 +1542,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1475,7 +1557,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   }
 ]

@@ -1,4 +1,5 @@
 import { useLocaleRender } from "../../i18n/Localized";
+import { BotTag } from "../components/BotTag";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
@@ -225,6 +226,7 @@ function Tiles({ call, ended }: { call: CallUiState; ended: boolean }) {
 }
 function Tile({ p, hand, compact = false }: { p: CallParticipantView; hand: boolean; compact?: boolean }) {
   useLocaleRender();
+  const isBot = useOrbit((state) => state.users[p.userId]?.bot ?? false);
   const engine = useEngine();
   const video = useRef<HTMLVideoElement>(null);
   const epoch = useOrbit((s) => s.call.mediaEpoch);
@@ -249,6 +251,7 @@ function Tile({ p, hand, compact = false }: { p: CallParticipantView; hand: bool
         {p.e2eeProblem && <ShieldAlert size={13} aria-hidden="true" />}
         {p.connectionWeak && <WifiOff size={13} aria-hidden="true" />}
         <span className="ellipsis">{name}</span>
+        {isBot && <BotTag />}
       </figcaption>
     </figure>
   );
