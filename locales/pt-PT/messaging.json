@@ -750,5 +750,10 @@
     "note": "Nota (opcional)",
     "privacy": "Só o destinatário pode ler esta nota. É eliminada quando o pedido termina."
   },
-  "reportAlreadySent": "Esta denúncia já foi recebida."
+  "reportAlreadySent": "Esta denúncia já foi recebida.",
+  "botDm": {
+    "notice": "Este bot e o seu programador podem ler as mensagens desta conversa.",
+    "allow": "Permitir mensagens do bot",
+    "restart": "Desativar o acesso ou bloquear o bot interrompe as mensagens. Ao ativar novamente, é iniciada uma nova conversa."
+  }
 }

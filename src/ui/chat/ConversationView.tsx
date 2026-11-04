@@ -160,7 +160,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           );
         })()}
         {/* Calls in a community happen in its voice rooms; a text channel has none to start (android round 7). */}
-        {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
+        {c.type !== "CHANNEL" && !c.request && !c.members?.some((member) => member.bot) && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
         {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
         {c.type === "CHANNEL" && !showVoice && <ChannelBell c={c} />}
         {/* Community parity C: a ticket's Close (and a moderator's Join). */}

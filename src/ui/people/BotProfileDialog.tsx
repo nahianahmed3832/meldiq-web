@@ -6,11 +6,14 @@ import type { Member } from "../../api/schemas";
 import { Dialog } from "../components/Overlay";
 import { StyledName } from "./NameStyle";
 import { StyledAvatar } from "./ProfileStyle";
+import { useOrbit } from "../../application/orbit";
+import { BotDirectMessages } from "./BotDirectMessages";
 type BotIdentity = Pick<Member, "id" | "displayName" | "avatarColor"> & Partial<Pick<Member, "photoRev" | "avatarMedia" | "profileStyle" | "tag" | "mojo" | "statusText" | "statusEmoji">>;
-/** Bot accounts have a community identity; they do not use the human profile or direct-message API. */
+/** Bot profiles use their native identity and personal consent controls. */
 export function BotProfileDialog({ bot, onClose }: { bot: BotIdentity; onClose: () => void }) {
   useLocaleRender();
   const l10n = useLocalization();
+  const direct = useOrbit((state) => state.server?.features.includes("bot-direct-messages") ?? false);
   const status = [bot.statusEmoji, bot.statusText].filter(Boolean).join(" ");
   return (
     <Dialog
@@ -47,6 +50,7 @@ export function BotProfileDialog({ bot, onClose }: { bot: BotIdentity; onClose: 
         <p className="faint">
           <Localized k="files.interface.find_this_bot_s_messages_and_supported_commands_in_your_community_7d13528" />
         </p>
+        {direct && <BotDirectMessages key={bot.id} botId={bot.id} onClose={onClose} />}
       </div>
     </Dialog>
   );

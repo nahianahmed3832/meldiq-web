@@ -750,5 +750,10 @@
     "note": "Notitie (optioneel)",
     "privacy": "Alleen de ontvanger kan deze notitie lezen. Ze wordt verwijderd wanneer het verzoek eindigt."
   },
-  "reportAlreadySent": "Deze melding is al ontvangen."
+  "reportAlreadySent": "Deze melding is al ontvangen.",
+  "botDm": {
+    "notice": "Deze bot en de ontwikkelaar kunnen berichten in deze chat lezen.",
+    "allow": "Botberichten toestaan",
+    "restart": "Toegang uitschakelen of de bot blokkeren stopt de berichten. Opnieuw inschakelen start een nieuwe chat."
+  }
 }

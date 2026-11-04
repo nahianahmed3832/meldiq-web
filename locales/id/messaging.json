@@ -750,5 +750,10 @@
     "note": "Catatan (opsional)",
     "privacy": "Hanya penerima yang dapat membaca catatan ini. Catatan dihapus saat permintaan berakhir."
   },
-  "reportAlreadySent": "Laporan ini sudah diterima."
+  "reportAlreadySent": "Laporan ini sudah diterima.",
+  "botDm": {
+    "notice": "Bot ini dan pengembangnya dapat membaca pesan dalam percakapan ini.",
+    "allow": "Izinkan pesan bot",
+    "restart": "Menonaktifkan akses atau memblokir bot akan menghentikan pesan. Mengaktifkannya lagi akan memulai percakapan baru."
+  }
 }

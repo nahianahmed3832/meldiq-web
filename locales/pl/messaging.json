@@ -750,5 +750,10 @@
     "note": "Notatka (opcjonalnie)",
     "privacy": "Tylko odbiorca może przeczytać tę notatkę. Zostanie usunięta po zakończeniu prośby."
   },
-  "reportAlreadySent": "To zgłoszenie zostało już odebrane."
+  "reportAlreadySent": "To zgłoszenie zostało już odebrane.",
+  "botDm": {
+    "notice": "Ten bot i jego twórca mogą czytać wiadomości w tym czacie.",
+    "allow": "Zezwól na wiadomości bota",
+    "restart": "Wyłączenie dostępu lub zablokowanie bota zatrzymuje wiadomości. Ponowne włączenie rozpoczyna nowy czat."
+  }
 }

@@ -3,6 +3,34 @@
   "routes": [
     {
       "method": "GET",
+      "path": "/v2/bots/{botId}/direct-messages"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bots/{botId}/direct-messages"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/users/{userId}/dm"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/changelog"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/webhooks"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/orgs/{orgId}/voice"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/events/test"
+    },
+    {
+      "method": "GET",
       "path": "/v1/orgs/{orgId}/bots/{botId}/permission-review"
     },
     {
@@ -2292,6 +2320,14 @@
     {
       "method": "PATCH",
       "path": "/v2/bot/users/me"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/users/me/photo"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/users/me/photo"
     },
     {
       "method": "PUT",

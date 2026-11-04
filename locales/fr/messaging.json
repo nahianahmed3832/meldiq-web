@@ -750,5 +750,10 @@
     "note": "Note (facultatif)",
     "privacy": "Seul le destinataire peut lire cette note. Elle est supprimée à la fin de la demande."
   },
-  "reportAlreadySent": "Ce signalement a déjà été reçu."
+  "reportAlreadySent": "Ce signalement a déjà été reçu.",
+  "botDm": {
+    "notice": "Ce bot et son développeur peuvent lire les messages de cette discussion.",
+    "allow": "Autoriser les messages du bot",
+    "restart": "Désactiver son accès ou bloquer le bot arrête les messages. Le réactiver démarre une nouvelle discussion."
+  }
 }

@@ -750,5 +750,10 @@
     "note": "Note (optional)",
     "privacy": "Only the recipient can read this note. It is deleted when the request ends."
   },
-  "reportAlreadySent": "This report has already been received."
+  "reportAlreadySent": "This report has already been received.",
+  "botDm": {
+    "notice": "This bot and its developer can read messages in this chat.",
+    "allow": "Allow bot messages",
+    "restart": "Turning access off or blocking the bot stops messaging. Enabling it again starts a new chat."
+  }
 }

@@ -750,5 +750,10 @@
     "note": "Notiz (optional)",
     "privacy": "Nur der Empfänger kann diese Notiz lesen. Sie wird gelöscht, wenn die Anfrage endet."
   },
-  "reportAlreadySent": "Diese Meldung wurde bereits empfangen."
+  "reportAlreadySent": "Diese Meldung wurde bereits empfangen.",
+  "botDm": {
+    "notice": "Dieser Bot und sein Entwickler können die Nachrichten in diesem Chat lesen.",
+    "allow": "Bot-Nachrichten erlauben",
+    "restart": "Wenn du den Zugriff deaktivierst oder den Bot blockierst, endet der Nachrichtenaustausch. Erneutes Aktivieren startet einen neuen Chat."
+  }
 }

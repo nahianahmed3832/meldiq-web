@@ -750,5 +750,10 @@
     "note": "Nota (facoltativa)",
     "privacy": "Solo il destinatario può leggere questa nota. Viene eliminata quando la richiesta termina."
   },
-  "reportAlreadySent": "Questa segnalazione è già stata ricevuta."
+  "reportAlreadySent": "Questa segnalazione è già stata ricevuta.",
+  "botDm": {
+    "notice": "Questo bot e il suo sviluppatore possono leggere i messaggi di questa chat.",
+    "allow": "Consenti i messaggi del bot",
+    "restart": "Disattivare l’accesso o bloccare il bot interrompe i messaggi. Riattivarlo avvia una nuova chat."
+  }
 }

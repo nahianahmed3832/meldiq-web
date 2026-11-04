@@ -750,5 +750,10 @@
     "note": "Ghi chú (không bắt buộc)",
     "privacy": "Chỉ người nhận mới có thể đọc ghi chú này. Ghi chú được xóa khi yêu cầu kết thúc."
   },
-  "reportAlreadySent": "Báo cáo này đã được tiếp nhận."
+  "reportAlreadySent": "Báo cáo này đã được tiếp nhận.",
+  "botDm": {
+    "notice": "Bot này và nhà phát triển có thể đọc tin nhắn trong cuộc trò chuyện này.",
+    "allow": "Cho phép tin nhắn từ bot",
+    "restart": "Tắt quyền truy cập hoặc chặn bot sẽ dừng nhắn tin. Bật lại sẽ bắt đầu cuộc trò chuyện mới."
+  }
 }

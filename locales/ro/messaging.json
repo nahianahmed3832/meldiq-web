@@ -750,5 +750,10 @@
     "note": "Notă (opțional)",
     "privacy": "Doar destinatarul poate citi această notă. Este ștearsă când solicitarea se încheie."
   },
-  "reportAlreadySent": "Această raportare a fost deja primită."
+  "reportAlreadySent": "Această raportare a fost deja primită.",
+  "botDm": {
+    "notice": "Acest bot și dezvoltatorul său pot citi mesajele din această conversație.",
+    "allow": "Permite mesajele botului",
+    "restart": "Dezactivarea accesului sau blocarea botului oprește mesajele. Reactivarea începe o conversație nouă."
+  }
 }

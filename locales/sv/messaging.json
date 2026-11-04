@@ -750,5 +750,10 @@
     "note": "Anteckning (valfritt)",
     "privacy": "Endast mottagaren kan läsa anteckningen. Den tas bort när förfrågan avslutas."
   },
-  "reportAlreadySent": "Den här anmälan har redan tagits emot."
+  "reportAlreadySent": "Den här anmälan har redan tagits emot.",
+  "botDm": {
+    "notice": "Den här boten och dess utvecklare kan läsa meddelanden i den här chatten.",
+    "allow": "Tillåt botmeddelanden",
+    "restart": "Om du stänger av åtkomst eller blockerar boten stoppas meddelandena. När du tillåter åtkomst igen startas en ny chatt."
+  }
 }

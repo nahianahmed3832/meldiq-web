@@ -1,0 +1,151 @@
+{
+  "recordedAt": "2026-11-04T18:21:50.225307+00:00",
+  "apiCommit": "beddb059af8a7dae5412496105433e85bd1493dd",
+  "webBase": "3134dbc",
+  "scope": "Native bot SDK/media/retention, inventories, personal DM consent and private replay; source candidate, not production acceptance",
+  "validation": {
+    "sdkMediaRetention": {
+      "files": 5,
+      "passed": 21,
+      "exitCode": 0
+    },
+    "developerInventory": {
+      "files": 4,
+      "passed": 16,
+      "exitCode": 0
+    },
+    "dmBroad": {
+      "files": 11,
+      "passed": 59,
+      "exitCode": 0,
+      "note": "Initial parallel database creation exhausted local PostgreSQL shared lock slots; the unchanged batch passed sequentially."
+    },
+    "dmGuardFollowup": {
+      "files": 4,
+      "passed": 25,
+      "exitCode": 0,
+      "note": "Overlaps broad cases; adds synthetic-account isolation and SDK duplicate-send/call-denial assertions. Do not sum these counts."
+    },
+    "contracts": {
+      "passed": 4,
+      "exitCode": 0
+    },
+    "apiTypecheck": {
+      "exitCode": 0
+    },
+    "webBuild": {
+      "exitCode": 0,
+      "testDeviceLinking": true,
+      "productionArtifact": false
+    },
+    "webUnit": {
+      "files": 147,
+      "passed": 989,
+      "skipped": 1,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "browser": {
+      "passed": 4,
+      "projects": [
+        "chromium",
+        "firefox",
+        "webkit",
+        "phone-width"
+      ],
+      "exitCode": 0,
+      "artifact": "Fresh corrected test-linking export. Harness corrections: general channel, loaded checkbox state, visible message log; no service-worker offline qualification."
+    },
+    "locales": {
+      "languages": 28,
+      "keysPerLanguage": 6299,
+      "structuralErrors": 0,
+      "hardcodedCandidates": 0,
+      "linguisticReview": "pending"
+    },
+    "webLint": {
+      "exitCode": 0
+    }
+  },
+  "stage": {
+    "database": "meldiq_parity_stage_botdm1",
+    "schemaMigrations": 31,
+    "scope": "Disposable loopback PostgreSQL; Auth/Realtime stubs, not hosted-provider proof"
+  },
+  "botContractDisposition": {
+    "IMPLEMENTED_NOT_ACCEPTED": 95,
+    "APPROVED_DEFERRED": 1,
+    "NOT_STARTED": 3
+  },
+  "remainingBotSlices": [
+    "Rich interactive components and interaction events",
+    "Bot voice join/leave and native encrypted-media authority",
+    "Remaining adapter-specific happy paths",
+    "Developer download surface",
+    "Capacity/performance and full release staging"
+  ],
+  "physicalDevices": "pending by owner decision",
+  "production": "unchanged; explicit authorization required only after a fully validated coordinated candidate",
+  "evidence": [
+    {
+      "file": "bot-sdk-media-retention-pg.txt",
+      "sha256": "2c8a1f0f53d762d901a9ee10ae5ccdc5a71d638ad5813190570d3b5c3e76a50b"
+    },
+    {
+      "file": "bot-sdk-typecheck.txt",
+      "sha256": "b776d13ae5e43c7d1d9e323aa81bd4ad2d60d79bf13658761b624c592cf72199"
+    },
+    {
+      "file": "bot-developer-current-pg.txt",
+      "sha256": "4b80a128c7432f0abc9ce31a2315caaf9b930d79ed8e759cb067fe4f6f8363e1"
+    },
+    {
+      "file": "bot-developer-typecheck.txt",
+      "sha256": "b776d13ae5e43c7d1d9e323aa81bd4ad2d60d79bf13658761b624c592cf72199"
+    },
+    {
+      "file": "bot-dm-serial-pg.txt",
+      "sha256": "fa11d217206ac1586e857e2d2f6342b1610126887c9110b9fbd94c95fda1d0c9"
+    },
+    {
+      "file": "bot-dm-guard-final-pg.txt",
+      "sha256": "3572d1e689eb442b19ef4eab17a34699182f4fa85372cd415e99aacc7793611f"
+    },
+    {
+      "file": "bot-dm-final-contracts-pg.txt",
+      "sha256": "caf530c8070f83ebc5c2153c240445d1483ebdefa2655de13fac55130743f78d"
+    },
+    {
+      "file": "bot-dm-final-types.txt",
+      "sha256": "b776d13ae5e43c7d1d9e323aa81bd4ad2d60d79bf13658761b624c592cf72199"
+    },
+    {
+      "file": "bot-dm-web-build-corrected.txt",
+      "sha256": "8e563321147eb8058a2d8431f526971bdba2f7fbd6030aaa93921f8d8dd93ffb"
+    },
+    {
+      "file": "bot-dm-web-unit-results.json",
+      "sha256": "ca5c36a98ed8d1a07b1c9fcf2ee88c22fcbbf4e5b9cae14258ac994657dd96cb"
+    },
+    {
+      "file": "bot-dm-web-unit.txt",
+      "sha256": "478f95b25fdf97cf223ba6e659326d3b93a477590deec6a8b9c6f9ad583b295f"
+    },
+    {
+      "file": "bot-dm-locales.txt",
+      "sha256": "8e7df3a0f7d1f82bec4a5dd49fe72083cc447947dd98ec1bed5889e48bfd0cde"
+    },
+    {
+      "file": "bot-dm-browser-qualified.txt",
+      "sha256": "f67d6ff1e000e4ca749d44c295c1961bd5020c1e814cb2653c442aff180be8e0"
+    },
+    {
+      "file": "bot-dm-stage-prep.json",
+      "sha256": "44b8b4aba7fb8c2a20d708c1a99569c14046db32e474ce3d971c4e5f6a68454e"
+    },
+    {
+      "file": "bot-dm-web-contract-sync.txt",
+      "sha256": "fd5bd3648f13884618b1a59aaabd3f4189535ce81fe4ec53394e8621f05ab4a5"
+    }
+  ]
+}
