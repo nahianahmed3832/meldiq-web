@@ -68,8 +68,8 @@ test("official bots: turn on, rename, set up, test, and see them work", async ({
   const levels = page.getByRole("dialog", { name: "Levels" });
   await levels.getByRole("switch", { name: "Levels on" }).click();
   await expect(levels.getByRole("radio", { name: "1.5×" })).toBeDisabled();
-  await levels.getByRole("button", { name: /Get Bots\+/ }).click();
-  await expect(levels.getByText("Payments for Bots+ aren't set up yet. Coming soon.")).toBeVisible();
+  await expect(levels.getByRole("button", { name: /Get Bots\+/ })).toBeDisabled();
+  await expect(levels.getByText("Bots+ checkout is not available yet.")).toBeVisible();
   await levels.getByRole("group", { name: /XP boost/ }).scrollIntoViewIfNeeded();
   await shot(page, "d-levels-plus-locked");
   await levels.getByRole("button", { name: "Close" }).click();

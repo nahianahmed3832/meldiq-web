@@ -197,22 +197,23 @@ export class CallManager {
     if (!this.state.voiceRoom) void this.host.recordCall(callId, conversationId, video).catch(() => undefined);
     return key;
   }
-  /** Opens the devices first: this is when the browser asks. Placing a call needs the microphone; answering doesn't. */
+  /** Capture follows the selected join policy before any track can be published. */
   private async prepare(gen: number, session: MediaSession, video: boolean, needMicrophone: boolean): Promise<void> {
     const listenOnly = this.state.listenOnly;
     this.patch({ askingPermission: true });
     const prefs = this.opts.callPrefs?.();
+    const microphone = !listenOnly && !prefs?.joinMuted && !prefs?.joinDeafened && !prefs?.pushToTalk;
     const devices = await session.prepare(video, {
       noiseReduction: prefs?.noiseReduction ?? true,
       // Only what Settings › Voice & Audio changed from the defaults.
       ...(prefs?.echoCancellation === false ? { echoCancellation: false } : {}),
       ...(prefs?.autoGain !== undefined ? { autoGain: prefs.autoGain } : {}),
       ...(prefs?.microphoneId ? { microphoneId: prefs.microphoneId } : {}),
-      microphone: !listenOnly,
+      microphone,
     });
     this.check(gen);
-    this.patch({ askingPermission: false, devices, micOn: !listenOnly && !devices.microphone, cameraOn: video && !devices.camera });
-    if (needMicrophone && !listenOnly && devices.microphone) throw new CallError(CallFailure.device("microphone", devices.microphone));
+    this.patch({ askingPermission: false, devices, micOn: microphone && !devices.microphone, cameraOn: video && !devices.camera });
+    if (needMicrophone && microphone && devices.microphone) throw new CallError(CallFailure.device("microphone", devices.microphone));
   }
   /** The key arrives as an encrypted control message, possibly after the ring; late joiners ask the creator (T5.3). */
   private async waitForKey(gen: number, callId: string): Promise<string> {
@@ -277,7 +278,11 @@ export class CallManager {
       security: (security) => live() && this.patch({ security }),
       flow: (media, path) => live() && this.patch({ media, path: path ?? this.state.path }),
       latency: (latencyMs) => live() && this.patch({ latencyMs }),
-      reconnecting: () => live() && this.patch({ phase: "reconnecting", latencyMs: null }),
+      reconnecting: () => {
+        if (!live()) return;
+        this.patch({ phase: "reconnecting", latencyMs: null });
+        void this.pushToTalk(false);
+      },
       reconnected: () => live() && this.patch({ phase: this.settledPhase() }),
       disconnected: (reason) => live() && this.onDisconnected(gen, reason),
       remoteJoined: () => live() && this.onRemoteJoined(),
@@ -365,10 +370,21 @@ export class CallManager {
       return false;
     }
     this.check(gen);
-    const { micOn, cameraOn } = this.state;
+    const { cameraOn } = this.state;
+    const prefs = this.opts.callPrefs?.();
+    const micOn = this.state.micOn && !this.state.listenOnly && !this.state.deafened && !prefs?.pushToTalk;
     const session = this.newSession(gen);
     try {
-      this.patch({ devices: await session.prepare(cameraOn) });
+      this.patch({
+        devices: await session.prepare(cameraOn, {
+          microphone: micOn,
+          noiseReduction: prefs?.noiseReduction ?? true,
+          ...(prefs?.echoCancellation === false ? { echoCancellation: false } : {}),
+          ...(prefs?.autoGain !== undefined ? { autoGain: prefs.autoGain } : {}),
+          ...(prefs?.microphoneId ? { microphoneId: prefs.microphoneId } : {}),
+        }),
+      });
+      if (this.state.deafened) session.setDeafened(true);
       await session.connect(grant, key);
       this.check(gen);
       if (!micOn) await session.setMicrophone(false).catch(() => undefined);
@@ -511,10 +527,23 @@ export class CallManager {
   }
   /** The call whose join preferences (join muted or deafened, push to talk) were applied. */
   private joinPrefsFor: string | null = null;
+  private pttRequested = false;
+  private pttWrites: Promise<void> = Promise.resolve();
   /** Push to talk (Settings › Voice & Audio): the microphone is on only while the key is held, never while deafened. */
   async pushToTalk(down: boolean): Promise<void> {
-    if (!this.session || this.state.listenOnly || this.state.deafened || !this.opts.callPrefs?.().pushToTalk) return;
-    if (down !== this.state.micOn) await this.setDevice("microphone", down).catch(() => undefined);
+    if (down && (!this.opts.callPrefs?.().pushToTalk || this.state.listenOnly || this.state.deafened || this.state.phase === "reconnecting")) return;
+    // A keyup can arrive while getUserMedia is still opening. Queue the release behind that operation.
+    if (!down && !this.pttRequested && !this.opts.callPrefs?.().pushToTalk) return;
+    this.pttRequested = down;
+    const session = this.session;
+    this.pttWrites = this.pttWrites
+      .catch(() => undefined)
+      .then(async () => {
+        if (!session || session !== this.session) return;
+        const on = this.pttRequested && !!this.opts.callPrefs?.().pushToTalk && !this.state.listenOnly && !this.state.deafened && this.state.phase !== "reconnecting";
+        if (on !== this.state.micOn) await this.setDevice("microphone", on);
+      });
+    await this.pttWrites;
   }
   /** The speaker or volume changed in Settings: everyone's sound follows at once. */
   applyOutput(): void {
@@ -578,8 +607,12 @@ export class CallManager {
     const session = this.session;
     const quality = clampShareQuality(wanted, this.state.shareQualities);
     if (!session || !this.state.screenSharing || this.state.shareQuality === quality) return;
-    await session.setShareQuality(quality).catch(() => this.patch({ notice: uiText("calls.interface.the_share_s_quality_couldn_t_be_changed_2ba5a37") }));
-    this.patch({ shareQuality: quality });
+    try {
+      await session.setShareQuality(quality);
+      if (this.session === session && this.state.screenSharing) this.patch({ shareQuality: quality });
+    } catch {
+      if (this.session === session) this.patch({ notice: uiText("calls.interface.the_share_s_quality_couldn_t_be_changed_2ba5a37") });
+    }
   }
   /** Watches the share [key], or goes back to the people (null). Only this browser's view changes. */
   watchShare(key: string | null): void {
@@ -710,6 +743,7 @@ export class CallManager {
     }
   }
   private teardown(): void {
+    this.pttRequested = false;
     clearTimeout(this.peerTimer);
     clearTimeout(this.resetTimer);
     this.peerTimer = undefined;

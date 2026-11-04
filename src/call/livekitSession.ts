@@ -85,8 +85,8 @@ export class LiveKitSession implements MediaSession {
   }
   async prepare(video: boolean, opts: PrepareOptions = {}): Promise<DeviceIssues> {
     // Batch B10: noise reduction and automatic level unless turned off; a listen-only voice channel opens no microphone.
-    const audio = opts.microphone === false ? false : audioProcessing(opts.noiseReduction !== false, opts);
-    this.audioOptions = audio || undefined;
+    this.audioOptions = audioProcessing(opts.noiseReduction !== false, opts);
+    const audio = opts.microphone === false ? false : this.audioOptions;
     if (!audio && !video) return { microphone: null, camera: null };
     const both = await open({ audio, video: video ? CAMERA : false });
     if (!both.issue) this.prepared = both.tracks;

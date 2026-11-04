@@ -24,13 +24,19 @@ export function usePushToTalk(): void {
       if (e.code === pttKey) void engine.calls.pushToTalk(false);
     };
     const release = () => void engine.calls.pushToTalk(false);
+    const visibility = () => {
+      if (document.hidden) release();
+    };
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
     window.addEventListener("blur", release);
+    document.addEventListener("visibilitychange", visibility);
     return () => {
+      release();
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
       window.removeEventListener("blur", release);
+      document.removeEventListener("visibilitychange", visibility);
     };
   }, [engine, pushToTalk, pttKey, inCall]);
 }

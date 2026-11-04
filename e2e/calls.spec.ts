@@ -35,6 +35,62 @@ interface Pair {
   dm: string;
 }
 
+test("Part 4: joining muted captures nothing until explicit unmute", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("orbit.prefs.v1", JSON.stringify({ joinMuted: true }));
+    const original = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    const audit = { captures: 0 };
+    Object.assign(window, { __part4Capture: audit });
+    navigator.mediaDevices.getUserMedia = (...args) => {
+      audit.captures++;
+      return original(...args);
+    };
+  });
+  const { bob } = await setUp(page);
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
+  await page.getByRole("button", { name: "Start a voice call" }).click();
+  const call = await answerCall(bob, false);
+  try {
+    const s = stage(page);
+    await expect(s.getByRole("button", { name: "Unmute", exact: true })).toBeVisible();
+    expect(await page.evaluate(() => (window as unknown as { __part4Capture: { captures: number } }).__part4Capture.captures)).toBe(0);
+    expect(call.media.received.audio.frames).toBe(0);
+    await s.getByRole("button", { name: "Unmute", exact: true }).click();
+    await heardBrowser(call.media);
+    expect(await page.evaluate(() => (window as unknown as { __part4Capture: { captures: number } }).__part4Capture.captures)).toBeGreaterThan(0);
+    await s.getByRole("button", { name: "Hang up" }).click();
+  } finally {
+    await call.media.leave();
+  }
+});
+
+test("Part 4: push-to-talk releases audio when the browser loses focus", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("orbit.prefs.v1", JSON.stringify({ pushToTalk: true, pttKey: "F8" })));
+  const { bob } = await setUp(page);
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
+  await page.getByRole("button", { name: "Start a voice call" }).click();
+  const call = await answerCall(bob, false);
+  try {
+    const s = stage(page);
+    await expect(s.getByRole("button", { name: "Unmute", exact: true })).toBeVisible();
+    expect(call.media.received.audio.frames).toBe(0);
+    await page.keyboard.down("F8");
+    await heardBrowser(call.media);
+    await page.evaluate(() => window.dispatchEvent(new Event("blur")));
+    await expect(s.getByRole("button", { name: "Unmute", exact: true })).toBeVisible();
+    await page.keyboard.up("F8");
+    await s.getByRole("button", { name: "Hang up" }).click();
+  } finally {
+    await call.media.leave();
+  }
+});
+
 /** Alice's phone and Bob, a DM between them, and this page linked to Alice's account. */
 async function setUp(page: Page): Promise<Pair> {
   const alice = await newPhone("alice", "Alice Rahman");

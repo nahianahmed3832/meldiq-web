@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { ApiClient } from "../src/api/client";
-import { CallManager, type CallHost, type CallTarget } from "../src/call/manager";
+import { CallManager, type CallHost, type CallTarget, type CallPrefs } from "../src/call/manager";
 import { audioProcessing, deafenChange, frameShape, micLevel } from "../src/call/rules";
-import { SHARE_QUALITIES, type ShareQuality, shareQualityOf } from "../src/call/shareQuality";
+import { SHARE_QUALITIES, shareQualityOf } from "../src/call/shareQuality";
 import type { CallShareView } from "../src/call/shares";
 import { Store } from "../src/state/store";
 import { MediaRig } from "./support/fakeMedia";
@@ -12,11 +12,7 @@ const call = (id: string) => ({ id, conversationId: "c1", createdBy: "me", video
 
 const posted: string[] = [];
 
-function setup(
-  target: Partial<CallTarget> = {},
-  prefs: { noiseReduction: boolean; shareQuality: ShareQuality; shareAudio: boolean } = { noiseReduction: true, shareQuality: "standard", shareAudio: false },
-  maxScreenShares?: number,
-) {
+function setup(target: Partial<CallTarget> = {}, prefs: CallPrefs = { noiseReduction: true, shareQuality: "standard", shareAudio: false }, maxScreenShares?: number) {
   const rig = new MediaRig();
   const api = {
     json: async (method: string, path: string, schema: { parse(v: unknown): unknown }) => {
@@ -68,6 +64,75 @@ describe("call rules", () => {
 });
 
 describe("call controls", () => {
+  it("keeps the selected share quality when the media adapter rejects a change", async () => {
+    const { calls, rig, host } = setup();
+    await calls.startCall("c1", false);
+    await calls.toggleScreenShare({ quality: "standard", audio: false });
+    rig.last!.setShareQuality = async () => {
+      throw new Error("sender failed");
+    };
+    await calls.setShareQuality("high");
+    expect(host.state.get().call.shareQuality).toBe("standard");
+    expect(host.state.get().call.notice).toBeTruthy();
+    calls.hangup();
+  });
+
+  it.each(["joinMuted", "joinDeafened", "pushToTalk"] as const)("%s prevents microphone capture before connecting", async (policy) => {
+    const { calls, rig, host } = setup({}, { noiseReduction: true, shareQuality: "standard", shareAudio: false, [policy]: true });
+    // A missing microphone must not prevent an intentional silent join.
+    rig.issues.microphone = "denied";
+    await calls.startCall("c1", false);
+    expect(rig.last?.prepareOptions?.microphone).toBe(false);
+    expect(rig.last?.connected).not.toBeNull();
+    expect(rig.last?.mic).toBe(false);
+    expect(host.state.get().call.micOn).toBe(false);
+    calls.hangup();
+  });
+
+  it("a PTT release while microphone access is opening mutes after the pending operation", async () => {
+    const { calls, rig, host } = setup({}, { noiseReduction: true, shareQuality: "standard", shareAudio: false, pushToTalk: true });
+    await calls.startCall("c1", false);
+    const media = rig.last!;
+    let opened!: () => void;
+    let started!: () => void;
+    const opening = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    media.setMicrophone = async (on) => {
+      if (on) {
+        started();
+        await new Promise<void>((resolve) => {
+          opened = resolve;
+        });
+      }
+      media.mic = on;
+    };
+    const down = calls.pushToTalk(true);
+    await opening;
+    const up = calls.pushToTalk(false);
+    opened();
+    await Promise.all([down, up]);
+    expect(media.mic).toBe(false);
+    expect(host.state.get().call.micOn).toBe(false);
+    calls.hangup();
+  });
+
+  it("reconnecting releases PTT and requires a fresh press after reconnect", async () => {
+    const { calls, rig, host } = setup({}, { noiseReduction: true, shareQuality: "standard", shareAudio: false, pushToTalk: true });
+    await calls.startCall("c1", false);
+    await calls.pushToTalk(true);
+    expect(rig.last?.mic).toBe(true);
+    rig.last!.events.reconnecting();
+    await calls.pushToTalk(true);
+    await calls.pushToTalk(false);
+    expect(rig.last?.mic).toBe(false);
+    rig.last!.events.reconnected();
+    expect(host.state.get().call.micOn).toBe(false);
+    await calls.pushToTalk(true);
+    expect(rig.last?.mic).toBe(true);
+    calls.hangup();
+  });
+
   it("deafens and undeafens, restoring the microphone as it was", async () => {
     const { calls, rig, host } = setup();
     await calls.startCall("c1", false);

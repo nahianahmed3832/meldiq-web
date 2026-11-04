@@ -1,6 +1,8 @@
 -- TEST HARNESS ONLY. Minimal Auth/Realtime contracts for plain PostgreSQL integration tests.
 -- This does not run Supabase Auth or a Realtime server and cannot certify their hosted behavior.
 DO $$ BEGIN
+  -- Roles are cluster-wide even though each concurrent harness owns a separate database.
+  PERFORM pg_advisory_xact_lock(hashtext('meldiq_test_bootstrap_roles'));
   IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='anon') THEN CREATE ROLE anon NOLOGIN; END IF;
   IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='authenticated') THEN CREATE ROLE authenticated NOLOGIN; END IF;
   IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='meldiq_api') THEN CREATE ROLE meldiq_api NOLOGIN NOBYPASSRLS; END IF;

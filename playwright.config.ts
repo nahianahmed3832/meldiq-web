@@ -119,7 +119,7 @@ export default defineConfig({
             reuseExistingServer: false,
             timeout: 300_000,
             // The test phones link through the pre-email device sign-in, which release builds leave out (auth/testLinking.ts).
-            env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`, ORBIT_E2E_FORWARD: "1", NEXT_PUBLIC_MELDIQ_TEST_LINKING: "1" },
+            env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`, ORBIT_E2E_FORWARD: "1", NEXT_PUBLIC_MELDIQ_TEST_LINKING: process.env.ORBIT_E2E_TEST_LINKING === "0" ? "0" : "1" },
           },
         ]
       : [
