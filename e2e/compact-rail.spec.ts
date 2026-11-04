@@ -56,6 +56,10 @@ test("compact rail keeps icons, unread badges and daily navigation usable", asyn
   await expect(selected).toHaveAttribute("title", "Makers Guild");
   await expect(rail.locator(".rail-primary")).toHaveCount(0);
   if (!isMobile) {
+    const discoverAction = rail.getByRole("link", { name: "Discover communities", exact: true });
+    await discoverAction.hover();
+    expect(await discoverAction.evaluate((el) => getComputedStyle(el).backgroundImage)).toContain("gradient");
+    await page.mouse.move(800, 200);
     const geometry = await rail.evaluate((el) => {
       const box = el.getBoundingClientRect();
       const side = document.querySelector(".sidebar")!.getBoundingClientRect();

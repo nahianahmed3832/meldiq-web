@@ -59,11 +59,13 @@
   inset-inline-start: calc(-1 * var(--rail-tile-edge));
   background: var(--rail-glow);
 }
+.rail-round {
+  border: 0;
+  background: var(--rail-tile, var(--rail-round));
+}
 .rail-round,
 .rail-round + .rail-round {
   margin-top: 0;
-  border: 0;
-  background: var(--rail-tile, var(--rail-round));
 }
 .rail-round[aria-current="page"] {
   box-shadow: none;
