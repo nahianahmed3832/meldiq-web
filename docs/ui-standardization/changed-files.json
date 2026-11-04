@@ -1,5 +1,13 @@
 [
+  "deploy/ui-standardization/README.md",
+  "deploy/ui-standardization/RELEASE.json",
+  "deploy/ui-standardization/production-receipt.json",
+  "deploy/ui-standardization/public-browser-verification.json",
+  "deploy/ui-standardization/publish.py",
+  "deploy/ui-standardization/rollback.py",
+  "deploy/ui-standardization/smoke.mjs",
   "docs/ui-standardization/DELIVERY.md",
+  "docs/ui-standardization/DEPLOYMENT.md",
   "docs/ui-standardization/INVENTORY.md",
   "docs/ui-standardization/changed-files.json",
   "docs/ui-standardization/evidence/community-mobile.png",

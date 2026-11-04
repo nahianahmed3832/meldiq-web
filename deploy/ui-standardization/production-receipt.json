@@ -1,0 +1,93 @@
+{
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-04T04:42:00.648578+00:00",
+  "sourceCommit": "3cc3c032b973ef9f03b7a2c95593cface27e6f32",
+  "sourceTreeSha256": "1f3393e4e70b05b7a31a72de52bcfc8a942d010f64798c1a4dd96a2c38e2abba",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-no-service-popups-9ffbab9",
+  "webRelease": "/opt/meldiq-web/releases/0.5.0-beta-ui-standardization-3cc3c03",
+  "buildId": "tE7fCsXBrpB0ZN4UpNM1F",
+  "archiveSha256": "2ca7f87e2f7c36125b172ad56dff0b781a30d59ea7470731f26d4904dda6891d",
+  "apiPreserved": true,
+  "apiImageId": "sha256:6fe6ef9beb98aa14d2cc3e264d1392a0e76ba6aefe26ba9029342950f2f67f03",
+  "apiContainerId": "2f2da5b48ecc192a8c0eb18b93531783b3259819065b54b6199b4ab39321a522",
+  "publicConfigPreserved": true,
+  "nginxPreserved": true,
+  "oauthCallbackPreserved": true,
+  "health": {
+    "ok": true,
+    "version": "0.76.1",
+    "time": 1793767320642,
+    "livekit": true,
+    "mongodb": null,
+    "postgres": true,
+    "databaseMode": "supabase",
+    "redis": true
+  },
+  "previousStaticAssetsRetained": true,
+  "verifiedFileCount": 473,
+  "validation": {
+    "unitTests": {
+      "files": 142,
+      "passed": 969,
+      "skipped": 1
+    },
+    "typecheck": "passed",
+    "lint": "passed",
+    "localization": "passed-28-locales",
+    "productionBuild": "passed-test-linking-disabled",
+    "sourceBuildInputs": 1151,
+    "browserRegression": {
+      "passed": 55,
+      "failed": 0,
+      "duration": "7.0m"
+    },
+    "localBrowser": {
+      "status": "passed",
+      "target": "http://127.0.0.1:5399",
+      "testedAt": "2026-11-04T04:38:12.343Z",
+      "results": [
+        {
+          "name": "chromium-desktop",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "buildId": "tE7fCsXBrpB0ZN4UpNM1F",
+          "testLinkingDisabled": true,
+          "reloadPassed": true,
+          "pageErrors": 0,
+          "failedAssets": 0
+        },
+        {
+          "name": "chromium-phone",
+          "viewport": {
+            "width": 393,
+            "height": 852
+          },
+          "buildId": "tE7fCsXBrpB0ZN4UpNM1F",
+          "testLinkingDisabled": true,
+          "reloadPassed": true,
+          "pageErrors": 0,
+          "failedAssets": 0
+        },
+        {
+          "name": "webkit-desktop",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "buildId": "tE7fCsXBrpB0ZN4UpNM1F",
+          "testLinkingDisabled": true,
+          "reloadPassed": true,
+          "pageErrors": 0,
+          "failedAssets": 0
+        }
+      ]
+    },
+    "additionalBrowsers": {
+      "passed": 8,
+      "failed": 0,
+      "projects": ["firefox", "iphone-width"]
+    }
+  }
+}

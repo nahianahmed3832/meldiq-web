@@ -30,9 +30,9 @@ for (const [name, engine, viewport] of [
     assert.equal(await page.locator("#__NEXT_DATA__").evaluate((element) => JSON.parse(element.textContent).buildId), expectedBuildId);
     assert(!(await page.locator("body").innerText()).includes("Link with your phone"), "Test linking must be disabled");
     await page.getByRole("button", { name: "Continue with email", exact: true }).click();
-    await page.locator("input[type=email]").waitFor({ state: "visible" });
-    assert(await page.locator("input[type=email]").isVisible(), "Sign-in email field missing");
-    assert(await page.locator("input[type=password]").isVisible(), "Sign-in password field missing");
+    await page.locator("#si-email").waitFor({ state: "visible" });
+    assert(await page.locator("#si-email").isVisible(), "Sign-in email field missing");
+    assert(await page.locator(".landing-auth input[type=password]").isVisible(), "Sign-in password field missing");
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "Horizontal overflow");
     assert.equal(await page.locator(".service-status-notice").count(), 0);
     await page.reload({ waitUntil: "networkidle" });
