@@ -1,0 +1,83 @@
+[
+  {
+    "path": "screenshots/search-1440.png",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "e3e3ea0cde0fb9d29968cc62c68da82a6356c39aa0e161e43e13229fd92c4f89",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  },
+  {
+    "path": "screenshots/search-412.png",
+    "dimensions": [
+      1082,
+      2202
+    ],
+    "sha256": "cf460e58f35f04287c2f3fcae0ce26f3d63976e17c74e99cef9e12352baf9f21",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  },
+  {
+    "path": "screenshots/editor-phone-preview.png",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "b5d8186536adf762897925770d412a26f4ec51c2b6df553e8126e7675e6e2cd7",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  },
+  {
+    "path": "screenshots/lobby-gaming.png",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "f5b1d21aa8ec5231387fe3d51c014b393b019ba77620e4e54c1bdb40f9e3b1ec",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  },
+  {
+    "path": "screenshots/a-member-read-only.png",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "8d9475242584c1e62361a8c3db53e4c29a646dfb55bb4437c28ccc3123f694fe",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  },
+  {
+    "path": "screenshots/a-role-permissions.png",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "6889c1cac7f2ebea2dfda5317b1dfe55d02d989e820ff16d6b80df6d98fb6d30",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  },
+  {
+    "path": "screenshots/permissions-basic.png",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "e0211c1eb48712f26721f7622db14fb1fc505d6d4f6094d9e896c6262e0e8dc4",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  },
+  {
+    "path": "screenshots/event-preview.png",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "dcf8e3f20b8c3072af9d11c62a477b18ddf317c814428745bda5fd12855e4cd5",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  },
+  {
+    "path": "screenshots/make-a-post.png",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "7cf411bd1b4888b966b9d061503657c64e6077522edc42b854e31081df1f73a3",
+    "environment": "local built-browser synthetic fixture; not production evidence"
+  }
+]

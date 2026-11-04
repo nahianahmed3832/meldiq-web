@@ -1,0 +1,1910 @@
+[
+  {
+    "id": "YAP-SOCIAL-001",
+    "name": "Online and all friends",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Online and all friends implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-002",
+    "name": "Pending requests",
+    "state": "ACCEPTED",
+    "testing": "Controlled API accept/decline/cancel plus browser request acceptance; duplicate accepts, concurrent retries, stable accepted_at and removed-request race pass. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-003",
+    "name": "Blocked users",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Blocked users implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-004",
+    "name": "Find people scope",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Find people scope implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-005",
+    "name": "Find people no-result state",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Find people no-result state implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-006",
+    "name": "Friend request by username",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Friend request by username implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-007",
+    "name": "Friend request note",
+    "state": "DEFERRED_DECISION",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Request payload accepts a user ID or username only. A note composer/retention/privacy contract is not implemented; competitor note submission was not verified. Product approval and authoritative note length/audience/retention are required.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-008",
+    "name": "Suggested people",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Suggested people implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-009",
+    "name": "New direct message",
+    "state": "ACCEPTED",
+    "testing": "Controlled accounts open one DM; blocked/denied contact is rejected server-side; built-browser exchange and server history restoration pass. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-010",
+    "name": "DM privacy choices",
+    "state": "ACCEPTED",
+    "testing": "Connection/shared-community/stranger/request/denied settings are server-enforced in API fixtures; no real users contacted. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-011",
+    "name": "DM safety card",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing DM safety card implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-012",
+    "name": "Create group friend picker",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Create group friend picker implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-013",
+    "name": "Group identity and membership",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Group identity and membership implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-014",
+    "name": "Group-add privacy",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Group-add privacy implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-015",
+    "name": "Pinned DM ordering",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Pinned DM ordering implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-016",
+    "name": "Presence modes",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Presence modes implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-017",
+    "name": "Custom status expiry",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Custom status expiry implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-SOCIAL-018",
+    "name": "Profile comments and likes",
+    "state": "DEFERRED_DECISION",
+    "testing": "API connections_requests, profile_privacy, members_add, group_photo_presence, status_presence and activity_status; browser connection-requests and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Profile comments/likes remain an unverified rollout, with no approved Meldiq visibility, abuse, moderation or retention model. Preserve Part 2 profile-layout privacy; no comments service was invented.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/FriendsView.tsx; src/ui/dialogs; src/sync/social.ts"
+  },
+  {
+    "id": "YAP-MSG-001",
+    "name": "Send text",
+    "state": "ACCEPTED",
+    "testing": "Atomic durable message acknowledgement/deduplication and controlled linked-browser exchanges, rapid sends and reload restoration pass. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-002",
+    "name": "Message length limits",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Message length limits implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-003",
+    "name": "Markdown formatting",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Markdown formatting implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-004",
+    "name": "Masked links and safe destinations",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Masked links and safe destinations implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-005",
+    "name": "Emoji autocomplete",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Emoji autocomplete implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-006",
+    "name": "Typing indicators",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Typing indicators implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-007",
+    "name": "Hover and touch actions",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Hover and touch actions implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-008",
+    "name": "Standard reactions",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Standard reactions implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-009",
+    "name": "Quick reaction set",
+    "state": "DEFERRED_DECISION",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing quick reactions are fixed shortcuts. An editable account-synced quick set has no approved persistence/size contract; expression favorites remain available. Decide this optional extension before implementation.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-010",
+    "name": "Reply and target jump",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Reply and target jump implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-011",
+    "name": "Edit own message",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Edit own message implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-012",
+    "name": "Delete message",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Delete message implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-013",
+    "name": "Forward message",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Forward message implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-014",
+    "name": "Copy message text",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Copy message text implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-015",
+    "name": "Copy message link",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Copy message link implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-016",
+    "name": "Mark unread",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Mark unread implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-017",
+    "name": "Translate message",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing translation entry is retained. External translation-provider availability, consent, failure and cached-result behavior have not been accepted; no provider was configured or contacted for message content.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-018",
+    "name": "Pin message",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Pin message implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-019",
+    "name": "Thread creation",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Thread creation implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-020",
+    "name": "Thread follow and unfollow",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Thread follow and unfollow implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-021",
+    "name": "Thread close lock and delete",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Thread close lock and delete implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-022",
+    "name": "Poll creation",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Poll creation implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-023",
+    "name": "Quiz correct answers",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Quiz correct answers implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-024",
+    "name": "Poll voting and voter visibility",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Poll voting and voter visibility implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-025",
+    "name": "Recent-first history loading",
+    "state": "ACCEPTED",
+    "testing": "Newest bounded 60-item main window is exercised on opening/reopen/reload with browser and PostgreSQL tests. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-026",
+    "name": "Older-history pagination",
+    "state": "ACCEPTED",
+    "testing": "Timestamp-plus-ID cursors, overlapping page de-duplication and held prepend with <=2px reading anchor pass. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-027",
+    "name": "New arrivals while reading",
+    "state": "ACCEPTED",
+    "testing": "Incoming and same-account other-device arrivals preserve active reading, including deferred prepend and late layout growth. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-028",
+    "name": "Jump to latest",
+    "state": "ACCEPTED",
+    "testing": "Jump to latest returns to the newest contiguous window and follows late height growth without requiring scrollend. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-029",
+    "name": "Reload restoration",
+    "state": "ACCEPTED",
+    "testing": "Defined policy is newest on ordinary reopen/reload, retaining an anchor only during active reading; obsolete stored anchors cannot override it. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-030",
+    "name": "Distant message loading",
+    "state": "ACCEPTED",
+    "testing": "Distant search window remains separate from recent history, preserves authority and returns explicitly to latest. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-031",
+    "name": "Long-message expansion",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Long-message expansion implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-032",
+    "name": "Message read and delivery state",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Message read and delivery state implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-MSG-033",
+    "name": "Offline reconnect and retry",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API messaging, server_messages, message_atomic_ack, message_history_cursor, message_collections, community_permissions; Web history-navigation, mark-read-boundary, protocol, polls and threads; browser research-improvements, message-collections, message-extras, server-history and poll-media. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Offline reconnect and retry implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat; src/sync/compose.ts; src/sync/engine.ts; src/realtime/socket.ts"
+  },
+  {
+    "id": "YAP-SEARCH-001",
+    "name": "Keyword search",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Search failures now show a retryable error and preserve the query. The server returns at most 100 text candidates and has no result cursor; exhaustive result pagination remains unimplemented.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-002",
+    "name": "Whole server and channel scope",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Conversation-specific and account-wide text search exist. The inline conversation panel does not supply an exhaustive community-wide, paginated search contract; global authority filtering is fixed and tested.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-003",
+    "name": "Sender filter",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "from: filters loaded/server text candidates locally. Applying sender filtering before server pagination and resolving uncached sender names are not implemented as an exhaustive server filter.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-004",
+    "name": "Mention filter",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Mention activity exists, but the text-search parser has no dedicated mentions: filter. Define the canonical query/mention scope and add server filtering before claiming this combined search requirement.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-005",
+    "name": "Channel filter",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "A conversation ID scopes server search authoritatively. An in: channel selector across a whole community and a complete paginated result contract remain outside the current inline panel.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-006",
+    "name": "Attachment-type filters",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "has:image/video/file/link filters are retained over loaded/server text candidates. Filter-only searches do not fetch all historical candidates; exhaustive server attachment filtering is not implemented.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-007",
+    "name": "Before date",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "before: uses local midnight correctly. Date filtering is still over retrieved/loaded candidates, rather than a server-side paginated range.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-008",
+    "name": "During date",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Implemented during:YYYY-MM-DD as a local half-open calendar day with DST tests. Exhaustive server-side date-range filtering and a translated During chip remain future UI/API work; the literal syntax is in shared help.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-009",
+    "name": "After date",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Fixed after: to advance one calendar day across DST, rather than 24 hours. Exhaustive server-side date-range filtering remains unimplemented.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-010",
+    "name": "Pinned-only search",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Paged Pins is authoritative and independently tested. Combining a pinned-only predicate with arbitrary global text/date/sender search is not implemented in the inline query parser.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-SEARCH-011",
+    "name": "Search-result jump",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API search, server_messages and message_visibility; Web search-query; browser part3-search and research-improvements. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Search-result jump implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/chat/SearchPanel.tsx; src/ui/dialogs/SearchDialog.tsx; src/sync/universalSearch.ts"
+  },
+  {
+    "id": "YAP-COMM-001",
+    "name": "Create a server",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Create a server implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-002",
+    "name": "Server templates",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Server templates implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-003",
+    "name": "Discord structure import",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Discord structure importer is retained. Final human provider consent, source-server permission, preview, partial-failure and real import validation remain unverified; Google/Discord account login is preserved.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-004",
+    "name": "Discovery eligibility",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Discovery eligibility implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-005",
+    "name": "Discovery name topic and tags",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Discovery name topic and tags implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-006",
+    "name": "Join a public community",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Join a public community implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-007",
+    "name": "Server menu",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Server menu implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-008",
+    "name": "Server icon and banner",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing community image endpoints and UI are retained; this part validates integration only. Part 4 must accept original-byte upload, cancellation, invalid media, revocation and native rendering.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-009",
+    "name": "Server name and description",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Server name and description implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-010",
+    "name": "Server tag",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Server tag implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-011",
+    "name": "Server external links",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Server external links implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-012",
+    "name": "Vanity invite eligibility",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Vanity invite eligibility implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-013",
+    "name": "Invitation creation and expiry",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Invitation creation and expiry implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-014",
+    "name": "Server lobby entry",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Server lobby entry implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-015",
+    "name": "Lobby templates and layouts",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby templates and layouts implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-016",
+    "name": "Lobby section editor",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby section editor implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-017",
+    "name": "Lobby responsive preview",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing lobby editor includes responsive preview. Mobile/desktop order mutations, narrow long names and all fallback combinations need dedicated visual acceptance; desktop editor smoke alone does not establish them.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-018",
+    "name": "Community theme",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Community tint and personal hide-community-themes choices are retained and exercised. Cross-theme contrast and every responsive combination remain unaccepted; Meldiq stays the global default.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-019",
+    "name": "Server rules channel",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Server rules channel implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-020",
+    "name": "Ticket availability toggle",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Ticket availability toggle implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-021",
+    "name": "Community onboarding questions",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Community onboarding questions implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-022",
+    "name": "Onboarding starting channel",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Onboarding starting channel implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-023",
+    "name": "Opt-in ping roles",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Opt-in ping roles implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-024",
+    "name": "Per-server nickname",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Nickname authority and profile APIs are tested. Cross-client nickname projection/cache invalidation and all empty/error/length UI cases remain release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-025",
+    "name": "Leave and bulk leave",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing leave/revocation behavior is retained. Bulk-leave selection, owner transfer requirements, partial failure and restoration UX need a dedicated workflow acceptance run.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-026",
+    "name": "Server deletion",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Server deletion implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-027",
+    "name": "Ownership transfer",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing ownership transfer and owner-only hierarchy are retained. Two controlled owners must still accept the full transfer, cancellation, stale revision and old-owner post-transfer UI workflow.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-COMM-028",
+    "name": "Partner application and checklist",
+    "state": "DEFERRED_DECISION",
+    "testing": "API orgs, invites_workspaces, community_settings, community_templates, community_branding, discovery, org_delete and workspace_admin; browser community-controls, community-lobby, discovery-search and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Discovery review is implemented, but a distinct partner eligibility/checklist/reviewer/badge contract is not approved. Do not invent a partner program or issue a badge from UI-only state.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community; src/ui/workspace; src/sync/community.ts"
+  },
+  {
+    "id": "YAP-CHANNEL-001",
+    "name": "Text channel creation",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Text channel creation implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-002",
+    "name": "Voice channel creation",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Channel creation and authority are tested locally; real joining, device permissions, tracks and native call behavior remain Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-003",
+    "name": "Discussion channel creation",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Discussion channel creation implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-004",
+    "name": "Stage channel mode",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Stage/listen-only permission paths exist and are API-tested. Moderator/audience transitions, revoked live publication and physical media acceptance remain Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-005",
+    "name": "Categories",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Categories implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-006",
+    "name": "Channel and category ordering",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Channel and category ordering implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-007",
+    "name": "Uncategorized channel area",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Uncategorized channel area implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-008",
+    "name": "Category inheritance",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Category inheritance implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-009",
+    "name": "Channel permission overrides",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Allow/deny/inherit and member overwrites are tested in the canonical resolver. Final signed media tickets, live tracks and bot actions must pass the same revocation matrix in Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-010",
+    "name": "Channel identity and topic",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Channel identity and topic implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-011",
+    "name": "Slowmode",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Slowmode implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-012",
+    "name": "Channel notification override",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Channel notification override implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-013",
+    "name": "Forum tagged post",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Forum tagged post implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-014",
+    "name": "Forum guidelines and required tags",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Forum guidelines and required tags implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-015",
+    "name": "Forum sort and gallery layout",
+    "state": "DEFERRED_DECISION",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Forum has latest/newest sorting and tag filters. An image-gallery layout is not implemented; decide the approved media layout/pagination policy rather than claiming sort alone closes gallery parity.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-016",
+    "name": "Forum post follow pin lock",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Forum post follow pin lock implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-017",
+    "name": "Voice channel text conversation",
+    "state": "DEFERRED_DECISION",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Voice channels reject ordinary text posting under the current model. An associated text conversation needs a defined identity/access contract with Part 4; do not bypass voice/text permissions to imitate another service.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-CHANNEL-018",
+    "name": "Future per-channel thread settings",
+    "state": "DEFERRED_DECISION",
+    "testing": "API community_channels, channel_access, channel_controls, channel_order, channel_permissions and forum_guidelines; browser community-controls and community-parity-c. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Future competitor thread settings were not verified. Existing thread permissions and per-thread controls remain; no speculative channel settings were added.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelDialogs.tsx; src/ui/chat/ForumView.tsx; src/ui/workspace/ChannelsPage.tsx"
+  },
+  {
+    "id": "YAP-ROLE-001",
+    "name": "Member search and filtering",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API custom_roles, roles, permissions_rules, community_permissions and pronouns_role_hoist; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Member search and filtering implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/RoleEditor.tsx; src/ui/community/PermissionsDialog.tsx; backend organization permission resolver"
+  },
+  {
+    "id": "YAP-ROLE-002",
+    "name": "Bulk member selection",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API custom_roles, roles, permissions_rules, community_permissions and pronouns_role_hoist; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Individual assignment enforces hierarchy on the server. Bulk selection scope, partial failures and stale selection changes need explicit multi-member UX acceptance; no bulk bypass API was added.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/RoleEditor.tsx; src/ui/community/PermissionsDialog.tsx; backend organization permission resolver"
+  },
+  {
+    "id": "YAP-ROLE-003",
+    "name": "Role creation and hierarchy",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API custom_roles, roles, permissions_rules, community_permissions and pronouns_role_hoist; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Role creation and hierarchy implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/RoleEditor.tsx; src/ui/community/PermissionsDialog.tsx; backend organization permission resolver"
+  },
+  {
+    "id": "YAP-ROLE-004",
+    "name": "Role name color and gradient",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API custom_roles, roles, permissions_rules, community_permissions and pronouns_role_hoist; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Role name color and gradient implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/RoleEditor.tsx; src/ui/community/PermissionsDialog.tsx; backend organization permission resolver"
+  },
+  {
+    "id": "YAP-ROLE-005",
+    "name": "Role assignment and removal",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API custom_roles, roles, permissions_rules, community_permissions and pronouns_role_hoist; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Role assignment and removal implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/RoleEditor.tsx; src/ui/community/PermissionsDialog.tsx; backend organization permission resolver"
+  },
+  {
+    "id": "YAP-ROLE-006",
+    "name": "Everyone base permissions",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API custom_roles, roles, permissions_rules, community_permissions and pronouns_role_hoist; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Everyone base permissions implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/RoleEditor.tsx; src/ui/community/PermissionsDialog.tsx; backend organization permission resolver"
+  },
+  {
+    "id": "YAP-ROLE-007",
+    "name": "Role mention membership",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API custom_roles, roles, permissions_rules, community_permissions and pronouns_role_hoist; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Role mention membership implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/RoleEditor.tsx; src/ui/community/PermissionsDialog.tsx; backend organization permission resolver"
+  },
+  {
+    "id": "YAP-ROLE-008",
+    "name": "Future role icons",
+    "state": "DEFERRED_DECISION",
+    "testing": "API custom_roles, roles, permissions_rules, community_permissions and pronouns_role_hoist; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Future role icons were not verified and have no approved asset/ownership contract. Preserve current colors, gradients and hoisting.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/RoleEditor.tsx; src/ui/community/PermissionsDialog.tsx; backend organization permission resolver"
+  },
+  {
+    "id": "YAP-MOD-001",
+    "name": "Temporary server lock",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Temporary server lock implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-002",
+    "name": "Automatic raid lock",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Automatic raid lock implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-003",
+    "name": "Verification level",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Verification level implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-004",
+    "name": "New-account minimum age",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing New-account minimum age implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-005",
+    "name": "Join applications",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing join applications and server review authority are reused. Complete applicant/reviewer browser approval, rejection, resubmission and private-answer retention need dedicated acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-006",
+    "name": "Kick member",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Server kick/hierarchy and membership checks are tested. Part 4 must prove revocation of issued download tickets, long transfers and active native/live sessions.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-007",
+    "name": "Ban and unban",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Ban and unban implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-008",
+    "name": "Timeout member",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Timeout member implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-009",
+    "name": "Voice bans",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Voice ban/unban and token authority pass local API tests. Active media disconnect/rejoin and physical/native enforcement remain Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-010",
+    "name": "Message reports",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Message reports implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-011",
+    "name": "Report handling",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Report status authorization and sealed private evidence are tested. Duplicate/reordered resolutions and review-audit timestamps need a dedicated idempotency acceptance test; a report resolution must not silently sanction.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-012",
+    "name": "Platform report escalation",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing DM/group/illegal reports route to operators. Final staff roles, privacy audit, escalation notification and reviewer lifecycle remain unaccepted; no unrelated DM context was read.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-013",
+    "name": "Whole-server reporting",
+    "state": "DEFERRED_DECISION",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "The report contract targets a person with optional message/community context. A standalone whole-community report target and review workflow are not implemented; define scope, evidence and operator routing first.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-014",
+    "name": "Audit log actor and action filters",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing audit actor/action filters and cursor UI are retained. Equal-timestamp pagination, retention copy and every action family need dedicated audit acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-015",
+    "name": "Expanded audit changes",
+    "state": "DEFERRED_DECISION",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing audit entries expose actor/action/target/detail, not a universal structured before/after diff. Define allowed fields, redaction and retention before adding generic expanded changes.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-016",
+    "name": "Voice moderation log",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Voice moderation writes audited actions in local safety tests. Final live-call actor completeness, retention and authorized staff UI acceptance remain Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-017",
+    "name": "Bug report and status",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Owned bug-report server module and feedback UI are retained. Real reporter submission/status transitions and private review have not been executed; synthetic suite coverage is not a real support result.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-018",
+    "name": "Staff application",
+    "state": "DEFERRED_DECISION",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "No approved staff recruitment eligibility, review roles, retention or outcome workflow exists. Staff applications must never grant staff permissions automatically; no recruitment system was invented.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-MOD-019",
+    "name": "Platform administrator experience",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_safety, community_safety_rules, member_timeout, reports_security, workspace_admin, account_safety and discovery_admin; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Meldiq admin authorization surfaces are retained. Yapin platform staff access is restricted and unavailable; final authorized Meldiq staff UI/end-to-end review remains unverified.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/ModerationPages.tsx; ReportsPage.tsx; AuditPage.tsx; central admin workspace"
+  },
+  {
+    "id": "YAP-NOTIFY-001",
+    "name": "For-you inbox",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing account-owned activity, mentions, threads, reminders and notices are reused. For-you aggregate loading/error/retry and every event source need a dedicated acceptance matrix.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-002",
+    "name": "Mentions inbox",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Mentions inbox implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-003",
+    "name": "Unread inbox",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Unread inbox implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-004",
+    "name": "Mark all read",
+    "state": "ACCEPTED",
+    "testing": "Deterministic delayed-local-read regression proves click-time receipt boundary and that later unread/mention arrivals survive; repeat is idempotent. Accepted scope: isolated local Web/API fixtures only.",
+    "gap": "No remaining defect established in the recorded local acceptance scope. Part 4 still owns current-production source reconciliation, native interoperability and release acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-005",
+    "name": "Global notification sounds",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing sound/volume preference helpers pass unit checks. Browser gesture activation, actual sound output and native preference parity remain unaccepted.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-006",
+    "name": "Desktop notification permission",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing notification permission UI is retained. Real allow/deny/unsupported operating-system states have not been accepted on installed clients.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-007",
+    "name": "Phone background push",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Physical installed-client background push, wake delivery, logout/revocation and notification taps remain Part 4. The observed production Web Firebase config was absent; local foreground notifications are separate evidence.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-008",
+    "name": "Notification inheritance",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Notification inheritance implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-009",
+    "name": "Missed call activity",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing missed-call activity and authorization are retained. Exactly-once real ringing/answer/timeout behavior with physical/native clients remains Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-010",
+    "name": "Global leaderboard categories",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Ranking metrics, credited-invite ledger and private/blocked/synthetic/disabled exclusions are tested locally. Final browser refresh, dedicated opt-out semantics and cross-client display remain unaccepted.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-011",
+    "name": "Daily activity currency",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Daily activity currency implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-012",
+    "name": "Account leveling",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Account leveling implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-NOTIFY-013",
+    "name": "Chat streak and freeze",
+    "state": "DEFERRED_DECISION",
+    "testing": "API history_reads, community_navigation, nav_preferences, mentions, points and leaderboards; Web mark-read-boundary, nav-prefs, message-chime and conversation-locals; browser community-first and cross-device. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing achievements, Embers and streak rules are preserved. No approved chat-freeze accrual/consumption policy or verified competitor control exists; no new reward currency was added.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/views/ActivityView.tsx; src/sync/status.ts; src/application/webPush.ts; src/ui/points; src/ui/leaderboards"
+  },
+  {
+    "id": "YAP-EVENT-001",
+    "name": "Upcoming event list",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Upcoming voice-room meetings and empty states are implemented/tested. General public-event live-state and failed-list UX need additional acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-EVENT-002",
+    "name": "Event draft identity",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing three-step community event draft was exercised. Cancel-without-publish/notify and every validation error still need a focused browser test.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-EVENT-003",
+    "name": "Voice or external location",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Meeting contract requires an authorized voice room; no external-location field exists. External events need a defined destination/safety/visibility contract before implementation.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-EVENT-004",
+    "name": "Local event start and end",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing absolute times/IANA zones and recurrence DST rules pass API/unit tests. All viewer-timezone displays and expired/invalid draft intervals remain browser acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-EVENT-005",
+    "name": "Weekly recurrence",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Weekly/biweekly/monthly/yearly meeting recurrence already exists and passes DST/calendar tests; it was reused, not rebuilt. A generic event-series single-occurrence exception model is not implemented.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-EVENT-006",
+    "name": "Event start announcement",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Starting-soon notice is sent once ten minutes before an invited voice-room meeting and tested. Exact-start community announcements and arbitrary target-channel delivery are not implemented.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-EVENT-007",
+    "name": "Event cover",
+    "state": "DEFERRED_DECISION",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Meeting schema has no cover asset. Event-specific preview, ownership, validation, upload recovery and retention require Part 4 media contract plus an approved field; no misleading cover uploader was added.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-EVENT-008",
+    "name": "RSVP",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing invited meeting attendees respond accepted/declined/tentative, with private room visibility tests. A public Interested attendee/RSVP model is not implemented or claimed.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-EVENT-009",
+    "name": "Event management and recurrence edits",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API events_onboarding_guide and workspace_c5; browser community-controls. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Organizer/room-manager edit/cancel, revision conflicts and RSVP reset on rescheduling are tested. Single-occurrence versus series edits require a defined exception contract.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/workspace/MeetingsPage.tsx; backend meeting routes; exact parity unverified"
+  },
+  {
+    "id": "YAP-LOBBY-001",
+    "name": "Lobby enable and save",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby enable and save implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-002",
+    "name": "Independent lobby branding",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Independent lobby branding implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-003",
+    "name": "Lobby background variants",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby background variants implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-004",
+    "name": "Lobby card style",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby card style implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-005",
+    "name": "Lobby typography",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing original font choices are retained. Full fallback/font loading, licensing inventory and every supported viewport have not been newly accepted.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-006",
+    "name": "Lobby header size and alignment",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby header size and alignment implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-007",
+    "name": "Lobby desktop and phone ordering",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Separate desktop/mobile order fields are retained and schema validation is exercised. Independent drag ordering, linkage/reset and stale draft UI need a dedicated two-width acceptance run.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-008",
+    "name": "Lobby tagline and actions",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby tagline and actions implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-009",
+    "name": "Lobby about card",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby about card implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-010",
+    "name": "Lobby main-channel card",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby main-channel card implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-011",
+    "name": "Lobby live-activity card",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "API filters live voice rooms by access. Actual publisher presence, ended streams and native reconnect truthfulness remain Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-012",
+    "name": "Lobby giveaway card",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing giveaway card integration is retained. Part 4 must accept installed bot lifecycle, unavailable bot state and private-channel filtering end to end.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-013",
+    "name": "Lobby generated feed URL",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Feed secret generation/rotation/revocation and payload validation pass local API tests. Final secret display/log-redaction and deployment host allowlist need release acceptance; no feed URL was published.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-014",
+    "name": "Lobby FAQ card",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby FAQ card implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-015",
+    "name": "Lobby leaderboard card",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing scoped leaderboard card is retained and API-tested. Dedicated opt-out policy, disabled service and final browser/native refresh remain unaccepted.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-016",
+    "name": "Lobby opt-in role card",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby opt-in role card implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-LOBBY-017",
+    "name": "Lobby rules staff and links cards",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_lobby, activity_scope and events_onboarding_guide; browser community-lobby. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Lobby rules staff and links cards implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/lobby; src/sync/lobby.ts; src/sync/lobbyDraft.ts"
+  },
+  {
+    "id": "YAP-GATE-001",
+    "name": "Private-channel allow list",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_permissions, channel_access, channel_permissions, member_timeout and activity_scope; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Private membership, direct history/search and global suspension denial are locally tested. Issued media tickets/live tracks/native caches must pass Part 4 revocation acceptance.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelOptionsFields.tsx; src/ui/workspace/RoleEditor.tsx; backend authorization"
+  },
+  {
+    "id": "YAP-GATE-002",
+    "name": "Text-only channel",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_permissions, channel_access, channel_permissions, member_timeout and activity_scope; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Text-only posting and encrypted attachment authorization pass local API tests. Final multipart/legacy/native upload routes and signed-ticket enforcement remain Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelOptionsFields.tsx; src/ui/workspace/RoleEditor.tsx; backend authorization"
+  },
+  {
+    "id": "YAP-GATE-003",
+    "name": "Independent GIF restriction",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_permissions, channel_access, channel_permissions, member_timeout and activity_scope; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Independent GIF restriction implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelOptionsFields.tsx; src/ui/workspace/RoleEditor.tsx; backend authorization"
+  },
+  {
+    "id": "YAP-GATE-004",
+    "name": "Read-only posting roles",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_permissions, channel_access, channel_permissions, member_timeout and activity_scope; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Read-only/poster-role policy passes local UI/API tests. Final bot, media upload and native adapters must prove identical authority in Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelOptionsFields.tsx; src/ui/workspace/RoleEditor.tsx; backend authorization"
+  },
+  {
+    "id": "YAP-GATE-005",
+    "name": "Automatic role enrollment",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_permissions, channel_access, channel_permissions, member_timeout and activity_scope; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Automatic role enrollment implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelOptionsFields.tsx; src/ui/workspace/RoleEditor.tsx; backend authorization"
+  },
+  {
+    "id": "YAP-GATE-006",
+    "name": "Role display separation",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API community_permissions, channel_access, channel_permissions, member_timeout and activity_scope; browser community-parity-a-wiring. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing Role display separation implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/ChannelOptionsFields.tsx; src/ui/workspace/RoleEditor.tsx; backend authorization"
+  },
+  {
+    "id": "YAP-PERM-001",
+    "name": "manage_channels",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing manage_channels implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-002",
+    "name": "manage_roles",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing manage_roles implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-003",
+    "name": "manage_emojis",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing manage_emojis implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-004",
+    "name": "manage_server",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing manage_server implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-005",
+    "name": "manage_webhooks",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing manage_webhooks implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-006",
+    "name": "manage_events",
+    "state": "DEFERRED_DECISION",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Meldiq meetings use organizer/room-manager authority; no independent manage_events grant exists. A new delegated event-management permission needs an approved catalog migration and hierarchy semantics.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-007",
+    "name": "view_audit_log",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing view_audit_log implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-008",
+    "name": "create_invite",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing create_invite implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-009",
+    "name": "change_nickname",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing change_nickname implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-010",
+    "name": "manage_nicknames",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing manage_nicknames implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-011",
+    "name": "kick_members",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing kick_members implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-012",
+    "name": "ban_members",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing ban_members implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-013",
+    "name": "timeout_members",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing timeout_members implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-014",
+    "name": "send_messages",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing send_messages implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-015",
+    "name": "embed_links",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing embed_links implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-016",
+    "name": "attach_files",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing attach_files implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-017",
+    "name": "send_voice_messages",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing send_voice_messages implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-018",
+    "name": "add_reactions",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing add_reactions implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-019",
+    "name": "use_external_emojis",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing use_external_emojis implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-020",
+    "name": "create_polls",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing create_polls implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-021",
+    "name": "use_headings",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing use_headings implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-022",
+    "name": "mention_everyone",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing mention_everyone implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-023",
+    "name": "manage_messages",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing manage_messages implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-024",
+    "name": "create_threads",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing create_threads implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-025",
+    "name": "send_in_threads",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing send_in_threads implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-026",
+    "name": "manage_threads",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing manage_threads implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-027",
+    "name": "read_history",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Existing read_history implementation is reused. Its complete row-specific failure/permission/accessibility matrix and final cross-client acceptance have not all been exercised; see the original acceptance criterion and Part 4 release gates.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-028",
+    "name": "connect",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "voice.connect resolves and gates local API tokens; physical/live/native revocation belongs to Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-029",
+    "name": "speak",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "voice.speak resolves and gates publish grants; real track enforcement and native clients remain Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-030",
+    "name": "mute_members",
+    "state": "IMPLEMENTED_NOT_ACCEPTED",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "voice.mute_members respects hierarchy and channel authority in API safety tests; physical publication stop/rejoin remains Part 4.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-031",
+    "name": "move_members",
+    "state": "DEFERRED_DECISION",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Current voice.move_members disconnects a member. Cross-channel movement is not implemented; define destination consent/capacity/access behavior with Part 4 before extending the permission.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  },
+  {
+    "id": "YAP-PERM-032",
+    "name": "administrator",
+    "state": "DEFERRED_DECISION",
+    "testing": "API permissions_rules, custom_roles, channel_permissions, community_permissions, authz_edges, community_safety and channel_access; exact individual endpoint coverage varies by key. This names related suite coverage, not a claim that every criterion in this row passed.",
+    "gap": "Meldiq intentionally uses owners/admin base roles and constrained roles.delegate, not a new blanket administrator bit. Preserve these powers unless an explicit governance decision approves a replacement.",
+    "scope": "Local Part 3 source and synthetic fixtures; no production or physical-device acceptance",
+    "sourceLead": "src/ui/community/PermissionsDialog.tsx; backend authoritative organization permission resolver"
+  }
+]

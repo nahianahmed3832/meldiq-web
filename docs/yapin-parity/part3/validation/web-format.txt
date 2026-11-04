@@ -1,0 +1,7 @@
+Date: 2026-11-04 Asia/Shanghai
+Source: Web a7daad87677259412cfeb15e8188bbc794d486ae; API 30e85347a01af2a715ae552d2e2d2824b5ad5805
+Command: node node_modules/prettier/bin/prettier.cjs --check 'src/**/*.{ts,tsx,css}' 'test/**/*.ts' 'e2e/**/*.ts' 'scripts/**/*.{ts,mjs}'
+Environment: local source check
+
+Checking formatting...
+All matched files use Prettier code style!

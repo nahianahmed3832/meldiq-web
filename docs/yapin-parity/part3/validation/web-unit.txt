@@ -1,0 +1,9 @@
+Date: 2026-11-04 Asia/Shanghai
+Source: Web a7daad87677259412cfeb15e8188bbc794d486ae; API 30e85347a01af2a715ae552d2e2d2824b5ad5805
+Command: ORBIT_SERVER_DIR=/Volumes/code_files/meldiq_part3_api/server node node_modules/vitest/vitest.mjs run --exclude 'test/live*.test.ts'
+Environment: isolated local non-live Web tests
+
+ Test Files  144 passed (144)
+      Tests  975 passed | 1 skipped (976)
+   Start at  16:22:07
+   Duration  21.42s (transform 249.69s, setup 6.71s, import 40.13s, tests 38.68s, environment 19ms)

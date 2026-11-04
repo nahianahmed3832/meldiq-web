@@ -2,6 +2,14 @@
 
 This is the proposed order for Parts 2–4. No implementation or release begins in Part 1. Work starts from the **then-current production source**, preserving the capabilities that are newer than the shared working copy. See [architecture](CURRENT_ARCHITECTURE.md) and [project control](PROJECT_CONTROL.md).
 
+## Part 3 implementation checkpoint
+
+Part 3 has reviewed all 212 owned rows and delivered source commits, regression evidence and explicit remaining work. Read [the report](handoffs/PART_3_REPORT.md) and [contracts](part3/CONTRACTS.md). Local fixes cover read-boundary ordering, retry-safe friend acceptance, current-authority aggregate search/summary, truthful search errors and DST calendar filters. Existing history, communities, roles, moderation, events and lobby implementations were reused.
+
+11 rows are locally accepted, 185 retain implementation with incomplete acceptance and 16 need product/authority decisions. These states do not change the historical existing-capability column or imply a production rollout. Phase 2/3 final acceptance is bounded by the [per-row review](part3/FEATURE_REVIEW.md); exhaustive server-side filtered search and the listed event/audit/optional program extensions remain open.
+
+Next, Part 4 must reconcile the active production predecessor/overlay, apply the compatible Web/API source changes, consume frozen authority on media/call/bot paths, verify actual native/provider/push behavior, resolve approved optional contracts and build/release with test-linking disabled. Keep all 356 unowned rows and current billing/auth/privacy contracts intact.
+
 ## Sequence and dependencies
 
 ```mermaid

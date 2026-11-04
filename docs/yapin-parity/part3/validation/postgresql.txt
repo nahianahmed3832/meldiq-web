@@ -1,0 +1,9 @@
+Date: 2026-11-04 Asia/Shanghai
+Source: Web a7daad87677259412cfeb15e8188bbc794d486ae; API 30e85347a01af2a715ae552d2e2d2824b5ad5805
+Command: MELDIQ_TEST_PG_URL=postgresql://meldiq_part3_test@127.0.0.1:55433/postgres MELDIQ_TEST_PG_DELIVERY_MODE=legacy MELDIQ_SUPABASE_WEB_ROOT=/Volumes/code_files/meldiq_web_part3_ecosystem node node_modules/vitest/vitest.mjs run <52 domain suites listed below> --maxWorkers=2
+Environment: owned isolated PostgreSQL 17; existing bootstrap/migrations; legacy delivery
+
+ Test Files  52 passed (52)
+      Tests  467 passed | 1 skipped (468)
+   Start at  16:33:22
+   Duration  78.16s (transform 6.71s, setup 0ms, import 60.78s, tests 85.84s, environment 3ms)

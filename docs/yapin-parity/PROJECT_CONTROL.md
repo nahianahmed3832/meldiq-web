@@ -1,8 +1,10 @@
 # Project control
 
-Status: **Part 2 foundation locally implemented/tested; final release acceptance remains open**. Date: 4 November 2026, Asia/Shanghai. Part 1 was research only; the subsequent Part 2 request authorized the isolated UI/UX implementation. Production infrastructure/database mutation and multi-region migration remain outside scope.
+Status: **Part 3 local implementation/verification handoff prepared; final release acceptance remains open**. Date: 4 November 2026, Asia/Shanghai. Part 1 was research, Part 2 supplied the shared foundation, and Part 3 reused those contracts for domain fixes and isolated verification. No production database/infrastructure mutation, multi-region migration or deployment occurred.
 
-Current handoff: [Part 2 report](handoffs/PART_2_REPORT.md), [shared contracts](part2/SHARED_INTERFACES.md), [validation](part2/validation.json), [row dispositions](part2/feature-dispositions.json). All 118 owned rows were updated without changing the other 450. `ACCEPTED` in these 19 rows means the specifically recorded **local static-build / synthetic API-fixture scope** passed. It does not close broader provider/native/production cases; each remaining criterion is stated in the row. Do not convert this into 118 completed or deployed features. The original Meldiq existing-status column remains the Part 1 baseline.
+Current handoff: [Part 3 report](handoffs/PART_3_REPORT.md), [domain contracts](part3/CONTRACTS.md), [validation](part3/validation.json) and [212 row dispositions](part3/feature-dispositions.json). Part 3 counts: **11 ACCEPTED, 185 IMPLEMENTED_NOT_ACCEPTED, 16 DEFERRED_DECISION**. ACCEPTED means the specifically recorded local static-build/synthetic API scope passed. Broader release/native/provider criteria remain separate. Other 356 rows remain unchanged. Original competitor verification and Meldiq existing-status columns preserve Part 1 evidence.
+
+Part 2 handoff remains [available](handoffs/PART_2_REPORT.md), with [shared interfaces](part2/SHARED_INTERFACES.md) and 118 row dispositions. Its 19 local acceptances are unchanged. No local source-only or fixture result implies production deployment or all-client acceptance.
 
 Owner decisions: minimum age **13+**; operator **GRIIPBUDDY LLC, Wyoming**, `contact@griipbuddy.com`, supplied Cheyenne address. [Prepared policies/release requirements](part2/legal/RELEASE_NOTES.md) replace the earlier unknown-age planning assumption, but the live policy and server acceptance ledger are not updated yet.
 

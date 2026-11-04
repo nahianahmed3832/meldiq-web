@@ -1,0 +1,450 @@
+[
+  {
+    "project": "chromium",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "dm: large history opens newest after switching, Back, reload and settings",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "group: large history opens newest after switching, Back, reload and settings",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "channel: large history opens newest after switching, Back, reload and settings",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "slow opens cannot expose cached history or acknowledge it; switching cancels the old viewport",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "signing out and linking again opens large server history at latest",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/community-controls.spec.ts",
+    "title": "channel bell, Basic permissions and a three-step event",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/community-first.spec.ts",
+    "title": "daily navigation is in the rail and Saved stays in the profile menu",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/community-first.spec.ts",
+    "title": "one unread event highlights a channel without a number; two show a count; the title counts DMs",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/community-first.spec.ts",
+    "title": "hovering a reaction shows who reacted",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/community-lobby.spec.ts",
+    "title": "the lobby: first visit, the live editor, templates and its settings page",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/community-parity-a-wiring.spec.ts",
+    "title": "owner: safety and lock, roles with @everyone, theme tint, create channel options",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/community-parity-a-wiring.spec.ts",
+    "title": "member: a locked community and a read-only channel hold the composer back",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/community-parity-c.spec.ts",
+    "title": "webhook posts, Make a post, reaction roles and tickets",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/connection-requests.spec.ts",
+    "title": "a connection request is announced, counted, and accepted from the DM",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/cross-device.spec.ts",
+    "title": "a linked browser and the phone stay in sync through the server, and signing out erases the browser",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/cross-device.spec.ts",
+    "title": "removing the browser from the phone signs it out and erases what it kept",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/cross-device.spec.ts",
+    "title": "a second tab doesn't take the connection unless asked",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/discovery-search.spec.ts",
+    "title": "public communities load, search and recover from no matches with Meldiq artwork",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/dms-selection.spec.ts",
+    "title": "in DMs no community is selected, and a community in the rail opens its channels",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/message-collections.spec.ts",
+    "title": "a busy thread cannot displace the main conversation timeline",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/message-collections.spec.ts",
+    "title": "media and files remain accessible after their messages leave the active history window",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/message-collections.spec.ts",
+    "title": "pins and threads page beyond loaded history, preserve counts, and recover from errors",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/message-extras.spec.ts",
+    "title": "forward to two chats with a note, a call card, the viewer's caption and React, and YouTube in Meldiq",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/part3-search.spec.ts",
+    "title": "message search distinguishes failure from no matches and retries the same query",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/poll-media.spec.ts",
+    "title": "poll percentages, named and hidden ballots survive reload, change, remove and close",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/poll-media.spec.ts",
+    "title": "long originals fit completely, zoom and pan, and navigate across separate image messages",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "opening always shows latest; active reading survives pagination, arrivals and late layout changes",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "a distant search result stays separate from recent history and can return to latest",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "settings search opens canonical pages, shows scope and handles no matches",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "the expression picker finds joined-community emoji and previews uploads without losing animation",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "opening unread history starts at latest and acknowledges only the visible fresh window",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "chromium",
+    "file": "e2e/server-history.spec.ts",
+    "title": "chats come back from the server after signing out and in again",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "dm: large history opens newest after switching, Back, reload and settings",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "group: large history opens newest after switching, Back, reload and settings",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "channel: large history opens newest after switching, Back, reload and settings",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "slow opens cannot expose cached history or acknowledge it; switching cancels the old viewport",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/chat-open-latest.spec.ts",
+    "title": "signing out and linking again opens large server history at latest",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/community-controls.spec.ts",
+    "title": "channel bell, Basic permissions and a three-step event",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/community-first.spec.ts",
+    "title": "daily navigation is in the rail and Saved stays in the profile menu",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/community-first.spec.ts",
+    "title": "one unread event highlights a channel without a number; two show a count; the title counts DMs",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/community-first.spec.ts",
+    "title": "hovering a reaction shows who reacted",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/community-lobby.spec.ts",
+    "title": "the lobby: first visit, the live editor, templates and its settings page",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/community-parity-a-wiring.spec.ts",
+    "title": "owner: safety and lock, roles with @everyone, theme tint, create channel options",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/community-parity-a-wiring.spec.ts",
+    "title": "member: a locked community and a read-only channel hold the composer back",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/community-parity-c.spec.ts",
+    "title": "webhook posts, Make a post, reaction roles and tickets",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/connection-requests.spec.ts",
+    "title": "a connection request is announced, counted, and accepted from the DM",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/cross-device.spec.ts",
+    "title": "a linked browser and the phone stay in sync through the server, and signing out erases the browser",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/cross-device.spec.ts",
+    "title": "removing the browser from the phone signs it out and erases what it kept",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/cross-device.spec.ts",
+    "title": "a second tab doesn't take the connection unless asked",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/discovery-search.spec.ts",
+    "title": "public communities load, search and recover from no matches with Meldiq artwork",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/dms-selection.spec.ts",
+    "title": "in DMs no community is selected, and a community in the rail opens its channels",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/message-collections.spec.ts",
+    "title": "a busy thread cannot displace the main conversation timeline",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/message-collections.spec.ts",
+    "title": "media and files remain accessible after their messages leave the active history window",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/message-collections.spec.ts",
+    "title": "pins and threads page beyond loaded history, preserve counts, and recover from errors",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/message-extras.spec.ts",
+    "title": "forward to two chats with a note, a call card, the viewer's caption and React, and YouTube in Meldiq",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/part3-search.spec.ts",
+    "title": "message search distinguishes failure from no matches and retries the same query",
+    "result": "passed",
+    "lastRun": "browser-final-corrections.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/poll-media.spec.ts",
+    "title": "poll percentages, named and hidden ballots survive reload, change, remove and close",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/poll-media.spec.ts",
+    "title": "long originals fit completely, zoom and pan, and navigate across separate image messages",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "opening always shows latest; active reading survives pagination, arrivals and late layout changes",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "a distant search result stays separate from recent history and can return to latest",
+    "result": "skipped",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "settings search opens canonical pages, shows scope and handles no matches",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "the expression picker finds joined-community emoji and previews uploads without losing animation",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/research-improvements.spec.ts",
+    "title": "opening unread history starts at latest and acknowledges only the visible fresh window",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  },
+  {
+    "project": "phone-width",
+    "file": "e2e/server-history.spec.ts",
+    "title": "chats come back from the server after signing out and in again",
+    "result": "passed",
+    "lastRun": "browser-expanded-final.log"
+  }
+]

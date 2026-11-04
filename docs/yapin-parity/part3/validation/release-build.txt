@@ -1,0 +1,8 @@
+Date: 2026-11-04 Asia/Shanghai
+Source: Web a7daad87677259412cfeb15e8188bbc794d486ae; API 30e85347a01af2a715ae552d2e2d2824b5ad5805
+Command: NEXT_PUBLIC_MELDIQ_TEST_LINKING=0 npm run -s build
+Environment: normal static production artifact; includes Web typecheck, Next build/export and service worker build
+
+✓ Compiled successfully in 16.9s
+dist/sw.js  188.97 kB │ gzip: 58.50 kB
+✓ built in 719ms

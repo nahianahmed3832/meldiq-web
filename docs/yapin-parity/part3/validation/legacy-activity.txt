@@ -1,0 +1,9 @@
+Date: 2026-11-04 Asia/Shanghai
+Source: Web a7daad87677259412cfeb15e8188bbc794d486ae; API 30e85347a01af2a715ae552d2e2d2824b5ad5805
+Command: node node_modules/vitest/vitest.mjs run test/activity_status.test.ts --maxWorkers=1
+Environment: SQLite/explicit MongoDB persistence fixture
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  16:40:28
+   Duration  9.34s (transform 2.50s, setup 0ms, import 4.42s, tests 3.45s, environment 0ms)

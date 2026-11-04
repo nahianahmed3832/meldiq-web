@@ -134,6 +134,9 @@ if "byImplementation" in counts:
 if "part2Implementation" in counts:
     check(counts["part2Implementation"] == dict(Counter(row["Implementation status"] for row in rows if row["Owner"] == "PART 2")),
           "Part 2 state count mismatch", "counts")
+if "part3Implementation" in counts:
+    check(counts["part3Implementation"] == dict(Counter(row["Implementation status"] for row in rows if row["Owner"] == "PART 3")),
+          "Part 3 state count mismatch", "counts")
 if (ROOT / "part2/feature-dispositions.json").exists():
     dispositions = read_json("part2/feature-dispositions.json")
     owned = {row["Feature ID"]: row for row in rows if row["Owner"] == "PART 2"}
@@ -142,6 +145,16 @@ if (ROOT / "part2/feature-dispositions.json").exists():
     for item in dispositions:
         check(item["id"] in owned and item["state"] == owned[item["id"]]["Implementation status"],
               f"Part 2 disposition mismatch: {item['id']}", "part2")
+if (ROOT / "part3/feature-dispositions.json").exists():
+    dispositions = read_json("part3/feature-dispositions.json")
+    owned = {row["Feature ID"]: row for row in rows if row["Owner"] == "PART 3"}
+    check(len(dispositions) == len(owned) == len({item["id"] for item in dispositions}),
+          "Part 3 dispositions do not cover each owned row exactly once", "part3")
+    for item in dispositions:
+        row = owned.get(item["id"])
+        check(bool(row) and item["state"] == row["Implementation status"] and item["gap"] == row["Gap description"]
+              and row["Testing status"].startswith(item["testing"]),
+              f"Part 3 disposition mismatch: {item['id']}", "part3")
 
 api = read_json("evidence/documented-api-operations.json")
 schema = read_json("evidence/yapin-openapi-audit.json")

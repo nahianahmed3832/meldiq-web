@@ -1,0 +1,6 @@
+Date: 2026-11-04 Asia/Shanghai
+Source: Web a7daad87677259412cfeb15e8188bbc794d486ae; API 30e85347a01af2a715ae552d2e2d2824b5ad5805
+Command: ORBIT_SERVER_DIR=/Volumes/code_files/meldiq_part3_api/server ORBIT_E2E_API_PORT=8292 ORBIT_E2E_WEB_PORT=5391 ORBIT_E2E_BUILD=1 node node_modules/@playwright/test/cli.js test <16 spec files below> --project=chromium --project=phone-width; then the two corrected spec files
+Environment: static Next export, test-linking enabled only for fixture authentication; throwaway SQLite API and synthetic protocol peers; Chromium 1440x900 and Pixel 7 CSS 412x839
+
+Final two corrected specs: 12 passed. Combined with expanded run: 51 unique passed, 13 expected skips, no remaining failures. Exact case outcomes are in browser-cases.json.

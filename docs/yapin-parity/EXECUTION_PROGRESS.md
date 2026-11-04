@@ -1,5 +1,21 @@
 # Execution progress
 
+## Current — Part 3, 4 November 2026 (Asia/Shanghai)
+
+Local implementation and verification handoff prepared. Read [Part 3 report](handoffs/PART_3_REPORT.md), [domain contracts](part3/CONTRACTS.md), [feature review](part3/FEATURE_REVIEW.md), [validation](part3/validation.json) and [baseline/source identity](part3/baseline.json).
+
+| Workstream | Result | Remaining scope |
+| --- | --- | --- |
+| Messaging / unread | Reproduced and fixed click-time read-marker race; reused existing deterministic cursors, recent windows, active reading anchors, disjoint search and independent collections | Existing timestamp receipt granularity; final native and production interoperability |
+| Social | Recipient acceptance is conditional and retry-safe in PostgreSQL/SQLite/MongoDB; concurrent retries emit once and removed requests stay removed | Optional request notes/comments and complete peer UX matrix remain in dispositions |
+| Search / authority | Loading/error/retry/no-match are distinct; during: uses local calendar boundaries, after: handles DST; global search/summary obey current membership/suspension authority | Exhaustive filtered/paginated server search remains partial |
+| Communities / roles / moderation | Existing administration, hierarchy, overrides, private scope, onboarding safety, restrictions, reports and lobby reused and checked on isolated PostgreSQL | Detailed row matrix, audit/report reviewer lifecycle, media/call/bot/native enforcement |
+| Tests | Web 975 passed / 1 skipped; PostgreSQL 467 passed / 1 Mongo-specific skip across 52 files; browser 51 unique passed / 13 expected skips across 64 cases; legacy adapters separately validated | Firefox/WebKit, physical devices, actual providers, final production release |
+| Register | All 212 owned rows reviewed: 11 ACCEPTED in bounded local scope, 185 IMPLEMENTED_NOT_ACCEPTED, 16 DEFERRED_DECISION | No claim of 212 completed features; every remaining criterion is recorded; other 356 rows unchanged |
+| Source / release | Separate Part 3 Web/API commits and companion patch; no schema changes, production writes or deployment | Part 4 reconciles exact current release overlay and releases only accepted scope |
+
+Meldiq default palette, canonical teal/cream Meldling, Google/Discord login and official icons/handlers, Part 2 profile privacy, existing account/device identity and latency improvements are preserved. The local PostgreSQL cluster is isolated loopback test infrastructure, not a native Auth/Realtime rollout. The Part 2 and Part 1 ledgers below remain historical evidence.
+
 ## Current — Part 2, 4 November 2026 (Asia/Shanghai)
 
 Owner follow-up: [Meldiq default / mascot correction](part2/BRANDING_CORRECTION.md) is locally implemented and tested. It preserves explicit palette choices and uses the existing canonical teal/cream Meldling for shared branding and built-in expressions. No deployment.

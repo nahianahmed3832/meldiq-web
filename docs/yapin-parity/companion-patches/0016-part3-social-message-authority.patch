@@ -1,0 +1,430 @@
+From 30e85347a01af2a715ae552d2e2d2824b5ad5805 Mon Sep 17 00:00:00 2001
+From: "MD.NAHIAN AHMED" <254077813+nahianahmed3832@users.noreply.github.com>
+Date: Wed, 4 Nov 2026 16:39:49 +0800
+Subject: [PATCH] Make connection acceptance retry safe and guard aggregate
+ message visibility
+
+---
+ .../accounts/relationships/mongoStore.ts      |  3 ++
+ .../accounts/relationships/postgresStore.ts   |  3 ++
+ .../modules/accounts/relationships/routes.ts  |  9 ++--
+ .../modules/accounts/relationships/store.ts   |  7 +++
+ .../modules/messaging/serverMessagesRoutes.ts | 10 ++++-
+ server/test/activity_status.test.ts           |  3 +-
+ server/test/community_lobby.test.ts           |  5 ++-
+ server/test/community_safety.test.ts          |  5 ++-
+ server/test/community_templates.test.ts       |  5 ++-
+ server/test/connections_requests.test.ts      | 45 ++++++++++++++++++-
+ server/test/discovery.test.ts                 |  5 ++-
+ server/test/history_reads.test.ts             |  5 ++-
+ server/test/leaderboards.test.ts              | 13 ++++--
+ server/test/message_visibility.test.ts        | 25 +++++++++++
+ server/test/org_delete.test.ts                |  2 +-
+ server/test/reports_security.test.ts          | 14 +++---
+ 16 files changed, 129 insertions(+), 30 deletions(-)
+ create mode 100644 server/test/message_visibility.test.ts
+
+diff --git a/server/src/modules/accounts/relationships/mongoStore.ts b/server/src/modules/accounts/relationships/mongoStore.ts
+index f29c21af..3cf0f9b7 100644
+--- a/server/src/modules/accounts/relationships/mongoStore.ts
++++ b/server/src/modules/accounts/relationships/mongoStore.ts
+@@ -48,6 +48,9 @@ export class MongoRelationshipStore implements RelationshipStore {
+   async deleteConnection(x: string, y: string): Promise<boolean> {
+     return (await this.connections.deleteOne({ _id: pairOf(x, y).pair }, { session: this.mongo.session() })).deletedCount > 0;
+   }
++  async acceptConnection(recipient: string, from: string, at: number): Promise<boolean> {
++    return (await this.connections.updateOne({ _id: pairOf(recipient, from).pair, state: "pending", requested_by: from }, { $set: { state: "accepted", accepted_at: at } }, { session: this.mongo.session() })).modifiedCount === 1;
++  }
+ 
+   async request(conversationId: string): Promise<DmRequestRow | null> {
+     return this.strip(await this.requests.findOne({ _id: conversationId }, { session: this.mongo.session() }));
+diff --git a/server/src/modules/accounts/relationships/postgresStore.ts b/server/src/modules/accounts/relationships/postgresStore.ts
+index f8dcff5d..60063203 100644
+--- a/server/src/modules/accounts/relationships/postgresStore.ts
++++ b/server/src/modules/accounts/relationships/postgresStore.ts
+@@ -20,6 +20,9 @@ export class PostgresRelationshipStore implements RelationshipStore {
+   async deleteConnection(x: string, y: string): Promise<boolean> {
+     return (await this.db.query("DELETE FROM meldiq.connections WHERE pair=$1", [pairOf(x, y).pair])).rowCount === 1;
+   }
++  async acceptConnection(recipient: string, from: string, at: number): Promise<boolean> {
++    return (await this.db.query("UPDATE meldiq.connections SET state='accepted',accepted_at=$3 WHERE pair=$1 AND state='pending' AND requested_by=$2", [pairOf(recipient, from).pair, from, at])).rowCount === 1;
++  }
+   async request(conversationId: string): Promise<DmRequestRow | null> {
+     return (await this.db.query<DmRequestRow>("SELECT * FROM meldiq.dm_requests WHERE conversation_id=$1", [conversationId])).rows[0] ?? null;
+   }
+diff --git a/server/src/modules/accounts/relationships/routes.ts b/server/src/modules/accounts/relationships/routes.ts
+index 18b0f4b2..be1e56c8 100644
+--- a/server/src/modules/accounts/relationships/routes.ts
++++ b/server/src/modules/accounts/relationships/routes.ts
+@@ -76,10 +76,11 @@ export default async function connectionRoutes(app: FastifyInstance, ctx: AppCon
+   app.post("/v1/connections/:userId/accept", auth, async (req) => {
+     const userId = me(req).userId;
+     const { userId: from } = parse(ConnectionUserParams, req.params);
+-    const row = await rel.connection(userId, from);
+-    if (!row || row.state !== "pending" || row.requested_by === userId || blockedEitherWay(ctx, userId, from)) throw notFound("Request not found");
+-    await rel.putConnection({ ...row, state: "accepted", accepted_at: now() });
+-    changed(userId, from);
++    if (blockedEitherWay(ctx, userId, from)) throw notFound("Request not found");
++    // A retry after a lost response succeeds without changing its timestamp or emitting another event. The
++    // conditional update also prevents a stale accept from recreating a request removed on another device.
++    if (await rel.acceptConnection(userId, from, now())) changed(userId, from);
++    else if ((await rel.connection(userId, from))?.state !== "accepted") throw notFound("Request not found");
+     return { state: "accepted" };
+   });
+ 
+diff --git a/server/src/modules/accounts/relationships/store.ts b/server/src/modules/accounts/relationships/store.ts
+index 05f3dc4f..fa2af5f8 100644
+--- a/server/src/modules/accounts/relationships/store.ts
++++ b/server/src/modules/accounts/relationships/store.ts
+@@ -47,6 +47,8 @@ export interface RelationshipStore {
+   connectionsOf(userId: string): Promise<ConnectionRow[]>;
+   /** Inserts or replaces the pair's row. */
+   putConnection(row: ConnectionRow): Promise<void>;
++  /** Accepts only an existing pending request from [from] to [recipient]. No upsert; true only on transition. */
++  acceptConnection(recipient: string, from: string, at: number): Promise<boolean>;
+   deleteConnection(x: string, y: string): Promise<boolean>;
+   request(conversationId: string): Promise<DmRequestRow | null>;
+   createRequest(row: DmRequestRow): Promise<void>;
+@@ -92,6 +94,11 @@ export class SqliteRelationshipStore implements RelationshipStore {
+     return this.db.prepare("DELETE FROM connections WHERE pair = ?").run(pairOf(x, y).pair).changes > 0;
+   }
+ 
++  async acceptConnection(recipient: string, from: string, at: number): Promise<boolean> {
++    return this.db.prepare("UPDATE connections SET state = 'accepted', accepted_at = ? WHERE pair = ? AND state = 'pending' AND requested_by = ?")
++      .run(at, pairOf(recipient, from).pair, from).changes === 1;
++  }
++
+   async request(conversationId: string): Promise<DmRequestRow | null> {
+     return (this.db.prepare("SELECT * FROM dm_requests WHERE conversation_id = ?").get(conversationId) as DmRequestRow | undefined) ?? null;
+   }
+diff --git a/server/src/modules/messaging/serverMessagesRoutes.ts b/server/src/modules/messaging/serverMessagesRoutes.ts
+index f7b4c850..fea3bf47 100644
+--- a/server/src/modules/messaging/serverMessagesRoutes.ts
++++ b/server/src/modules/messaging/serverMessagesRoutes.ts
+@@ -32,6 +32,12 @@ function historySinceOf(ctx: AppContext, userId: string): (conversationId: strin
+   };
+ }
+ 
++/** Stored membership rows can survive a platform suspension. Aggregate endpoints must use current authority too. */
++function currentConversationIds(ctx: AppContext, userId: string): string[] {
++  return ctx.ws.all<{ conversation_id: string }>("conversation_members", { where: { user_id: userId } })
++    .map((r) => r.conversation_id).filter((id) => ctx.authz.isMember(id, userId));
++}
++
+ export default async function serverMessagesRoutes(app: FastifyInstance, ctx: AppContext) {
+   const auth = { preHandler: requireAuth(ctx) };
+ 
+@@ -94,7 +100,7 @@ export default async function serverMessagesRoutes(app: FastifyInstance, ctx: Ap
+ 
+   app.get("/v2/messages/summary", auth, async (req) => {
+     const { userId } = me(req);
+-    const mine = ctx.ws.all<{ conversation_id: string }>("conversation_members", { where: { user_id: userId } }).map((r) => r.conversation_id);
++    const mine = currentConversationIds(ctx, userId);
+     const list = await ctx.messages.summaries(mine, userId, UNREAD_CAP);
+     const since = historySinceOf(ctx, userId);
+     return {
+@@ -113,7 +119,7 @@ export default async function serverMessagesRoutes(app: FastifyInstance, ctx: Ap
+     const q = parse(SearchQuery, req.query);
+     const mine = q.conversationId
+       ? [ctx.authz.requireMember(q.conversationId, userId).id]
+-      : ctx.ws.all<{ conversation_id: string }>("conversation_members", { where: { user_id: userId } }).map((r) => r.conversation_id);
++      : currentConversationIds(ctx, userId);
+     const hits = await ctx.messages.search(mine, q.q, q.limit);
+     const since = historySinceOf(ctx, userId);
+     return { messages: hits.filter((e) => e.server_ts >= (since(e.conversation_id) ?? 0)).map(eventToWire) };
+diff --git a/server/test/activity_status.test.ts b/server/test/activity_status.test.ts
+index fe6ec6c4..408470de 100644
+--- a/server/test/activity_status.test.ts
++++ b/server/test/activity_status.test.ts
+@@ -233,7 +233,8 @@ describe("ActivityService", () => {
+   });
+ });
+ 
+-describe("activities in MongoDB", () => {
++// This persistence assertion inspects a MongoDB collection, not the PostgreSQL activity adapter.
++describe.skipIf(!!process.env.MELDIQ_TEST_PG_URL)("activities in MongoDB", () => {
+   let m: Harness;
+   beforeAll(async () => {
+     m = await startServer({ MONGODB_DOMAINS: "accounts,preferences" }, { mailer });
+diff --git a/server/test/community_lobby.test.ts b/server/test/community_lobby.test.ts
+index 144f19d4..698b79cc 100644
+--- a/server/test/community_lobby.test.ts
++++ b/server/test/community_lobby.test.ts
+@@ -22,10 +22,11 @@ async function feedPost(h: Harness, token: string, body: unknown): Promise<{ sta
+   return { status: res.status, json: await res.json() };
+ }
+ 
+-describe.each([
++const backends = process.env.MELDIQ_TEST_PG_URL ? [["postgres", {}] as const] : [
+   ["sqlite", {}],
+   ["mongodb", { MONGODB_DOMAINS: `${PRODUCTION_DOMAINS},workspace,conversations,calls` }],
+-] as const)("community lobby kept in %s", (backend, env) => {
++] as const;
++describe.each(backends)("community lobby kept in %s", (backend, env) => {
+   let h: Harness;
+   let owner: GriipClient, admin: GriipClient, mod: GriipClient, member: GriipClient, outsider: GriipClient;
+   let orgId: string, otherOrg: string, general: string, art: string, secret: string, voice: string, hiddenVoice: string, foreign: string;
+diff --git a/server/test/community_safety.test.ts b/server/test/community_safety.test.ts
+index fc043b93..21e30501 100644
+--- a/server/test/community_safety.test.ts
++++ b/server/test/community_safety.test.ts
+@@ -20,10 +20,11 @@ const react = (c: GriipClient, conv: string, target: string) => c.send(conv, { t
+ const read = (c: GriipClient, conv: string, upTo: number) => c.send(conv, { type: "read", upTo }, "control", `d_safe_${++n}_${Date.now()}`);
+ const err = (e: { error: { code: string; details?: Record<string, unknown> } }) => e.error;
+ 
+-describe.each([
++const backends = process.env.MELDIQ_TEST_PG_URL ? [["postgres", {}] as const] : [
+   ["memory", {}],
+   ["mongodb", { MONGODB_DOMAINS: `${PRODUCTION_DOMAINS},workspace,conversations,calls` }],
+-] as const)("community safety kept in %s", (_backend, env) => {
++] as const;
++describe.each(backends)("community safety kept in %s", (_backend, env) => {
+   let h: Harness;
+   let owner: GriipClient, admin: GriipClient, mod: GriipClient, member: GriipClient, helper: GriipClient;
+   let orgId: string, invite: string, general: string, lounge: string;
+diff --git a/server/test/community_templates.test.ts b/server/test/community_templates.test.ts
+index e05df4e8..a4b8ea55 100644
+--- a/server/test/community_templates.test.ts
++++ b/server/test/community_templates.test.ts
+@@ -25,10 +25,11 @@ interface Ch {
+   guidelines: string | null;
+ }
+ 
+-describe.each([
++const backends = process.env.MELDIQ_TEST_PG_URL ? [["postgres", {}] as const] : [
+   ["sqlite", {}],
+   ["mongodb", { MONGODB_DOMAINS: WORKSPACE_IN_MONGO }],
+-] as const)("templates from a community with communities in %s", (_backend, env) => {
++] as const;
++describe.each(backends)("templates from a community with communities in %s", (_backend, env) => {
+   let h: Harness;
+   let owner: GriipClient, member: GriipClient, outsider: GriipClient;
+   let orgId: string, modsRole: string, crewRole: string, category: string, rulesChannel: string, forum: string;
+diff --git a/server/test/connections_requests.test.ts b/server/test/connections_requests.test.ts
+index 0712037b..53b54354 100644
+--- a/server/test/connections_requests.test.ts
++++ b/server/test/connections_requests.test.ts
+@@ -1,4 +1,4 @@
+-import { afterAll, beforeAll, describe, expect, it } from "vitest";
++import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+ import { loadConfig } from "../src/app/config.js";
+ import type { GriipClient } from "./support/griipClient.js";
+ import { expectStatus, type Harness, startServer } from "./support/harness.js";
+@@ -128,6 +128,46 @@ describe("message requests", () => {
+ });
+ 
+ describe("connections", () => {
++  it("accepts concurrent retries once and emits one relationship change", async () => {
++    const [sender, recipient] = [gil, cat];
++    await sender.req("POST", "/v1/connections", { userId: recipient.userId });
++    const announced = vi.spyOn(h.ctx.hub, "sendToUsers");
++    try {
++      const results = await Promise.all(Array.from({ length: 3 }, () => recipient.req("POST", `/v1/connections/${sender.userId}/accept`)));
++      expect(results.map((r) => r.state)).toEqual(["accepted", "accepted", "accepted"]);
++      expect(announced.mock.calls.filter(([, frame]) => frame.t === "connections.updated")).toHaveLength(1);
++      expect((await recipient.req("GET", "/v1/connections")).connected.map((u: { id: string }) => u.id)).toEqual([sender.userId]);
++    } finally {
++      announced.mockRestore();
++    }
++  });
++
++  it("does not resurrect a request removed while acceptance is waiting", async () => {
++    const [sender, recipient] = [gil, eve];
++    await sender.req("POST", "/v1/connections", { userId: recipient.userId });
++    const accept = h.ctx.relationships.acceptConnection.bind(h.ctx.relationships);
++    let release!: () => void;
++    let entered!: () => void;
++    const held = new Promise<void>((resolve) => { release = resolve; });
++    const waiting = new Promise<void>((resolve) => { entered = resolve; });
++    const transition = vi.spyOn(h.ctx.relationships, "acceptConnection").mockImplementationOnce(async (...args) => {
++      entered();
++      await held;
++      return accept(...args);
++    });
++    try {
++      const result = expectStatus(recipient.req("POST", `/v1/connections/${sender.userId}/accept`), 404);
++      await waiting;
++      await sender.req("DELETE", `/v1/connections/${recipient.userId}`);
++      release();
++      await result;
++      expect(await h.ctx.relationships.connection(sender.userId, recipient.userId)).toBeNull();
++    } finally {
++      release();
++      transition.mockRestore();
++    }
++  });
++
+   it("go from request to accepted, by id or username, and repeating changes nothing", async () => {
+     expect((await ben.req("POST", "/v1/connections", { username: `@${cat.username}` })).state).toBe("pending");
+     expect((await ben.req("POST", "/v1/connections", { userId: cat.userId })).state).toBe("pending");
+@@ -138,6 +178,9 @@ describe("connections", () => {
+     await expectStatus(ann.req("POST", `/v1/connections/${ben.userId}/accept`), 404);
+     await expectStatus(ben.req("POST", `/v1/connections/${cat.userId}/accept`), 404);
+     await cat.req("POST", `/v1/connections/${ben.userId}/accept`);
++    const accepted = await h.ctx.relationships.connection(cat.userId, ben.userId);
++    expect((await cat.req("POST", `/v1/connections/${ben.userId}/accept`)).state).toBe("accepted");
++    expect(await h.ctx.relationships.connection(cat.userId, ben.userId)).toEqual(accepted);
+     expect((await ben.req("GET", "/v1/connections")).connected.map((u: { id: string }) => u.id)).toEqual([cat.userId]);
+   });
+ 
+diff --git a/server/test/discovery.test.ts b/server/test/discovery.test.ts
+index 6ab95a1b..ae1d2728 100644
+--- a/server/test/discovery.test.ts
++++ b/server/test/discovery.test.ts
+@@ -17,10 +17,11 @@ const STARTUP_MS = 120_000;
+ const code = (e: { error: { code: string } }) => e.error.code;
+ const ids = (cards: { id: string }[]) => cards.map((c) => c.id);
+ 
+-describe.each([
++const backends = process.env.MELDIQ_TEST_PG_URL ? [["postgres", {}] as const] : [
+   ["sqlite", {}],
+   ["mongodb", { MONGODB_DOMAINS: WORKSPACE_IN_MONGO }],
+-] as const)("discovery with communities in %s", (_backend, env) => {
++] as const;
++describe.each(backends)("discovery with communities in %s", (_backend, env) => {
+   let h: Harness;
+   let owner: GriipClient, small: GriipClient, other: GriipClient, viewer: GriipClient, joiner: GriipClient;
+   let members: GriipClient[];
+diff --git a/server/test/history_reads.test.ts b/server/test/history_reads.test.ts
+index 5af30329..9865bdd0 100644
+--- a/server/test/history_reads.test.ts
++++ b/server/test/history_reads.test.ts
+@@ -20,10 +20,11 @@ const readsIn = (page: { changes: Change[] }) => page.changes.filter((c) => c.pa
+  * message (`{ type: "read", upTo }`), so history's changes, chosen by target, never carried it: an app that rebuilds a
+  * conversation from history (the web app on every page load) never learned the other person had read it.
+  */
+-describe.each([
++const backends = process.env.MELDIQ_TEST_PG_URL ? [["postgresql", ""]] : [
+   ["sqlite", ""],
+   ["mongodb", "history"],
+-])("history carries the other members' read receipts (%s)", (_backend, domains) => {
++];
++describe.each(backends)("history carries the other members' read receipts (%s)", (_backend, domains) => {
+   let h: Harness;
+   let alice: GriipClient, bob: GriipClient;
+   let dm: string;
+diff --git a/server/test/leaderboards.test.ts b/server/test/leaderboards.test.ts
+index 4475394e..1876982c 100644
+--- a/server/test/leaderboards.test.ts
++++ b/server/test/leaderboards.test.ts
+@@ -8,7 +8,7 @@ import {
+ import type { CallParticipantRow } from "../src/modules/calls/store.js";
+ 
+ const DAY = 86400_000;
+-describe.each([
++const backends = process.env.MELDIQ_TEST_PG_URL ? [["postgres", {}] as const] : [
+   ["sqlite", {}],
+   [
+     "mongodb",
+@@ -17,7 +17,8 @@ describe.each([
+         "accounts,preferences,reports,relationships,history,files,relay,billing,workspace,conversations,calls",
+     },
+   ],
+-] as const)("leaderboards on %s", (_backend, env) => {
++] as const;
++describe.each(backends)("leaderboards on %s", (_backend, env) => {
+   let h: Harness, alice: GriipClient, bob: GriipClient, carol: GriipClient;
+   let general: string, secret: string, voice: string, hiddenVoice: string;
+   beforeAll(async () => {
+@@ -241,16 +242,20 @@ describe.each([
+     expect(b.entries).toMatchObject([{ user: { id: alice.userId }, value: 3 }]);
+   });
+   it("counts credited invites only", async () => {
+-    for (const state of ["credited", "pending", "lapsed", "capped"] as const)
++    for (const state of ["credited", "pending", "lapsed", "capped"] as const) {
++      // The ledger allows one credited invite per joiner/community. Use real distinct fixture communities.
++      const orgId = (await alice.req("POST", "/v1/orgs", { name: `Invite ${state}` })).org.id;
+       await h.ctx.points.store.addInvite({
+         id: `inv-${state}`,
+         inviterId: alice.userId,
+         joinerId: bob.userId,
+-        orgId: "test",
++        orgId,
+         joinedAt: Date.now() - 8 * DAY,
+         state,
+         settledAt: Date.now(),
+       });
++    }
++    expect(await h.ctx.points.store.leaderboard("invites")).toEqual([{ userId: alice.userId, count: 1 }]);
+     const b = await alice.req("GET", "/v2/leaderboards?metric=invites");
+     expect(b.entries).toMatchObject([{ user: { id: alice.userId }, value: 1 }]);
+   });
+diff --git a/server/test/message_visibility.test.ts b/server/test/message_visibility.test.ts
+new file mode 100644
+index 00000000..15f8ead8
+--- /dev/null
++++ b/server/test/message_visibility.test.ts
+@@ -0,0 +1,25 @@
++import { afterAll, beforeAll, expect, it, vi } from "vitest";
++import { expectStatus, type Harness, startServer } from "./support/harness.js";
++
++let h: Harness;
++beforeAll(async () => { h = await startServer(); });
++afterAll(async () => h.close());
++
++it("global search and summaries obey the same current membership denial as direct history", async () => {
++  const owner = await h.client("visibilityowner");
++  const org = (await owner.req("POST", "/v1/orgs", { name: "Visibility fixture" })).org.id;
++  const channel = (await owner.req("POST", `/v1/orgs/${org}/channels`, { name: "private-scope" })).channel.id;
++  owner.serverMessages = true;
++  await owner.send(channel, { type: "text", text: "visibilityneedle" });
++  expect((await owner.req("GET", "/v2/messages/search?q=visibilityneedle")).messages).toHaveLength(1);
++  // Suspension is an existing authority hook. Exercise its denial without changing any real community or staff state.
++  const suspended = vi.spyOn(h.ctx.authz, "platformSuspended").mockImplementation((id) => id === org);
++  try {
++    await expectStatus(owner.req("GET", `/v2/conversations/${channel}/messages`), 404);
++    await expectStatus(owner.req("GET", `/v2/messages/search?q=visibilityneedle&conversationId=${channel}`), 404);
++    expect((await owner.req("GET", "/v2/messages/search?q=visibilityneedle")).messages).toEqual([]);
++    expect((await owner.req("GET", "/v2/messages/summary")).conversations.map((c: { conversationId: string }) => c.conversationId)).not.toContain(channel);
++  } finally {
++    suspended.mockRestore();
++  }
++});
+diff --git a/server/test/org_delete.test.ts b/server/test/org_delete.test.ts
+index d2ce8ba1..c54a30b6 100644
+--- a/server/test/org_delete.test.ts
++++ b/server/test/org_delete.test.ts
+@@ -68,7 +68,7 @@ describe("deleting an organization", () => {
+     await expectStatus(member.req("GET", `/v1/attachments/${fileId}`), 404);
+     expect(fs.existsSync(path.join(h.dir, "attachments", fileId))).toBe(false);
+     for (const t of ["org_members", "invitations", "branches", "teams", "channel_categories", "channel_overwrites", "org_bans", "org_roles"]) {
+-      expect((h.ctx.db.prepare(`SELECT COUNT(*) n FROM ${t} WHERE org_id = ?`).get(orgId) as { n: number }).n).toBe(0);
++      expect(h.ctx.ws.count(t, { org_id: orgId })).toBe(0);
+     }
+     await expect.poll(() => queuedCount(h, (r) => r.conversation_id === channel)).toBe(0);
+     // Untouched.
+diff --git a/server/test/reports_security.test.ts b/server/test/reports_security.test.ts
+index 2bc5656e..a840aa0a 100644
+--- a/server/test/reports_security.test.ts
++++ b/server/test/reports_security.test.ts
+@@ -48,11 +48,10 @@ describe("reports", () => {
+     expect(q.reports[0]).not.toHaveProperty("reporter");
+     expect(q.reports[0]).not.toHaveProperty("reporterId");
+     // Sealed at rest: the stored row doesn't contain the text.
+-    const raw = (h.ctx.mongo?.owns("reports")
+-      ? await h.ctx.mongo.db.collection("reports").findOne({ _id: r.report.id as never })
+-      : h.ctx.db.prepare("SELECT content FROM reports WHERE id = ?").get(r.report.id)) as { content: string };
+-    expect(raw.content.startsWith("r1.")).toBe(true);
+-    expect(raw.content).not.toContain("rude");
++    const raw = await h.ctx.reports.get(r.report.id);
++    expect(raw).not.toBeNull();
++    expect(raw!.content?.startsWith("r1.")).toBe(true);
++    expect(raw!.content).not.toContain("rude");
+   });
+ 
+   it("returns the first report when the same message is reported again", async () => {
+@@ -110,8 +109,9 @@ describe("reports", () => {
+   it("deletes closed reports 90 days after they were handled", async () => {
+     const closed = (await queue(mod, "closed")).reports[0].id;
+     const old = Date.now() - 91 * 86_400_000;
+-    if (h.ctx.mongo?.owns("reports")) await h.ctx.mongo.db.collection("reports").updateOne({ _id: closed as never }, { $set: { handled_at: old } });
+-    else h.ctx.db.prepare("UPDATE reports SET handled_at = ? WHERE id = ?").run(old, closed);
++    const row = (await h.ctx.reports.get(closed))!;
++    const aged = await h.ctx.reports.setStatus(closed, row.status, row.handled_by!, row.handled_note, old);
++    expect(aged?.handled_at).toBe(old);
+     const r = await runCleanup(h.ctx);
+     expect(r.reportsPurged).toBe(1);
+     expect(await h.ctx.reports.get(closed)).toBeNull();
+-- 
+2.54.0
+

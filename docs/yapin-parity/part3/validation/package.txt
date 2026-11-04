@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-11-04T08:45:53.176159+00:00",
+  "status": "PASS",
+  "scope": "saved documentation only; no network/application/database operations",
+  "historicalSourceRoot": "/Volumes/code_files/meldiq_web",
+  "checksByGroup": {
+    "deliverables": 13,
+    "register": 3979,
+    "ownership": 568,
+    "verification_scope": 24,
+    "contracts": 568,
+    "references": 2173,
+    "counts": 16,
+    "part2": 119,
+    "part3": 213,
+    "schema": 6,
+    "images": 311,
+    "routes": 121,
+    "provenance": 466,
+    "links": 439,
+    "runtime": 3,
+    "bounded_secret_scan": 2178
+  },
+  "checkCount": 11197,
+  "featureRows": 568,
+  "owners": {
+    "PART 2": 118,
+    "PART 3": 212,
+    "PART 4": 238
+  },
+  "localMarkdownLinksChecked": 439,
+  "rowEvidenceFilesChecked": 93,
+  "inventory": {
+    "canonicalYapinPathsInspected": 41,
+    "currentYapinScreenshots": 92,
+    "historicalYapinScreenshots": 62,
+    "meldiqScreenshots": 1,
+    "textOnlyScreens": 2,
+    "documentedScreenStates": 157,
+    "screenshotsTotal": 155
+  },
+  "apiOperations": 76,
+  "historicalImportsChecked": 233,
+  "runtimeIdentityUnchanged": true,
+  "errors": []
+}

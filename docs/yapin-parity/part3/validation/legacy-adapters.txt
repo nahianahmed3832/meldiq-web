@@ -1,0 +1,9 @@
+Date: 2026-11-04 Asia/Shanghai
+Source: Web a7daad87677259412cfeb15e8188bbc794d486ae; API 30e85347a01af2a715ae552d2e2d2824b5ad5805
+Command: node node_modules/vitest/vitest.mjs run test/connections_requests.test.ts test/message_visibility.test.ts test/reports_security.test.ts test/history_reads.test.ts --maxWorkers=2
+Environment: SQLite plus existing explicit MongoDB history matrix
+
+ Test Files  4 passed (4)
+      Tests  34 passed (34)
+   Start at  16:23:56
+   Duration  8.85s (transform 4.23s, setup 0ms, import 9.07s, tests 3.94s, environment 0ms)
