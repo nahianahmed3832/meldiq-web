@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-11-04T14:03:52.503663+00:00",
+  "source": "Explicit user selection in this conversation",
+  "decision": "Keep all six deferred",
+  "deferred": [
+    "recording, clips and report buffers",
+    "soundboards",
+    "watch-together and whiteboards",
+    "hosted bot execution",
+    "new paid promotion",
+    "creator marketplace settlement"
+  ],
+  "preserve": [
+    "existing calls",
+    "bot APIs",
+    "Spark",
+    "Embers",
+    "free customization"
+  ],
+  "physicalDevices": "pending by prior explicit user choice",
+  "production": "Requires validated coordinated candidate and explicit production authorization",
+  "broaderBotPlatform": {
+    "decision": "Include a broader bot platform",
+    "source": "Explicit owner reply to the 99-row contract review",
+    "nativeEquivalentRowsAtReview": 10,
+    "expansionRowsInScope": 89,
+    "scope": "Scoped administrative APIs, general bot events and dedicated bot gateway. Six prior product deferrals stay in force. No blanket administrator permission."
+  }
+}

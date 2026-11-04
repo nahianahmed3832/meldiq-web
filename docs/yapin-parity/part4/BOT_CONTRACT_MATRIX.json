@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "YAP-API-001",
+    "reference": "GET /me",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "GET /v2/bot/me",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-API-002",
+    "reference": "PATCH /me",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-003",
+    "reference": "PUT /me/avatar",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-004",
+    "reference": "DELETE /me/avatar",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-005",
+    "reference": "PUT /me/banner",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-006",
+    "reference": "DELETE /me/banner",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-007",
+    "reference": "PUT /me/status",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-008",
+    "reference": "GET /commands",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "GET /v2/bot/commands",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-API-009",
+    "reference": "PUT /commands",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "PUT /v2/bot/commands",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-API-010",
+    "reference": "GET /channels",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-011",
+    "reference": "GET /servers/{id}/channels",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-012",
+    "reference": "POST /servers/{id}/channels",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-013",
+    "reference": "GET /channels/{id}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-014",
+    "reference": "PATCH /channels/{id}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-015",
+    "reference": "DELETE /channels/{id}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-016",
+    "reference": "GET /channels/{id}/permissions",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-017",
+    "reference": "PUT /channels/{id}/permissions/{role}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-018",
+    "reference": "DELETE /channels/{id}/permissions/{role}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-019",
+    "reference": "POST /servers/{id}/categories",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-020",
+    "reference": "PATCH /servers/{id}/categories/{cid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-021",
+    "reference": "DELETE /servers/{id}/categories/{cid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-022",
+    "reference": "PUT /servers/{id}/categories/{cid}/permissions/{role}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-023",
+    "reference": "DELETE /servers/{id}/categories/{cid}/permissions/{role}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-024",
+    "reference": "GET /channels/{id}/messages/{mid}/emojis",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-025",
+    "reference": "GET /servers/{id}/emojis",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-026",
+    "reference": "POST /servers/{id}/emojis",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-027",
+    "reference": "PATCH /servers/{id}/emojis/{eid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-028",
+    "reference": "DELETE /servers/{id}/emojis/{eid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-029",
+    "reference": "GET /events",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-030",
+    "reference": "POST /interactions/{id}/{token}/callback",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "POST /v2/bot/interactions/:id/reply",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-API-031",
+    "reference": "GET /channels/{id}/messages",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-032",
+    "reference": "POST /channels/{id}/messages",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "POST /v2/bot/channels/:channelId/messages",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-API-033",
+    "reference": "GET /channels/{id}/messages/{mid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-034",
+    "reference": "PATCH /channels/{id}/messages/{mid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "PATCH /v2/bot/messages/:messageId",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-API-035",
+    "reference": "DELETE /channels/{id}/messages/{mid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "DELETE /v2/bot/messages/:messageId",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-API-036",
+    "reference": "POST /channels/{id}/messages/bulk-delete",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-037",
+    "reference": "PUT /channels/{id}/messages/{mid}/pin",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-038",
+    "reference": "DELETE /channels/{id}/messages/{mid}/pin",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-039",
+    "reference": "GET /channels/{id}/messages/{mid}/reactions",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-040",
+    "reference": "PUT /channels/{id}/messages/{mid}/reactions/{emoji}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-041",
+    "reference": "DELETE /channels/{id}/messages/{mid}/reactions/{emoji}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-042",
+    "reference": "PATCH /servers/{id}/members/{uid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-043",
+    "reference": "POST /servers/{id}/kick",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-044",
+    "reference": "GET /servers/{id}/bans",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-045",
+    "reference": "POST /servers/{id}/bans",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-046",
+    "reference": "DELETE /servers/{id}/bans/{uid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-047",
+    "reference": "POST /servers/{id}/timeouts",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-048",
+    "reference": "GET /servers/{id}/invites",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-049",
+    "reference": "GET /servers/{id}/roles",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-050",
+    "reference": "POST /servers/{id}/roles",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-051",
+    "reference": "PATCH /servers/{id}/roles/everyone",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-052",
+    "reference": "PATCH /servers/{id}/roles/{rid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-053",
+    "reference": "DELETE /servers/{id}/roles/{rid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-054",
+    "reference": "PUT /servers/{id}/members/{uid}/roles/{rid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-055",
+    "reference": "DELETE /servers/{id}/members/{uid}/roles/{rid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-056",
+    "reference": "GET /servers/{id}/events",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-057",
+    "reference": "POST /servers/{id}/events",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-058",
+    "reference": "GET /servers",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "GET /v2/bot/communities",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-API-059",
+    "reference": "GET /servers/{id}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-060",
+    "reference": "GET /servers/{id}/counts",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-061",
+    "reference": "GET /servers/{id}/members",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-062",
+    "reference": "GET /servers/{id}/members/{uid}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-063",
+    "reference": "GET /users/{id}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-064",
+    "reference": "POST /users/{id}/dm",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-065",
+    "reference": "GET /version",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-066",
+    "reference": "GET /changelog",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-067",
+    "reference": "GET /servers/{id}/voice",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-068",
+    "reference": "POST /servers/{id}/voice/move",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-069",
+    "reference": "POST /servers/{id}/voice/disconnect",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-070",
+    "reference": "POST /servers/{id}/voice/join",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-071",
+    "reference": "POST /servers/{id}/voice/leave",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-072",
+    "reference": "GET /channels/{id}/webhooks",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-073",
+    "reference": "POST /channels/{id}/webhooks",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-074",
+    "reference": "GET /webhooks",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-075",
+    "reference": "POST /webhooks/{id}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-API-076",
+    "reference": "DELETE /webhooks/{id}",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-001",
+    "reference": "message event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-002",
+    "reference": "dm_message event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-003",
+    "reference": "member_join event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-004",
+    "reference": "member_leave event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-005",
+    "reference": "reaction_add event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-006",
+    "reference": "reaction_remove event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-007",
+    "reference": "voice_join event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-008",
+    "reference": "voice_leave event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-009",
+    "reference": "command event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "GET /v2/bot/interactions; POST /v2/interactions",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-BOTEVENT-010",
+    "reference": "interaction event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": "GET /v2/bot/interactions; POST /v2/interactions",
+    "scope": "Supported native bot identity, commands, own messages and leased interactions only; no vendor URL compatibility",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [
+      "part4/evidence/api-pg-results.json",
+      "part4/evidence/api-regression-corrections.txt"
+    ],
+    "disposition": "IMPLEMENTED_NOT_ACCEPTED"
+  },
+  {
+    "id": "YAP-BOTEVENT-011",
+    "reference": "invite_create event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-012",
+    "reference": "invite_delete event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-BOTEVENT-013",
+    "reference": "test event",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-001",
+    "reference": "hello frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-002",
+    "reference": "identify frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-003",
+    "reference": "resume frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-004",
+    "reference": "ready frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-005",
+    "reference": "event frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-006",
+    "reference": "heartbeat frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-007",
+    "reference": "heartbeat_ack frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-008",
+    "reference": "presence frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-009",
+    "reference": "request frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  },
+  {
+    "id": "YAP-GATEWAY-010",
+    "reference": "response frame",
+    "verification": "UNVERIFIED_DOCS",
+    "nativeEquivalent": null,
+    "scope": "No corresponding bot-authenticated administrative or general-event/gateway contract in current source. Human/community APIs and the user WebSocket do not grant bots this authority.",
+    "source": "server/src/modules/bots/routes.ts; server/src/modules/bots/auth.ts; server/src/modules/bots/interactions.ts",
+    "evidence": [],
+    "disposition": "RESEARCH_REQUIRED"
+  }
+]
