@@ -1,0 +1,74 @@
+[
+  {
+    "file": "expressions-chromium.jpg",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "2bba2de12318c347883dabe9e7e1acae6b64321a8d10cce21a80ea90164d0f6b",
+    "scope": "local synthetic fixture; provider captures use simulated configured-provider list"
+  },
+  {
+    "file": "expressions-phone-width.jpg",
+    "dimensions": [
+      1082,
+      2202
+    ],
+    "sha256": "501734c9392adc5659e23c90bdb6cb8caf7c68de2420337b36c02832e2107d35",
+    "scope": "local synthetic fixture; provider captures use simulated configured-provider list"
+  },
+  {
+    "file": "login-providers-chromium.jpg",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "6f079e5e9c2255edfb2ab06ff1e1ac008b3c51cd9576bb87ccb3e2e9671533b7",
+    "scope": "local synthetic fixture; provider captures use simulated configured-provider list"
+  },
+  {
+    "file": "login-providers-phone-width.jpg",
+    "dimensions": [
+      1082,
+      2202
+    ],
+    "sha256": "3d76eb834cac189931c308db75ec2a39d99fd7706874159cdcebd67cdb2724c0",
+    "scope": "local synthetic fixture; provider captures use simulated configured-provider list"
+  },
+  {
+    "file": "messages-chromium.jpg",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "1853edb0994f21c820be5e2f1a72b0a32d8d18342774c5cf38230cf40fd3e184",
+    "scope": "local synthetic fixture; provider captures use simulated configured-provider list"
+  },
+  {
+    "file": "messages-phone-width.jpg",
+    "dimensions": [
+      1082,
+      2202
+    ],
+    "sha256": "ef77822c5c40d6814264f40cb6ca62559fce2cba412923603bd2976d368ecdd0",
+    "scope": "local synthetic fixture; provider captures use simulated configured-provider list"
+  },
+  {
+    "file": "welcome-default-chromium.jpg",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "e1bf3c9e71f1315f038c592084148abc635a584b769ba24ff3edb0cf5c7450d2",
+    "scope": "local synthetic fixture; provider captures use simulated configured-provider list"
+  },
+  {
+    "file": "welcome-default-phone-width.jpg",
+    "dimensions": [
+      1082,
+      2202
+    ],
+    "sha256": "8e03d1413f2dab7a91c8e6e99c6916d09d60524d27ce74bf719be75c806296f3",
+    "scope": "local synthetic fixture; provider captures use simulated configured-provider list"
+  }
+]

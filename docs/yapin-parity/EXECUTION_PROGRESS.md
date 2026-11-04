@@ -2,6 +2,8 @@
 
 ## Current — Part 2, 4 November 2026 (Asia/Shanghai)
 
+Owner follow-up: [Meldiq default / mascot correction](part2/BRANDING_CORRECTION.md) is locally implemented and tested. It preserves explicit palette choices and uses the existing canonical teal/cream Meldling for shared branding and built-in expressions. No deployment.
+
 Application foundation implemented in isolated release-derived Web and backend branches; **not deployed**. Read [Part 2 report](handoffs/PART_2_REPORT.md), [shared interfaces](part2/SHARED_INTERFACES.md), [design audit](part2/DESIGN_AUDIT.md), [validation](part2/validation.json) and [source manifest](part2/source-manifest.json).
 
 | Workstream | State / evidence | Remaining |

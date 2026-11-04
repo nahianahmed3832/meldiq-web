@@ -1,0 +1,10 @@
+  ✓  1 [chromium] › e2e/branding.spec.ts:10:1 › Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji (9.1s)
+  ✓  2 [chromium] › e2e/branding.spec.ts:57:1 › the old unchosen palette migrates while an explicit Midnight choice survives the first paint and reload (2.2s)
+  ✓  3 [chromium] › e2e/continuation-v3.spec.ts:14:1 › the composer has one searchable expression picker and a sticker sends (5.1s)
+  ✓  4 [chromium] › e2e/part2-foundation.spec.ts:13:1 › fresh registration enforces consent, verifies email, and resumes real profile/preferences setup (38.5s)
+  ✓  5 [phone-width] › e2e/branding.spec.ts:10:1 › Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji (8.4s)
+  ✓  6 [phone-width] › e2e/branding.spec.ts:57:1 › the old unchosen palette migrates while an explicit Midnight choice survives the first paint and reload (1.6s)
+  -  7 [phone-width] › e2e/continuation-v3.spec.ts:14:1 › the composer has one searchable expression picker and a sticker sends
+  ✓  8 [phone-width] › e2e/part2-foundation.spec.ts:13:1 › fresh registration enforces consent, verifies email, and resumes real profile/preferences setup (37.2s)
+  1 skipped
+  7 passed (2.5m)

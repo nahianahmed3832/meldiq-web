@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T07:27:26.217756+00:00",
+  "checkedAt": "2026-11-04T07:57:05.657893+00:00",
   "status": "PASS",
   "scope": "saved documentation only; no network/application/database operations",
   "historicalSourceRoot": "/Volumes/code_files/meldiq_web",
@@ -16,18 +16,18 @@
     "images": 311,
     "routes": 121,
     "provenance": 466,
-    "links": 404,
+    "links": 417,
     "runtime": 3,
-    "bounded_secret_scan": 1998
+    "bounded_secret_scan": 2046
   },
-  "checkCount": 10556,
+  "checkCount": 10617,
   "featureRows": 568,
   "owners": {
     "PART 2": 118,
     "PART 3": 212,
     "PART 4": 238
   },
-  "localMarkdownLinksChecked": 404,
+  "localMarkdownLinksChecked": 417,
   "rowEvidenceFilesChecked": 93,
   "inventory": {
     "canonicalYapinPathsInspected": 41,

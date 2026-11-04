@@ -4,7 +4,7 @@
  * Structure:
  *  1. Scale: type, radii, spacing, motion, elevation shape (palette-independent).
  *  2. Neutrals: surfaces, text, borders and states, shared by every palette.
- *  3. Palettes: the colour plates (midnight, the default: navy with cyan/blue/violet accents; indigo, from the logo's
+ *  3. Palettes: Meldiq is the default charcoal/lime plate; Midnight offers navy with cyan/blue/violet accents; indigo, from the logo's
  *     cyan → blue → violet ribbon; plum; amber).
  *     A palette sets only brand hues: the frame (rail and top bar), the sidebar tint, the accent and its soft and text
  *     forms, mentions, badges and the brand gradient. `data-palette` on <html> picks one (src/application/prefs.ts).

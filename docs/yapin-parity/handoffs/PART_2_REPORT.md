@@ -1,5 +1,7 @@
 # Part 2 — application foundation handoff
 
+**Subsequent owner correction:** [Meldiq default and canonical mascot](../part2/BRANDING_CORRECTION.md). The report below records the initial `4da13d6` implementation; the linked addendum records updated default-palette and logo/emoji rendering with its own tests and source hashes.
+
 Date: **4 November 2026, Asia/Shanghai**. State: **implemented and validated locally; not deployed**. This report accepts bounded local workflows, not every production/native/provider condition in the 118 owned requirements. Register disposition: **19 locally ACCEPTED, 84 IMPLEMENTED_NOT_ACCEPTED, 13 DEFERRED_DECISION, 2 RESEARCH_REQUIRED**. All 118 owned rows were individually updated; the other 450 rows and their ownership are unchanged.
 
 Web source: `/Volumes/code_files/meldiq_web_part2_foundation`, branch `codex/meldiq-part2-foundation`, based on `1f18c4a4e503c2aba263082b56d3d0db436e3736` (the release receipt following active source `3cc3c03`). Backend companion: `/Volumes/code_files/meldiq_part2_api`, branch `codex/meldiq-part2-profile-contract`, based on `bd20d747e3a4a768b823263cab017b9d9e0017c4`, committed as `598f7c1d`. The dirty original Web checkout was preserved. No production database, infrastructure, configuration, account, provider, payment, deployment or native binary was changed.

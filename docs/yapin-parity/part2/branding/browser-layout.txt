@@ -1,0 +1,6 @@
+  ✓  1 [chromium] › e2e/branding.spec.ts:10:1 › Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji (7.9s)
+  ✓  2 [chromium] › e2e/continuation-v3.spec.ts:14:1 › the composer has one searchable expression picker and a sticker sends (5.2s)
+  ✓  3 [phone-width] › e2e/branding.spec.ts:10:1 › Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji (8.0s)
+  -  4 [phone-width] › e2e/continuation-v3.spec.ts:14:1 › the composer has one searchable expression picker and a sticker sends
+  1 skipped
+  3 passed (1.0m)

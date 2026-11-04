@@ -6,6 +6,7 @@
 export const BRAND = {
   /** The product. */
   name: "Meldiq",
+  mascot: "Meldling",
   /** This app: the browser client. */
   web: "Meldiq Web",
   /** The phone app, as people find it on their phone. */
@@ -14,4 +15,10 @@ export const BRAND = {
   company: "GriipBuddy",
   /** Shown where people who knew the old name might look for it. */
   formerly: "Orbit",
+} as const;
+
+/** The owner's canonical teal/cream Meldling, generated from brand/meldling.png. */
+export const MELDLING_ASSETS = {
+  mark: "/meldling-128.png",
+  srcSet: "/meldling-128.png 128w, /meldling-256.png 256w, /meldling-512.png 512w",
 } as const;

@@ -1,5 +1,7 @@
 # Yapin investigation and Meldiq parity handoff
 
+Latest owner correction: [Meldiq is the default palette; canonical Meldling drives logo, illustrations and branded emoji](part2/BRANDING_CORRECTION.md).
+
 Date: **4 November 2026, Asia/Shanghai**. Current status: **Part 2 foundation implemented and locally validated; release/provider/native acceptance remains open**. No production deployment, infrastructure/database change or migration was performed.
 
 Start with the [Part 2 report](handoffs/PART_2_REPORT.md), [design audit/system](part2/DESIGN_AUDIT.md), [shared interfaces](part2/SHARED_INTERFACES.md), and [validation receipt](part2/validation.json). All 118 Part 2 rows were individually reviewed: 19 bounded local acceptances, 84 implemented but not fully accepted, 13 deferred decisions and 2 research items. The other 450 rows are unchanged. [Prepared GRIIPBUDDY LLC Terms](part2/legal/TERMS_OF_SERVICE.md) and [Privacy](part2/legal/PRIVACY_POLICY.md) use the approved 13+ minimum; publication and durable server policy acceptance remain open.

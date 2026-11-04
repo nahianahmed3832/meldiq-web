@@ -1,4 +1,6 @@
-/** Meldling's illustrated poses (brand/meldling/, rendered by scripts/render-brand-assets.mjs into public/meldling/). */
+import { MELDLING_ASSETS } from "../../application/brand";
+
+/** Presentation roles reuse the same canonical mascot as the logo. */
 export type MeldlingPose = "hello" | "gaming" | "all-set" | "loading" | "waving" | "confused" | "love";
 
 interface MeldlingArtProps {
@@ -12,5 +14,18 @@ interface MeldlingArtProps {
  * the screen's own heading says what's going on.
  */
 export function MeldlingArt({ pose, size = 160 }: MeldlingArtProps) {
-  return <img className={`meldling-art pose-${pose}`} src={`/meldling/${pose}.webp`} width={size} alt="" aria-hidden="true" draggable={false} loading="lazy" />;
+  return (
+    <img
+      className={`meldling-art pose-${pose}`}
+      src={MELDLING_ASSETS.mark}
+      srcSet={MELDLING_ASSETS.srcSet}
+      sizes={`${size}px`}
+      width={size}
+      height={size}
+      alt=""
+      aria-hidden="true"
+      draggable={false}
+      loading="lazy"
+    />
+  );
 }

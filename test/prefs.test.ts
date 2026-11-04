@@ -21,9 +21,9 @@ afterEach(() => {
 });
 
 describe("preferences", () => {
-  it("defaults to the dark theme, the navy palette and the side panels open", async () => {
+  it("defaults to the dark theme, the Meldiq palette and the side panels open", async () => {
     const { getPrefs } = await loadWith(undefined);
-    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "midnight", memberList: true, dmProfile: true });
+    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "meldiq", memberList: true, dmProfile: true });
   });
 
   it("keeps every existing valid palette when the product default changes", async () => {
@@ -36,7 +36,8 @@ describe("preferences", () => {
 
   it("keeps Midnight, the navy look before the floating redesign, for whoever picks it", async () => {
     expect((await loadWith({ palette: "midnight", paletteChosen: true })).getPrefs().palette).toBe("midnight");
-    expect((await loadWith({ palette: "midnight" })).getPrefs().palette).toBe("midnight");
+    expect((await loadWith({ palette: "midnight" })).getPrefs().palette).toBe("meldiq");
+    expect((await loadWith({ palette: "midnight", paletteChosen: false })).getPrefs().palette).toBe("meldiq");
   });
 
   it("keeps hidden side panels hidden", async () => {
@@ -51,7 +52,7 @@ describe("preferences", () => {
 
   it("falls back to the defaults for an unknown or tampered theme or palette", async () => {
     const { getPrefs } = await loadWith({ theme: 'x" onload="', palette: "neon", textSize: "huge" });
-    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "midnight", textSize: "default" });
+    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "meldiq", textSize: "default" });
   });
 
   it("moves the old default (system, never picked) to dark, and keeps a theme someone picked, black included", async () => {
@@ -62,6 +63,6 @@ describe("preferences", () => {
 
   it("gives browsers that stored preferences before palettes existed the default palette", async () => {
     const { getPrefs } = await loadWith({ theme: "light", notifications: true });
-    expect(getPrefs()).toMatchObject({ theme: "light", palette: "midnight", notifications: true });
+    expect(getPrefs()).toMatchObject({ theme: "light", palette: "meldiq", notifications: true });
   });
 });

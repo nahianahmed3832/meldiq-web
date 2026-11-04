@@ -1,0 +1,144 @@
+{
+  "date": "2026-11-04",
+  "timezone": "Asia/Shanghai",
+  "baseline": "4da13d6",
+  "scope": "local Web branding/presentation; isolated synthetic API fixtures",
+  "status": "PASS_LOCAL",
+  "sourceManifest": [
+    {
+      "path": "e2e/branding.spec.ts",
+      "sha256": "f0ca773542506b56ff0809c15653e4c310238b75352b77395a223773875cb085"
+    },
+    {
+      "path": "e2e/part2-foundation.spec.ts",
+      "sha256": "2d4f2d6ed42a04766800f452c9b481d1be7062994887bc6b6ff9c609039900e5"
+    },
+    {
+      "path": "public/boot.js",
+      "sha256": "d66c5aa47538fbe5efbd0555a3ff86426db199915553c1843e02e6cc93c2be17"
+    },
+    {
+      "path": "src/application/brand.ts",
+      "sha256": "83d01053644f52f0291a4d1f411260c00def12fdadebfc37809279d58de1b17c"
+    },
+    {
+      "path": "src/application/prefs.ts",
+      "sha256": "1275c362fed497e152d24d2e0933ed21ea98debead516b76e7feb93dab984c38"
+    },
+    {
+      "path": "src/pages/_document.tsx",
+      "sha256": "b8a3a3431dd9da1cbe6793ca25643648b5755f0cf994c05f42406f6000caee35"
+    },
+    {
+      "path": "src/styles/conversation.css",
+      "sha256": "55d5218cadbf6db941df7bf6e8109d2e031c7e65871c3c8ffa2e5c47ac1b583f"
+    },
+    {
+      "path": "src/styles/tokens.css",
+      "sha256": "4ce47f8b48305a7f972ac265328b6c7db1d65458f90c2d9d88a95fb81d760a2c"
+    },
+    {
+      "path": "src/ui/chat/AnimojiView.tsx",
+      "sha256": "3f5b39d434a795ea252d0f5458b0db69d6ff7f4328eeedbee51c1e1b61d2d360"
+    },
+    {
+      "path": "src/ui/chat/ExpressionPicker.tsx",
+      "sha256": "ec5fd2cd2d286980c35fe89d341db3ff97ccedb6eaa47eaf8a3fad0399c18128"
+    },
+    {
+      "path": "src/ui/chat/StickerView.tsx",
+      "sha256": "0d26929124e6f33bb62271575d89d6e36cac5dc0e690821756b3d909ee6fee5c"
+    },
+    {
+      "path": "src/ui/components/BrandMark.tsx",
+      "sha256": "8298eaf0af3d7ce7e80676403014562b84491bdd0416a01bed1e7dc795aa93ec"
+    },
+    {
+      "path": "src/ui/components/MeldlingArt.tsx",
+      "sha256": "4a47422c3004acd72db96cfdf44e7ee26f6e0e0d5f4754e6fb1b28b53b943802"
+    },
+    {
+      "path": "src/ui/components/MeldlingExpression.tsx",
+      "sha256": "8ffd6868cd8d7505e5b75cd20b8d5920f7b57e99bf65a6d09ecf8c72b3937e61"
+    },
+    {
+      "path": "test/prefs.test.ts",
+      "sha256": "1d27bf252e725f4bd875614ee8883347c6ed7ea0daf5d7f3b80d6f5ad2a9d801"
+    }
+  ],
+  "webUnit": {
+    "passed": 973,
+    "skipped": 1
+  },
+  "builtBrowser": {
+    "passed": 7,
+    "skipped": 1,
+    "projects": [
+      "chromium",
+      "phone-width"
+    ]
+  },
+  "finalLayoutRepeat": {
+    "passed": 3,
+    "skipped": 1
+  },
+  "checks": {
+    "typecheck": "PASS",
+    "lint": "PASS, zero warnings",
+    "format": "PASS",
+    "i18n": "PASS, 28 locales \u00d7 6232 keys",
+    "normalReleaseBuild": "PASS with NEXT_PUBLIC_MELDIQ_TEST_LINKING=0"
+  },
+  "canonicalAsset": {
+    "path": "brand/meldling.png",
+    "sha256": "09a5edd98eb1e66fd0a4a1d29cabcb06f401a01ffd06379274c33cc429109dd3"
+  },
+  "productionMutations": false,
+  "apiChanges": false,
+  "preservedProviderFiles": [
+    {
+      "path": "src/ui/auth/SocialSignIn.tsx",
+      "sha256": "26f686ff40e6b93b8083078a5d308572bac71dbb9cee3819a9d64664ad437aa3",
+      "unchangedFrom": "4da13d6"
+    },
+    {
+      "path": "src/ui/auth/AccountForms.tsx",
+      "sha256": "64e32f6f11a9f332b41262073bc5ba9b982864d1846ea2499ea9ba54c4eb029e",
+      "unchangedFrom": "4da13d6"
+    },
+    {
+      "path": "src/ui/auth/AuthScreen.tsx",
+      "sha256": "ae8c69dbabe016389f802030bd15307c19638f7255d75eecd110af3b59e34648",
+      "unchangedFrom": "4da13d6"
+    },
+    {
+      "path": "src/auth/socialAuth.ts",
+      "sha256": "b32b3289b6c7b85b4ab01f4fa70745ebe815a28d145c25abae002c9aa3702174",
+      "unchangedFrom": "4da13d6"
+    },
+    {
+      "path": "public/auth-provider-icons/google.svg",
+      "sha256": "49d94b5b1a2fa37a26c74307de1dadc3c9f8b17ff6f109fb2f8744ed4c73c41e",
+      "unchangedFrom": "4da13d6"
+    },
+    {
+      "path": "public/auth-provider-icons/discord.svg",
+      "sha256": "eb3bf5a2e8b9f9aa39c1b1d38aeaa7c2997084567634c55f4141aa39cf426cec",
+      "unchangedFrom": "4da13d6"
+    }
+  ],
+  "providerGuard": {
+    "status": "PASS",
+    "scope": "mock configured-provider UI and start handlers only; no external OAuth consent",
+    "initialTestIssue": "Expected raw synthetic 503 message; existing client correctly sanitizes server errors. Assertion corrected to existing generic message; no auth implementation changes.",
+    "passed": 2,
+    "projects": [
+      "chromium",
+      "phone-width"
+    ]
+  },
+  "normalBuildIndexSha256": "af36ff6166ee366c1de95f16627c281cd60b17bcbfebcbfbfd5a5a352709462f",
+  "uniqueBuiltBrowserPassed": 9,
+  "expectedSkipped": 1,
+  "csvFormat": "Existing CRLF preserved; whitespace check allows CR at EOL and checks normal trailing whitespace."
+}

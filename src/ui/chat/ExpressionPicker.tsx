@@ -1,3 +1,4 @@
+import { BRAND } from "../../application/brand";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -19,6 +20,7 @@ import { useFocusTrap } from "../components/Overlay";
 import { ExpressionLibrary } from "./ExpressionLibrary";
 import { EmojiPicker } from "./EmojiPicker";
 import { StickerArt } from "./StickerView";
+import { MeldlingExpression } from "../components/MeldlingExpression";
 /** Permissions still distinguish media types; the interface uses one searchable collection. */
 export type PickerTab = "emoji" | "gifs" | "stickers";
 interface ExpressionPickerProps {
@@ -216,6 +218,20 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
               onPick={(expression) => (expression.kind === "sticker" ? p.community?.onSticker(expression) : p.community?.onEmoji(expression))}
             />
           )}
+          {stickers && !query && (
+            <section className="xp-expression-group" aria-label={BRAND.mascot}>
+              <h3 className="xp-group-heading">
+                {BRAND.mascot} · <Localized k="settings.ap_animoji" />
+              </h3>
+              <div className="xp-expression-grid">
+                {ANIMOJI.map(([emoji]) => (
+                  <button className="xp-builtin" key={emoji} aria-label={uiText("messaging.interface.send_animated_value0_6035757", { value0: emoji })} onClick={() => p.onAnimoji(emoji)}>
+                    <MeldlingExpression symbol={emoji} />
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
           <EmojiPicker embedded query={query} onPick={p.onEmoji} community={!p.library ? p.community : undefined} />
           {stickers &&
             STICKER_PACKS.map((pack) => {
@@ -242,20 +258,6 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
                 )
               );
             })}
-          {stickers && !query && (
-            <section className="xp-expression-group" aria-label={uiText("settings.ap_animoji")}>
-              <h3 className="xp-group-heading">
-                <Localized k="settings.ap_animoji" />
-              </h3>
-              <div className="xp-expression-grid">
-                {ANIMOJI.map(([emoji]) => (
-                  <button className="xp-builtin" key={emoji} aria-label={uiText("messaging.interface.send_animated_value0_6035757", { value0: emoji })} onClick={() => p.onAnimoji(emoji)}>
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
           {gifs && <GifPicker query={query} onGif={p.onGif} />}
         </div>
         <footer className="xp-unified-foot">

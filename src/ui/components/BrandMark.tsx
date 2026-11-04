@@ -1,4 +1,4 @@
-import { BRAND } from "../../application/brand";
+import { BRAND, MELDLING_ASSETS } from "../../application/brand";
 
 /**
  * Meldling, Meldiq's mascot, from the one canonical asset (brand/meldling.png, cropped and scaled by
@@ -9,8 +9,8 @@ export function BrandMark({ size = 40, title = BRAND.name }: { size?: number; ti
   return (
     <img
       className="brand-mark"
-      src="/meldling-128.png"
-      srcSet="/meldling-128.png 128w, /meldling-256.png 256w"
+      src={MELDLING_ASSETS.mark}
+      srcSet={MELDLING_ASSETS.srcSet}
       sizes={`${size}px`}
       width={size}
       height={size}

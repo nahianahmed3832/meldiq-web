@@ -29,7 +29,7 @@ const SPLASH = LAUNCH + FRAME;
 
 export default function Document() {
   return (
-    <Html lang="en">
+    <Html lang="en" data-palette="meldiq">
       <Head>
         <meta name="color-scheme" content="light dark" />
         <meta name="theme-color" content="#1e1f22" />
@@ -48,10 +48,10 @@ export default function Document() {
         <meta property="og:site_name" content="Meldiq" />
         <meta property="og:title" content="Meldiq" />
         <meta property="og:description" content="Communities, messages, voice and video. Connect. Play. Belong." />
-        <meta property="og:image" content="/meldiq-og.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="og:image" content="/meldling-512.png" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta name="twitter:card" content="summary" />
         {/* The tab icon is Meldling's silhouette alone (continuation brief v3 §6): teal on light browser chrome, white on
             dark. The square icon stays for home-screen and app icons (apple-touch-icon, the manifest). */}
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32.png" media="(prefers-color-scheme: light)" />

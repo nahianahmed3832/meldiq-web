@@ -4,6 +4,8 @@ The Web branch is `codex/meldiq-part2-foundation` in `/Volumes/code_files/meldiq
 
 ## C-AUTH and C-KEYS
 
+Explicit owner constraint from the branding follow-up: **keep Google and Discord login**. Preserve their configured chooser entries, official icons and existing start/complete handlers. The Meldling brand treatment applies to Meldiq branding and built-in expressions, not to third-party provider identities. Local fixture servers without configured providers are not evidence of their removal.
+
 Keep AccountApi, SetupCredentials, create/add-device contracts and the custom account/device session model. AuthScreen still hands `onSave(device, grant)` the created device before displaying recovery material and calls `onReady(device, grant)` only through the existing completion boundary. Signup → email verify → encryption identity → recovery acknowledgement → welcome is the new-account sequence. Login on a new browser restores existing keys and skips fresh-account welcome. Google/Discord remain their existing adapter, not a replacement authentication authority. Native Supabase Auth/Realtime migration is not enabled here.
 
 `useSubmit.run` synchronously rejects duplicate in-flight calls. `PasswordInput` accepts ordinary input props, manages reveal state only, and never owns persistence. `useCodeCooldown` provides a presentation deadline; server rate limits remain authoritative. TermsConsent requires 13+ declaration and links current public policies. It is not age verification or a durable policy ledger. Follow [policy release contract](legal/RELEASE_NOTES.md) before claiming cross-client legal acceptance.

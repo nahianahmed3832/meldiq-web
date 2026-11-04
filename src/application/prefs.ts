@@ -147,7 +147,7 @@ const defaults: Prefs = {
   highContrast: false,
   lineSpacing: "normal",
   language: "system",
-  palette: "midnight",
+  palette: "meldiq",
   textSize: "default",
   messageLayout: "stream",
   animatedEmoji: true,
@@ -283,8 +283,9 @@ export function volumeOf(v: unknown): number {
   return typeof v === "number" && Number.isFinite(v) ? Math.round(Math.min(100, Math.max(0, v))) : defaults.soundVolume;
 }
 
-/** Existing valid choices stay intact when the product default changes. */
+/** Move the unchosen former default to Meldiq; explicit and other legacy choices stay intact. */
 export function paletteOf(stored: { palette?: unknown; paletteChosen?: unknown }): Palette {
+  if (stored.palette === "midnight" && stored.paletteChosen !== true) return defaults.palette;
   return PALETTES.find((p) => p === stored.palette) ?? defaults.palette;
 }
 
@@ -341,6 +342,7 @@ const LOOK_KEY = "meldiq.look";
 export function applyTheme({
   theme,
   palette,
+  paletteChosen = false,
   textSize,
   messageLayout,
   language,
@@ -352,7 +354,7 @@ export function applyTheme({
   highContrast = false,
   lineSpacing = "normal",
 }: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> &
-  Partial<Pick<Prefs, "language" | "vibe" | "vibeCustom" | "vibeStrength" | "density" | "reducedMotion" | "highContrast" | "lineSpacing">>): void {
+  Partial<Pick<Prefs, "paletteChosen" | "language" | "vibe" | "vibeCustom" | "vibeStrength" | "density" | "reducedMotion" | "highContrast" | "lineSpacing">>): void {
   const root = document.documentElement;
   // The page's language follows the interface's (screen readers, fonts, spelling).
   root.setAttribute("lang", resolveLanguage(language ?? "system"));
@@ -371,7 +373,7 @@ export function applyTheme({
   if (frame) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", frame);
   // For the next load's first paint (public/boot.js): the same look before any of the app's scripts run.
   try {
-    localStorage.setItem(LOOK_KEY, JSON.stringify({ theme, palette, language: resolveLanguage(language ?? "system") }));
+    localStorage.setItem(LOOK_KEY, JSON.stringify({ theme, palette, paletteChosen, language: resolveLanguage(language ?? "system") }));
   } catch {
     /* storage unavailable: the next load starts in the default look until this runs */
   }

@@ -1,0 +1,3 @@
+  ✘  1 [chromium] › e2e/branding.spec.ts:10:1 › Google and Discord login entries still call their existing provider handlers (11.4s)
+  ✘  2 [phone-width] › e2e/branding.spec.ts:10:1 › Google and Discord login entries still call their existing provider handlers (11.6s)
+  2 failed

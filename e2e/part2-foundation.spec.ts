@@ -54,6 +54,11 @@ test("fresh registration enforces consent, verifies email, and resumes real prof
   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Create your profile", exact: true })).toBeVisible();
   await expect(page.getByLabel("Display name", { exact: true })).toHaveValue("Foundation Explorer");
+  await expect(page.locator("html")).toHaveAttribute("data-palette", "meldiq");
+  await expect(page.locator(".welcome-story .meldling-art")).toHaveAttribute("src", "/meldling-128.png");
+  const brandScreenshots = process.env.MELDIQ_BRANDING_SCREENSHOTS ?? "/tmp/meldiq-part2/branding";
+  fs.mkdirSync(brandScreenshots, { recursive: true });
+  await page.screenshot({ path: path.join(brandScreenshots, `welcome-default-${info.project.name}.jpg`), animations: "disabled" });
   await page.getByLabel("Display name", { exact: true }).fill("My Meldiq Space");
   await page.locator(".welcome-avatar input[type=file]").setInputFiles(path.resolve("e2e/fixtures/photo.jpg"));
   await expect(page.getByRole("button", { name: "Continue", exact: true })).toBeEnabled();

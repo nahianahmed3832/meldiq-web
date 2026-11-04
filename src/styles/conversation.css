@@ -1538,9 +1538,36 @@
 }
 .sticker-emoji {
   position: relative;
-  font-size: 0.42em;
+  font-size: 0.52em;
   line-height: 1.1;
   display: inline-block;
+}
+.meldling-expression {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  line-height: 1;
+}
+.meldling-expression > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 24%;
+}
+.meldling-expression-symbol {
+  position: absolute;
+  inset-inline-end: -0.15em;
+  bottom: -0.08em;
+  display: grid;
+  place-items: center;
+  width: 1.35em;
+  height: 1.35em;
+  font-size: 0.4em;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  box-shadow: 0 1px 3px #0003;
 }
 .sticker-caption {
   position: relative;
@@ -3111,6 +3138,14 @@ button.media-card {
 .xp-expression-pick:focus-visible,
 .xp-builtin:hover {
   background: var(--surface-hover);
+}
+.xp-builtin .meldling-expression,
+.xp-builtin .sticker-emoji {
+  font-size: 32px;
+}
+.xp-builtin .sticker-caption,
+.xp-builtin .sticker-shape {
+  display: none;
 }
 .xp-expression-pick > span {
   display: grid;
