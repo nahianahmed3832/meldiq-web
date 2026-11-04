@@ -7,6 +7,7 @@ import type { StoredMessage } from "../model/types";
  *   from:bob  from:"Bob Chen"  from:me     a sender (name or @username, any part of it)
  *   has:image  has:video  has:file  has:link
  *   before:2026-10-01  after:2026-10-01   messages before / after that day (the day itself excluded), local time
+ *   during:2026-10-01                   that local calendar day, including DST transitions
  */
 export const HAS_KINDS = ["image", "video", "file", "link"] as const;
 export type HasKind = (typeof HAS_KINDS)[number];
@@ -31,6 +32,12 @@ function dayStart(s: string): number | null {
   return d.getMonth() === Number(m[2]) - 1 && d.getDate() === Number(m[3]) ? d.getTime() : null;
 }
 
+function nextDay(t: number): number {
+  const d = new Date(t);
+  d.setDate(d.getDate() + 1);
+  return d.getTime();
+}
+
 export function parseSearchQuery(raw: string): SearchQuery {
   const q: SearchQuery = { text: "", from: null, has: [], before: null, after: null };
   const rest = raw.replace(TOKEN, (whole, key: string, value: string, quoted: string | undefined) => {
@@ -49,13 +56,20 @@ export function parseSearchQuery(raw: string): SearchQuery {
       case "before": {
         const t = dayStart(v);
         if (t === null) return whole;
-        q.before = t;
+        q.before = Math.min(q.before ?? Infinity, t);
         return " ";
       }
       case "after": {
         const t = dayStart(v);
         if (t === null) return whole;
-        q.after = t + 86_400_000; // the day after starts after it
+        q.after = Math.max(q.after ?? -Infinity, nextDay(t));
+        return " ";
+      }
+      case "during": {
+        const t = dayStart(v);
+        if (t === null) return whole;
+        q.after = Math.max(q.after ?? -Infinity, t);
+        q.before = Math.min(q.before ?? Infinity, nextDay(t));
         return " ";
       }
       default:

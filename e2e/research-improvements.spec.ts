@@ -61,7 +61,7 @@ test("opening always shows latest; active reading survives pagination, arrivals 
     release = resolve;
   });
 
-  await page.route(/\/v2\/conversations\/[^/]+\/messages\?.*before=/, async (route) => {
+  await page.route(/\/v2\/conversations\/[^/]+\/(?:messages|message-collections)\?.*before=/, async (route) => {
     requested = true;
     await held;
     await route.continue();

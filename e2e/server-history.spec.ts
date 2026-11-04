@@ -58,10 +58,11 @@ test("chats come back from the server after signing out and in again", async ({ 
   // No backup settings any more.
   await page.goto("/settings/security");
   await expect(page.getByText(/backed up/i)).toHaveCount(0);
-  await page.getByRole("button", { name: "Sign out", exact: true }).click();
-  const dialog = page.getByRole("dialog", { name: "Sign out of this browser?" });
-  await expect(dialog).toContainText("all there when you sign in again");
-  await dialog.getByRole("button", { name: "Sign out" }).click();
+  await page.goto("/settings/you");
+  await page.getByRole("button", { name: "Log out", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Log out of Meldiq?" });
+  await expect(dialog).toContainText("Your chats stay on Meldiq and return when you sign in again.");
+  await dialog.getByRole("button", { name: "Log out", exact: true }).click();
   await expectSignedOut(page);
 
   // Signed in again (a new device of the account): the chats are back, from the server.

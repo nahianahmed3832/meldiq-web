@@ -62,9 +62,9 @@ test("a linked browser and the phone stay in sync through the server, and signin
   await expect(page.getByText("Reply typed in the browser ✓")).toBeVisible();
 
   // Sign out: the server lists the browser as removed, and the browser is back at the link screen.
-  await page.goto("/settings/security");
-  await page.getByRole("button", { name: "Sign out", exact: true }).click();
-  await page.getByRole("dialog", { name: "Sign out of this browser?" }).getByRole("button", { name: "Sign out" }).click();
+  await page.goto("/settings/you");
+  await page.getByRole("button", { name: "Log out", exact: true }).click();
+  await page.getByRole("dialog", { name: "Log out of Meldiq?" }).getByRole("button", { name: "Log out", exact: true }).click();
   await expectSignedOut(page);
   const devices = (await alice.req("GET", "/v1/devices")).devices as { name: string; revokedAt: number | null }[];
   expect(devices.filter((d) => /^(Meldiq|Orbit) Web/.test(d.name)).every((d) => d.revokedAt !== null)).toBe(true);

@@ -31,7 +31,7 @@ import { CallManager, type CallTarget } from "../call/manager";
 import { callSupport } from "../call/support";
 import type { MediaFactory } from "../call/types";
 import { fingerprint } from "../crypto/identity";
-import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
+import type { DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
 import { RealtimeClient } from "../realtime/socket";
 import type { CallPrefs } from "../call/manager";
@@ -986,9 +986,6 @@ export class Engine implements EngineContext {
   async markThreadSeen(rootId: string): Promise<void> {
     if (await markThreadSeen(this.store, rootId)) this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
   }
-  private local(id: string): Promise<ConversationLocal> {
-    return this.locals.get(id);
-  }
   bump(
     m: StoredMessage,
     counts: {
@@ -1297,9 +1294,12 @@ export class Engine implements EngineContext {
   }
   /** Clears unread on this device and, where the phone would, tells the others with an encrypted read receipt. */
   async markRead(id: string): Promise<void> {
-    let l = await this.local(id);
+    // Start the in-memory message snapshot and queue the counter change before yielding. A later arrival must
+    // remain behind this action in the locals queue and outside this receipt, including for "mark all read".
+    const latestAtClick = this.store.newestMessage(id, (m) => !m.outgoing && m.kind === "text");
+    let readUpTo = 0;
     await this.locals.update(id, (cur) => {
-      l = cur;
+      readUpTo = cur.readUpTo;
       return cur.unread || cur.mentions ? { ...cur, unread: 0, mentions: 0 } : null;
     });
     const conv = this.state.get().conversations[id];
@@ -1308,11 +1308,11 @@ export class Engine implements EngineContext {
     // Channels and large groups send no read receipts; there, only this person's own devices hear about it (below).
     const selfOnly = !sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) && (this.state.get().server?.features.includes("self-controls") ?? false);
     if (!receipts && !selfOnly) return;
-    const latest = await this.store.newestMessage(id, (m) => !m.outgoing && m.kind === "text");
+    const latest = await latestAtClick;
     if (!latest) return;
     const upTo = latest.serverTs ?? latest.sortTs;
     // Already said by this browser, or by another device of the account (its receipt reached us as readElsewhere).
-    if (Math.max(this.lastReadSent.get(id) ?? 0, l.readUpTo) >= upTo) return;
+    if (Math.max(this.lastReadSent.get(id) ?? 0, readUpTo) >= upTo) return;
     this.lastReadSent.set(id, upTo);
     await this.locals.update(id, (cur) => ({ ...cur, readUpTo: Math.max(cur.readUpTo, upTo) }));
     if (receipts) return this.enqueueControl(id, { type: "read", upTo });
@@ -1489,8 +1489,8 @@ export class Engine implements EngineContext {
     if (q.text.trim()) {
       const params = new URLSearchParams({ q: q.text.trim().slice(0, 200), limit: "100" });
       if (conversationId) params.set("conversationId", conversationId);
-      const res = await this.api.json("GET", `/v2/messages/search?${params}`, zSearchRes).catch(() => null);
-      for (const e of res?.messages ?? []) await this.receiver.ingest(e, 0, { history: true });
+      const res = await this.api.json("GET", `/v2/messages/search?${params}`, zSearchRes);
+      for (const e of res.messages) await this.receiver.ingest(e, 0, { history: true });
     }
     const sender = (m: StoredMessage) => {
       const mine = m.outgoing || m.senderUserId === this.device.userId;

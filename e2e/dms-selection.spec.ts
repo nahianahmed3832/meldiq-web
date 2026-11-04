@@ -42,7 +42,8 @@ test("in DMs no community is selected, and a community in the rail opens its cha
   await expect(sidebar).toContainText("Bob Chen");
 
   await community.click();
-  await expect(page).toHaveURL(/\/home$/);
+  await expect(page).toHaveURL(/\/lobby$/);
+  await expect(page.getByRole("heading", { name: "Rail Lab", level: 1, exact: true })).toBeVisible();
   await expect(selected).toHaveCount(1);
   await expect(sidebar).toContainText("Rail Lab");
   await expect(sidebar.getByRole("heading", { name: "Direct messages", level: 2 })).toHaveCount(0);

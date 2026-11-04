@@ -10,6 +10,7 @@ import type { StoredMessage } from "../../model/types";
 import { shortWhen } from "../format";
 import { jumpTo } from "./jump";
 import { hasFilters, parseSearchQuery } from "../../sync/searchQuery";
+import { StatePanel } from "../components/StatePanel";
 /** Filters added by a tap (android search chips): the text typed after them narrows further. */
 const CHIPS: {
   label: string;
@@ -62,8 +63,8 @@ const MIN_QUERY = 2;
 /** Characters of text shown before a match. */
 const CONTEXT = 32;
 /**
- * Search in this conversation (android ConversationViewModel search): message text on this browser, newest first. The
- * server can't search: it only holds encrypted copies. Choosing a result scrolls to it, loading older messages if needed.
+ * Search this conversation's server text and loaded history, newest first. Filters narrow the retrieved/loaded
+ * candidates. Choosing a result opens a separate history window when its message is outside the current timeline.
  */
 export function SearchPanel({ conversationId, onClose }: { conversationId: string; onClose: () => void }) {
   useLocaleRender();
@@ -74,25 +75,37 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
   const [q, setQ] = useState("");
   const [results, setResults] = useState<StoredMessage[] | null>(null);
   const [missing, setMissing] = useState<string | null>(null);
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [attempt, setAttempt] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => input.current?.focus(), []);
   const parsed = parseSearchQuery(q);
   useEffect(() => {
     const term = q.trim();
     const query = parseSearchQuery(term);
-    if (query.text.length < MIN_QUERY && !hasFilters(query)) return setResults(null);
+    setResults(null);
+    if (query.text.length < MIN_QUERY && !hasFilters(query)) {
+      setStatus("idle");
+      return;
+    }
+    setStatus("loading");
     let alive = true;
     const t = setTimeout(() => {
       engine
         .searchMessages(term, conversationId)
-        .then((r) => alive && setResults(r))
-        .catch(() => alive && setResults([]));
+        .then((r) => {
+          if (alive) {
+            setResults(r);
+            setStatus("idle");
+          }
+        })
+        .catch(() => alive && setStatus("error"));
     }, 200);
     return () => {
       alive = false;
       clearTimeout(t);
     };
-  }, [engine, conversationId, q]);
+  }, [engine, conversationId, q, attempt]);
   const open = async (m: StoredMessage) => {
     setMissing(null);
     if (!(await jumpTo(engine, conversationId, m.id))) setMissing(uiText("messaging.interface.that_message_isn_t_loaded_in_this_conversation_any_more_d58914f"));
@@ -135,7 +148,15 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
             {missing}
           </p>
         )}
-        {results === null ? (
+        {status === "error" ? (
+          <StatePanel error title={l10n("messaging.interface.couldn_t_load_messages_try_again_9068b8c")}>
+            <button className="btn btn-secondary btn-sm" onClick={() => setAttempt((n) => n + 1)}>
+              {l10n("common.actions.retry")}
+            </button>
+          </StatePanel>
+        ) : status === "loading" ? (
+          <StatePanel loading title={l10n("common.status.loading")} />
+        ) : results === null ? (
           <p className="faint" style={{ padding: "8px 4px" }}>
             <Localized
               k="messaging.interface.searches_every_message_in_your_conversations_narrow_it_with_from_43f8bc9"

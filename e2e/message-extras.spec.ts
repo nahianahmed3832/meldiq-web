@@ -72,7 +72,7 @@ test("forward to two chats with a note, a call card, the viewer's caption and Re
   await viewer.getByRole("button", { name: "React 🎉" }).click();
   await expect(viewer.getByRole("button", { name: "React 🎉" })).toHaveAttribute("aria-pressed", "true");
   await page.keyboard.press("Escape");
-  await expect(photoMsg.locator(".reaction")).toContainText("🎉");
+  await expect(photoMsg.getByRole("button", { name: "🎉 1, reacted by You", exact: true })).toHaveAttribute("aria-pressed", "true");
 
   // YouTube plays here, in the privacy-enhanced player.
   await bob.send(dmBob, { type: "text", text: "Watch https://youtu.be/dQw4w9WgXcQ" });

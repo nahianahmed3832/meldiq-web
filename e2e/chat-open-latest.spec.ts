@@ -45,7 +45,8 @@ for (const kind of ["dm", "group", "channel"] as const) {
     const href = `/${kind === "channel" ? "home" : "dms"}/c/${id}`;
     const requests: string[] = [];
     page.on("request", (req) => {
-      if (req.url().includes(`/v2/conversations/${id}/messages?`)) requests.push(req.url());
+      const pathname = new URL(req.url()).pathname;
+      if (pathname === `/v2/conversations/${id}/messages` || pathname === `/v2/conversations/${id}/message-collections`) requests.push(req.url());
     });
     await go(page, href);
     await newest(page, last);
@@ -149,11 +150,14 @@ test("slow opens cannot expose cached history or acknowledge it; switching cance
     release = resolve;
   });
   let requested = false;
-  await page.route(`**/v2/conversations/${dm}/messages?*`, async (route) => {
-    requested = true;
-    await held;
-    await route.continue();
-  });
+  await page.route(
+    (url) => url.pathname === `/v2/conversations/${dm}/messages` || url.pathname === `/v2/conversations/${dm}/message-collections`,
+    async (route) => {
+      requested = true;
+      await held;
+      await route.continue();
+    },
+  );
   await go(page, `/dms/c/${dm}`);
   await expect.poll(() => requested).toBe(true);
   // While the initial page is pending there is a loading state, not the first item of an old window.
@@ -181,9 +185,9 @@ test("signing out and linking again opens large server history at latest", async
   await messages(page).evaluate((el) => {
     el.scrollTop = 300;
   });
-  await go(page, "/settings/security");
-  await page.getByRole("button", { name: "Sign out", exact: true }).click();
-  await page.getByRole("dialog", { name: "Sign out of this browser?" }).getByRole("button", { name: "Sign out", exact: true }).click();
+  await go(page, "/settings/you");
+  await page.getByRole("button", { name: "Log out", exact: true }).click();
+  await page.getByRole("dialog", { name: "Log out of Meldiq?" }).getByRole("button", { name: "Log out", exact: true }).click();
   await expectSignedOut(page);
   await bob.send(dm, { type: "text", text: "Newest after sign out" });
   await link(page, alice);
