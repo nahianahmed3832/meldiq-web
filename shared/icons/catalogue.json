@@ -339,9 +339,9 @@
     {
       "id": "settings.general",
       "collection": "Lucide",
-      "originalName": "settings2",
+      "originalName": "settings-2",
       "sourceVersion": "lucide-react@1.59.0",
-      "upstream": "https://lucide.dev/icons/settings2",
+      "upstream": "https://lucide.dev/icons/settings-2",
       "svg": "svg/settings2.svg",
       "license": "ISC AND MIT",
       "licenseFile": "LICENSE-lucide.txt",
