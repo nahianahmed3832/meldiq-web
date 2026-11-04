@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "target": "http://127.0.0.1:5495",
-  "testedAt": "2026-11-04T11:43:11.863Z",
+  "testedAt": "2026-11-04T11:46:42.206Z",
   "results": [
     {
       "name": "chromium-desktop",
@@ -9,7 +9,7 @@
         "width": 1440,
         "height": 900
       },
-      "buildId": "HHAngSPTIE33OqsUlZN1p",
+      "buildId": "gKnRbLn8SW1ecppm2v3AH",
       "testLinkingDisabled": true,
       "reloadPassed": true,
       "pageErrors": 0,
@@ -21,7 +21,7 @@
         "width": 393,
         "height": 852
       },
-      "buildId": "HHAngSPTIE33OqsUlZN1p",
+      "buildId": "gKnRbLn8SW1ecppm2v3AH",
       "testLinkingDisabled": true,
       "reloadPassed": true,
       "pageErrors": 0,
@@ -33,7 +33,7 @@
         "width": 1440,
         "height": 900
       },
-      "buildId": "HHAngSPTIE33OqsUlZN1p",
+      "buildId": "gKnRbLn8SW1ecppm2v3AH",
       "testLinkingDisabled": true,
       "reloadPassed": true,
       "pageErrors": 0,

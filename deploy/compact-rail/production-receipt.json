@@ -1,0 +1,104 @@
+{
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-04T11:47:48.504043+00:00",
+  "sourceCommit": "1153ca0e7b71542a9820a981c3bc839c0ccf9646",
+  "sourceTreeSha256": "01624ecf165dc1f153ba08f2a148c7fba3f235c275bccd3abcc6e62a7d1f7e32",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-compact-rail-22607b3",
+  "webRelease": "/opt/meldiq-web/releases/0.5.0-beta-compact-rail-1153ca0",
+  "buildId": "gKnRbLn8SW1ecppm2v3AH",
+  "archiveSha256": "0b288c6ccd570978f848fe2e4b856d5b84d909c48fa35f762f0519d9261fd202",
+  "apiPreserved": true,
+  "apiImageId": "sha256:6fe6ef9beb98aa14d2cc3e264d1392a0e76ba6aefe26ba9029342950f2f67f03",
+  "apiContainerId": "2f2da5b48ecc192a8c0eb18b93531783b3259819065b54b6199b4ab39321a522",
+  "publicConfigPreserved": true,
+  "nginxPreserved": true,
+  "oauthCallbackPreserved": true,
+  "health": {
+    "ok": true,
+    "version": "0.76.1",
+    "time": 1793792868501,
+    "livekit": true,
+    "mongodb": null,
+    "postgres": true,
+    "databaseMode": "supabase",
+    "redis": true
+  },
+  "previousStaticAssetsRetained": true,
+  "verifiedFileCount": 473,
+  "validation": {
+    "typecheck": "passed",
+    "targetedLint": "passed",
+    "format": "passed",
+    "localization": "passed-28-locales",
+    "unitTests": {
+      "passed": 7,
+      "files": 2
+    },
+    "productionBuild": "passed-test-linking-disabled",
+    "browserRegression": {
+      "passed": 4,
+      "failed": 0,
+      "engines": [
+        "chromium",
+        "webkit",
+        "firefox",
+        "phone"
+      ],
+      "normalEmailOnboarding": true,
+      "coverage": [
+        "daily-navigation",
+        "unread-badge-paint",
+        "edge-alignment",
+        "long-rail-short-window",
+        "rtl",
+        "light-dark",
+        "phone-layout",
+        "action-hover-contrast"
+      ],
+      "duration": "40.3s"
+    },
+    "localBrowser": {
+      "status": "passed",
+      "target": "http://127.0.0.1:5495",
+      "testedAt": "2026-11-04T11:46:42.206Z",
+      "results": [
+        {
+          "name": "chromium-desktop",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "buildId": "gKnRbLn8SW1ecppm2v3AH",
+          "testLinkingDisabled": true,
+          "reloadPassed": true,
+          "pageErrors": 0,
+          "failedAssets": 0
+        },
+        {
+          "name": "chromium-phone",
+          "viewport": {
+            "width": 393,
+            "height": 852
+          },
+          "buildId": "gKnRbLn8SW1ecppm2v3AH",
+          "testLinkingDisabled": true,
+          "reloadPassed": true,
+          "pageErrors": 0,
+          "failedAssets": 0
+        },
+        {
+          "name": "webkit-desktop",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "buildId": "gKnRbLn8SW1ecppm2v3AH",
+          "testLinkingDisabled": true,
+          "reloadPassed": true,
+          "pageErrors": 0,
+          "failedAssets": 0
+        }
+      ]
+    }
+  }
+}
