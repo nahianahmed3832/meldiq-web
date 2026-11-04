@@ -1,0 +1,7 @@
+{
+  "scope": "synthetic fixed interoperability keys only",
+  "androidOpenedNodePacket": true,
+  "nodeSdkOpenedAndroidPacket": true,
+  "wrongContextRejected": true,
+  "physicalDevice": false
+}

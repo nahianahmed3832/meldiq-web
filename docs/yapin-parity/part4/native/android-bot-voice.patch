@@ -1,0 +1,358 @@
+--- a/android/app/src/main/java/com/meldiq/android/data/api/ApiModels.kt
++++ b/android/app/src/main/java/com/meldiq/android/data/api/ApiModels.kt
+@@ -726,6 +726,8 @@
+     val hands: List<String> = emptyList(),
+     /** Live calls: who is sharing their screen now, from the media server (API 0.42.0; older servers leave it out). */
+     val sharing: List<String> = emptyList(),
++    /** Optional API voice preview: only public approved keys, never a bot credential or room key. */
++    val botVoice: List<BotVoiceKeyRequestDto> = emptyList(),
+ )
+ @Serializable data class CallAttendanceDto(val userId: String, val joinedAt: Long, val leftAt: Long, val seconds: Long)
+ /** [canSpeak] false: a voice channel where you may only listen (the token can't publish). Older servers: true. */
+--- a/android/app/src/main/java/com/meldiq/android/call/CallManager.kt
++++ b/android/app/src/main/java/com/meldiq/android/call/CallManager.kt
+@@ -22,6 +22,8 @@
+ import com.meldiq.android.data.api.GriipJson
+ import com.meldiq.android.data.api.HandReq
+ import com.meldiq.android.data.api.ModerateReq
++import com.meldiq.android.data.api.BotVoicePacketDto
++import com.meldiq.android.data.api.BotVoiceKeyAcceptedDto
+ import kotlinx.serialization.builtins.ListSerializer
+ import kotlinx.serialization.builtins.serializer
+ import com.meldiq.android.data.db.CallLogEntity
+@@ -93,6 +95,7 @@
+     val e2eeProblem: Boolean = false,
+     /** Draw this camera mirrored: only your own front camera (round 7, [CallMediaPolicy.mirrorPreview]). */
+     val mirrored: Boolean = false,
++    val isBot: Boolean = false,
+ )
+ 
+ data class CallUiState(
+@@ -198,6 +201,7 @@
+     private val diag = CallDiagnostics(scope)
+     /** Calls this device already rang, answered, declined or ended: ring recovery never re-rings them. Bounded. */
+     private val handled = LinkedHashSet<String>()
++    private val botVoiceKeys = BotVoiceKeyRelay()
+     private var mediaJob: Job? = null
+     /** The previous call's native teardown; a new call waits for it, so two rooms never hold the microphone and speaker at once. */
+     private var releaseJob: Job? = null
+@@ -253,6 +257,7 @@
+                 // The conversation's "call in progress · Join" banner follows the call's own events. It used to change only
+                 // when the conversation list was reloaded, so it stayed after the call had ended (seen on the phone, UI-003).
+                 scope.launch { runCatching { syncActiveCall(call, f.event) } }
++                if (call.id == _state.value.callId && f.event != CallEvents.ENDED) scope.launch { shareBotVoiceKeys(call) }
+                 when (f.event) {
+                     CallEvents.RING -> onRing(call)
+                     CallEvents.ENDED -> if (call.id == _state.value.callId) finish(remoteReason = call.endReason ?: "ended", notifyServer = false)
+@@ -295,6 +300,16 @@
+                     db.conversations().setRoomPeople(call.conversationId, GriipJson.encodeToString(ListSerializer(String.serializer()), people))
+                 }
+             }
++        }
++    }
++
++    private suspend fun shareBotVoiceKeys(call: CallDto) {
++        val me = session.session ?: return
++        fun active() = settings.current.mediaE2ee && room != null && _state.value.callId == call.id && _state.value.phase == CallPhase.Connected
++        if (!active() || call.botVoice.isEmpty()) return
++        val key = messages.callKey(call.id) ?: return
++        botVoiceKeys.share(call, me.userId, me.deviceId, key, ::active) { leaseId, packet ->
++            api.post<BotVoicePacketDto, BotVoiceKeyAcceptedDto>("/v1/calls/${call.id}/bot-voice/$leaseId/key", packet)
+         }
+     }
+ 
+@@ -975,6 +990,7 @@
+                 connectionWeak = p.connectionQuality == ConnectionQuality.POOR || p.connectionQuality == ConnectionQuality.LOST,
+                 e2eeProblem = id in problems,
+                 mirrored = CallMediaPolicy.mirrorPreview(local, (cam as? LocalVideoTrack)?.options?.position == io.livekit.android.room.track.CameraPosition.BACK),
++                isBot = id.substringAfter('.', "").startsWith("botvoice_"),
+             )
+         }
+         // One tile per identity in a stable order (others by arrival, then you), never yourself twice.
+@@ -1363,6 +1379,7 @@
+     }
+ 
+     private fun teardown() {
++        botVoiceKeys.clear()
+         routeCheck?.cancel()
+         routeCheck = null
+         routedRoom = null
+--- a/android/app/src/main/java/com/meldiq/android/ui/screens/calls/CallOverlay.kt
++++ b/android/app/src/main/java/com/meldiq/android/ui/screens/calls/CallOverlay.kt
+@@ -509,6 +509,7 @@
+             .semantics(mergeDescendants = true) {
+                 contentDescription = buildString {
+                     append(if (p.isLocal) "You" else p.name)
++                    if (p.isBot) append(", BOT")
+                     if (!p.micOn) append(", muted")
+                     if (p.speaking) append(", speaking")
+                     if (!p.cameraOn) append(", camera off")
+@@ -535,11 +536,13 @@
+         }
+         // Name at the bottom left on a soft shade; muted or speaking in a round badge at the bottom right.
+         Box(Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(44.dp).background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = 0.55f)))))
+-        Text(
+-            if (p.isLocal) stringResource(R.string.call_you) else p.name, style = Griip.type.label.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold),
+-            color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis,
+-            modifier = Modifier.align(Alignment.BottomStart).padding(start = 10.dp, end = 40.dp, bottom = 8.dp),
+-        )
++        Row(Modifier.align(Alignment.BottomStart).padding(start = 10.dp, end = 40.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++            Text(
++                if (p.isLocal) stringResource(R.string.call_you) else p.name, style = Griip.type.label.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold),
++                color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false),
++            )
++            if (p.isBot) com.meldiq.android.ui.screens.conversation.BotTag()
++        }
+         when {
+             !p.micOn -> Box(Modifier.align(Alignment.BottomEnd).padding(6.dp).size(26.dp).clip(CircleShape).background(Color.Black.copy(alpha = 0.55f)), contentAlignment = Alignment.Center) {
+                 Icon(Icons.Rounded.MicOff, null, tint = Color.White, modifier = Modifier.size(15.dp))
+--- /dev/null
++++ b/android/app/src/main/java/com/meldiq/android/data/api/BotVoiceModels.kt
+@@ -0,0 +1,14 @@
++package com.meldiq.android.data.api
++
++import kotlinx.serialization.Serializable
++
++@Serializable data class BotVoiceKeyRequestDto(
++    val leaseId: String,
++    val botId: String,
++    val publicKey: String,
++    val fingerprint: String,
++    val manifestRev: Int,
++    val expiresAt: Long,
++)
++@Serializable data class BotVoicePacketDto(val enc: String, val ct: String)
++@Serializable data class BotVoiceKeyAcceptedDto(val accepted: Boolean)
+--- /dev/null
++++ b/android/app/src/main/java/com/meldiq/android/call/BotVoiceKeys.kt
+@@ -0,0 +1,66 @@
++package com.meldiq.android.call
++
++import com.meldiq.android.crypto.Hpke
++import com.meldiq.android.crypto.b64
++import com.meldiq.android.crypto.sha256
++import com.meldiq.android.crypto.unb64
++import com.meldiq.android.data.api.BotVoiceKeyRequestDto
++import com.meldiq.android.data.api.BotVoicePacketDto
++import com.meldiq.android.data.api.CallDto
++import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
++import kotlinx.serialization.json.JsonArray
++import kotlinx.serialization.json.JsonPrimitive
++
++/** Same HPKE suite/AAD as Web and the optional bot SDK. Only ciphertext leaves this client. */
++object BotVoiceKeys {
++    const val INFO = "meldiq-bot-voice-v1"
++    private val id = Regex("[A-Za-z0-9_-]{1,64}")
++    fun aad(callId: String, channelId: String, request: BotVoiceKeyRequestDto): ByteArray = JsonArray(listOf(
++        JsonPrimitive(INFO), JsonPrimitive(callId), JsonPrimitive(channelId), JsonPrimitive(request.botId),
++        JsonPrimitive(request.leaseId), JsonPrimitive(request.manifestRev),
++    )).toString().toByteArray(Charsets.UTF_8)
++
++    fun seal(request: BotVoiceKeyRequestDto, callId: String, channelId: String, key: String, now: Long = System.currentTimeMillis()): BotVoicePacketDto {
++        require(listOf(callId, channelId, request.botId, request.leaseId).all(id::matches))
++        require(request.expiresAt > now && request.manifestRev > 0)
++        val publicKey = request.publicKey.unb64()
++        val roomKey = key.unb64()
++        require(publicKey.size == 32 && publicKey.b64() == request.publicKey && roomKey.size == 32)
++        require(sha256(publicKey).joinToString("") { "%02x".format(it) } == request.fingerprint)
++        val (enc, ct) = Hpke.seal(publicKey, INFO.toByteArray(Charsets.UTF_8), aad(callId, channelId, request), roomKey)
++        return BotVoicePacketDto(enc.b64(), ct.b64())
++    }
++}
++
++/** Per-call bounded metadata only. No additional room-key persistence, logs or background polling. */
++class BotVoiceKeyRelay {
++    private val lock = Any()
++    private val pending = HashSet<String>()
++    private val shared = LinkedHashSet<String>()
++    fun clear() = synchronized(lock) { pending.clear(); shared.clear() }
++
++    suspend fun share(call: CallDto, userId: String, deviceId: String, key: String, active: () -> Boolean, send: suspend (String, BotVoicePacketDto) -> Unit) {
++        if (!call.voiceRoom || call.state != "ACTIVE" || !call.participants.any { it.userId == userId && it.deviceId == deviceId } || !active()) return
++        for (request in call.botVoice.take(128)) {
++            val start = synchronized(lock) { pending.size < 128 && request.leaseId !in shared && pending.add(request.leaseId) }
++            if (!start) continue
++            try {
++                val packet = withContext(Dispatchers.Default) { BotVoiceKeys.seal(request, call.id, call.conversationId, key) }
++                if (!active()) return
++                send(request.leaseId, packet)
++                if (active()) synchronized(lock) {
++                    shared += request.leaseId
++                    while (shared.size > 128) shared.remove(shared.first())
++                }
++            } catch (cancel: CancellationException) {
++                throw cancel
++            } catch (_: Exception) {
++                // A current pending request is reannounced by the lease heartbeat; no private material is logged.
++            } finally {
++                synchronized(lock) { pending.remove(request.leaseId) }
++            }
++        }
++    }
++}
+--- /dev/null
++++ b/android/app/src/test/java/com/meldiq/android/call/BotVoiceKeysTest.kt
+@@ -0,0 +1,98 @@
++package com.meldiq.android.call
++
++import com.meldiq.android.crypto.Hpke
++import com.meldiq.android.crypto.unb64
++import com.meldiq.android.data.api.BotVoiceKeyRequestDto
++import com.meldiq.android.data.api.BotVoicePacketDto
++import com.meldiq.android.data.api.CallDto
++import com.meldiq.android.data.api.CallParticipantDto
++import com.meldiq.android.data.api.GriipJson
++import com.meldiq.android.data.api.RealtimeCodec
++import com.meldiq.android.data.api.ServerEvent
++import kotlinx.coroutines.CompletableDeferred
++import kotlinx.coroutines.async
++import kotlinx.coroutines.awaitAll
++import kotlinx.coroutines.runBlocking
++import kotlinx.serialization.Serializable
++import org.junit.Assert.*
++import org.junit.Test
++
++class BotVoiceKeysTest {
++    @Serializable private data class Vector(val scope: String, val callId: String, val channelId: String, val request: BotVoiceKeyRequestDto, val privateKey: String, val roomKey: String, val aad: String, val packet: BotVoicePacketDto)
++    private val vector = GriipJson.decodeFromString<Vector>(javaClass.classLoader!!.getResource("bot_voice_hpke_node.json")!!.readText())
++    private fun open(packet: BotVoicePacketDto, request: BotVoiceKeyRequestDto = vector.request, callId: String = vector.callId, channelId: String = vector.channelId): ByteArray = Hpke.open(
++        vector.privateKey.unb64(), vector.request.publicKey.unb64(), packet.enc.unb64(), BotVoiceKeys.INFO.toByteArray(),
++        BotVoiceKeys.aad(callId, channelId, request), packet.ct.unb64(),
++    )
++    private fun call() = CallDto(vector.callId, vector.channelId, createdBy = "human", video = false, state = "ACTIVE", createdAt = 1,
++        voiceRoom = true, participants = listOf(CallParticipantDto("human", "phone", 1)), botVoice = listOf(vector.request))
++
++    @Test fun `opens the Node HPKE packet using the exact shared context`() {
++        assertEquals(vector.aad, String(BotVoiceKeys.aad(vector.callId, vector.channelId, vector.request)))
++        assertArrayEquals(vector.roomKey.unb64(), open(vector.packet))
++        val own = BotVoiceKeys.seal(vector.request, vector.callId, vector.channelId, vector.roomKey)
++        assertArrayEquals(vector.roomKey.unb64(), open(own))
++        assertNotEquals(vector.packet.enc, own.enc)
++        assertEquals(48, own.ct.unb64().size)
++        // Synthetic fixture only: let the first-party Node SDK independently open Android's packet.
++        java.io.File("build/tmp/bot-voice-interop/android-packet.json").also { file ->
++            file.parentFile.mkdirs()
++            file.writeText(GriipJson.encodeToString(BotVoicePacketDto.serializer(), own))
++        }
++    }
++
++    @Test fun `decodes the real API frame and keeps old call frames compatible`() {
++        val fixture = javaClass.classLoader!!.getResource("bot_voice_call_api.json")!!.readText()
++        val event = RealtimeCodec.decode(fixture) as ServerEvent.Call
++        assertEquals(1, event.call.botVoice.size)
++        assertTrue(event.call.voiceRoom)
++        assertEquals(32, event.call.botVoice.single().publicKey.unb64().size)
++        assertTrue(GriipJson.decodeFromString<CallDto>("""{"id":"old","conversationId":"channel","createdBy":"human","video":false,"state":"ACTIVE","createdAt":1}""").botVoice.isEmpty())
++    }
++
++    @Test fun `rejects every context substitution and expired or mismatched public keys`() {
++        val alternatives = listOf(
++            { open(vector.packet, callId = "other_call") }, { open(vector.packet, channelId = "other_channel") },
++            { open(vector.packet, request = vector.request.copy(botId = "other_bot")) },
++            { open(vector.packet, request = vector.request.copy(leaseId = "other_lease")) },
++            { open(vector.packet, request = vector.request.copy(manifestRev = 8)) },
++        )
++        for (attempt in alternatives) assertTrue(runCatching { attempt() }.isFailure)
++        for (request in listOf(vector.request.copy(expiresAt = 1), vector.request.copy(fingerprint = "0".repeat(64)), vector.request.copy(publicKey = vector.request.publicKey + "\n"))) {
++            assertTrue(runCatching { BotVoiceKeys.seal(request, vector.callId, vector.channelId, vector.roomKey) }.isFailure)
++        }
++    }
++
++    @Test fun `shares only from the current participating device and retries a failed delivery`() = runBlocking {
++        val relay = BotVoiceKeyRelay()
++        var sent = 0
++        val send: suspend (String, BotVoicePacketDto) -> Unit = { _, _ -> sent++ }
++        relay.share(call(), "human", "other_phone", vector.roomKey, { true }, send)
++        relay.share(call(), "human", "phone", vector.roomKey, { false }, send)
++        relay.share(call().copy(state = "ENDED"), "human", "phone", vector.roomKey, { true }, send)
++        assertEquals(0, sent)
++        relay.share(call(), "human", "phone", vector.roomKey, { true }) { _, _ -> throw java.io.IOException("temporary failure") }
++        relay.share(call(), "human", "phone", vector.roomKey, { true }, send)
++        relay.share(call(), "human", "phone", vector.roomKey, { true }, send)
++        assertEquals(1, sent)
++    }
++
++    @Test fun `concurrent call frames send a lease packet once`() = runBlocking {
++        val relay = BotVoiceKeyRelay()
++        val entered = CompletableDeferred<Unit>()
++        val release = CompletableDeferred<Unit>()
++        var sent = 0
++        val jobs = List(12) { async {
++            relay.share(call(), "human", "phone", vector.roomKey, { true }) { _, packet ->
++                assertArrayEquals(vector.roomKey.unb64(), open(packet))
++                sent++
++                entered.complete(Unit)
++                release.await()
++            }
++        } }
++        entered.await()
++        release.complete(Unit)
++        jobs.awaitAll()
++        assertEquals(1, sent)
++    }
++}
+--- /dev/null
++++ b/android/app/src/test/resources/bot_voice_hpke_node.json
+@@ -0,0 +1,20 @@
++{
++  "scope": "Synthetic interoperability fixture only; never use these keys outside tests",
++  "callId": "call_bot_interop",
++  "channelId": "channel_bot_interop",
++  "request": {
++    "leaseId": "botvoice_interop",
++    "botId": "bot_interop",
++    "publicKey": "AZw3VsJ+j7be/ICFUxLL46sCcR/a7UI7VjtJr42LZzA=",
++    "fingerprint": "745f61e30e19dac2932433f5a49355040c37d25f9c5b26639f9d01c43b0c0ec0",
++    "manifestRev": 7,
++    "expiresAt": 4102444800000
++  },
++  "privateKey": "SMLjCZsFPlqd8r3gvzc67S1ONAWk1YM3HUQBuV2pGFI=",
++  "roomKey": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
++  "aad": "[\"meldiq-bot-voice-v1\",\"call_bot_interop\",\"channel_bot_interop\",\"bot_interop\",\"botvoice_interop\",7]",
++  "packet": {
++    "enc": "dkI90YRh8gV/1ZmptsOhewUJd8rkNOilwvqK3xHG5VM=",
++    "ct": "4/M3rcg1mmqnJzj6jB7CFAfjAyM392IU9Y6RpcCzfT+3EIj1fY5X8pZQxALQ3uGp"
++  }
++}
+--- /dev/null
++++ b/android/app/src/test/resources/bot_voice_call_api.json
+@@ -0,0 +1,37 @@
++{
++  "t": "call",
++  "event": "updated",
++  "call": {
++    "id": "call_2yDA9hzqBJinDKFgtbToGQ",
++    "conversationId": "c_cLCoHQ70gEwNycZx9bSDHw",
++    "conversationType": "CHANNEL",
++    "createdBy": "u_Xy0YHl4Ck_kadi3cE2Dwmg",
++    "video": false,
++    "state": "ACTIVE",
++    "createdAt": 1793826190103,
++    "answeredAt": 1793826190103,
++    "alertedAt": null,
++    "endedAt": null,
++    "endReason": null,
++    "participants": [
++      {
++        "userId": "u_Xy0YHl4Ck_kadi3cE2Dwmg",
++        "deviceId": "d_eT8UVLmUpqAHBOxcK-V1Yw",
++        "joinedAt": 1793826190110
++      }
++    ],
++    "voiceRoom": true,
++    "hands": [],
++    "botVoice": [
++      {
++        "leaseId": "botvoice_zrkHMUqzDCoQvOs67cLVKw",
++        "botId": "u_X8u8ViPgASPVOgVXhTxwVQ",
++        "publicKey": "yvv85vxkpzk36CeSA49jb/mLznHZm6ohNSzi/wLEuzQ=",
++        "fingerprint": "e241eea7e8a9f091f40bbe5a4720a6e9d8d9886fe617333330a7fa8dfee20319",
++        "manifestRev": 1,
++        "expiresAt": 1793826250125
++      }
++    ],
++    "sharing": []
++  }
++}

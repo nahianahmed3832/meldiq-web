@@ -1,0 +1,74 @@
+{
+  "scope": "native source checkpoint, tested in the existing combined Android workspace; not a published APK or physical-device acceptance",
+  "parent": "285651477be0adbef73d8bec3359a02d781bd3f4",
+  "commit": "3d5f6bb1436acd24cb2281ffd01ad4e6376c1fca",
+  "branch": "refs/heads/codex/yapin-parity-android-bot-voice",
+  "files": [
+    "android/app/src/main/java/com/meldiq/android/call/BotVoiceKeys.kt",
+    "android/app/src/main/java/com/meldiq/android/call/CallManager.kt",
+    "android/app/src/main/java/com/meldiq/android/data/api/ApiModels.kt",
+    "android/app/src/main/java/com/meldiq/android/data/api/BotVoiceModels.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/calls/CallOverlay.kt",
+    "android/app/src/test/java/com/meldiq/android/call/BotVoiceKeysTest.kt",
+    "android/app/src/test/resources/bot_voice_call_api.json",
+    "android/app/src/test/resources/bot_voice_hpke_node.json"
+  ],
+  "sourceResolution": "CallOverlay BOT label applied to committed predecessor layout; the working folder retains the newer uncommitted owner UI and other existing work. Whole native integration remains pending.",
+  "workingFiles": [
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/call/BotVoiceKeys.kt",
+      "sha256": "9abe0535f095cc628d6b5ec0513796ce70200b882c1fad043cc1dc83799f32cd"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/call/CallManager.kt",
+      "sha256": "abfb993f587e55488fcd85d55c5955e802df1039d9a4599e2566ef1c230c2e38"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/data/api/ApiModels.kt",
+      "sha256": "7df37c539c2cd41b63f4c22f219f3e9d1fe49b87ca29864f86c50c5111151ece"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/data/api/BotVoiceModels.kt",
+      "sha256": "8e59e30ec14d54b8e4d1c50ebdb7d76fb644e7ec5c419f031f095da644c84b88"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/calls/CallOverlay.kt",
+      "sha256": "fd0a9eddbf07bfe069cf19fa5a163fe7cf6bb09ff02cb3a2279d48fff35cdd25"
+    },
+    {
+      "path": "android/app/src/test/java/com/meldiq/android/call/BotVoiceKeysTest.kt",
+      "sha256": "74ddf509b1d170e8cb05cd2e36837bcf0b90aacae6c82e25f5ce944ae574d1c9"
+    },
+    {
+      "path": "android/app/src/test/resources/bot_voice_call_api.json",
+      "sha256": "006c807da21490e074c791ffe74529ce237fc92842cbe7a48c889533177c0b15"
+    },
+    {
+      "path": "android/app/src/test/resources/bot_voice_hpke_node.json",
+      "sha256": "06c3e5c56a40cf76eb7149cb387b9d399172e2f11908ee45ac7b49f1446a159e"
+    }
+  ],
+  "tests": [
+    {
+      "name": "com.meldiq.android.call.BotVoiceKeysTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.meldiq.android.call.CallMediaPolicyTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.meldiq.android.call.CallReachabilityTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ]
+}

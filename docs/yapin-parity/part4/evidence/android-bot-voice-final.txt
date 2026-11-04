@@ -1,0 +1,72 @@
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:kspDebugKotlin UP-TO-DATE
+> Task :app:compileDebugKotlin FROM-CACHE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac FROM-CACHE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:processDebugUnitTestManifest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:kspDebugUnitTestKotlin
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/call/BotVoiceKeysTest.kt:39:13 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/KeyDirectoryTest.kt:191:19 Redundant creation of Json format. Creating instances for each usage can be slow.
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:42:32 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:50:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:55:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:58:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:70:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:72:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:75:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:85:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:86:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:94:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:96:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:97:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:108:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:120:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:123:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:135:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:139:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:142:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:152:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:157:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:160:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:169:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:172:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///Volumes/code_files/meldiq_android/android/app/src/test/java/com/meldiq/android/data/repo/WakeFetchTest.kt:183:9 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes
+> Task :app:testDebugUnitTest
+
+BUILD SUCCESSFUL in 12s
+34 actionable tasks: 6 executed, 2 from cache, 26 up-to-date

@@ -34,11 +34,12 @@
   "documentedBotEvents": 13,
   "documentedGatewayFrames": 10,
   "byImplementation": {
-    "IMPLEMENTED_NOT_ACCEPTED": 86,
-    "RESEARCH_REQUIRED": 144,
-    "DEFERRED_DECISION": 17,
+    "IMPLEMENTED_NOT_ACCEPTED": 204,
+    "RESEARCH_REQUIRED": 25,
+    "DEFERRED_DECISION": 31,
     "ACCEPTED": 225,
-    "NOT_STARTED_IN_THIS_PROGRAM": 96
+    "NOT_STARTED_IN_THIS_PROGRAM": 80,
+    "IN_PROGRESS": 3
   },
   "part2Implementation": {
     "ACCEPTED": 19,
@@ -50,5 +51,12 @@
     "ACCEPTED": 206,
     "DEFERRED_DECISION": 4,
     "IMPLEMENTED_NOT_ACCEPTED": 2
+  },
+  "part4Implementation": {
+    "NOT_STARTED_IN_THIS_PROGRAM": 80,
+    "RESEARCH_REQUIRED": 23,
+    "DEFERRED_DECISION": 14,
+    "IMPLEMENTED_NOT_ACCEPTED": 118,
+    "IN_PROGRESS": 3
   }
 }

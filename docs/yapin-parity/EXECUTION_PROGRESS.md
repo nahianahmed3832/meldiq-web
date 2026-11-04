@@ -1,5 +1,13 @@
 # Execution progress
 
+## Current Part 4 integration status — 5 November 2026
+
+The broader bot platform is included. Committed Web/API source covers scoped native administration, durable events/gateway, recipient consent, private rich controls, pinned SDKs and encrypted existing-room bot voice. Android has a preserved source checkpoint and 20 selected passing call cases. Windows integrates the committed Web candidate, preserving its native adaptations, with passing source/build checks and isolated Electron verification. Exact source identities and test boundaries are in [the integration report](INTEGRATION_REPORT.md).
+
+The register reconciliation updates 135 Part 4 rows, retains all 568 stable IDs and leaves 330 other-owned rows unchanged. Part 4 counts are 118 implemented-but-unaccepted, 14 approved deferrals, three active integration rows and 103 rows retaining their prior review/program state. The 99-row bot matrix has 98 source counterparts awaiting complete acceptance and one approved destination-move deferral. Competitor documentation is still unverified runtime behavior. Nothing deployed.
+
+The six Part 4 product deferrals and the owner's physical-device choice are recorded. No new product decision is currently required. Attachments, remaining variants, complete native integration, policy acceptance, full staging/performance/restore/rollback, remaining owned review and normal release artifacts remain active. [The release checklist](RELEASE_CHECKLIST.md) and [Part 4 journal](part4/PROGRESS.md) track those gates. The Part 3 counts below remain their bounded historical local acceptance, not a claim of production or all-client completion.
+
 ## Current Part 3 completion status — 4 November 2026
 
 The expanded Web/API follow-up is locally implemented/tested: 183 of the original 185 pending rows accepted, 12 enabled/retained owner choices accepted and four choices deferred as approved. Together with 11 prior acceptances: **206 accepted / 2 pending / 4 approved deferrals**. Pending: physical background push (explicit owner choice) and restricted Yapin staff reference access. No unanswered product decision remains.

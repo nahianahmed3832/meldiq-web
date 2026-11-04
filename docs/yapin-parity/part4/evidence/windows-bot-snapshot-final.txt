@@ -1,0 +1,5 @@
+
+> meldiq-desktop@0.3.0 verify:snapshot
+> node scripts/verify-snapshot.mjs
+
+2285 upstream files checked; 26 documented desktop adaptations.
