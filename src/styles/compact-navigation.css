@@ -1,0 +1,132 @@
+/* Compact community navigation, shared by the desktop rail and phone Home. */
+.rail {
+  gap: 8px;
+  padding-block: 12px;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--rail-panel, var(--rail));
+  --rail-tile-edge: 12px;
+}
+.rail-home {
+  margin-bottom: 0;
+  border-radius: 50%;
+  background: var(--rail-tile, var(--rail-round));
+}
+.rail-mascot {
+  width: 48px;
+  height: 48px;
+  box-shadow: none;
+}
+.rail-home:hover {
+  transform: none;
+}
+.rail-home:hover .rail-mascot,
+.rail-home[aria-current="page"] .rail-mascot,
+.rail-org[aria-current="true"] .avatar,
+.rail-org.c-accent[aria-current="true"] .avatar {
+  border-radius: 16px;
+  box-shadow: none;
+}
+.rail-sep {
+  width: 32px;
+  margin: 2px 0;
+}
+.rail-orgs,
+.rail-dms {
+  flex-shrink: 0;
+  gap: 8px;
+}
+.rail-dms {
+  padding-block: 0;
+}
+.rail::before {
+  background: linear-gradient(to bottom, var(--rail-panel, var(--rail)), transparent);
+}
+.rail::after {
+  background: linear-gradient(to top, var(--rail-panel, var(--rail)), transparent);
+}
+.rail-org,
+.rail-dm {
+  border-radius: 50%;
+}
+.rail-org .avatar,
+.rail-dm > .styled-avatar,
+.rail-dm > .avatar {
+  border-radius: 50%;
+}
+.rail-home::before,
+.rail-org::before {
+  inset-inline-start: calc(-1 * var(--rail-tile-edge));
+  background: var(--rail-glow);
+}
+.rail-round {
+  border: 0;
+  background: var(--rail-tile, var(--rail-round));
+}
+.rail-round,
+.rail-round + .rail-round {
+  margin-top: 0;
+}
+.rail-round[aria-current="page"] {
+  box-shadow: none;
+}
+.rail-home > .count,
+.rail-org > .count,
+.rail-dm > .count {
+  top: auto;
+  bottom: -2px;
+  inset-inline-end: -2px;
+}
+.rail .count.accent,
+.rail-org > .count {
+  box-shadow: 0 0 0 3px var(--rail-panel, var(--rail));
+}
+.sidebar-primary {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+/* Meldiq's charcoal navigation keeps the brand artwork and uses red unread counts. */
+:root[data-palette="meldiq"] .rail {
+  --rail-panel: light-dark(#e3e5e8, #121316);
+  --rail-tile: light-dark(#ffffff, #292a30);
+  --rail-line: light-dark(#c4c7ce, #35363d);
+  --rail-glow: light-dark(#313338, #f2f3f5);
+  --rail-badge: #f23f54;
+  --on-rail-badge: #ffffff;
+  --rail-round-icon: light-dark(#168542, #3bca78);
+}
+
+@media (min-width: 961px) {
+  .app {
+    --rail-w: 72px;
+    column-gap: 0;
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .app > .workspace > .body > .sidebar {
+    border-radius: 0;
+    box-shadow: none;
+    border-inline-end: 1px solid var(--hairline);
+  }
+  .app > .workspace > .body {
+    border-radius: 0;
+  }
+  :root[data-palette="meldiq"] .app > .workspace > .body > .sidebar {
+    background: light-dark(#f2f3f5, #1a1b1f);
+  }
+  .app > .user-panel {
+    inset-inline-start: calc(var(--safe-inline-start) + 8px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+    width: calc(var(--rail-w) + var(--sidebar-w) - 16px);
+    border-radius: 16px;
+  }
+}
+@media (max-width: 640px) {
+  .sidebar-primary {
+    display: none;
+  }
+}

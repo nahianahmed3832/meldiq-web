@@ -5,7 +5,9 @@ import { Localized } from "../../i18n/Localized";
 import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Search, Settings2, Ticket, UsersRound } from "lucide-react";
 import { type MouseEvent, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
-import { markAllReadTargets } from "../selectors";
+import { markAllReadTargets, mentionCount } from "../selectors";
+import { PRIMARY_NAVIGATION, primaryDestinationActive } from "./navigation";
+import { capCount } from "../unread";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
 import { Avatar } from "../components/Avatar";
@@ -52,6 +54,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const hideMuted = !!orgId && prefs.collapsed.includes(hideMutedKey(orgId));
   const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
   const t = useT();
+  const mentions = useOrbit(mentionCount);
   // Home with no community yet (none joined, or the chosen one left) shows the messages hub rather than an empty list.
   // Discover has its own short list (the owner, 2026-10-29: no friends list while finding communities).
   const discover = section === "discover";
@@ -232,6 +235,17 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
       )}
 
       <div className="side-scroll scroll" ref={list} onScroll={(e) => scrollMemory.set(listKey, e.currentTarget.scrollTop)} onContextMenu={onBlankMenu}>
+        <div className="sidebar-primary">
+          {PRIMARY_NAVIGATION.filter((item) => item.section === "home" || item.section === "activity").map((item) => (
+            <a key={item.section} className="side-item" href={`/${item.section}`} aria-current={primaryDestinationActive(item, section) ? "page" : undefined}>
+              <span className="glyph">
+                <item.icon size={20} aria-hidden="true" />
+              </span>
+              <span className="grow">{t(item.labelKey)}</span>
+              {item.section === "activity" && mentions > 0 && <span className="count accent">{capCount(mentions)}</span>}
+            </a>
+          ))}
+        </div>
         {discover ? (
           <DiscoverSide onDialog={onDialog} />
         ) : (!synced && empty) || (!layoutKnown && !messages) ? (

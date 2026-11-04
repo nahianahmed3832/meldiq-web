@@ -34,6 +34,7 @@ import "../styles/mobile.css"; // mobile interaction and visual-viewport refinem
 import "../styles/localization.css";
 import "../styles/standardization.css";
 import "../styles/foundation.css";
+import "../styles/compact-navigation.css";
 
 export default function MeldiqApp({ Component, pageProps }: AppProps) {
   return (
