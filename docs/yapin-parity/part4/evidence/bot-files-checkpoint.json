@@ -1,0 +1,99 @@
+{
+  "recordedAt": "2026-11-04T22:27:37.741149+00:00",
+  "apiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "eventQualificationCommit": "d9034438",
+  "status": "approved community attachment preview and native event qualification; coordinated release remains active",
+  "permissions": {
+    "separateScopes": [
+      "files.upload",
+      "files.read"
+    ],
+    "oldApprovalsExpand": false,
+    "nativeAuthority": "upload requires current native post and attach; read requires current native history; publication additionally requires messages.post",
+    "personalBotDmFiles": "not included in preview"
+  },
+  "api": {
+    "fileSdkRegression": {
+      "files": 9,
+      "passed": 71
+    },
+    "latestIncarnationFollowup": {
+      "files": 4,
+      "passed": 24,
+      "fileCases": 11
+    },
+    "eventGatewaySdk": {
+      "files": 3,
+      "passed": 21
+    },
+    "countsOverlap": true,
+    "typecheckExitCode": 0,
+    "coverage": [
+      "native upload, encrypted publication, human/API decryption and byte ranges",
+      "JavaScript AES-GCM helper and binary/streaming methods; Python native HTTP upload/download",
+      "current scope, native role, token and installation identity",
+      "rotation and uninstall/reapproval during storage writes remove unpublished blobs",
+      "download revocation during storage and streaming closes storage readers",
+      "local object-store stand-in checksum, idempotency, ownership, multipart and cancellation",
+      "real invitation/member lifecycle events; current invite role/scope withdrawal; no invitation-code disclosure"
+    ]
+  },
+  "web": {
+    "files": 149,
+    "passed": 996,
+    "skipped": 1,
+    "typecheckExitCode": 0,
+    "lintExitCode": 0,
+    "build": "completed test-linking export; ordinary release export pending",
+    "locales": 28,
+    "keys": 6305,
+    "linguisticReview": "pending"
+  },
+  "browser": {
+    "passed": 8,
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width"
+    ],
+    "flows": [
+      "separate developer request and manager approval; request alone cannot upload",
+      "actual SDK upload and publication; human browser download equals original plaintext",
+      "withdrawn bot read approval denies SDK download",
+      "pinned SDK/guide download and archive SHA-256 integrity"
+    ],
+    "screenshotsReviewed": [
+      "chromium",
+      "phone-width"
+    ],
+    "firstDiagnostic": "test expected Attach files instead of the existing Share files label; corrected test selector, no runtime change"
+  },
+  "database": {
+    "scope": "fresh disposable loopback PostgreSQL with hosted Auth/Realtime test stubs",
+    "migrations": 34,
+    "newMigration": false
+  },
+  "sdk": {
+    "mode": "package",
+    "apiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+    "files": 13,
+    "bytes": 240295,
+    "sha256": "b2c19b8e100caf69a85b3293342c81f729c6ecb21fc9bc55e82e6f82c718cf0c"
+  },
+  "boundaries": [
+    "no real AWS object-store acceptance",
+    "JavaScript convenience encryption is bounded to 64 MiB in memory; native quota and larger direct/chunk protocols unchanged",
+    "attachment v2 relay can see keys; not server-resistant E2EE",
+    "no hosted code execution, package publication, production change or physical-device claim"
+  ],
+  "remaining": [
+    "Windows file checkpoint resync",
+    "empty-room bot initiation",
+    "remaining adapter/event variants",
+    "complete immutable native integration",
+    "performance and restore/rollback",
+    "durable policy acceptance",
+    "full coordinated release qualification"
+  ]
+}

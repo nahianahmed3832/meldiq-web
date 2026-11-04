@@ -17,6 +17,8 @@ export const BOT_SCOPES = [
   "messages.manage",
   "messages.react",
   "messages.post",
+  "files.upload",
+  "files.read",
   "expressions.manage",
   "members.invite",
   "voice.connect",

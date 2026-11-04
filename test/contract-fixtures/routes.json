@@ -2572,6 +2572,38 @@
     {
       "method": "POST",
       "path": "/v2/bot/orgs/{orgId}/voice/members/{userId}/disconnect"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/attachments"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/attachments/uploads"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/attachments/uploads/{id}/url"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/attachments/uploads/{id}/parts"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/attachments/uploads/{id}/parts"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/attachments/uploads/{id}/complete"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/attachments/uploads/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/attachments/{id}"
     }
   ],
   "errors": {

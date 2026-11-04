@@ -1,13 +1,13 @@
 {
   "format": 1,
-  "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+  "apiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
   "status": "preview source clients",
-  "archiveSha256": "b5fb45f33467a67ae843ae2ad6f1e684cc6dc8f8ff9b020339cb35dec7b976f7",
+  "archiveSha256": "b2c19b8e100caf69a85b3293342c81f729c6ecb21fc9bc55e82e6f82c718cf0c",
   "files": [
     {
       "path": "README.md",
-      "sha256": "8c7e02c56bbb015dea9d068c9b4149767c6b8f4dc73eb6a552d63e76b7e86528",
-      "bytes": 13037
+      "sha256": "f5d0c9bc917c5c5016970934454bec8f524e8b6f9f591d25608cc6373253a80a",
+      "bytes": 17088
     },
     {
       "path": "docs/api/bot-gateway.schema.json",
@@ -16,8 +16,8 @@
     },
     {
       "path": "docs/api/openapi.json",
-      "sha256": "d2f2d339e10b6cdabf86e1836d40c05c4a6f3af2605177d451725f6054be701c",
-      "bytes": 4071097
+      "sha256": "c6bf830eefc1ca01085bb1fb2445cdb5f8c436dc7888e373e5d4523a35efd601",
+      "bytes": 4105291
     },
     {
       "path": "examples/commands.mjs",
@@ -35,19 +35,24 @@
       "bytes": 3363
     },
     {
+      "path": "javascript/attachments.mjs",
+      "sha256": "db2682121eda23240e9b57caa861557973c32ac1d7527c7b897e8758560448c8",
+      "bytes": 2455
+    },
+    {
       "path": "javascript/gateway.mjs",
       "sha256": "49ba8fd98e258d8ba8bb7f4a90ba6287701563b561b533278bc4bd60dafb1591",
       "bytes": 9966
     },
     {
       "path": "javascript/index.mjs",
-      "sha256": "078978370761af843aa26de2711aa35c21202ad4c76b275c1ed6156baf5e32cd",
-      "bytes": 6076
+      "sha256": "8d84cf57a5df2ec1038d1713a32d0959622fdaf26da1efecf6bb43f45313ff4e",
+      "bytes": 8968
     },
     {
       "path": "javascript/package.json",
-      "sha256": "16940a9cfd922abb368ebef37f14653bdfb4caf87002c00e54171bc78dc9d967",
-      "bytes": 356
+      "sha256": "7473ec07404cfcc8078807fb89a003c6ef05c4cffb60e723ad2b78859ef96da7",
+      "bytes": 398
     },
     {
       "path": "javascript/transport.mjs",
@@ -61,8 +66,8 @@
     },
     {
       "path": "python/meldiq_bot.py",
-      "sha256": "b56b75a10a471003fd0115888102eec8c94dd3ea3cb5422f69557bbae0704a1d",
-      "bytes": 7179
+      "sha256": "0f0d6423dd7178d120a1031da27417c9922e87545a2f9924f4132c05f19ceef2",
+      "bytes": 10477
     }
   ]
 }

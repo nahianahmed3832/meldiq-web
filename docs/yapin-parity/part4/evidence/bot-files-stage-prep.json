@@ -1,0 +1,142 @@
+{
+  "scope": "disposable loopback PostgreSQL; Auth/Realtime contracts are test stubs",
+  "database": "meldiq_parity_stage_botfiles1",
+  "migrations": [
+    {
+      "name": "20261102000100_release_relations.sql",
+      "sha256": "b95e48e79b3e365d355c78d692a1354fbf7ed413edbb4267e63bdd62c9f2a858"
+    },
+    {
+      "name": "20261102000200_identity_outbox.sql",
+      "sha256": "22bd015e4a37a903f42cc80d9ebedc008e57df7a2bc6678b124a62fd844bf3f6"
+    },
+    {
+      "name": "20261102000300_event_read_hardening.sql",
+      "sha256": "03a6550d1e55f670b86be0979a681442bed5f37193047a98b47c625a882bc32d"
+    },
+    {
+      "name": "20261102000400_native_relations.sql",
+      "sha256": "2ed068256f50cdc74dce873e1a2d4d0289600d50aba3f9ed9ef45a5a5c995be8"
+    },
+    {
+      "name": "20261102000500_live_auth_sessions.sql",
+      "sha256": "716138f39f6af922a6aec660b16d4fdb274bfbfb1f3fab5a1149610916be7b25"
+    },
+    {
+      "name": "20261102000600_administration_relations.sql",
+      "sha256": "2591ef19ed2f39c5023105c9feadeca3988728d313ffc5c3a8ee9f6f3700ccdd"
+    },
+    {
+      "name": "20261102000700_attachment_cleanup.sql",
+      "sha256": "c053f7c51b8e8e73f1a18c350e29982f30424ec49739816a098f7b1b55d78baa"
+    },
+    {
+      "name": "20261102000800_privacy_and_favorites.sql",
+      "sha256": "8fc1aff9fe07fdf8be72a653c91e86fc9e5c7dc6d69a261dcde4e44434182bd9"
+    },
+    {
+      "name": "20261102000900_community_historical_actors.sql",
+      "sha256": "cb915fb3fd9900ee943548593157de3c70a910e4cf100987bbb9619a9327f142"
+    },
+    {
+      "name": "20261102001000_immutable_audit_and_prices.sql",
+      "sha256": "a636138c1951c4051372e45038b7c782b869daf37b55c1895417332e87fcca72"
+    },
+    {
+      "name": "20261102001100_auth_device_binding.sql",
+      "sha256": "f47b177a56462d475e7ff7ea294f5d97b4d35f8967e1105701a681fd223fa84d"
+    },
+    {
+      "name": "20261102001200_reliable_backend_broadcast.sql",
+      "sha256": "a75261fc10eed905eac1094ba1fc937a40f6b0dfcf0371b0a0e78fe3f74cf248"
+    },
+    {
+      "name": "20261103001300_current_production_fields.sql",
+      "sha256": "8092ab2fc3753a19dfd4f71ee78851d8679cefdc573cfed1824cf79543462db8"
+    },
+    {
+      "name": "20261103001400_atomic_repository_units.sql",
+      "sha256": "e23a02471e5a0d9ba784ac0d5294d806c310f629b8b4b497df038328e0d91374"
+    },
+    {
+      "name": "20261103001500_indexed_repository_deletes.sql",
+      "sha256": "af9df465eea5376487f449d181e79429a7edf773083229eac8229661e212a63f"
+    },
+    {
+      "name": "20261104001600_connection_request_notes.sql",
+      "sha256": "aee941c8b5a7355bec665c76842057fa9922337f37dd8648ff19041969ea1a5f"
+    },
+    {
+      "name": "20261104001700_event_covers.sql",
+      "sha256": "e38471b46a6f7ccee4d07fd342eead86b60a031219dd80d50ff05a624dc2d707"
+    },
+    {
+      "name": "20261104001800_role_asset_icons.sql",
+      "sha256": "e967dfec4fcdec4a55ab5aa7729694d44d9a8a0c1b46ef8128facfe6f9976124"
+    },
+    {
+      "name": "20261104001900_community_report_targets.sql",
+      "sha256": "dd3fc02878c3c4c7287999175c63a4fbe32c0f5f770afafea741f3192df99ab2"
+    },
+    {
+      "name": "20261104002000_partner_applications.sql",
+      "sha256": "65ad5e5f01334f755acaf0feeae18469f602e5808b573d1c53bb40cf3edd4fcb"
+    },
+    {
+      "name": "20261104002100_administrative_audit_changes.sql",
+      "sha256": "94ce1813e343e81471a7c18b8b1726a9e0a73f08f35130405ca0d0a185b48dfb"
+    },
+    {
+      "name": "20261104002200_forum_tag_policy.sql",
+      "sha256": "bd4d5160c9af9a3b8049618420fb4c340ff7d7d276e12c47cbdf245e789d635f"
+    },
+    {
+      "name": "20261104002300_event_occurrences.sql",
+      "sha256": "1cde6a4cbcabe32652ab6c4940ea86bbe5bc62794505c19ea2f730118c9162b3"
+    },
+    {
+      "name": "20261104002400_managed_polls.sql",
+      "sha256": "fc6ec092b5a664571610d7f6b7dc1404c4d07f05cd2dd98fad9eae50dc8db8bc"
+    },
+    {
+      "name": "20261104002500_thread_lifecycle.sql",
+      "sha256": "3d1dbe5bdf154dbd83166453d192bf99672b519878eaf8b8ab79774d546126af"
+    },
+    {
+      "name": "20261104002600_bot_platform_permissions.sql",
+      "sha256": "519d27beb94e66f25dc623064c87e32c25db52b665417343f8731ebe16d31477"
+    },
+    {
+      "name": "20261104002700_bot_derived_credentials.sql",
+      "sha256": "05ff9b39941cb7ac794aff3c0e425e9c805e969b7e6c584b7136441a019ae4aa"
+    },
+    {
+      "name": "20261104002800_bot_event_journal.sql",
+      "sha256": "031e0c83376621fea24aa53316f9e461f55eebcb748065c05b06a0dc366130f1"
+    },
+    {
+      "name": "20261104002900_bot_invite_credentials.sql",
+      "sha256": "de470a1911cc856f2ec057f3be0f179c5fdc684a273bb1f305bbde943f2b4745"
+    },
+    {
+      "name": "20261104003000_bot_replay_boundary.sql",
+      "sha256": "c4f3a88722b1a03661ce998e3358a0940ab0c9b676fef6f67b7e212df75f3337"
+    },
+    {
+      "name": "20261105003100_bot_direct_messages.sql",
+      "sha256": "a1d70e296e51ce55008516228f87efd9dfcda042324e5b2ea76c651d1b0150ab"
+    },
+    {
+      "name": "20261105003200_bot_components.sql",
+      "sha256": "08e5460a21d7f9efeb4c4fa4ac189235e1430259c49de21934bebe7529a61909"
+    },
+    {
+      "name": "20261105003300_bot_voice_public_key.sql",
+      "sha256": "0f72d8240b40a2a47a7ea37851b2745e4a29a847ccc4a64db856cafde3f7d51d"
+    },
+    {
+      "name": "20261105003400_bot_media_evictions.sql",
+      "sha256": "e83e12897ef09877dee350024fcbf51e06a0e901f5bab50e03192715ee0592d1"
+    }
+  ]
+}

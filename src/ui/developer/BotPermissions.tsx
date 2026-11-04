@@ -11,6 +11,7 @@ import { ErrorLine } from "../components/SettingsCard";
 /** Reuse the current native permission catalog and all 28 translations, without displaying permission identifiers. */
 function scopeText(scope: BotScope): { label: string; description?: string } {
   if (scope === "messages.post") return { label: t("workspace.botAccess.richMessages"), description: t("workspace.botAccess.richMessagesDescription") };
+  if (scope === "files.read") return { label: `${t("files.files")} · ${t("common.actions.download")}` };
   if (scope === "events.manage") return { label: `${t("common.actions.edit")} · ${t("workspace.interface.events_8d14f6e")}` };
   const names = {
     "communities.read": () => t("workspace.interface.communities_c864f32"),
@@ -18,7 +19,7 @@ function scopeText(scope: BotScope): { label: string; description?: string } {
     direct_messages: () => t("workspace.directMessages"),
   };
   if (scope in names) return { label: names[scope as keyof typeof names]() };
-  const native = scope === "channels.read" ? "channels.view" : scope === "members.read" ? "members.view" : scope;
+  const native = scope === "channels.read" ? "channels.view" : scope === "members.read" ? "members.view" : scope === "files.upload" ? "messages.attach" : scope;
   const key = native.replaceAll(".", "_");
   const source = (ENGLISH.organization.builtIn.permissionCatalog as Record<string, { label: string; description: string }>)[key];
   if (!source) return { label: t("workspace.interface.events_8d14f6e") };
