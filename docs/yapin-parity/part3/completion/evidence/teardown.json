@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-11-04T13:43:20.573993+00:00",
+  "ports": [
+    {
+      "host": "127.0.0.1",
+      "port": 8292,
+      "listening": false
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 5391,
+      "listening": false
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 55433,
+      "listening": false
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 8293,
+      "listening": false
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 5393,
+      "listening": false
+    }
+  ],
+  "ownedPostgres": "stopped",
+  "productionActions": false
+}

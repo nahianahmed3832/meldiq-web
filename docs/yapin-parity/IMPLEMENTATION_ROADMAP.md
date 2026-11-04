@@ -2,13 +2,11 @@
 
 This is the proposed order for Parts 2–4. No implementation or release begins in Part 1. Work starts from the **then-current production source**, preserving the capabilities that are newer than the shared working copy. See [architecture](CURRENT_ARCHITECTURE.md) and [project control](PROJECT_CONTROL.md).
 
-## Part 3 implementation checkpoint
+## Part 3 completion checkpoint
 
-Part 3 has reviewed all 212 owned rows and delivered source commits, regression evidence and explicit remaining work. Read [the report](handoffs/PART_3_REPORT.md) and [contracts](part3/CONTRACTS.md). Local fixes cover read-boundary ordering, retry-safe friend acceptance, current-authority aggregate search/summary, truthful search errors and DST calendar filters. Existing history, communities, roles, moderation, events and lobby implementations were reused.
+The follow-up resolved all 16 owner decisions and accepted 183 of the original 185 pending rows in the recorded local Web/API scope. Total: **206 ACCEPTED, 2 pending external prerequisites, 4 approved deferrals**. Read [the report](handoffs/PART_3_REPORT.md), [contracts](part3/CONTRACTS.md) and [row evidence](part3/completion/ROW_EVIDENCE.json). The two pending rows are physical background push (owner-selected pending) and restricted Yapin platform-staff observation; no current product answer is outstanding.
 
-11 rows are locally accepted, 185 retain implementation with incomplete acceptance and 16 need product/authority decisions. These states do not change the historical existing-capability column or imply a production rollout. Phase 2/3 final acceptance is bounded by the [per-row review](part3/FEATURE_REVIEW.md); exhaustive server-side filtered search and the listed event/audit/optional program extensions remain open.
-
-Next, Part 4 must reconcile the active production predecessor/overlay, apply the compatible Web/API source changes, consume frozen authority on media/call/bot paths, verify actual native/provider/push behavior, resolve approved optional contracts and build/release with test-linking disabled. Keep all 356 unowned rows and current billing/auth/privacy contracts intact.
+Search, event/occurrence/cover, role/member, forum, partner/report/audit, lobby, poll/quiz, thread and message-interaction additions are locally implemented/tested. Existing auth, branding, core messaging and reward contracts remain. Additive local migrations are prepared but production is unchanged. Part 4 must reconcile the current release source, consume the contracts, complete native/provider/device gates and perform only an authorized controlled rollout. Other 356 register rows are unchanged.
 
 ## Sequence and dependencies
 
@@ -50,7 +48,7 @@ Accept in isolated/browser fixtures: desktop and 390/768 widths, keyboard/back/f
 
 1. Reproduce current behavior before treating earlier pagination/anchor/CORS observations as current production bugs. Backend PostgreSQL and Web source have changed since 1 November.
 2. Prioritize durable messages, deterministic tie-safe pagination, contiguous versus disjoint history, unread/read markers, retry and membership revocation. Do not replace a reliable existing outbox to imitate competitor scrolling.
-3. Keep Meldiq's canonical permission catalog. The register maps 29 direct semantic leads; `move_members`, `manage_events` and blanket `administrator` require special review. A competitor permission name is not a new Meldiq grant.
+3. Keep Meldiq's canonical permission catalog. The register maps 29 direct semantic leads; `move_members` remains disconnect-only, `manage_events` maps to delegated `events.manage`, and owner/admin delegation remains constrained without a blanket `administrator` bit. The owner approved these choices. A competitor permission name is not a new Meldiq grant.
 4. Use a controlled non-owner account for friendship/group/privacy/onboarding/private-channel and role-conflict tests. Owner-only observations do not establish member/moderator enforcement.
 5. Preserve existing communities, forum/thread content, rules channels, Saved/Reminders and notification inheritance. Accept the existing lobby and bot-connected cards before adding more templates.
 6. Establish event/recurrence/RSVP semantics and background notification reality. Active Web Firebase configuration is absent in the observed release; foreground UI and native push are separate paths.

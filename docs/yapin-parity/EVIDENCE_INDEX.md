@@ -58,3 +58,7 @@ Existing release test results are cited as historical release evidence where nee
 No saved cookies, passwords, OTPs, private keys, authentication headers, live bot credentials, HAR files, private database contents or signed media tickets are part of this package. Public API examples contain fictional example identifiers/tokens; they are not operational credentials. Screenshot references may show public display names and existing synthetic research fixtures. They must not be used as product assets.
 
 Screenshots establish only the shown viewport/state. Text may expose offscreen controls; neither proves a control was saved or a backend action succeeded. For each implementation change, retain a new bounded test record with account role, source, environment, steps, outcome and limitations.
+
+## Part 3 completion evidence
+
+[Current validation](part3/validation.json), [per-row case names](part3/completion/ROW_EVIDENCE.json), [unique browser cases](part3/completion/evidence/browser-cases.json), [native API cases](part3/completion/evidence/api-cases.json), [unit cases](part3/completion/evidence/unit-cases.json), [source/patch hashes](part3/completion/SOURCES.json) and [owner choices](part3/completion/OWNER_DECISIONS.json) define the local completion scope. Raw passing/corrective receipts are retained under part3/completion/evidence. The [register preview](part3/completion/evidence/register-preview.png) is an artifact-tool CSV review, not a product screenshot. Historical Part 1/2/early Part 3 observations keep their original dates and verification limits.

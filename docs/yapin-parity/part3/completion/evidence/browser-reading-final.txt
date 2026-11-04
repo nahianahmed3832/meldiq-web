@@ -1,0 +1,104 @@
+[WebServer] (node:35813) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:35837) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:35838) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:35838) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:35838) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:36021) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36031) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36079) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36107) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36105) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36106) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36115) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36125) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ../meldiq_web/node_modules/zod/v4/core/util.js (400:0): A comment
+[WebServer] 
+[WebServer] "// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/zod/v4/core/regexes.js (74:0): A comment
+[WebServer] 
+[WebServer] "/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+[WebServer]  * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+[WebServer]  * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+[WebServer] 
+[WebServer] "// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */ oidNist(0x07),"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] (node:36127) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:36131) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/chat-position.spec.ts:23:1 › a conversation opens at its newest message and keeps a reader's place (9.4s)
+  ✓  2 [chromium] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (6.5s)
+(node:36241) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [tablet-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (6.6s)
+(node:36354) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  4 [phone-width] › e2e/chat-position.spec.ts:23:1 › a conversation opens at its newest message and keeps a reader's place
+  ✓  5 [phone-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (5.9s)
+
+  1 skipped
+  4 passed (1.4m)

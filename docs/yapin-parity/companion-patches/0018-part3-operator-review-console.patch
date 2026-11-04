@@ -1,0 +1,1257 @@
+diff --git a/deploy/nginx/meldiq-admin-headers.conf b/deploy/nginx/meldiq-admin-headers.conf
+new file mode 100644
+index 0000000..d688de4
+--- /dev/null
++++ b/deploy/nginx/meldiq-admin-headers.conf
+@@ -0,0 +1,11 @@
++# Security headers of the Meldiq Admin Console. Generated from deploy/security-headers.json (test/headers.test.ts checks
++# they match): change that file, then this one. Included in every location that answers, since add_header in a
++# location replaces the server's.
++add_header Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'" always;
++add_header X-Content-Type-Options "nosniff" always;
++add_header X-Frame-Options "DENY" always;
++add_header Referrer-Policy "no-referrer" always;
++add_header Cross-Origin-Opener-Policy "same-origin" always;
++add_header Cross-Origin-Resource-Policy "same-origin" always;
++add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), display-capture=()" always;
++add_header Strict-Transport-Security "max-age=31536000" always;
+diff --git a/deploy/security-headers.json b/deploy/security-headers.json
+new file mode 100644
+index 0000000..5eae895
+--- /dev/null
++++ b/deploy/security-headers.json
+@@ -0,0 +1,10 @@
++{
++  "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'",
++  "X-Content-Type-Options": "nosniff",
++  "X-Frame-Options": "DENY",
++  "Referrer-Policy": "no-referrer",
++  "Cross-Origin-Opener-Policy": "same-origin",
++  "Cross-Origin-Resource-Policy": "same-origin",
++  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), display-capture=()",
++  "Strict-Transport-Security": "max-age=31536000"
++}
+diff --git a/e2e/console.spec.ts b/e2e/console.spec.ts
+index 7a99f01..4bc6713 100644
+--- a/e2e/console.spec.ts
++++ b/e2e/console.spec.ts
+@@ -116,7 +116,7 @@ test("an operator enrols, looks around, suspends and restores someone, and signs
+   await expect(title(page, "Dashboard")).toBeVisible();
+   await expect(region(page, "Registered users")).toContainText("3");
+   await expect(region(page, "Operations")).toContainText(/Billing provider\s*Configured/);
+-  await expect(page.getByRole("navigation", { name: "Sections" }).getByRole("link")).toHaveCount(27);
++  await expect(page.getByRole("navigation", { name: "Sections" }).getByRole("link")).toHaveCount(28);
+   await shot(page, "03-overview");
+ 
+   // People: search, then the detail page.
+@@ -205,6 +205,7 @@ test("an operator sets limits, checks infrastructure, runs an incident, verifies
+     "Create Accounts",
+     "Ownership requests",
+     "Communities & teams",
++    "Partner reviews",
+     "Creator reviews",
+     "Devices & Sessions",
+     "Promotions & purchases",
+diff --git a/e2e/ecosystem.spec.ts b/e2e/ecosystem.spec.ts
+new file mode 100644
+index 0000000..65414a4
+--- /dev/null
++++ b/e2e/ecosystem.spec.ts
+@@ -0,0 +1,69 @@
++import { expect, test } from "@playwright/test";
++import fs from "node:fs";
++import { API_PORT, STATE_FILE } from "./global-setup";
++
++test("operators review private community reports and partner applications with failed-save recovery on desktop and phone", async ({ page }) => {
++  const s = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
++  const cdp = await page.context().newCDPSession(page);
++  await cdp.send("WebAuthn.enable");
++  await cdp.send("WebAuthn.addVirtualAuthenticator", {
++    options: { protocol: "ctap2", transport: "internal", hasResidentKey: true, hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true },
++  });
++  await page.goto("/#/enrol");
++  await page.getByLabel("Email").fill(s.ecosystem.email);
++  await page.getByLabel("Password of your Meldiq account").fill(s.ecosystem.password);
++  await page.getByLabel("Enrolment code").fill(s.ecosystem.enrolment);
++  await page.getByRole("button", { name: "Create passkey and sign in" }).click();
++  await expect(page.getByRole("heading", { name: "Dashboard", level: 1 })).toBeVisible();
++  await page.goto(`/#/reports/${s.communityReportId}`);
++  await expect(page.getByRole("region", { name: "Report metadata", exact: true })).toContainText(s.orgId);
++  await expect(page.getByRole("region", { name: "Community report note", exact: true })).toContainText("<script>literal note</script>");
++  await page.goto(`/#/reports/${s.reportId}`);
++  await expect(page.getByRole("heading", { name: "Report review", level: 1 })).toBeVisible();
++  await expect(page.getByText("Private reporter note: never in the console")).toHaveCount(0);
++  await expect(page.getByRole("region", { name: "Community report note", exact: true })).toHaveCount(0);
++  await page.goto("/#/partners");
++  await expect(page.getByText("Owner statement <script>literal text</script>", { exact: true })).toBeVisible();
++  await page.getByRole("button", { name: "Decline application", exact: true }).click();
++  const decline = page.getByRole("dialog", { name: "Decline partner application", exact: true });
++  await expect(decline.getByRole("button", { name: "Record decision", exact: true })).toBeDisabled();
++  await decline.getByLabel(/Reason/).fill("Please describe your moderation coverage");
++  await page.route(
++    "**/admin/v1/partner-applications/*",
++    async (route) => {
++      await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: { code: "unavailable", message: "Temporary review failure" } }) });
++    },
++    { times: 1 },
++  );
++  await decline.getByRole("button", { name: "Record decision", exact: true }).click();
++  await expect(decline.getByRole("alert")).toBeVisible();
++  await expect(decline.getByLabel(/Reason/)).toHaveValue("Please describe your moderation coverage");
++  await decline.getByRole("button", { name: "Record decision", exact: true }).click();
++  const stepUp = page.getByRole("dialog", { name: "Confirm it's you" });
++  await expect(stepUp.or(page.getByRole("status")).first()).toBeVisible();
++  if (await stepUp.isVisible()) await stepUp.getByRole("button", { name: "Use passkey" }).click();
++  await expect(page.getByRole("status")).toContainText("Partner review recorded");
++  await expect(page.getByText("No applications awaiting review", { exact: true })).toBeVisible();
++  const ownerRequest = async (method: string, body?: unknown) => {
++    const r = await fetch(`http://127.0.0.1:${API_PORT}/v1/orgs/${s.orgId}/partner-application`, {
++      method,
++      headers: { authorization: `Bearer ${s.ownerToken}`, "content-type": "application/json" },
++      ...(body ? { body: JSON.stringify(body) } : {}),
++    });
++    expect(r.ok).toBe(true);
++    return r.json();
++  };
++  const declined = (await ownerRequest("GET")).application;
++  expect(declined.status).toBe("declined");
++  await ownerRequest("PUT", { baseRev: declined.rev, statement: "Updated moderation coverage", checklist: { guidelines: true, moderation: true, safety: true, activity: true } });
++  await page.setViewportSize({ width: 390, height: 844 });
++  await page.reload();
++  await expect(page.getByText("Updated moderation coverage", { exact: true })).toBeVisible();
++  await page.getByRole("button", { name: "Approve application", exact: true }).click();
++  const approve = page.getByRole("dialog", { name: "Approve partner application", exact: true });
++  await approve.getByLabel(/Reason/).fill("Manual review completed with the updated coverage");
++  await approve.getByRole("button", { name: "Record decision", exact: true }).click();
++  await expect(page.getByRole("status")).toContainText("Partner review recorded");
++  expect((await ownerRequest("GET")).application.status).toBe("approved");
++  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
++});
+diff --git a/e2e/global-setup.ts b/e2e/global-setup.ts
+index c7faa3e..b6376dc 100644
+--- a/e2e/global-setup.ts
++++ b/e2e/global-setup.ts
+@@ -63,6 +63,8 @@ export default async function globalSetup(): Promise<() => Promise<void>> {
+     REGISTRATION_MODE: "open",
+     MAIL_TRANSPORT: "file",
+     PASSWORD_SCRYPT_LOG_N: "10",
++    REGISTRATION_PER_ADDRESS_PER_HOUR: "100", // Isolated fixture preparation, not a registration-limit test.
++    AUTH_RATE_LIMIT_PER_MINUTE: "200", // Local fixture accounts are prepared in one short burst.
+     ADMIN_CONSOLE_ORIGIN: `http://localhost:${process.env.E2E_CONSOLE_PORT ?? 5174}`,
+     // Telemetry every 2 s, so the charts have samples within the test. Billing in sandbox (test) mode: no real money.
+     TELEMETRY_TICK_MS: "2000",
+@@ -102,6 +104,7 @@ async function prepare(base: string, dataDir: string, env: NodeJS.ProcessEnv, se
+     return { email, password, enrolment };
+   };
+   const operator = await account("Test Operator", "super_admin");
++  const ecosystem = await account("Ecosystem Operator", "super_admin");
+   const completion = await account("Completion Operator", "super_admin");
+   const parity = await account("Parity Operator", "super_admin");
+   const operations = await account("Operational Controls Operator", "super_admin");
+@@ -130,7 +133,23 @@ async function prepare(base: string, dataDir: string, env: NodeJS.ProcessEnv, se
+   });
+   if (!reportResponse.ok) throw new Error("Could not seed a real report");
+   const reportId = (await reportResponse.json()).report.id;
+-  fs.writeFileSync(STATE_FILE, JSON.stringify({ ...operator, operations, parity, completion, reportId, second, newcomer, billing, controls, reviewer, accountsOperator, ...seeded }), { mode: 0o600 });
++  const ownerRequest = async (method: string, path: string, body: unknown) => {
++    const response = await fetch(`${base}${path}`, { method, headers: { authorization: `Bearer ${seeded.ownerToken}`, "content-type": "application/json" }, body: JSON.stringify(body) });
++    if (!response.ok) throw new Error(`Ecosystem seed failed: ${path} ${response.status}`);
++    return response.json();
++  };
++  await ownerRequest("PUT", `/v1/orgs/${seeded.orgId}/partner-application`, {
++    baseRev: 0,
++    statement: "Owner statement <script>literal text</script>",
++    checklist: { guidelines: true, moderation: true, safety: true, activity: true },
++  });
++  const communityReport = await ownerRequest("POST", `/v1/orgs/${seeded.orgId}/report`, { reason: "harassment", note: "Private community report <script>literal note</script>" });
++  const communityReportId = communityReport.report.id;
++  fs.writeFileSync(
++    STATE_FILE,
++    JSON.stringify({ ...operator, ecosystem, communityReportId, operations, parity, completion, reportId, second, newcomer, billing, controls, reviewer, accountsOperator, ...seeded }),
++    { mode: 0o600 },
++  );
+   return async () => {
+     server.kill();
+     fs.rmSync(dataDir, { recursive: true, force: true });
+diff --git a/scripts/contracts.ts b/scripts/contracts.ts
+index db43809..b49ee1f 100644
+--- a/scripts/contracts.ts
++++ b/scripts/contracts.ts
+@@ -29,12 +29,13 @@ export function renderFeatureContracts(): string {
+   const creators = source("creators.ts");
+   const discovery = source("discovery.ts");
+   const bots = source("officialBots.ts");
++  const partners = source("partners.ts");
+   return `// Generated by npm run contracts. Shared server schemas; do not edit.\nimport { z } from "zod/v4";\n${source("platformAdmin.ts")
+-    .match(/^export const zReason = .+;$/m)![0]
++    .match(/^export const zReason =[\s\S]+?;/m)![0]
+     .replace(
+       "export ",
+       "",
+-    )}\nconst zCount = z.number().int().nonnegative();\nconst zTime = z.number().int().nonnegative();\n\n${withoutImports(creators.slice(0, creators.indexOf("const creators =")))}\n${creators.slice(creators.indexOf("/* The admin console's side"))}\n${discovery.slice(discovery.indexOf("export const BOOST_TIERS"), discovery.indexOf("/** Why a community"))}\n${discovery.slice(discovery.indexOf("export const BoostRecord"), discovery.indexOf("export const PromoteView"))}\n${bots.slice(bots.indexOf("export const BotsPlusGrant"), bots.indexOf("const tag ="))}`;
++    )}\nconst zCount = z.number().int().nonnegative();\nconst zTime = z.number().int().nonnegative();\n\n${withoutImports(partners.slice(0, partners.indexOf("export const partnerContracts")))}\n${withoutImports(creators.slice(0, creators.indexOf("const creators =")))}\n${creators.slice(creators.indexOf("/* The admin console's side"))}\n${discovery.slice(discovery.indexOf("export const BOOST_TIERS"), discovery.indexOf("/** Why a community"))}\n${discovery.slice(discovery.indexOf("export const BoostRecord"), discovery.indexOf("export const PromoteView"))}\n${bots.slice(bots.indexOf("export const BotsPlusGrant"), bots.indexOf("const tag ="))}`;
+ }
+ export const renderCollectibleContracts = () => `// Generated by npm run contracts. Shared server schemas; do not edit.\n${source("collectibles.ts")}`;
+ 
+diff --git a/src/api/contracts.ts b/src/api/contracts.ts
+index 7280055..061a0ba 100644
+--- a/src/api/contracts.ts
++++ b/src/api/contracts.ts
+@@ -22,31 +22,70 @@ const zPassword = z.string().min(1).max(512);
+  * unknown keys are refused, so nothing can be mass-assigned.
+  */
+ 
+-export const PLATFORM_ROLE_VALUES = ["super_admin", "operations_admin", "platform_moderator", "support_admin", "billing_admin", "auditor"] as const;
++export const PLATFORM_ROLE_VALUES = [
++  "super_admin",
++  "operations_admin",
++  "platform_moderator",
++  "support_admin",
++  "billing_admin",
++  "auditor",
++] as const;
+ export const zPlatformRole = z.enum(PLATFORM_ROLE_VALUES);
+ 
+ /** Why a sensitive action is taken: shown in the audit trail. */
+-export const zReason = z.string().trim().min(8, "Say why, in a few words (at least 8 characters)").max(500);
++export const zReason = z
++  .string()
++  .trim()
++  .min(8, "Say why, in a few words (at least 8 characters)")
++  .max(500);
+ 
+ /** A WebAuthn ceremony's answer as the browser gives it (base64url fields); verified by the server. */
+-const zWebAuthnResponse = z.object({ id: z.string().min(1).max(1024), rawId: z.string().min(1).max(1024), type: z.literal("public-key") }).passthrough();
++const zWebAuthnResponse = z
++  .object({
++    id: z.string().min(1).max(1024),
++    rawId: z.string().min(1).max(1024),
++    type: z.literal("public-key"),
++  })
++  .passthrough();
+ 
+ // ───────────── Requests ─────────────
+ 
+-export const AdminPasswordBody = z.strictObject({ email: zEmail, password: zPassword });
++export const AdminPasswordBody = z.strictObject({
++  email: zEmail,
++  password: zPassword,
++});
+ export const AdminPasskeyBody = z.strictObject({ response: zWebAuthnResponse });
+-export const AdminEnrolStartBody = z.strictObject({ email: zEmail, password: zPassword, code: z.string().trim().min(10).max(20) });
+-export const AdminEnrolFinishBody = z.strictObject({ response: zWebAuthnResponse, name: zName.optional() });
++export const AdminEnrolStartBody = z.strictObject({
++  email: zEmail,
++  password: zPassword,
++  code: z.string().trim().min(10).max(20),
++});
++export const AdminEnrolFinishBody = z.strictObject({
++  response: zWebAuthnResponse,
++  name: zName.optional(),
++});
+ 
+ // ───────────── Answers ─────────────
+ 
+-export const AdminCeremony = z.strictObject({ options: z.record(z.string(), z.unknown()) });
++export const AdminCeremony = z.strictObject({
++  options: z.record(z.string(), z.unknown()),
++});
+ 
+ export const AdminMe = z.strictObject({
+-  account: z.strictObject({ id: z.string(), email: z.string(), name: z.string() }),
++  account: z.strictObject({
++    id: z.string(),
++    email: z.string(),
++    name: z.string(),
++  }),
+   role: zPlatformRole,
+   permissions: z.array(z.string()),
+-  session: z.strictObject({ id: z.string(), createdAt: zTime, expiresAt: zTime, idleExpiresAt: zTime, reauthUntil: zTime }),
++  session: z.strictObject({
++    id: z.string(),
++    createdAt: zTime,
++    expiresAt: zTime,
++    idleExpiresAt: zTime,
++    reauthUntil: zTime,
++  }),
+   passkeys: zCount,
+ });
+ 
+@@ -55,7 +94,10 @@ export const AdminOk = z.strictObject({ ok: z.literal(true) });
+ // ───────────── Pagination ─────────────
+ 
+ /** Keyset pagination: an opaque cursor from the previous page, and a page size of at most 100. */
+-export const zCursor = z.string().max(200).regex(/^[A-Za-z0-9_-]+$/);
++export const zCursor = z
++  .string()
++  .max(200)
++  .regex(/^[A-Za-z0-9_-]+$/);
+ export const zLimit = z.coerce.number().int().min(1).max(100).default(25);
+ const zSearch = z.string().trim().max(120).optional();
+ 
+@@ -65,11 +107,35 @@ const zPerDay = z.array(z.strictObject({ day: z.string(), count: zCount }));
+ 
+ export const AdminOverview = z.strictObject({
+   generatedAt: zTime,
+-  people: z.strictObject({ total: zCount, suspended: zCount, deleted: zCount, seen24h: zCount, seen30d: zCount, newPerDay: zPerDay }),
+-  organizations: z.strictObject({ total: zCount, teams: zCount, communities: zCount, newPerDay: zPerDay }),
++  people: z.strictObject({
++    total: zCount,
++    suspended: zCount,
++    deleted: zCount,
++    seen24h: zCount,
++    seen30d: zCount,
++    newPerDay: zPerDay,
++  }),
++  organizations: z.strictObject({
++    total: zCount,
++    teams: zCount,
++    communities: zCount,
++    newPerDay: zPerDay,
++  }),
+   /** Workspace file bytes (latest daily gauge); personal files aren't counted per workspace. */
+-  storage: z.strictObject({ workspaceBytes: zCount, measuredAt: z.string().nullable() }),
+-  requests: z.strictObject({ since: zTime, windowMinutes: zCount, requests: zCount, serverErrors: zCount, errorRate: z.number().nullable(), p95Ms: z.number().nullable() }).nullable(),
++  storage: z.strictObject({
++    workspaceBytes: zCount,
++    measuredAt: z.string().nullable(),
++  }),
++  requests: z
++    .strictObject({
++      since: zTime,
++      windowMinutes: zCount,
++      requests: zCount,
++      serverErrors: zCount,
++      errorRate: z.number().nullable(),
++      p95Ms: z.number().nullable(),
++    })
++    .nullable(),
+   health: z
+     .strictObject({
+       version: z.string(),
+@@ -82,19 +148,37 @@ export const AdminOverview = z.strictObject({
+       warnings: z.array(z.string()),
+     })
+     .nullable(),
+-  billing: z.strictObject({ available: z.boolean(), reason: z.string().nullable() }),
+-  recentActions: z.array(z.strictObject({ at: zTime, action: z.string(), outcome: z.string(), actorRole: z.string().nullable(), targetType: z.string().nullable() })).nullable(),
++  billing: z.strictObject({
++    available: z.boolean(),
++    reason: z.string().nullable(),
++  }),
++  recentActions: z
++    .array(
++      z.strictObject({
++        at: zTime,
++        action: z.string(),
++        outcome: z.string(),
++        actorRole: z.string().nullable(),
++        targetType: z.string().nullable(),
++      }),
++    )
++    .nullable(),
+   openIncidents: zCount,
+ });
+ 
+ // ───────────── People ─────────────
+ 
+ export const USER_STATUSES = ["active", "suspended", "deleted"] as const;
+-export const zDay = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "A day like 2026-10-24");
++export const zDay = z
++  .string()
++  .regex(/^\d{4}-\d{2}-\d{2}$/, "A day like 2026-10-24");
+ export const AdminUsersQuery = z.strictObject({
+   q: zSearch,
+   plan: z.enum(["free", "plus", "go"]).optional(),
+-  orgId: z.string().regex(/^[A-Za-z0-9_-]{3,64}$/).optional(),
++  orgId: z
++    .string()
++    .regex(/^[A-Za-z0-9_-]{3,64}$/)
++    .optional(),
+   status: z.enum(USER_STATUSES).optional(),
+   /** active7d: qualifying activity in the last 7 days; inactive30d: none in 30 days (telemetry, since it began). */
+   activity: z.enum(["active7d", "inactive30d"]).optional(),
+@@ -104,10 +188,19 @@ export const AdminUsersQuery = z.strictObject({
+   cursor: zCursor.optional(),
+   limit: zLimit,
+ });
+-export const AdminUserParams = z.strictObject({ userId: z.string().min(3).max(64).regex(/^[A-Za-z0-9_-]+$/) });
++export const AdminUserParams = z.strictObject({
++  userId: z
++    .string()
++    .min(3)
++    .max(64)
++    .regex(/^[A-Za-z0-9_-]+$/),
++});
+ export const AdminReasonBody = z.strictObject({ reason: zReason });
+ /** A suspension, optionally temporary: it ends by itself at [until] (audited by the job that lifts it). */
+-export const AdminSuspendBody = z.strictObject({ reason: zReason, until: zTime.optional() });
++export const AdminSuspendBody = z.strictObject({
++  reason: zReason,
++  until: zTime.optional(),
++});
+ 
+ export const AdminUserSummary = z.strictObject({
+   id: z.string(),
+@@ -125,7 +218,10 @@ export const AdminUserSummary = z.strictObject({
+   suspendedUntil: zTime.nullable(),
+ });
+ 
+-export const AdminUsersPage = z.strictObject({ users: z.array(AdminUserSummary), nextCursor: z.string().nullable() });
++export const AdminUsersPage = z.strictObject({
++  users: z.array(AdminUserSummary),
++  nextCursor: z.string().nullable(),
++});
+ 
+ export const AdminUserDetail = z.strictObject({
+   user: AdminUserSummary,
+@@ -141,21 +237,63 @@ export const AdminUserDetail = z.strictObject({
+       passkeys: zCount,
+     })
+     .nullable(),
+-  devices: z.array(z.strictObject({ id: z.string(), name: z.string(), createdAt: zTime, lastSeenAt: zTime.nullable(), revokedAt: zTime.nullable() })),
+-  memberships: z.array(z.strictObject({ orgId: z.string(), name: z.string(), kind: z.string(), role: z.string(), joinedAt: zTime, customRoles: z.array(z.string()) })),
++  devices: z.array(
++    z.strictObject({
++      id: z.string(),
++      name: z.string(),
++      createdAt: zTime,
++      lastSeenAt: zTime.nullable(),
++      revokedAt: zTime.nullable(),
++    }),
++  ),
++  memberships: z.array(
++    z.strictObject({
++      orgId: z.string(),
++      name: z.string(),
++      kind: z.string(),
++      role: z.string(),
++      joinedAt: zTime,
++      customRoles: z.array(z.string()),
++    }),
++  ),
+   platformRole: zPlatformRole.nullable(),
+   securityEvents: z.array(z.strictObject({ at: zTime, action: z.string() })),
+-  interventions: z.array(z.strictObject({ at: zTime, action: z.string(), outcome: z.string(), actorRole: z.string().nullable(), reason: z.string().nullable() })),
++  interventions: z.array(
++    z.strictObject({
++      at: zTime,
++      action: z.string(),
++      outcome: z.string(),
++      actorRole: z.string().nullable(),
++      reason: z.string().nullable(),
++    }),
++  ),
+ });
+ 
+-export const AdminUserChanged = z.strictObject({ user: AdminUserSummary, changed: z.boolean() });
+-export const AdminSessionsRevoked = z.strictObject({ accountSessions: zCount, legacySessions: zCount });
++export const AdminUserChanged = z.strictObject({
++  user: AdminUserSummary,
++  changed: z.boolean(),
++});
++export const AdminSessionsRevoked = z.strictObject({
++  accountSessions: zCount,
++  legacySessions: zCount,
++});
+ 
+ // ───────────── Organizations ─────────────
+ 
+ export const ORG_KINDS = ["team", "community"] as const;
+-export const AdminOrgsQuery = z.strictObject({ q: zSearch, kind: z.enum(ORG_KINDS).optional(), cursor: zCursor.optional(), limit: zLimit });
+-export const AdminOrgParams = z.strictObject({ orgId: z.string().min(3).max(64).regex(/^[A-Za-z0-9_-]+$/) });
++export const AdminOrgsQuery = z.strictObject({
++  q: zSearch,
++  kind: z.enum(ORG_KINDS).optional(),
++  cursor: zCursor.optional(),
++  limit: zLimit,
++});
++export const AdminOrgParams = z.strictObject({
++  orgId: z
++    .string()
++    .min(3)
++    .max(64)
++    .regex(/^[A-Za-z0-9_-]+$/),
++});
+ 
+ export const AdminOrgSummary = z.strictObject({
+   id: z.string(),
+@@ -167,7 +305,10 @@ export const AdminOrgSummary = z.strictObject({
+   members: zCount,
+ });
+ 
+-export const AdminOrgsPage = z.strictObject({ organizations: z.array(AdminOrgSummary), nextCursor: z.string().nullable() });
++export const AdminOrgsPage = z.strictObject({
++  organizations: z.array(AdminOrgSummary),
++  nextCursor: z.string().nullable(),
++});
+ 
+ export const AdminOrgDetail = z.strictObject({
+   organization: AdminOrgSummary.extend({
+@@ -179,58 +320,168 @@ export const AdminOrgDetail = z.strictObject({
+     activityAlerts: z.boolean(),
+     raidAlertAt: zTime.nullable(),
+   }),
+-  owners: z.array(z.strictObject({ id: z.string(), username: z.string().nullable() })),
+-  composition: z.strictObject({ byRole: z.record(z.string(), zCount), customRoles: zCount, bans: zCount, activeInvites: zCount }),
++  owners: z.array(
++    z.strictObject({ id: z.string(), username: z.string().nullable() }),
++  ),
++  composition: z.strictObject({
++    byRole: z.record(z.string(), zCount),
++    customRoles: zCount,
++    bans: zCount,
++    activeInvites: zCount,
++  }),
+   channels: z.strictObject({ total: zCount, private: zCount }),
+-  usage: z.strictObject({ days: zCount, metrics: z.record(z.string(), z.number()) }),
+-  limits: z.array(z.strictObject({ key: z.string(), limit: zCount.nullable(), source: z.enum(["workspace", "plan", "server", "none"]) })),
++  usage: z.strictObject({
++    days: zCount,
++    metrics: z.record(z.string(), z.number()),
++  }),
++  limits: z.array(
++    z.strictObject({
++      key: z.string(),
++      limit: zCount.nullable(),
++      source: z.enum(["workspace", "plan", "server", "none"]),
++    }),
++  ),
+   /** The subscription that isn't over, if any (docs/BILLING.md); null when there is none. */
+-  subscription: z.strictObject({ id: z.string(), plan: z.string(), status: z.string(), standing: z.string(), currentPeriodEnd: zTime.nullable() }).nullable(),
++  subscription: z
++    .strictObject({
++      id: z.string(),
++      plan: z.string(),
++      status: z.string(),
++      standing: z.string(),
++      currentPeriodEnd: zTime.nullable(),
++    })
++    .nullable(),
+   /** Reversible platform restriction, enforced in shared community authorization. */
+-  suspension: z.strictObject({ supported: z.literal(true), active: z.boolean(), suspendedAt: zTime.nullable(), until: zTime.nullable() }),
++  suspension: z.strictObject({
++    supported: z.literal(true),
++    active: z.boolean(),
++    suspendedAt: zTime.nullable(),
++    until: zTime.nullable(),
++  }),
+ });
+ 
+ // ───────────── Entitlements and billing status (phase 4) ─────────────
+ 
+-export const ENTITLEMENT_KEY_VALUES = ["roles.custom", "members", "storage.bytes"] as const;
++export const ENTITLEMENT_KEY_VALUES = [
++  "roles.custom",
++  "members",
++  "storage.bytes",
++] as const;
+ const zLimitValue = z.number().int().min(0).max(Number.MAX_SAFE_INTEGER);
+ 
+ export const AdminEntitlements = z.strictObject({
+   /** Whether a billing provider is configured: without one the console says so instead of showing invented figures. */
+-  billing: z.strictObject({ available: z.boolean(), reason: z.string().nullable() }),
++  billing: z.strictObject({
++    available: z.boolean(),
++    reason: z.string().nullable(),
++  }),
+   keys: z.array(z.strictObject({ key: z.string(), label: z.string() })),
+   serverLimits: z.array(z.strictObject({ key: z.string(), limit: zCount })),
+   overrides: z.array(
+-    z.strictObject({ orgId: z.string(), orgName: z.string().nullable(), key: z.string(), limit: zCount, setAt: zTime, expiresAt: zTime.nullable(), reason: z.string().nullable() }),
++    z.strictObject({
++      orgId: z.string(),
++      orgName: z.string().nullable(),
++      key: z.string(),
++      limit: zCount,
++      setAt: zTime,
++      expiresAt: zTime.nullable(),
++      reason: z.string().nullable(),
++    }),
+   ),
+ });
+ 
+ export const AdminLimitsBody = z.strictObject({
+   /** null clears an organization's own limit (the server-wide one, if any, applies again). */
+-  limits: z.partialRecord(z.enum(ENTITLEMENT_KEY_VALUES), zLimitValue.nullable()).refine((l) => Object.keys(l).length > 0, "Change at least one limit"),
++  limits: z
++    .partialRecord(z.enum(ENTITLEMENT_KEY_VALUES), zLimitValue.nullable())
++    .refine((l) => Object.keys(l).length > 0, "Change at least one limit"),
+   /** When the limits set here stop applying. Required to set a limit; null (no end) is for super admins only. */
+   expiresAt: zTime.nullable().optional(),
+   reason: zReason,
+ });
+-export const AdminLimits = z.strictObject({ limits: z.array(z.strictObject({ key: z.string(), limit: zCount.nullable(), source: z.enum(["workspace", "plan", "server", "none"]) })) });
++export const AdminLimits = z.strictObject({
++  limits: z.array(
++    z.strictObject({
++      key: z.string(),
++      limit: zCount.nullable(),
++      source: z.enum(["workspace", "plan", "server", "none"]),
++    }),
++  ),
++});
+ 
+ // ───────────── Infrastructure (phase 4) ─────────────
+ 
+ const zCheckStatus = z.enum(["ok", "failing", "not_measured", "off"]);
+-export const CONNECTOR_IDS = ["email", "storage", "push-fcm", "mongodb"] as const;
++export const CONNECTOR_IDS = [
++  "email",
++  "storage",
++  "push-fcm",
++  "mongodb",
++] as const;
+ 
+ export const AdminInfrastructure = z.strictObject({
+   version: z.string(),
+   generatedAt: zTime,
+   uptimeSeconds: zCount,
+-  checks: z.array(z.strictObject({ id: z.string(), label: z.string(), status: zCheckStatus, detail: z.string().nullable() })),
+-  process: z.strictObject({ rssBytes: zCount, heapUsedBytes: zCount, eventLoopDelayP99Ms: z.number().nullable() }),
++  checks: z.array(
++    z.strictObject({
++      id: z.string(),
++      label: z.string(),
++      status: zCheckStatus,
++      detail: z.string().nullable(),
++    }),
++  ),
++  process: z.strictObject({
++    rssBytes: zCount,
++    heapUsedBytes: zCount,
++    eventLoopDelayP99Ms: z.number().nullable(),
++  }),
+   onlineDevices: zCount,
+-  queues: z.strictObject({ deliveryItems: zCount, deliveryOldestAgeSeconds: z.number().int().nullable(), remindersOverdue: zCount, remindersRetrying: zCount }),
+-  window: z.strictObject({ since: zTime, minutes: zCount, requests: zCount, serverErrors: zCount, errorRate: z.number().nullable(), p95Ms: z.number().nullable() }),
+-  routes: z.array(z.strictObject({ route: z.string(), count: zCount, clientErrors: zCount, serverErrors: zCount, avgMs: z.number(), p95Ms: z.number().nullable(), maxMs: z.number() })),
+-  jobs: z.array(z.strictObject({ name: z.string(), runs: zCount, failures: zCount, lastRunAt: zTime.nullable(), lastFailureAt: zTime.nullable(), lastErrorKind: z.string().nullable() })),
+-  providers: z.array(z.strictObject({ name: z.string(), ok: zCount, failed: zCount, lastOkAt: zTime.nullable(), lastFailureAt: zTime.nullable(), lastErrorKind: z.string().nullable() })),
++  queues: z.strictObject({
++    deliveryItems: zCount,
++    deliveryOldestAgeSeconds: z.number().int().nullable(),
++    remindersOverdue: zCount,
++    remindersRetrying: zCount,
++  }),
++  window: z.strictObject({
++    since: zTime,
++    minutes: zCount,
++    requests: zCount,
++    serverErrors: zCount,
++    errorRate: z.number().nullable(),
++    p95Ms: z.number().nullable(),
++  }),
++  routes: z.array(
++    z.strictObject({
++      route: z.string(),
++      count: zCount,
++      clientErrors: zCount,
++      serverErrors: zCount,
++      avgMs: z.number(),
++      p95Ms: z.number().nullable(),
++      maxMs: z.number(),
++    }),
++  ),
++  jobs: z.array(
++    z.strictObject({
++      name: z.string(),
++      runs: zCount,
++      failures: zCount,
++      lastRunAt: zTime.nullable(),
++      lastFailureAt: zTime.nullable(),
++      lastErrorKind: z.string().nullable(),
++    }),
++  ),
++  providers: z.array(
++    z.strictObject({
++      name: z.string(),
++      ok: zCount,
++      failed: zCount,
++      lastOkAt: zTime.nullable(),
++      lastFailureAt: zTime.nullable(),
++      lastErrorKind: z.string().nullable(),
++    }),
++  ),
+   connectors: z.array(
+     z.strictObject({
+       id: z.string(),
+@@ -248,17 +499,36 @@ export const AdminInfrastructure = z.strictObject({
+   ),
+   warnings: z.array(z.string()),
+ });
+-export const AdminConnectorParams = z.strictObject({ id: z.enum(CONNECTOR_IDS) });
+-export const AdminConnectorCheck = z.strictObject({ ok: z.boolean(), errorKind: z.string().nullable() });
++export const AdminConnectorParams = z.strictObject({
++  id: z.enum(CONNECTOR_IDS),
++});
++export const AdminConnectorCheck = z.strictObject({
++  ok: z.boolean(),
++  errorKind: z.string().nullable(),
++});
+ 
+ // ───────────── Incidents (phase 4) ─────────────
+ 
+ export const INCIDENT_SEVERITIES = ["sev1", "sev2", "sev3", "sev4"] as const;
+ /** The lifecycle: open → acknowledged → investigating → monitoring → resolved → closed. */
+-export const INCIDENT_STATUSES = ["open", "acknowledged", "investigating", "monitoring", "resolved", "closed"] as const;
++export const INCIDENT_STATUSES = [
++  "open",
++  "acknowledged",
++  "investigating",
++  "monitoring",
++  "resolved",
++  "closed",
++] as const;
+ export const INCIDENT_KINDS = ["incident", "maintenance", "support"] as const;
+-export const zRef = z.string().min(3).max(64).regex(/^[A-Za-z0-9_-]+$/);
+-export const zPerson = z.strictObject({ accountId: z.string(), name: z.string().nullable() });
++export const zRef = z
++  .string()
++  .min(3)
++  .max(64)
++  .regex(/^[A-Za-z0-9_-]+$/);
++export const zPerson = z.strictObject({
++  accountId: z.string(),
++  name: z.string().nullable(),
++});
+ const zService = z.string().trim().min(1).max(60);
+ 
+ export const AdminIncidentsQuery = z.strictObject({
+@@ -293,7 +563,9 @@ export const AdminIncidentPatch = z
+     service: zService.nullable().optional(),
+   })
+   .refine((p) => Object.keys(p).length > 0, "Change at least one thing");
+-export const AdminIncidentNote = z.strictObject({ body: z.string().trim().min(1).max(4000) });
++export const AdminIncidentNote = z.strictObject({
++  body: z.string().trim().min(1).max(4000),
++});
+ 
+ export const AdminIncident = z.strictObject({
+   id: z.string(),
+@@ -319,10 +591,20 @@ export const AdminIncident = z.strictObject({
+   updatedAt: zTime,
+   resolvedAt: zTime.nullable(),
+ });
+-export const AdminIncidentsPage = z.strictObject({ incidents: z.array(AdminIncident), nextCursor: z.string().nullable() });
++export const AdminIncidentsPage = z.strictObject({
++  incidents: z.array(AdminIncident),
++  nextCursor: z.string().nullable(),
++});
+ export const AdminIncidentDetail = z.strictObject({
+   incident: AdminIncident,
+-  events: z.array(z.strictObject({ at: zTime, kind: z.enum(["note", "status", "severity", "assign", "created"]), body: z.string(), actor: zPerson })),
++  events: z.array(
++    z.strictObject({
++      at: zTime,
++      kind: z.enum(["note", "status", "severity", "assign", "created"]),
++      body: z.string(),
++      actor: zPerson,
++    }),
++  ),
+ });
+ 
+ // ───────────── Audit (phase 4) ─────────────
+@@ -332,8 +614,17 @@ const zAuditCursor = z.coerce.number().int().positive();
+ export const AdminAuditQuery = z.strictObject({
+   actor: zRef.optional(),
+   /** The start of an action name, e.g. "user." or "admin.login". */
+-  action: z.string().trim().max(60).regex(/^[a-z_.]*$/).optional(),
+-  targetType: z.string().max(40).regex(/^[a-z_]+$/).optional(),
++  action: z
++    .string()
++    .trim()
++    .max(60)
++    .regex(/^[a-z_.]*$/)
++    .optional(),
++  targetType: z
++    .string()
++    .max(40)
++    .regex(/^[a-z_]+$/)
++    .optional(),
+   targetId: zRef.optional(),
+   outcome: z.enum(AUDIT_OUTCOMES).optional(),
+   from: z.coerce.number().int().nonnegative().optional(),
+@@ -353,17 +644,37 @@ export const AdminAuditRow = z.strictObject({
+   outcome: z.enum(AUDIT_OUTCOMES),
+   reason: z.string().nullable(),
+   network: z.string().nullable(),
+-  detail: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()])).nullable(),
++  detail: z
++    .record(
++      z.string(),
++      z.union([z.string(), z.number(), z.boolean(), z.null()]),
++    )
++    .nullable(),
++});
++export const AdminAuditPage = z.strictObject({
++  events: z.array(AdminAuditRow),
++  nextCursor: z.string().nullable(),
++});
++export const AdminAuditVerify = z.strictObject({
++  rows: zCount,
++  brokenAt: zCount.nullable(),
++  lastHash: z.string(),
++  verifiedAt: zTime,
+ });
+-export const AdminAuditPage = z.strictObject({ events: z.array(AdminAuditRow), nextCursor: z.string().nullable() });
+-export const AdminAuditVerify = z.strictObject({ rows: zCount, brokenAt: zCount.nullable(), lastHash: z.string(), verifiedAt: zTime });
+ 
+ // ───────────── Admins (phase 4) ─────────────
+ 
+ export const AdminAccountParams = z.strictObject({ accountId: zRef });
+ export const AdminSessionParams = z.strictObject({ sessionId: zRef });
+-export const AdminGrantBody = z.strictObject({ email: zEmail, role: zPlatformRole, reason: zReason });
+-export const AdminRoleBody = z.strictObject({ role: zPlatformRole, reason: zReason });
++export const AdminGrantBody = z.strictObject({
++  email: zEmail,
++  role: zPlatformRole,
++  reason: zReason,
++});
++export const AdminRoleBody = z.strictObject({
++  role: zPlatformRole,
++  reason: zReason,
++});
+ 
+ export const AdminEntry = z.strictObject({
+   accountId: z.string(),
+@@ -379,22 +690,42 @@ export const AdminEntry = z.strictObject({
+   lastSignInAt: zTime.nullable(),
+   enrolmentPending: z.boolean(),
+ });
+-export const AdminAdminsList = z.strictObject({ admins: z.array(AdminEntry), activeSuperAdmins: zCount });
+-export const AdminGrantResult = z.strictObject({ admin: AdminEntry, enrolmentCode: z.string().nullable() });
++export const AdminAdminsList = z.strictObject({
++  admins: z.array(AdminEntry),
++  activeSuperAdmins: zCount,
++});
++export const AdminGrantResult = z.strictObject({
++  admin: AdminEntry,
++  enrolmentCode: z.string().nullable(),
++});
+ export const AdminSessionsList = z.strictObject({
+-  sessions: z.array(z.strictObject({ id: z.string(), createdAt: zTime, lastUsedAt: zTime, expiresAt: zTime, idleExpiresAt: zTime, network: z.string(), current: z.boolean() })),
++  sessions: z.array(
++    z.strictObject({
++      id: z.string(),
++      createdAt: zTime,
++      lastUsedAt: zTime,
++      expiresAt: zTime,
++      idleExpiresAt: zTime,
++      network: z.string(),
++      current: z.boolean(),
++    }),
++  ),
+ });
+ /** Who an incident can be assigned to: active admins whose role may manage incidents (names only). */
+ export const AdminAssignees = z.strictObject({ assignees: z.array(zPerson) });
+ 
+ /** Profile decorations waiting for review, and decided ones (API 0.61.0, docs/PROFILE_DECORATIONS.md). */
+ export const AdminDecorationsQuery = z.strictObject({
+-  status: z.enum(["pending", "approved", "rejected", "removed"]).default("pending"),
++  status: z
++    .enum(["pending", "approved", "rejected", "removed"])
++    .default("pending"),
+   /** The `next` of the previous page. */
+   before: z.coerce.number().int().nonnegative().optional(),
+   limit: z.coerce.number().int().min(1).max(100).default(30),
+ });
+-export const AdminDecorationParams = z.strictObject({ id: z.string().regex(/^c_[a-z0-9]{16}$/) });
++export const AdminDecorationParams = z.strictObject({
++  id: z.string().regex(/^c_[a-z0-9]{16}$/),
++});
+ /** Approving needs no reason; turning one down or taking it down does (the creator sees it). */
+ export const AdminDecorationDecision = z.discriminatedUnion("decision", [
+   z.strictObject({ decision: z.literal("approve") }),
+@@ -416,11 +747,20 @@ export const AdminDecorationView = z.strictObject({
+ export const AdminDecorationEntry = AdminDecorationView.extend({
+   format: z.enum(["png", "webp", "gif"]),
+   size: zCount,
+-  creator: z.strictObject({ userId: z.string(), displayName: z.string().nullable(), artist: z.boolean() }),
++  creator: z.strictObject({
++    userId: z.string(),
++    displayName: z.string().nullable(),
++    artist: z.boolean(),
++  }),
+   reviewedBy: z.string().nullable(),
+ });
+-export const AdminDecorationsPage = z.strictObject({ decorations: z.array(AdminDecorationEntry), next: zTime.nullable() });
+-export const AdminDecorationDecided = z.strictObject({ decoration: AdminDecorationView });
++export const AdminDecorationsPage = z.strictObject({
++  decorations: z.array(AdminDecorationEntry),
++  next: zTime.nullable(),
++});
++export const AdminDecorationDecided = z.strictObject({
++  decoration: AdminDecorationView,
++});
+ 
+ // Central operations (2026-11-01): no reporter identity, sealed report content or private messages.
+ export const AdminReportQuery = z.strictObject({
+@@ -444,13 +784,18 @@ export const AdminReportUpdate = z
+     note: z.string().trim().max(2000).optional(),
+     reason: zReason,
+   })
+-  .refine((v) => Object.keys(v).some((k) => k !== "version" && k !== "reason"), "Choose a change");
++  .refine(
++    (v) => Object.keys(v).some((k) => k !== "version" && k !== "reason"),
++    "Choose a change",
++  );
+ export const AdminReportView = z.strictObject({
+   id: z.string(),
+   orgId: z.string().nullable(),
+-  targetUserId: z.string(),
++  targetUserId: z.string().nullable(),
++  targetCommunityId: z.string().optional(),
++  communityNote: z.string().nullable().optional(),
+   reason: z.string(),
+-  kind: z.enum(["message", "profile"]),
++  kind: z.enum(["message", "profile", "community"]),
+   messageId: z.string().nullable(),
+   status: z.enum(["open", "actioned", "dismissed"]),
+   createdAt: zTime,
+@@ -494,8 +839,18 @@ export const AdminOrgRestriction = z.strictObject({
+   reason: zReason,
+ });
+ 
+-export const AdminOrgDeleteBody = z.strictObject({ reason: zReason, confirmName: z.string().trim().min(1).max(160), requestId: z.uuid() });
+-export const AdminOrgDeleted = z.strictObject({ deleted: z.literal(true), orgId: z.string(), members: zCount, channels: zCount, files: zCount });
++export const AdminOrgDeleteBody = z.strictObject({
++  reason: zReason,
++  confirmName: z.string().trim().min(1).max(160),
++  requestId: z.uuid(),
++});
++export const AdminOrgDeleted = z.strictObject({
++  deleted: z.literal(true),
++  orgId: z.string(),
++  members: zCount,
++  channels: zCount,
++  files: zCount,
++});
+ 
+ /**
+  * Platform Admin 2.0 (meldiq_central_admin/docs/ADMIN_2_ASSESSMENT.md): analytics, live connections, devices and
+diff --git a/src/api/platformFeatures.ts b/src/api/platformFeatures.ts
+index 42e08bd..a953348 100644
+--- a/src/api/platformFeatures.ts
++++ b/src/api/platformFeatures.ts
+@@ -1,9 +1,47 @@
+ // Generated by npm run contracts. Shared server schemas; do not edit.
+ import { z } from "zod/v4";
+-const zReason = z.string().trim().min(8, "Say why, in a few words (at least 8 characters)").max(500);
++const zReason = z
++  .string()
++  .trim()
++  .min(8, "Say why, in a few words (at least 8 characters)")
++  .max(500);
+ const zCount = z.number().int().nonnegative();
+ const zTime = z.number().int().nonnegative();
+ 
++export const PartnerChecklist = z.strictObject({
++  guidelines: z.literal(true),
++  moderation: z.literal(true),
++  safety: z.literal(true),
++  activity: z.literal(true),
++});
++export const PartnerSubmission = z.strictObject({
++  baseRev: z.number().int().nonnegative(),
++  statement: z.string().trim().min(1).max(2000),
++  checklist: PartnerChecklist,
++});
++export const PartnerReview = z.strictObject({
++  baseRev: z.number().int().positive(),
++  status: z.enum(["approved", "declined"]),
++  reason: z.string().trim().min(10).max(500),
++});
++export const PartnerApplication = z.strictObject({
++  orgId: z.string(),
++  statement: z.string(),
++  checklist: PartnerChecklist,
++  status: z.enum(["submitted", "approved", "declined"]),
++  rev: z.number().int().positive(),
++  submittedAt: z.number(),
++  reviewedAt: z.number().nullable(),
++  reviewNote: z.string().nullable(),
++});
++export const PartnerResult = z.strictObject({
++  application: PartnerApplication.nullable(),
++});
++export const PartnerQueue = z.strictObject({
++  applications: z.array(PartnerApplication),
++  nextAfter: z.string().nullable(),
++});
++
+ 
+ /**
+  * Creators (API 0.65.0 batch B, docs/SETTINGS_PARITY_API.md): verifying a channel you run on another platform (an
+diff --git a/src/console/App.tsx b/src/console/App.tsx
+index 6a38801..ddd3cdf 100644
+--- a/src/console/App.tsx
++++ b/src/console/App.tsx
+@@ -17,6 +17,7 @@ const Announcements = operational("Announcements"),
+   RolloutControls = operational("RolloutControls"),
+   OperatorAccess = operational("OperatorAccess"),
+   OwnershipRequests = operational("OwnershipRequests");
++const Partners = lazy(() => import("./pages/Partners").then((m) => ({ default: m.Partners })));
+ const Creators = lazy(() => import("./pages/Creators").then((m) => ({ default: m.Creators })));
+ const Collectibles = lazy(() => import("./pages/CollectibleManager").then((m) => ({ default: m.CollectibleManager })));
+ const Moderation = lazy(() => import("./pages/Moderation").then((m) => ({ default: m.Moderation })));
+@@ -57,6 +58,8 @@ function Page({ route }: { route: Route }) {
+       return <OperatorAccess />;
+     case "ownership":
+       return <OwnershipRequests />;
++    case "partners":
++      return <Partners route={route} />;
+     case "creators":
+       return <Creators route={route} />;
+     case "collectibles":
+diff --git a/src/console/kit/Dialog.tsx b/src/console/kit/Dialog.tsx
+index 6fb0465..2ba81a8 100644
+--- a/src/console/kit/Dialog.tsx
++++ b/src/console/kit/Dialog.tsx
+@@ -44,6 +44,7 @@ export interface ConfirmDialogProps {
+   valid?: boolean;
+   /** A wider dialog, for forms with many fields. */
+   wide?: boolean;
++  reasonMin?: number;
+ }
+ 
+ /**
+@@ -59,12 +60,12 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
+ }
+ 
+ /** Mounted only while the dialog is open: each confirmation gets fresh form state without an effect clearing typed input. */
+-function ConfirmationForm({ description, confirmLabel, danger, onConfirm, onClose, children, valid = true }: ConfirmDialogProps) {
++function ConfirmationForm({ description, confirmLabel, danger, onConfirm, onClose, children, valid = true, reasonMin = REASON_MIN }: ConfirmDialogProps) {
+   const [reason, setReason] = useState("");
+   const [busy, setBusy] = useState(false);
+   const [error, setError] = useState<string | null>(null);
+   const id = useId();
+-  const tooShort = reason.trim().length < REASON_MIN;
++  const tooShort = reason.trim().length < reasonMin;
+   const submit = async (e: FormEvent) => {
+     e.preventDefault();
+     if (tooShort || busy || !valid) return;
+@@ -90,7 +91,7 @@ function ConfirmationForm({ description, confirmLabel, danger, onConfirm, onClos
+           <label htmlFor={id}>Reason (recorded in the audit trail)</label>
+           <textarea id={id} className="textarea" rows={3} maxLength={REASON_MAX} value={reason} onChange={(e) => setReason(e.target.value)} required aria-describedby={`${id}-hint`} />
+           <p id={`${id}-hint`} className="field-hint">
+-            At least {REASON_MIN} characters. Don't include passwords or message content.
++            At least {reasonMin} characters. Don't include passwords or message content.
+           </p>
+         </div>
+         {error && (
+diff --git a/src/console/pages/Moderation.tsx b/src/console/pages/Moderation.tsx
+index 0c92304..8872be8 100644
+--- a/src/console/pages/Moderation.tsx
++++ b/src/console/pages/Moderation.tsx
+@@ -76,7 +76,7 @@ export function Moderation({ route }: { route: Route }) {
+                     header: "Target",
+                     cell: (v) => (
+                       <>
+-                        <span className="mono">{v.targetUserId}</span>
++                        <span className="mono">{v.targetCommunityId ?? v.targetUserId}</span>
+                         <span className="sub">
+                           {v.kind} · {v.orgId ? "Community" : "Platform"}
+                         </span>
+@@ -134,9 +134,9 @@ export function ReportDetail({ id }: { id: string }) {
+               items={[
+                 ["Reason", v.reason.replaceAll("_", " ")],
+                 ["Type", v.kind],
+-                ["Account", can("users.view") ? <a href={href("user", v.targetUserId)}>{v.targetUserId}</a> : v.targetUserId],
+-                ["Community", v.orgId ? <a href={href("org", v.orgId)}>{v.orgId}</a> : "Platform queue"],
+-                ["Evidence reference", v.messageId ?? "Profile report"],
++                ["Account", v.targetUserId ? can("users.view") ? <a href={href("user", v.targetUserId)}>{v.targetUserId}</a> : v.targetUserId : "Community report"],
++                ["Community", (v.targetCommunityId ?? v.orgId) ? <a href={href("org", v.targetCommunityId ?? v.orgId)}>{v.targetCommunityId ?? v.orgId}</a> : "Platform queue"],
++                ["Evidence reference", v.kind === "community" ? "Whole-community report" : (v.messageId ?? "Profile report")],
+                 ["Priority", v.priority],
+                 ["Appeal", v.appealStatus],
+                 ["Received", <Timestamp at={v.createdAt} mode="absolute" />],
+@@ -144,7 +144,11 @@ export function ReportDetail({ id }: { id: string }) {
+             />
+           </Card>
+           <Card title="Review workflow" sub="Assignment, priority, notes, decisions and appeals are audited.">
+-            <p className="muted">Only report metadata is available here. Evidence content access requires a separate approved policy. Account restrictions are available from the account’s page.</p>
++            <p className="muted">
++              {v.kind === "community"
++                ? "The community report is private to Meldiq operators. Resolving it does not automatically suspend the community."
++                : "Only report metadata is available here. Evidence content access requires a separate approved policy. Account restrictions are available from the account’s page."}
++            </p>
+             {can("reports.manage") && (
+               <ReportEditor
+                 key={`${id}-${v.version}`}
+@@ -157,6 +161,11 @@ export function ReportDetail({ id }: { id: string }) {
+             )}
+           </Card>
+         </div>
++        {v.kind === "community" && (
++          <Card title="Community report note">
++            <p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{v.communityNote || "No note provided."}</p>
++          </Card>
++        )}
+         <Card title="Resolution history" sub="Latest 100 events">
+           {r.data.events.length === 0 ? (
+             <EmptyState title="No moderation activity yet" />
+diff --git a/src/console/pages/Partners.tsx b/src/console/pages/Partners.tsx
+new file mode 100644
+index 0000000..7e98e84
+--- /dev/null
++++ b/src/console/pages/Partners.tsx
+@@ -0,0 +1,105 @@
++import { useState } from "react";
++import type { z } from "zod/v4";
++import { api, withQuery } from "../../api/client";
++import { PartnerQueue, PartnerResult, PartnerReview as PartnerReviewBody } from "../../api/platformFeatures";
++import { useResource } from "../../app/useResource";
++import { Card, KeyValues } from "../kit/Card";
++import { Pagination } from "../kit/DataTable";
++import { ConfirmDialog } from "../kit/Dialog";
++import { PageHeader } from "../kit/PageHeader";
++import { EmptyState, ErrorState, Loading } from "../kit/States";
++import { Timestamp } from "../kit/Timestamp";
++import { href, navigate, type Route } from "../router";
++
++type Application = z.infer<typeof PartnerQueue>["applications"][number];
++
++export function Partners({ route }: { route: Route }) {
++  const after = route.params.get("after") ?? "";
++  const r = useResource(() => api(PartnerQueue, "GET", withQuery("/admin/v1/partner-applications", { after, limit: 25 })), after);
++  const [notice, setNotice] = useState("");
++  return (
++    <>
++      <PageHeader title="Partner reviews" description="Review private owner applications. Approval records a decision; it does not award a badge, role or entitlement." />
++      {notice && (
++        <p className="banner" role="status">
++          {notice}
++        </p>
++      )}
++      <div className="stack">
++        <button className="btn" onClick={r.reload}>
++          Refresh applications
++        </button>
++        {r.state === "loading" ? (
++          <Loading label="Loading partner applications" />
++        ) : r.state === "error" ? (
++          <ErrorState error={r.error} onRetry={r.reload} />
++        ) : (
++          <>
++            {r.data.applications.length === 0 ? (
++              <EmptyState title="No applications awaiting review" />
++            ) : (
++              r.data.applications.map((application) => (
++                <PartnerReview
++                  key={`${application.orgId}-${application.rev}`}
++                  application={application}
++                  onSaved={() => {
++                    setNotice("Partner review recorded. The owner can view the decision.");
++                    r.reload();
++                  }}
++                />
++              ))
++            )}
++            <Pagination
++              shown={r.data.applications.length}
++              isFirst={!after}
++              hasNext={!!r.data.nextAfter}
++              onFirst={() => navigate(href("partners"))}
++              onNext={() => navigate(href("partners", null, { after: r.data.nextAfter ?? undefined }))}
++            />
++          </>
++        )}
++      </div>
++    </>
++  );
++}
++
++function PartnerReview({ application: v, onSaved }: { application: Application; onSaved: () => void }) {
++  const [decision, setDecision] = useState<"approved" | "declined" | null>(null);
++  return (
++    <Card title={`Application: ${v.orgId}`} sub={`Revision ${v.rev}`}>
++      <KeyValues
++        items={[
++          ["Community", <a href={href("org", v.orgId)}>{v.orgId}</a>],
++          ["Submitted", <Timestamp at={v.submittedAt} mode="absolute" />],
++          ["Guidelines", v.checklist.guidelines ? "Confirmed by owner" : "Not confirmed"],
++          ["Active moderation", v.checklist.moderation ? "Confirmed by owner" : "Not confirmed"],
++          ["Safety processes", v.checklist.safety ? "Confirmed by owner" : "Not confirmed"],
++          ["Community activity", v.checklist.activity ? "Confirmed by owner" : "Not confirmed"],
++        ]}
++      />
++      <h3>Owner statement</h3>
++      <p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{v.statement}</p>
++      <div className="row" style={{ gap: 8 }}>
++        <button className="btn btn-primary" onClick={() => setDecision("approved")}>
++          Approve application
++        </button>
++        <button className="btn" onClick={() => setDecision("declined")}>
++          Decline application
++        </button>
++      </div>
++      <ConfirmDialog
++        reasonMin={PartnerReviewBody.shape.reason.minLength ?? 10}
++        open={decision !== null}
++        title={decision === "approved" ? "Approve partner application" : "Decline partner application"}
++        description="Your reason is shared privately with the owner and recorded in the operator audit. This decision does not assign a badge or change community access. If the application has changed, refresh before reviewing again."
++        confirmLabel="Record decision"
++        onClose={() => setDecision(null)}
++        onConfirm={async (reason) => {
++          if (!decision) return;
++          await api(PartnerResult, "PUT", `/admin/v1/partner-applications/${encodeURIComponent(v.orgId)}`, { baseRev: v.rev, status: decision, reason });
++          onSaved();
++        }}
++      />
++    </Card>
++  );
++}
+diff --git a/src/console/router.ts b/src/console/router.ts
+index df59dd1..4c138c5 100644
+--- a/src/console/router.ts
++++ b/src/console/router.ts
+@@ -12,6 +12,7 @@ export type Page =
+   | "rollouts"
+   | "operators"
+   | "ownership"
++  | "partners"
+   | "creators"
+   | "collectibles"
+   | "reports"
+@@ -66,6 +67,7 @@ const PATH: Record<Page, string> = {
+   rollouts: "rollouts",
+   operators: "operators",
+   ownership: "ownership",
++  partners: "partners",
+   creators: "creators",
+   collectibles: "collectibles",
+   reports: "reports",
+diff --git a/src/console/shell/nav.ts b/src/console/shell/nav.ts
+index 0eabd68..3a06bda 100644
+--- a/src/console/shell/nav.ts
++++ b/src/console/shell/nav.ts
+@@ -57,6 +57,7 @@ export const NAV: NavGroup[] = [
+       { page: "accounts", label: "Create Accounts", icon: UserPlus, permission: "users.view" },
+       { page: "ownership", label: "Ownership requests", icon: Building2, permission: "orgs.view" },
+       { page: "orgs", label: "Communities & teams", icon: Building2, permission: "orgs.view", also: ["org"] },
++      { page: "partners", label: "Partner reviews", icon: BadgeCheck, permission: "partners.review" },
+       { page: "creators", label: "Creator reviews", icon: BadgeCheck, permission: "creators.review" },
+       { page: "devices", label: "Devices & Sessions", icon: Smartphone, permission: "devices.view" },
+       { page: "commerce-controls", label: "Promotions & purchases", icon: CreditCard, permission: "billing.view" },
+@@ -102,6 +103,7 @@ export const TITLES: Record<Page, string> = {
+   rollouts: "Rollouts & upload policy",
+   operators: "Legacy operator access",
+   ownership: "Ownership requests",
++  partners: "Partner reviews",
+   creators: "Creator reviews",
+   collectibles: "Profile catalog",
+   reports: "Trust & safety",
+diff --git a/test/parity.test.ts b/test/parity.test.ts
+index 9cdf62d..545e73c 100644
+--- a/test/parity.test.ts
++++ b/test/parity.test.ts
+@@ -7,6 +7,8 @@ import { overridesOf, PLAN_FIELDS } from "../src/console/pages/billing/mojoField
+ describe("new administration entry points", () => {
+   it("protects creator and catalog routes with backend permissions", () => {
+     expect(parseHash("#/creators?tab=program&status=pending").page).toBe("creators");
++    expect(parseHash("#/partners").page).toBe("partners");
++    expect(PERMISSION.partners).toBe("partners.review");
+     expect(PERMISSION.creators).toBe("creators.review");
+     expect(parseHash("#/collectibles").page).toBe("collectibles");
+     expect(PERMISSION.collectibles).toBe("collectibles.manage");

@@ -1,0 +1,1344 @@
+[
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "dm: large history opens newest after switching, Back, reload and settings",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "group: large history opens newest after switching, Back, reload and settings",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "channel: large history opens newest after switching, Back, reload and settings",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "slow opens cannot expose cached history or acknowledge it; switching cancels the old viewport",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "signing out and linking again opens large server history at latest",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "dm: large history opens newest after switching, Back, reload and settings",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "group: large history opens newest after switching, Back, reload and settings",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "channel: large history opens newest after switching, Back, reload and settings",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "slow opens cannot expose cached history or acknowledge it; switching cancels the old viewport",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-open-latest.spec.ts",
+    "name": "signing out and linking again opens large server history at latest",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-controls.spec.ts",
+    "name": "channel bell, Basic permissions and a three-step event",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-controls.spec.ts",
+    "name": "channel bell, Basic permissions and a three-step event",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium is enough for these controls",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/community-controls.spec.ts",
+          "line": 10,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "community-first.spec.ts",
+    "name": "daily navigation is in the rail and Saved stays in the profile menu",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-first.spec.ts",
+    "name": "one unread event highlights a channel without a number; two show a count; the title counts DMs",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-first.spec.ts",
+    "name": "hovering a reaction shows who reacted",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-first.spec.ts",
+    "name": "daily navigation is in the rail and Saved stays in the profile menu",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium: the rail and hover",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/community-first.spec.ts",
+          "line": 10,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "community-first.spec.ts",
+    "name": "one unread event highlights a channel without a number; two show a count; the title counts DMs",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium: the rail and hover",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/community-first.spec.ts",
+          "line": 10,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "community-first.spec.ts",
+    "name": "hovering a reaction shows who reacted",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium: the rail and hover",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/community-first.spec.ts",
+          "line": 10,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "community-lobby.spec.ts",
+    "name": "the lobby: first visit, the live editor, templates and its settings page",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-lobby.spec.ts",
+    "name": "the lobby: first visit, the live editor, templates and its settings page",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/community-lobby.spec.ts",
+          "line": 11,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "community-parity-a-wiring.spec.ts",
+    "name": "owner: safety and lock, roles with @everyone, theme tint, create channel options",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-parity-a-wiring.spec.ts",
+    "name": "member: a locked community and a read-only channel hold the composer back",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-parity-a-wiring.spec.ts",
+    "name": "owner: safety and lock, roles with @everyone, theme tint, create channel options",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/community-parity-a-wiring.spec.ts",
+          "line": 11,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "community-parity-a-wiring.spec.ts",
+    "name": "member: a locked community and a read-only channel hold the composer back",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/community-parity-a-wiring.spec.ts",
+          "line": 11,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "community-parity-c.spec.ts",
+    "name": "webhook posts, Make a post, reaction roles and tickets",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "community-parity-c.spec.ts",
+    "name": "webhook posts, Make a post, reaction roles and tickets",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/community-parity-c.spec.ts",
+          "line": 11,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "connection-requests.spec.ts",
+    "name": "a connection request is announced, counted, and accepted from the DM",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "connection-requests.spec.ts",
+    "name": "a connection request is announced, counted, and accepted from the DM",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium only: the rail is hidden on phones",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/connection-requests.spec.ts",
+          "line": 9,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "cross-device.spec.ts",
+    "name": "a linked browser and the phone stay in sync through the server, and signing out erases the browser",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "cross-device.spec.ts",
+    "name": "removing the browser from the phone signs it out and erases what it kept",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "cross-device.spec.ts",
+    "name": "a second tab doesn't take the connection unless asked",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "cross-device.spec.ts",
+    "name": "a linked browser and the phone stay in sync through the server, and signing out erases the browser",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "cross-device.spec.ts",
+    "name": "removing the browser from the phone signs it out and erases what it kept",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "cross-device.spec.ts",
+    "name": "a second tab doesn't take the connection unless asked",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop behaviour",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/cross-device.spec.ts",
+          "line": 88,
+          "column": 8
+        }
+      }
+    ]
+  },
+  {
+    "suite": "discovery-search.spec.ts",
+    "name": "public communities load, search and recover from no matches with Meldiq artwork",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "discovery-search.spec.ts",
+    "name": "public communities load, search and recover from no matches with Meldiq artwork",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "dms-selection.spec.ts",
+    "name": "in DMs no community is selected, and a community in the rail opens its channels",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "dms-selection.spec.ts",
+    "name": "in DMs no community is selected, and a community in the rail opens its channels",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium only: the rail is hidden on phones",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/dms-selection.spec.ts",
+          "line": 10,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "message-collections.spec.ts",
+    "name": "a busy thread cannot displace the main conversation timeline",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "message-collections.spec.ts",
+    "name": "media and files remain accessible after their messages leave the active history window",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "message-collections.spec.ts",
+    "name": "pins and threads page beyond loaded history, preserve counts, and recover from errors",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "message-collections.spec.ts",
+    "name": "a busy thread cannot displace the main conversation timeline",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "message-collections.spec.ts",
+    "name": "media and files remain accessible after their messages leave the active history window",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "message-collections.spec.ts",
+    "name": "pins and threads page beyond loaded history, preserve counts, and recover from errors",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "message-extras.spec.ts",
+    "name": "forward to two chats with a note, a call card, the viewer's caption and React, and YouTube in Meldiq",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "message-extras.spec.ts",
+    "name": "forward to two chats with a note, a call card, the viewer's caption and React, and YouTube in Meldiq",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium is enough for these",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/message-extras.spec.ts",
+          "line": 10,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "external event locations and occurrence or series changes are explicit and survive reload",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "event covers save, survive reload, retain the selection after failure and can be removed",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a role selects a validated community emoji and keeps the draft after a failed save",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a whole-community report goes to Meldiq operators and retries return the same receipt",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a voice room's associated text chat does not join audio and keeps text permissions independent",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "the private partner application validates its checklist and retains its draft after a failed submission",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "authorized audit entries expand administrative changes and omit private descriptions",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "forum paging, activity sort and gallery keep their scope through retries and show an authorized post image",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "forum tag requirements persist and ordinary authors cannot select moderator-only tags",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "forum-navigation-browser-final-2.log",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "external event locations and occurrence or series changes are explicit and survive reload",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "event covers save, survive reload, retain the selection after failure and can be removed",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a role selects a validated community emoji and keeps the draft after a failed save",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a whole-community report goes to Meldiq operators and retries return the same receipt",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a voice room's associated text chat does not join audio and keeps text permissions independent",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "the private partner application validates its checklist and retains its draft after a failed submission",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "authorized audit entries expand administrative changes and omit private descriptions",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "forum paging, activity sort and gallery keep their scope through retries and show an authorized post image",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "forum tag requirements persist and ordinary authors cannot select moderator-only tags",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "forum-navigation-browser-final-2.log",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "external event locations and occurrence or series changes are explicit and survive reload",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "event covers save, survive reload, retain the selection after failure and can be removed",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a role selects a validated community emoji and keeps the draft after a failed save",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a whole-community report goes to Meldiq operators and retries return the same receipt",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "a voice room's associated text chat does not join audio and keeps text permissions independent",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "the private partner application validates its checklist and retains its draft after a failed submission",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "authorized audit entries expand administrative changes and omit private descriptions",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "forum paging, activity sort and gallery keep their scope through retries and show an authorized post image",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-community.spec.ts",
+    "name": "forum tag requirements persist and ordinary authors cannot select moderator-only tags",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "forum-navigation-browser-final-2.log",
+    "annotations": []
+  },
+  {
+    "suite": "part3-lobby.spec.ts",
+    "name": "lobby phone and desktop orders save independently through keyboard controls and can be reset or linked",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-lobby.spec.ts",
+    "name": "lobby phone and desktop orders save independently through keyboard controls and can be reset or linked",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-lobby.spec.ts",
+    "name": "lobby phone and desktop orders save independently through keyboard controls and can be reset or linked",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-members.spec.ts",
+    "name": "member pages preserve loaded selections on failure, exclude owners and atomically save only the reviewed role targets",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-members.spec.ts",
+    "name": "member pages preserve loaded selections on failure, exclude owners and atomically save only the reviewed role targets",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-members.spec.ts",
+    "name": "member pages preserve loaded selections on failure, exclude owners and atomically save only the reviewed role targets",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-messaging.spec.ts",
+    "name": "offline sends and a lost HTTP acknowledgement recover without duplicate messages or lost drafts",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-messaging.spec.ts",
+    "name": "offline sends and a lost HTTP acknowledgement recover without duplicate messages or lost drafts",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-messaging.spec.ts",
+    "name": "offline sends and a lost HTTP acknowledgement recover without duplicate messages or lost drafts",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-search.spec.ts",
+    "name": "filtered historical search pages beyond the recent window and retries a failed next page",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-search.spec.ts",
+    "name": "message search distinguishes failure from no matches and retries the same query",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-search.spec.ts",
+    "name": "filtered historical search pages beyond the recent window and retries a failed next page",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-search.spec.ts",
+    "name": "message search distinguishes failure from no matches and retries the same query",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-search.spec.ts",
+    "name": "filtered historical search pages beyond the recent window and retries a failed next page",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-search.spec.ts",
+    "name": "message search distinguishes failure from no matches and retries the same query",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-social.spec.ts",
+    "name": "request notes stay recipient-only, retain drafts after failure and disappear after acceptance",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-social.spec.ts",
+    "name": "three-to-five quick reactions persist on the account and drive the message menu",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-social.spec.ts",
+    "name": "request notes stay recipient-only, retain drafts after failure and disappear after acceptance",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-social.spec.ts",
+    "name": "three-to-five quick reactions persist on the account and drive the message menu",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-social.spec.ts",
+    "name": "request notes stay recipient-only, retain drafts after failure and disappear after acceptance",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-social.spec.ts",
+    "name": "three-to-five quick reactions persist on the account and drive the message menu",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-translation.spec.ts",
+    "name": "translation browser contracts show unavailable, failed and successful results while preserving the original",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-translation.spec.ts",
+    "name": "translation browser contracts show unavailable, failed and successful results while preserving the original",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-translation.spec.ts",
+    "name": "translation browser contracts show unavailable, failed and successful results while preserving the original",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "poll-media.spec.ts",
+    "name": "poll percentages, named and hidden ballots survive reload, change, remove and close",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "poll-media.spec.ts",
+    "name": "long originals fit completely, zoom and pan, and navigate across separate image messages",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "poll-media.spec.ts",
+    "name": "poll percentages, named and hidden ballots survive reload, change, remove and close",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "poll-media.spec.ts",
+    "name": "long originals fit completely, zoom and pan, and navigate across separate image messages",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "opening always shows latest; active reading survives pagination, arrivals and late layout changes",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "a distant search result stays separate from recent history and can return to latest",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "settings search opens canonical pages, shows scope and handles no matches",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "the expression picker finds joined-community emoji and previews uploads without losing animation",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "opening unread history starts at latest and acknowledges only the visible fresh window",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "opening always shows latest; active reading survives pagination, arrivals and late layout changes",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "a distant search result stays separate from recent history and can return to latest",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "browser-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "The side search panel replaces the conversation at phone width.",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/research-improvements.spec.ts",
+          "line": 106,
+          "column": 8
+        }
+      }
+    ]
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "settings search opens canonical pages, shows scope and handles no matches",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "the expression picker finds joined-community emoji and previews uploads without losing animation",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "research-improvements.spec.ts",
+    "name": "opening unread history starts at latest and acknowledges only the visible fresh window",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "server-history.spec.ts",
+    "name": "chats come back from the server after signing out and in again",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "server-history.spec.ts",
+    "name": "chats come back from the server after signing out and in again",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "branding.spec.ts",
+    "name": "Google and Discord login entries still call their existing provider handlers",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "branding.spec.ts",
+    "name": "Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "branding.spec.ts",
+    "name": "the old unchosen palette migrates while an explicit Midnight choice survives the first paint and reload",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "branding.spec.ts",
+    "name": "Google and Discord login entries still call their existing provider handlers",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "branding.spec.ts",
+    "name": "Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "branding.spec.ts",
+    "name": "the old unchosen palette migrates while an explicit Midnight choice survives the first paint and reload",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "notifications.spec.ts",
+    "name": "with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "notifications.spec.ts",
+    "name": "a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "notifications.spec.ts",
+    "name": "with Meldiq closed, a ringing call shows as an incoming call that opens its conversation",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "notifications.spec.ts",
+    "name": "a direct mention still notifies from a muted conversation while ordinary messages stay quiet",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "notifications.spec.ts",
+    "name": "with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "notifications.spec.ts",
+    "name": "a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "notifications.spec.ts",
+    "name": "with Meldiq closed, a ringing call shows as an incoming call that opens its conversation",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "notifications.spec.ts",
+    "name": "a direct mention still notifies from a muted conversation while ordinary messages stay quiet",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-failure-states.spec.ts",
+    "name": "friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-failure-states.spec.ts",
+    "name": "friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-failure-states.spec.ts",
+    "name": "friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "reading-browser-settled-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "colon emoji completion is keyboard accessible and choosing an option never submits the draft",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "reading-browser-settled-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "colon emoji completion is keyboard accessible and choosing an option never submits the draft",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "reading-browser-settled-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-message-actions.spec.ts",
+    "name": "colon emoji completion is keyboard accessible and choosing an option never submits the draft",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-quiz.spec.ts",
+    "name": "quiz answers stay hidden until close and anonymous votes never expose their account in another member's response",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-quiz.spec.ts",
+    "name": "quiz answers stay hidden until close and anonymous votes never expose their account in another member's response",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-quiz.spec.ts",
+    "name": "quiz answers stay hidden until close and anonymous votes never expose their account in another member's response",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-threads.spec.ts",
+    "name": "thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-threads.spec.ts",
+    "name": "thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion",
+    "project": "tablet-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "part3-threads.spec.ts",
+    "name": "thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion",
+    "project": "phone-width",
+    "status": "passed",
+    "receipt": "final-message-browser-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-position.spec.ts",
+    "name": "a conversation opens at its newest message and keeps a reader's place",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "reading-browser-settled-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-position.spec.ts",
+    "name": "a community's categories show in their saved order from the first paint",
+    "project": "chromium",
+    "status": "passed",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": []
+  },
+  {
+    "suite": "chat-position.spec.ts",
+    "name": "a conversation opens at its newest message and keeps a reader's place",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "reading-browser-settled-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/chat-position.spec.ts",
+          "line": 10,
+          "column": 6
+        }
+      }
+    ]
+  },
+  {
+    "suite": "chat-position.spec.ts",
+    "name": "a community's categories show in their saved order from the first paint",
+    "project": "phone-width",
+    "status": "skipped",
+    "receipt": "message-browser-corrected-results.json",
+    "annotations": [
+      {
+        "type": "skip",
+        "description": "desktop Chromium",
+        "location": {
+          "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/chat-position.spec.ts",
+          "line": 10,
+          "column": 6
+        }
+      }
+    ]
+  }
+]

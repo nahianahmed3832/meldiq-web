@@ -1,0 +1,3437 @@
+[
+  {
+    "suite": "account_safety.test.ts",
+    "name": "two-step sign-in is advertised and off at first",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "two-step sign-in turns on with the password and the app's first code, then every password sign-in needs a code",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "two-step sign-in pauses after too many wrong codes, and turns off with the password and a code",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "two-step sign-in keeps the secret sealed in the database",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "changing the email sends a code to the new address, changes on the code, and tells the old one",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "changing the email answers the same for an address that already has an account, and tells that address instead of sending a code",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "account standing limits more with each active warning, and an expired or lifted one stops counting",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "account standing shows the account its standing and the reasons",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "bug reports and profile additions takes a report, lists it to its reporter, and a confirmed one earns the Bug Hunter badge",
+    "status": "passed"
+  },
+  {
+    "suite": "account_safety.test.ts",
+    "name": "bug reports and profile additions keeps About me and https links, shown under the bio's setting",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_scope.test.ts",
+    "name": "activity feed respects channel visibility (T1.8) a member without the role sees nothing about the gated channels or their calls",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_scope.test.ts",
+    "name": "activity feed respects channel visibility (T1.8) a member with the role sees its channel and the call in it",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_scope.test.ts",
+    "name": "activity feed respects channel visibility (T1.8) owners still see everything",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_scope.test.ts",
+    "name": "activity feed respects channel visibility (T1.8) hides older branch and team rows, and rows whose target is gone",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "setting an activity is advertised",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "setting an activity is kept and read back, and null clears it",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "setting an activity keeps the start time when the same game is reported again, and starts over for another game",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "setting an activity replaces a start time in the future or over a day old with the time it arrived",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "setting an activity refuses names that are empty, too long or more than one line, other kinds, and anything that isn't a package name",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "setting an activity needs a signed-in person",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "who sees it shows it to a DM contact while the player is online: member list, profile, presence and a live frame",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "who sees it shows it to the members of a shared community",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "who sees it hides it while the player appears invisible or limits who sees when they're online",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "who sees it ends when the player's last connection closes",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "who sees it isn't shown while the player is offline even before it lapses",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "ActivityService lets an activity lapse without a refresh and announces the end once",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "ActivityService picks up activities that haven't lapsed after a restart",
+    "status": "passed"
+  },
+  {
+    "suite": "activity_status.test.ts",
+    "name": "activities in MongoDB are written to user_activities and removed when cleared",
+    "status": "skipped"
+  },
+  {
+    "suite": "administrative_audit_changes.test.ts",
+    "name": "allows only explicit administrative values and never serializes content, credentials or private evidence",
+    "status": "passed"
+  },
+  {
+    "suite": "administrative_audit_changes.test.ts",
+    "name": "administrative before/after (postgres) projects real role/channel changes only to authorized readers and excludes every private field",
+    "status": "passed"
+  },
+  {
+    "suite": "applications_alerts.test.ts",
+    "name": "join applications advertises the features",
+    "status": "passed"
+  },
+  {
+    "suite": "applications_alerts.test.ts",
+    "name": "join applications are turned on by people who edit the community, with up to five questions",
+    "status": "passed"
+  },
+  {
+    "suite": "applications_alerts.test.ts",
+    "name": "join applications need every answer, once; banned people and private communities can't apply",
+    "status": "passed"
+  },
+  {
+    "suite": "applications_alerts.test.ts",
+    "name": "join applications are listed for people with members.approve, who approve (the person joins) or deny",
+    "status": "passed"
+  },
+  {
+    "suite": "applications_alerts.test.ts",
+    "name": "join applications replace open joining while the questions are on",
+    "status": "passed"
+  },
+  {
+    "suite": "applications_alerts.test.ts",
+    "name": "join applications can be withdrawn, and are refused while joining is paused",
+    "status": "passed"
+  },
+  {
+    "suite": "applications_alerts.test.ts",
+    "name": "activity alerts tell moderators when ten or more people join within ten minutes, once per half hour, and can be turned off",
+    "status": "passed"
+  },
+  {
+    "suite": "applications_alerts.test.ts",
+    "name": "public invite preview shows the community's name and size without signing in, and the usual problems",
+    "status": "passed"
+  },
+  {
+    "suite": "architecture_boundaries.test.ts",
+    "name": "architecture boundaries allows only the listed exceptions to the dependency rules",
+    "status": "passed"
+  },
+  {
+    "suite": "architecture_boundaries.test.ts",
+    "name": "architecture boundaries lets a module touch another module's tables only where already listed",
+    "status": "passed"
+  },
+  {
+    "suite": "architecture_boundaries.test.ts",
+    "name": "architecture boundaries knows an owner for every table the migrations create",
+    "status": "passed"
+  },
+  {
+    "suite": "architecture_boundaries.test.ts",
+    "name": "architecture boundaries keeps the layout's top-level folders",
+    "status": "passed"
+  },
+  {
+    "suite": "authz_edges.test.ts",
+    "name": "invites are re-checked against their creator's current rights (T3.1) an invite from someone whose role let them invite stops working once the role is taken away",
+    "status": "passed"
+  },
+  {
+    "suite": "authz_edges.test.ts",
+    "name": "invites are re-checked against their creator's current rights (T3.1) an admin invite stops working when its owner becomes an admin; others' invites are unaffected",
+    "status": "passed"
+  },
+  {
+    "suite": "authz_edges.test.ts",
+    "name": "accounts disabled from the admin CLI are disconnected (T3.3) closes their open sockets at the next cleanup run",
+    "status": "passed"
+  },
+  {
+    "suite": "authz_edges.test.ts",
+    "name": "archived channels are read-only (T3.2) blocks posts and calls until restored, and members keep reading",
+    "status": "passed"
+  },
+  {
+    "suite": "b14b_leave.test.ts",
+    "name": "leaving refuses leaving one channel of a community, and the member keeps it",
+    "status": "passed"
+  },
+  {
+    "suite": "b14b_leave.test.ts",
+    "name": "leaving lets a manager take someone out of a channel",
+    "status": "passed"
+  },
+  {
+    "suite": "b14b_leave.test.ts",
+    "name": "leaving still lets someone leave a group",
+    "status": "passed"
+  },
+  {
+    "suite": "b15_isolation.test.ts",
+    "name": "another community stays closed refuses every community route of B4\u2013B14 to someone who isn't in it",
+    "status": "passed"
+  },
+  {
+    "suite": "b15_isolation.test.ts",
+    "name": "removing someone takes access away at once, and nothing sent afterwards is queued for them",
+    "status": "passed"
+  },
+  {
+    "suite": "b15_isolation.test.ts",
+    "name": "signing out ends the session: the same token is refused afterwards",
+    "status": "passed"
+  },
+  {
+    "suite": "call_history.test.ts",
+    "name": "call history a completed 1:1 call reports both people and their connected time",
+    "status": "passed"
+  },
+  {
+    "suite": "call_history.test.ts",
+    "name": "call history an unanswered call has no attendance from the person who only rang",
+    "status": "passed"
+  },
+  {
+    "suite": "call_history.test.ts",
+    "name": "call history group calls list everyone who connected, once each, even across two devices",
+    "status": "passed"
+  },
+  {
+    "suite": "call_history.test.ts",
+    "name": "call history members list a conversation's calls newest first, only since they joined",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) a new member is in the org-wide public channel and may post there",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) members already in the workspace join a public channel created later",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) an opt-in public channel is listed for joining, and joining works",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) messages and attachments reach the channel, live",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) a private channel stays hidden and closed to members who aren't invited",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) an invitation from a channel manager opens the private channel",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) people outside the workspace see none of it",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) an ordinary member can't manage channels",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) the repair adds members to public channels created as opt-in before the fix, except people who left",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_access.test.ts",
+    "name": "workspace members and channels (round 7, bug 6) a guest isn't auto-joined, and removing someone from the workspace closes its channels",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "slowmode advertises the features",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "slowmode is set by people who manage the channel, to one of the offered intervals, on channels only",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "slowmode lets a member post once per interval, says when they can post again, and keeps edits and reactions free",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "slowmode returns a retry of an accepted message as a duplicate, never as a slowmode refusal",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "slowmode doesn't slow down channel managers or holders of messages.bypass_slowmode",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "slowmode turns off",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "channel preferences keeps mutes that haven't ended, for the person's own conversations only, in any document",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "channel preferences keeps a level per category of this community, and an explicit 'all' under a quieter category",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "channel preferences hides channels of this community the person can see, joined or not",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_controls.test.ts",
+    "name": "channel preferences keeps all three when an older app writes without them, and drops the community ones from the personal document",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_order.test.ts",
+    "name": "channel order in the conversation list gives every channel its category's position, in the order the categories were made; none outside a category",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_permissions.test.ts",
+    "name": "channel permissions start from the community permissions when nothing overrides them",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_permissions.test.ts",
+    "name": "channel permissions apply @everyone, then roles, then the member, deny before allow, category before channel",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_permissions.test.ts",
+    "name": "channel permissions let owners and admins skip overwrites",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_permissions.test.ts",
+    "name": "channel permissions never lift a role's community-wide restriction",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_permissions.test.ts",
+    "name": "channel permissions give guests only guest-safe powers, whatever an overwrite says",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_permissions.test.ts",
+    "name": "channel permissions ignore capability keys it doesn't know (a newer server's)",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_permissions.test.ts",
+    "name": "writing overwrites refuses allowing and denying the same thing",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_permissions.test.ts",
+    "name": "writing overwrites refuses changing a power the writer doesn't hold, and allows leaving it as it was",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres is advertised, and only holders of webhooks.manage see or make webhooks",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres gives a new webhook a friendly name and shows its token once, keeping only a hash",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres posts Discord's JSON as a channel message with boxes, buttons and the webhook's name",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres validates strictly: https only, Discord's limits, something to show",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres refuses unknown and wrong tokens alike, and a new address retires the old one",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres isn't held up by slowmode, but an archived channel refuses it",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres never lets people's own messages carry boxes, buttons or webhook details",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres makes a post for holders of webhooks.manage, and needs a title in a forum",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres renames, sets a picture members can fetch, and messages name it",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres stops at 10 per channel",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres deletes a webhook: its address stops working and what it posted stays",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks with communities in postgres limits posts per webhook address",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "channel webhooks switched off (CHANNEL_WEBHOOKS=off) aren't advertised and their routes answer 503",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "webhook payloads makes text from the boxes when there's no content, for apps that can't show boxes",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "webhook payloads takes the poster's name and picture over the webhook's",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "webhook payloads refuses a box with nothing in it",
+    "status": "passed"
+  },
+  {
+    "suite": "channel_webhooks.test.ts",
+    "name": "webhook payloads never logs a webhook's token",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding is advertised, and a community without any keeps Meldiq's theme (nulls)",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding sets an accent (stored in lower case) for owners and admins only, and puts the theme back with null",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding refuses anything that isn't a #rrggbb colour",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding stores a banner per revision for people who edit the community; members read it, outsiders don't",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding is shown on Discover and readable by anyone signed in once the community is public",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding comes with an invitation: in the app's preview and on the public invite page, with the banner",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding is removed cleanly; a community without a banner answers 404, and other communities are untouched",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding shows the community's icon on the public invite page (API 0.46.0), only through a usable code",
+    "status": "passed"
+  },
+  {
+    "suite": "community_branding.test.ts",
+    "name": "community branding takes an animated GIF icon and banner (API 0.64.0) and serves them as GIFs, checking their size and frames",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "voice channel permissions let members join and speak by default, and say so on the channel",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "voice channel permissions make a role listen-only with a channel overwrite: it joins, its token can't publish",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "voice channel permissions refuse joining or opening a voice channel without voice.connect; owners skip overwrites",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "voice channel permissions keep the community-wide restriction of a role: no channel allow lifts it",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "voice channel permissions don't limit calls outside communities",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "forum tags are kept per forum: names trimmed, duplicates dropped, ids stable across renames of other tags",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "forum tags refuse tags on text channels and more than 20",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "forum tags merge a manager's list without losing ids (pure rule)",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "deleting a channel needs the channel's managers and its exact name; removes its messages and files for everyone",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "deleting a channel refuse deleting groups and direct conversations (people leave those)",
+    "status": "passed"
+  },
+  {
+    "suite": "community_channels.test.ts",
+    "name": "deleting a channel let a moderator role that manages channels delete one, and take its overwrites with it",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres is advertised, and community views say whether it's on and seen",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres starts with the default lobby, for members only",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres is changed by people who can edit the community, checking every field",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres never shows members the channels they can't open",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres picks the busiest channels the viewer can see when none are picked, and counts this week's messages",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres lists who runs it with badges, and hides them from members when switched off",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres shows voice rooms with people in them, only the ones the viewer can see",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres offers the onboarding answers that give roles, and the rules channel members can see",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres applies templates: look and sections change, text stays, starter questions only fill an empty FAQ",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres takes posts through a secret feed URL that can be replaced and deleted",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby kept in postgres remembers the first time a member opened it, until they leave",
+    "status": "passed"
+  },
+  {
+    "suite": "community_lobby.test.ts",
+    "name": "community lobby switched off isn't advertised, answers 503 and leaves community views alone",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "community notification settings advertises the features",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "community notification settings stores a community default level and suppress @everyone, and keeps an explicit 'all' override only when the default isn't 'all'",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "community notification settings keeps the community settings when an older app writes without them",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "community notification settings refuses unknown levels and fields, and doesn't keep community settings in the personal document",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "community notification settings is private to the person",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "rail order keeps the order of the person's own communities only, once each, in the personal document",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "rail order isn't kept in a community's document",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "rail order refuses malformed ids",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "rail folders (API 0.50.0) are advertised",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "rail folders (API 0.50.0) keeps folders of the person's own communities, each community once, and keeps them when an app leaves them out",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "rail folders (API 0.50.0) isn't kept in a community's document, and refuses malformed folders",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "community templates lists the templates",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "community templates creates a community from a template, with its voice and forum channels",
+    "status": "passed"
+  },
+  {
+    "suite": "community_navigation.test.ts",
+    "name": "community templates uses the starter set when no template is named, and refuses unknown templates",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres is advertised, and the catalog carries the new keys with everyday ones held by default",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres lets owners change what plain members may do by default, within their own powers",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres refuses what a restricting role takes away, and allows what it leaves",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres takes channel overwrites of the new powers",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres starts history at joining for people without messages.history",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres lets message moderators delete and pin anyone's messages and skip slowmode",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres lets holders of messages.mention_all mention everyone and any role",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres keeps nicknames per community, within each person's reach",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres gives roles automatically, keeps them for show, and takes back what it gave",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres reorders roles, moving only roles below the caller's highest unless they're an owner or admin",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres keeps text-only and no-GIF channels to text, except for their moderators",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres lets everyone read and react in a read-only channel, and only its poster roles post",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres lets a stage's moderators bring listeners up to speak",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions kept in postgres forgets a nickname when its member leaves",
+    "status": "passed"
+  },
+  {
+    "suite": "community_permissions.test.ts",
+    "name": "community permissions switched off hides the feature, answers its routes with 503 and leaves views as they were",
+    "status": "passed"
+  },
+  {
+    "suite": "community_reports.test.ts",
+    "name": "private community reports (postgres) routes only to operators, deduplicates concurrent retries, preserves privacy and never applies a sanction",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres is advertised, starts with the defaults and shows the settings to moderators only",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres lets only people who can edit the community change the settings, audited",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres locks the community: nobody new joins and only moderators post, the rest read and react",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres unlocks early, audited, and keeps Pause joining as it was",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres locks itself for 15 minutes on a join flood, audited as automatic",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres slows a channel down for 10 minutes on a message flood, then lets it go",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres asks for a verified email at low and a wait at medium and high; moderators and role holders skip it",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres keeps accounts younger than the gate out, unless they're platform staff",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres voice-bans people from the voice channels only, listed with the bans and audited",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres server-mutes someone until unmuted: their media stops publishing and new tokens listen only",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres disconnects someone from the voice call they're in, with voice.move_members",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety kept in postgres lets a voice channel's own mute power mute in its call",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety.test.ts",
+    "name": "community safety switched off isn't advertised, answers 503 and enforces nothing",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety_rules.test.ts",
+    "name": "raid protection's counting locks on 60 joins within a minute, and not on 60 spread over longer",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety_rules.test.ts",
+    "name": "raid protection's counting slows a channel on 30 messages from 6 people within 10 seconds, not from fewer people",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety_rules.test.ts",
+    "name": "raid protection's counting takes other thresholds, as the integration tests use",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety_rules.test.ts",
+    "name": "verification levels asks nothing at none, a verified email from low up",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety_rules.test.ts",
+    "name": "verification levels medium: account and membership 5 minutes old; high: membership 10 minutes",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety_rules.test.ts",
+    "name": "account-age gate and lock lengths lets older accounts in and says when a young one may join",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety_rules.test.ts",
+    "name": "voice moderation keys are admin powers in the moderator template",
+    "status": "passed"
+  },
+  {
+    "suite": "community_safety_rules.test.ts",
+    "name": "voice moderation keys act on members and guests below the holder, never on owners",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres is advertised in the server's features",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres makes member invitations that never expire and have no use limit; admin and guest ones keep their limits",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres gives each member one standard link that stays the same and is remade once revoked",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres is read and changed only by people who can edit the community",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres takes a name of up to 100 characters, the background tint and links, and shows them on the community",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres claims a custom invite link only at five members, in the allowed form, once across communities",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres joins through the custom link wherever a code is taken, with the usual rules, until it's changed or cleared",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres only lands people in a text channel everyone can see",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres holds back only members who join after 'must finish' is on, until they answer, agree and finish",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres asks again after someone leaves and comes back, and stops once 'must finish' is off",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings kept in postgres keeps the personal choice to hide community themes",
+    "status": "passed"
+  },
+  {
+    "suite": "community_settings.test.ts",
+    "name": "community settings switched off (COMMUNITY_SETTINGS=off) isn't advertised, its routes answer 503, custom links don't resolve and nothing is enforced",
+    "status": "passed"
+  },
+  {
+    "suite": "community_templates.test.ts",
+    "name": "templates from a community with communities in postgres is advertised, and made only by people who can edit the community",
+    "status": "passed"
+  },
+  {
+    "suite": "community_templates.test.ts",
+    "name": "templates from a community with communities in postgres copies channels, categories and roles under a share code, one per community",
+    "status": "passed"
+  },
+  {
+    "suite": "community_templates.test.ts",
+    "name": "templates from a community with communities in postgres previews by code (any case) for anyone signed in, without members or people's overwrites",
+    "status": "passed"
+  },
+  {
+    "suite": "community_templates.test.ts",
+    "name": "templates from a community with communities in postgres builds a new community from the code: same layout, roles remapped, only its owner as member",
+    "status": "passed"
+  },
+  {
+    "suite": "community_templates.test.ts",
+    "name": "templates from a community with communities in postgres says when it's out of date, syncs on request, and stops working once deleted",
+    "status": "passed"
+  },
+  {
+    "suite": "community_templates.test.ts",
+    "name": "templates switched off hides the feature and answers 503",
+    "status": "passed"
+  },
+  {
+    "suite": "connection_notes.test.ts",
+    "name": "recipient-only request notes (postgres) returns a note only to its intended recipient and clears it on acceptance",
+    "status": "passed"
+  },
+  {
+    "suite": "connection_notes.test.ts",
+    "name": "recipient-only request notes (postgres) retains the first note for duplicate sends and deletes notes on decline/cancel/block",
+    "status": "passed"
+  },
+  {
+    "suite": "connection_notes.test.ts",
+    "name": "recipient-only request notes (postgres) accepts simultaneous crossed requests without regression or retained notes",
+    "status": "passed"
+  },
+  {
+    "suite": "connection_notes.test.ts",
+    "name": "recipient-only request notes (postgres) validates 300 Unicode code points and persists nothing when privacy denies the request",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "who may message you advertises the features and starts from the defaults",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "who may message you opens a DM directly between people who share a community",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "who may message you turns a stranger's DM into a message request, and a guest isn't in the community for this",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "who may message you refuses people your settings don't allow, and answers blocked and unknown people the same way",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "message requests let the sender send three messages, without a push, and the recipient can't reply before answering",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "message requests only the recipient answers, and decline hides it from them and drops what was waiting",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "message requests opening the DM yourself after declining makes it an ordinary DM again",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "message requests accept connects the two people; block declines and blocks",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "message requests are limited to twenty new ones an hour",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "connections accepts concurrent retries once and emits one relationship change",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "connections does not resurrect a request removed while acceptance is waiting",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "connections go from request to accepted, by id or username, and repeating changes nothing",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "connections crossed requests accept each other; remove, cancel and decline are one call that says nothing to the other",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "connections make a DM direct even when your settings ask for connections",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "connections respect who may send requests, and blocked people get the same answer as unknown ones",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "connections go with the account when it's deleted",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_requests.test.ts",
+    "name": "the server's default keeps DMs open for people who never chose until the operator sets DEFAULT_DM_POLICY",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "the outbound client times out and logs only the host and path, never the query (keys travel there)",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres Steam (OpenID 2.0) sends the browser to Steam with a return address on this API",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres Steam (OpenID 2.0) refuses an assertion Steam doesn't confirm",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres Steam (OpenID 2.0) stores the account, its name and up to 5 recent games once Steam confirms it (links built from ids)",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres Steam (OpenID 2.0) takes each state once, only for its own provider and person, and never a tampered one",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres Steam (OpenID 2.0) says so when the person cancels on Steam's page",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres AniList (OAuth 2) exchanges the code, keeps the tokens sealed, and shows up to 5 currently watching",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres AniList (OAuth 2) reports a code the provider refuses, and a refusal on its page",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres Last.fm (web auth) signs auth.getSession and shows what's playing now",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres Trakt (OAuth 2 with PKCE) sends a PKCE challenge, proves it with the verifier, and shows recently watched",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres on profiles shows the visible ones to others, none to someone they blocked",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres on profiles hides one its owner turned off",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres on profiles serves what's stored and refreshes stale data in the background, at most every 6 hours",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres disconnects: the account is forgotten and Trakt is asked to revoke its token",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts, kept in postgres forgets every linked account when the account is deleted",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts without keys lists every provider as unavailable and refuses to start",
+    "status": "passed"
+  },
+  {
+    "suite": "connections_v2.test.ts",
+    "name": "linked accounts without keys needs the API's public address too",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "catalog and visibility advertises custom roles and lists the catalog, templates and protected base roles",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "catalog and visibility hides roles from guests and outsiders",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "creating, cloning and editing creates from a template and refuses duplicate or base-role names",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "creating, cloning and editing clones a role and edits it with its revision; a stale revision is refused",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "creating, cloning and editing refuses unknown permissions and platform powers",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "creating, cloning and editing stops admins giving roles admin powers (owners delegate), but lets them make everyday roles",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "creating, cloning and editing refuses members without roles.manage, and role ids from other workspaces",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "assignments and effective permissions grants exactly the role's permissions, enforced on the server, and takes them back at once",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "assignments and effective permissions never reaches another workspace",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "assignments and effective permissions refuses assignments by members, guests, and of roles beyond the assigner's powers",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "assignments and effective permissions refuses roles guests can't hold",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "assignments and effective permissions explains where each permission comes from",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "delegated administration lets a delegated co-admin manage members, while admins can't undo someone more powerful",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "delegated administration doesn't let an admin restrict another admin by editing a role that admin holds",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "delegated administration doesn't let promoting a guest back hand out admin powers the promoter lacks",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "restrictions a read-only role stops posting in channels (server-side) and can't be lifted by its holder",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "archiving and deleting archived roles grant nothing, can be restored, and only archived ones can be deleted",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "ownership needs the exact name, a non-guest member, and leaves the previous owner as an admin",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "usage and audit shows usage figures to people allowed to see them",
+    "status": "passed"
+  },
+  {
+    "suite": "custom_roles.test.ts",
+    "name": "usage and audit pages through the audit log for audit.view only, newest first",
+    "status": "passed"
+  },
+  {
+    "suite": "directory_bulk_roles.test.ts",
+    "name": "member directory and atomic selection (postgres) filters before deterministic paging and reports true totals; validates every bulk target before any change",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "Discord import, not set up says so, and refuses to start",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "connecting Discord asks Discord for the bot with only View Channels, and the person's identity and servers",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "connecting Discord refuses a state it didn't issue, or one issued to someone else",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "connecting Discord refuses someone without Manage Server there, and still revokes their token",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "connecting Discord refuses a server the bot wasn't added to",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "connecting Discord connects the owner's server, keeps no token, and the state works once",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "previewing and importing previews every item with what happens to it, and what is never imported",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "previewing and importing imports into a new private community, item by item, without writing to Discord",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "previewing and importing copies role permissions only when asked, never Administrator",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "previewing and importing retries only what failed, without making anything twice",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "previewing and importing refuses an existing community where the person can't make those things, and a name they already own",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "previewing and importing re-checks the person's role in the destination before a retry",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_import.test.ts",
+    "name": "previewing and importing disconnects, and the bot leaves only when asked",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_mapping.test.ts",
+    "name": "who may import is the owner, or someone with Manage Server or Administrator",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_mapping.test.ts",
+    "name": "role permissions maps the powers Meldiq has, and never Administrator",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_mapping.test.ts",
+    "name": "names keeps channel names readable and within Meldiq's limits",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_mapping.test.ts",
+    "name": "names makes emoji names Meldiq accepts, or none",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_mapping.test.ts",
+    "name": "the plan goes icon, roles (highest first), categories, channels, emoji",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_mapping.test.ts",
+    "name": "the plan keeps hidden channels private and never makes @everyone or bot roles",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_mapping.test.ts",
+    "name": "the plan stays within the limits, saying what was left out",
+    "status": "passed"
+  },
+  {
+    "suite": "discord_mapping.test.ts",
+    "name": "the plan includes only the parts chosen",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery with communities in postgres lists public communities from 5 members; older apps still find small ones",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery with communities in postgres lets people who can edit the community set the card line and up to 5 tags",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery with communities in postgres searches names, descriptions and tags, and filters by tag",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery with communities in postgres never shows communities turned off, private, locked, removed or with a name passing for Meldiq's",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery with communities in postgres puts boosted communities first by tier, the biggest boost counting, and lists them under 5 members",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery with communities in postgres shows a Promoted row on the home page only, counting views, clicks and joins from Discover",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery with communities in postgres shows the Promote page to editors, with prices, rank, the next spot and weekly visitors",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery with communities in postgres answers 503 billing_unavailable for purchases while billing is off, and promoted_full when every spot is taken",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "discovery switched off hides the features, answers 503, and leaves the older route as it was",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery_admin.test.ts",
+    "name": "discovery in the console grants a boost and a Promoted week, shown on Discover at once",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery_admin.test.ts",
+    "name": "discovery in the console cancels them, takes the community out of Discovery and marks it official",
+    "status": "passed"
+  },
+  {
+    "suite": "event_authority.test.ts",
+    "name": "event authority and covers (postgres) delegates management without channel visibility bypass, preserves organizer rights, atomically rejects stale edits and sends one authorized notice",
+    "status": "passed"
+  },
+  {
+    "suite": "event_occurrences.test.ts",
+    "name": "event locations and occurrence scopes (postgres) validates external locations, enforces visibility and separates current-occurrence changes, future RSVPs and series cancellation",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "event repeats keep the local time across daylight-saving changes",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "event repeats monthly is the same weekday of the month, and a missing fifth one becomes the last",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "event repeats yearly keeps the date, 29 February becomes the 28th",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "event repeats the current occurrence is the first that hasn't ended",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "repeating events are created with a repeat and move to the next occurrence when one ends",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "onboarding questions are set by people who edit the community; roles with admin permissions and private channels are refused",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "onboarding questions give the chosen answers' roles and channels; the required and one-answer rules hold",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "onboarding questions never give a role that gained an admin permission later, and guests don't answer",
+    "status": "passed"
+  },
+  {
+    "suite": "events_onboarding_guide.test.ts",
+    "name": "community guide is set by people who edit the community, seen by members, and drops items whose channel is gone",
+    "status": "passed"
+  },
+  {
+    "suite": "filtered_message_search.test.ts",
+    "name": "filtered message search (postgres) filters historical candidates before the page limit and pages equal timestamps without repeats",
+    "status": "passed"
+  },
+  {
+    "suite": "filtered_message_search.test.ts",
+    "name": "filtered message search (postgres) searches current edited text, excludes deleted/private content, and returns only scoped changes",
+    "status": "passed"
+  },
+  {
+    "suite": "filtered_message_search.test.ts",
+    "name": "filtered message search (postgres) supports filter-only sender, attachment and half-open date ranges",
+    "status": "passed"
+  },
+  {
+    "suite": "filtered_message_search.test.ts",
+    "name": "filtered message search (postgres) rejects malformed filters/cursors and does not reveal a forbidden community scope",
+    "status": "passed"
+  },
+  {
+    "suite": "filtered_message_search.test.ts",
+    "name": "filtered message search (postgres) applies current suspension and history boundaries before matching and pagination",
+    "status": "passed"
+  },
+  {
+    "suite": "forum_collections.test.ts",
+    "name": "authoritative forum pages (postgres) pages all roots, uses visible reply activity and current edited tags/text, and never exposes private/deleted roots",
+    "status": "passed"
+  },
+  {
+    "suite": "forum_guidelines.test.ts",
+    "name": "forum guidelines are set by people who manage the forum and shown to everyone in it",
+    "status": "passed"
+  },
+  {
+    "suite": "forum_guidelines.test.ts",
+    "name": "forum guidelines are only for forums, and bounded",
+    "status": "passed"
+  },
+  {
+    "suite": "forum_tag_policy.test.ts",
+    "name": "forum tag policy (postgres) enforces required/restricted tags server-side, protects text edits and rolls back invalid combined settings",
+    "status": "passed"
+  },
+  {
+    "suite": "group_photo_presence.test.ts",
+    "name": "group photo is set by the group's admins, seen by its members, and removed",
+    "status": "passed"
+  },
+  {
+    "suite": "group_photo_presence.test.ts",
+    "name": "group photo is only for groups",
+    "status": "passed"
+  },
+  {
+    "suite": "group_photo_presence.test.ts",
+    "name": "presence is online while connected, and follows what the person chose",
+    "status": "passed"
+  },
+  {
+    "suite": "group_photo_presence.test.ts",
+    "name": "presence invisible appears offline everywhere, and coming and going changes nothing others see",
+    "status": "passed"
+  },
+  {
+    "suite": "group_photo_presence.test.ts",
+    "name": "presence goes back to automatic, and refuses unknown choices and end times out of range",
+    "status": "passed"
+  },
+  {
+    "suite": "group_photo_presence.test.ts",
+    "name": "presence a timed choice ends by itself",
+    "status": "passed"
+  },
+  {
+    "suite": "history_reads.test.ts",
+    "name": "history carries the other members' read receipts (postgresql) serves each other member's newest read receipt with every page, and never the viewer's own",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "invite preview and accept (phase 1) the preview's org has the same shape as every other org response (id, name, slug)",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "invite preview and accept (phase 1) accepts the code however it was typed: lower case, without dashes, with spaces",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "invite preview and accept (phase 1) says why a code can't be used: unknown, revoked, expired, used up, or its creator lost the right",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "invite preview and accept (phase 1) needs a signed-in user",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "invite preview and accept (phase 1) a double tap or retry joins once, uses the invite once, and succeeds both times",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "invite preview and accept (phase 1) two people racing for an invite's last use: exactly one joins",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "invite preview and accept (phase 1) an invite that would upgrade a member is not 'already satisfied'",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "invite preview and accept (phase 1) registration with an unusable org invite says why (invite-only servers)",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "creating a workspace is idempotent (phase 3) the same request id returns the same workspace, even for simultaneous taps",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "creating a workspace is idempotent (phase 3) refuses a second workspace with a name its owner already uses, pointing at the first",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "creating a workspace is idempotent (phase 3) an account in one workspace lists exactly one workspace",
+    "status": "passed"
+  },
+  {
+    "suite": "invites_workspaces.test.ts",
+    "name": "operator repair of existing duplicates (phase 3) lists same-name workspaces and removes only provably empty ones",
+    "status": "passed"
+  },
+  {
+    "suite": "leaderboards.test.ts",
+    "name": "leaderboards on postgres requires a session and validates the category",
+    "status": "passed"
+  },
+  {
+    "suite": "leaderboards.test.ts",
+    "name": "leaderboards on postgres uses earned totals, shared ranks, actual levels and a separate own position",
+    "status": "passed"
+  },
+  {
+    "suite": "leaderboards.test.ts",
+    "name": "leaderboards on postgres hides blocked, disabled, synthetic, deleted and non-discoverable people and private photos",
+    "status": "passed"
+  },
+  {
+    "suite": "leaderboards.test.ts",
+    "name": "leaderboards on postgres counts live messages only in visible community channels, excluding DMs, imports and old events",
+    "status": "passed"
+  },
+  {
+    "suite": "leaderboards.test.ts",
+    "name": "leaderboards on postgres counts only visible voice rooms and never multiplies overlapping devices",
+    "status": "passed"
+  },
+  {
+    "suite": "leaderboards.test.ts",
+    "name": "leaderboards on postgres counts credited invites only",
+    "status": "passed"
+  },
+  {
+    "suite": "leaderboards.test.ts",
+    "name": "leaderboards on postgres never counts unpaid, refunded or disputed gifts or exposes purchase details",
+    "status": "passed"
+  },
+  {
+    "suite": "leaderboards.test.ts",
+    "name": "clips voice spans to the week and merges overlaps, ignoring invalid spans",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby_responsive_order.test.ts",
+    "name": "responsive lobby order (postgres) preserves independent orders on partial saves, validates complete keys and permissions, rejects stale writes and explicitly links orders",
+    "status": "passed"
+  },
+  {
+    "suite": "managed_polls.test.ts",
+    "name": "managed poll authority and quiz disclosure (postgres) keeps answer keys and anonymous identities out of message history, validates ballots and closes once under concurrent requests",
+    "status": "passed"
+  },
+  {
+    "suite": "managed_polls.test.ts",
+    "name": "managed poll authority and quiz disclosure (postgres) rejects malformed quiz definitions and cannot expose an unpublished reservation; expiry is server-owned",
+    "status": "passed"
+  },
+  {
+    "suite": "media_grant.test.ts",
+    "name": "scoped private media grant binds the file, expiration, API key and independent worker identity",
+    "status": "passed"
+  },
+  {
+    "suite": "member_timeout.test.ts",
+    "name": "who may time out whom needs members.timeout, and never reaches owners, admins (unless the owner acts) or oneself",
+    "status": "passed"
+  },
+  {
+    "suite": "member_timeout.test.ts",
+    "name": "who may time out whom lasts between now and 28 days",
+    "status": "passed"
+  },
+  {
+    "suite": "member_timeout.test.ts",
+    "name": "a timed-out member can't post, upload or join voice in the community, says why, and is shown as timed out",
+    "status": "passed"
+  },
+  {
+    "suite": "member_timeout.test.ts",
+    "name": "a timed-out member is removed from a live voice call when timed out",
+    "status": "passed"
+  },
+  {
+    "suite": "member_timeout.test.ts",
+    "name": "a timed-out member can post again when the timeout is ended or runs out",
+    "status": "passed"
+  },
+  {
+    "suite": "member_timeout.test.ts",
+    "name": "a timed-out member is recorded in the audit log",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly adds someone the owner knows; they're told at once and are a member",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly says already_member for a member, once per person however often they're listed",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly refuses strangers, people who blocked the adder and people whose settings want a request, all alike",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly refuses someone banned from the community",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly enforces who may add on the server: guests and outsiders can't",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly is refused while the community has paused new members",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly validates the request: at least one and at most twenty people",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly limits each device to ten requests a minute",
+    "status": "passed"
+  },
+  {
+    "suite": "members_add.test.ts",
+    "name": "adding members directly records each addition in the audit log",
+    "status": "passed"
+  },
+  {
+    "suite": "mentions.test.ts",
+    "name": "individual mentions travel inside the encrypted payload as user ids, unchanged by the server",
+    "status": "passed"
+  },
+  {
+    "suite": "mentions.test.ts",
+    "name": "@everyone a member of a small group may notify everyone; every copy carries the server's mark",
+    "status": "passed"
+  },
+  {
+    "suite": "mentions.test.ts",
+    "name": "@everyone ordinary members of a larger group are refused; admins are not",
+    "status": "passed"
+  },
+  {
+    "suite": "mentions.test.ts",
+    "name": "@everyone a claim inside the payload without the server's mark is just text",
+    "status": "passed"
+  },
+  {
+    "suite": "mentions.test.ts",
+    "name": "@everyone isn't available in direct messages",
+    "status": "passed"
+  },
+  {
+    "suite": "mentions.test.ts",
+    "name": "@everyone is limited per hour, and a retried message isn't counted twice",
+    "status": "passed"
+  },
+  {
+    "suite": "mentions.test.ts",
+    "name": "@everyone controls (edits, reactions, receipts) never carry the mark",
+    "status": "passed"
+  },
+  {
+    "suite": "mentions.test.ts",
+    "name": "@everyone a peer server's mark is removed before queueing (federated conversations are direct messages)",
+    "status": "passed"
+  },
+  {
+    "suite": "message_atomic_ack.test.ts",
+    "name": "commits recipient removal and delivered receipts once, and rolls both back on a receipt failure",
+    "status": "passed"
+  },
+  {
+    "suite": "message_collections.test.ts",
+    "name": "authoritative message collections (postgres) classifies media/files and excludes deleted, voice, malformed and someone else's private content",
+    "status": "passed"
+  },
+  {
+    "suite": "message_collections.test.ts",
+    "name": "authoritative message collections (postgres) uses the latest visible pin state, including deterministic equal-timestamp ordering",
+    "status": "passed"
+  },
+  {
+    "suite": "message_collections.test.ts",
+    "name": "authoritative message collections (postgres) paginates every main timeline timestamp tie once without returning replies or malformed payloads",
+    "status": "passed"
+  },
+  {
+    "suite": "message_collections.test.ts",
+    "name": "authoritative message collections (postgres) paginates thread summaries by time and root ID with private replies excluded from counts",
+    "status": "passed"
+  },
+  {
+    "suite": "message_collections.test.ts",
+    "name": "authoritative message collections (postgres) returns thread context and rejects an around anchor from another thread or private audience",
+    "status": "passed"
+  },
+  {
+    "suite": "message_collections.test.ts",
+    "name": "authoritative message collections (postgres) keeps deleted main anchors as tombstones with their authorized controls and denies outsiders",
+    "status": "passed"
+  },
+  {
+    "suite": "message_history_cursor.test.ts",
+    "name": "ordered message cursors (postgres) pages every timestamp tie exactly once while newer writes arrive",
+    "status": "passed"
+  },
+  {
+    "suite": "message_history_cursor.test.ts",
+    "name": "ordered message cursors (postgres) puts equal-time neighbors on the correct sides of an around window",
+    "status": "passed"
+  },
+  {
+    "suite": "message_history_cursor.test.ts",
+    "name": "ordered message cursors (postgres) keeps legacy timestamps valid and checks membership and cursor shape",
+    "status": "passed"
+  },
+  {
+    "suite": "message_visibility.test.ts",
+    "name": "global search and summaries obey the same current membership denial as direct history",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "end-to-end encrypted messaging delivers a message in real time both ways and the relay holds only ciphertext",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "end-to-end encrypted messaging removes acknowledged items and sends a delivery receipt to the sender",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "end-to-end encrypted messaging queues for offline recipients and delivers after reconnect",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "end-to-end encrypted messaging is idempotent for retried submissions (duplicate suppression)",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "end-to-end encrypted messaging rejects envelopes with a bad signature or a stale device list",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "end-to-end encrypted messaging delivers group messages only to the intended members",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "end-to-end encrypted messaging relays typing indicators to other members only",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "end-to-end encrypted messaging supports multi-device: sender's other devices receive a copy",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "announcement channels lets only managers post",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "announcement channels refuses members' controls too (reactions, pins), so the app must not offer them",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "retention expires queued envelopes: not retrievable after TTL, deleted by cleanup",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging.test.ts",
+    "name": "retention caps the queue TTL at 7 days regardless of configuration",
+    "status": "passed"
+  },
+  {
+    "suite": "names_and_tags.test.ts",
+    "name": "name styles and community tags are advertised",
+    "status": "passed"
+  },
+  {
+    "suite": "names_and_tags.test.ts",
+    "name": "name styles and community tags lets owners set a 2 to 4 character tag, stored in capitals, and members can't",
+    "status": "passed"
+  },
+  {
+    "suite": "names_and_tags.test.ts",
+    "name": "name styles and community tags keeps a name style: font, colours (lower case) and effect; unknown fonts are refused",
+    "status": "passed"
+  },
+  {
+    "suite": "names_and_tags.test.ts",
+    "name": "name styles and community tags wears only a tag of a community you're in, and shows it with the name in profiles and member lists",
+    "status": "passed"
+  },
+  {
+    "suite": "names_and_tags.test.ts",
+    "name": "name styles and community tags drops the tag when the community removes it or the person leaves",
+    "status": "passed"
+  },
+  {
+    "suite": "names_and_tags.test.ts",
+    "name": "name styles and community tags mutes a whole community for a while; an app that leaves the mute out keeps it, and an ended one is dropped",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences advertises the feature and starts empty at revision 0",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences stores starred conversations, sections, collapsed groups and notification levels, and bumps the revision",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences keeps saved messages (ids and times only), drops other people's conversations and duplicates",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences refuses a write based on a stale revision and returns the current copy",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences lists each conversation once and drops conversations the person isn't in",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences keeps each person's and each workspace's preferences apart",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences hides organisations the person isn't in, with the same answer as one that doesn't exist",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences validates the document: unknown fields, levels, sizes and names",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences tells the person's other devices (not the one that wrote), without content",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "navigation preferences removes someone's arrangement of a workspace when they leave it",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "organisation photo lets owners and admins set it, members see it, and nobody else",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "organisation photo replaces the stored file on a new upload and removes it on delete",
+    "status": "passed"
+  },
+  {
+    "suite": "nav_preferences.test.ts",
+    "name": "organisation photo deleting the organisation removes its photo and everyone's preferences for it",
+    "status": "passed"
+  },
+  {
+    "suite": "org_delete.test.ts",
+    "name": "deleting an organization is refused to admins, members and outsiders, and without the exact name",
+    "status": "passed"
+  },
+  {
+    "suite": "org_delete.test.ts",
+    "name": "deleting an organization an owner deletes it: members, channels, files and invitations go; accounts, DMs, groups and other orgs stay",
+    "status": "passed"
+  },
+  {
+    "suite": "org_delete.test.ts",
+    "name": "deleting an organization two owners deleting at the same time: exactly one deletion happens",
+    "status": "passed"
+  },
+  {
+    "suite": "org_delete.test.ts",
+    "name": "deleting an organization the organization's name can be used again afterwards",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities start with categorised welcome channels, and keep the old structure fields empty for older apps",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities invite members, admins and guests; an invitation can hand out a role; branch and team invitations are refused",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities enforce every power on the server",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities gate a category to a role with overwrites: the same people see it, assigning the role adds them, removing it takes them out",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities let channel overwrites restrict posting and sharing files; a role's restriction still wins over a channel allow",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities refuse overwrites that hand out powers the writer doesn't hold",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities keep who sees what with the people who may change channel access, and hide a hidden category's rules and name",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities stop an invitation handing out a powerful role once its creator can't assign it any more",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities keep a category whose permissions decide visibility until its channels move out; moving a channel takes the new category's rules",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities have forum channels; voice channels can't be forums",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities limit categories",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "communities hide private channel names in the activity log from members",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "discovery and joining list only public communities; open ones can be joined, invite-only ones can't",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "discovery and joining bans: a moderator removes someone and keeps them out of invites and open joining until lifted",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "demotion to guest removes every channel membership in the community, and tells the person's devices",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "demotion to guest refuses envelopes still addressed to the guest's devices",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "demotion to guest keeps channels a manager grants the guest explicitly afterwards",
+    "status": "passed"
+  },
+  {
+    "suite": "orgs.test.ts",
+    "name": "demotion to guest promotion back to member restores what the person's roles let them see; private channels need a new invitation",
+    "status": "passed"
+  },
+  {
+    "suite": "partner_applications.test.ts",
+    "name": "private partner applications (postgres) keeps owner applications private, validates the checklist and records only explicit authorized reviews without a badge or role",
+    "status": "passed"
+  },
+  {
+    "suite": "permission_override_matrix.test.ts",
+    "name": "every channel capability through authorized API overwrites applies inherited deny, multiple roles, personal deny and community restrictions while protecting owners and guest limits",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "permission catalog has a definition for every key and nothing platform-wide",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "permission catalog keeps owner-only powers out of every other base role",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "permission catalog gives members and guests no administrative power by default",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "permission catalog only uses catalog keys in the starter templates",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "effective permissions adds grants, removes restrictions, and the order of roles never matters",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "effective permissions never grants owner-only powers through a role",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "effective permissions gives guests only what a guest may hold",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "effective permissions can't restrict an owner, and restricts only restrictable permissions",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "defining roles needs roles.manage and only the definer's own powers",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "defining roles needs roles.delegate for administrative powers: admins can't make admin-like roles, owners can",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "defining roles refuses owner-only powers, unrestrictable restrictions and grant-and-deny",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "defining roles won't let anyone edit a role that's already stronger than them",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "assigning and removing roles needs roles.assign and powers the assigner holds",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "assigning and removing roles refuses roles a guest can't hold",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "assigning and removing roles keeps admins off admins and owners, and everyone off people with powers they lack",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "assigning and removing roles won't let a restricted person lift their own restriction",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "base-role rules with delegated permissions lets a member with members.roles switch members and guests, but never touch admins",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions_rules.test.ts",
+    "name": "base-role rules with delegated permissions uses members.titles and members.remove for titles and removal",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "overview counts from named sources, and shows health and admin actions only to roles that may see them",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "people are searched by username or display name, a page at a time, without email addresses",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "people are found by exact email only by roles that may see addresses",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "people show metadata, memberships and security events; the address only with users.view_email; every view audited",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "people are suspended with a reason after a recent passkey check, ending every session, and restored",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "people can't be suspended by roles without the permission, by the person themselves, or if they're an admin (unless super)",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "people have their sessions ended on request without being suspended",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "organizations are searched and shown as counts, settings, usage and limits; never members or channels by name",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_data.test.ts",
+    "name": "organizations refuse percent signs as wildcards",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_parity.test.ts",
+    "name": "the shared upload ceiling rejects oversized new plan and community entitlements and caps legacy values on read",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_parity.test.ts",
+    "name": "administration parity security and actual outcomes searches and pages the administrator catalog without repeating items",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_parity.test.ts",
+    "name": "administration parity security and actual outcomes saves catalog reasons and before/after metadata, rejects stale writes and enforces deactivation",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_parity.test.ts",
+    "name": "administration parity security and actual outcomes filters and pages actual gift rows with tied timestamps without exposing personal notes",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_parity.test.ts",
+    "name": "administration parity security and actual outcomes updates shared subscription limits through the admin API and rejects an oversized file ceiling",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_parity.test.ts",
+    "name": "administration parity security and actual outcomes keeps creator and collectible reads usable after step-up expiry, while refusing mutations",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_permissions.test.ts",
+    "name": "platform roles grant exactly the documented permissions",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_permissions.test.ts",
+    "name": "platform roles deny anything unknown",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_permissions.test.ts",
+    "name": "platform roles keep audit and admin management away from operations, support and billing",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_permissions.test.ts",
+    "name": "platform roles keep credentials, deletion, settings and membership changes to super admins",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_permissions.test.ts",
+    "name": "platform roles don't let billing suspend people, or support see billing controls and infrastructure costs",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_permissions.test.ts",
+    "name": "the console's code imports no messaging, history, file, report or key code",
+    "status": "passed"
+  },
+  {
+    "suite": "platform_admin_permissions.test.ts",
+    "name": "the console's code never touches message content, history, queued envelopes, files, reports or key backups",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres gives nothing to accounts under a day old",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres counts the daily visit once a day, however often the apps check in",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres adds 30 for each 7 days in a row, and starts the streak again after a missed day",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres counts a chat minute once however many messages it has, 5 points per 5 minutes, at most 25 a day",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres finishes the daily quests from real messages: 3 chats, 3 reactions and a reply to others",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres claims one-time quests when the account meets them",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres keeps achievement awards through reloads and missed streaks without inflating the wallet or quest totals",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres levels up for 100 points, refuses without them, and shows the level on profiles",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres pays an inviter 100 once the person they brought has stayed 7 days, at most 10 a month",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "points kept in postgres earns 1.5 times on Meldiq Plus",
+    "status": "passed"
+  },
+  {
+    "suite": "points.test.ts",
+    "name": "the points store never spends below zero, even with level-ups at once",
+    "status": "passed"
+  },
+  {
+    "suite": "presence.test.ts",
+    "name": "presence privacy (T1.7) a stranger who knows the username learns nothing about online state",
+    "status": "passed"
+  },
+  {
+    "suite": "presence.test.ts",
+    "name": "presence privacy (T1.7) a DM peer and a non-guest org colleague see it; the person sees themself",
+    "status": "passed"
+  },
+  {
+    "suite": "presence.test.ts",
+    "name": "presence privacy (T1.7) a guest sees presence only after sharing a conversation",
+    "status": "passed"
+  },
+  {
+    "suite": "presence.test.ts",
+    "name": "presence privacy (T1.7) realtime presence events reach conversation peers, not strangers",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_mutuals.test.ts",
+    "name": "profile: member since and mutual communities lists only communities both people are in, with when they joined, and when they joined Meldiq",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "profile the owner sees every field and the privacy defaults",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "profile birthday and phone are private by default; names and bio are public",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "profile contacts-only fields are shown to contacts, not strangers",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "profile someone the person blocked sees only the basics",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "profile validates fields and clears them with null",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "profile usernames change once an hour and stay unique",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "profile photo accepts a JPEG up to 512 KB and serves it to its audience",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "discovery and last seen nobody finds someone by phone unless they allow it, and the answer doesn't reveal the number",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "discovery and last seen someone who limits username search isn't found by strangers",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "discovery and last seen last seen follows its setting",
+    "status": "passed"
+  },
+  {
+    "suite": "profile_privacy.test.ts",
+    "name": "discovery and last seen conversation member lists and live presence follow the setting too",
+    "status": "passed"
+  },
+  {
+    "suite": "pronouns_role_hoist.test.ts",
+    "name": "pronouns are set by the person, shown with the bio and hidden by the bio's privacy setting",
+    "status": "passed"
+  },
+  {
+    "suite": "pronouns_role_hoist.test.ts",
+    "name": "roles listed separately are created and edited with hoist, and the member list marks them",
+    "status": "passed"
+  },
+  {
+    "suite": "push_transport.test.ts",
+    "name": "the HTTPS wake-up request POSTs an empty body to the pinned address, with transport headers only",
+    "status": "passed"
+  },
+  {
+    "suite": "push_transport.test.ts",
+    "name": "the HTTPS wake-up request returns the push server's status, and never follows a redirect",
+    "status": "passed"
+  },
+  {
+    "suite": "push_transport.test.ts",
+    "name": "the HTTPS wake-up request gives up at its deadline when the push server doesn't answer",
+    "status": "passed"
+  },
+  {
+    "suite": "push_transport.test.ts",
+    "name": "the HTTPS wake-up request refuses a certificate it can't verify",
+    "status": "passed"
+  },
+  {
+    "suite": "push_transport.test.ts",
+    "name": "the HTTPS wake-up request reports a refused connection",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "registering a device's endpoint needs a signed-in device that hasn't been removed",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "registering a device's endpoint keeps one endpoint per device, and an endpoint moves to the device that registered it last",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "registering a device's endpoint is removed on request and when the device signs out",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "registering a device's endpoint refuses anything but https on an allow-listed push host (no SSRF through registration)",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "registering a device's endpoint accepts the host in any letter case and stores the normalized URL",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "registering a device's endpoint is advertised in server-info only when configured; without it, registering is refused but removal works",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "waking a device wakes an offline device with an empty request that names nothing about the message",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "waking a device doesn't wake a connected device, and delivery receipts never wake anyone",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "waking a device coalesces wake-ups to one per window and defers the rest instead of dropping them",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "waking a device skips a deferred wake-up once the device has fetched its queue",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "waking a device wakes a device whose socket closed with live items unacknowledged, but not for items from its backlog",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "waking a device rings an offline device at once, even right after a message wake-up",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "waking a device doesn't ring a device that is connected",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "waking a device never wakes disabled accounts, and the retention job removes endpoints of revoked devices",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "push server answers and address checks drops an endpoint the push server reports gone (404, 410), logging no URL",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "push server answers and address checks keeps the endpoint on other failures and logs only the device and a reason",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "push server answers and address checks drops an endpoint that has kept failing for a week",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "push server answers and address checks never sends to a push host that resolves to a private, loopback or link-local address",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "push server answers and address checks never lets a failure inside push break sending a message",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "push server answers and address checks drops endpoints on a host that is no longer allow-listed, without contacting it",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "push server answers and address checks stops waking anyone once the server is shutting down",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "address and endpoint rules counts only public unicast addresses as public",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "address and endpoint rules matches the allow-list on host and port",
+    "status": "passed"
+  },
+  {
+    "suite": "push_wakeup.test.ts",
+    "name": "address and endpoint rules reads the push settings strictly and keeps push off by default",
+    "status": "passed"
+  },
+  {
+    "suite": "quick_reactions.test.ts",
+    "name": "quick reaction preferences (postgres) persists 3\u20135 distinct choices, preserves older client omissions, isolates accounts and rejects stale writes",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres is advertised and starts empty for anyone in the channel",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres is set by holders of roles.assign, only with roles they could give and no admin powers",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres gives the role on reacting and takes it back when the reaction comes off",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres never takes back a role someone gave by hand",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres only counts reactions in the message's own channel",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres refuses timed-out members' reactions, so they get nothing",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres stops giving a role that gained an administrative power",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres goes with a deleted role, and with a deleted message",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles with communities in postgres can be removed",
+    "status": "passed"
+  },
+  {
+    "suite": "reaction_roles.test.ts",
+    "name": "reaction roles switched off (REACTION_ROLES=off) aren't advertised, answer 503 and give nothing",
+    "status": "passed"
+  },
+  {
+    "suite": "report_recovery.test.ts",
+    "name": "reconciles confirmed crash results, exposes mismatches and leaves active requests alone",
+    "status": "passed"
+  },
+  {
+    "suite": "report_recovery.test.ts",
+    "name": "preserves pending intent when the canonical store is unavailable",
+    "status": "passed"
+  },
+  {
+    "suite": "report_recovery.test.ts",
+    "name": "purges only absent workflows older than 90 days and preserves the audit chain",
+    "status": "passed"
+  },
+  {
+    "suite": "report_resolution.test.ts",
+    "name": "report resolution (postgres) applies concurrent retries once, preserves the first handler/time, audits real changes and never sanctions",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports advertises the features",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports sends a channel message report to the community's moderators, with what the reporter shared, never who reported",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports returns the first report when the same message is reported again",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports checks who may report what",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports sends direct messages and illegal content to Meldiq's operators, not to moderators",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports reports a person to the community both belong to, or to Meldiq otherwise",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports only people with reports.view see and close reports; closing is audited without content",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports doesn't let a moderator close a report about themselves",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports limits reports to ten an hour per person",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "reports deletes closed reports 90 days after they were handled",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "security actions are for people who edit the community or ban members, at most 7 days ahead",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "security actions pausing invites stops new members joining, says so in the preview, and resumes",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "security actions pausing DMs stops new DMs between members, but not existing ones or moderators",
+    "status": "passed"
+  },
+  {
+    "suite": "reports_security.test.ts",
+    "name": "audit log filters filters by the person who made the change",
+    "status": "passed"
+  },
+  {
+    "suite": "revoked_sender.test.ts",
+    "name": "messages from a device revoked after sending (T1.5) lists the revoked device for verification, never as a device to encrypt to",
+    "status": "passed"
+  },
+  {
+    "suite": "revoked_sender.test.ts",
+    "name": "messages from a device revoked after sending (T1.5) delivers and verifies what the device sent before it was revoked",
+    "status": "passed"
+  },
+  {
+    "suite": "revoked_sender.test.ts",
+    "name": "messages from a device revoked after sending (T1.5) refuses an envelope encrypted to the revoked device, while replies reach only the active ones",
+    "status": "passed"
+  },
+  {
+    "suite": "revoked_sender.test.ts",
+    "name": "messages from a device revoked after sending (T1.5) stops listing a revoked device once nothing it sent can still be queued",
+    "status": "passed"
+  },
+  {
+    "suite": "role_asset_icons.test.ts",
+    "name": "validated role icons (postgres) uses same-community available emoji, rejects unauthorized/foreign assets and falls back after removal",
+    "status": "passed"
+  },
+  {
+    "suite": "roles.test.ts",
+    "name": "organization role rules matches the table for changing someone else's role",
+    "status": "passed"
+  },
+  {
+    "suite": "roles.test.ts",
+    "name": "organization role rules matches the table for changing your own role",
+    "status": "passed"
+  },
+  {
+    "suite": "roles.test.ts",
+    "name": "organization role rules protects the last owner with a conflict, not a refusal",
+    "status": "passed"
+  },
+  {
+    "suite": "roles.test.ts",
+    "name": "organization role rules limits titles and removal",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres is advertised in the server's features",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres starts empty, and the community view says nothing about it until it's set",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres is set by people who can edit the community, with a channel that suits",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres shows on the community and in its plain rules for the preview and older apps",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres only lets people who can edit the community post there; everyone reads and reacts",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres asks members to agree before they post or react, once it's required",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres asks again after someone leaves and comes back",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres forgets an archived rules channel, and turning the requirement off opens posting again",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres survives a restart (read back from the store)",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel kept in postgres removing the channel and the rules clears the plain copy it wrote",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "rules channel switched off (COMMUNITY_RULES=off) isn't advertised, its routes answer 503, and nothing stored is enforced",
+    "status": "passed"
+  },
+  {
+    "suite": "rules_channel.test.ts",
+    "name": "plainRules numbers the rules, puts descriptions under titles and stays within 4,000 characters",
+    "status": "passed"
+  },
+  {
+    "suite": "schema.test.ts",
+    "name": "checked-in schema is what the migrations create (run `npm run schema` after adding a migration)",
+    "status": "passed"
+  },
+  {
+    "suite": "schema.test.ts",
+    "name": "checked-in schema gives every table its domain without a database",
+    "status": "passed"
+  },
+  {
+    "suite": "schema.test.ts",
+    "name": "checked-in schema matches the live schema table by table, keys and indexes included",
+    "status": "passed"
+  },
+  {
+    "suite": "schema.test.ts",
+    "name": "which domains may be in MongoDB together refuses identity in MongoDB while tables that reference it are still in SQLite",
+    "status": "passed"
+  },
+  {
+    "suite": "schema.test.ts",
+    "name": "which domains may be in MongoDB together accepts every stage of the cutover runbook, and everything at once",
+    "status": "passed"
+  },
+  {
+    "suite": "search.test.ts",
+    "name": "universal search (round 7, C2) ranks exact, then prefix, then word start, then contains",
+    "status": "passed"
+  },
+  {
+    "suite": "search.test.ts",
+    "name": "universal search (round 7, C2) finds public channels you haven't joined, never private ones you're not in, nor other workspaces'",
+    "status": "passed"
+  },
+  {
+    "suite": "search.test.ts",
+    "name": "universal search (round 7, C2) people: shared-workspace members by partial name; strangers only by exact username; never someone who blocked you",
+    "status": "passed"
+  },
+  {
+    "suite": "search.test.ts",
+    "name": "universal search (round 7, C2) a guest doesn't browse the workspace's people",
+    "status": "passed"
+  },
+  {
+    "suite": "search.test.ts",
+    "name": "universal search (round 7, C2) workspaces and groups: only yours",
+    "status": "passed"
+  },
+  {
+    "suite": "search.test.ts",
+    "name": "universal search (round 7, C2) pages one kind with a cursor",
+    "status": "passed"
+  },
+  {
+    "suite": "search.test.ts",
+    "name": "universal search (round 7, C2) filters by a workspace you're in, and refuses one you're not",
+    "status": "passed"
+  },
+  {
+    "suite": "search.test.ts",
+    "name": "universal search (round 7, C2) is advertised to apps",
+    "status": "passed"
+  },
+  {
+    "suite": "self_only_controls.test.ts",
+    "name": "self-only controls reach the sender's other devices and nobody else",
+    "status": "passed"
+  },
+  {
+    "suite": "self_only_controls.test.ts",
+    "name": "self-only controls refuse anyone else's device among the recipients, and leaving out an own device",
+    "status": "passed"
+  },
+  {
+    "suite": "self_only_controls.test.ts",
+    "name": "self-only controls are only for controls",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages stores a message, delivers it readable to the other members' devices, and serves it as history",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages pages history newest first with the changes to each page's messages",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages only a message's sender edits or deletes it, and only in its own conversation",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages counts characters as people do against the sender's plan, edits included",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages self-only changes reach only the sender's own devices and history",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages imports a device's earlier history once, marked with who uploaded it, only into its own conversations",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages summarises each conversation: newest message, read position, unread and mentions since",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages searches the text of messages in your own conversations",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages tells an app from before the change to update, unless the server still takes encrypted envelopes",
+    "status": "passed"
+  },
+  {
+    "suite": "server_messages.test.ts",
+    "name": "server-stored messages deletes a channel's stored messages with the channel",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores is advertised in the server's features",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores the two-colour profile theme keeps one or two colours, sets the accent to the first, and an accent alone (an older app) clears the theme",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores the badge you show takes only a badge the person holds or none, and a badge they lose reads as the default",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores the badge you show comes with the level on profiles",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores leaving several communities leaves the ones the person is in, skips the ones they own, and says which were neither",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores leaving several communities takes 1 to 100 communities",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores who may add you to group chats defaults to friends, and is changed with the messaging settings",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores who may add you to group chats is enforced when a group is made and when someone is added",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores suggested people lists suggestable people from shared communities, most shared first, never friends, requests or blocks",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores old usernames are held 7 days for their last owner, who can take them back",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "settings parity on the default (memory) stores old usernames are free again after 7 days",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "new settings kept in postgres keeps decoration favourites, newest first, once each, up to 200",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "new settings kept in postgres keeps the privacy choices",
+    "status": "passed"
+  },
+  {
+    "suite": "settings_parity.test.ts",
+    "name": "new settings kept in postgres keeps username holds",
+    "status": "passed"
+  },
+  {
+    "suite": "social_profile.test.ts",
+    "name": "provider profile defaults normalizes names without corrupting non-Latin text or emoji",
+    "status": "passed"
+  },
+  {
+    "suite": "social_profile.test.ts",
+    "name": "provider profile defaults ignores missing or malformed cosmetic metadata undefined",
+    "status": "passed"
+  },
+  {
+    "suite": "social_profile.test.ts",
+    "name": "provider profile defaults ignores missing or malformed cosmetic metadata null",
+    "status": "passed"
+  },
+  {
+    "suite": "social_profile.test.ts",
+    "name": "provider profile defaults ignores missing or malformed cosmetic metadata 42",
+    "status": "passed"
+  },
+  {
+    "suite": "social_profile.test.ts",
+    "name": "provider profile defaults ignores missing or malformed cosmetic metadata {}",
+    "status": "passed"
+  },
+  {
+    "suite": "social_profile.test.ts",
+    "name": "provider profile defaults ignores missing or malformed cosmetic metadata \" \\n\u202e \"",
+    "status": "passed"
+  },
+  {
+    "suite": "social_profile.test.ts",
+    "name": "provider profile defaults falls back from empty Discord display names without deriving names from email",
+    "status": "passed"
+  },
+  {
+    "suite": "status_presence.test.ts",
+    "name": "statuses are advertised",
+    "status": "passed"
+  },
+  {
+    "suite": "status_presence.test.ts",
+    "name": "statuses carry an emoji and an end time, and disappear for everyone once it passes",
+    "status": "passed"
+  },
+  {
+    "suite": "status_presence.test.ts",
+    "name": "statuses refuse an end time in the past or beyond a year, and emoji with letters; a new status drops the old end time",
+    "status": "passed"
+  },
+  {
+    "suite": "status_presence.test.ts",
+    "name": "pausing notifications is kept for the person, shown to people who may see their last-seen time, and can be ended",
+    "status": "passed"
+  },
+  {
+    "suite": "status_presence.test.ts",
+    "name": "who is online in a conversation counts online members for members only, leaving out people who hide their online state",
+    "status": "passed"
+  },
+  {
+    "suite": "thread_lifecycle.test.ts",
+    "name": "thread lifecycle (postgres) separates author close/reopen from moderator lock, rejects stale changes and controls current reply/vote authority",
+    "status": "passed"
+  },
+  {
+    "suite": "thread_lifecycle.test.ts",
+    "name": "thread lifecycle (postgres) deletes all replies in bounded resumable batches, retains a text parent and forbids format-race widening",
+    "status": "passed"
+  },
+  {
+    "suite": "thread_lifecycle.test.ts",
+    "name": "thread lifecycle (postgres) deletes a forum parent last, settles private poll data and stops an interrupted job on revoked authority",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres is advertised, off until a community turns it on, and configured by people who can edit the community",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres checks the panels' channels and limits",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres turns on with panels in an automatic Tickets category, keeping panel ids",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres posts a panel with an Open a ticket button, as the community's Tickets account",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres opens a private channel only the opener and the moderators see, with the text first and a log line",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres allows only so many open tickets per person",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres lists every open ticket for moderators and your own for others",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres lets only the opener or a moderator close a ticket: archived, out of the category, logged",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres lets someone who becomes a moderator later join open tickets",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets with communities in postgres stops new tickets when the community turns them off; open ones still close",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "tickets switched off (COMMUNITY_TICKETS=off) aren't advertised and answer 503",
+    "status": "passed"
+  },
+  {
+    "suite": "tickets.test.ts",
+    "name": "ticket channel names are ticket-<n>-<username> in letters, digits and dashes",
+    "status": "passed"
+  },
+  {
+    "suite": "voice_channel_chat.test.ts",
+    "name": "associated voice text (postgres) uses current channel/text authority, requires no audio membership and preserves independent voice denial",
+    "status": "passed"
+  },
+  {
+    "suite": "voice_rooms.test.ts",
+    "name": "text channels (round 7) refuses to start a call in a text channel, while DMs still ring",
+    "status": "passed"
+  },
+  {
+    "suite": "voice_rooms.test.ts",
+    "name": "voice rooms advertises the feature and creates a voice channel",
+    "status": "passed"
+  },
+  {
+    "suite": "voice_rooms.test.ts",
+    "name": "voice rooms opens without ringing anyone, is active at once, and the next person joins the same call",
+    "status": "passed"
+  },
+  {
+    "suite": "voice_rooms.test.ts",
+    "name": "voice rooms queues raised hands, lowers them on request or when someone leaves",
+    "status": "passed"
+  },
+  {
+    "suite": "voice_rooms.test.ts",
+    "name": "voice rooms lets a manager mute someone's microphone and remove them from the call",
+    "status": "passed"
+  },
+  {
+    "suite": "voice_rooms.test.ts",
+    "name": "voice rooms closes when the last person leaves, and refuses hands outside voice rooms",
+    "status": "passed"
+  },
+  {
+    "suite": "voice_rooms.test.ts",
+    "name": "messages in voice channels (batch B14) allows the approved associated text chat while call controls keep independent voice permission",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "server-info advertises workspace administration",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "organization roles can't be self-granted or escalated refuses admins creating owners or admins, or touching other admins",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "organization roles can't be self-granted or escalated refuses members, guests and moderators changing anyone's base role, their own included",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "organization roles can't be self-granted or escalated lets admins switch members and guests, and step down themselves",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "organization roles can't be self-granted or escalated keeps at least one owner",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "organization roles can't be self-granted or escalated limits who can change titles",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "organization roles can't be self-granted or escalated hides everything from outsiders (404, not 403)",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "removing people and leaving lets admins remove members and guests only; members remove nobody",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "removing people and leaving lets a member leave, taking their channels with them; the last owner can't",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "channel access modes tells each person whether they may change access",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "channel access modes refuses a channel admin by role alone, a channel-level manager, and people who can't see the channel",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "channel access modes makes a channel private: members stay, others can no longer see or join it",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "channel access modes makes it public again (the people who may see it join), and announcement-only: only managers post",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "channel access modes refuses access changes on archived channels and non-channels",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "channel access modes answers older apps' archived branches and teams with empty lists",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_admin.test.ts",
+    "name": "invitation states reports one state per invite and who created it",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_c5.test.ts",
+    "name": "guests a guest invitation's end date applies when they join; admins can change it within the policy",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_c5.test.ts",
+    "name": "guests the policy caps or refuses guest invitations and brings end dates forward",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_c5.test.ts",
+    "name": "guests a guest past their end date is taken out by the retention job, like a removal",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_c5.test.ts",
+    "name": "meetings happens in a voice room, never a text channel; everyone invited must be able to open it",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_c5.test.ts",
+    "name": "meetings people invited respond; a private room's meeting stays hidden from people who can't open the room",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_c5.test.ts",
+    "name": "meetings a new time asks everyone again; only the organizer or room managers change or cancel it",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace_c5.test.ts",
+    "name": "meetings 'starting soon' goes out once, ten minutes ahead; cancelled meetings never",
+    "status": "passed"
+  },
+  {
+    "suite": "ws_frame_auth.test.ts",
+    "name": "WebSocket authentication with the first frame (browsers) a valid auth frame opens the session: hello, then queued envelopes, then acknowledgements work",
+    "status": "passed"
+  },
+  {
+    "suite": "ws_frame_auth.test.ts",
+    "name": "WebSocket authentication with the first frame (browsers) live envelopes reach an authenticated browser socket without a reconnect",
+    "status": "passed"
+  },
+  {
+    "suite": "ws_frame_auth.test.ts",
+    "name": "WebSocket authentication with the first frame (browsers) a wrong token closes the socket with 4401 and never says hello",
+    "status": "passed"
+  },
+  {
+    "suite": "ws_frame_auth.test.ts",
+    "name": "WebSocket authentication with the first frame (browsers) a first frame that isn't auth closes the socket with 4401",
+    "status": "passed"
+  },
+  {
+    "suite": "ws_frame_auth.test.ts",
+    "name": "WebSocket authentication with the first frame (browsers) a socket that doesn't authenticate in time is closed with 4401",
+    "status": "passed"
+  },
+  {
+    "suite": "ws_frame_auth.test.ts",
+    "name": "WebSocket authentication with the first frame (browsers) a revoked device can't authenticate with its old token",
+    "status": "passed"
+  },
+  {
+    "suite": "ws_frame_auth.test.ts",
+    "name": "WebSocket authentication with the first frame (browsers) header authentication (the Android app) still works unchanged",
+    "status": "passed"
+  }
+]

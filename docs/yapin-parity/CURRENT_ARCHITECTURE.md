@@ -100,3 +100,7 @@ All three parts must start by recording the then-active release and worktree sta
 - Real OAuth consent, push delivery, calls/media, payments/3DS, signed webhooks and lifecycle acceptance.
 
 See [PROJECT_CONTROL.md](PROJECT_CONTROL.md) for status definitions and [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md) for the proposed implementation order.
+
+## Local Part 3 completion source — 4 November 2026
+
+Web `fe6f294dc7ba2963df8f7ca8ca421e17c5118ab5`, API `9b0b6e5493695a3bec1d620b0d7fac6f320238c0` and operator console `8a10c4bae41fcac023f849a582fdd95f97ab8457` are isolated local completion artifacts, not a new observation of production. Additive SQLite 095–104 / PostgreSQL 016–025 migrations and capability/contract extensions are prepared and exercised on owned fixtures. Hosted native Auth/Realtime, production rollout/capacity and installed clients remain unverified. See [contracts](part3/CONTRACTS.md) and [source/patch receipts](part3/completion/SOURCES.json). Preserve the then-current Frankfurt/single-region deployment and reconcile its actual predecessor before integrating these branches.

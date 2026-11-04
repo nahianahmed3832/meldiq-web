@@ -1,0 +1,37 @@
+{
+  "sources": {
+    "web": "fe6f294dc7ba2963df8f7ca8ca421e17c5118ab5",
+    "api": "9b0b6e5493695a3bec1d620b0d7fac6f320238c0",
+    "admin": "8a10c4bae41fcac023f849a582fdd95f97ab8457",
+    "webFollowupBase": "5e45e70fa42edbf2b87dd9f253464663cb129e7e",
+    "apiFollowupBase": "30e85347a01af2a715ae552d2e2d2824b5ad5805",
+    "adminBase": "361ea0f8246f42d15c9134e39241d9dd0bc12268"
+  },
+  "patches": [
+    {
+      "file": "companion-patches/0017-part3-community-ecosystem-api.patch",
+      "repository": "/Volumes/code_files/meldiq_part3_api",
+      "base": "30e85347a01af2a715ae552d2e2d2824b5ad5805",
+      "head": "9b0b6e5493695a3bec1d620b0d7fac6f320238c0",
+      "sha256": "7e6c177b6d808a0e95c3878045a70b7c286b76cae0911086417f7cd7b4424bb2",
+      "bytes": 1445967
+    },
+    {
+      "file": "companion-patches/0018-part3-operator-review-console.patch",
+      "repository": "/Volumes/code_files/meldiq_part3_admin",
+      "base": "361ea0f8246f42d15c9134e39241d9dd0bc12268",
+      "head": "8a10c4bae41fcac023f849a582fdd95f97ab8457",
+      "sha256": "a807d65c7e21941f76feb8b7ae662aeab91b70bbcab7925f14d01cbacef410bb",
+      "bytes": 57933
+    },
+    {
+      "file": "companion-patches/0019-part3-community-ecosystem-web.patch",
+      "repository": "/Volumes/code_files/meldiq_web_part3_ecosystem",
+      "base": "5e45e70fa42edbf2b87dd9f253464663cb129e7e",
+      "head": "fe6f294dc7ba2963df8f7ca8ca421e17c5118ab5",
+      "sha256": "0d34019311d20996cd19d2d68ecf2bbc276466fc964de71cc067b53d330bc05b",
+      "bytes": 515059
+    }
+  ],
+  "productionDeployed": false
+}

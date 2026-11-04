@@ -1,0 +1,475 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_part3_api/server
+
+(node:25493) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25493) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:25494) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25494) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/thread_lifecycle.test.ts (3 tests) 9023ms
+     ✓ separates author close/reopen from moderator lock, rejects stale changes and controls current reply/vote authority  468ms
+     ✓ deletes all replies in bounded resumable batches, retains a text parent and forbids format-race widening  455ms
+ ❯ test/settings_parity.test.ts (17 tests | 6 skipped) 13174ms
+     ✓ is advertised in the server's features 160ms
+       ✓ keeps one or two colours, sets the accent to the first, and an accent alone (an older app) clears the theme 43ms
+       ✓ takes only a badge the person holds or none, and a badge they lose reads as the default 47ms
+       ✓ comes with the level on profiles 13ms
+       ✓ leaves the ones the person is in, skips the ones they own, and says which were neither 127ms
+       ✓ takes 1 to 100 communities 10ms
+       ✓ defaults to friends, and is changed with the messaging settings 23ms
+       ✓ is enforced when a group is made and when someone is added 105ms
+       ✓ lists suggestable people from shared communities, most shared first, never friends, requests or blocks 99ms
+       ✓ are held 7 days for their last owner, who can take them back 30ms
+       ✓ are free again after 7 days 0ms
+     ↓ keeps decoration favourites, newest first, once each, up to 200
+     ↓ keeps the privacy choices
+     ↓ keeps username holds
+     ↓ keeps decoration favourites, newest first, once each, up to 200
+     ↓ keeps the privacy choices
+     ↓ keeps username holds
+(node:25637) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25581) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25581) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:25637) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/messaging.test.ts (12 tests) 22947ms
+     ✓ expires queued envelopes: not retrievable after TTL, deleted by cleanup  9860ms
+     ✓ caps the queue TTL at 7 days regardless of configuration  5807ms
+(node:25807) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25807) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/discord_import.test.ts (13 tests) 20549ms
+     ✓ retries only what failed, without making anything twice  1770ms
+(node:25912) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25912) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/push_wakeup.test.ts (24 tests) 58230ms
+     ✓ is advertised in server-info only when configured; without it, registering is refused but removal works  9488ms
+     ✓ doesn't wake a connected device, and delivery receipts never wake anyone  407ms
+     ✓ coalesces wake-ups to one per window and defers the rest instead of dropping them  5333ms
+     ✓ skips a deferred wake-up once the device has fetched its queue  2980ms
+     ✓ wakes a device whose socket closed with live items unacknowledged, but not for items from its backlog  660ms
+     ✓ rings an offline device at once, even right after a message wake-up  369ms
+     ✓ doesn't ring a device that is connected  338ms
+     ✓ never wakes disabled accounts, and the retention job removes endpoints of revoked devices  362ms
+     ✓ stops waking anyone once the server is shutting down  8472ms
+(node:26002) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26002) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/server_messages.test.ts (10 tests) 13591ms
+     ✓ counts characters as people do against the sender's plan, edits included  7224ms
+(node:26047) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26047) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/channel_webhooks.test.ts (17 tests) 16811ms
+     ✓ aren't advertised and their routes answer 503  5472ms
+(node:26118) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26118) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/connections_v2.test.ts (17 tests) 21690ms
+     ✓ needs the API's public address too  4831ms
+(node:26122) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26122) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/community_safety.test.ts (13 tests) 6714ms
+ ✓ test/community_permissions.test.ts (15 tests) 6893ms
+(node:26146) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26146) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26147) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26147) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/community_settings.test.ts (12 tests) 15478ms
+ ✓ test/community_lobby.test.ts (12 tests) 16228ms
+(node:26260) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26260) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26259) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26259) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/invites_workspaces.test.ts (12 tests) 14551ms
+     ✓ registration with an unusable org invite says why (invite-only servers)  6328ms
+ ✓ test/discovery.test.ts (9 tests) 15221ms
+(node:26355) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26355) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26356) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26356) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/reaction_roles.test.ts (10 tests) 16405ms
+     ✓ aren't advertised, answer 503 and give nothing  7032ms
+ ✓ test/tickets.test.ts (12 tests) 17232ms
+     ✓ aren't advertised and answer 503  6892ms
+(node:26433) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26434) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26434) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26433) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/community_templates.test.ts (6 tests) 20874ms
+ ✓ test/rules_channel.test.ts (12 tests) 21677ms
+     ✓ isn't advertised, its routes answer 503, and nothing stored is enforced  630ms
+(node:26514) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26514) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26535) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26535) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/workspace_c5.test.ts (7 tests) 5225ms
+ ✓ test/reports_security.test.ts (14 tests) 5939ms
+(node:26571) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26571) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26584) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26584) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/forum_tag_policy.test.ts (1 test) 4857ms
+     ✓ enforces required/restricted tags server-side, protects text edits and rolls back invalid combined settings  557ms
+ ✓ test/orgs.test.ts (18 tests) 6636ms
+     ✓ gate a category to a role with overwrites: the same people see it, assigning the role adds them, removing it takes them out  480ms
+(node:26634) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26634) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26638) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26638) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/community_branding.test.ts (9 tests) 11367ms
+ ✓ test/account_safety.test.ts (10 tests) 10962ms
+(node:26719) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26719) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26721) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26721) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/voice_channel_chat.test.ts (1 test) 5139ms
+ ✓ test/permission_override_matrix.test.ts (1 test) 6159ms
+     ✓ applies inherited deny, multiple roles, personal deny and community restrictions while protecting owners and guest limits  1258ms
+(node:26775) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26775) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26777) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26777) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/connection_notes.test.ts (4 tests) 4743ms
+ ✓ test/forum_guidelines.test.ts (2 tests) 5106ms
+(node:26827) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26827) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26828) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26828) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/profile_privacy.test.ts (11 tests) 2942ms
+     ✓ conversation member lists and live presence follow the setting too  320ms
+ ✓ test/ws_frame_auth.test.ts (7 tests) 3069ms
+     ✓ a socket that doesn't authenticate in time is closed with 4401  303ms
+(node:26841) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26841) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26842) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26842) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/history_reads.test.ts (1 test) 6074ms
+ ✓ test/message_history_cursor.test.ts (3 tests) 6788ms
+(node:26853) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26853) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26855) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26855) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/platform_admin_parity.test.ts (6 tests) 5906ms
+(node:26866) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26866) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/pronouns_role_hoist.test.ts (2 tests) 6123ms
+(node:26869) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26869) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/activity_status.test.ts (14 tests | 1 skipped) 6453ms
+ ✓ test/voice_rooms.test.ts (7 tests) 6330ms
+(node:26883) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26883) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26885) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26885) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+PostgreSQL API parity failure call sites (no request values):
+    at /Volumes/code_files/meldiq_supabase_migration/server/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at PostgresRows.persist (/Volumes/code_files/meldiq_part3_api/server/src/infrastructure/database/rows/postgresRows.ts:99:5)
+    at PostgresRows.commit (/Volumes/code_files/meldiq_part3_api/server/src/infrastructure/database/rows/memory.ts:318:11)
+    at run (/Volumes/code_files/meldiq_part3_api/server/src/infrastructure/database/rows/memory.ts:278:7)
+ ✓ test/filtered_message_search.test.ts (5 tests) 7328ms
+ ✓ test/message_atomic_ack.test.ts (1 test) 7835ms
+   ✓ commits recipient removal and delivered receipts once, and rolls both back on a receipt failure  7834ms
+(node:26967) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26967) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26968) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26968) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/connections_requests.test.ts (17 tests) 3612ms
+     ✓ are limited to twenty new ones an hour  332ms
+ ✓ test/status_presence.test.ts (5 tests) 4944ms
+(node:27001) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27001) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:26994) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26994) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/platform_admin_data.test.ts (9 tests) 6558ms
+ ✓ test/points.test.ts (11 tests) 6642ms
+     ✓ gives nothing to accounts under a day old  365ms
+(node:27057) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27057) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27058) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27058) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/revoked_sender.test.ts (4 tests) 6273ms
+ ✓ test/workspace_admin.test.ts (16 tests) 6789ms
+(node:27107) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27107) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27109) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27109) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/discovery_admin.test.ts (2 tests) 7643ms
+ ✓ test/community_channels.test.ts (11 tests) 8758ms
+(node:27124) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27124) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27126) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27126) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/self_only_controls.test.ts (3 tests) 8933ms
+     ✓ reach the sender's other devices and nobody else  305ms
+ ✓ test/search.test.ts (8 tests) 9548ms
+(node:27212) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27212) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27200) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27200) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/channel_order.test.ts (1 test) 7604ms
+(node:27247) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27247) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/custom_roles.test.ts (20 tests) 10845ms
+(node:27249) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27249) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/forum_collections.test.ts (1 test) 5805ms
+     ✓ pages all roots, uses visible reply activity and current edited tags/text, and never exposes private/deleted roots  302ms
+(node:27257) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27257) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/member_timeout.test.ts (6 tests) 5424ms
+(node:27261) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27261) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/org_delete.test.ts (4 tests) 5838ms
+(node:27275) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27275) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/channel_access.test.ts (10 tests) 5533ms
+(node:27277) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27277) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/group_photo_presence.test.ts (6 tests) 6670ms
+ ✓ test/directory_bulk_roles.test.ts (1 test) 6434ms
+     ✓ filters before deterministic paging and reports true totals; validates every bulk target before any change  430ms
+(node:27319) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27319) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27318) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27318) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/mentions.test.ts (8 tests) 9169ms
+ ✓ test/event_authority.test.ts (1 test) 10062ms
+     ✓ delegates management without channel visibility bypass, preserves organizer rights, atomically rejects stale edits and sends one authorized notice  768ms
+(node:27375) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27375) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27370) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27370) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/event_occurrences.test.ts (1 test) 8168ms
+     ✓ validates external locations, enforces visibility and separates current-occurrence changes, future RSVPs and series cancellation  828ms
+ ✓ test/call_history.test.ts (4 tests) 8588ms
+(node:27400) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27400) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27401) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27401) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/authz_edges.test.ts (4 tests) 11345ms
+ ✓ test/channel_controls.test.ts (10 tests) 12371ms
+(node:27496) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27496) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27497) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27497) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/b15_isolation.test.ts (3 tests) 5562ms
+ ✓ test/applications_alerts.test.ts (8 tests) 5742ms
+(node:27510) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27510) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27509) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27509) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/presence.test.ts (4 tests) 3051ms
+ ✓ test/nav_preferences.test.ts (13 tests) 3370ms
+     ✓ removes someone's arrangement of a workspace when they leave it  329ms
+(node:27552) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27552) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27553) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27553) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/leaderboards.test.ts (8 tests) 5135ms
+ ✓ test/managed_polls.test.ts (2 tests) 5793ms
+     ✓ keeps answer keys and anonymous identities out of message history, validates ballots and closes once under concurrent requests  321ms
+(node:27566) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27566) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27569) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27569) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/activity_scope.test.ts (4 tests) 3838ms
+ ✓ test/administrative_audit_changes.test.ts (2 tests) 4199ms
+(node:27576) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27576) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27577) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27577) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/message_visibility.test.ts (1 test) 5424ms
+ ✓ test/events_onboarding_guide.test.ts (9 tests) 5081ms
+(node:27605) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27605) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27604) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27604) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/message_collections.test.ts (6 tests) 2327ms
+ ✓ test/names_and_tags.test.ts (6 tests) 2440ms
+(node:27617) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27617) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27618) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27618) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/profile_mutuals.test.ts (1 test) 1876ms
+ ✓ test/lobby_responsive_order.test.ts (1 test) 1917ms
+(node:27632) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27632) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27633) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27633) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/community_navigation.test.ts (14 tests) 2876ms
+ ✓ test/community_reports.test.ts (1 test) 3047ms
+(node:27643) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27643) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27644) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27644) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/quick_reactions.test.ts (1 test) 2834ms
+ ✓ test/report_resolution.test.ts (1 test) 3238ms
+(node:27675) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27675) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27677) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27677) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/b14b_leave.test.ts (3 tests) 3208ms
+ ✓ test/partner_applications.test.ts (1 test) 3275ms
+     ✓ keeps owner applications private, validates the checklist and records only explicit authorized reviews without a badge or role  700ms
+(node:27783) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27783) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:27784) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27784) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/role_asset_icons.test.ts (1 test) 5839ms
+     ✓ uses same-community available emoji, rejects unauthorized/foreign assets and falls back after removal  789ms
+ ✓ test/members_add.test.ts (9 tests) 6160ms
+(node:27826) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27826) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/schema.test.ts (5 tests) 3137ms
+     ✓ is what the migrations create (run `npm run schema` after adding a migration)  2358ms
+     ✓ matches the live schema table by table, keys and indexes included  749ms
+ ✓ test/push_transport.test.ts (5 tests) 755ms
+     ✓ gives up at its deadline when the push server doesn't answer  312ms
+ ✓ test/architecture_boundaries.test.ts (4 tests) 1164ms
+     ✓ allows only the listed exceptions to the dependency rules  962ms
+ ✓ test/platform_admin_permissions.test.ts (7 tests) 20ms
+ ✓ test/permissions_rules.test.ts (18 tests) 46ms
+(node:27909) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27909) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/report_recovery.test.ts (3 tests) 6173ms
+ ✓ test/discord_mapping.test.ts (8 tests) 11ms
+ ✓ test/community_safety_rules.test.ts (8 tests) 12ms
+ ✓ test/roles.test.ts (4 tests) 18ms
+ ✓ test/channel_permissions.test.ts (8 tests) 6ms
+ ✓ test/media_grant.test.ts (1 test) 7ms
+ ✓ test/social_profile.test.ts (7 tests) 12ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/settings_parity.test.ts > new settings kept in memory
+AssertionError: expected 'postgres' to be 'memory' // Object.is equality
+
+Expected: "memory"
+Received: "postgres"
+
+ ❯ test/settings_parity.test.ts:348:49
+    346|   beforeAll(async () => {
+    347|     h = await startServer({ ...env });
+    348|     expect(h.ctx.decorations.favorites.backend).toBe(backend);
+       |                                                 ^
+    349|     expect(h.ctx.privacyChoices.backend).toBe(backend);
+    350|     expect(h.ctx.usernames.store.backend).toBe(backend);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/settings_parity.test.ts > new settings kept in mongodb
+Error: MONGODB_DOMAINS needs MONGODB_URI
+ ❯ mongoConfig src/infrastructure/database/mongo/config.ts:87:31
+     85|   }
+     86|   if (!uri) {
+     87|     if (domains.length) throw new Error("MONGODB_DOMAINS needs MONGODB…
+       |                               ^
+     88|     return null;
+     89|   }
+ ❯ loadConfig src/app/config.ts:605:41
+ ❯ startServer test/support/harness.ts:40:18
+ ❯ test/settings_parity.test.ts:347:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/settings_parity.test.ts > new settings kept in mongodb
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/settings_parity.test.ts:353:26
+    351|     [ada, bob] = await Promise.all([h.client("keptada"), h.client("kep…
+    352|   });
+    353|   afterAll(async () => h.close());
+       |                          ^
+    354|
+    355|   it("keeps decoration favourites, newest first, once each, up to 200"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 95 passed (96)
+      Tests  683 passed | 7 skipped (690)
+   Start at  20:53:50
+   Duration  511.03s (transform 20.18s, setup 0ms, import 255.94s, tests 733.42s, environment 10ms)
+
+JSON report written to /tmp/meldiq-part3-completion/final-api-clean-results.json

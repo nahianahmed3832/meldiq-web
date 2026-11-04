@@ -1,0 +1,892 @@
+ M .env.example
+ M .github/workflows/ci.yml
+ M .gitignore
+ M deploy/nginx/meldiq-web-headers.conf.template
+ M deploy/nginx/meldiq-web.conf.template
+ M deploy/scripts/build-release.sh
+ M e2e/accounts.spec.ts
+ M e2e/calls.spec.ts
+ M e2e/community-controls.spec.ts
+ M e2e/community-first.spec.ts
+ M e2e/community-lobby.spec.ts
+ M e2e/community-parity-a-wiring.spec.ts
+ M e2e/community-parity-a.spec.ts
+ M e2e/community-parity-c.spec.ts
+ M e2e/community-parity-e.spec.ts
+ M e2e/connection-requests.spec.ts
+ M e2e/decorations.spec.ts
+ M e2e/dms-selection.spec.ts
+ M e2e/languages.spec.ts
+ M e2e/launch.spec.ts
+ M e2e/link.ts
+ M e2e/mojo.spec.ts
+ M e2e/notifications.spec.ts
+ M e2e/official-bots.spec.ts
+ M e2e/passkeys.spec.ts
+ M e2e/people-panels.spec.ts
+ M e2e/screen-share.spec.ts
+ M e2e/stage1-account.spec.ts
+ M e2e/viewports.spec.ts
+ M eslint.config.js
+ M next.config.mjs
+ M package-lock.json
+ M package.json
+ M playwright.config.ts
+ M public/boot.js
+ M public/invite.html
+ M public/invite.js
+ M scripts/finish-export.mjs
+ M scripts/local-server.sh
+ M scripts/web-server.ts
+ M server-patches/README.md
+ M src/api/client.ts
+ M src/api/mojoSchemas.ts
+ M src/api/profileSchemas.ts
+ M src/api/schemas.ts
+ M src/application/boot.ts
+ M src/application/lastPlace.ts
+ M src/application/prefs.ts
+ M src/application/router.ts
+ M src/application/shortcuts.ts
+ M src/application/tabBadge.ts
+ M src/application/updates.ts
+ M src/application/vibes.ts
+ M src/application/viewport.ts
+ M src/application/voicePlayback.ts
+ M src/application/webPush.ts
+ M src/auth/accountApi.ts
+ M src/auth/accountSession.ts
+ M src/auth/deleteAccount.ts
+ M src/auth/deviceSetup.ts
+ M src/auth/passkeys.ts
+ M src/auth/rules.ts
+ M src/call/livekitSession.ts
+ M src/call/manager.ts
+ M src/call/rules.ts
+ M src/call/shareQuality.ts
+ M src/call/support.ts
+ M src/call/types.ts
+ M src/client/Root.tsx
+ M src/crypto/cipherClient.ts
+ M src/crypto/keyBackup.ts
+ M src/i18n/index.ts
+ M src/i18n/languages.ts
+ M src/i18n/strings.ts
+ M src/model/types.ts
+ M src/pages/_app.tsx
+ M src/pages/_document.tsx
+ M src/protocol/payload.ts
+ M src/realtime/frames.ts
+ M src/state/store.ts
+ M src/store/db.ts
+ M src/styles/base.css
+ M src/styles/call.css
+ M src/styles/community-parity-a.css
+ M src/styles/community.css
+ M src/styles/conversation.css
+ M src/styles/decorations.css
+ M src/styles/discovery.css
+ M src/styles/landing.css
+ M src/styles/layout.css
+ M src/styles/lobby-editor.css
+ M src/styles/lobby.css
+ M src/styles/mojo.css
+ M src/styles/official-bots.css
+ M src/styles/posting.css
+ M src/styles/profile.css
+ M src/styles/responsive.css
+ M src/styles/settings-parity-b.css
+ M src/styles/settings-parity.css
+ M src/styles/settings-profile.css
+ M src/styles/settings.css
+ M src/styles/tokens.css
+ M src/styles/views.css
+ M src/sw/shell.ts
+ M src/sw/sw.ts
+ M src/sw/swPrefs.ts
+ M src/sw/wakeRules.ts
+ M src/sync/account.ts
+ M src/sync/accountSafety.ts
+ M src/sync/attachments.ts
+ M src/sync/bots.ts
+ M src/sync/bulkSaver.ts
+ M src/sync/callHistory.ts
+ M src/sync/channelGates.ts
+ M src/sync/community.ts
+ M src/sync/communityParity.ts
+ M src/sync/communityRules.ts
+ M src/sync/communitySettings.ts
+ M src/sync/compose.ts
+ M src/sync/creators.ts
+ M src/sync/decorations.ts
+ M src/sync/developer.ts
+ M src/sync/discovery/promote.ts
+ M src/sync/discovery/rules.ts
+ M src/sync/engine.ts
+ M src/sync/expressions.ts
+ M src/sync/forward.ts
+ M src/sync/giveaways.ts
+ M src/sync/groupAdd.ts
+ M src/sync/historyUpload.ts
+ M src/sync/inviteCodes.ts
+ M src/sync/largeUpload.ts
+ M src/sync/legacyImport.ts
+ M src/sync/linkRules.ts
+ M src/sync/linkedAccounts.ts
+ M src/sync/lobby.ts
+ M src/sync/lobbyDraft.ts
+ M src/sync/locals.ts
+ M src/sync/mediaLinks.ts
+ M src/sync/mojo.ts
+ M src/sync/navPrefs.ts
+ M src/sync/oauth.ts
+ M src/sync/officialBotRules.ts
+ M src/sync/officialBots.ts
+ M src/sync/ops.ts
+ M src/sync/outbox.ts
+ M src/sync/permissionGroups.ts
+ M src/sync/photoQuality.ts
+ M src/sync/pins.ts
+ M src/sync/points.ts
+ M src/sync/polls.ts
+ M src/sync/posting/draft.ts
+ M src/sync/posting/embeds.ts
+ M src/sync/posting/reactionRoles.ts
+ M src/sync/posting/tickets.ts
+ M src/sync/profile.ts
+ M src/sync/receiver.ts
+ M src/sync/reminders.ts
+ M src/sync/reports.ts
+ M src/sync/rich.ts
+ M src/sync/rules.ts
+ M src/sync/rulesChannel.ts
+ M src/sync/session.ts
+ M src/sync/signals.ts
+ M src/sync/snapshot.ts
+ M src/sync/social.ts
+ M src/sync/status.ts
+ M src/sync/threads.ts
+ M src/sync/transfers.ts
+ M src/sync/translate.ts
+ M src/sync/universalSearch.ts
+ M src/sync/usage.ts
+ M src/sync/voice.ts
+ M src/sync/workspaceC5.ts
+ M src/sync/workspaceRules.ts
+ M src/sync/workspaces.ts
+ M src/ui/App.tsx
+ M src/ui/LinkScreen.tsx
+ M src/ui/StatusScreens.tsx
+ M src/ui/auth/AccountForms.tsx
+ M src/ui/auth/AuthFrame.tsx
+ M src/ui/auth/AuthScreen.tsx
+ M src/ui/auth/DeviceSetupViews.tsx
+ M src/ui/auth/ReauthScreen.tsx
+ M src/ui/auth/RecoverForms.tsx
+ M src/ui/auth/useSubmit.ts
+ M src/ui/call/CallLayer.tsx
+ M src/ui/call/CallStage.tsx
+ M src/ui/call/ConnectedCallPanel.tsx
+ M src/ui/call/RoomControls.tsx
+ M src/ui/call/ShareViews.tsx
+ M src/ui/call/callShared.ts
+ M src/ui/call/callText.ts
+ M src/ui/call/voiceModeration.tsx
+ M src/ui/chat/AnimojiView.tsx
+ M src/ui/chat/Attachments.tsx
+ M src/ui/chat/BulkSaveBar.tsx
+ M src/ui/chat/ChannelBell.tsx
+ M src/ui/chat/ChannelDetails.tsx
+ M src/ui/chat/Composer.tsx
+ M src/ui/chat/ComposerGates.tsx
+ M src/ui/chat/ConversationDetails.tsx
+ M src/ui/chat/ConversationManage.tsx
+ M src/ui/chat/ConversationMenu.tsx
+ M src/ui/chat/ConversationSettings.tsx
+ M src/ui/chat/ConversationView.tsx
+ M src/ui/chat/DetailsTabs.tsx
+ M src/ui/chat/EmojiPicker.tsx
+ M src/ui/chat/ExpressionPicker.tsx
+ M src/ui/chat/ForumView.tsx
+ M src/ui/chat/GifView.tsx
+ M src/ui/chat/GiveawayStatus.tsx
+ M src/ui/chat/MediaGalleryDialog.tsx
+ M src/ui/chat/MediaLinkCard.tsx
+ M src/ui/chat/MediaViewer.tsx
+ M src/ui/chat/MessageInfo.tsx
+ M src/ui/chat/MessageItem.tsx
+ M src/ui/chat/MessageList.tsx
+ M src/ui/chat/PanelHead.tsx
+ M src/ui/chat/PeoplePanels.tsx
+ M src/ui/chat/PinnedPanel.tsx
+ M src/ui/chat/PollDialog.tsx
+ M src/ui/chat/PollView.tsx
+ M src/ui/chat/PostedContent.tsx
+ M src/ui/chat/ProfileCards.tsx
+ M src/ui/chat/Reactions.tsx
+ M src/ui/chat/ReportDialog.tsx
+ M src/ui/chat/RichDialogs.tsx
+ M src/ui/chat/SafeLink.tsx
+ M src/ui/chat/SearchPanel.tsx
+ M src/ui/chat/SecuritySheet.tsx
+ M src/ui/chat/SidePanel.tsx
+ M src/ui/chat/SlashCommands.tsx
+ M src/ui/chat/StickerView.tsx
+ M src/ui/chat/ThreadsPanel.tsx
+ M src/ui/chat/TransferList.tsx
+ M src/ui/chat/VoiceBar.tsx
+ M src/ui/chat/VoiceRoomView.tsx
+ M src/ui/chat/WebhookSender.tsx
+ M src/ui/chat/WordyGameDialog.tsx
+ M src/ui/chat/WordyHeaderAction.tsx
+ M src/ui/chat/blobUrl.ts
+ M src/ui/chat/contextTarget.tsx
+ M src/ui/chat/inAppLinks.ts
+ M src/ui/chat/memberListRules.ts
+ M src/ui/chat/voiceRoomRules.ts
+ M src/ui/community/CategoryDialogs.tsx
+ M src/ui/community/ChannelDialogs.tsx
+ M src/ui/community/ChannelOptionsFields.tsx
+ M src/ui/community/CommunityHeader.tsx
+ M src/ui/community/CommunityPanel.tsx
+ M src/ui/community/CommunityPreviewDialog.tsx
+ M src/ui/community/CreateChannelDialog.tsx
+ M src/ui/community/CreateCommunityDialog.tsx
+ M src/ui/community/CustomEmoji.tsx
+ M src/ui/community/DeleteCommunityDialog.tsx
+ M src/ui/community/DiscordImport.tsx
+ M src/ui/community/GuideOnboarding.tsx
+ M src/ui/community/LeaveDialog.tsx
+ M src/ui/community/LockedBanner.tsx
+ M src/ui/community/NicknameDialog.tsx
+ M src/ui/community/NotifyDialogs.tsx
+ M src/ui/community/OnboardingFinish.tsx
+ M src/ui/community/PermissionsDialog.tsx
+ M src/ui/community/RulesViews.tsx
+ M src/ui/community/TemplatePreviewDialog.tsx
+ M src/ui/community/accent.ts
+ M src/ui/community/communityMenu.tsx
+ M src/ui/community/lockMenu.tsx
+ M src/ui/community/menuLabels.tsx
+ M src/ui/community/reactionRoles/ReactionRolesDialog.tsx
+ M src/ui/community/reactionRoles/useReactionRolesItem.tsx
+ M src/ui/community/tickets/OpenTicketsList.tsx
+ M src/ui/community/tickets/PanelEditor.tsx
+ M src/ui/community/tickets/TicketDialogs.tsx
+ M src/ui/community/tickets/TicketHeaderActions.tsx
+ M src/ui/community/tickets/TicketsCard.tsx
+ M src/ui/community/useCommunityAccess.ts
+ M src/ui/community/useCommunityMembers.ts
+ M src/ui/community/useCommunityPermissions.ts
+ M src/ui/community/webhooks/BoxEditor.tsx
+ M src/ui/community/webhooks/ButtonsEditor.tsx
+ M src/ui/community/webhooks/ChannelDialogTabs.tsx
+ M src/ui/community/webhooks/ImportJsonDialog.tsx
+ M src/ui/community/webhooks/PostBuilder.tsx
+ M src/ui/community/webhooks/PostPreview.tsx
+ M src/ui/community/webhooks/WebhookRow.tsx
+ M src/ui/community/webhooks/WebhooksTab.tsx
+ M src/ui/components/Avatar.tsx
+ M src/ui/components/CopyButton.tsx
+ M src/ui/components/LanguagePicker.tsx
+ M src/ui/components/LiveCallBadge.tsx
+ M src/ui/components/Overlay.tsx
+ M src/ui/creators/CreatorsPage.tsx
+ M src/ui/developer/AppsSection.tsx
+ M src/ui/developer/BotListingCard.tsx
+ M src/ui/developer/BotsSection.tsx
+ M src/ui/developer/DeveloperPage.tsx
+ M src/ui/dialogs/ChannelBrowser.tsx
+ M src/ui/dialogs/ForwardDialog.tsx
+ M src/ui/dialogs/IdentityReview.tsx
+ M src/ui/dialogs/NewGroupDialog.tsx
+ M src/ui/dialogs/NewMessageDialog.tsx
+ M src/ui/dialogs/SearchDialog.tsx
+ M src/ui/dialogs/ShortcutsDialog.tsx
+ M src/ui/dialogs/StatusDialogs.tsx
+ M src/ui/dialogs/WorkspaceDialogs.tsx
+ M src/ui/format.ts
+ M src/ui/later/LaterView.tsx
+ M src/ui/later/RemindMeDialog.tsx
+ M src/ui/later/ReminderEditor.tsx
+ M src/ui/later/RemindersList.tsx
+ M src/ui/later/SavedList.tsx
+ M src/ui/later/when.ts
+ M src/ui/lobby/CardEditor.tsx
+ M src/ui/lobby/EditorLook.tsx
+ M src/ui/lobby/EditorSections.tsx
+ M src/ui/lobby/EditorTemplates.tsx
+ M src/ui/lobby/FeedUrl.tsx
+ M src/ui/lobby/LobbyEditorPanel.tsx
+ M src/ui/lobby/LobbyHeader.tsx
+ M src/ui/lobby/LobbyPage.tsx
+ M src/ui/lobby/LobbyRow.tsx
+ M src/ui/lobby/LobbySurface.tsx
+ M src/ui/lobby/PickRolesCard.tsx
+ M src/ui/lobby/cardsChannels.tsx
+ M src/ui/lobby/cardsInfo.tsx
+ M src/ui/lobby/cardsPeople.tsx
+ M src/ui/lobby/fieldEditors.tsx
+ M src/ui/lobby/lobbyContext.ts
+ M src/ui/lobby/lobbyInfo.ts
+ M src/ui/lobby/useLobbyEditor.ts
+ M src/ui/lobby/useLobbyLanding.ts
+ M src/ui/mojo/CharLimit.tsx
+ M src/ui/mojo/MojoBadge.tsx
+ M src/ui/mojo/MojoBanner.tsx
+ M src/ui/mojo/MojoGifts.tsx
+ M src/ui/mojo/MojoPage.tsx
+ M src/ui/mojo/MojoPlans.tsx
+ M src/ui/mojo/SparkDialog.tsx
+ M src/ui/mojo/SparkGoal.tsx
+ M src/ui/mojo/SparkPage.tsx
+ M src/ui/mojo/SparkSection.tsx
+ M src/ui/mojo/SparkTrack.tsx
+ M src/ui/mojo/mojoFormat.ts
+ M src/ui/mojo/useMojoLimits.ts
+ M src/ui/oauth/ConsentPage.tsx
+ M src/ui/people/ArtistDecorations.tsx
+ M src/ui/people/ConnectionRequestViews.tsx
+ M src/ui/people/ConnectionsDialog.tsx
+ M src/ui/people/GroupPhotoCard.tsx
+ M src/ui/people/LevelRing.tsx
+ M src/ui/people/NameBadge.tsx
+ M src/ui/people/NameStyle.tsx
+ M src/ui/people/ProfileConnections.tsx
+ M src/ui/people/ProfileDialog.tsx
+ M src/ui/people/ProfilePins.tsx
+ M src/ui/people/ProfileStyle.tsx
+ M src/ui/people/RequestBar.tsx
+ M src/ui/people/profileTheme.ts
+ M src/ui/points/PointsEarn.tsx
+ M src/ui/points/PointsPage.tsx
+ M src/ui/points/PointsQuests.tsx
+ M src/ui/points/pointsWords.ts
+ M src/ui/selectors.ts
+ M src/ui/settings/AccountExtrasCards.tsx
+ M src/ui/settings/AccountOverview.tsx
+ M src/ui/settings/AccountPages.tsx
+ M src/ui/settings/AccountSafetyCards.tsx
+ M src/ui/settings/AccountSettingsPage.tsx
+ M src/ui/settings/AdminUsagePage.tsx
+ M src/ui/settings/AdvancedPage.tsx
+ M src/ui/settings/AppearanceExtras.tsx
+ M src/ui/settings/AuthorizedAppsCard.tsx
+ M src/ui/settings/BackgroundNotifications.tsx
+ M src/ui/settings/CallsPage.tsx
+ M src/ui/settings/ConnectionsCard.tsx
+ M src/ui/settings/CreatorVerificationCard.tsx
+ M src/ui/settings/DecorationPicker.tsx
+ M src/ui/settings/DecorationWindow.tsx
+ M src/ui/settings/InstallButton.tsx
+ M src/ui/settings/KeyBackupCard.tsx
+ M src/ui/settings/LeaveManyDialog.tsx
+ M src/ui/settings/NameStyleWindow.tsx
+ M src/ui/settings/PasskeysCard.tsx
+ M src/ui/settings/PreferencePages.tsx
+ M src/ui/settings/PrivacyExtras.tsx
+ M src/ui/settings/PrivacyPage.tsx
+ M src/ui/settings/ProfilePage.tsx
+ M src/ui/settings/ProfilePreviewCard.tsx
+ M src/ui/settings/ProfileStyleCard.tsx
+ M src/ui/settings/ProfileThemePicker.tsx
+ M src/ui/settings/RecoveryCodesCard.tsx
+ M src/ui/settings/ServiceHealthPage.tsx
+ M src/ui/settings/SettingsView.tsx
+ M src/ui/settings/ShortcutsPage.tsx
+ M src/ui/settings/ShownBadgePicker.tsx
+ M src/ui/settings/StoragePage.tsx
+ M src/ui/settings/SubmitDecorationDialog.tsx
+ M src/ui/settings/YouCard.tsx
+ M src/ui/settings/profileDraft.tsx
+ M src/ui/settings/useDecorationFavorites.ts
+ M src/ui/settings/useStyleSaver.ts
+ M src/ui/shell/ConnectionBanner.tsx
+ M src/ui/shell/ConversationRow.tsx
+ M src/ui/shell/DmPromos.tsx
+ M src/ui/shell/Notices.tsx
+ M src/ui/shell/ProfileMenu.tsx
+ M src/ui/shell/Rail.tsx
+ M src/ui/shell/RailCommunity.tsx
+ M src/ui/shell/RailFolder.tsx
+ M src/ui/shell/SettingsWindow.tsx
+ M src/ui/shell/Shell.tsx
+ M src/ui/shell/Sidebar.tsx
+ M src/ui/shell/SidebarSections.tsx
+ M src/ui/shell/TabBar.tsx
+ M src/ui/shell/TabIndicators.tsx
+ M src/ui/shell/TopBar.tsx
+ M src/ui/shell/UserPanel.tsx
+ M src/ui/shell/VoiceRooms.tsx
+ M src/ui/views/ActivityView.tsx
+ M src/ui/views/DiscoverCard.tsx
+ M src/ui/views/DraftsAndSent.tsx
+ M src/ui/views/FriendRows.tsx
+ M src/ui/views/FriendsView.tsx
+ M src/ui/views/HomeView.tsx
+ M src/ui/views/StartChecklist.tsx
+ M src/ui/views/SuggestedPeople.tsx
+ M src/ui/workspace/AddMembersDialog.tsx
+ M src/ui/workspace/AppearanceCard.tsx
+ M src/ui/workspace/AuditPage.tsx
+ M src/ui/workspace/BotsPage.tsx
+ M src/ui/workspace/ChannelsPage.tsx
+ M src/ui/workspace/EveryoneDialog.tsx
+ M src/ui/workspace/ExpressionsPage.tsx
+ M src/ui/workspace/GuidePages.tsx
+ M src/ui/workspace/InvitationsPage.tsx
+ M src/ui/workspace/InviteLink.tsx
+ M src/ui/workspace/LobbySettingsPage.tsx
+ M src/ui/workspace/MeetingsPage.tsx
+ M src/ui/workspace/MemberParityActions.tsx
+ M src/ui/workspace/ModerationPages.tsx
+ M src/ui/workspace/OnboardingGateCard.tsx
+ M src/ui/workspace/OverviewPage.tsx
+ M src/ui/workspace/PeoplePage.tsx
+ M src/ui/workspace/PinsPage.tsx
+ M src/ui/workspace/ProfileExtrasCards.tsx
+ M src/ui/workspace/ProfileSafety.tsx
+ M src/ui/workspace/ReportsPage.tsx
+ M src/ui/workspace/RoleDisplayTab.tsx
+ M src/ui/workspace/RoleEditor.tsx
+ M src/ui/workspace/RoleMembers.tsx
+ M src/ui/workspace/RolePermissionsTab.tsx
+ M src/ui/workspace/RolesPage.tsx
+ M src/ui/workspace/RulesPage.tsx
+ M src/ui/workspace/SparksPromotePages.tsx
+ M src/ui/workspace/StandardInvite.tsx
+ M src/ui/workspace/TagCard.tsx
+ M src/ui/workspace/ThemePage.tsx
+ M src/ui/workspace/TransferOwnership.tsx
+ M src/ui/workspace/UsagePage.tsx
+ M src/ui/workspace/VoiceBansCard.tsx
+ M src/ui/workspace/WorkspaceSetupCards.tsx
+ M src/ui/workspace/WorkspaceView.tsx
+ M src/ui/workspace/bots/AlertsWatches.tsx
+ M src/ui/workspace/bots/BotLook.tsx
+ M src/ui/workspace/bots/BotParts.tsx
+ M src/ui/workspace/bots/BotWindow.tsx
+ M src/ui/workspace/bots/CommunityBotsCard.tsx
+ M src/ui/workspace/bots/HelperLevelsForms.tsx
+ M src/ui/workspace/bots/LoggerStarboardForms.tsx
+ M src/ui/workspace/bots/OfficialBotsSection.tsx
+ M src/ui/workspace/bots/PartTwoForms.tsx
+ M src/ui/workspace/bots/WelcomerForm.tsx
+ M src/ui/workspace/communityRail.tsx
+ M src/ui/workspace/discovery/DiscoveryCard.tsx
+ M src/ui/workspace/discovery/TemplateCard.tsx
+ M src/ui/workspace/photo.ts
+ M src/ui/workspace/promote/BoostCards.tsx
+ M src/ui/workspace/promote/PromotePage.tsx
+ M src/ui/workspace/promote/PromotedRowCard.tsx
+ M src/ui/workspace/promote/usePromoteBuy.ts
+ M src/ui/workspace/useLoad.ts
+ M test/app-reload.test.ts
+ M test/community-parity-a.test.ts
+ M test/contract-fixtures.test.ts
+ M test/contract-fixtures/http/GET_v2_mojo_catalog.json
+ M test/contract-fixtures/http/GET_v2_pins.json
+ M test/contract-fixtures/http/GET_v2_points.json
+ M test/contract-fixtures/http/POST_v2_points_checkin.json
+ M test/contract-fixtures/http/errors/not_enough_points.json
+ M test/contract-fixtures/realtime-client.schema.json
+ M test/contract-fixtures/routes.json
+ M test/i18n.test.ts
+ M test/large-files.test.ts
+ M test/legacy-import.test.ts
+ M test/live-large.test.ts
+ M test/live-s3-cors.test.ts
+ M test/lobby.test.ts
+ M test/member-list-rules.test.ts
+ M test/mojo.test.ts
+ M test/nav-prefs.test.ts
+ M test/prefs.test.ts
+ M test/realtime-frames.test.ts
+ M test/rules-channel.test.ts
+ M test/settings-parity.test.ts
+ M test/snapshot-actions.test.ts
+ M test/snapshot.test.ts
+ M test/support/contracts.ts
+ M test/support/serverDir.ts
+ M test/wake-rules.test.ts
+ M tsconfig.app.json
+ M vite.config.ts
+ M vite.sw.config.ts
+?? .github/workflows/supabase.yml
+?? Meldiq-Yapin-Research/
+?? PAYMENT-SECURITY.md
+?? PAYPAL-ENVIRONMENT-SETUP.md
+?? PAYPAL-INTEGRATION.md
+?? PAYPAL-LIVE-RELEASE.md
+?? PAYPAL-SANDBOX-TEST-REPORT.md
+?? PAYPAL-SUBSCRIPTIONS.md
+?? PAYPAL-WEBHOOKS.md
+?? deploy/call-receipts-sidebar/
+?? deploy/community-identity/
+?? deploy/compact-rail/
+?? deploy/database-migration/
+?? deploy/localization/
+?? deploy/media-optimized-default/
+?? deploy/media-sharing/
+?? deploy/member-identity/
+?? deploy/nginx/meldiq-web-paypal-sandbox-headers.conf.template
+?? deploy/no-service-popups/
+?? deploy/polls-and-media/
+?? deploy/profile-customization/
+?? deploy/supabase-preparation/
+?? deploy/supabase/
+?? deploy/ui-standardization/
+?? deploy/unified-auth/
+?? deploy/unified-file-picker/
+?? docs/CHAT_LATEST_MESSAGE_P0_2026-11-01.md
+?? docs/MELDIQ_LEADERBOARDS.md
+?? docs/MELDIQ_YAPIN_RELIABILITY_2026_11_01.md
+?? docs/MELDIQ_YAPIN_ROADMAP_2026_11_01.md
+?? docs/MOBILE_UX_ALIGNMENT_2026-11-01.md
+?? docs/SMOOTH_AUTH_COMMERCE.md
+?? docs/UNIFIED_AUTH.md
+?? docs/UNIFIED_AUTH_FILES.md
+?? docs/UNIFIED_AUTH_TEST_RESULTS.md
+?? docs/architecture/
+?? docs/database-migration/
+?? docs/deployment/
+?? docs/design/
+?? docs/i18n/
+?? docs/media-sharing/
+?? docs/migrations/
+?? docs/monetization/
+?? docs/operations/
+?? docs/paypal/
+?? docs/profile-customization/
+?? docs/security/
+?? docs/testing/
+?? docs/ui-standardization/
+?? docs/unified-auth-email-preview.jpg
+?? docs/unified-auth-email-production.jpg
+?? docs/unified-auth-methods-preview.jpg
+?? docs/unified-auth-onboarding-production.jpg
+?? docs/unified-auth-production.jpg
+?? docs/unified-auth-provider-icons-preview.jpg
+?? docs/unified-auth-verification-preview.jpg
+?? docs/yapin-parity/
+?? e2e/auth-input.spec.ts
+?? e2e/call-receipts-sidebar.spec.ts
+?? e2e/chat-open-latest.spec.ts
+?? e2e/community-identity.spec.ts
+?? e2e/compact-rail.spec.ts
+?? e2e/embers-layout.spec.ts
+?? e2e/fixtures/media-optimize-input.mp4
+?? e2e/fixtures/media-synthetic.mp4
+?? e2e/independent-support.spec.ts
+?? e2e/leaderboards.spec.ts
+?? e2e/localization-call.spec.ts
+?? e2e/localization-public.spec.ts
+?? e2e/localization.spec.ts
+?? e2e/media-sharing.spec.ts
+?? e2e/message-collections.spec.ts
+?? e2e/mobile-overlays.spec.ts
+?? e2e/mobile-ux.spec.ts
+?? e2e/multiple-accounts.spec.ts
+?? e2e/paypal-checkout.spec.ts
+?? e2e/poll-media.spec.ts
+?? e2e/profile-collection.spec.ts
+?? e2e/rail-badges.spec.ts
+?? e2e/research-improvements.spec.ts
+?? e2e/settings-redesign.spec.ts
+?? e2e/smooth-auth-upload.spec.ts
+?? e2e/startup-preview.spec.ts
+?? e2e/ui-standardization.spec.ts
+?? e2e/validation-csp.spec.ts
+?? e2e/yapin-roadmap.spec.ts
+?? locales/
+?? playwright.call-fixes.config.ts
+?? playwright.compact-rail.config.ts
+?? playwright.identity.config.ts
+?? playwright.localization.config.ts
+?? playwright.media.config.ts
+?? playwright.poll-media.config.ts
+?? playwright.rules.config.ts
+?? public/auth-provider-icons/
+?? public/embers.svg
+?? public/social-auth-callback.html
+?? public/social-auth-callback.js
+?? scripts/check-database-boundaries.mjs
+?? scripts/i18n/
+?? scripts/media/
+?? scripts/paypal-sdk-probe.mjs
+?? scripts/paypal-sdk-sandbox-probe.mjs
+?? scripts/supabase/
+?? scripts/test-social-auth-browser.mjs
+?? server-patches/0003-history-and-mojo-lineup.patch
+?? server-patches/0004-google-play-lineup-tests.patch
+?? server-patches/0005-core-yapin-roadmap.patch
+?? server-patches/0006-paypal-sandbox.patch
+?? server-patches/0007-paypal-live.patch
+?? server-patches/0008-smooth-auth-commerce-api.patch
+?? server-patches/0009-embers-achievements.patch
+?? server-patches/0010-profile-collectibles.patch
+?? server-patches/0011-media-sharing.patch
+?? server-patches/0012-call-read-receipts.patch
+?? server-patches/0012-supabase-staging-consolidation.patch
+?? server-patches/0013-supabase-real-data-rehearsal.patch
+?? server-patches/0014-interface-locales.patch
+?? server-patches/0015-profile-layout-foundation.patch
+?? server-patches/meldiq-admin-paypal.patch
+?? server-patches/paypal-live.env.example
+?? server-patches/paypal.env.example
+?? src/api/collectibleSchemas.ts
+?? src/api/jsonBudget.ts
+?? src/api/messageCollections.ts
+?? src/api/paypalSchemas.ts
+?? src/api/promotionSchemas.ts
+?? src/application/accountSwitch.ts
+?? src/application/communityLanding.ts
+?? src/application/navigationGuard.ts
+?? src/application/plusSupport.ts
+?? src/application/readingPosition.ts
+?? src/application/validationPolicy.ts
+?? src/auth/savedAccounts.ts
+?? src/auth/socialAuth.ts
+?? src/auth/supabaseClient.ts
+?? src/auth/supabaseMigration.ts
+?? src/call/screenShareSupport.ts
+?? src/i18n/Localized.tsx
+?? src/i18n/Provider.tsx
+?? src/i18n/api-errors.ts
+?? src/i18n/billing.ts
+?? src/i18n/catalog.ts
+?? src/i18n/counts.ts
+?? src/i18n/english.ts
+?? src/i18n/errors.ts
+?? src/i18n/format.ts
+?? src/i18n/legacy-keys.json
+?? src/i18n/namespaces.ts
+?? src/i18n/preferences.ts
+?? src/i18n/runtime.ts
+?? src/i18n/syntax.ts
+?? src/realtime/supabaseEvents.ts
+?? src/store/outgoingVault.ts
+?? src/styles/billing.css
+?? src/styles/collection.css
+?? src/styles/compact-navigation.css
+?? src/styles/embers.css
+?? src/styles/identity-marks.css
+?? src/styles/leaderboards.css
+?? src/styles/localization.css
+?? src/styles/mobile.css
+?? src/styles/settings-redesign.css
+?? src/styles/standardization.css
+?? src/sw/internalLocale.ts
+?? src/sync/attachmentPolicy.ts
+?? src/sync/collectibles.ts
+?? src/sync/communityProfile.ts
+?? src/sync/leaderboards.ts
+?? src/sync/mediaPreview.ts
+?? src/sync/messageCollections.ts
+?? src/sync/prepareExpression.ts
+?? src/sync/videoQuality.ts
+?? src/ui/auth/SocialSignIn.tsx
+?? src/ui/billing/
+?? src/ui/call/CallAvatar.tsx
+?? src/ui/call/CallConnection.tsx
+?? src/ui/chat/AttachmentDrafts.tsx
+?? src/ui/chat/ExpressionLibrary.tsx
+?? src/ui/chat/GalleryMediaViewer.tsx
+?? src/ui/chat/PollResultsDialog.tsx
+?? src/ui/chat/ZoomableImage.tsx
+?? src/ui/chat/useMessageCollection.tsx
+?? src/ui/chat/useReadingPosition.ts
+?? src/ui/community/PermissionPreview.tsx
+?? src/ui/components/BadgeMark.tsx
+?? src/ui/components/BotTag.tsx
+?? src/ui/components/CommunityOwnerBadge.tsx
+?? src/ui/components/ConfirmationDialog.tsx
+?? src/ui/components/EmberIcon.tsx
+?? src/ui/components/IdentityGlyph.tsx
+?? src/ui/components/MotionImage.tsx
+?? src/ui/components/NotificationLevelSelect.tsx
+?? src/ui/components/SettingsCard.tsx
+?? src/ui/components/SettingsIcon.tsx
+?? src/ui/components/SettingsNavigation.tsx
+?? src/ui/components/UnsavedChanges.tsx
+?? src/ui/leaderboards/
+?? src/ui/mojo/PlusPromotion.tsx
+?? src/ui/mojo/PlusRenewalNotice.tsx
+?? src/ui/mojo/PlusSupportNotice.tsx
+?? src/ui/people/AvatarFrame.tsx
+?? src/ui/people/BotProfileDialog.tsx
+?? src/ui/people/CollectibleLayers.tsx
+?? src/ui/points/AchievementGallery.tsx
+?? src/ui/settings/CollectionStudio.tsx
+?? src/ui/settings/CommunityProfileCard.tsx
+?? src/ui/settings/ConnectedAccountsCard.tsx
+?? src/ui/settings/NotificationOverview.tsx
+?? src/ui/settings/SessionsCard.tsx
+?? src/ui/settings/SpecializedPages.tsx
+?? src/ui/settings/settingsCatalog.tsx
+?? src/ui/settings/settingsSearch.ts
+?? src/ui/settings/useStyleDraft.ts
+?? src/ui/shell/AccountActions.tsx
+?? src/ui/shell/navigation.tsx
+?? src/ui/workspace/CategoryPages.tsx
+?? src/ui/workspace/bots/BotDiagnostics.tsx
+?? supabase/
+?? test/attachment-policy.test.ts
+?? test/automatic-photos.test.ts
+?? test/avatar-presence.test.tsx
+?? test/bot-labels.test.tsx
+?? test/call-latency.test.ts
+?? test/community-landing.test.ts
+?? test/contract-fixtures/http/DELETE_admin_v1_profile-collectibles_id.json
+?? test/contract-fixtures/http/DELETE_v2_account_identities_provider.json
+?? test/contract-fixtures/http/DELETE_v2_mojo_sparks_id.json
+?? test/contract-fixtures/http/DELETE_v2_users_me_profile-collectibles_id_favorite.json
+?? test/contract-fixtures/http/GET_admin_v1_billing_gift-deliveries.json
+?? test/contract-fixtures/http/GET_admin_v1_billing_orders.json
+?? test/contract-fixtures/http/GET_admin_v1_billing_paypal_transactions.json
+?? test/contract-fixtures/http/GET_admin_v1_billing_promotions.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_appeals.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_notices.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_notices_id_receipts.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_operators.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_orders.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_ownership.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_policy.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_policy_history.json
+?? test/contract-fixtures/http/GET_admin_v1_operations_promotions.json
+?? test/contract-fixtures/http/GET_admin_v1_profile-collectibles.json
+?? test/contract-fixtures/http/GET_admin_v1_reports.json
+?? test/contract-fixtures/http/GET_admin_v1_reports_assignees.json
+?? test/contract-fixtures/http/GET_v1_categories_id_permission-preview.json
+?? test/contract-fixtures/http/GET_v1_conversations_id_permission-preview.json
+?? test/contract-fixtures/http/GET_v1_orgs_orgId_members_userId_profile.json
+?? test/contract-fixtures/http/GET_v1_orgs_orgId_official-bots_key_diagnostics.json
+?? test/contract-fixtures/http/GET_v1_orgs_orgId_sparks.json
+?? test/contract-fixtures/http/GET_v2_account_identities.json
+?? test/contract-fixtures/http/GET_v2_auth_social_config.json
+?? test/contract-fixtures/http/GET_v2_billing_account.json
+?? test/contract-fixtures/http/GET_v2_billing_entitlements.json
+?? test/contract-fixtures/http/GET_v2_billing_gifts.json
+?? test/contract-fixtures/http/GET_v2_billing_orders.json
+?? test/contract-fixtures/http/GET_v2_billing_orders_id_receipt.json
+?? test/contract-fixtures/http/GET_v2_billing_paypal_checkouts_id.json
+?? test/contract-fixtures/http/GET_v2_billing_paypal_config.json
+?? test/contract-fixtures/http/GET_v2_billing_paypal_history.json
+?? test/contract-fixtures/http/GET_v2_billing_plans.json
+?? test/contract-fixtures/http/GET_v2_billing_promotions_id.json
+?? test/contract-fixtures/http/GET_v2_billing_promotions_preference.json
+?? test/contract-fixtures/http/GET_v2_billing_referral.json
+?? test/contract-fixtures/http/GET_v2_collectible-purchases.json
+?? test/contract-fixtures/http/GET_v2_leaderboards.json
+?? test/contract-fixtures/http/GET_v2_mojo_me.json
+?? test/contract-fixtures/http/GET_v2_platform_appeals.json
+?? test/contract-fixtures/http/GET_v2_platform_features.json
+?? test/contract-fixtures/http/GET_v2_platform_notices.json
+?? test/contract-fixtures/http/GET_v2_platform_ownership.json
+?? test/contract-fixtures/http/GET_v2_profile-collectibles.json
+?? test/contract-fixtures/http/GET_v2_profile-collectibles_categories.json
+?? test/contract-fixtures/http/GET_v2_users_me_profile-collectibles.json
+?? test/contract-fixtures/http/GET_v2_users_me_profile-customization.json
+?? test/contract-fixtures/http/PATCH_v2_users_me_profile-customization.json
+?? test/contract-fixtures/http/POST_admin_v1_billing_paypal_transactions_id_refund.json
+?? test/contract-fixtures/http/POST_admin_v1_operations_appeals_id_decision.json
+?? test/contract-fixtures/http/POST_admin_v1_operations_notices.json
+?? test/contract-fixtures/http/POST_admin_v1_operations_notices_id_state.json
+?? test/contract-fixtures/http/POST_admin_v1_operations_orders_id_refund.json
+?? test/contract-fixtures/http/POST_admin_v1_operations_ownership.json
+?? test/contract-fixtures/http/POST_admin_v1_operations_warnings.json
+?? test/contract-fixtures/http/POST_admin_v1_profile-collectibles_id_grant.json
+?? test/contract-fixtures/http/POST_v2_auth_social_complete.json
+?? test/contract-fixtures/http/POST_v2_auth_social_start.json
+?? test/contract-fixtures/http/POST_v2_billing_checkout.json
+?? test/contract-fixtures/http/POST_v2_billing_gifts_id_link.json
+?? test/contract-fixtures/http/POST_v2_billing_gifts_id_redeem.json
+?? test/contract-fixtures/http/POST_v2_billing_gifts_redeem.json
+?? test/contract-fixtures/http/POST_v2_billing_paypal_cancel.json
+?? test/contract-fixtures/http/POST_v2_billing_paypal_checkouts.json
+?? test/contract-fixtures/http/POST_v2_billing_paypal_checkouts_id_confirm.json
+?? test/contract-fixtures/http/POST_v2_billing_portal.json
+?? test/contract-fixtures/http/POST_v2_billing_promotions_activity.json
+?? test/contract-fixtures/http/POST_v2_billing_promotions_claim.json
+?? test/contract-fixtures/http/POST_v2_billing_promotions_events.json
+?? test/contract-fixtures/http/POST_v2_billing_referral_claim.json
+?? test/contract-fixtures/http/POST_v2_billing_reminders_renewal.json
+?? test/contract-fixtures/http/POST_v2_billing_sync.json
+?? test/contract-fixtures/http/POST_v2_collectible-purchases.json
+?? test/contract-fixtures/http/POST_v2_mojo_gifts.json
+?? test/contract-fixtures/http/POST_v2_mojo_gifts_id_redeem.json
+?? test/contract-fixtures/http/POST_v2_mojo_play_intent.json
+?? test/contract-fixtures/http/POST_v2_mojo_play_verify.json
+?? test/contract-fixtures/http/POST_v2_mojo_sparks.json
+?? test/contract-fixtures/http/POST_v2_mojo_sparks_checkout.json
+?? test/contract-fixtures/http/POST_v2_mojo_sparks_id_move.json
+?? test/contract-fixtures/http/POST_v2_platform_appeals.json
+?? test/contract-fixtures/http/POST_v2_platform_appeals_email_complete.json
+?? test/contract-fixtures/http/POST_v2_platform_notices_id_read.json
+?? test/contract-fixtures/http/POST_v2_platform_ownership_id_approve.json
+?? test/contract-fixtures/http/POST_v2_platform_promotions_redeem.json
+?? test/contract-fixtures/http/POST_v2_users_me_profile-collectibles_id_claim.json
+?? test/contract-fixtures/http/PUT_admin_v1_billing_promotions.json
+?? test/contract-fixtures/http/PUT_admin_v1_operations_operators_id.json
+?? test/contract-fixtures/http/PUT_admin_v1_operations_policy.json
+?? test/contract-fixtures/http/PUT_admin_v1_operations_promotions.json
+?? test/contract-fixtures/http/PUT_admin_v1_profile-collectibles_id.json
+?? test/contract-fixtures/http/PUT_v1_orgs_orgId_members_userId_profile.json
+?? test/contract-fixtures/http/PUT_v2_billing_promotions_preference.json
+?? test/contract-fixtures/http/PUT_v2_mojo_badge.json
+?? test/contract-fixtures/http/PUT_v2_users_me_profile-collectibles_id_favorite.json
+?? test/contract-fixtures/http/errors/account_link_required.json
+?? test/contract-fixtures/http/errors/acquisition_required.json
+?? test/contract-fixtures/http/errors/billed_elsewhere.json
+?? test/contract-fixtures/http/errors/collectible_unavailable.json
+?? test/contract-fixtures/http/errors/custom_items_limit.json
+?? test/contract-fixtures/http/errors/fresh_auth_required.json
+?? test/contract-fixtures/http/errors/identity_conflict.json
+?? test/contract-fixtures/http/errors/invalid_device_proof.json
+?? test/contract-fixtures/http/errors/last_login_method.json
+?? test/contract-fixtures/http/errors/no_free_sparks.json
+?? test/contract-fixtures/http/errors/no_sparks.json
+?? test/contract-fixtures/http/errors/not_owned.json
+?? test/contract-fixtures/http/errors/provider_email_required.json
+?? test/contract-fixtures/http/errors/social_flow_expired.json
+?? test/contract-fixtures/http/errors/social_state_invalid.json
+?? test/contract-fixtures/http/errors/subscription_active.json
+?? test/contract-fixtures/http/errors/unavailable.json
+?? test/contract-fixtures/http/errors/upload_limit.json
+?? test/contract-fixtures/http/errors/wrong_category.json
+?? test/contract-source.txt
+?? test/download-reliability.test.ts
+?? test/expression-cache.test.ts
+?? test/forward-contract-fixtures/
+?? test/history-navigation.test.ts
+?? test/i18n-preferences.test.ts
+?? test/i18n-public.test.ts
+?? test/i18n-quality.test.ts
+?? test/i18n-rich.test.tsx
+?? test/identity-marks.test.tsx
+?? test/json-budget.test.ts
+?? test/legacy-profile-compatibility.test.ts
+?? test/message-collections.test.ts
+?? test/navigation-guard.test.ts
+?? test/outgoing-recovery.test.ts
+?? test/paypal-checkout-draft.test.ts
+?? test/plus-promotion.test.tsx
+?? test/plus-support.test.ts
+?? test/poll-results.test.ts
+?? test/prepare-expression.test.ts
+?? test/profile-collectibles.test.ts
+?? test/reading-position.test.ts
+?? test/saved-accounts.test.ts
+?? test/screen-share-support.test.ts
+?? test/settings-search.test.ts
+?? test/social-auth.test.ts
+?? test/startup-refresh.test.ts
+?? test/supabase-client.test.ts
+?? test/supabase-events.test.ts
+?? test/supabase-migration.test.ts
+?? test/support/legacy-web-426/
+?? test/upload-reliability.test.ts
+?? test/video-quality.test.ts
+?? test/viewport.test.ts
+?? test/wake-dedup.test.ts
+?? test/zod-upgrade.test.ts

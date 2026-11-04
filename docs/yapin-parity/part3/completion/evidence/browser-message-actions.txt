@@ -1,0 +1,216 @@
+[WebServer] (node:33408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33430) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33431) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33431) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:33431) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:33481) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33483) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33494) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33502) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33501) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33503) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ../meldiq_web/node_modules/zod/v4/core/util.js (400:0): A comment
+[WebServer] 
+[WebServer] "// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/zod/v4/core/regexes.js (74:0): A comment
+[WebServer] 
+[WebServer] "/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+[WebServer]  * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+[WebServer]  * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+[WebServer] 
+[WebServer] "// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */ oidNist(0x07),"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] (node:33532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 19 tests using 1 worker
+
+(node:33553) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/chat-position.spec.ts:23:1 › a conversation opens at its newest message and keeps a reader's place (9.1s)
+  ✓   2 [chromium] › e2e/chat-position.spec.ts:71:1 › a community's categories show in their saved order from the first paint (7.5s)
+  ✓   3 [chromium] › e2e/message-collections.spec.ts:26:1 › a busy thread cannot displace the main conversation timeline (6.1s)
+  ✓   4 [chromium] › e2e/message-collections.spec.ts:47:1 › media and files remain accessible after their messages leave the active history window (8.7s)
+  ✓   5 [chromium] › e2e/message-collections.spec.ts:85:1 › pins and threads page beyond loaded history, preserve counts, and recover from errors (6.4s)
+  ✓   6 [chromium] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts (7.1s)
+  ✘   7 [chromium] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (15.3s)
+(node:33837) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [chromium] › e2e/part3-message-actions.spec.ts:102:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft (6.0s)
+(node:33879) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [tablet-width] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts (8.2s)
+  ✘  10 [tablet-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (14.8s)
+(node:33982) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [tablet-width] › e2e/part3-message-actions.spec.ts:102:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft (5.4s)
+(node:34039) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  12 [phone-width] › e2e/chat-position.spec.ts:23:1 › a conversation opens at its newest message and keeps a reader's place
+  -  13 [phone-width] › e2e/chat-position.spec.ts:71:1 › a community's categories show in their saved order from the first paint
+  ✓  14 [phone-width] › e2e/message-collections.spec.ts:26:1 › a busy thread cannot displace the main conversation timeline (4.8s)
+  ✓  15 [phone-width] › e2e/message-collections.spec.ts:47:1 › media and files remain accessible after their messages leave the active history window (10.0s)
+  ✓  16 [phone-width] › e2e/message-collections.spec.ts:85:1 › pins and threads page beyond loaded history, preserve counts, and recover from errors (7.5s)
+  ✓  17 [phone-width] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts (10.1s)
+  ✘  18 [phone-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (15.9s)
+(node:34288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [phone-width] › e2e/part3-message-actions.spec.ts:102:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft (5.2s)
+
+
+  1) [chromium] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 4
+    Received:   391
+
+    Call Log:
+    - Timeout 10000ms exceeded while waiting on the predicate
+
+      91 |   await expect(less).toHaveAttribute("aria-expanded", "true");
+      92 |   await expect(m).toContainText("Line 30:");
+    > 93 |   await expect.poll(async () => Math.abs((await m.boundingBox())!.y - before)).toBeLessThan(4);
+         |                                                                                ^
+      94 |   await page.keyboard.press("Enter");
+      95 |   await expect(more).toBeFocused();
+      96 |   await expect(more).toHaveAttribute("aria-expanded", "false");
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:93:80
+
+    Error Context: test-results/part3-message-actions-long-81085--keeps-the-complete-message-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-long-81085--keeps-the-complete-message-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-long-81085--keeps-the-complete-message-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [tablet-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 4
+    Received:   326
+
+    Call Log:
+    - Timeout 10000ms exceeded while waiting on the predicate
+
+      91 |   await expect(less).toHaveAttribute("aria-expanded", "true");
+      92 |   await expect(m).toContainText("Line 30:");
+    > 93 |   await expect.poll(async () => Math.abs((await m.boundingBox())!.y - before)).toBeLessThan(4);
+         |                                                                                ^
+      94 |   await page.keyboard.press("Enter");
+      95 |   await expect(more).toBeFocused();
+      96 |   await expect(more).toHaveAttribute("aria-expanded", "false");
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:93:80
+
+    Error Context: test-results/part3-message-actions-long-81085--keeps-the-complete-message-tablet-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-long-81085--keeps-the-complete-message-tablet-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-long-81085--keeps-the-complete-message-tablet-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [phone-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 4
+    Received:   434
+
+    Call Log:
+    - Timeout 10000ms exceeded while waiting on the predicate
+
+      91 |   await expect(less).toHaveAttribute("aria-expanded", "true");
+      92 |   await expect(m).toContainText("Line 30:");
+    > 93 |   await expect.poll(async () => Math.abs((await m.boundingBox())!.y - before)).toBeLessThan(4);
+         |                                                                                ^
+      94 |   await page.keyboard.press("Enter");
+      95 |   await expect(more).toBeFocused();
+      96 |   await expect(more).toHaveAttribute("aria-expanded", "false");
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:93:80
+
+    Error Context: test-results/part3-message-actions-long-81085--keeps-the-complete-message-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-long-81085--keeps-the-complete-message-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-long-81085--keeps-the-complete-message-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message 
+    [tablet-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message 
+    [phone-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message 
+  2 skipped
+  14 passed (3.3m)

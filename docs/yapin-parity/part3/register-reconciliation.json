@@ -9,9 +9,9 @@
     "Notes"
   ],
   "part3Implementation": {
-    "IMPLEMENTED_NOT_ACCEPTED": 185,
-    "ACCEPTED": 11,
-    "DEFERRED_DECISION": 16
+    "ACCEPTED": 206,
+    "DEFERRED_DECISION": 4,
+    "IMPLEMENTED_NOT_ACCEPTED": 2
   },
   "unchangedRowsSha256": "7769b91359c57308c4ba0e8f0dd897e498219f625ee555499aeffa410c3d993d"
 }

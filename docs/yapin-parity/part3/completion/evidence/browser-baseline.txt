@@ -1,0 +1,303 @@
+[WebServer] (node:12275) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12291) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12292) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+
+[WebServer] (node:12292) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+
+[WebServer] (node:12391) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12395) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12417) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12453) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12451) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12454) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12477) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12479) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] ../meldiq_web/node_modules/zod/v4/core/util.js (400:0): A comment
+[WebServer] 
+[WebServer] "// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] ../meldiq_web/node_modules/zod/v4/core/regexes.js (74:0): A comment
+[WebServer] 
+[WebServer] "/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+[WebServer]  * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+[WebServer]  * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+[WebServer] 
+[WebServer] "// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */ oidNist(0x07),"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+
+[WebServer] (node:12484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 113 tests using 1 worker
+
+(node:12486) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/113] [chromium] › e2e/chat-open-latest.spec.ts:29:3 › dm: large history opens newest after switching, Back, reload and settings
+[2/113] [chromium] › e2e/chat-open-latest.spec.ts:29:3 › group: large history opens newest after switching, Back, reload and settings
+[3/113] [chromium] › e2e/chat-open-latest.spec.ts:29:3 › channel: large history opens newest after switching, Back, reload and settings
+[4/113] [chromium] › e2e/chat-open-latest.spec.ts:131:1 › slow opens cannot expose cached history or acknowledge it; switching cancels the old viewport
+[5/113] [chromium] › e2e/chat-open-latest.spec.ts:177:1 › signing out and linking again opens large server history at latest
+[6/113] [chromium] › e2e/community-controls.spec.ts:21:1 › channel bell, Basic permissions and a three-step event
+[7/113] [chromium] › e2e/community-first.spec.ts:12:1 › daily navigation is in the rail and Saved stays in the profile menu
+[8/113] [chromium] › e2e/community-first.spec.ts:45:1 › one unread event highlights a channel without a number; two show a count; the title counts DMs
+[9/113] [chromium] › e2e/community-first.spec.ts:77:1 › hovering a reaction shows who reacted
+[10/113] [chromium] › e2e/community-lobby.spec.ts:17:1 › the lobby: first visit, the live editor, templates and its settings page
+[11/113] [chromium] › e2e/community-parity-a-wiring.spec.ts:21:1 › owner: safety and lock, roles with @everyone, theme tint, create channel options
+[12/113] [chromium] › e2e/community-parity-a-wiring.spec.ts:98:1 › member: a locked community and a read-only channel hold the composer back
+[13/113] [chromium] › e2e/community-parity-c.spec.ts:22:1 › webhook posts, Make a post, reaction roles and tickets
+[14/113] [chromium] › e2e/connection-requests.spec.ts:14:1 › a connection request is announced, counted, and accepted from the DM
+[15/113] [chromium] › e2e/cross-device.spec.ts:23:1 › a linked browser and the phone stay in sync through the server, and signing out erases the browser
+[16/113] [chromium] › e2e/cross-device.spec.ts:76:1 › removing the browser from the phone signs it out and erases what it kept
+[17/113] [chromium] › e2e/cross-device.spec.ts:87:1 › a second tab doesn't take the connection unless asked
+[18/113] [chromium] › e2e/discovery-search.spec.ts:10:1 › public communities load, search and recover from no matches with Meldiq artwork
+[19/113] [chromium] › e2e/dms-selection.spec.ts:15:1 › in DMs no community is selected, and a community in the rail opens its channels
+[20/113] [chromium] › e2e/message-collections.spec.ts:26:1 › a busy thread cannot displace the main conversation timeline
+[21/113] [chromium] › e2e/message-collections.spec.ts:47:1 › media and files remain accessible after their messages leave the active history window
+[22/113] [chromium] › e2e/message-collections.spec.ts:85:1 › pins and threads page beyond loaded history, preserve counts, and recover from errors
+[23/113] [chromium] › e2e/message-extras.spec.ts:16:1 › forward to two chats with a note, a call card, the viewer's caption and React, and YouTube in Meldiq
+[24/113] [chromium] › e2e/part3-community.spec.ts:7:1 › external event locations and occurrence or series changes are explicit and survive reload
+[25/113] [chromium] › e2e/part3-community.spec.ts:48:1 › event covers save, survive reload, retain the selection after failure and can be removed
+[26/113] [chromium] › e2e/part3-community.spec.ts:82:1 › a role selects a validated community emoji and keeps the draft after a failed save
+[27/113] [chromium] › e2e/part3-community.spec.ts:110:1 › a whole-community report goes to Meldiq operators and retries return the same receipt
+[28/113] [chromium] › e2e/part3-community.spec.ts:128:1 › a voice room's associated text chat does not join audio and keeps text permissions independent
+[29/113] [chromium] › e2e/part3-community.spec.ts:166:1 › the private partner application validates its checklist and retains its draft after a failed submission
+[30/113] [chromium] › e2e/part3-community.spec.ts:198:1 › authorized audit entries expand administrative changes and omit private descriptions
+[31/113] [chromium] › e2e/part3-community.spec.ts:213:1 › forum paging, activity sort and gallery keep their scope through retries and show an authorized post image
+[32/113] [chromium] › e2e/part3-community.spec.ts:274:1 › forum tag requirements persist and ordinary authors cannot select moderator-only tags
+[33/113] [chromium] › e2e/part3-lobby.spec.ts:6:1 › lobby phone and desktop orders save independently through keyboard controls and can be reset or linked
+[34/113] [chromium] › e2e/part3-members.spec.ts:6:1 › member pages preserve loaded selections on failure, exclude owners and atomically save only the reviewed role targets
+[35/113] [chromium] › e2e/part3-messaging.spec.ts:6:1 › offline sends and a lost HTTP acknowledgement recover without duplicate messages or lost drafts
+[36/113] [chromium] › e2e/part3-search.spec.ts:9:1 › filtered historical search pages beyond the recent window and retries a failed next page
+[37/113] [chromium] › e2e/part3-search.spec.ts:41:1 › message search distinguishes failure from no matches and retries the same query
+[38/113] [chromium] › e2e/part3-social.spec.ts:7:1 › request notes stay recipient-only, retain drafts after failure and disappear after acceptance
+[39/113] [chromium] › e2e/part3-social.spec.ts:54:1 › three-to-five quick reactions persist on the account and drive the message menu
+[40/113] [chromium] › e2e/part3-translation.spec.ts:7:1 › translation browser contracts show unavailable, failed and successful results while preserving the original
+[41/113] [chromium] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close
+[42/113] [chromium] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages
+[43/113] [chromium] › e2e/research-improvements.spec.ts:30:1 › opening always shows latest; active reading survives pagination, arrivals and late layout changes
+[44/113] [chromium] › e2e/research-improvements.spec.ts:105:1 › a distant search result stays separate from recent history and can return to latest
+[45/113] [chromium] › e2e/research-improvements.spec.ts:126:1 › settings search opens canonical pages, shows scope and handles no matches
+[46/113] [chromium] › e2e/research-improvements.spec.ts:149:1 › the expression picker finds joined-community emoji and previews uploads without losing animation
+[47/113] [chromium] › e2e/research-improvements.spec.ts:186:1 › opening unread history starts at latest and acknowledges only the visible fresh window
+[48/113] [chromium] › e2e/server-history.spec.ts:14:1 › chats come back from the server after signing out and in again
+(node:14584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[49/113] [tablet-width] › e2e/part3-community.spec.ts:7:1 › external event locations and occurrence or series changes are explicit and survive reload
+[50/113] [tablet-width] › e2e/part3-community.spec.ts:48:1 › event covers save, survive reload, retain the selection after failure and can be removed
+[51/113] [tablet-width] › e2e/part3-community.spec.ts:82:1 › a role selects a validated community emoji and keeps the draft after a failed save
+[52/113] [tablet-width] › e2e/part3-community.spec.ts:110:1 › a whole-community report goes to Meldiq operators and retries return the same receipt
+[53/113] [tablet-width] › e2e/part3-community.spec.ts:128:1 › a voice room's associated text chat does not join audio and keeps text permissions independent
+[54/113] [tablet-width] › e2e/part3-community.spec.ts:166:1 › the private partner application validates its checklist and retains its draft after a failed submission
+[55/113] [tablet-width] › e2e/part3-community.spec.ts:198:1 › authorized audit entries expand administrative changes and omit private descriptions
+[56/113] [tablet-width] › e2e/part3-community.spec.ts:213:1 › forum paging, activity sort and gallery keep their scope through retries and show an authorized post image
+[57/113] [tablet-width] › e2e/part3-community.spec.ts:274:1 › forum tag requirements persist and ordinary authors cannot select moderator-only tags
+  1) [tablet-width] › e2e/part3-community.spec.ts:274:1 › forum tag requirements persist and ordinary authors cannot select moderator-only tags 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'More for tag-forum', exact: true })
+        - locator resolved to <button class="row-more" aria-haspopup="menu" aria-label="More for tag-forum">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not stable
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <nav class="rail can-scroll-end" aria-label="Home, communities, create and discover">…</nav> intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        164 × waiting for element to be visible, enabled and stable
+            - element is visible, enabled and stable
+            - scrolling into view if needed
+            - done scrolling
+            - <nav class="rail can-scroll-end" aria-label="Home, communities, create and discover">…</nav> intercepts pointer events
+          - retrying click action
+            - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+
+
+      285 |   const back = page.getByRole("button", { name: "Back to conversations", exact: true });
+      286 |   if (await back.isVisible()) await back.click();
+    > 287 |   await page.getByRole("button", { name: "More for tag-forum", exact: true }).click();
+          |                                                                               ^
+      288 |   await page.getByRole("menuitem", { name: /Edit channel/ }).click();
+      289 |   const edit = page.getByRole("dialog", { name: "Edit #tag-forum", exact: true });
+      290 |   await edit.getByRole("checkbox", { name: "Require a tag for new posts", exact: true }).check();
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-community.spec.ts:287:79
+
+    Error Context: test-results/part3-community-forum-tag--6e837--select-moderator-only-tags-tablet-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-community-forum-tag--6e837--select-moderator-only-tags-tablet-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-community-forum-tag--6e837--select-moderator-only-tags-tablet-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:15092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[58/113] [tablet-width] › e2e/part3-lobby.spec.ts:6:1 › lobby phone and desktop orders save independently through keyboard controls and can be reset or linked
+[59/113] [tablet-width] › e2e/part3-members.spec.ts:6:1 › member pages preserve loaded selections on failure, exclude owners and atomically save only the reviewed role targets
+[60/113] [tablet-width] › e2e/part3-messaging.spec.ts:6:1 › offline sends and a lost HTTP acknowledgement recover without duplicate messages or lost drafts
+[61/113] [tablet-width] › e2e/part3-search.spec.ts:9:1 › filtered historical search pages beyond the recent window and retries a failed next page
+[62/113] [tablet-width] › e2e/part3-search.spec.ts:41:1 › message search distinguishes failure from no matches and retries the same query
+[63/113] [tablet-width] › e2e/part3-social.spec.ts:7:1 › request notes stay recipient-only, retain drafts after failure and disappear after acceptance
+[64/113] [tablet-width] › e2e/part3-social.spec.ts:54:1 › three-to-five quick reactions persist on the account and drive the message menu
+[65/113] [tablet-width] › e2e/part3-translation.spec.ts:7:1 › translation browser contracts show unavailable, failed and successful results while preserving the original
+(node:15309) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[66/113] [phone-width] › e2e/chat-open-latest.spec.ts:29:3 › dm: large history opens newest after switching, Back, reload and settings
+[67/113] [phone-width] › e2e/chat-open-latest.spec.ts:29:3 › group: large history opens newest after switching, Back, reload and settings
+[68/113] [phone-width] › e2e/chat-open-latest.spec.ts:29:3 › channel: large history opens newest after switching, Back, reload and settings
+[69/113] [phone-width] › e2e/chat-open-latest.spec.ts:131:1 › slow opens cannot expose cached history or acknowledge it; switching cancels the old viewport
+[70/113] [phone-width] › e2e/chat-open-latest.spec.ts:177:1 › signing out and linking again opens large server history at latest
+[71/113] [phone-width] › e2e/community-controls.spec.ts:21:1 › channel bell, Basic permissions and a three-step event
+[72/113] [phone-width] › e2e/community-first.spec.ts:12:1 › daily navigation is in the rail and Saved stays in the profile menu
+[73/113] [phone-width] › e2e/community-first.spec.ts:45:1 › one unread event highlights a channel without a number; two show a count; the title counts DMs
+[74/113] [phone-width] › e2e/community-first.spec.ts:77:1 › hovering a reaction shows who reacted
+[75/113] [phone-width] › e2e/community-lobby.spec.ts:17:1 › the lobby: first visit, the live editor, templates and its settings page
+[76/113] [phone-width] › e2e/community-parity-a-wiring.spec.ts:21:1 › owner: safety and lock, roles with @everyone, theme tint, create channel options
+[77/113] [phone-width] › e2e/community-parity-a-wiring.spec.ts:98:1 › member: a locked community and a read-only channel hold the composer back
+[78/113] [phone-width] › e2e/community-parity-c.spec.ts:22:1 › webhook posts, Make a post, reaction roles and tickets
+[79/113] [phone-width] › e2e/connection-requests.spec.ts:14:1 › a connection request is announced, counted, and accepted from the DM
+[80/113] [phone-width] › e2e/cross-device.spec.ts:23:1 › a linked browser and the phone stay in sync through the server, and signing out erases the browser
+[81/113] [phone-width] › e2e/cross-device.spec.ts:76:1 › removing the browser from the phone signs it out and erases what it kept
+[82/113] [phone-width] › e2e/cross-device.spec.ts:87:1 › a second tab doesn't take the connection unless asked
+[83/113] [phone-width] › e2e/discovery-search.spec.ts:10:1 › public communities load, search and recover from no matches with Meldiq artwork
+[84/113] [phone-width] › e2e/dms-selection.spec.ts:15:1 › in DMs no community is selected, and a community in the rail opens its channels
+[85/113] [phone-width] › e2e/message-collections.spec.ts:26:1 › a busy thread cannot displace the main conversation timeline
+[86/113] [phone-width] › e2e/message-collections.spec.ts:47:1 › media and files remain accessible after their messages leave the active history window
+[87/113] [phone-width] › e2e/message-collections.spec.ts:85:1 › pins and threads page beyond loaded history, preserve counts, and recover from errors
+[88/113] [phone-width] › e2e/message-extras.spec.ts:16:1 › forward to two chats with a note, a call card, the viewer's caption and React, and YouTube in Meldiq
+[89/113] [phone-width] › e2e/part3-community.spec.ts:7:1 › external event locations and occurrence or series changes are explicit and survive reload
+[90/113] [phone-width] › e2e/part3-community.spec.ts:48:1 › event covers save, survive reload, retain the selection after failure and can be removed
+[91/113] [phone-width] › e2e/part3-community.spec.ts:82:1 › a role selects a validated community emoji and keeps the draft after a failed save
+[92/113] [phone-width] › e2e/part3-community.spec.ts:110:1 › a whole-community report goes to Meldiq operators and retries return the same receipt
+[93/113] [phone-width] › e2e/part3-community.spec.ts:128:1 › a voice room's associated text chat does not join audio and keeps text permissions independent
+[94/113] [phone-width] › e2e/part3-community.spec.ts:166:1 › the private partner application validates its checklist and retains its draft after a failed submission
+[95/113] [phone-width] › e2e/part3-community.spec.ts:198:1 › authorized audit entries expand administrative changes and omit private descriptions
+[96/113] [phone-width] › e2e/part3-community.spec.ts:213:1 › forum paging, activity sort and gallery keep their scope through retries and show an authorized post image
+[97/113] [phone-width] › e2e/part3-community.spec.ts:274:1 › forum tag requirements persist and ordinary authors cannot select moderator-only tags
+[98/113] [phone-width] › e2e/part3-lobby.spec.ts:6:1 › lobby phone and desktop orders save independently through keyboard controls and can be reset or linked
+[99/113] [phone-width] › e2e/part3-members.spec.ts:6:1 › member pages preserve loaded selections on failure, exclude owners and atomically save only the reviewed role targets
+[100/113] [phone-width] › e2e/part3-messaging.spec.ts:6:1 › offline sends and a lost HTTP acknowledgement recover without duplicate messages or lost drafts
+[101/113] [phone-width] › e2e/part3-search.spec.ts:9:1 › filtered historical search pages beyond the recent window and retries a failed next page
+[102/113] [phone-width] › e2e/part3-search.spec.ts:41:1 › message search distinguishes failure from no matches and retries the same query
+[103/113] [phone-width] › e2e/part3-social.spec.ts:7:1 › request notes stay recipient-only, retain drafts after failure and disappear after acceptance
+[104/113] [phone-width] › e2e/part3-social.spec.ts:54:1 › three-to-five quick reactions persist on the account and drive the message menu
+[105/113] [phone-width] › e2e/part3-translation.spec.ts:7:1 › translation browser contracts show unavailable, failed and successful results while preserving the original
+[106/113] [phone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close
+[107/113] [phone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages
+[108/113] [phone-width] › e2e/research-improvements.spec.ts:30:1 › opening always shows latest; active reading survives pagination, arrivals and late layout changes
+[109/113] [phone-width] › e2e/research-improvements.spec.ts:105:1 › a distant search result stays separate from recent history and can return to latest
+[110/113] [phone-width] › e2e/research-improvements.spec.ts:126:1 › settings search opens canonical pages, shows scope and handles no matches
+[111/113] [phone-width] › e2e/research-improvements.spec.ts:149:1 › the expression picker finds joined-community emoji and previews uploads without losing animation
+[112/113] [phone-width] › e2e/research-improvements.spec.ts:186:1 › opening unread history starts at latest and acknowledges only the visible fresh window
+[113/113] [phone-width] › e2e/server-history.spec.ts:14:1 › chats come back from the server after signing out and in again
+  1 failed
+    [tablet-width] › e2e/part3-community.spec.ts:274:1 › forum tag requirements persist and ordinary authors cannot select moderator-only tags 
+  13 skipped
+  99 passed (13.6m)

@@ -1,0 +1,364 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_web_part3_ecosystem
+
+(node:36731) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/contract-fixtures.test.ts (4 tests) 1536ms
+     ✓ test/contract-fixtures is the server checkout's current copy  490ms
+     ✓ decodes every answer the web reads, frame and error, with the strict findings only where already known  1030ms
+(node:36746) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/i18n.test.ts (10 tests) 2760ms
+     ✓ configures all 28 distinct variants and all feature namespaces  539ms
+     ✓ contains every source key in all 28 catalogs  462ms
+(node:36769) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/snapshot-actions.test.ts (9 tests) 615ms
+     ✓ a reaction made in the gap waits, then is applied to the server's copy once its page arrives  353ms
+(node:36770) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/keyBackup.test.ts (4 tests) 355ms
+ ✓ test/i18n-public.test.ts (2 tests) 149ms
+(node:36773) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/transfers.test.ts (7 tests) 495ms
+ ✓ test/i18n-preferences.test.ts (6 tests) 283ms
+(node:36777) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/large-files.test.ts (5 tests) 237ms
+(node:36779) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/history-navigation.test.ts (15 tests) 137ms
+ ✓ test/legacy-curves.test.ts (6 tests) 76ms
+ ✓ test/supabase-events.test.ts (4 tests) 207ms
+(node:36782) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/supabase-preview.test.ts (8 tests) 71ms
+ ✓ test/prefs.test.ts (8 tests) 160ms
+(node:36785) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/download-reliability.test.ts (4 tests) 52ms
+(node:36786) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/call-controls.test.ts (13 tests) 56ms
+(node:36788) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/saved-accounts.test.ts (8 tests) 136ms
+(node:36805) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/app-reload.test.ts (18 tests) 92ms
+(node:36809) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/i18n-quality.test.ts (2 tests) 15270ms
+     ✓ detects invalid plural grammar and changed placeholder types  3316ms
+     ✓ reports missing files, invalid JSON, unexpected keys, empty text, placeholders, untranslated values and unlabeled icon buttons  11951ms
+ ✓ test/snapshot.test.ts (14 tests) 79ms
+(node:36811) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/translate.test.ts (5 tests) 72ms
+ ✓ test/crypto.test.ts (20 tests) 40ms
+(node:36813) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36815) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/upload-reliability.test.ts (4 tests) 63ms
+ ✓ test/mark-read-boundary.test.ts (1 test) 61ms
+(node:36817) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/json-budget.test.ts (4 tests) 59ms
+ ✓ test/message-chime.test.ts (3 tests) 33ms
+(node:36820) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36821) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/posting-tools.test.ts (33 tests) 36ms
+(node:36824) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/community-parity-a-gates.test.ts (26 tests) 25ms
+ ✓ test/supabase-migration.test.ts (10 tests) 48ms
+(node:36826) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36827) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/call-setup.test.ts (2 tests) 43ms
+ ✓ test/avatar-presence.test.tsx (3 tests) 25ms
+(node:36828) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/supabase-preview-config.test.ts (6 tests) 29ms
+ ✓ test/history-backup.test.ts (10 tests) 33ms
+(node:36830) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36831) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/push-rules.test.ts (5 tests) 31ms
+ ✓ test/supabase-client.test.ts (5 tests) 26ms
+(node:36832) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36833) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/permissions-basic.test.ts (4 tests) 31ms
+ ✓ test/lobby.test.ts (20 tests) 32ms
+(node:36834) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36835) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/ui-logic.test.ts (9 tests) 22ms
+ ✓ test/social-auth.test.ts (3 tests) 38ms
+ ✓ test/config.test.ts (5 tests) 29ms
+(node:36837) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36838) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/message-collections.test.ts (8 tests) 39ms
+ ✓ test/rules-channel.test.ts (9 tests) 28ms
+(node:36839) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36840) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/discovery.test.ts (21 tests) 17ms
+ ✓ test/plus-promotion.test.tsx (1 test) 27ms
+(node:36841) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/conversation-locals.test.ts (5 tests) 32ms
+(node:36842) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/rules.test.ts (31 tests) 26ms
+(node:36843) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/mojo.test.ts (5 tests) 28ms
+ ✓ test/media-cache.test.ts (3 tests) 26ms
+(node:36846) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36847) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/identity-marks.test.tsx (3 tests) 27ms
+ ✓ test/wake-rules.test.ts (11 tests) 24ms
+(node:36850) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/keystorage.test.ts (3 tests | 1 skipped) 21ms
+ ✓ test/video-quality.test.ts (3 tests) 18ms
+(node:36852) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36853) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/social-rules.test.ts (5 tests) 17ms
+(node:36854) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/settings-parity.test.ts (14 tests) 22ms
+ ✓ test/bot-labels.test.tsx (3 tests) 21ms
+(node:36855) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/call-rules.test.ts (23 tests) 21ms
+(node:36856) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/i18n-rich.test.tsx (5 tests) 26ms
+(node:36857) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36858) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/official-bots-part2.test.ts (10 tests) 26ms
+ ✓ test/official-bots.test.ts (21 tests) 24ms
+(node:36861) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36860) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/revoked-sender.test.ts (4 tests) 24ms
+ ✓ test/community-parity-a.test.ts (12 tests) 20ms
+(node:36862) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/meeting-rules.test.ts (4 tests) 25ms
+(node:36863) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/guide-rules.test.ts (4 tests) 21ms
+(node:36864) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/prepare-expression.test.ts (3 tests) 17ms
+(node:36865) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36866) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/passkeys.test.ts (8 tests) 20ms
+ ✓ test/messaging-extras.test.ts (10 tests) 20ms
+(node:36868) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36867) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/voice-playback.test.ts (9 tests) 19ms
+ ✓ test/receiver-unknown.test.ts (3 tests) 22ms
+(node:36869) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/settings-search.test.ts (2 tests) 16ms
+(node:36870) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/invite-codes.test.ts (5 tests) 17ms
+(node:36871) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/workspace-rules.test.ts (7 tests) 18ms
+(node:36872) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/share-quality.test.ts (12 tests) 19ms
+(node:36873) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/member-list-rules.test.ts (9 tests) 17ms
+(node:36874) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/link-rules.test.ts (5 tests) 18ms
+ ✓ test/recovery.test.ts (6 tests) 15ms
+(node:36876) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/voice-room.test.ts (5 tests) 16ms
+(node:36877) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/typing-indicator.test.ts (3 tests) 16ms
+(node:36878) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/emoji.test.ts (5 tests) 16ms
+(node:36879) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/screen-share-support.test.ts (3 tests) 16ms
+(node:36880) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/delete-account-rules.test.ts (2 tests) 16ms
+(node:36881) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/tab-badge.test.ts (4 tests) 15ms
+(node:36882) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/meldiq2.test.ts (10 tests) 15ms
+(node:36883) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/reading-position.test.ts (3 tests) 12ms
+ ✓ test/settings-parity-b.test.ts (21 tests) 15ms
+ ✓ test/call-keys.test.ts (12 tests) 10ms
+(node:36887) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36886) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/foundation.test.ts (4 tests) 8ms
+ ✓ test/filtered-message-search.test.ts (1 test) 11ms
+ ✓ test/expression-rules.test.ts (7 tests) 11ms
+(node:36889) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/media-links.test.ts (4 tests) 7ms
+ ✓ test/reminder-rules.test.ts (6 tests) 10ms
+ ✓ test/wake-dedup.test.ts (2 tests) 9ms
+(node:36892) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/realtime-frames.test.ts (38 tests) 9ms
+(node:36893) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/stage1-rules.test.ts (9 tests) 9ms
+(node:36894) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/nav-prefs.test.ts (15 tests) 8ms
+ ✓ test/attachment-policy.test.ts (3 tests) 7ms
+(node:36896) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/poll-results.test.ts (5 tests) 7ms
+ ✓ test/community-rules.test.ts (24 tests) 7ms
+ ✓ test/retired-features.test.ts (2 tests) 6ms
+(node:36898) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/history-read-receipts.test.ts (2 tests) 13ms
+(node:36902) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/confirmed-message-controls.test.ts (1 test) 7ms
+(node:36904) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/zod-upgrade.test.ts (3 tests) 7ms
+(node:36905) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/paypal-checkout-draft.test.ts (4 tests) 7ms
+ ✓ test/plus-support.test.ts (5 tests) 10ms
+(node:36907) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36908) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/startup-refresh.test.ts (1 test) 7ms
+ ✓ test/multiple-reactions.test.ts (1 test) 13ms
+(node:36909) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/search-query.test.ts (4 tests) 5ms
+ ✓ test/automatic-photos.test.ts (7 tests) 5ms
+ ✓ test/light-dark-fallback.test.ts (2 tests) 5ms
+(node:36912) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/stage1-settings.test.ts (6 tests) 5ms
+(node:36913) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/profile-collectibles.test.ts (4 tests) 4ms
+ ✓ test/legacy-profile-compatibility.test.ts (1 test) 4ms
+(node:36916) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/polls-stickers.test.ts (8 tests) 4ms
+ ✓ test/gallery.test.ts (5 tests) 4ms
+(node:36917) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/community-accent.test.ts (5 tests) 4ms
+ ✓ test/discord-import.test.ts (5 tests) 4ms
+ ✓ test/expression-cache.test.ts (2 tests) 4ms
+ ✓ test/bulk-save.test.ts (5 tests) 4ms
+ ✓ test/forum-rules.test.ts (6 tests) 4ms
+ ✓ test/viewport.test.ts (3 tests) 4ms
+(node:36923) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/threads.test.ts (5 tests) 4ms
+ ✓ test/polls.test.ts (2 tests) 3ms
+ ✓ test/conversation-security.test.ts (3 tests) 3ms
+ ✓ test/message-links.test.ts (4 tests) 3ms
+(node:36927) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/status.test.ts (6 tests) 3ms
+(node:36928) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/legacy-import.test.ts (4 tests) 4ms
+(node:36929) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/rail-folders.test.ts (5 tests) 3ms
+ ✓ test/community-landing.test.ts (4 tests) 3ms
+(node:36931) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/unread-markers.test.ts (8 tests) 3ms
+ ✓ test/forward-origin.test.ts (2 tests) 3ms
+ ✓ test/gestures.test.ts (5 tests) 3ms
+ ✓ test/reactors.test.ts (5 tests) 3ms
+(node:36935) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36936) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/universal-search.test.ts (3 tests) 34ms
+ ✓ test/profile-cards.test.ts (3 tests) 3ms
+ ✓ test/long-press.test.ts (6 tests) 3ms
+(node:36938) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/report-rules.test.ts (4 tests) 3ms
+ ✓ test/navigation-guard.test.ts (2 tests) 3ms
+ ✓ test/emoji-completion.test.ts (1 test) 2ms
+(node:36941) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/photo-quality.test.ts (3 tests) 3ms
+ ✓ test/mini-call-position.test.ts (4 tests) 2ms
+(node:36943) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/youtube-player.test.ts (2 tests) 3ms
+(node:36944) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/frame-reducers.test.ts (3 tests) 2ms
+(node:36945) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/pending-invite.test.ts (3 tests) 3ms
+ ✓ test/connection-requests.test.ts (3 tests) 2ms
+ ✓ test/details-rules.test.ts (3 tests) 2ms
+ ✓ test/lookup.test.ts (2 tests) 2ms
+ ✓ test/updates.test.ts (3 tests) 3ms
+(node:36950) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/call-latency.test.ts (3 tests) 2ms
+ ✓ test/inspect-guard.test.ts (3 tests) 2ms
+
+ Test Files  147 passed (147)
+      Tests  983 passed | 1 skipped (984)
+   Start at  21:27:16
+   Duration  30.75s (transform 436.52s, setup 2.60s, import 14.05s, tests 24.81s, environment 9ms)
+
+JSON report written to /tmp/meldiq-part3-completion/web-unit-final-source-results.json

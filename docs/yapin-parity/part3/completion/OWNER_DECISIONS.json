@@ -1,0 +1,86 @@
+{
+  "date": "2026-11-04",
+  "source": "User explicitly selected all three recommended choice groups in this conversation",
+  "decisions": [
+    {
+      "id": "YAP-SOCIAL-007",
+      "decision": "Enable request notes",
+      "limits": "300 characters, recipient only, deleted when request ends"
+    },
+    {
+      "id": "YAP-SOCIAL-018",
+      "decision": "Keep deferred",
+      "limits": "Comments/likes require a separate privacy/moderation design"
+    },
+    {
+      "id": "YAP-MSG-009",
+      "decision": "Enable synced quick reactions",
+      "limits": "3\u20135 choices using existing account preferences"
+    },
+    {
+      "id": "YAP-CHANNEL-015",
+      "decision": "Enable optional forum gallery",
+      "limits": "Use authorized existing image attachments and existing sort/pagination"
+    },
+    {
+      "id": "YAP-CHANNEL-017",
+      "decision": "Enable associated voice text chat",
+      "limits": "Inherit channel access; never automatically join voice"
+    },
+    {
+      "id": "YAP-CHANNEL-018",
+      "decision": "Keep deferred",
+      "limits": "Future thread settings remain unverified"
+    },
+    {
+      "id": "YAP-ROLE-008",
+      "decision": "Enable role icons",
+      "limits": "Use validated community asset system"
+    },
+    {
+      "id": "YAP-COMM-028",
+      "decision": "Enable private partner application",
+      "limits": "Checklist and manual operator review; no automatic badge"
+    },
+    {
+      "id": "YAP-MOD-013",
+      "decision": "Enable whole-community reports",
+      "limits": "Private operator routing and duplicate protection"
+    },
+    {
+      "id": "YAP-MOD-015",
+      "decision": "Enable audit before/after",
+      "limits": "Redact message content, credentials and private report evidence"
+    },
+    {
+      "id": "YAP-MOD-018",
+      "decision": "Keep deferred",
+      "limits": "Staff recruitment eligibility/reviewers undefined"
+    },
+    {
+      "id": "YAP-NOTIFY-013",
+      "decision": "Keep deferred",
+      "limits": "Preserve existing Embers/achievement rules"
+    },
+    {
+      "id": "YAP-EVENT-007",
+      "decision": "Enable optional event cover",
+      "limits": "One validated image through existing media system"
+    },
+    {
+      "id": "YAP-PERM-006",
+      "decision": "Add delegated event management",
+      "limits": "Preserve organizer and owner rights"
+    },
+    {
+      "id": "YAP-PERM-031",
+      "decision": "Retain disconnect-only",
+      "limits": "No cross-channel move until destination/consent is approved"
+    },
+    {
+      "id": "YAP-PERM-032",
+      "decision": "Retain current owner/admin model",
+      "limits": "No blanket permission bit; preserve constrained delegation"
+    }
+  ]
+}

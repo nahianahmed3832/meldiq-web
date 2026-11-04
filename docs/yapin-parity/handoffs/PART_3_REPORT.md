@@ -1,85 +1,84 @@
-# Part 3 report — messaging, social and communities
+# Part 3 completion report — messaging, social and communities
 
-4 November 2026, Asia/Shanghai. Work is isolated on `codex/meldiq-part3-ecosystem` in `/Volumes/code_files/meldiq_web_part3_ecosystem` and `/Volumes/code_files/meldiq_part3_api`. All **212 Part 3 rows** have a disposition. This is a local implementation/verification handoff, not a production release or a claim of 212 completed features. Exact counts and final results are in [validation](../part3/validation.json), with every remaining criterion in [feature dispositions](../part3/feature-dispositions.json).
+4 November 2026, Asia/Shanghai. **183 of the original 185 pending rows now pass the recorded local Web/API acceptance scope.** The other two have explicit external prerequisites below. All 16 owner choices are resolved: 12 enabled/retained outcomes are accepted locally and four features remain deferred as approved. Together with the previous 11 acceptances, the 212 owned rows are **206 ACCEPTED, 2 IMPLEMENTED_NOT_ACCEPTED and 4 approved DEFERRED_DECISION**. No production deployment or migration occurred.
 
-Read [baseline](../part3/baseline.json) and [frozen domain contracts](../part3/CONTRACTS.md) before integrating. Web starts at Part 2 `e62fb19`; API starts at `598f7c1d`. A new automated public config request returned HTTP 403, so exact current runtime identity was not freshly established. Preserve the last verified Part 1 release and reconcile its overlay again for Part 4.
+The [master register](../FEATURE_REGISTER.csv), [row evidence](../part3/completion/ROW_EVIDENCE.json), [dispositions](../part3/feature-dispositions.json) and [validation manifest](../part3/validation.json) reconcile. Original competitor verification/existing-capability columns and the other 356 rows are unchanged. Acceptance means the identified controlled local cases; it does not certify every native/provider/production condition.
 
 ## 1. Features implemented
 
-- `during:YYYY-MM-DD` search syntax uses the viewer's local calendar day, intersecting other date bounds. Shared syntax help includes it. This is a filter over retrieved/loaded candidates, not an exhaustive new search service.
-- Search has distinct loading, failure, retry and no-match states, with query retention and stale-result suppression, using Part 2's existing `StatePanel`.
-- Retry-safe recipient acceptance transitions in all three relationship adapters, with unchanged API response shape and no schema additions.
+Implemented recipient-only request notes; account-synced quick reactions; protected forum gallery/filtering/paging and required/restricted tags; associated voice-channel text without an audio join; validated role icons; private partner applications and operator review; whole-community reports; redacted administrative before/after changes; event covers and delegated event management. Retained disconnect-only voice movement and constrained owner/admin delegation.
+
+Added missing managed polls/quizzes with server-enforced options, expiry, membership, hidden correct answers until voting closes and anonymous public projections. Added community-thread author close/reopen, delegated-manager lock/unlock and resumable bounded deletion. Added colon emoji completion, normal-message Markdown and long-message expansion using existing catalogs/rendering/components.
 
 ## 2. Features improved
 
-- **Unread race fixed:** a deterministic test previously produced unread/mentions zero and a receipt through a message arriving after the click. Snapshotting the message boundary and queuing the counter change before yielding preserves that later unread/mention and bounds the receipt.
-- **Friend acceptance fixed:** a lost response/repeated accept previously returned 404. A conditional pending-to-accepted transition now returns accepted on retry, keeps the original timestamp, emits one change for concurrent retries and never resurrects a removed request.
-- **Aggregate authorization fixed:** a synthetic suspension previously denied direct history but still returned its text in global search. Global search and unread summaries now apply the same current membership authority.
-- **DST date bounds fixed:** `after:` advances a calendar day rather than a fixed 24 hours, tested against 23- and 25-hour days. `during:` excludes the following midnight.
-- Existing browser regressions now observe the active message-collections endpoint, canonical lobby navigation, unique reaction controls and Part 2 logout labels. Their delivery, pagination, pixel-anchor, revocation and server-history assertions remain.
+Search filters run before native database paging, including edits/deletes, sender/mention/channel/attachment/pin/date constraints and deterministic cursor ties. Member directories filter/page natively with totals, safe loaded-member selection and atomic role changes. Event occurrence versus series edits/cancellation and independent future RSVPs are explicit. Lobby desktop/phone ordering, linking/reset, keyboard controls and template cancellation are explicit.
 
-## 3. Features already present and reused
+Message edits, deletion and pins confirm through the existing API before local mutation; failures preserve original content and the owning draft/confirmation. Repeated attempts retain control IDs; late edit acknowledgements preserve newer edits/deletion. Long-message expansion preserves the reading anchor through focus/layout changes. Friends, lookup/group/global search and Activity distinguish failed requests from empty answers and support retry. Unfollow preferences sync per account, override implicit Activity participation and suppress ordinary thread wake-ups while preserving direct mentions.
 
-Reuse existing DM/group send/edit/delete/reply/reaction/mention/typing/poll/thread pipelines, sealed controls, server acknowledgements, deterministic history cursors, disjoint search windows, separate pins/files/media/thread collections, server history and outbox/snapshot behavior. No duplicate messaging framework was built.
+## 3. Existing features reused
 
-Reuse friends/requests/blocking/privacy/presence, community creation/discovery/invites/templates/branding/onboarding, channels/categories/forums, role hierarchy and effective permissions, moderation/reports/audits, notification inheritance/pause/Activity, Embers/levels/leaderboards, events/meetings and lobby cards/editor/feed. Source presence and related suite success do not automatically accept each UI or native criterion; see the row-level limits.
-
-Meldiq remains the charcoal/lime default. Canonical teal/cream Meldling assets and branded expressions are preserved. Google and Discord login, their official icons and handlers remain unchanged.
+Reused the shared application shell, charcoal/lime Meldiq theme, canonical teal/cream Meldling, Google/Discord identities and login handlers, account/device/session model, history windows/cursors, outbox, message-control pipeline, role resolver, moderation/report/audit stores, media validation, community/lobby/event services, notifications and Embers rules. No duplicate social or messaging backend was created. Ordinary top-level sends gain no additional application network hop.
 
 ## 4. Database changes
 
-None to application schemas or production data. Tests use an owned PostgreSQL 17 cluster on loopback, with the existing bootstrap and all existing migrations. Each API harness creates and drops its own database. Legacy per-device delivery is explicitly selected, matching the observed runtime; this is not a hosted Supabase Auth/Realtime certification.
-
-Relationship acceptance is a conditional update, not an insert/upsert. Test fixtures use existing adapter APIs for sealed reports, retention timestamps and deletion checks, select the actual backend, and seed valid invite communities/unique joiner-community pairs. No assertion was removed to obtain a pass. MongoDB-specific persistence inspection remains separately labelled and runs in the legacy adapter checks.
+Ten additive local SQLite migrations (095–104) and matching PostgreSQL migrations (016–025) add request notes, event covers, role icons, community report targets, partner applications, audit changes, forum-tag policy, event-occurrence overrides, managed polls/ballots and thread lifecycle/preferences. PostgreSQL poll/thread tables have RLS and direct-client grants revoked; API projections apply current membership/history/authority checks. Lobby ordering remains validated existing JSON settings. No production schema was changed.
 
 ## 5. API changes
 
-No endpoint, wire schema, auth method or catalog change. Internal `RelationshipStore.acceptConnection` is implemented for PostgreSQL, SQLite and MongoDB. The existing accept route is idempotent for already accepted pairs. Aggregate server-message routes now filter by `Authz.isMember`, closing suspension disclosure. Source and patch paths are in [validation](../part3/validation.json).
+New poll state/vote/close, thread state/change/delete/follow/preferences, partner submission/operator review and related existing domain extensions are recorded in [contracts](../part3/CONTRACTS.md). OpenAPI/realtime schemas and Web fixtures were regenerated; Web pins API `9b0b6e5493695a3bec1d620b0d7fac6f320238c0`. Legacy polls stay readable; older apps receive managed-poll text fallbacks. New native interactive controls remain an integration task.
 
 ## 6. UI changes
 
-Only the conversation search asynchronous states and literal date-syntax help changed. Shared shell/router/settings/dialogs, brand assets and authentication were reused. The retry button keeps the typed query; a failed fetch no longer reports no matches. Existing local filter-only limitations are documented rather than hidden.
+All controls use the shared panels, buttons, dialogs, confirmation, focus behavior and original assets. New flows include retryable notes/preferences, event cover/occurrence/location choices, forum controls, member selection previews, role assets, private partner/report workflows, audit details, poll/quiz creation/results and thread management. Keyboard/touch/desktop and tablet/phone CSS widths are covered by the listed browser cases. Physical safe areas, keyboards, notification receipt and capture are separate checks.
 
-## 7. Permission changes
+## 7. Permission and privacy changes
 
-Canonical permission semantics are unchanged. A current membership check is now also applied by aggregate search/summary. Existing tests exercise outsider/member/guest/moderator/owner roles, explicit denies, category/channel/member overrides, self-escalation, hierarchy, private channels, text-only/no-GIF/read-only policy, onboarding role safety, timeouts, moderation and privacy projections.
+`events.manage` delegates event management without bypassing channel visibility. `partners.review` is a constrained sensitive operator permission, super-admin by default; self-review is denied and approval grants no badge/role/entitlement. Thread authors manage their own community threads; canonical thread managers moderate them. Deletion stores explicit parent intent, checks current authority per target and uses scoped internal grants. Text parents remain; forum parents are deleted last.
 
-29 direct permission leads retain their Meldiq mapping. Separate `manage_events`, cross-channel movement and blanket administrator remain explicit decisions; no unsafe grant was added. Final media/call/bot/native enforcement remains Part 4.
+Request notes are at most 300 Unicode code points, recipient-only and removed when requests end. Audit changes allow administrative metadata and redact private content/credentials/evidence. Community reports go privately to Meldiq operators with duplicate protection and no automatic sanction. Anonymous poll projections omit voter identity; the server retains account-linked ballots to enforce votes. Current messages/polls are server-readable, and global message deletion follows existing journal/projection retention; private poll keys/ballots are erased. No server-resistant E2EE claim is made.
 
-## 8. Files modified
+## 8. Files and source
 
-[File inventory](../part3/files.json) records every Web/API changed file. Application edits are limited to Web `src/sync/engine.ts`, `src/sync/searchQuery.ts`, `src/ui/chat/SearchPanel.tsx`, `src/i18n/syntax.ts`; API relationship routes/adapters and server-message aggregate routes. Remaining changes are regression tests, fixture portability and this handoff/register package. The original dirty application checkout was preserved.
+| Repository | Immutable source | Workspace |
+| --- | --- | --- |
+| Web | `fe6f294dc7ba2963df8f7ca8ca421e17c5118ab5` | `/Volumes/code_files/meldiq_web_part3_ecosystem` |
+| API | `9b0b6e5493695a3bec1d620b0d7fac6f320238c0` | `/Volumes/code_files/meldiq_part3_api` |
+| Operator console | `8a10c4bae41fcac023f849a582fdd95f97ab8457` | `/Volumes/code_files/meldiq_part3_admin` |
+
+All use `codex/meldiq-part3-ecosystem`. [File inventory](../part3/files.json) records exact paths. [Source and patch receipts](../part3/completion/SOURCES.json) include bases, heads and SHA-256 hashes for companion patches 0017–0019. Apply only to their recorded compatible bases. The original dirty application checkout was preserved; shared documentation is synchronized separately.
 
 ## 9. Tests executed
 
-[Validation manifest](../part3/validation.json) records commands, environments and log files. Coverage includes full non-live Web unit tests, lint/typecheck/format/i18n, PostgreSQL domain/API/authorization tests, SQLite/MongoDB adapter regressions and static-build browser workflows at desktop and phone widths. Browser media fixtures are synthetic; no real users, sanctions, provider consent, purchases or physical devices were involved.
+Native PostgreSQL domain/API/authorization, SQLite/Mongo adapter regressions, Web unit/protocol/permission tests, built Chromium workflows, operator-console tests/browser workflows, typecheck, lint, formatting, 28-locale structural checks, normal production build with test-linking disabled, artifact-tool register reconciliation and package validation. Full commands, suites and result files are in the [validation manifest](../part3/validation.json).
 
-## 10. Test results
+## 10. Results
 
-Final results: **Web 975 passed / 1 skipped (144 files); PostgreSQL 467 passed / 1 Mongo-only skip (52 files); 51 unique built-browser cases passed / 13 expected skips (64 cases)**. SQLite/explicit MongoDB regressions passed 34, dedicated MongoDB relationships passed 17, and legacy activity passed 14. Lint, API typecheck, formatting, i18n and the normal test-linking-disabled build passed. Retries are not summed as distinct tests. Initial failures and their corrections are retained in the QA record: three state/authorization defects were reproduced before fixes, search error conflation and DST arithmetic were corrected, stale endpoint/selectors were updated and PostgreSQL fixtures were made valid without weakening assertions. Expected skips are explicitly explained.
+| Check | Recorded result |
+| --- | --- |
+| Web unit | 147 files; 983 passed, 1 existing skip |
+| Native PostgreSQL | 96 files; 686 passed, 1 Mongo-only skip, deduplicated broad run plus corrected settings-suite rerun |
+| Current poll/thread/settings legacy + architecture | 4 files; 31 passed |
+| Built browser | 134 unique passes, 15 existing skips across 149 file/title/project cases; no unresolved failure |
+| Operator console | 7 files; 33 unit passes; 2 desktop/phone-width workflow passes |
+| Typecheck/lint/format/build | Passed; normal build uses `NEXT_PUBLIC_MELDIQ_TEST_LINKING=0` |
+| i18n | 6,292 keys in 28 locales; zero structural/hardcoded-source errors; native-speaker review pending |
+
+Overlapping reruns are not added to unique totals. Earlier failures are retained and explained in [QA](../part3/QA_REPORT.md), including the actual deletion-cursor and expansion-anchor bugs. Browser notifications use controlled service-worker/transport fixtures and do not establish physical receipt. Existing skips are listed per case in the evidence.
 
 ## 11. Known bugs and limits
 
-- Text search is capped at 100 server candidates without pagination; sender/date/attachment filters operate locally and filter-only queries do not search complete history. Combined mention/channel/pinned filters are not a complete server search implementation.
-- Read receipts retain the existing numeric timestamp granularity; history pagination separately uses timestamp-plus-ID. This part does not introduce a cross-client read-marker protocol migration.
-- Event, audit, optional program and voice-adjacent parity limits are concrete in the row dispositions. No current production defect is inferred from local fixture behavior without evidence.
-- Exact current production overlay, all physical/native workflows and final installed-client background push remain unverified.
+No unresolved failure remains in the recorded local acceptance cases. This is bounded evidence, not a guarantee about untested environments. Current production reconciliation, real browser-model output, real provider consent, OS/hardware output, native interaction updates, hosted Auth/Realtime and multi-node/load/restart capacity are not certified. Thread management is scoped to community threads; existing DM thread history remains compatible. Persisted deletion interruption/resume is tested; a full production crash/failover exercise is not claimed.
 
 ## 12. Partially completed features
 
-All `IMPLEMENTED_NOT_ACCEPTED` rows identify the existing behavior, related evidence and remaining acceptance. Important partial areas are exhaustive filtered search, full moderation/report reviewer lifecycle, structured audit details, member bulk UX, native/media revocation, event versus meeting parity, responsive lobby ordering and real notifications. Existing UI smoke tests are not a substitute for their full acceptance matrix.
+- **YAP-NOTIFY-007:** physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending by the owner’s explicit choice. Web/API fixture checks passed.
+- **YAP-MOD-019:** Meldiq operator Web/API review and permission checks passed. Authorized Yapin platform-staff reference access is unavailable, so direct observation of its restricted administrator experience remains unverified.
 
-## 13. Remaining features
+## 13. Remaining features and decisions
 
-`DEFERRED_DECISION` rows explicitly identify missing product/authority/retention contracts: request notes, comments/likes, editable quick reactions, partner/staff programs, forum gallery, voice-associated text, speculative thread settings/role icons, standalone community reports, structured audit diffs, chat freeze policy, event covers, separate event-management grant, cross-channel movement and a blanket administrator bit. Preserve existing alternatives until these are approved; no fake functionality or invented backend was added.
+Four owner-approved deferrals remain: SOCIAL-018 comments/likes, CHANNEL-018 future per-channel thread settings, MOD-018 staff applications and NOTIFY-013 streak freezes. Preserve current privacy/moderation and Embers rules. They require no new answer for this scope. All 16 choices are recorded in [OWNER_DECISIONS.json](../part3/completion/OWNER_DECISIONS.json); unanswered decisions: **zero**.
 
-The register retains every stable ID, original competitor verification and historical Meldiq-existing-status value. Only Part 3 implementation/testing/gap/notes fields changed; the other 356 rows remain unchanged.
+## 14. Part 4 dependencies
 
-## 14. Dependencies for Part 4
-
-1. Reconcile the current production predecessor and newer overlay with both source commits/companion patch. Do not deploy a stale whole checkout or restore an old customer database.
-2. Consume the frozen message/history/social/community/permission contracts. Preserve Google/Discord and Part 2 profile privacy/brand changes.
-3. Enforce the same authority on uploads, range/tickets/downloads, bots and live tracks; test revocation in flight, private scope, timeout/read-only and switched/revoked accounts.
-4. Accept real media/calls/expressions/native interoperability, installed push and provider consent on actual devices. Mock/local checks are clearly bounded.
-5. Define approved optional event/audit/program/reward contracts before enabling their remaining features. No new product approval is implied by this handoff.
-6. Run immutable production builds with test-linking disabled, verify the accepted release matrix, deploy only authorized scope, monitor and keep application-artifact rollback compatible with new customer writes. This Part 3 did not deploy or migrate production.
+Reconcile the then-current production Web/API/native source and overlay before integration. Review/apply the additive migrations in an authorized controlled rollout; keep application rollback compatible with persisted data. Consume the current message/history/role/event/report contracts in native/media/call/bot integrations. Verify real installed-client push, native poll/thread controls, provider/OS behavior, media revocation and relevant capacity/failover gates. Keep billing/provider capabilities behind their existing gates. Use the verified normal build and obtain deployment authorization only for a concrete reviewed release; this handoff has not deployed anything.

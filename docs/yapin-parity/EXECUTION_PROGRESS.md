@@ -1,5 +1,18 @@
 # Execution progress
 
+## Current Part 3 completion status — 4 November 2026
+
+The expanded Web/API follow-up is locally implemented/tested: 183 of the original 185 pending rows accepted, 12 enabled/retained owner choices accepted and four choices deferred as approved. Together with 11 prior acceptances: **206 accepted / 2 pending / 4 approved deferrals**. Pending: physical background push (explicit owner choice) and restricted Yapin staff reference access. No unanswered product decision remains.
+
+Web/API/operator source commits, additive migration/contract changes, deduplicated tests and companion patches are in [the current report](handoffs/PART_3_REPORT.md) and [validation](part3/validation.json). Web: 983 unit passes; API: 686 native PG passes across documented runs; browser: 134 unique passes. No deployment or production migration occurred. The original dirty app source and 356 unowned rows remain preserved.
+
+The checkpoints below are historical; their Part 3 pending counts and active-work descriptions are superseded by this entry. See the [timestamped follow-up journal](part3/completion/PROGRESS.md) for failure/fix chronology.
+
+
+## Active completion follow-up
+
+The user requested completion and testing of the 185 remaining items and approved all 16 recommended choices. Work is active. See [decision receipt](part3/completion/OWNER_DECISIONS.json) and [follow-up progress](part3/completion/PROGRESS.md). The checkpoint below is historical and does not imply the expanded request is finished.
+
 ## Current — Part 3, 4 November 2026 (Asia/Shanghai)
 
 Local implementation and verification handoff prepared. Read [Part 3 report](handoffs/PART_3_REPORT.md), [domain contracts](part3/CONTRACTS.md), [feature review](part3/FEATURE_REVIEW.md), [validation](part3/validation.json) and [baseline/source identity](part3/baseline.json).

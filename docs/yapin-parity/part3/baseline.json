@@ -14,5 +14,19 @@
   "implementedApiSource": "30e85347a01af2a715ae552d2e2d2824b5ad5805",
   "release": "Not deployed. Part 4 must reconcile current production overlay.",
   "schemaChanges": false,
-  "deliveryModeTested": "legacy per-device delivery; native hosted Auth/Realtime not certified"
+  "deliveryModeTested": "legacy per-device delivery; native hosted Auth/Realtime not certified",
+  "initialCheckpointScope": "Original source/checkpoint fields are historical. Current completion source and local schema changes are below and in validation.json.",
+  "completion": {
+    "sources": {
+      "web": "fe6f294dc7ba2963df8f7ca8ca421e17c5118ab5",
+      "api": "9b0b6e5493695a3bec1d620b0d7fac6f320238c0",
+      "admin": "8a10c4bae41fcac023f849a582fdd95f97ab8457",
+      "webFollowupBase": "5e45e70fa42edbf2b87dd9f253464663cb129e7e",
+      "apiFollowupBase": "30e85347a01af2a715ae552d2e2d2824b5ad5805",
+      "adminBase": "361ea0f8246f42d15c9134e39241d9dd0bc12268"
+    },
+    "schemaChanges": true,
+    "productionChanges": false,
+    "productionReconciled": false
+  }
 }

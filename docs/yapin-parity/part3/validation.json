@@ -2,221 +2,162 @@
   "date": "2026-11-04",
   "timezone": "Asia/Shanghai",
   "source": {
-    "web": "a7daad87677259412cfeb15e8188bbc794d486ae",
-    "api": "30e85347a01af2a715ae552d2e2d2824b5ad5805",
-    "webParent": "e62fb193ef24dd3cd27234c6116709b7bd499987",
-    "apiParent": "598f7c1d72c48cd5179c822221266aaafcb89815",
-    "apiPatch": "../companion-patches/0016-part3-social-message-authority.patch",
-    "apiPatchSha256": "e46af93ab96a54c18c13c238aef92406a750862da8a92a65e9a391016e549327"
+    "web": "fe6f294dc7ba2963df8f7ca8ca421e17c5118ab5",
+    "api": "9b0b6e5493695a3bec1d620b0d7fac6f320238c0",
+    "admin": "8a10c4bae41fcac023f849a582fdd95f97ab8457",
+    "webFollowupBase": "5e45e70fa42edbf2b87dd9f253464663cb129e7e",
+    "apiFollowupBase": "30e85347a01af2a715ae552d2e2d2824b5ad5805",
+    "adminBase": "361ea0f8246f42d15c9134e39241d9dd0bc12268"
   },
   "productionChanges": false,
-  "databaseSchemaChanges": false,
+  "databaseSchemaChanges": true,
+  "databaseSchemaScope": "Local additive source/harness migrations only: SQLite 095–104 and PostgreSQL 016–025. No production migration.",
+  "productionDatabaseSchemaChanges": false,
+  "rowDispositionCounts": {
+    "ACCEPTED": 206,
+    "DEFERRED_DECISION": 4,
+    "IMPLEMENTED_NOT_ACCEPTED": 2
+  },
+  "original185": {
+    "accepted": 183,
+    "pending": 2
+  },
+  "original16": {
+    "resolved": 16,
+    "enabledOrRetained": 12,
+    "approvedDeferrals": 4,
+    "unansweredDecisions": 0
+  },
   "testRuns": {
-    "web-unit": {
-      "result": "passed",
-      "files": 144,
-      "passed": 975,
+    "webUnit": {
+      "files": 147,
+      "passed": 983,
       "skipped": 1,
-      "command": "ORBIT_SERVER_DIR=/Volumes/code_files/meldiq_part3_api/server node node_modules/vitest/vitest.mjs run --exclude 'test/live*.test.ts'",
-      "environment": "isolated local non-live Web tests",
-      "savedEvidence": "validation/web-unit.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/web-unit.log"
-    },
-    "postgresql": {
       "result": "passed",
-      "files": 52,
-      "passed": 467,
+      "command": "ORBIT_SERVER_DIR=/Volumes/code_files/meldiq_part3_api/server node node_modules/vitest/vitest.mjs run --exclude 'test/live*.test.ts' --maxWorkers=2 --reporter=default --reporter=json",
+      "evidence": "completion/evidence/web-unit.txt"
+    },
+    "apiPostgresql": {
+      "files": 96,
+      "passed": 686,
       "skipped": 1,
-      "command": "MELDIQ_TEST_PG_URL=postgresql://meldiq_part3_test@127.0.0.1:55433/postgres MELDIQ_TEST_PG_DELIVERY_MODE=legacy MELDIQ_SUPABASE_WEB_ROOT=/Volumes/code_files/meldiq_web_part3_ecosystem node node_modules/vitest/vitest.mjs run <52 domain suites listed below> --maxWorkers=2",
-      "environment": "owned isolated PostgreSQL 17; existing bootstrap/migrations; legacy delivery",
-      "skipReason": "One MongoDB-collection-only activity persistence test; separately passed in legacy activity run",
-      "savedEvidence": "validation/postgresql.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/pg-final.log",
-      "suites": [
-        "test/message_history_cursor.test.ts",
-        "test/server_messages.test.ts",
-        "test/message_atomic_ack.test.ts",
-        "test/messaging.test.ts",
-        "test/message_collections.test.ts",
-        "test/custom_roles.test.ts",
-        "test/community_permissions.test.ts",
-        "test/channel_permissions.test.ts",
-        "test/channel_access.test.ts",
-        "test/permissions_rules.test.ts",
-        "test/authz_edges.test.ts",
-        "test/connections_requests.test.ts",
-        "test/search.test.ts",
-        "test/events_onboarding_guide.test.ts",
-        "test/history_reads.test.ts",
-        "test/rules_channel.test.ts",
-        "test/member_timeout.test.ts",
-        "test/reports_security.test.ts",
-        "test/activity_scope.test.ts",
-        "test/profile_privacy.test.ts",
-        "test/community_settings.test.ts",
-        "test/community_channels.test.ts",
-        "test/community_lobby.test.ts",
-        "test/community_safety.test.ts",
-        "test/community_safety_rules.test.ts",
-        "test/community_navigation.test.ts",
-        "test/reaction_roles.test.ts",
-        "test/discovery.test.ts",
-        "test/points.test.ts",
-        "test/nav_preferences.test.ts",
-        "test/members_add.test.ts",
-        "test/status_presence.test.ts",
-        "test/activity_status.test.ts",
-        "test/mentions.test.ts",
-        "test/orgs.test.ts",
-        "test/invites_workspaces.test.ts",
-        "test/group_photo_presence.test.ts",
-        "test/pronouns_role_hoist.test.ts",
-        "test/workspace_admin.test.ts",
-        "test/forum_guidelines.test.ts",
-        "test/tickets.test.ts",
-        "test/channel_controls.test.ts",
-        "test/leaderboards.test.ts",
-        "test/discovery_admin.test.ts",
-        "test/org_delete.test.ts",
-        "test/channel_order.test.ts",
-        "test/account_safety.test.ts",
-        "test/roles.test.ts",
-        "test/community_templates.test.ts",
-        "test/community_branding.test.ts",
-        "test/workspace_c5.test.ts",
-        "test/message_visibility.test.ts"
-      ]
+      "result": "passed across broad run plus corrected adapter-suite rerun",
+      "command": "MELDIQ_TEST_PG_URL=postgresql://meldiq_part3_test@127.0.0.1:55433/postgres MELDIQ_TEST_PG_DELIVERY_MODE=legacy MELDIQ_SUPABASE_WEB_ROOT=/Volumes/code_files/meldiq_web_part3_ecosystem node node_modules/vitest/vitest.mjs run <completion/evidence/final-api-suites.json> --maxWorkers=2; settings_parity rerun with --maxWorkers=1",
+      "evidence": [
+        "completion/evidence/api-pg-broad.txt",
+        "completion/evidence/api-pg-settings-corrected.txt"
+      ],
+      "note": "The broad run passed 95 suites; settings had an adapter-selection harness failure. Its native PostgreSQL selection was corrected and all 14 cases passed. Counts are deduplicated by file/case, not added attempts. One Mongo-only activity persistence case is skipped in native PG."
     },
-    "legacy-adapters": {
-      "result": "passed",
+    "apiLegacy": {
       "files": 4,
-      "passed": 34,
-      "skipped": 0,
-      "command": "node node_modules/vitest/vitest.mjs run test/connections_requests.test.ts test/message_visibility.test.ts test/reports_security.test.ts test/history_reads.test.ts --maxWorkers=2",
-      "environment": "SQLite plus existing explicit MongoDB history matrix",
-      "savedEvidence": "validation/legacy-adapters.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/legacy-adapter-regressions.log"
-    },
-    "mongodb-relationships": {
+      "passed": 31,
       "result": "passed",
-      "files": 1,
-      "passed": 17,
-      "skipped": 0,
-      "command": "MELDIQ_TEST_MONGO_DOMAINS=relationships node node_modules/vitest/vitest.mjs run test/connections_requests.test.ts --maxWorkers=1",
-      "environment": "isolated local MongoDB replica set",
-      "savedEvidence": "validation/mongodb-relationships.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/mongo-relationship-regressions.log"
-    },
-    "legacy-activity": {
-      "result": "passed",
-      "files": 1,
-      "passed": 14,
-      "skipped": 0,
-      "command": "node node_modules/vitest/vitest.mjs run test/activity_status.test.ts --maxWorkers=1",
-      "environment": "SQLite/explicit MongoDB persistence fixture",
-      "savedEvidence": "validation/legacy-activity.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/legacy-activity.log"
+      "suites": [
+        "settings_parity",
+        "thread_lifecycle",
+        "managed_polls",
+        "architecture_boundaries"
+      ],
+      "command": "MELDIQ_SUPABASE_WEB_ROOT=/Volumes/code_files/meldiq_web_part3_ecosystem node node_modules/vitest/vitest.mjs run test/settings_parity.test.ts test/thread_lifecycle.test.ts test/managed_polls.test.ts test/architecture_boundaries.test.ts --maxWorkers=2",
+      "evidence": "completion/evidence/api-legacy.txt",
+      "note": "SQLite/Mongo current follow-up checks. Earlier targeted legacy runs for the other additions are recorded in completion/PROGRESS.md and are not added to this total."
     },
     "browser": {
-      "result": "passed after correcting stale test observers/selectors",
-      "uniqueCases": 64,
-      "passed": 51,
-      "skipped": 13,
-      "command": "ORBIT_SERVER_DIR=/Volumes/code_files/meldiq_part3_api/server ORBIT_E2E_API_PORT=8292 ORBIT_E2E_WEB_PORT=5391 ORBIT_E2E_BUILD=1 node node_modules/@playwright/test/cli.js test <16 spec files below> --project=chromium --project=phone-width; then the two corrected spec files",
-      "environment": "static Next export, test-linking enabled only for fixture authentication; throwaway SQLite API and synthetic protocol peers; Chromium 1440x900 and Pixel 7 CSS 412x839",
-      "skipReason": "Existing desktop-only rail/community controls and side-search/single-tab scenarios explicitly skip phone width; see individual cases",
-      "savedEvidence": "validation/browser.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/browser-final-corrections.log",
-      "specs": [
-        "e2e/chat-open-latest.spec.ts",
-        "e2e/community-controls.spec.ts",
-        "e2e/community-first.spec.ts",
-        "e2e/community-lobby.spec.ts",
-        "e2e/community-parity-a-wiring.spec.ts",
-        "e2e/community-parity-c.spec.ts",
-        "e2e/connection-requests.spec.ts",
-        "e2e/cross-device.spec.ts",
-        "e2e/discovery-search.spec.ts",
-        "e2e/dms-selection.spec.ts",
-        "e2e/message-collections.spec.ts",
-        "e2e/message-extras.spec.ts",
-        "e2e/part3-search.spec.ts",
-        "e2e/poll-media.spec.ts",
-        "e2e/research-improvements.spec.ts",
-        "e2e/server-history.spec.ts"
+      "passed": 134,
+      "skipped": 15,
+      "unique": 149,
+      "unexpected": 0,
+      "result": "passed across baseline and corrective/expanded runs",
+      "engines": [
+        "Chromium"
+      ],
+      "widths": [
+        1440,
+        768,
+        412
+      ],
+      "evidence": "completion/evidence/browser-cases.json",
+      "note": "Deduplicated file/title/project outcomes; later corrective passes replace prior failed attempts. Raw failures and passing receipts are retained. Browser phone widths/reference clients are not physical devices."
+    },
+    "admin": {
+      "files": 7,
+      "passed": 33,
+      "browserPassed": 2,
+      "result": "passed",
+      "evidence": [
+        "completion/evidence/admin-unit.txt",
+        "completion/evidence/admin-browser.txt"
+      ],
+      "note": "Console browser workflow at desktop/phone CSS widths; no real operator account or customer report was modified. Contract regeneration against final API produced no console source change."
+    },
+    "quality": {
+      "apiTypecheck": "passed",
+      "webTypecheck": "passed as part of normal build",
+      "lint": "passed with zero warnings",
+      "format": "changed handwritten sources passed",
+      "i18n": {
+        "locales": 28,
+        "keys": 6292,
+        "structureErrors": 0,
+        "hardcodedCandidates": 0,
+        "nativeSpeakerReview": "pending"
+      },
+      "productionBuild": "passed with NEXT_PUBLIC_MELDIQ_TEST_LINKING=0",
+      "evidence": [
+        "completion/evidence/api-typecheck.txt",
+        "completion/evidence/web-lint.txt",
+        "completion/evidence/web-format.txt",
+        "completion/evidence/i18n.txt",
+        "completion/evidence/production-build.txt"
       ]
-    },
-    "web-lint": {
-      "result": "passed",
-      "command": "node node_modules/eslint/bin/eslint.js .",
-      "savedEvidence": "validation/web-lint.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/web-lint.log"
-    },
-    "web-format": {
-      "result": "passed",
-      "command": "node node_modules/prettier/bin/prettier.cjs --check 'src/**/*.{ts,tsx,css}' 'test/**/*.ts' 'e2e/**/*.ts' 'scripts/**/*.{ts,mjs}'",
-      "savedEvidence": "validation/web-format.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/web-format-final.log"
-    },
-    "api-typecheck": {
-      "result": "passed",
-      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit --pretty false",
-      "savedEvidence": "validation/api-typecheck.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/api-typecheck-final.log"
-    },
-    "i18n": {
-      "result": "passed: 0 structural errors and 0 hardcoded source candidates",
-      "command": "node scripts/i18n/check.mjs",
-      "savedEvidence": "validation/i18n.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/web-i18n.log"
-    },
-    "release-build": {
-      "result": "passed",
-      "command": "NEXT_PUBLIC_MELDIQ_TEST_LINKING=0 npm run -s build",
-      "environment": "normal static production artifact; includes Web typecheck, Next build/export and service worker build",
-      "savedEvidence": "validation/release-build.txt",
-      "rawLogTemporary": "/tmp/meldiq-part3/web-release-build.log"
-    },
-    "package": {
-      "result": "passed",
-      "command": "python3 docs/yapin-parity/validate_package.py --source-root /Volumes/code_files/meldiq_web",
-      "checks": 11197,
-      "savedEvidence": "validation/package.txt",
-      "scope": "Saved documentation/register/provenance/links only; no application/network/database operations"
     }
   },
-  "browserUniqueCounts": {
-    "passed": 51,
-    "skipped": 13
-  },
-  "rowDispositionCounts": {
-    "IMPLEMENTED_NOT_ACCEPTED": 185,
-    "ACCEPTED": 11,
-    "DEFERRED_DECISION": 16
-  },
   "qualityLimits": [
-    "No physical devices or native distributions tested",
-    "No real external provider consent, push delivery, buyer payment or hosted native Auth/Realtime accepted",
-    "Exact current production overlay not freshly re-established: public request returned HTTP 403",
-    "Search is not an exhaustive filtered/paginated server API",
-    "Feature states are bounded; related suite names do not claim every row criterion passed"
+    "Physical installed-client/background push remains pending at the owner’s explicit choice.",
+    "Authorized Yapin platform-staff reference access is unavailable.",
+    "Real translation model output, real OAuth/Discord consent and real OS/hardware output are not certified by substitutes.",
+    "No real purchase, provider lifecycle, native distribution, hosted Supabase Auth/Realtime, multi-node capacity or production rollout is accepted.",
+    "Message deletion uses existing global deletion projections/journal retention; private managed-poll ballots and answer keys are erased. The server can read current message/poll data."
   ],
-  "visualReview": {
-    "reviewed": [
-      "screenshots/search-1440.png",
-      "screenshots/search-412.png"
-    ],
-    "result": "Search panel legible at desktop and phone CSS width, shared default palette and existing canonical mascot preserved. Desktop shared shell and full-width phone search retained."
-  },
+  "rowEvidence": "completion/ROW_EVIDENCE.json",
+  "patches": [
+    {
+      "file": "companion-patches/0017-part3-community-ecosystem-api.patch",
+      "repository": "/Volumes/code_files/meldiq_part3_api",
+      "base": "30e85347a01af2a715ae552d2e2d2824b5ad5805",
+      "head": "9b0b6e5493695a3bec1d620b0d7fac6f320238c0",
+      "sha256": "7e6c177b6d808a0e95c3878045a70b7c286b76cae0911086417f7cd7b4424bb2",
+      "bytes": 1445967
+    },
+    {
+      "file": "companion-patches/0018-part3-operator-review-console.patch",
+      "repository": "/Volumes/code_files/meldiq_part3_admin",
+      "base": "361ea0f8246f42d15c9134e39241d9dd0bc12268",
+      "head": "8a10c4bae41fcac023f849a582fdd95f97ab8457",
+      "sha256": "a807d65c7e21941f76feb8b7ae662aeab91b70bbcab7925f14d01cbacef410bb",
+      "bytes": 57933
+    },
+    {
+      "file": "companion-patches/0019-part3-community-ecosystem-web.patch",
+      "repository": "/Volumes/code_files/meldiq_web_part3_ecosystem",
+      "base": "5e45e70fa42edbf2b87dd9f253464663cb129e7e",
+      "head": "fe6f294dc7ba2963df8f7ca8ca421e17c5118ab5",
+      "sha256": "0d34019311d20996cd19d2d68ecf2bbc276466fc964de71cc067b53d330bc05b",
+      "bytes": 515059
+    }
+  ],
   "teardown": {
-    "ownedPostgresql": "Stopped successfully with pg_ctl -D /tmp/meldiq-part3/postgres stop -m fast",
-    "browserApiAndWebPorts": "No listener remains on owned test ports 8292/5391",
-    "productionServicesChanged": false
+    "ownedPostgresql": "stopped via pg_ctl -D /tmp/meldiq-part3/postgres stop -m fast",
+    "testServers": "owned ports 8292/5391/55433/8293/5393 confirmed closed",
+    "portReceipt": "completion/evidence/teardown.json"
   },
   "preservationChecks": {
-    "unownedRegisterRowsUnchanged": 356,
-    "originalCompetitorAndMeldiqBaselineFieldsUnchanged": true,
-    "googleDiscordAuthAndProviderIconSourcesUnchangedFromPart2": true,
-    "defaultPaletteAndCanonicalMascotSourcesUnchangedFromPart2": true
+    "nonOwnedRows": 356,
+    "historicalCompetitorAndExistingColumns": "unchanged",
+    "originalDirtyApplicationSource": "untouched",
+    "branding": "Meldiq charcoal/lime default and canonical teal/cream Meldling retained",
+    "authProviders": "Google and Discord icons/handlers retained; controlled browser handler tests pass",
+    "originalDirtyStatusReceipt": "completion/evidence/original-worktree-status.txt"
   }
 }

@@ -1,0 +1,2203 @@
+[WebServer] (node:29932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29955) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29959) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29959) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:29959) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:30239) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30242) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30267) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30275) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30305) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30303) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30306) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30333) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ../meldiq_web/node_modules/zod/v4/core/util.js (400:0): A comment
+[WebServer] 
+[WebServer] "// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/zod/v4/core/regexes.js (74:0): A comment
+[WebServer] 
+[WebServer] "/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+[WebServer]  * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+[WebServer]  * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+[WebServer] 
+[WebServer] "// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */ oidNist(0x07),"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+[WebServer] 
+[WebServer] in "../meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] (node:30362) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 36 tests using 1 worker
+
+(node:30363) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/branding.spec.ts:10:1 › Google and Discord login entries still call their existing provider handlers (3.1s)
+  ✓   2 [chromium] › e2e/branding.spec.ts:36:1 › Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji (7.9s)
+  ✓   3 [chromium] › e2e/branding.spec.ts:84:1 › the old unchosen palette migrates while an explicit Midnight choice survives the first paint and reload (2.3s)
+  ✓   4 [chromium] › e2e/notifications.spec.ts:58:1 › with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation (6.3s)
+  ✓   5 [chromium] › e2e/notifications.spec.ts:76:1 › a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself (10.6s)
+  ✓   6 [chromium] › e2e/notifications.spec.ts:93:1 › with Meldiq closed, a ringing call shows as an incoming call that opens its conversation (8.9s)
+  ✓   7 [chromium] › e2e/notifications.spec.ts:108:1 › a direct mention still notifies from a muted conversation while ordinary messages stay quiet (5.6s)
+  ✓   8 [chromium] › e2e/part3-failure-states.spec.ts:7:1 › friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place (9.1s)
+  ✘   9 [chromium] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts (7.5s)
+(node:30965) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [chromium] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (6.4s)
+  ✘  11 [chromium] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft (15.2s)
+(node:31206) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  12 [chromium] › e2e/part3-quiz.spec.ts:6:1 › quiz answers stay hidden until close and anonymous votes never expose their account in another member's response (13.2s)
+  ✓  13 [chromium] › e2e/part3-threads.spec.ts:6:1 › thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion (15.2s)
+  ✓  14 [chromium] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.6s)
+  ✓  15 [chromium] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.8s)
+(node:31560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [tablet-width] › e2e/part3-failure-states.spec.ts:7:1 › friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place (9.7s)
+  ✘  17 [tablet-width] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts (7.6s)
+(node:31747) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  18 [tablet-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (6.3s)
+  ✘  19 [tablet-width] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft (14.8s)
+(node:31952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  20 [tablet-width] › e2e/part3-quiz.spec.ts:6:1 › quiz answers stay hidden until close and anonymous votes never expose their account in another member's response (13.7s)
+  ✓  21 [tablet-width] › e2e/part3-threads.spec.ts:6:1 › thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion (21.7s)
+(node:32195) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  22 [phone-width] › e2e/branding.spec.ts:10:1 › Google and Discord login entries still call their existing provider handlers (3.6s)
+  ✓  23 [phone-width] › e2e/branding.spec.ts:36:1 › Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji (13.8s)
+  ✓  24 [phone-width] › e2e/branding.spec.ts:84:1 › the old unchosen palette migrates while an explicit Midnight choice survives the first paint and reload (4.2s)
+  ✓  25 [phone-width] › e2e/notifications.spec.ts:58:1 › with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation (6.6s)
+  ✓  26 [phone-width] › e2e/notifications.spec.ts:76:1 › a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself (10.4s)
+  ✓  27 [phone-width] › e2e/notifications.spec.ts:93:1 › with Meldiq closed, a ringing call shows as an incoming call that opens its conversation (5.9s)
+  ✓  28 [phone-width] › e2e/notifications.spec.ts:108:1 › a direct mention still notifies from a muted conversation while ordinary messages stay quiet (4.4s)
+  ✓  29 [phone-width] › e2e/part3-failure-states.spec.ts:7:1 › friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place (8.8s)
+  ✘  30 [phone-width] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts (8.3s)
+(node:32601) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  31 [phone-width] › e2e/part3-message-actions.spec.ts:72:1 › long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message (5.9s)
+  ✘  32 [phone-width] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft (14.8s)
+(node:32716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  33 [phone-width] › e2e/part3-quiz.spec.ts:6:1 › quiz answers stay hidden until close and anonymous votes never expose their account in another member's response (15.3s)
+  ✓  34 [phone-width] › e2e/part3-threads.spec.ts:6:1 › thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion (15.9s)
+  ✓  35 [phone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (17.0s)
+  ✓  36 [phone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (11.0s)
+
+
+  1) [chromium] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#msg-m_actions_1793797784313').locator('.msg-meta')
+    Expected substring: "edited"
+    Error: strict mode violation: locator('#msg-m_actions_1793797784313').locator('.msg-meta') resolved to 2 elements:
+        1) <span class="msg-meta">(edited)</span> aka getByText('(edited)')
+        2) <span title="Sent" class="msg-meta">…</span> aka getByTitle('Sent')
+
+    Call log:
+      - Expect "toContainText" locator('#msg-m_actions_1793797784313').locator('.msg-meta') with timeout 10000ms
+      - waiting for locator('#msg-m_actions_1793797784313').locator('.msg-meta')
+
+
+      59 |   await page.reload();
+      60 |   await expect(m.locator(".msg-text strong")).toHaveText("Confirmed edit");
+    > 61 |   await expect(m.locator(".msg-meta")).toContainText("edited");
+         |                                        ^
+      62 |   await m.click({ button: "right" });
+      63 |   await page.getByRole("menuitem", { name: "Delete for everyone", exact: true }).click();
+      64 |   const del = page.getByRole("dialog", { name: "Delete this message for everyone?", exact: true });
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40
+
+    Error Context: test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms
+      - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()
+
+
+      105 |   await input.fill(":thumbs_up");
+      106 |   const options = page.getByRole("listbox", { name: "Emoji", exact: true });
+    > 107 |   await expect(options.getByRole("option").first()).toBeVisible();
+          |                                                     ^
+      108 |   await input.press("ArrowDown");
+      109 |   await input.press("Enter");
+      110 |   await expect(options).toHaveCount(0);
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53
+
+    Error Context: test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [tablet-width] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#msg-m_actions_1793797885205').locator('.msg-meta')
+    Expected substring: "edited"
+    Error: strict mode violation: locator('#msg-m_actions_1793797885205').locator('.msg-meta') resolved to 2 elements:
+        1) <span class="msg-meta">(edited)</span> aka getByText('(edited)')
+        2) <span title="Sent" class="msg-meta">…</span> aka getByTitle('Sent')
+
+    Call log:
+      - Expect "toContainText" locator('#msg-m_actions_1793797885205').locator('.msg-meta') with timeout 10000ms
+      - waiting for locator('#msg-m_actions_1793797885205').locator('.msg-meta')
+
+
+      59 |   await page.reload();
+      60 |   await expect(m.locator(".msg-text strong")).toHaveText("Confirmed edit");
+    > 61 |   await expect(m.locator(".msg-meta").filter({hasText:"(edited)"})).toContainText("edited");
+         |                                        ^
+      62 |   await m.click({ button: "right" });
+      63 |   await page.getByRole("menuitem", { name: "Delete for everyone", exact: true }).click();
+      64 |   const del = page.getByRole("dialog", { name: "Delete this message for everyone?", exact: true });
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40
+
+    Error Context: test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-tablet-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-tablet-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-tablet-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [tablet-width] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms
+      - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()
+
+
+      105 |   await input.fill(":thumbs_up");
+      106 |   const options = page.getByRole("listbox", { name: /^emoji$/i });
+    > 107 |   await expect(options.getByRole("option").first()).toBeVisible();
+          |                                                     ^
+      108 |   await input.press("ArrowDown");
+      109 |   await input.press("Enter");
+      110 |   await expect(options).toHaveCount(0);
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53
+
+    Error Context: test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-tablet-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-tablet-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-tablet-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [phone-width] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#msg-m_actions_1793798012966').locator('.msg-meta')
+    Expected substring: "edited"
+    Error: strict mode violation: locator('#msg-m_actions_1793798012966').locator('.msg-meta') resolved to 2 elements:
+        1) <span class="msg-meta">(edited)</span> aka getByText('(edited)')
+        2) <span title="Sent" class="msg-meta">…</span> aka getByTitle('Sent')
+
+    Call log:
+      - Expect "toContainText" locator('#msg-m_actions_1793798012966').locator('.msg-meta') with timeout 10000ms
+      - waiting for locator('#msg-m_actions_1793798012966').locator('.msg-meta')
+
+
+      59 |   await page.reload();
+      60 |   await expect(m.locator(".msg-text strong")).toHaveText("Confirmed edit");
+    > 61 |   await expect(m.locator(".msg-meta").filter({hasText:"(edited)"})).toContainText("edited");
+         |                                        ^
+      62 |   await m.click({ button: "right" });
+      63 |   await page.getByRole("menuitem", { name: "Delete for everyone", exact: true }).click();
+      64 |   const del = page.getByRole("dialog", { name: "Delete this message for everyone?", exact: true });
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40
+
+    Error Context: test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [phone-width] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms
+      - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()
+
+
+      105 |   const cid = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
+      106 |   await link(page, alice);
+    > 107 |   await page.goto(`/dms/c/${cid}`);
+          |                                    ^
+      108 |   const input = page.locator(".composer textarea");
+      109 |   await input.fill(":thumbs_up");
+      110 |   const options = page.getByRole("listbox", { name: /^emoji$/i });
+        at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53
+
+    Error Context: test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [chromium] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts 
+    [chromium] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft 
+    [tablet-width] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts 
+    [tablet-width] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft 
+    [phone-width] › e2e/part3-message-actions.spec.ts:9:1 › Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts 
+    [phone-width] › e2e/part3-message-actions.spec.ts:98:1 › colon emoji completion is keyboard accessible and choosing an option never submits the draft 
+  30 passed (7.4m)
+{
+  "config": {
+    "argv": [
+      "/opt/homebrew/Cellar/node/25.8.0/bin/node",
+      "/Volumes/code_files/meldiq_web_part3_ecosystem/node_modules/.bin/playwright",
+      "test",
+      "e2e/part3-message-actions.spec.ts",
+      "e2e/part3-failure-states.spec.ts",
+      "e2e/part3-threads.spec.ts",
+      "e2e/part3-quiz.spec.ts",
+      "e2e/poll-media.spec.ts",
+      "e2e/branding.spec.ts",
+      "e2e/notifications.spec.ts",
+      "--project=chromium",
+      "--project=tablet-width",
+      "--project=phone-width",
+      "--reporter=list,json"
+    ],
+    "configFile": "/Volumes/code_files/meldiq_web_part3_ecosystem/playwright.config.ts",
+    "rootDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "tablet-width",
+        "name": "tablet-width",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/part3-.*\\.spec\\.ts/"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "phone-width",
+        "name": "phone-width",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "iphone-width",
+        "name": "iphone-width",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "snapshotDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5391",
+          "trace": "retain-on-failure",
+          "storageState": {
+            "cookies": [],
+            "origins": [
+              {
+                "origin": "http://127.0.0.1:5391",
+                "localStorage": [
+                  {
+                    "name": "meldiq.introSeen",
+                    "value": "1"
+                  }
+                ]
+              }
+            ]
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium",
+          "channel": "chromium",
+          "launchOptions": {
+            "args": [
+              "--use-fake-device-for-media-stream"
+            ]
+          },
+          "permissions": [
+            "microphone",
+            "camera"
+          ]
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "tablet-width",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "snapshotDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5391",
+          "trace": "retain-on-failure",
+          "storageState": {
+            "cookies": [],
+            "origins": [
+              {
+                "origin": "http://127.0.0.1:5391",
+                "localStorage": [
+                  {
+                    "name": "meldiq.introSeen",
+                    "value": "1"
+                  }
+                ]
+              }
+            ]
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 768,
+            "height": 1024
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium",
+          "channel": "chromium",
+          "launchOptions": {
+            "args": [
+              "--use-fake-device-for-media-stream"
+            ]
+          },
+          "permissions": [
+            "microphone",
+            "camera"
+          ]
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "tablet-width"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "phone-width",
+        "testDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "snapshotDir": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5391",
+          "trace": "retain-on-failure",
+          "storageState": {
+            "cookies": [],
+            "origins": [
+              {
+                "origin": "http://127.0.0.1:5391",
+                "localStorage": [
+                  {
+                    "name": "meldiq.introSeen",
+                    "value": "1"
+                  }
+                ]
+              }
+            ]
+          },
+          "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+          "viewport": {
+            "width": 412,
+            "height": 839
+          },
+          "screen": {
+            "width": 412,
+            "height": 915
+          },
+          "deviceScaleFactor": 2.625,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "chromium",
+          "channel": "chromium",
+          "launchOptions": {
+            "args": [
+              "--use-fake-device-for-media-stream"
+            ]
+          },
+          "permissions": [
+            "microphone",
+            "camera"
+          ]
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "phone-width"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "branding.spec.ts",
+      "file": "branding.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Google and Discord login entries still call their existing provider handlers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3139,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:08:45.148Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c7f19e806919ac620bf8-20a22613b8d4708a2287",
+          "file": "branding.spec.ts",
+          "line": 10,
+          "column": 1
+        },
+        {
+          "title": "Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7910,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:08:52.996Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c7f19e806919ac620bf8-05911040554ee471d61c",
+          "file": "branding.spec.ts",
+          "line": 36,
+          "column": 1
+        },
+        {
+          "title": "the old unchosen palette migrates while an explicit Midnight choice survives the first paint and reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2305,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:09:00.918Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c7f19e806919ac620bf8-6226cfa9809912679c2e",
+          "file": "branding.spec.ts",
+          "line": 84,
+          "column": 1
+        },
+        {
+          "title": "Google and Discord login entries still call their existing provider handlers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3571,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:12:33.349Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c7f19e806919ac620bf8-1b536085bf673fe48e40",
+          "file": "branding.spec.ts",
+          "line": 10,
+          "column": 1
+        },
+        {
+          "title": "Meldiq is the default and the same Meldling appears in branding, stickers and animated emoji",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13841,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:12:38.081Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c7f19e806919ac620bf8-20a26c5a91ab39a11639",
+          "file": "branding.spec.ts",
+          "line": 36,
+          "column": 1
+        },
+        {
+          "title": "the old unchosen palette migrates while an explicit Midnight choice survives the first paint and reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4190,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:12:51.940Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c7f19e806919ac620bf8-f9c79f3c3195e2394976",
+          "file": "branding.spec.ts",
+          "line": 84,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "notifications.spec.ts",
+      "file": "notifications.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6323,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:09:03.246Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "be7d0958780d1a4666e5-b73f73c6bcc60d24dd0c",
+          "file": "notifications.spec.ts",
+          "line": 58,
+          "column": 1
+        },
+        {
+          "title": "a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10624,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:09:09.583Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "be7d0958780d1a4666e5-84286b61a472ebbfbed3",
+          "file": "notifications.spec.ts",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "with Meldiq closed, a ringing call shows as an incoming call that opens its conversation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8887,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:09:20.227Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "be7d0958780d1a4666e5-c7ad66917bf89d668d86",
+          "file": "notifications.spec.ts",
+          "line": 93,
+          "column": 1
+        },
+        {
+          "title": "a direct mention still notifies from a muted conversation while ordinary messages stay quiet",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5639,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:09:29.151Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "be7d0958780d1a4666e5-ca11bc7fdac767b018dc",
+          "file": "notifications.spec.ts",
+          "line": 108,
+          "column": 1
+        },
+        {
+          "title": "with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6612,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:12:56.162Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "be7d0958780d1a4666e5-b9e5f08ca3e6737dea90",
+          "file": "notifications.spec.ts",
+          "line": 58,
+          "column": 1
+        },
+        {
+          "title": "a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10441,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:13:02.788Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "be7d0958780d1a4666e5-968c382cd9329613fe77",
+          "file": "notifications.spec.ts",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "with Meldiq closed, a ringing call shows as an incoming call that opens its conversation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5894,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:13:13.245Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "be7d0958780d1a4666e5-6da8ce88aff92b983197",
+          "file": "notifications.spec.ts",
+          "line": 93,
+          "column": 1
+        },
+        {
+          "title": "a direct mention still notifies from a muted conversation while ordinary messages stay quiet",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4357,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:13:19.159Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "be7d0958780d1a4666e5-492051e44effa40ffae5",
+          "file": "notifications.spec.ts",
+          "line": 108,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "part3-failure-states.spec.ts",
+      "file": "part3-failure-states.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9054,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:09:34.820Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3af9c1a6d73cf2b7790c-47ee6a59531f367163e1",
+          "file": "part3-failure-states.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "tablet-width",
+              "projectName": "tablet-width",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9679,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:11:13.449Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3af9c1a6d73cf2b7790c-eedbdc1c4e7048816602",
+          "file": "part3-failure-states.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "friends, people lookup, group drafts and Activity distinguish a failed request from an empty result and retry in place",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8781,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:13:23.564Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3af9c1a6d73cf2b7790c-d282f469a9bbac5e1873",
+          "file": "part3-failure-states.spec.ts",
+          "line": 7,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "part3-message-actions.spec.ts",
+      "file": "part3-message-actions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7532,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793797784313').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793797784313').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793797784313').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793797784313').locator('.msg-meta')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793797784313').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793797784313').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793797784313').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793797784313').locator('.msg-meta')\u001b[22m\n\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40",
+                    "location": {
+                      "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                      "column": 40,
+                      "line": 61
+                    },
+                    "snippet": "  59 |   await page.reload();\n  60 |   await expect(m.locator(\".msg-text strong\")).toHaveText(\"Confirmed edit\");\n> 61 |   await expect(m.locator(\".msg-meta\")).toContainText(\"edited\");\n     |                                        ^\n  62 |   await m.click({ button: \"right\" });\n  63 |   await page.getByRole(\"menuitem\", { name: \"Delete for everyone\", exact: true }).click();\n  64 |   const del = page.getByRole(\"dialog\", { name: \"Delete this message for everyone?\", exact: true });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                        "column": 40,
+                        "line": 61
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793797784313').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793797784313').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793797784313').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793797784313').locator('.msg-meta')\u001b[22m\n\n\n  59 |   await page.reload();\n  60 |   await expect(m.locator(\".msg-text strong\")).toHaveText(\"Confirmed edit\");\n> 61 |   await expect(m.locator(\".msg-meta\")).toContainText(\"edited\");\n     |                                        ^\n  62 |   await m.click({ button: \"right\" });\n  63 |   await page.getByRole(\"menuitem\", { name: \"Delete for everyone\", exact: true }).click();\n  64 |   const del = page.getByRole(\"dialog\", { name: \"Delete this message for everyone?\", exact: true });\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:09:43.906Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-chromium/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                    "column": 40,
+                    "line": 61
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-d639351cfceea9dd1502",
+          "file": "part3-message-actions.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6398,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:09:52.683Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-1a936163fbcefceeb1f6",
+          "file": "part3-message-actions.spec.ts",
+          "line": 72,
+          "column": 1
+        },
+        {
+          "title": "colon emoji completion is keyboard accessible and choosing an option never submits the draft",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 15212,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53",
+                    "location": {
+                      "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                      "column": 53,
+                      "line": 107
+                    },
+                    "snippet": "  105 |   await input.fill(\":thumbs_up\");\n  106 |   const options = page.getByRole(\"listbox\", { name: \"Emoji\", exact: true });\n> 107 |   await expect(options.getByRole(\"option\").first()).toBeVisible();\n      |                                                     ^\n  108 |   await input.press(\"ArrowDown\");\n  109 |   await input.press(\"Enter\");\n  110 |   await expect(options).toHaveCount(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                        "column": 53,
+                        "line": 107
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n\n\n  105 |   await input.fill(\":thumbs_up\");\n  106 |   const options = page.getByRole(\"listbox\", { name: \"Emoji\", exact: true });\n> 107 |   await expect(options.getByRole(\"option\").first()).toBeVisible();\n      |                                                     ^\n  108 |   await input.press(\"ArrowDown\");\n  109 |   await input.press(\"Enter\");\n  110 |   await expect(options).toHaveCount(0);\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:10:01.025Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-chromium/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                    "column": 53,
+                    "line": 107
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-1e1fd9891a8fd2aca581",
+          "file": "part3-message-actions.spec.ts",
+          "line": 98,
+          "column": 1
+        },
+        {
+          "title": "Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "tablet-width",
+              "projectName": "tablet-width",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7599,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793797885205').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793797885205').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793797885205').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793797885205').locator('.msg-meta')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793797885205').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793797885205').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793797885205').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793797885205').locator('.msg-meta')\u001b[22m\n\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40",
+                    "location": {
+                      "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                      "column": 40,
+                      "line": 61
+                    },
+                    "snippet": "  59 |   await page.reload();\n  60 |   await expect(m.locator(\".msg-text strong\")).toHaveText(\"Confirmed edit\");\n> 61 |   await expect(m.locator(\".msg-meta\").filter({hasText:\"(edited)\"})).toContainText(\"edited\");\n     |                                        ^\n  62 |   await m.click({ button: \"right\" });\n  63 |   await page.getByRole(\"menuitem\", { name: \"Delete for everyone\", exact: true }).click();\n  64 |   const del = page.getByRole(\"dialog\", { name: \"Delete this message for everyone?\", exact: true });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                        "column": 40,
+                        "line": 61
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793797885205').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793797885205').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793797885205').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793797885205').locator('.msg-meta')\u001b[22m\n\n\n  59 |   await page.reload();\n  60 |   await expect(m.locator(\".msg-text strong\")).toHaveText(\"Confirmed edit\");\n> 61 |   await expect(m.locator(\".msg-meta\").filter({hasText:\"(edited)\"})).toContainText(\"edited\");\n     |                                        ^\n  62 |   await m.click({ button: \"right\" });\n  63 |   await page.getByRole(\"menuitem\", { name: \"Delete for everyone\", exact: true }).click();\n  64 |   const del = page.getByRole(\"dialog\", { name: \"Delete this message for everyone?\", exact: true });\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:11:24.262Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-tablet-width/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-tablet-width/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                    "column": 40,
+                    "line": 61
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-f6c122cd1148fb3199ab",
+          "file": "part3-message-actions.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "tablet-width",
+              "projectName": "tablet-width",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6315,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:11:32.841Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-7f5b35626be06a5b7b9e",
+          "file": "part3-message-actions.spec.ts",
+          "line": 72,
+          "column": 1
+        },
+        {
+          "title": "colon emoji completion is keyboard accessible and choosing an option never submits the draft",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "tablet-width",
+              "projectName": "tablet-width",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 14766,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53",
+                    "location": {
+                      "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                      "column": 53,
+                      "line": 107
+                    },
+                    "snippet": "  105 |   await input.fill(\":thumbs_up\");\n  106 |   const options = page.getByRole(\"listbox\", { name: /^emoji$/i });\n> 107 |   await expect(options.getByRole(\"option\").first()).toBeVisible();\n      |                                                     ^\n  108 |   await input.press(\"ArrowDown\");\n  109 |   await input.press(\"Enter\");\n  110 |   await expect(options).toHaveCount(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                        "column": 53,
+                        "line": 107
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n\n\n  105 |   await input.fill(\":thumbs_up\");\n  106 |   const options = page.getByRole(\"listbox\", { name: /^emoji$/i });\n> 107 |   await expect(options.getByRole(\"option\").first()).toBeVisible();\n      |                                                     ^\n  108 |   await input.press(\"ArrowDown\");\n  109 |   await input.press(\"Enter\");\n  110 |   await expect(options).toHaveCount(0);\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:11:39.862Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-tablet-width/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-tablet-width/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                    "column": 53,
+                    "line": 107
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-15e5351953fc5694a005",
+          "file": "part3-message-actions.spec.ts",
+          "line": 98,
+          "column": 1
+        },
+        {
+          "title": "Markdown stays escaped, masked links show their destination, and failed edits/deletions preserve content and drafts",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 8252,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793798012966').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793798012966').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793798012966').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793798012966').locator('.msg-meta')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793798012966').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793798012966').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793798012966').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793798012966').locator('.msg-meta')\u001b[22m\n\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40",
+                    "location": {
+                      "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                      "column": 40,
+                      "line": 61
+                    },
+                    "snippet": "  59 |   await page.reload();\n  60 |   await expect(m.locator(\".msg-text strong\")).toHaveText(\"Confirmed edit\");\n> 61 |   await expect(m.locator(\".msg-meta\").filter({hasText:\"(edited)\"})).toContainText(\"edited\");\n     |                                        ^\n  62 |   await m.click({ button: \"right\" });\n  63 |   await page.getByRole(\"menuitem\", { name: \"Delete for everyone\", exact: true }).click();\n  64 |   const del = page.getByRole(\"dialog\", { name: \"Delete this message for everyone?\", exact: true });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                        "column": 40,
+                        "line": 61
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#msg-m_actions_1793798012966').locator('.msg-meta')\nExpected substring: \u001b[32m\"edited\"\u001b[39m\nError: strict mode violation: locator('#msg-m_actions_1793798012966').locator('.msg-meta') resolved to 2 elements:\n    1) <span class=\"msg-meta\">(edited)</span> aka getByText('(edited)')\n    2) <span title=\"Sent\" class=\"msg-meta\">…</span> aka getByTitle('Sent')\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('#msg-m_actions_1793798012966').locator('.msg-meta') with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('#msg-m_actions_1793798012966').locator('.msg-meta')\u001b[22m\n\n\n  59 |   await page.reload();\n  60 |   await expect(m.locator(\".msg-text strong\")).toHaveText(\"Confirmed edit\");\n> 61 |   await expect(m.locator(\".msg-meta\").filter({hasText:\"(edited)\"})).toContainText(\"edited\");\n     |                                        ^\n  62 |   await m.click({ button: \"right\" });\n  63 |   await page.getByRole(\"menuitem\", { name: \"Delete for everyone\", exact: true }).click();\n  64 |   const del = page.getByRole(\"dialog\", { name: \"Delete this message for everyone?\", exact: true });\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:61:40"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:13:32.373Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-phone-width/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-Mark-8d6c7-preserve-content-and-drafts-phone-width/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                    "column": 40,
+                    "line": 61
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-2356f72c06b37fc339f4",
+          "file": "part3-message-actions.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "long messages expand and collapse with keyboard focus retained while Copy text keeps the complete message",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5887,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:13:41.454Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-193a601c04c74849f122",
+          "file": "part3-message-actions.spec.ts",
+          "line": 72,
+          "column": 1
+        },
+        {
+          "title": "colon emoji completion is keyboard accessible and choosing an option never submits the draft",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 14782,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53",
+                    "location": {
+                      "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                      "column": 53,
+                      "line": 107
+                    },
+                    "snippet": "  105 |   const cid = (await alice.req(\"POST\", \"/v1/conversations/dm\", { userId: bob.userId })).conversation.id;\n  106 |   await link(page, alice);\n> 107 |   await page.goto(`/dms/c/${cid}`);\n      |                                    ^\n  108 |   const input = page.locator(\".composer textarea\");\n  109 |   await input.fill(\":thumbs_up\");\n  110 |   const options = page.getByRole(\"listbox\", { name: /^emoji$/i });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                        "column": 53,
+                        "line": 107
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('listbox', { name: 'Emoji', exact: true }).getByRole('option').first()\u001b[22m\n\n\n  105 |   const cid = (await alice.req(\"POST\", \"/v1/conversations/dm\", { userId: bob.userId })).conversation.id;\n  106 |   await link(page, alice);\n> 107 |   await page.goto(`/dms/c/${cid}`);\n      |                                    ^\n  108 |   const input = page.locator(\".composer textarea\");\n  109 |   await input.fill(\":thumbs_up\");\n  110 |   const options = page.getByRole(\"listbox\", { name: /^emoji$/i });\n    at /Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts:107:53"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:13:48.220Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-phone-width/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Volumes/code_files/meldiq_web_part3_ecosystem/test-results/part3-message-actions-colo-4732c-ion-never-submits-the-draft-phone-width/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Volumes/code_files/meldiq_web_part3_ecosystem/e2e/part3-message-actions.spec.ts",
+                    "column": 53,
+                    "line": 107
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e449e2677a39809d71e7-a2775c72e90691a3a121",
+          "file": "part3-message-actions.spec.ts",
+          "line": 98,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "part3-quiz.spec.ts",
+      "file": "part3-quiz.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "quiz answers stay hidden until close and anonymous votes never expose their account in another member's response",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13181,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:10:17.299Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "582601639fcff382df3e-5dfb9937aa0ab9eca660",
+          "file": "part3-quiz.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "quiz answers stay hidden until close and anonymous votes never expose their account in another member's response",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "tablet-width",
+              "projectName": "tablet-width",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13741,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:11:55.502Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "582601639fcff382df3e-0c9e67a1cdd335c7d48c",
+          "file": "part3-quiz.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "quiz answers stay hidden until close and anonymous votes never expose their account in another member's response",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 15283,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:14:03.823Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "582601639fcff382df3e-50b3d10e543d614abebe",
+          "file": "part3-quiz.spec.ts",
+          "line": 6,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "part3-threads.spec.ts",
+      "file": "part3-threads.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 15204,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:10:31.827Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "933e86607481e9b0fd9c-d9307b26a0066a218222",
+          "file": "part3-threads.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "tablet-width",
+              "projectName": "tablet-width",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 21698,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:12:10.366Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "933e86607481e9b0fd9c-a7ffd53e38b45bb54ab1",
+          "file": "part3-threads.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 15869,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:14:20.846Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "933e86607481e9b0fd9c-422cc155f93baa03d577",
+          "file": "part3-threads.spec.ts",
+          "line": 6,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "poll-media.spec.ts",
+      "file": "poll-media.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "poll percentages, named and hidden ballots survive reload, change, remove and close",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16562,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:10:47.071Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d1ecea967f4c5165f6e-e0342dbad3112c7d2a2d",
+          "file": "poll-media.spec.ts",
+          "line": 69,
+          "column": 1
+        },
+        {
+          "title": "long originals fit completely, zoom and pan, and navigate across separate image messages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8763,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:11:03.644Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "phone-image-metrics.json",
+                      "contentType": "application/json",
+                      "body": "eyJpbWFnZSI6eyJ4Ijo4LCJ5Ijo3Miwid2lkdGgiOjM3NCwiaGVpZ2h0IjozNzQwLCJ0b3AiOjcyLCJyaWdodCI6MzgyLCJib3R0b20iOjM4MTIsImxlZnQiOjh9LCJ2aWV3cG9ydCI6eyJ4Ijo4LCJ5Ijo3Miwid2lkdGgiOjM3NCwiaGVpZ2h0Ijo1NzIuNjA5Mzc1LCJ0b3AiOjcyLCJyaWdodCI6MzgyLCJib3R0b20iOjY0NC42MDkzNzUsImxlZnQiOjh9LCJ2aXNpYmlsaXR5IjoidmlzaWJsZSJ9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d1ecea967f4c5165f6e-9c49b451ac4cba94b7f9",
+          "file": "poll-media.spec.ts",
+          "line": 171,
+          "column": 1
+        },
+        {
+          "title": "poll percentages, named and hidden ballots survive reload, change, remove and close",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16954,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:14:36.751Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d1ecea967f4c5165f6e-1791175db29fe692c2a4",
+          "file": "poll-media.spec.ts",
+          "line": 69,
+          "column": 1
+        },
+        {
+          "title": "long originals fit completely, zoom and pan, and navigate across separate image messages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "phone-width",
+              "projectName": "phone-width",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11036,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-04T13:14:53.713Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "phone-image-metrics.json",
+                      "contentType": "application/json",
+                      "body": "eyJpbWFnZSI6eyJ4Ijo4LCJ5Ijo3Miwid2lkdGgiOjM3NCwiaGVpZ2h0IjozNzQwLCJ0b3AiOjcyLCJyaWdodCI6MzgyLCJib3R0b20iOjM4MTIsImxlZnQiOjh9LCJ2aWV3cG9ydCI6eyJ4Ijo4LCJ5Ijo3Miwid2lkdGgiOjM3NCwiaGVpZ2h0Ijo1NzIuNjA5Mzc1LCJ0b3AiOjcyLCJyaWdodCI6MzgyLCJib3R0b20iOjY0NC42MDkzNzUsImxlZnQiOjh9LCJ2aXNpYmlsaXR5IjoidmlzaWJsZSJ9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d1ecea967f4c5165f6e-870990cb53716c29671a",
+          "file": "poll-media.spec.ts",
+          "line": 171,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-04T13:07:41.150Z",
+    "duration": 444224.965,
+    "expected": 30,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

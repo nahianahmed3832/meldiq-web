@@ -1,0 +1,17 @@
+{
+  "api": {
+    "passed": 686,
+    "skipped": 1
+  },
+  "unit": {
+    "passed": 983,
+    "skipped": 1
+  },
+  "browser": {
+    "passed": 134,
+    "skipped": 15
+  },
+  "apiFiles": 96,
+  "unitFiles": 147,
+  "unresolvedSelectors": []
+}

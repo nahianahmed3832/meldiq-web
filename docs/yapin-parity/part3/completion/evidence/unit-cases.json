@@ -1,0 +1,4922 @@
+[
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the app shell from the service worker loads current billing and checkout screens from the network",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the app shell from the service worker answers opening the app's own routes with the kept page",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the app shell from the service worker leaves links with a query, other pages, the API and other methods to the network",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the app shell from the service worker keeps content-hashed build files, and freshens the boot script",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the app shell from the service worker reads the build files a page starts with",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the app shell from the service worker keeps only the app's own page, never an error, a redirect or something else",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the service worker's fetch handling uses the current payment screen online and preserves its offline fallback",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the service worker's fetch handling opens on the kept page at once and keeps the newest one for next time",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the service worker's fetch handling never keeps an error page, and leaves the API alone",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the service worker's fetch handling serves build files from the cache once fetched",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the configuration kept from last time waits for config.json the first time, then starts at once on the kept copy while reading it again",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the configuration kept from last time forgets the kept copy when the file turns out malformed, so the next start says what's wrong",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the configuration kept from last time never trusts a tampered kept copy",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "where the person left off reopens the last conversation for the same account, only at the bare address",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "where the person left off keeps only the app's own routes, whatever was stored",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the session after a page load waits for the session instead of sending a request bound to be refused",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the session after a page load sends a refused request again with a token another request already renewed, without swapping it again",
+    "status": "passed"
+  },
+  {
+    "suite": "app-reload.test.ts",
+    "name": "the session after a page load still renews a refused token once when nothing renewed it",
+    "status": "passed"
+  },
+  {
+    "suite": "attachment-policy.test.ts",
+    "name": "attachment plaintext policy uses signatures instead of image or video labels, and keeps arbitrary files downloadable",
+    "status": "passed"
+  },
+  {
+    "suite": "attachment-policy.test.ts",
+    "name": "attachment plaintext policy removes path and display spoofing characters, preserves extensions and flags executable downloads",
+    "status": "passed"
+  },
+  {
+    "suite": "attachment-policy.test.ts",
+    "name": "attachment plaintext policy accepts legacy references and bounds separate previews without recursion",
+    "status": "passed"
+  },
+  {
+    "suite": "automatic-photos.test.ts",
+    "name": "automatic photo upload and export scales a static photo to 2560, encodes WebP and releases the bitmap",
+    "status": "passed"
+  },
+  {
+    "suite": "automatic-photos.test.ts",
+    "name": "automatic photo upload and export preserves a 600 by 12000 screenshot without downscaling its text",
+    "status": "passed"
+  },
+  {
+    "suite": "automatic-photos.test.ts",
+    "name": "automatic photo upload and export preserves a 12000 by 600 screenshot without downscaling its text",
+    "status": "passed"
+  },
+  {
+    "suite": "automatic-photos.test.ts",
+    "name": "automatic photo upload and export falls back to the original when encoding or decoding is unavailable",
+    "status": "passed"
+  },
+  {
+    "suite": "automatic-photos.test.ts",
+    "name": "automatic photo upload and export preserves animated WebP before opening a bitmap",
+    "status": "passed"
+  },
+  {
+    "suite": "automatic-photos.test.ts",
+    "name": "automatic photo upload and export downloads every original without conversion or a filename change",
+    "status": "passed"
+  },
+  {
+    "suite": "automatic-photos.test.ts",
+    "name": "per-upload quality choice optimizes a photo by default and preserves exact bytes only when Original is selected",
+    "status": "passed"
+  },
+  {
+    "suite": "avatar-presence.test.tsx",
+    "name": "presence above avatar artwork keeps idle presence for animated=false and places it after the decoration",
+    "status": "passed"
+  },
+  {
+    "suite": "avatar-presence.test.tsx",
+    "name": "presence above avatar artwork keeps idle presence for animated=true and places it after the decoration",
+    "status": "passed"
+  },
+  {
+    "suite": "avatar-presence.test.tsx",
+    "name": "presence above avatar artwork keeps offline and hidden presence distinct",
+    "status": "passed"
+  },
+  {
+    "suite": "bot-labels.test.tsx",
+    "name": "bot classification in name presentations keeps BOT in compact names, headers and marked names: {}",
+    "status": "passed"
+  },
+  {
+    "suite": "bot-labels.test.tsx",
+    "name": "bot classification in name presentations keeps BOT in compact names, headers and marked names: { withMarks: true }",
+    "status": "passed"
+  },
+  {
+    "suite": "bot-labels.test.tsx",
+    "name": "bot classification in name presentations keeps BOT in compact names, headers and marked names: { withSubscription: true }",
+    "status": "passed"
+  },
+  {
+    "suite": "bulk-save.test.ts",
+    "name": "saving several files five albums of ten photos plan as one batch of fifty, every name distinct",
+    "status": "passed"
+  },
+  {
+    "suite": "bulk-save.test.ts",
+    "name": "saving several files clashing names get a number before the extension",
+    "status": "passed"
+  },
+  {
+    "suite": "bulk-save.test.ts",
+    "name": "saving several files excluded files and duplicates are left out",
+    "status": "passed"
+  },
+  {
+    "suite": "bulk-save.test.ts",
+    "name": "saving several files limits are reported, not silently cut",
+    "status": "passed"
+  },
+  {
+    "suite": "bulk-save.test.ts",
+    "name": "saving several files the summary tells partial success from running",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "call rules deafen mutes the microphone, and undeafening brings it back only if it was on",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "call rules share qualities: Standard is 1280\u00d7720 at 30 fps, High 1920\u00d71080 at 60; anything else saved reads as Standard",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "call rules noise reduction turns noise suppression and level on or off, echo cancellation stays; the meter is the root of the RMS",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "call controls deafens and undeafens, restoring the microphone as it was",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "call controls a listen-only voice channel opens no microphone and can't be unmuted",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "call controls shares with the chosen quality and sound, changes it during the share, and says when someone else stops",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "several screens shared at once (2026-10-24) watches the first share, keeps it when another starts, and moves on when it ends",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "several screens shared at once (2026-10-24) keeps the people on screen after the viewer goes back to them, until they pick a share",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "several screens shared at once (2026-10-24) follows a presenter who shares again (a republish or rejoin gives a new track)",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "several screens shared at once (2026-10-24) refuses to start a share past the cap, and never watches your own",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "a shared screen's shape (screen-share crop fix, 2026-10-22) is portrait when taller than wide, landscape otherwise, unknown before the first frame",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "one device per person in a call (API 0.31) leaves when the server says this person joined on another device, without ending the call for anyone",
+    "status": "passed"
+  },
+  {
+    "suite": "call-controls.test.ts",
+    "name": "one device per person in a call (API 0.31) when the room drops it first (removed by the server), it neither rejoins nor hangs up, and still says why",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "call keys makes 256-bit keys in the Android format and refuses anything else",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "call keys accepts a key only from the call's creator, in the call's conversation, while it's live (T5.2)",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "call keys in a voice room, someone connected to its call may pass the key on; outside voice rooms only the creator counts (android CallKeyVerifierTest)",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "call keys keeps the first key for a call: a later invite can't swap it mid-call",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "call keys holds at most 64 calls' keys, forgetting the oldest",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "call keys asks for a missing key after a grace period, then at most every 5 s; the creator answers at most every 5 s (T5.3)",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "call keys derives the same verification code as the Android algorithm, from the key and the call id",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "call keys uses WebCrypto's HKDF as RFC 5869 defines it (test case 1)",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "frame audit counts a received frame as verified only when the cryptor authenticated and shortened it",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "frame audit passes empty frames and the media server's injected frames, without counting them as proof",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "frame audit counts an outgoing frame as verified only when it grew by the encryption overhead and ends in the trailer",
+    "status": "passed"
+  },
+  {
+    "suite": "call-keys.test.ts",
+    "name": "frame audit reports what changed per track since the last report, following a reused transceiver's new id",
+    "status": "passed"
+  },
+  {
+    "suite": "call-latency.test.ts",
+    "name": "call latency from media stats uses the chosen ICE pair, rather than an unused candidate",
+    "status": "passed"
+  },
+  {
+    "suite": "call-latency.test.ts",
+    "name": "call latency from media stats supports selected pairs without transport stats and sender RTCP stats",
+    "status": "passed"
+  },
+  {
+    "suite": "call-latency.test.ts",
+    "name": "call latency from media stats keeps missing or invalid data unknown, including during setup",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) is verified once both directions prove themselves",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) shows a wrong-key peer as a problem, never as verified",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) doesn't call a slow start a failure, and recovers when frames decrypt",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) treats a frame that would have crossed unencrypted as a problem",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) marks a participant LiveKit reports an encryption error for until their media decrypts again",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) ignores the media server's injected frames when judging failure",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) needs every live remote track to prove itself, and one silent participant keeps a group call unverified",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) forgets removed tracks and ignores their late reports; a re-added track starts unproven",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) counts a report that arrived before its track was registered",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) forgets a participant who left and keeps the others",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) needs no proof from muted tracks but still shows their failures",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) vouches for a single track only while it's registered and decrypting (received media plays only then)",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) is never verified without remote media",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "encryption badge (D-17) bounds the list of removed tracks",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "call rules rings a recovered call only when it's ringing, someone else's, recent, unhandled and unanswered here",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "call rules retries only connection losses, with backoff",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "call rules says media flows only when inbound bytes grow, and stalls after two quiet samples",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "call rules describes the network path from WebRTC stats without addresses",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "call rules gives one clear message per failure class",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "call rules tells a denied permission from a missing or busy device",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "call status lines says where the call stands, from ringing to the timer",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "call status lines names every way a call can end, and formats long calls",
+    "status": "passed"
+  },
+  {
+    "suite": "call-rules.test.ts",
+    "name": "preview mirroring (android round 7 CallMediaPolicy.mirrorPreview) mirrors only your own front camera",
+    "status": "passed"
+  },
+  {
+    "suite": "call-setup.test.ts",
+    "name": "call setup order connects to the media room without waiting for the key message to be delivered",
+    "status": "passed"
+  },
+  {
+    "suite": "call-setup.test.ts",
+    "name": "call setup order a key message that can't be sent ends the call with the reason",
+    "status": "passed"
+  },
+  {
+    "suite": "community-accent.test.ts",
+    "name": "a community's accent colour accepts only #rrggbb",
+    "status": "passed"
+  },
+  {
+    "suite": "community-accent.test.ts",
+    "name": "a community's accent colour adds nothing without one, so the community keeps Meldiq's theme",
+    "status": "passed"
+  },
+  {
+    "suite": "community-accent.test.ts",
+    "name": "a community's accent colour keeps text readable whatever colour was picked: AA on light and dark surfaces, black or white on the fill",
+    "status": "passed"
+  },
+  {
+    "suite": "community-accent.test.ts",
+    "name": "a community's accent colour puts dark text on bright accents and white on deep ones",
+    "status": "passed"
+  },
+  {
+    "suite": "community-accent.test.ts",
+    "name": "a community's accent colour scopes plain colours to an element (no light-dark() or color-mix(), for older Safari)",
+    "status": "passed"
+  },
+  {
+    "suite": "community-landing.test.ts",
+    "name": "community entry opens an unseen lobby first and restores a valid last channel after that",
+    "status": "passed"
+  },
+  {
+    "suite": "community-landing.test.ts",
+    "name": "community entry uses a configured lobby before a default channel and never autojoins a voice room",
+    "status": "passed"
+  },
+  {
+    "suite": "community-landing.test.ts",
+    "name": "community entry waits for fresh membership before picking a default, and handles deleted channels",
+    "status": "passed"
+  },
+  {
+    "suite": "community-landing.test.ts",
+    "name": "community entry remembers each community separately, isolates accounts, and clears on sign-out",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "feature names uses the server's batch A features",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "channel abilities offers everything outside communities, and pins to people who may post there",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "channel abilities hides nothing while the community's permissions load",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "channel abilities follows the person's effective keys",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "channel abilities keeps files, GIFs and stickers out of text-only channels, but not from moderators",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "channel abilities refuses GIFs only in no-GIF channels",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "channel abilities lets poster roles and moderators post in read-only channels",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "channel abilities pins and moderates only with messages.manage or the channel's management, on servers with the feature",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "channel abilities spots headings as the server does",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "composer holds and refusal notes asks to finish onboarding first, then shows a lock to non-moderators, then read-only",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "composer holds and refusal notes turns the server's codes into friendly notes and leaves other errors alone",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "composer holds and refusal notes counts down to when a newcomer may post, or asks for a verified email",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "composer holds and refusal notes updates the community at once after a lock or onboarding refusal",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "moderator deletions applies someone else's deletion only in a community channel (the server checked messages.manage)",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "role mentions offers mentionable roles, and every role to holders of mention_all",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "role mentions sends the roles still named in the text",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "roles groups permissions the reference's way, unknown keys last",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "roles searches labels, hints and keys",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "roles refuses powers on roles given automatically",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "roles moves roles with the arrows and by dragging",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "roles lists roles highest first and paints gradient names",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "settings shows a nickname where there is one",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "settings checks a custom invite link and says why it's locked",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "settings accepts only https links with a name",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "settings opens custom invite links but never bare words",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a-gates.test.ts",
+    "name": "settings reads the new community and channel fields, and older servers without them",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "community settings rail lists an owner's pages in the reference's order, Meldiq's extras where they fit",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "community settings rail keeps pages from people who can't use them and servers without the feature",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "community settings rail shows only the open pages while permissions load",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "community settings rail hides Promote until the server announces it, then only for people who edit the community",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "community settings rail keeps safety links on Moderation and bot links on Integrations",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "community settings rail routes the new pages and keeps the old ones",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "change nickname sends empty as no nickname, trimmed otherwise",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "change nickname refuses more than 32 characters, counting emoji once",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "lock offers 15 minutes, 1 hour, 8 hours and 1 day, then Cancel",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "lock locks for the chosen time",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "lock says chat is limited only when the server has a real lock",
+    "status": "passed"
+  },
+  {
+    "suite": "community-parity-a.test.ts",
+    "name": "lock offers Unlock while locked, and Lock again once it has ended",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "channel tree groups channels by category in the community's order, uncategorised first",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "channel tree shows empty categories only for the people arranging them",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "channel tree orders categories the same before and after the category list loads (no alphabetical first paint)",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "channel tree keeps a category the list doesn't know yet, titled from the channel",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "channel tree takes channel types from kind, voice and format",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community panel follows the community order, uncategorised channels first",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community panel a collapsed category keeps channels with something new and the open one",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community panel hiding muted channels keeps the ones that mention you",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community panel unread only drops quiet sections, and starred channels aren't listed twice",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community panel keeps empty categories only for the people who fill them, and hidden channels while they mention you",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community panel mark as read and mute act on joined channels only",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "menus members get personal items only",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "menus managers can edit, set permissions, arrange, archive and delete",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "menus a channel you haven't joined offers nothing personal; hiding is offered where the server keeps it",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "menus category menus follow permissions, and the uncategorised group has nothing to manage",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "menus deleting needs the channel's exact name, with or without the hash",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "overwrites and layout change one capability at a time",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "overwrites and layout list in the order they apply, and say when a channel follows its category",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "overwrites and layout moves keep everything else in place",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community notifications and the rail (batches B2, B3) channels follow the community level unless they have their own",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community notifications and the rail (batches B2, B3) keeps an explicit all only while the community is quieter",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community notifications and the rail (batches B2, B3) reset makes a channel follow the community again; community fields change one at a time",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community notifications and the rail (batches B2, B3) a category's level sits between the channel's and the community's; timed mutes end by themselves",
+    "status": "passed"
+  },
+  {
+    "suite": "community-rules.test.ts",
+    "name": "community notifications and the rail (batches B2, B3) hides and shows channels, and keeps the rail in the arranged order with new communities at the end",
+    "status": "passed"
+  },
+  {
+    "suite": "config.test.ts",
+    "name": "runtime configuration (/config.json) defaults to same-origin when there's no file",
+    "status": "passed"
+  },
+  {
+    "suite": "config.test.ts",
+    "name": "runtime configuration (/config.json) points at another API origin and derives the WebSocket from it",
+    "status": "passed"
+  },
+  {
+    "suite": "config.test.ts",
+    "name": "runtime configuration (/config.json) refuses insecure or odd addresses instead of talking to the wrong server",
+    "status": "passed"
+  },
+  {
+    "suite": "config.test.ts",
+    "name": "runtime configuration (/config.json) ignores an HTML page served in place of the file (an SPA fallback)",
+    "status": "passed"
+  },
+  {
+    "suite": "config.test.ts",
+    "name": "runtime configuration (/config.json) takes the Firebase web settings for background notifications, and refuses an Android app id",
+    "status": "passed"
+  },
+  {
+    "suite": "confirmed-message-controls.test.ts",
+    "name": "failed edit, delete and pin preserve the original, retries use the supplied ID, and late edit acknowledgements preserve newer data",
+    "status": "passed"
+  },
+  {
+    "suite": "connection-requests.test.ts",
+    "name": "connection requests to tell about tells about requests that weren't there at the last check",
+    "status": "passed"
+  },
+  {
+    "suite": "connection-requests.test.ts",
+    "name": "connection requests to tell about tells about nothing when a request was accepted, declined or cancelled",
+    "status": "passed"
+  },
+  {
+    "suite": "connection-requests.test.ts",
+    "name": "connection requests to tell about on a page's first check, tells only about requests newer than the ones already told about in this browser",
+    "status": "passed"
+  },
+  {
+    "suite": "contract-fixtures.test.ts",
+    "name": "server contract fixtures (meldiq_android shared/contracts, API 0.76.1) test/contract-fixtures is the server checkout's current copy",
+    "status": "passed"
+  },
+  {
+    "suite": "contract-fixtures.test.ts",
+    "name": "server contract fixtures (meldiq_android shared/contracts, API 0.76.1) the strict pass notices a value a .catch() replaced",
+    "status": "passed"
+  },
+  {
+    "suite": "contract-fixtures.test.ts",
+    "name": "server contract fixtures (meldiq_android shared/contracts, API 0.76.1) tracks shared fallback schemas independently and restores their parsers",
+    "status": "passed"
+  },
+  {
+    "suite": "contract-fixtures.test.ts",
+    "name": "server contract fixtures (meldiq_android shared/contracts, API 0.76.1) decodes every answer the web reads, frame and error, with the strict findings only where already known",
+    "status": "passed"
+  },
+  {
+    "suite": "conversation-locals.test.ts",
+    "name": "conversation counters in this browser count every message that arrives at the same time",
+    "status": "passed"
+  },
+  {
+    "suite": "conversation-locals.test.ts",
+    "name": "conversation counters in this browser keep a message that arrives while the conversation is being marked read elsewhere",
+    "status": "passed"
+  },
+  {
+    "suite": "conversation-locals.test.ts",
+    "name": "conversation counters in this browser stay unread when another device read only up to an earlier message",
+    "status": "passed"
+  },
+  {
+    "suite": "conversation-locals.test.ts",
+    "name": "conversation counters in this browser publish the final state last",
+    "status": "passed"
+  },
+  {
+    "suite": "conversation-locals.test.ts",
+    "name": "relabels cached system previews without translating people, filenames, or message text",
+    "status": "passed"
+  },
+  {
+    "suite": "conversation-security.test.ts",
+    "name": "conversation security facts a direct message: encryption and what the server sees, with no safety-number points (retired in brief v4 \u00a713)",
+    "status": "passed"
+  },
+  {
+    "suite": "conversation-security.test.ts",
+    "name": "conversation security facts a channel with a changed key and a member elsewhere: the warning comes first, app updates are named",
+    "status": "passed"
+  },
+  {
+    "suite": "conversation-security.test.ts",
+    "name": "conversation security facts a group",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "shared griip-envelope-v1 vectors (also verified by the Android and server tests) reproduces the deterministic certificate and login proof signatures",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "shared griip-envelope-v1 vectors (also verified by the Android and server tests) matches the identity fingerprint the phone and server show",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "shared griip-envelope-v1 vectors (also verified by the Android and server tests) reproduces the AES-256-GCM vector",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "shared griip-envelope-v1 vectors (also verified by the Android and server tests) opens and verifies the envelope sealed by the Node reference client",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "shared griip-envelope-v1 vectors (also verified by the Android and server tests) refuses the vector envelope when anything signed or bound is changed",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "shared griip-envelope-v1 vectors (also verified by the Android and server tests) checks that a seed belongs to an identity key without exporting it",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "envelopes sealed in the browser open for every recipient with Node's own AES-GCM after an HPKE unwrap by the reference suite",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "envelopes sealed in the browser keeps private keys non-extractable",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "envelopes sealed in the browser verify is false, never an exception, for malformed input",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "attachments round-trip in the single-message format, readable by Node's AES-GCM",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "attachments decrypt chunked files written the way the phone writes them",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "attachments refuse a changed, truncated or reordered file",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "encrypted history items opens items the phone's algorithm sealed and computes the same tags",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "encrypted history items refuses items of another account, moved to another tag, or changed",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "encrypted history items derives non-extractable keys",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "linking opens the identity seed the phone sealed to this browser's transfer key",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "linking shows the same device fingerprint the phone shows when approving",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "bytes base64 and base64url match Node",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "bytes refuses malformed UTF-8 instead of guessing",
+    "status": "passed"
+  },
+  {
+    "suite": "crypto.test.ts",
+    "name": "bytes GCM refuses a wrong key",
+    "status": "passed"
+  },
+  {
+    "suite": "delete-account-rules.test.ts",
+    "name": "deleting the account: the page's rules needs the account's email, in any case and spacing, and a password",
+    "status": "passed"
+  },
+  {
+    "suite": "delete-account-rules.test.ts",
+    "name": "deleting the account: the page's rules turns the server's refusals into problems that say nothing was deleted",
+    "status": "passed"
+  },
+  {
+    "suite": "details-rules.test.ts",
+    "name": "details tabs (batches B14 and B14b, android DetailsRules.tabs) gives a group its members first",
+    "status": "passed"
+  },
+  {
+    "suite": "details-rules.test.ts",
+    "name": "details tabs (batches B14 and B14b, android DetailsRules.tabs) opens a direct message on Media: its two people are in the header",
+    "status": "passed"
+  },
+  {
+    "suite": "details-rules.test.ts",
+    "name": "details tabs (batches B14 and B14b, android DetailsRules.tabs) gives a channel Members, Media, Pins, Threads, Links and Files; a forum has no Threads tab (its posts are its threads)",
+    "status": "passed"
+  },
+  {
+    "suite": "discord-import.test.ts",
+    "name": "the return from Discord keeps the code, state and server from /discord/callback",
+    "status": "passed"
+  },
+  {
+    "suite": "discord-import.test.ts",
+    "name": "the return from Discord treats a cancelled or malformed return as cancelled, and ignores other paths",
+    "status": "passed"
+  },
+  {
+    "suite": "discord-import.test.ts",
+    "name": "the return from Discord drops a guild id that isn't a Discord id",
+    "status": "passed"
+  },
+  {
+    "suite": "discord-import.test.ts",
+    "name": "the preview shows only the parts chosen",
+    "status": "passed"
+  },
+  {
+    "suite": "discord-import.test.ts",
+    "name": "the preview is finished once it isn't running",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Discover's listing reads the server's answer: the Promoted row, labels, tags and who's online",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Discover's listing keeps a card whose label it doesn't know, without a label to show",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Discover's listing names each label as the reference ranks them, Mega in gold",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Discover's listing appends a further page without repeating a community the list shifted",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Discover's listing asks for only what's set, within the server's limits",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Profile \u203a Discovery reads a community's settings and says why it isn't listed",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Profile \u203a Discovery cleans comma-separated tags as the server stores them",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Profile \u203a Discovery refuses tags the server would",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "templates from a community reads a template link's preview: categories (uncategorised first), channels and roles",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "templates from a community reads uncategorised channels and a template whose source community is gone",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "templates from a community reads the community's own template, or none",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "templates from a community finds the code in a template link or a bare code, and nothing else",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Promote reads prices, tiers, rank and the Promoted row",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Promote leaves out a tier it doesn't know",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Promote shows a Promoted week Monday to Sunday in UTC",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Promote knows where a boost or booking stands",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Promote tells billing being off apart from other refusals",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "Promote only sends people to an https checkout page",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "community bot directory reads the directory and a bot's listing",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "community bot directory reads a listed bot, an unknown category kept as unknown",
+    "status": "passed"
+  },
+  {
+    "suite": "discovery.test.ts",
+    "name": "community bot directory has the reference's chips and sorts, and asks for what's chosen",
+    "status": "passed"
+  },
+  {
+    "suite": "download-reliability.test.ts",
+    "name": "bounded resumable downloads refuses an oversized stream before retaining its extra bytes",
+    "status": "passed"
+  },
+  {
+    "suite": "download-reliability.test.ts",
+    "name": "bounded resumable downloads validates the server's Content-Range before appending a resumed response",
+    "status": "passed"
+  },
+  {
+    "suite": "download-reliability.test.ts",
+    "name": "bounded resumable downloads tries direct delivery first, then remembers an authorized proxy only for the affected account engine",
+    "status": "passed"
+  },
+  {
+    "suite": "download-reliability.test.ts",
+    "name": "bounded resumable downloads cancellation prevents any download request",
+    "status": "passed"
+  },
+  {
+    "suite": "emoji-completion.test.ts",
+    "name": "opens only the current colon token and preserves its exact replacement range",
+    "status": "passed"
+  },
+  {
+    "suite": "emoji.test.ts",
+    "name": "emoji catalogue has Unicode's nine groups in order and every emoji once",
+    "status": "passed"
+  },
+  {
+    "suite": "emoji.test.ts",
+    "name": "emoji catalogue folds skin tones into their base, light to dark",
+    "status": "passed"
+  },
+  {
+    "suite": "emoji.test.ts",
+    "name": "emoji catalogue finds by name and keyword, best match first",
+    "status": "passed"
+  },
+  {
+    "suite": "emoji.test.ts",
+    "name": "reactions accepts every emoji and tone in the catalogue",
+    "status": "passed"
+  },
+  {
+    "suite": "emoji.test.ts",
+    "name": "reactions refuses text, spaces, control characters and long strings",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-cache.test.ts",
+    "name": "private expression images keeps caches separate between accounts and revokes them on membership loss or sign-out",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-cache.test.ts",
+    "name": "private expression images does not create an object URL when an old authorized download completes after invalidation",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-rules.test.ts",
+    "name": "community emoji in messages keep only well-formed references whose name is in the text, one per name, at most 20",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-rules.test.ts",
+    "name": "community emoji in messages find every use of a referenced name, and ignore names without a reference",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-rules.test.ts",
+    "name": "community emoji in messages send the emoji the text names; names for uploads are suggested from the file",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-rules.test.ts",
+    "name": "community emoji in messages show an image only when its hash matches",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-rules.test.ts",
+    "name": "community emoji in messages travel inside the payload, and plain messages stay plain on the wire",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-rules.test.ts",
+    "name": "community emoji reactions (batch B12) are the emoji's :name:, and only inside a community",
+    "status": "passed"
+  },
+  {
+    "suite": "expression-rules.test.ts",
+    "name": "community emoji images tries again after a failed download, but keeps refusing an image with the wrong hash",
+    "status": "passed"
+  },
+  {
+    "suite": "filtered-message-search.test.ts",
+    "name": "sends all filters and paired page cursors to the server, applies changes, and isolates search from the reader",
+    "status": "passed"
+  },
+  {
+    "suite": "forum-rules.test.ts",
+    "name": "forum posts have one bounded line as a title",
+    "status": "passed"
+  },
+  {
+    "suite": "forum-rules.test.ts",
+    "name": "forum posts start their text with the title so apps without forums still show it",
+    "status": "passed"
+  },
+  {
+    "suite": "forum-rules.test.ts",
+    "name": "forum posts sort by latest activity or newest, with their reply counts",
+    "status": "passed"
+  },
+  {
+    "suite": "forum-rules.test.ts",
+    "name": "forum posts carry well-formed, distinct tags, at most five; tag names are trimmed and not repeated",
+    "status": "passed"
+  },
+  {
+    "suite": "forum-rules.test.ts",
+    "name": "forum posts are searched and filtered here, by any or all of the chosen tags",
+    "status": "passed"
+  },
+  {
+    "suite": "forum-rules.test.ts",
+    "name": "forum posts show the most-used reaction on the card, counted by people; guidelines collapse to their first lines",
+    "status": "passed"
+  },
+  {
+    "suite": "forward-origin.test.ts",
+    "name": "a forwarded message's origin keeps a short place name, a plausible time and well-formed ids",
+    "status": "passed"
+  },
+  {
+    "suite": "forward-origin.test.ts",
+    "name": "a forwarded message's origin drops what isn't usable: no place, a bad time, ids that don't come in pairs or look wrong",
+    "status": "passed"
+  },
+  {
+    "suite": "foundation.test.ts",
+    "name": "account-scoped welcome progress resumes after a module/browser reload and never enrolls an unrelated or returning account",
+    "status": "passed"
+  },
+  {
+    "suite": "foundation.test.ts",
+    "name": "account-scoped welcome progress rejects malformed stored progress and survives unavailable storage without storing identity or secrets",
+    "status": "passed"
+  },
+  {
+    "suite": "foundation.test.ts",
+    "name": "profile layout compatibility keeps old-server defaults and drops malformed layout without discarding a valid style",
+    "status": "passed"
+  },
+  {
+    "suite": "foundation.test.ts",
+    "name": "profile layout compatibility reorders immutably without dropping hidden sections, including boundaries",
+    "status": "passed"
+  },
+  {
+    "suite": "frame-reducers.test.ts",
+    "name": "realtime frames that only change what's shown typing shows for six seconds and stops when told",
+    "status": "passed"
+  },
+  {
+    "suite": "frame-reducers.test.ts",
+    "name": "realtime frames that only change what's shown presence changes only people already known",
+    "status": "passed"
+  },
+  {
+    "suite": "frame-reducers.test.ts",
+    "name": "realtime frames that only change what's shown a deleted workspace takes its conversations with it; ended calls leave the live list",
+    "status": "passed"
+  },
+  {
+    "suite": "gallery.test.ts",
+    "name": "conversation gallery puts photos and videos in the media grid and documents in files, newest first",
+    "status": "passed"
+  },
+  {
+    "suite": "gallery.test.ts",
+    "name": "conversation gallery leaves out deleted messages, voice messages and repeats of the same attachment",
+    "status": "passed"
+  },
+  {
+    "suite": "gallery.test.ts",
+    "name": "conversation gallery treats an image type the browser won't show inline (SVG) as a file to download",
+    "status": "passed"
+  },
+  {
+    "suite": "gallery.test.ts",
+    "name": "conversation links and file search (batch B14 details tabs) lists every web link in the text, newest first, once each, without trailing punctuation",
+    "status": "passed"
+  },
+  {
+    "suite": "gallery.test.ts",
+    "name": "conversation links and file search (batch B14 details tabs) finds files by name, ignoring case; an empty search keeps them all",
+    "status": "passed"
+  },
+  {
+    "suite": "gestures.test.ts",
+    "name": "swipe to reply replies when a message is pulled far enough to the left, following the finger up to a limit",
+    "status": "passed"
+  },
+  {
+    "suite": "gestures.test.ts",
+    "name": "swipe to reply doesn't reply for a short pull, a scroll, a swipe to the right or a mouse",
+    "status": "passed"
+  },
+  {
+    "suite": "gestures.test.ts",
+    "name": "double tap to react is two taps close together in time and place",
+    "status": "passed"
+  },
+  {
+    "suite": "gestures.test.ts",
+    "name": "double tap to react isn't two taps too slow or too far apart",
+    "status": "passed"
+  },
+  {
+    "suite": "gestures.test.ts",
+    "name": "merging handlers runs both handlers of an event, in order, and keeps the others",
+    "status": "passed"
+  },
+  {
+    "suite": "guide-rules.test.ts",
+    "name": "community guide ticks the tasks pointing to a channel once it's opened, and counts them",
+    "status": "passed"
+  },
+  {
+    "suite": "guide-rules.test.ts",
+    "name": "onboarding answers replace a single answer, toggle the others, and name the first required question left",
+    "status": "passed"
+  },
+  {
+    "suite": "guide-rules.test.ts",
+    "name": "repeating events are named from the chosen date in its time zone",
+    "status": "passed"
+  },
+  {
+    "suite": "guide-rules.test.ts",
+    "name": "activity shows Unreads under its own chip only",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "history items written by the browser are read by the phone's algorithm, bound to their tag",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "history items written by the browser keep everything a message shows, in the phone's row format",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "history items written by the browser are written for settled messages only",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "history items written by the browser need keys derived since the browser could write: older ones only read",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "the browser's backup sends what this browser already held, then every message written here",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "the browser's backup doesn't send messages restored from the history, nor unsettled ones until they settle",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "the browser's backup doesn't send a message again for a read receipt alone, but does for a reaction",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "the browser's backup asks the server to keep a recent message's files",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "the browser's backup keeps what it couldn't send, and says why, so signing out can ask first",
+    "status": "passed"
+  },
+  {
+    "suite": "history-backup.test.ts",
+    "name": "the browser's backup carries on after a reload with what was still queued",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation reopens a detached conversation with a fresh newest page",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation does not reuse an earlier opening's in-flight request or publish it over the new opening",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation reopening replaces cached timestamp ties and edits with the fresh bounded page",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation preserves an arrival delivered while the opening reads its cached window",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation requests the newest page while summaries are still pending",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation renders history without waiting for individual sender profiles",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation coalesces button/scroll pagination and merges overlapping pages by ID",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation uses the advertised composite cursor so timestamp ties cross page boundaries",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation keeps a failed page retryable without advancing or emptying the history",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation keeps a distant result contiguous, updates its messages, and returns to latest explicitly",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation discards an older-page completion after a newer search window takes ownership",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation publishes the opening unread boundary with the first visible history window",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation does not mark a slow opening read after the person navigates away",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "history navigation acknowledges only a focused latest view, cancelling a pending read on scroll or route change",
+    "status": "passed"
+  },
+  {
+    "suite": "history-navigation.test.ts",
+    "name": "canonical message windows deduplicates replacements and uses the same tie order locally and on screen",
+    "status": "passed"
+  },
+  {
+    "suite": "history-read-receipts.test.ts",
+    "name": "read ticks after a reload your messages up to the other person's read receipt show as read, later ones as sent",
+    "status": "passed"
+  },
+  {
+    "suite": "history-read-receipts.test.ts",
+    "name": "read ticks after a reload your own read receipt from another device doesn't mark your messages read",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-preferences.test.ts",
+    "name": "persistent interface choice keeps a guest choice across sessions and applies real HTML direction",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-preferences.test.ts",
+    "name": "persistent interface choice loads the explicit account choice and follows a change from another device",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-preferences.test.ts",
+    "name": "persistent interface choice migrates an explicit guest choice once without writing on presence/message updates",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-preferences.test.ts",
+    "name": "persistent interface choice does not send unsupported fields to older servers and still keeps the browser choice",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-preferences.test.ts",
+    "name": "persistent interface choice isolates choices when switching accounts",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-preferences.test.ts",
+    "name": "persistent interface choice never stores automatic detection as an explicit account choice",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-public.test.ts",
+    "name": "standalone localization assets shares all 28 locale matches and regional detection with the application",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-public.test.ts",
+    "name": "standalone localization assets emits an English HTML fallback and formats native public counts without changing user variables",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-quality.test.ts",
+    "name": "localization quality gate detects invalid plural grammar and changed placeholder types",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-quality.test.ts",
+    "name": "localization quality gate reports missing files, invalid JSON, unexpected keys, empty text, placeholders, untranslated values and unlabeled icon buttons",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-rich.test.tsx",
+    "name": "localized inline controls and owned catalog metadata localizes owned plan and operations states while preserving identifiers and named products",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-rich.test.tsx",
+    "name": "localized inline controls and owned catalog metadata retains link behavior while translating its inline label as part of the sentence",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-rich.test.tsx",
+    "name": "localized inline controls and owned catalog metadata preserves and escapes user content supplied through an empty React slot",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-rich.test.tsx",
+    "name": "localized inline controls and owned catalog metadata only localizes catalog copy matching the audited source",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n-rich.test.tsx",
+    "name": "localized inline controls and owned catalog metadata keeps bot identity and community draft content intact",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages configures all 28 distinct variants and all feature namespaces",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages contains every source key in all 28 catalogs",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages matches supported browser preferences without merging regional variants",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages prioritizes explicit account and guest choices over browser detection",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages fills placeholders without interpreting user data as markup or code",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages uses native plural grammar and local digits",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages falls back to English and reports missing keys without logging private variables",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages localizes only the audited server usage labels and preserves custom metadata",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages sets actual document direction only for Arabic and Urdu",
+    "status": "passed"
+  },
+  {
+    "suite": "i18n.test.ts",
+    "name": "interface languages formats numbers, bytes, elapsed time and currency without changing the amount",
+    "status": "passed"
+  },
+  {
+    "suite": "identity-marks.test.tsx",
+    "name": "identity mark placement and meaning keeps the styled name, tag and membership mark in one aligned identity container",
+    "status": "passed"
+  },
+  {
+    "suite": "identity-marks.test.tsx",
+    "name": "identity mark placement and meaning shows no subscription indicator for a free account and respects the chosen message badge",
+    "status": "passed"
+  },
+  {
+    "suite": "identity-marks.test.tsx",
+    "name": "identity mark placement and meaning keeps the BOT label even when all optional badges are hidden",
+    "status": "passed"
+  },
+  {
+    "suite": "inspect-guard.test.ts",
+    "name": "opensInspector catches F12 and the developer tools shortcuts on Windows and Mac",
+    "status": "passed"
+  },
+  {
+    "suite": "inspect-guard.test.ts",
+    "name": "opensInspector catches View Source",
+    "status": "passed"
+  },
+  {
+    "suite": "inspect-guard.test.ts",
+    "name": "opensInspector leaves everyday shortcuts alone",
+    "status": "passed"
+  },
+  {
+    "suite": "invite-codes.test.ts",
+    "name": "invite codes reads the link the invite screen draws, older griip links and bare codes",
+    "status": "passed"
+  },
+  {
+    "suite": "invite-codes.test.ts",
+    "name": "invite codes refuses anything that isn't an invite",
+    "status": "passed"
+  },
+  {
+    "suite": "invite-codes.test.ts",
+    "name": "invite codes finds exactly one code in a pasted invite message",
+    "status": "passed"
+  },
+  {
+    "suite": "invite-codes.test.ts",
+    "name": "invite codes normalises typed codes but never reinterprets them",
+    "status": "passed"
+  },
+  {
+    "suite": "invite-codes.test.ts",
+    "name": "invitation links on every Meldiq address (2026-10-27: meldiq.app had no web server) are made on the web app's address and read back from any Meldiq host",
+    "status": "passed"
+  },
+  {
+    "suite": "json-budget.test.ts",
+    "name": "JSON validation work limits also rejects oversized realtime and legacy message payloads",
+    "status": "passed"
+  },
+  {
+    "suite": "json-budget.test.ts",
+    "name": "JSON validation work limits accepts realistic paged history and rejects oversized collections before reading their elements",
+    "status": "passed"
+  },
+  {
+    "suite": "json-budget.test.ts",
+    "name": "JSON validation work limits bounds depth, total work and cycles",
+    "status": "passed"
+  },
+  {
+    "suite": "json-budget.test.ts",
+    "name": "JSON validation work limits refuses an oversized API answer before invoking its schema validator",
+    "status": "passed"
+  },
+  {
+    "suite": "keyBackup.test.ts",
+    "name": "key backup opens the vector the other clients made",
+    "status": "passed"
+  },
+  {
+    "suite": "keyBackup.test.ts",
+    "name": "key backup seals with a fresh salt and nonce, naming the identity, and opens again",
+    "status": "passed"
+  },
+  {
+    "suite": "keyBackup.test.ts",
+    "name": "key backup refuses a wrong password, another account's backup and a backup claiming another identity",
+    "status": "passed"
+  },
+  {
+    "suite": "keyBackup.test.ts",
+    "name": "key backup uses the password's UTF-8 bytes",
+    "status": "passed"
+  },
+  {
+    "suite": "keystorage.test.ts",
+    "name": "keeping the device's encryption key across page loads stores non-extractable keys directly where the browser supports it",
+    "status": "passed"
+  },
+  {
+    "suite": "keystorage.test.ts",
+    "name": "keeping the device's encryption key across page loads stores only the sealed form where the browser can't keep X25519 keys (WebKit), and rebuilds a working key",
+    "status": "passed"
+  },
+  {
+    "suite": "keystorage.test.ts",
+    "name": "keeping the device's encryption key across page loads without native Ed25519/X25519 (Safari before 17), stores both private keys only sealed and rebuilds working ones",
+    "status": "skipped"
+  },
+  {
+    "suite": "large-files.test.ts",
+    "name": "chunked files streamed (android ChunkedAttachmentCrypto) encrypts in chunks exactly as the reference implementation does",
+    "status": "passed"
+  },
+  {
+    "suite": "large-files.test.ts",
+    "name": "chunked files streamed (android ChunkedAttachmentCrypto) decrypts the reference's ciphertext however the network cuts it, and agrees with the in-memory decryptor",
+    "status": "passed"
+  },
+  {
+    "suite": "large-files.test.ts",
+    "name": "chunked files streamed (android ChunkedAttachmentCrypto) refuses a truncated, extended, reordered or altered file",
+    "status": "passed"
+  },
+  {
+    "suite": "large-files.test.ts",
+    "name": "chunked files streamed (android ChunkedAttachmentCrypto) re-cuts a stream into fixed parts (16 MiB S3 parts from 1 MiB chunks)",
+    "status": "passed"
+  },
+  {
+    "suite": "large-files.test.ts",
+    "name": "chunked files streamed (android ChunkedAttachmentCrypto) takes the per-file limit from the server",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-curves.test.ts",
+    "name": "fallback Ed25519 and X25519 (browsers without them in WebCrypto) is what answers now, and its keys can't be read or kept by cloning",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-curves.test.ts",
+    "name": "fallback Ed25519 and X25519 (browsers without them in WebCrypto) signs exactly the shared vectors' certificate and login proof",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-curves.test.ts",
+    "name": "fallback Ed25519 and X25519 (browsers without them in WebCrypto) verifies and is verified by the native implementation",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-curves.test.ts",
+    "name": "fallback Ed25519 and X25519 (browsers without them in WebCrypto) agrees on X25519 shared secrets with the native implementation",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-curves.test.ts",
+    "name": "fallback Ed25519 and X25519 (browsers without them in WebCrypto) opens the envelope the Node reference client sealed (the format the phone uses)",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-curves.test.ts",
+    "name": "fallback Ed25519 and X25519 (browsers without them in WebCrypto) keeps device keys sealed at rest; after a reload (structured clone) they still sign and decrypt",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-import.test.ts",
+    "name": "uploading a browser's earlier history turns a kept message back into the payload it was sent as, with its final text",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-import.test.ts",
+    "name": "uploading a browser's earlier history uploads the message, then its reactions, votes, closing and pin as the changes that made them",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-import.test.ts",
+    "name": "uploading a browser's earlier history preserves hidden-name ballots in imported vote controls",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-import.test.ts",
+    "name": "uploading a browser's earlier history uploads nothing for deleted messages and call lines",
+    "status": "passed"
+  },
+  {
+    "suite": "legacy-profile-compatibility.test.ts",
+    "name": "the deployed web reader keeps legacy fallbacks when a profile contains collectible descriptors",
+    "status": "passed"
+  },
+  {
+    "suite": "light-dark-fallback.test.ts",
+    "name": "colours without CSS light-dark() (Safari before 17.5, every iPhone 8) picks one side of each light-dark(), commas inside colours and several calls included",
+    "status": "passed"
+  },
+  {
+    "suite": "light-dark-fallback.test.ts",
+    "name": "colours without CSS light-dark() (Safari before 17.5, every iPhone 8) adds light, system-dark and chosen-dark rules for every token, palettes included",
+    "status": "passed"
+  },
+  {
+    "suite": "link-rules.test.ts",
+    "name": "link warnings lets ordinary https links open directly",
+    "status": "passed"
+  },
+  {
+    "suite": "link-rules.test.ts",
+    "name": "link warnings warns about a destination hidden before @",
+    "status": "passed"
+  },
+  {
+    "suite": "link-rules.test.ts",
+    "name": "link warnings warns about look-alike letters from other alphabets",
+    "status": "passed"
+  },
+  {
+    "suite": "link-rules.test.ts",
+    "name": "link warnings warns about bare IP numbers, unencrypted http and long chains of names",
+    "status": "passed"
+  },
+  {
+    "suite": "link-rules.test.ts",
+    "name": "link warnings names the site readably",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "lobby answers reads the server's lobby view",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "lobby answers keeps the page when a newer server sends look values or cards this version doesn't know",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "lobby answers reads the settings view and the community's lobby flags",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the lobby's draft counts changes field by field, look fields one by one, ignoring blank additions",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the lobby's draft sends only what changed, cleaned, with the revision",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the lobby's draft says why a draft can't be saved",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the lobby's draft moves sections by drag and drop, joining the column they're dropped into",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the lobby's draft keeps who runs it and its card's switch together",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the lobby's draft orders lists, toggles boards but never the last one, and splits columns for Classic only",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the lobby as the draft shows it follows the draft's main channels and boards with what's known about them",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the lobby as the draft shows it tells empty cards (an editor's job) from quiet ones, and a bare lobby",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "pick your roles replaces a one-answer choice and toggles others",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "pick your roles keeps answers to questions the lobby doesn't show",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "landing, the channel list's row and the feed URL lands on a lobby that's on and unseen, only with the feature",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "landing, the channel list's row and the feed URL offers the lobby to members while it's on, and always to editors",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "landing, the channel list's row and the feed URL builds the feed URL on the API base",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "landing, the channel list's row and the feed URL routes /lobby and the Lobby settings page",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "community settings with the lobby puts Lobby where Home was and keeps the guide reachable",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the About text's Markdown parses headings, lists, quotes and paragraphs",
+    "status": "passed"
+  },
+  {
+    "suite": "lobby.test.ts",
+    "name": "the About text's Markdown only links https, and never makes HTML",
+    "status": "passed"
+  },
+  {
+    "suite": "long-press.test.ts",
+    "name": "long press on a message (touch screens) fires after holding still, and the click that follows is swallowed",
+    "status": "passed"
+  },
+  {
+    "suite": "long-press.test.ts",
+    "name": "long press on a message (touch screens) a quick tap stays a tap: reactions and links work as usual",
+    "status": "passed"
+  },
+  {
+    "suite": "long-press.test.ts",
+    "name": "long press on a message (touch screens) scrolling (moving, or the browser cancelling the touch) never opens the menu",
+    "status": "passed"
+  },
+  {
+    "suite": "long-press.test.ts",
+    "name": "long press on a message (touch screens) is for fingers and pens only: a mouse keeps its own clicks and right-click",
+    "status": "passed"
+  },
+  {
+    "suite": "long-press.test.ts",
+    "name": "long press on a message (touch screens) swallows only the click of the release itself, not a tap in the menu a moment later",
+    "status": "passed"
+  },
+  {
+    "suite": "long-press.test.ts",
+    "name": "long press on a message (touch screens) fires once per press",
+    "status": "passed"
+  },
+  {
+    "suite": "lookup.test.ts",
+    "name": "finding people tells names, phone numbers and other-server addresses apart",
+    "status": "passed"
+  },
+  {
+    "suite": "lookup.test.ts",
+    "name": "finding people writes addresses the way the server looks them up",
+    "status": "passed"
+  },
+  {
+    "suite": "mark-read-boundary.test.ts",
+    "name": "marks the click's boundary and keeps a message arriving during the local read unread",
+    "status": "passed"
+  },
+  {
+    "suite": "media-cache.test.ts",
+    "name": "media cache lets the oldest entries go until what stays fits",
+    "status": "passed"
+  },
+  {
+    "suite": "media-cache.test.ts",
+    "name": "media cache keeps nothing between visits (the server serves files each time), and erases what earlier versions kept",
+    "status": "passed"
+  },
+  {
+    "suite": "media-cache.test.ts",
+    "name": "media cache does nothing where the browser has no Cache API",
+    "status": "passed"
+  },
+  {
+    "suite": "media-links.test.ts",
+    "name": "music and video links recognises YouTube, YouTube Music, Spotify, SoundCloud and Vimeo links by what they are",
+    "status": "passed"
+  },
+  {
+    "suite": "media-links.test.ts",
+    "name": "music and video links leaves other links, plain http and malformed ids alone",
+    "status": "passed"
+  },
+  {
+    "suite": "media-links.test.ts",
+    "name": "music and video links finds the first music or video link in a message",
+    "status": "passed"
+  },
+  {
+    "suite": "media-links.test.ts",
+    "name": "albums (android Album) lays out two, three and four or more photos, the last tile counting the rest",
+    "status": "passed"
+  },
+  {
+    "suite": "meeting-rules.test.ts",
+    "name": "meeting rules local date and time become UTC in the chosen zone, DST included",
+    "status": "passed"
+  },
+  {
+    "suite": "meeting-rules.test.ts",
+    "name": "meeting rules the next slot is the next half hour",
+    "status": "passed"
+  },
+  {
+    "suite": "meeting-rules.test.ts",
+    "name": "meeting rules problems and fields round-trip",
+    "status": "passed"
+  },
+  {
+    "suite": "meeting-rules.test.ts",
+    "name": "meeting rules the calendar file carries the meeting in UTC, escaped",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "the analytics queue keeps the newest events within its capacity and hands them out in batches",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "the analytics queue puts a failed batch back in front, dropping the oldest when full",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "signals are silent on a server without experiments: control for everyone, nothing collected",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "signals collect nothing while the operator keeps analytics off, but still hand out assignments",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "signals send queued events and count an exposure once",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "signals when the network or server fails never throw into the caller and keep the events for the next try",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "signals when the network or server fails keep the established experience when the experiments request fails",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "closed analytics values bucket result counts and map search kinds to the catalogue's scopes",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "workspace kind is a team when the server says nothing, and unknown (not a team) when it says something newer",
+    "status": "passed"
+  },
+  {
+    "suite": "meldiq2.test.ts",
+    "name": "enums the server may extend keep a value this version doesn't know as unknown instead of a real one",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list adds directory bots omitted by the channel API without adding unrelated people or duplicating accounts",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list counts online, idle and do not disturb as here, and hidden presence by the online flag",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list puts people who are here under Online and everyone else under Offline, alphabetically",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list gives each shown-separately role its own group, in role order, under the person's highest such role",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list lists people who are offline under Offline whatever their roles, and leaves empty groups out",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list colours a name with the highest role that has a colour",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list keeps an active owner first in Admin without a custom role, ahead of other admins and hoisted roles",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list pins the owner's custom group above a higher-positioned role and keeps the owner first within it",
+    "status": "passed"
+  },
+  {
+    "suite": "member-list-rules.test.ts",
+    "name": "member list keeps offline owners offline, and bots separate from every human role and presence group",
+    "status": "passed"
+  },
+  {
+    "suite": "message-chime.test.ts",
+    "name": "the message chime is locked until a gesture unlocks it, then plays",
+    "status": "passed"
+  },
+  {
+    "suite": "message-chime.test.ts",
+    "name": "the message chime stays silent at volume 0 and says so when the browser keeps it blocked",
+    "status": "passed"
+  },
+  {
+    "suite": "message-chime.test.ts",
+    "name": "the message chime plays once for a burst of messages",
+    "status": "passed"
+  },
+  {
+    "suite": "message-collections.test.ts",
+    "name": "shared message collections pairs an older around-window cursor before returning to independent main history",
+    "status": "passed"
+  },
+  {
+    "suite": "message-collections.test.ts",
+    "name": "shared message collections shares one count request between message lists and clears vanished threads after a complete index",
+    "status": "passed"
+  },
+  {
+    "suite": "message-collections.test.ts",
+    "name": "shared message collections uses an independent main timeline page on capable servers",
+    "status": "passed"
+  },
+  {
+    "suite": "message-collections.test.ts",
+    "name": "shared message collections rejects a truncated cursor instead of silently truncating history",
+    "status": "passed"
+  },
+  {
+    "suite": "message-collections.test.ts",
+    "name": "shared message collections uses paired cursors, applies controls and keeps collection results out of the active timeline",
+    "status": "passed"
+  },
+  {
+    "suite": "message-collections.test.ts",
+    "name": "shared message collections keeps replies reachable when their root is outside the viewer's history",
+    "status": "passed"
+  },
+  {
+    "suite": "message-collections.test.ts",
+    "name": "shared message collections does not ingest another conversation's events",
+    "status": "passed"
+  },
+  {
+    "suite": "message-collections.test.ts",
+    "name": "shared message collections uses authoritative thread counts even without any cached replies or root",
+    "status": "passed"
+  },
+  {
+    "suite": "message-links.test.ts",
+    "name": "message links carry only the conversation and message ids, both ways",
+    "status": "passed"
+  },
+  {
+    "suite": "message-links.test.ts",
+    "name": "message links refuse anything else",
+    "status": "passed"
+  },
+  {
+    "suite": "message-links.test.ts",
+    "name": "message links are offered for sent messages that still exist",
+    "status": "passed"
+  },
+  {
+    "suite": "message-links.test.ts",
+    "name": "message links on every Meldiq address are read from meldiq.app, web.meldiq.app and meldiq://, never other sites",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "call history (android CallHistoryTest) one-to-one outcomes for the caller and the callee",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "call history (android CallHistoryTest) never invents a duration or makes it negative",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "call history (android CallHistoryTest) group calls use who connected",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "call history (android CallHistoryTest) lines say what happened",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "call history (android CallHistoryTest) previews a call entry like the phone's chat list",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "contact cards and locations (android RichRules) cleans a contact like the phone and writes the same fallback text",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "contact cards and locations (android RichRules) refuses impossible coordinates and links to OpenStreetMap with six decimals",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "voice messages (android VoiceNotes) prefers the phone's own format and falls back to Opus",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "voice messages (android VoiceNotes) plays only attachments marked voice and typed audio, with a clamped length",
+    "status": "passed"
+  },
+  {
+    "suite": "messaging-extras.test.ts",
+    "name": "profile fields (server rules) accepts birthdays with or without the year, and international phone numbers",
+    "status": "passed"
+  },
+  {
+    "suite": "mini-call-position.test.ts",
+    "name": "the minimised call's position stays where it's dropped while it's fully on screen",
+    "status": "passed"
+  },
+  {
+    "suite": "mini-call-position.test.ts",
+    "name": "the minimised call's position is pulled back on screen past any edge, keeping a margin",
+    "status": "passed"
+  },
+  {
+    "suite": "mini-call-position.test.ts",
+    "name": "the minimised call's position on a window narrower than itself, its left edge stays visible",
+    "status": "passed"
+  },
+  {
+    "suite": "mini-call-position.test.ts",
+    "name": "the minimised call's position moves with the arrow keys, further with Shift, and ignores other keys",
+    "status": "passed"
+  },
+  {
+    "suite": "mojo.test.ts",
+    "name": "Meldiq Plus on the web counts characters as people do: an emoji with its skin tone, a flag, a family is one",
+    "status": "passed"
+  },
+  {
+    "suite": "mojo.test.ts",
+    "name": "Meldiq Plus on the web shows sizes in the server's decimal units and prices from what's on sale",
+    "status": "passed"
+  },
+  {
+    "suite": "mojo.test.ts",
+    "name": "Meldiq Plus on the web offers only the screen-share qualities the server allows, and steps a choice down to them",
+    "status": "passed"
+  },
+  {
+    "suite": "mojo.test.ts",
+    "name": "Meldiq Plus on the web reads a person's Meldiq Plus",
+    "status": "passed"
+  },
+  {
+    "suite": "mojo.test.ts",
+    "name": "screen labels says a single ceiling as \"Up to\", and several as alternatives",
+    "status": "passed"
+  },
+  {
+    "suite": "multiple-reactions.test.ts",
+    "name": "preserves concurrent emoji reactions and removes only the selected emoji",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "navigation preference rules (android NavPrefsRules) places a conversation in exactly one place",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "navigation preference rules (android NavPrefsRules) ignores a move into a section that doesn't exist",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "navigation preference rules (android NavPrefsRules) moves within Starred and keeps the ends put",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "navigation preference rules (android NavPrefsRules) stores notification levels other than the default",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "navigation preference rules (android NavPrefsRules) adds, renames, collapses and deletes sections; deleting returns its conversations to their groups",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "navigation preference rules (android NavPrefsRules) collapses built-in groups by key",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "navigation preference rules (android NavPrefsRules) makes section ids the server accepts",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "syncing preferences (android NavPreferences) shows a change at once and stores it on the server with the revision it was based on",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "syncing preferences (android NavPreferences) merges with a change another device made meanwhile instead of overwriting it",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "syncing preferences (android NavPreferences) keeps changes made offline, across a reload, and sends them when back",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "syncing preferences (android NavPreferences) drops changes for a workspace the person has left instead of retrying them forever",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "syncing preferences (android NavPreferences) replays several pending changes in order",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "the details Mute button (batch B14, android DetailsActionsRow) mutes a conversation that notifies",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "the details Mute button (batch B14, android DetailsActionsRow) unmutes back to what it inherits",
+    "status": "passed"
+  },
+  {
+    "suite": "nav-prefs.test.ts",
+    "name": "the details Mute button (batch B14, android DetailsActionsRow) ends a timed mute, and turns messages on when the community or category is off",
+    "status": "passed"
+  },
+  {
+    "suite": "navigation-guard.test.ts",
+    "name": "unsaved editor navigation preserves multiple independent drafts until explicit discard",
+    "status": "passed"
+  },
+  {
+    "suite": "navigation-guard.test.ts",
+    "name": "unsaved editor navigation allows navigation after editors save or unmount",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "giveaway cards keeps a well-formed giveaway and drops a malformed one",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "giveaway cards reads the giveaway only from the server's own senders",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "giveaway cards an edit that ends the giveaway replaces the card's boxes and state",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "giveaway cards counts down in days, hours, minutes and seconds, faster in the last hour",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "Wordy reads marks and colours the keyboard with each letter's best mark",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "Wordy checks a guess is five letters before sending",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "Wordy knows the /wordy command, with or without a guess",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "Tickets with the Tickets bot offers 1\u20133 open tickets free and up to 10 with Bots+",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "Tickets with the Tickets bot checks the welcome line's length",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots-part2.test.ts",
+    "name": "Tickets with the Tickets bot sends only what changed, and no Plus extras without Bots+",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "official bot settings drafts fills in the defaults for anything the server left out",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "official bot settings drafts keeps an unknown bot's settings as they are",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "official bot settings drafts sends only the fields that changed",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "official bot settings drafts reads the server's welcomer fixture into a full draft",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "Plus gating lists each bot's Plus fields",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "Plus gating counts a value as Plus only past the free amount",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "Plus gating needs Bots+ for a changed Plus value, never for a kept (paused) one",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "Plus gating clearing a Plus value doesn't need Bots+",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "settings checks allows one greeting without Bots+ and ten with it",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "settings checks refuses empty and over-long greetings",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "settings checks checks Helper commands: names, built-ins, repeats and answers",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "settings checks checks level rewards: range, a role each, each role once",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "settings checks allows only the reference's star thresholds and 25 left-out channels",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "settings checks takes a YouTube channel link or an @handle for Alerts",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "settings checks cleans what's sent: trimmed text, empty optional text as null, names without !",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "words and previews fills the greeting's placeholders for the preview",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "words and previews limits the bot's name here to 32 characters",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "words and previews writes the Bots page's status line",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "words and previews turns Levels XP into levels",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "words and previews puts the server's refusals in words",
+    "status": "passed"
+  },
+  {
+    "suite": "official-bots.test.ts",
+    "name": "member list bots lists bots under Bots before Offline, whatever their presence",
+    "status": "passed"
+  },
+  {
+    "suite": "passkeys.test.ts",
+    "name": "passkeys in the browser are offered only when the server lists this page's origin and the browser has WebAuthn",
+    "status": "passed"
+  },
+  {
+    "suite": "passkeys.test.ts",
+    "name": "passkeys in the browser round-trip base64url without padding",
+    "status": "passed"
+  },
+  {
+    "suite": "passkeys.test.ts",
+    "name": "passkeys in the browser turn the server's create options into what navigator.credentials.create takes",
+    "status": "passed"
+  },
+  {
+    "suite": "passkeys.test.ts",
+    "name": "passkeys in the browser turn the server's sign-in options into what navigator.credentials.get takes",
+    "status": "passed"
+  },
+  {
+    "suite": "passkeys.test.ts",
+    "name": "passkeys in the browser send a new passkey and a signed answer back in the server's JSON form",
+    "status": "passed"
+  },
+  {
+    "suite": "passkeys.test.ts",
+    "name": "passkeys in the browser treat a closed or timed-out prompt as cancelled, and explain the browser's other refusals",
+    "status": "passed"
+  },
+  {
+    "suite": "passkeys.test.ts",
+    "name": "passkeys in the browser ask the server for this page's relying party, and send the answer to the ceremony it started",
+    "status": "passed"
+  },
+  {
+    "suite": "passkeys.test.ts",
+    "name": "passkeys in the browser are named after the browser and described by when they were added and used",
+    "status": "passed"
+  },
+  {
+    "suite": "paypal-checkout-draft.test.ts",
+    "name": "PayPal purchase intent recovery resumes a pending purchase with the same retry key and owned internal reference",
+    "status": "passed"
+  },
+  {
+    "suite": "paypal-checkout-draft.test.ts",
+    "name": "PayPal purchase intent recovery allows a separate intentional gift purchase after the earlier gift is confirmed",
+    "status": "passed"
+  },
+  {
+    "suite": "paypal-checkout-draft.test.ts",
+    "name": "PayPal purchase intent recovery does not restore another signed-in user's purchase reference",
+    "status": "passed"
+  },
+  {
+    "suite": "paypal-checkout-draft.test.ts",
+    "name": "PayPal purchase intent recovery starts a fresh request after restoring an expired owned checkout",
+    "status": "passed"
+  },
+  {
+    "suite": "pending-invite.test.ts",
+    "name": "invitation links into Meldiq Web reads the code from /join/<code>",
+    "status": "passed"
+  },
+  {
+    "suite": "pending-invite.test.ts",
+    "name": "invitation links into Meldiq Web reads ?invite=<code> on any page",
+    "status": "passed"
+  },
+  {
+    "suite": "pending-invite.test.ts",
+    "name": "invitation links into Meldiq Web ignores anything that isn't an invitation code",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions-basic.test.ts",
+    "name": "channel permissions, Basic view is private when @everyone can't see it",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions-basic.test.ts",
+    "name": "channel permissions, Basic view lists the roles and members who can see it, roles first",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions-basic.test.ts",
+    "name": "channel permissions, Basic view changes only seeing it, keeping every other rule",
+    "status": "passed"
+  },
+  {
+    "suite": "permissions-basic.test.ts",
+    "name": "event creation steps goes on from Where with a room, and from What and when with nothing left to fix",
+    "status": "passed"
+  },
+  {
+    "suite": "photo-quality.test.ts",
+    "name": "photo quality scales the longest edge down to the quality's size, never up",
+    "status": "passed"
+  },
+  {
+    "suite": "photo-quality.test.ts",
+    "name": "photo quality re-encodes JPEG, PNG and WebP; GIFs and everything else go as they are",
+    "status": "passed"
+  },
+  {
+    "suite": "photo-quality.test.ts",
+    "name": "photo quality names a re-encoded photo .jpg; a PNG keeps its name",
+    "status": "passed"
+  },
+  {
+    "suite": "plus-promotion.test.tsx",
+    "name": "reference-style Plus promotion uses catalog entitlements, truthful billing copy, visible dismissal and the server price",
+    "status": "passed"
+  },
+  {
+    "suite": "plus-support.test.ts",
+    "name": "Plus promotion presentation prerequisites requires known Free entitlements and a server offer",
+    "status": "passed"
+  },
+  {
+    "suite": "plus-support.test.ts",
+    "name": "Plus promotion presentation prerequisites fails closed on a missing catalog, billing state, errors or non-live offers",
+    "status": "passed"
+  },
+  {
+    "suite": "plus-support.test.ts",
+    "name": "account-wide reminder preference reads a remote opt-out and shares concurrent initial reads",
+    "status": "passed"
+  },
+  {
+    "suite": "plus-support.test.ts",
+    "name": "account-wide reminder preference migrates a legacy local opt-out once and respects a later re-enable from another device",
+    "status": "passed"
+  },
+  {
+    "suite": "plus-support.test.ts",
+    "name": "account-wide reminder preference does not mark migration complete or alter the local choice when the server is unavailable",
+    "status": "passed"
+  },
+  {
+    "suite": "poll-results.test.ts",
+    "name": "poll results and hidden-name ballots uses distinct valid voters as the percentage denominator for multiple answers",
+    "status": "passed"
+  },
+  {
+    "suite": "poll-results.test.ts",
+    "name": "poll results and hidden-name ballots never resolves hidden voters or returns their identifiers in display records",
+    "status": "passed"
+  },
+  {
+    "suite": "poll-results.test.ts",
+    "name": "poll results and hidden-name ballots syncs visibility changes, keeps hidden names for legacy votes, and clears retracted ballots",
+    "status": "passed"
+  },
+  {
+    "suite": "poll-results.test.ts",
+    "name": "poll results and hidden-name ballots round-trips vote privacy through the existing control protocol",
+    "status": "passed"
+  },
+  {
+    "suite": "poll-results.test.ts",
+    "name": "poll results and hidden-name ballots rejects duplicate answers and stops votes exactly at the scheduled end",
+    "status": "passed"
+  },
+  {
+    "suite": "polls-stickers.test.ts",
+    "name": "polls composes ids in order, drops blanks, and refuses fewer than two options or no question",
+    "status": "passed"
+  },
+  {
+    "suite": "polls-stickers.test.ts",
+    "name": "polls cleans received polls: squashed whitespace, bounded, bad and repeated ids dropped, at most ten options",
+    "status": "passed"
+  },
+  {
+    "suite": "polls-stickers.test.ts",
+    "name": "polls a vote replaces the voter's earlier one, keeps one choice unless several are allowed, ignores unknown options, and empty takes it back",
+    "status": "passed"
+  },
+  {
+    "suite": "polls-stickers.test.ts",
+    "name": "polls only the poll's sender closes it, and a closed poll takes no more votes",
+    "status": "passed"
+  },
+  {
+    "suite": "polls-stickers.test.ts",
+    "name": "polls gives older apps a readable fallback",
+    "status": "passed"
+  },
+  {
+    "suite": "polls-stickers.test.ts",
+    "name": "stickers reads the shared catalogue: three packs, every sticker with a known tone and motion",
+    "status": "passed"
+  },
+  {
+    "suite": "polls-stickers.test.ts",
+    "name": "stickers checks received references and finds nothing for unknown ones (they show their fallback text)",
+    "status": "passed"
+  },
+  {
+    "suite": "polls-stickers.test.ts",
+    "name": "stickers searches captions and keywords",
+    "status": "passed"
+  },
+  {
+    "suite": "polls.test.ts",
+    "name": "polls with an end time and answer emoji keep a valid emoji per answer and the end time",
+    "status": "passed"
+  },
+  {
+    "suite": "polls.test.ts",
+    "name": "polls with an end time and answer emoji close at the end time, and votes the server accepted after it don't count",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook reads a webhook post's fields and keeps them cleaned in the message",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook drops bad boxes and buttons one by one instead of losing the message",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook refuses absurd lists outright (bounded like the rest of the payload)",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook keeps at most 10 boxes and 5 buttons, and cuts oversized text",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook only takes https links and pictures, with a host and no credentials",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook removes control and direction-changing characters from box text",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook drops a box with nothing to show and a colour that isn't one",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook never reads these fields from another person's end-to-end message",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "payload: boxes, buttons and webhook shows text made from boxes only when there are boxes to show",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "webhook sender and picture keeps only the server's own picture address for that webhook",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "webhook sender and picture needs an id and a name, bounded",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "box rendering logic colour bars are #rrggbb",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "box rendering logic buttons say their emoji and label, or what they do",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "box rendering logic reads the markdown boxes use into plain tokens",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "box rendering logic makes links only of https addresses; anything else stays text",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "box rendering logic doesn't nest styles without end, and leaves snake_case alone",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out round-trips through Copy JSON and Import JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out reads a Discord webhook message, its colours and link-button components",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out says why a paste can't be read",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out caps imported boxes and buttons",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out lists what stops a post, by the server's limits",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out previews through the same cleaning as a received post",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out starts from a welcome box, a rules box and two buttons",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out moves boxes up and down without going past either end",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "Make a post: JSON in and out builds the address shown once",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "reaction roles offers only live roles this person may give that carry no admin power",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "reaction roles adds an emoji once, up to 20",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "reaction roles each row needs a role, and each emoji and role appear once",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "tickets knows ticket channels by the server's naming",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "tickets staff are owners, admins and people with a moderation power",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "tickets checks panels before saving",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "tickets says refusals in words",
+    "status": "passed"
+  },
+  {
+    "suite": "posting-tools.test.ts",
+    "name": "tickets reads the community view's tickets summary, and ignores a malformed one",
+    "status": "passed"
+  },
+  {
+    "suite": "prefs.test.ts",
+    "name": "preferences defaults to the dark theme, the Meldiq palette and the side panels open",
+    "status": "passed"
+  },
+  {
+    "suite": "prefs.test.ts",
+    "name": "preferences keeps every existing valid palette when the product default changes",
+    "status": "passed"
+  },
+  {
+    "suite": "prefs.test.ts",
+    "name": "preferences keeps Midnight, the navy look before the floating redesign, for whoever picks it",
+    "status": "passed"
+  },
+  {
+    "suite": "prefs.test.ts",
+    "name": "preferences keeps hidden side panels hidden",
+    "status": "passed"
+  },
+  {
+    "suite": "prefs.test.ts",
+    "name": "preferences keeps a stored theme and palette that are allowed",
+    "status": "passed"
+  },
+  {
+    "suite": "prefs.test.ts",
+    "name": "preferences falls back to the defaults for an unknown or tampered theme or palette",
+    "status": "passed"
+  },
+  {
+    "suite": "prefs.test.ts",
+    "name": "preferences moves the old default (system, never picked) to dark, and keeps a theme someone picked, black included",
+    "status": "passed"
+  },
+  {
+    "suite": "prefs.test.ts",
+    "name": "preferences gives browsers that stored preferences before palettes existed the default palette",
+    "status": "passed"
+  },
+  {
+    "suite": "prepare-expression.test.ts",
+    "name": "expression upload preparation preserves supported animated originals byte for byte",
+    "status": "passed"
+  },
+  {
+    "suite": "prepare-expression.test.ts",
+    "name": "expression upload preparation rejects oversized animation with an actionable reason before any canvas conversion",
+    "status": "passed"
+  },
+  {
+    "suite": "prepare-expression.test.ts",
+    "name": "expression upload preparation recognizes APNG and animated WebP rather than silently flattening them",
+    "status": "passed"
+  },
+  {
+    "suite": "profile-cards.test.ts",
+    "name": "profile cards carry no phone number or address",
+    "status": "passed"
+  },
+  {
+    "suite": "profile-cards.test.ts",
+    "name": "profile cards malformed profile ids fall back to a plain card",
+    "status": "passed"
+  },
+  {
+    "suite": "profile-cards.test.ts",
+    "name": "profile cards cards from older apps, with numbers, still show as they were",
+    "status": "passed"
+  },
+  {
+    "suite": "profile-collectibles.test.ts",
+    "name": "profile collectible rendering and draft safety previews a slot without changing the saved profile or unrelated styles",
+    "status": "passed"
+  },
+  {
+    "suite": "profile-collectibles.test.ts",
+    "name": "profile collectible rendering and draft safety drops malformed public artwork while preserving older profile fields",
+    "status": "passed"
+  },
+  {
+    "suite": "profile-collectibles.test.ts",
+    "name": "profile collectible rendering and draft safety uses a static, bounded recipe and asset references supplied by the API",
+    "status": "passed"
+  },
+  {
+    "suite": "profile-collectibles.test.ts",
+    "name": "clears overlapping collection layers in the existing style preview without dropping unrelated slots",
+    "status": "passed"
+  },
+  {
+    "suite": "push-rules.test.ts",
+    "name": "background notifications: the state Settings shows (web push) is on only with everything in place",
+    "status": "passed"
+  },
+  {
+    "suite": "push-rules.test.ts",
+    "name": "background notifications: the state Settings shows (web push) names what's missing, browser first, then the site, then the person's choices",
+    "status": "passed"
+  },
+  {
+    "suite": "push-rules.test.ts",
+    "name": "when this browser registers its token again on a new token, a new device (signed in again), or once a day",
+    "status": "passed"
+  },
+  {
+    "suite": "push-rules.test.ts",
+    "name": "Desktop notifications before the person chose (the 'allowed but nothing shows' bug) follow the site's permission until chosen; a choice wins either way",
+    "status": "passed"
+  },
+  {
+    "suite": "push-rules.test.ts",
+    "name": "iPhone and iPad: push only from the Home Screen asks for the Home Screen in Safari on an iPhone or iPad, not once opened from there, and never on a Mac",
+    "status": "passed"
+  },
+  {
+    "suite": "rail-folders.test.ts",
+    "name": "rail drag and drop moves a community before or after another",
+    "status": "passed"
+  },
+  {
+    "suite": "rail-folders.test.ts",
+    "name": "rail drag and drop drops a community onto another to make a folder where the target was, then into the folder",
+    "status": "passed"
+  },
+  {
+    "suite": "rail-folders.test.ts",
+    "name": "rail drag and drop places a community among an open folder's members, and takes one out to the top level",
+    "status": "passed"
+  },
+  {
+    "suite": "rail-folders.test.ts",
+    "name": "rail drag and drop moves a folder as a block, never into another folder; ungrouping keeps the order",
+    "status": "passed"
+  },
+  {
+    "suite": "rail-folders.test.ts",
+    "name": "rail drag and drop ignores folders' unknown communities and keeps every community in the order",
+    "status": "passed"
+  },
+  {
+    "suite": "reactors.test.ts",
+    "name": "who reacted lists each person once, you first, then in the order they reacted",
+    "status": "passed"
+  },
+  {
+    "suite": "reactors.test.ts",
+    "name": "who reacted names someone this browser hasn't loaded yet without inventing a name",
+    "status": "passed"
+  },
+  {
+    "suite": "reactors.test.ts",
+    "name": "who reacted falls back to the username when there's no display name",
+    "status": "passed"
+  },
+  {
+    "suite": "reactors.test.ts",
+    "name": "who reacted previews a long list and counts the rest",
+    "status": "passed"
+  },
+  {
+    "suite": "reactors.test.ts",
+    "name": "who reacted has nothing more to show for a short list",
+    "status": "passed"
+  },
+  {
+    "suite": "reading-position.test.ts",
+    "name": "session reading positions separates accounts, conversations and threads and removes positions on sign-out",
+    "status": "passed"
+  },
+  {
+    "suite": "reading-position.test.ts",
+    "name": "session reading positions tolerates unavailable, malformed, expired and non-finite stored positions",
+    "status": "passed"
+  },
+  {
+    "suite": "reading-position.test.ts",
+    "name": "session reading positions bounds the number of positions kept in a session",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the browser sends auth matches the server's ClientEvent schema",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the browser sends ping matches the server's ClientEvent schema",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the browser sends ack matches the server's ClientEvent schema",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the browser sends ack matches the server's ClientEvent schema",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the browser sends typing matches the server's ClientEvent schema",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the browser sends writes only the schema's fields, whatever the object carries",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends activity is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends call.alerted is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends call.declined is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends call.dismissed is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends call.ended is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends call.moderated is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends call.ring is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends call.started is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends call.updated is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends connections.updated is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends conv.updated is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends devices.changed is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends hello is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends interaction.reply is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends org.alert is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends org.application is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends org.applications is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends org.deleted is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends org.reports is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends org.updated is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends poll.updated is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends pong is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends presence is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends queue is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends queue.drained is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends reminder.due is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends reminders.changed is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends thread.preference is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends thread.updated is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends typing is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends user.updated is read from its text by the socket",
+    "status": "passed"
+  },
+  {
+    "suite": "realtime-frames.test.ts",
+    "name": "frames the server sends an unknown frame, extra fields or a broken one are ignored, never thrown",
+    "status": "passed"
+  },
+  {
+    "suite": "receiver-unknown.test.ts",
+    "name": "queue items the web can't parse an unknown item kind becomes a placeholder in its conversation, then is acknowledged",
+    "status": "passed"
+  },
+  {
+    "suite": "receiver-unknown.test.ts",
+    "name": "queue items the web can't parse isn't acknowledged while its placeholder can't be stored, so the server delivers it again",
+    "status": "passed"
+  },
+  {
+    "suite": "receiver-unknown.test.ts",
+    "name": "queue items the web can't parse a malformed receipt or control, or an item that names no message, is acknowledged without a placeholder",
+    "status": "passed"
+  },
+  {
+    "suite": "recovery.test.ts",
+    "name": "recovery key (android RecoveryCode) encodes exactly as an independent implementation of the Android algorithm",
+    "status": "passed"
+  },
+  {
+    "suite": "recovery.test.ts",
+    "name": "recovery key (android RecoveryCode) round-trips random seeds",
+    "status": "passed"
+  },
+  {
+    "suite": "recovery.test.ts",
+    "name": "recovery key (android RecoveryCode) tolerates how people type it: lower case, spaces, no dashes",
+    "status": "passed"
+  },
+  {
+    "suite": "recovery.test.ts",
+    "name": "recovery key (android RecoveryCode) refuses a typo or a truncated key rather than restoring the wrong identity",
+    "status": "passed"
+  },
+  {
+    "suite": "recovery.test.ts",
+    "name": "identity key from a seed matches RFC 8032 test 1",
+    "status": "passed"
+  },
+  {
+    "suite": "recovery.test.ts",
+    "name": "identity key from a seed is the key that verifies what the seed signs",
+    "status": "passed"
+  },
+  {
+    "suite": "reminder-rules.test.ts",
+    "name": "reminder rules (android ReminderRulesTest) groups upcoming soonest first, overdue and done latest first",
+    "status": "passed"
+  },
+  {
+    "suite": "reminder-rules.test.ts",
+    "name": "reminder rules (android ReminderRulesTest) snoozes to 10 minutes, an hour, this evening (or tomorrow's) and tomorrow morning",
+    "status": "passed"
+  },
+  {
+    "suite": "reminder-rules.test.ts",
+    "name": "reminder rules (android ReminderRulesTest) starts new reminders on the next quarter hour at least five minutes ahead, and keeps repeating ones on local time",
+    "status": "passed"
+  },
+  {
+    "suite": "reminder-rules.test.ts",
+    "name": "reminder rules (android ReminderRulesTest) names a saved message's reminder the same way as the phone",
+    "status": "passed"
+  },
+  {
+    "suite": "reminder-rules.test.ts",
+    "name": "sealed reminder content (android ReminderCrypto, server docs/REMINDERS.md) the browser's sealing opens with the documented format, and the documented format opens in the browser",
+    "status": "passed"
+  },
+  {
+    "suite": "reminder-rules.test.ts",
+    "name": "sealed reminder content (android ReminderCrypto, server docs/REMINDERS.md) refuses content moved to another reminder or another account",
+    "status": "passed"
+  },
+  {
+    "suite": "report-rules.test.ts",
+    "name": "reports share the message and up to five messages before it, oldest first",
+    "status": "passed"
+  },
+  {
+    "suite": "report-rules.test.ts",
+    "name": "reports give the first message no context, skip empty lines and cut long text to the server's limit",
+    "status": "passed"
+  },
+  {
+    "suite": "report-rules.test.ts",
+    "name": "reports go to the community from channels, to Meldiq from DMs and for illegal content",
+    "status": "passed"
+  },
+  {
+    "suite": "report-rules.test.ts",
+    "name": "reports pause for 1 hour to 7 days, time out for at most 28 days, and filter the audit log with keys the server accepts",
+    "status": "passed"
+  },
+  {
+    "suite": "retired-features.test.ts",
+    "name": "phone-only linking is off in a release build",
+    "status": "passed"
+  },
+  {
+    "suite": "retired-features.test.ts",
+    "name": "phone-only linking is on in development and in the browser-test build",
+    "status": "passed"
+  },
+  {
+    "suite": "revoked-sender.test.ts",
+    "name": "messages from a device revoked after sending (T1.5) verifies what the revoked device sent before its revocation, and nothing later",
+    "status": "passed"
+  },
+  {
+    "suite": "revoked-sender.test.ts",
+    "name": "messages from a device revoked after sending (T1.5) refuses a revoked device whose certificate isn't from the sender's identity",
+    "status": "passed"
+  },
+  {
+    "suite": "revoked-sender.test.ts",
+    "name": "messages from a device revoked after sending (T1.5) never encrypts to a revoked device",
+    "status": "passed"
+  },
+  {
+    "suite": "revoked-sender.test.ts",
+    "name": "messages from a device revoked after sending (T1.5) accepts a directory from a server without the T1.5 field",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "the community view reads the rules channel summary, and null from an older server or without one",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "the community view reads the rules view",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "posting and reacting lets everyone react in the rules channel, though only editors post there",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "posting and reacting holds posting and reacting everywhere in the community until the member agrees",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "posting and reacting shows the prompt at once when the server refuses for the rules",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "the Rules settings page sends trimmed rules, leaves blank ones out and never asks to agree to nothing",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "the Rules settings page says what's missing before saving",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "the Rules settings page moves a rule up and down, and leaves the ends alone",
+    "status": "passed"
+  },
+  {
+    "suite": "rules-channel.test.ts",
+    "name": "the Rules settings page has its words in every language",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) text parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) reply parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) thread reply with mentions parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) attachment parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) voice message parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) edit parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) delete parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) reaction add parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) reaction remove parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) pin parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) read receipt parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) call invite parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) call key request parses and re-encodes to the same JSON",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) accepts newer apps' types and fields without breaking",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) refuses what isn't a payload",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) refuses link previews that aren't web links (a javascript: URL from another device never becomes a link)",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "payload wire format (android griip-payload-v1-vectors.json) cleans file names that could disguise a file type",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "applying received payloads (same outcome as the phone) applies forum title/tag edits and preserves them through later text-only edits",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "applying received payloads (same outcome as the phone) only the author edits or deletes",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "applying received payloads (same outcome as the phone) reactions toggle per person and disappear when empty",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "applying received payloads (same outcome as the phone) receipts move status forward, never back",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "applying received payloads (same outcome as the phone) @everyone counts only with the server's mark, and never in a DM",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "applying received payloads (same outcome as the phone) caps received attachments and orders by server time",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "applying received payloads (same outcome as the phone) previews read like the phone's chat list",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "applying received payloads (same outcome as the phone) read receipts only in DMs and groups of up to 20 where one can post",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "mentions resolve only against the conversation's members, never myself",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "mentions @everyone only where it's allowed",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "mentions find the query under the caret",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "history records (the phone's Room rows) decode tolerantly: a malformed inner field becomes empty, unknown fields are dropped",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "history records (the phone's Room rows) merge: only later edits and deletions change a message this browser already has",
+    "status": "passed"
+  },
+  {
+    "suite": "rules.test.ts",
+    "name": "device name names the browser and system for the device list",
+    "status": "passed"
+  },
+  {
+    "suite": "saved-accounts.test.ts",
+    "name": "saved accounts adopts the existing account without moving its database, keys or sealed tokens",
+    "status": "passed"
+  },
+  {
+    "suite": "saved-accounts.test.ts",
+    "name": "saved accounts keeps sessions isolated across add, switch and reopen; removing one leaves the other usable",
+    "status": "passed"
+  },
+  {
+    "suite": "saved-accounts.test.ts",
+    "name": "saved accounts canceling add discards only the unfinished account and returns to the original session",
+    "status": "passed"
+  },
+  {
+    "suite": "saved-accounts.test.ts",
+    "name": "saved accounts does not replace a saved account with a duplicate identity or a missing device",
+    "status": "passed"
+  },
+  {
+    "suite": "saved-accounts.test.ts",
+    "name": "saved accounts an expired session clears only that account's vault",
+    "status": "passed"
+  },
+  {
+    "suite": "saved-accounts.test.ts",
+    "name": "saved accounts a pending send prevents a switch before the active account changes",
+    "status": "passed"
+  },
+  {
+    "suite": "saved-accounts.test.ts",
+    "name": "saved accounts finishes a rotating token refresh before a switch can unload the page",
+    "status": "passed"
+  },
+  {
+    "suite": "saved-accounts.test.ts",
+    "name": "saved accounts read receipts do not block switching; pending messages and user changes still do",
+    "status": "passed"
+  },
+  {
+    "suite": "screen-share-support.test.ts",
+    "name": "screen capture capability allows capable iPhone, iPad, Android and desktop browsers without a user-agent blacklist",
+    "status": "passed"
+  },
+  {
+    "suite": "screen-share-support.test.ts",
+    "name": "screen capture capability explains missing capture APIs while keeping watching separate from publishing",
+    "status": "passed"
+  },
+  {
+    "suite": "screen-share-support.test.ts",
+    "name": "screen capture capability requires HTTPS and tolerates environments without browser globals",
+    "status": "passed"
+  },
+  {
+    "suite": "search-query.test.ts",
+    "name": "search filters uses local calendar boundaries for during and after across 23-hour and 25-hour days",
+    "status": "passed"
+  },
+  {
+    "suite": "search-query.test.ts",
+    "name": "search filters reads from:, has:, before: and after:, and leaves the rest as text",
+    "status": "passed"
+  },
+  {
+    "suite": "search-query.test.ts",
+    "name": "search filters keeps words that only look like filters as text",
+    "status": "passed"
+  },
+  {
+    "suite": "search-query.test.ts",
+    "name": "search filters matches text, sender, attachments and days",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "creator verification puts the form in the query, trimmed, without empty notes",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "creator verification says what's missing before sending",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "creator verification checks the screenshot's type and size against the server's rules",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "creator verification reads views as a whole number, empty as not given",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "developer apps and bots allows https anywhere and http only on this computer, never a fragment or user info",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "developer apps and bots reads redirect URIs one per line",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "developer apps and bots says a bot quota from the server's details",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "connections reads the provider's way back and ignores anything else",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "connections shows known providers with https links only",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "connections reads connections and the BOT mark on profiles and members, and none from older servers",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "the consent page keeps the request's known parameters and leaves the rest out",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "the consent page refuses requests it can't send on",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "the consent page follows only http(s) answers and names the host people go back to",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "the consent page has its own route that links don't move to in-page (the query would be lost)",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "slash commands lists commands while a name is typed, by name then bot",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "slash commands fills in the required options when one is picked",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "slash commands reads options by type",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "slash commands says what's wrong, and leaves text that isn't a command here alone",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "slash commands runs the picked bot's command when two bots share a name",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "answers only you can see parses the frame and drops one missing what it needs",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity-b.test.ts",
+    "name": "answers only you can see keeps each answer once with its conversation, until dismissed",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "profile theme reads theme colours, falls back to the accent of older servers, and drops anything malformed",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "profile theme paints one colour solid and two as a gradient",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "profile theme has twelve two-colour presets in lower case, recognised when picked",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "profile theme starts a second colour as a lighter shade of the first",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "the badge shown by a name shows the chosen badge, none for none, and the Meldiq Plus badge by default",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "the badge shown by a name reads an unknown badge as the default",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "account levels changes the ring colour every 10 levels and keeps the last one past 100",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "account levels reads the level from profiles, null on older servers",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "account levels says what a refused level-up costs",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "points page words names quests and history rows, and an unknown quest from its id",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "points page words signs amounts, bounds progress and shows a full week on the 7th day",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "who may add you to group chats names who refused, then counts the rest",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "who may add you to group chats reads only the group_add_not_allowed refusal",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-parity.test.ts",
+    "name": "leaving several communities says what was left, what you own and what you'd already left",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-search.test.ts",
+    "name": "settings discovery finds existing pages by everyday tasks and scope",
+    "status": "passed"
+  },
+  {
+    "suite": "settings-search.test.ts",
+    "name": "settings discovery matches all words, ignores case and accents, and handles an empty search",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "screen share capture and encoding asks getDisplayMedia for the mode's size and rate, capped so a bigger screen is scaled, not cropped",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "screen share capture and encoding encodes each rung at its rate and bitrate, scaling the capture down to the rung's height",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "adaptive fallback steps down after three limited samples in a row, one rung at a time, at most every 8 s",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "adaptive fallback ignores a short blip, and goes back up only after a long clean stretch",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "adaptive fallback doesn't flap: an upgrade that fails again soon makes the next one wait twice as long",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "stats read back finds the sent and received video and why the encoder holds back",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "stats read back tells the presenter when the browser delivers less than the mode, and when the connection lowered it",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "which share a viewer watches keys a share by participant and track",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "which share a viewer watches keeps the watched share while it lives; a new one never takes over",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "which share a viewer watches moves to the same presenter's new share, else another, else the people",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "which share a viewer watches leaves the people on screen when the viewer chose them, and never watches your own share",
+    "status": "passed"
+  },
+  {
+    "suite": "share-quality.test.ts",
+    "name": "which share a viewer watches allows at least two shares at once, up to the cap",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot keeps the saved window visible and guarded when the fresh page fails",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot persists drafts through the existing encrypted snapshot before the save resolves",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot shows the snapshot's messages before the server answers",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot a reaction made in the gap waits, then is applied to the server's copy once its page arrives",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot a quick page shows nothing waiting",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot says the message changed when the server's page no longer has it, and doesn't act",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot says it couldn't reach Meldiq when the page fails, or doesn't come in time",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot a reply to a snapshot message waits for it; a new message doesn't wait at all",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot-actions.test.ts",
+    "name": "actions on messages drawn from the snapshot a reply to a message that's gone is refused with the reason, so the composer keeps the text",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer excludes distant search windows so a return never presents them as the latest messages",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer is kept sealed and comes back as it was, the newest messages of the conversations opened last",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer draws before the server answers, and never over what the server already sent",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer keeps at most the 12 conversations opened last",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer goes with everything else when this browser signs out, is removed, or the account is deleted",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer never opens another account's snapshot, and erases it",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer binds the account into the seal: relabelling one for another account doesn't open",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer drops one of another version",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer drops one sealed with another key, or tampered with, without a fuss",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer stays within its size limit by dropping the oldest conversations' messages first",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "the snapshot on this computer drops the oldest conversations when the browser's storage is full, instead of failing",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "keeping it current serializes overlapping draft and background saves so the newest state wins",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "keeping it current writes once changes settle for about 4 s, only after the server answered, and not while signed out of the session",
+    "status": "passed"
+  },
+  {
+    "suite": "snapshot.test.ts",
+    "name": "a session that needs the person draws nothing kept until it's unlocked: no tokens, or a refresh token that ran out",
+    "status": "passed"
+  },
+  {
+    "suite": "social-auth.test.ts",
+    "name": "social sessions reuse existing Meldiq session security uses the S256 PKCE proof challenge",
+    "status": "passed"
+  },
+  {
+    "suite": "social-auth.test.ts",
+    "name": "social sessions reuse existing Meldiq session security serializes refresh across tabs and adopts the rotated pair",
+    "status": "passed"
+  },
+  {
+    "suite": "social-auth.test.ts",
+    "name": "social sessions reuse existing Meldiq session security does not revive a session another tab forgot",
+    "status": "passed"
+  },
+  {
+    "suite": "social-rules.test.ts",
+    "name": "connections and requests say where someone stands from the lists",
+    "status": "passed"
+  },
+  {
+    "suite": "social-rules.test.ts",
+    "name": "connections and requests clean a typed username and count what's left to send",
+    "status": "passed"
+  },
+  {
+    "suite": "social-rules.test.ts",
+    "name": "presence is automatic once a timed choice ends",
+    "status": "passed"
+  },
+  {
+    "suite": "social-rules.test.ts",
+    "name": "presence pauses notifications as long as do not disturb lasts, and reads as words for others",
+    "status": "passed"
+  },
+  {
+    "suite": "social-rules.test.ts",
+    "name": "invite from a profile offers communities where you're more than a guest, by name, and sends the name and link",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "community mute (API 0.46.0) mutes every channel while it runs, even one with its own level, and ends by itself",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "community mute (API 0.46.0) keeps the mute when another community setting changes, and unmutes with null",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "community mute (API 0.46.0) reads documents from servers without it",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "name styles and tags paints one colour solid and two or three as a gradient",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "name styles and tags has presets of two or three valid colours with unique ids",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "name styles and tags keeps a member's look from a list and drops what it can't draw",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "name styles and tags reads a community's tag, ignoring anything that isn't 2\u20134 capitals or digits",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "voice options follows noise reduction for gain unless chosen, and asks for the chosen microphone without failing",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-rules.test.ts",
+    "name": "Builder mode adds Copy channel ID to a channel's menu only when on",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-settings.test.ts",
+    "name": "shortcuts writes a key press the same way on every platform",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-settings.test.ts",
+    "name": "shortcuts finds the action, follows the person's own combinations, and an empty one turns it off",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-settings.test.ts",
+    "name": "shortcuts draws keycaps for the platform and refuses plain keys",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-settings.test.ts",
+    "name": "colour themes has unique presets of valid colours, and a custom theme needs two or three",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-settings.test.ts",
+    "name": "account masks an email as the reference does until Reveal",
+    "status": "passed"
+  },
+  {
+    "suite": "stage1-settings.test.ts",
+    "name": "account reads standing, treating an unknown level as good",
+    "status": "passed"
+  },
+  {
+    "suite": "startup-refresh.test.ts",
+    "name": "shares startup and socket metadata requests, and refreshes again on a later reconnect",
+    "status": "passed"
+  },
+  {
+    "suite": "status.test.ts",
+    "name": "statuses end when the chosen time comes",
+    "status": "passed"
+  },
+  {
+    "suite": "status.test.ts",
+    "name": "statuses keep the reference's suggestions and their lengths",
+    "status": "passed"
+  },
+  {
+    "suite": "status.test.ts",
+    "name": "statuses show as one line until they end",
+    "status": "passed"
+  },
+  {
+    "suite": "status.test.ts",
+    "name": "pausing notifications lasts a while or until tomorrow at 9:00",
+    "status": "passed"
+  },
+  {
+    "suite": "status.test.ts",
+    "name": "Activity chips and mark all as read show their own section",
+    "status": "passed"
+  },
+  {
+    "suite": "status.test.ts",
+    "name": "Activity chips and mark all as read clear this workspace's unread channels only",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-client.test.ts",
+    "name": "staged Supabase client security seals tokens at rest and reads them after reopening",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-client.test.ts",
+    "name": "staged Supabase client security serializes concurrent wrapping-key creation",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-client.test.ts",
+    "name": "staged Supabase client security rejects a ciphertext moved to another session key and removes only the corrupt entry",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-client.test.ts",
+    "name": "staged Supabase client security rejects privileged keys and mismatched project origins before constructing a client",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-client.test.ts",
+    "name": "staged Supabase client security validates invalidation IDs and refuses message content/entitlement injection",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-events.test.ts",
+    "name": "private Supabase invalidation lifecycle deduplicates delivery and recovers durable history after each reconnect",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-events.test.ts",
+    "name": "private Supabase invalidation lifecycle serializes events and allows a failed invalidation to be retried",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-events.test.ts",
+    "name": "private Supabase invalidation lifecycle refuses malformed events and callbacks from a stopped account",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-events.test.ts",
+    "name": "private Supabase invalidation lifecycle does not let an older account switch replace a newer subscription",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport signs the exact provider/session/device/nonce context and confirms original ownership before returning a receipt",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport prevents credential redirects, shared caching and incidental cookie transmission",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport rejects mismatched ownership without changing the existing identity or SDK session",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport does not infer ownership from JWT metadata or an unrelated provider session",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport refuses insecure nonlocal or credential-bearing API origins before sending secrets",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport supports a later certified-device binding without resending legacy credentials",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport keeps failure messages free of server text, tokens and passwords",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport refuses expired challenges before signing or linking",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport keeps one provider token throughout an in-flight proof when the caller's SDK state changes",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-migration.test.ts",
+    "name": "staged web account migration transport returns only owner identifiers and rejects a malformed server challenge",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview-config.test.ts",
+    "name": "web migration deployment gate keeps the existing production configuration on its released auth path",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview-config.test.ts",
+    "name": "web migration deployment gate refuses enabling the preview through a production config",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview-config.test.ts",
+    "name": "web migration deployment gate pins the separate staging project and only accepts publishable keys",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview-config.test.ts",
+    "name": "web migration deployment gate requires a dedicated staging host even when a config declares staging",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview-config.test.ts",
+    "name": "web migration deployment gate rechecks cached staging opt-in before showing it after a deployment rollback",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview-config.test.ts",
+    "name": "web migration deployment gate does not activate cached staging credentials when fresh config is unavailable",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview.test.ts",
+    "name": "staging web sign-in rehearsal runs the actual SDK with sealed storage, bounded credential requests and local-scope logout",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview.test.ts",
+    "name": "staging web sign-in rehearsal verifies exact ownership then revokes both test sessions without changing keys, legacy auth or the offline outbox",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview.test.ts",
+    "name": "staging web sign-in rehearsal rejects a real-user address before opening an SDK session",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview.test.ts",
+    "name": "staging web sign-in rehearsal does not create a new session for an account that has already switched",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview.test.ts",
+    "name": "staging web sign-in rehearsal fences cancellation during provider sign-in and still ends and removes the SDK session",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview.test.ts",
+    "name": "staging web sign-in rehearsal rejects mismatched ownership and cleans up without revoking an unverified application binding",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview.test.ts",
+    "name": "staging web sign-in rehearsal refuses a stale result if SDK state changes after the device proof",
+    "status": "passed"
+  },
+  {
+    "suite": "supabase-preview.test.ts",
+    "name": "staging web sign-in rehearsal does not call a test passed when session cleanup fails",
+    "status": "passed"
+  },
+  {
+    "suite": "tab-badge.test.ts",
+    "name": "the tab's unread signal counts unread direct messages and mentions of you, and shows other channel activity as a dot",
+    "status": "passed"
+  },
+  {
+    "suite": "tab-badge.test.ts",
+    "name": "the tab's unread signal leaves out muted, archived and request conversations",
+    "status": "passed"
+  },
+  {
+    "suite": "tab-badge.test.ts",
+    "name": "the tab's unread signal shows channel activity alone as a dot, without a number",
+    "status": "passed"
+  },
+  {
+    "suite": "tab-badge.test.ts",
+    "name": "the tab's unread signal caps the title at 99+ and the icon at 9+",
+    "status": "passed"
+  },
+  {
+    "suite": "threads.test.ts",
+    "name": "Activity \u203a Thread replies (android ThreadActivityRules) lists threads I started or replied in, with replies from others since I last looked or replied",
+    "status": "passed"
+  },
+  {
+    "suite": "threads.test.ts",
+    "name": "Activity \u203a Thread replies (android ThreadActivityRules) puts unseen threads first and forgets what was seen",
+    "status": "passed"
+  },
+  {
+    "suite": "threads.test.ts",
+    "name": "Activity \u203a Thread replies (android ThreadActivityRules) ignores deleted replies and keeps the list short",
+    "status": "passed"
+  },
+  {
+    "suite": "threads.test.ts",
+    "name": "followed threads (batch B8) bring replies into Activity even when you never wrote in the thread",
+    "status": "passed"
+  },
+  {
+    "suite": "threads.test.ts",
+    "name": "explicit unfollow overrides participation and deleted roots leave Activity",
+    "status": "passed"
+  },
+  {
+    "suite": "transfers.test.ts",
+    "name": "one encryption pass produces exactly the reference ciphertext and hash, and decrypts back with every check",
+    "status": "passed"
+  },
+  {
+    "suite": "transfers.test.ts",
+    "name": "one encryption pass still checks every chunk when the hash matches: a changed or reordered chunk with a recomputed hash fails",
+    "status": "passed"
+  },
+  {
+    "suite": "transfers.test.ts",
+    "name": "transfers send once, and the same send while it runs joins it",
+    "status": "passed"
+  },
+  {
+    "suite": "transfers.test.ts",
+    "name": "transfers keeps no plaintext and no raw key in the browser's database, only ciphertext and a sealed key",
+    "status": "passed"
+  },
+  {
+    "suite": "transfers.test.ts",
+    "name": "transfers after a reload comes back interrupted and resumes from the kept ciphertext without encrypting again",
+    "status": "passed"
+  },
+  {
+    "suite": "transfers.test.ts",
+    "name": "transfers a small file interrupted before uploading asks for the file again",
+    "status": "passed"
+  },
+  {
+    "suite": "transfers.test.ts",
+    "name": "transfers cancel stops it and forgets its checkpoint",
+    "status": "passed"
+  },
+  {
+    "suite": "translate.test.ts",
+    "name": "translation on the device isn't offered where the browser has no on-device translator",
+    "status": "passed"
+  },
+  {
+    "suite": "translate.test.ts",
+    "name": "translation on the device detects the language, translates on the device and reports the model download",
+    "status": "passed"
+  },
+  {
+    "suite": "translate.test.ts",
+    "name": "translation on the device refuses unclear languages, the same language and unavailable pairs, without translating",
+    "status": "passed"
+  },
+  {
+    "suite": "translate.test.ts",
+    "name": "when the browser's translator misbehaves a hanging model or a browser error ends with one plain message, not a raw error or an endless wait",
+    "status": "passed"
+  },
+  {
+    "suite": "translate.test.ts",
+    "name": "the language to translate into is the person's last choice, else the interface's",
+    "status": "passed"
+  },
+  {
+    "suite": "typing-indicator.test.ts",
+    "name": "the Meldling typing indicator's names says nothing when nobody types",
+    "status": "passed"
+  },
+  {
+    "suite": "typing-indicator.test.ts",
+    "name": "the Meldling typing indicator's names names one, two, or two and how many others",
+    "status": "passed"
+  },
+  {
+    "suite": "typing-indicator.test.ts",
+    "name": "the Meldling typing indicator's names keeps the mascot's name in every language",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "routes round-trip every route, and fall back safely on anything else",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "routes old hash links and this app's own paths open in the app; nothing else does",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "formatting days and times read naturally",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "formatting names conversations: channels by name, DMs by the other person",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "sidebar selections lists a voice room once, in its own section, not again among the channels",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "sidebar selections a workspace shows its own channels, grouped by scope, plus every DM and group",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "sidebar selections counts unread people, mentions and per-workspace unread channels",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "sidebar selections loaded messages stay ordered by server time, and updates replace in place",
+    "status": "passed"
+  },
+  {
+    "suite": "ui-logic.test.ts",
+    "name": "Get started (android StartRules) shows until hidden or every required step is done; optional steps never keep it up",
+    "status": "passed"
+  },
+  {
+    "suite": "universal-search.test.ts",
+    "name": "universal search rules device-only filters never ask the server",
+    "status": "passed"
+  },
+  {
+    "suite": "universal-search.test.ts",
+    "name": "universal search rules each filter shows its own section, all shows everything",
+    "status": "passed"
+  },
+  {
+    "suite": "universal-search.test.ts",
+    "name": "universal search rules recent searches are newest first, unique and bounded",
+    "status": "passed"
+  },
+  {
+    "suite": "unread-markers.test.ts",
+    "name": "unread markers shows nothing when there's nothing new",
+    "status": "passed"
+  },
+  {
+    "suite": "unread-markers.test.ts",
+    "name": "unread markers highlights a single unread event without a number",
+    "status": "passed"
+  },
+  {
+    "suite": "unread-markers.test.ts",
+    "name": "unread markers shows the count from two unread events",
+    "status": "passed"
+  },
+  {
+    "suite": "unread-markers.test.ts",
+    "name": "unread markers caps the shown count at 99+ while the label keeps the real number",
+    "status": "passed"
+  },
+  {
+    "suite": "unread-markers.test.ts",
+    "name": "unread markers keeps a muted conversation quiet",
+    "status": "passed"
+  },
+  {
+    "suite": "unread-markers.test.ts",
+    "name": "unread markers still shows a mention of you in a muted conversation, apart from plain unread",
+    "status": "passed"
+  },
+  {
+    "suite": "unread-markers.test.ts",
+    "name": "unread markers numbers even one unread message in a DM or group",
+    "status": "passed"
+  },
+  {
+    "suite": "unread-markers.test.ts",
+    "name": "unread markers labels every state for screen readers",
+    "status": "passed"
+  },
+  {
+    "suite": "updates.test.ts",
+    "name": "new releases reads the build id from a page of this app",
+    "status": "passed"
+  },
+  {
+    "suite": "updates.test.ts",
+    "name": "new releases has no build id for a development server or another page",
+    "status": "passed"
+  },
+  {
+    "suite": "updates.test.ts",
+    "name": "new releases recognises a screen of an older release that's no longer on the server",
+    "status": "passed"
+  },
+  {
+    "suite": "upload-reliability.test.ts",
+    "name": "upload recovery does not send an already-cancelled body",
+    "status": "passed"
+  },
+  {
+    "suite": "upload-reliability.test.ts",
+    "name": "upload recovery keeps multipart progress after interruption and never falls back to re-uploading the whole object",
+    "status": "passed"
+  },
+  {
+    "suite": "upload-reliability.test.ts",
+    "name": "upload recovery resumes only parts whose size AND checksum match, and persists completion before finalizing",
+    "status": "passed"
+  },
+  {
+    "suite": "upload-reliability.test.ts",
+    "name": "upload recovery refreshes an expired single PUT and treats a lost successful PUT as completion",
+    "status": "passed"
+  },
+  {
+    "suite": "video-quality.test.ts",
+    "name": "keeps an already efficient small video without unnecessary quality loss",
+    "status": "passed"
+  },
+  {
+    "suite": "video-quality.test.ts",
+    "name": "asks for Original instead of silently uploading an unsupported large video",
+    "status": "passed"
+  },
+  {
+    "suite": "video-quality.test.ts",
+    "name": "honors cancellation before opening the selected file",
+    "status": "passed"
+  },
+  {
+    "suite": "viewport.test.ts",
+    "name": "mobile visible viewport lifecycle follows keyboard shrink and pan, coalesces events, and restores after orientation / page restoration",
+    "status": "passed"
+  },
+  {
+    "suite": "viewport.test.ts",
+    "name": "mobile visible viewport lifecycle leaves pinch zoom alone and cancels pending callbacks and listeners on teardown",
+    "status": "passed"
+  },
+  {
+    "suite": "viewport.test.ts",
+    "name": "mobile visible viewport lifecycle falls back to the layout viewport when VisualViewport is unavailable",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time starting B pauses A at once, through one audio element, and both show the right state",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time resumes A where it was left, at the chosen speed",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time rapid clicks end with the last one playing and the others' rejected play() ignored",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time a clip still decrypting doesn't start if another was asked for meanwhile",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time says why when the browser refuses to play, and the next click tries again",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time pauses and toggles, seeks the current clip or remembers a place for another, and rewinds at the end",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time stops when its player goes away, and on sign-out forgets everything",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time follows a pause from outside the page (media keys)",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-playback.test.ts",
+    "name": "one voice message at a time notifies subscribers with a new snapshot on each change",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-room.test.ts",
+    "name": "voice channel room (batch B14, android VoiceChannelScreen) offers Join voice when nothing is in the way",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-room.test.ts",
+    "name": "voice channel room (batch B14, android VoiceChannelScreen) offers Open the call when this browser is already in the room",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-room.test.ts",
+    "name": "voice channel room (batch B14, android VoiceChannelScreen) says when you may only listen, and still lets you join",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-room.test.ts",
+    "name": "voice channel room (batch B14, android VoiceChannelScreen) can't be joined without voice.connect, and says so instead of the listen-only note",
+    "status": "passed"
+  },
+  {
+    "suite": "voice-room.test.ts",
+    "name": "voice channel room (batch B14, android VoiceChannelScreen) says why it can't be joined: calling not set up, another call, or archived",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-dedup.test.ts",
+    "name": "persisted background notification identities shows a repeated event once even with simultaneous wake-ups, and scopes accounts",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-dedup.test.ts",
+    "name": "persisted background notification identities retries a failed display rather than saving it as delivered",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) uses the mirrored locale without changing names, content or notification privacy",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) one notification per conversation with new messages from others, titled like the app's own",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) shows what a server-stored message says (API 0.57.0), and still counts several",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) never wakes anyone for reactions, edits, receipts or their own messages",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) follows the synced notification levels: muted, timed mute, mentions only, and Ignore @everyone",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) lets a direct mention through a muted channel and counts each message once",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) stays quiet when notifications are off, paused, or for message requests; group notifications off keeps DMs",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) hides who and how many when message text is hidden in notifications",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) shows an incoming call ringing from someone else, not a call this person started elsewhere",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "what a background wake-up shows (service worker, no Meldiq tab open) skips conversations this browser doesn't know (left, or not loaded) instead of guessing",
+    "status": "passed"
+  },
+  {
+    "suite": "wake-rules.test.ts",
+    "name": "the page a notification opens is a path of this app, also from a notification shown before routes were paths; never another site",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace-rules.test.ts",
+    "name": "workspace role rules (same table as the server) offers exactly the role changes the server allows for someone else",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace-rules.test.ts",
+    "name": "workspace role rules (same table as the server) offers exactly the changes the server allows to your own role",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace-rules.test.ts",
+    "name": "workspace role rules (same table as the server) never offers to demote the last owner",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace-rules.test.ts",
+    "name": "workspace role rules (same table as the server) limits titles, removal and invitations",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace-rules.test.ts",
+    "name": "workspace role rules (same table as the server) names roles and tidies typed invitation codes",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace-rules.test.ts",
+    "name": "workspace role rules (same table as the server) formats counts and expiry times",
+    "status": "passed"
+  },
+  {
+    "suite": "workspace-rules.test.ts",
+    "name": "member groups (batch B12, android MemberGroupsTest) puts each person once, under their highest role shown separately, in role order, then everyone else",
+    "status": "passed"
+  },
+  {
+    "suite": "youtube-player.test.ts",
+    "name": "YouTube in Meldiq YouTube videos, Shorts and live streams carry the id the in-app player plays",
+    "status": "passed"
+  },
+  {
+    "suite": "youtube-player.test.ts",
+    "name": "YouTube in Meldiq only a well-formed id becomes a privacy-enhanced player address",
+    "status": "passed"
+  },
+  {
+    "suite": "zod-upgrade.test.ts",
+    "name": "patched Zod and legacy wire compatibility rejects an oversized constrained collection before validating its elements",
+    "status": "passed"
+  },
+  {
+    "suite": "zod-upgrade.test.ts",
+    "name": "patched Zod and legacy wire compatibility keeps omitted payload fields optional and normalizes legacy nulls",
+    "status": "passed"
+  },
+  {
+    "suite": "zod-upgrade.test.ts",
+    "name": "patched Zod and legacy wire compatibility keeps the optional bot marker absent for ordinary members",
+    "status": "passed"
+  }
+]
