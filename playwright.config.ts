@@ -55,6 +55,7 @@ export default defineConfig({
     { name: "chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 }, ...chromiumMedia } },
     { name: "firefox", use: { ...devices["Desktop Firefox"], viewport: { width: 1440, height: 900 }, ...firefoxMedia } },
     { name: "webkit", use: { ...devices["Desktop Safari"], viewport: { width: 1440, height: 900 }, permissions: media } },
+    { name: "tablet-width", testMatch: /part3-.*\.spec\.ts/, use: { ...devices["Desktop Chrome"], viewport: { width: 768, height: 1024 }, ...chromiumMedia } },
     { name: "phone-width", use: { ...devices["Pixel 7"], ...chromiumMedia } },
     { name: "iphone-width", use: { ...devices["iPhone 13"], permissions: media } },
   ],

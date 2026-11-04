@@ -745,5 +745,10 @@
     "photo": "照片",
     "video": "影片",
     "audio": "音訊"
-  }
+  },
+  "friendRequest": {
+    "note": "備註（選填）",
+    "privacy": "只有接收者可以閱讀此備註。請求結束後，備註將被刪除。"
+  },
+  "reportAlreadySent": "此檢舉已收到。"
 }

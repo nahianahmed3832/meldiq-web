@@ -2013,5 +2013,61 @@
       "storage": "Tập tin được lưu (bytes)",
       "calls": "Thời gian gọi"
     }
+  },
+  "eventCover": {
+    "label": "Ảnh bìa sự kiện"
+  },
+  "roleIcon": {
+    "label": "Biểu tượng vai trò"
+  },
+  "voiceChat": {
+    "label": "Trò chuyện trong phòng",
+    "help": "Tham gia để nói hoặc mở trò chuyện mà không tham gia thoại."
+  },
+  "partners": {
+    "label": "Đơn đăng ký đối tác",
+    "intro": "Chỉ chủ sở hữu và người xét duyệt Meldiq được xem. Xét duyệt thủ công; phê duyệt không cấp huy hiệu.",
+    "statement": "Giới thiệu về cộng đồng của bạn",
+    "guidelines": "Hướng dẫn cộng đồng đã công bố",
+    "moderation": "Có đội ngũ kiểm duyệt",
+    "safety": "Quy trình an toàn và báo cáo",
+    "activity": "Cộng đồng hoạt động tích cực"
+  },
+  "auditChanges": {
+    "label": "Thay đổi",
+    "before": "Trước",
+    "after": "Sau"
+  },
+  "forumLayout": {
+    "label": "Bố cục bài viết",
+    "list": "Danh sách",
+    "gallery": "Thư viện"
+  },
+  "forumTags": {
+    "required": "Bắt buộc gắn thẻ cho bài viết mới",
+    "restricted": "Chỉ kiểm duyệt viên",
+    "choose": "Chọn ít nhất một thẻ."
+  },
+  "part3": {
+    "cancelEvent": "Hủy sự kiện",
+    "confirmCancel": "Xác nhận hủy",
+    "changeScope": "Áp dụng thay đổi cho",
+    "thisOccurrence": "Chỉ lần này",
+    "currentAndFuture": "Lần này và các lần tiếp theo",
+    "scopeHelp": "Thay đổi một lần giữ nguyên lịch và phản hồi trong tương lai. Đổi lặp lại cho toàn bộ chuỗi.",
+    "locationType": "Địa điểm sự kiện",
+    "externalLocation": "Địa điểm bên ngoài",
+    "externalHelp": "Nhập địa điểm hoặc địa chỉ HTTPS. Kênh đã chọn quyết định ai thấy sự kiện.",
+    "visibilityChannel": "Kênh hiển thị",
+    "locationRequired": "Nhập địa điểm bên ngoài.",
+    "linkLobbyOrders": "Liên kết thứ tự máy tính và điện thoại",
+    "resetPhoneOrder": "Đặt lại thứ tự điện thoại theo máy tính",
+    "selectionScope": "Chỉ chọn thành viên đã tải (tối đa 50). Không bao gồm chủ sở hữu.",
+    "selectedCount": "Đã chọn {selected} · Đã tải {loaded} · {total} kết quả",
+    "selectMember": "Chọn {name}",
+    "selectLoaded": "Chọn thành viên đã tải",
+    "bulkRoles": "Quản lý vai trò đã chọn",
+    "allRoles": "Mọi cấp truy cập",
+    "loadedCount": "Đã tải {loaded} · {total} kết quả"
   }
 }

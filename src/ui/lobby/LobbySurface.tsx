@@ -2,9 +2,9 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { FileText, Hash, HelpCircle, Sparkles } from "lucide-react";
-import { type CSSProperties, useRef } from "react";
+import { type CSSProperties, useRef, useState, useEffect } from "react";
 import type { LobbySectionKey } from "../../api/lobbySchemas";
-import { cardState, lobbyIsBare, moveSection, pageColumns } from "../../sync/lobbyDraft";
+import { cardState, lobbyIsBare, moveLobbySection, orderedLobbySections, pageColumns } from "../../sync/lobbyDraft";
 import { ACCENT_CLASS, accentStyle, isAccent } from "../community/accent";
 import { GuideCard } from "../community/GuideOnboarding";
 import { useDragSort } from "../components/dragSort";
@@ -30,13 +30,18 @@ export function LobbySurface({ onCustomize, opening }: LobbySurfaceProps) {
   const accent = look.accent === "auto" ? view.community.accent : look.accent;
   const bannerUrl = usePhoto("banner", view.community.id, view.community.bannerRev);
   const body = useRef<HTMLDivElement>(null);
-  useDragSort(
-    body,
-    (drag, target, at) => editor?.change((d) => ({ ...d, sections: moveSection(d.sections, drag.id as LobbySectionKey, target.id as LobbySectionKey, at === "after" ? "after" : "before") })),
-    editing,
-  );
-  const shown = view.settings.sections.filter((s) => s.shown);
-  const { main, side } = pageColumns(shown, look.layout);
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const element = body.current;
+    if (!element) return;
+    const observer = new ResizeObserver((entries) => setNarrow(entries[0].contentRect.width <= 720));
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const phone = editor ? editor.phone : narrow;
+  useDragSort(body, (drag, target, at) => editor?.change((d) => moveLobbySection(d, phone, drag.id as LobbySectionKey, target.id as LobbySectionKey, at === "after" ? "after" : "before")), editing);
+  const shown = orderedLobbySections(view.settings, phone).filter((s) => s.shown);
+  const { main, side } = pageColumns(shown, phone ? "spotlight" : look.layout);
   const bare = lobbyIsBare(view);
   const vars = {
     ...accentStyle(accent),

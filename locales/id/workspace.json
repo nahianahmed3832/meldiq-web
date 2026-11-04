@@ -2013,5 +2013,61 @@
       "storage": "Berkas yang disimpan (byte)",
       "calls": "Menelepon peserta menit"
     }
+  },
+  "eventCover": {
+    "label": "Sampul acara"
+  },
+  "roleIcon": {
+    "label": "Ikon peran"
+  },
+  "voiceChat": {
+    "label": "Obrolan ruang",
+    "help": "Bergabung untuk berbicara atau buka obrolan tanpa bergabung ke suara."
+  },
+  "partners": {
+    "label": "Permohonan mitra",
+    "intro": "Pribadi untuk pemilik dan peninjau Meldiq. Peninjauan manual; persetujuan tidak memberi lencana.",
+    "statement": "Ceritakan tentang komunitas Anda",
+    "guidelines": "Pedoman komunitas dipublikasikan",
+    "moderation": "Cakupan moderasi",
+    "safety": "Proses keamanan dan pelaporan",
+    "activity": "Komunitas aktif"
+  },
+  "auditChanges": {
+    "label": "Perubahan",
+    "before": "Sebelum",
+    "after": "Sesudah"
+  },
+  "forumLayout": {
+    "label": "Tata letak postingan",
+    "list": "Daftar",
+    "gallery": "Galeri"
+  },
+  "forumTags": {
+    "required": "Wajibkan tag untuk postingan baru",
+    "restricted": "Hanya moderator",
+    "choose": "Pilih setidaknya satu tag."
+  },
+  "part3": {
+    "cancelEvent": "Batalkan acara",
+    "confirmCancel": "Konfirmasi pembatalan",
+    "changeScope": "Terapkan perubahan ke",
+    "thisOccurrence": "Hanya kejadian ini",
+    "currentAndFuture": "Kejadian ini dan berikutnya",
+    "scopeHelp": "Perubahan satu kejadian mempertahankan jadwal dan jawaban mendatang. Ubah pengulangan untuk seluruh rangkaian.",
+    "locationType": "Lokasi acara",
+    "externalLocation": "Lokasi eksternal",
+    "externalHelp": "Masukkan tempat atau alamat HTTPS. Kanal pilihan menentukan siapa yang dapat melihat acara.",
+    "visibilityChannel": "Kanal visibilitas",
+    "locationRequired": "Masukkan lokasi eksternal.",
+    "linkLobbyOrders": "Tautkan urutan desktop dan ponsel",
+    "resetPhoneOrder": "Atur ulang urutan ponsel mengikuti desktop",
+    "selectionScope": "Pilih hanya anggota yang dimuat (maksimal 50). Pemilik dikecualikan.",
+    "selectedCount": "{selected} dipilih · {loaded} dimuat · {total} cocok",
+    "selectMember": "Pilih {name}",
+    "selectLoaded": "Pilih anggota yang dimuat",
+    "bulkRoles": "Kelola peran pilihan",
+    "allRoles": "Semua tingkat akses",
+    "loadedCount": "{loaded} dimuat · {total} cocok"
   }
 }

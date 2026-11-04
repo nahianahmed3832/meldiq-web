@@ -127,7 +127,7 @@ export function AuditPage({ detail }: { detail: OrgAdminDetail }) {
             .flatMap((p) => p.entries)
             .map((e) => (
               <li key={e.id} className="ws-row">
-                <span className="lines grow">
+                <div className="lines grow">
                   <span>
                     <strong>{e.actorName ?? l10n("messaging.react_someone")}</strong> · {e.action.replace(/[._]/g, " ")}
                   </span>
@@ -135,7 +135,24 @@ export function AuditPage({ detail }: { detail: OrgAdminDetail }) {
                     {fullTime(e.at)}
                     {e.detail ? uiText("calls.interface.value0_9402340", { value0: e.detail }) : ""}
                   </small>
-                </span>
+                  {e.changes.length > 0 && (
+                    <details>
+                      <summary>{l10n("workspace.auditChanges.label")}</summary>
+                      <dl style={{ margin: "8px 0", overflowWrap: "anywhere" }}>
+                        {e.changes.map((change) => (
+                          <div key={change.field}>
+                            <dt>
+                              <strong>{change.field}</strong>
+                            </dt>
+                            <dd style={{ marginInlineStart: 12 }}>
+                              {l10n("workspace.auditChanges.before")}: {JSON.stringify(change.before)} → {l10n("workspace.auditChanges.after")}: {JSON.stringify(change.after)}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </details>
+                  )}
+                </div>
               </li>
             ))}
           {first.data && all[0].entries.length === 0 && (

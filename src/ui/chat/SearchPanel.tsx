@@ -1,4 +1,4 @@
-import { SEARCH_SYNTAX } from "../../i18n/syntax";
+import { SEARCH_SYNTAX, SEARCH_FILTER_TOKENS } from "../../i18n/syntax";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -11,11 +11,21 @@ import { shortWhen } from "../format";
 import { jumpTo } from "./jump";
 import { hasFilters, parseSearchQuery } from "../../sync/searchQuery";
 import { StatePanel } from "../components/StatePanel";
+import type { CollectionCursor } from "../../api/messageCollections";
 /** Filters added by a tap (android search chips): the text typed after them narrows further. */
 const CHIPS: {
   label: string;
   token: string;
 }[] = [
+  { label: SEARCH_FILTER_TOKENS.during, token: SEARCH_FILTER_TOKENS.during },
+  { label: SEARCH_FILTER_TOKENS.mentions, token: SEARCH_FILTER_TOKENS.mentions },
+  { label: SEARCH_FILTER_TOKENS.channel, token: SEARCH_FILTER_TOKENS.channel },
+  {
+    get label() {
+      return uiText("messaging.interface.pinned_f20c879");
+    },
+    token: "is:pinned ",
+  },
   {
     get label() {
       return uiText("messaging.interface.from_2181976");
@@ -77,13 +87,22 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
   const [missing, setMissing] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [attempt, setAttempt] = useState(0);
+  const [cursor, setCursor] = useState<CollectionCursor | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [moreError, setMoreError] = useState(false);
+  const generation = useRef(0);
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => input.current?.focus(), []);
   const parsed = parseSearchQuery(q);
   useEffect(() => {
+    const requests = generation;
+    const version = ++requests.current;
     const term = q.trim();
     const query = parseSearchQuery(term);
     setResults(null);
+    setCursor(null);
+    setMoreError(false);
+    setLoadingMore(false);
     if (query.text.length < MIN_QUERY && !hasFilters(query)) {
       setStatus("idle");
       return;
@@ -92,10 +111,11 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
     let alive = true;
     const t = setTimeout(() => {
       engine
-        .searchMessages(term, conversationId)
+        .searchMessagePage(term, conversationId)
         .then((r) => {
           if (alive) {
-            setResults(r);
+            setResults(r.items);
+            setCursor(r.more ? r.nextCursor : null);
             setStatus("idle");
           }
         })
@@ -103,9 +123,26 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
     }, 200);
     return () => {
       alive = false;
+      if (requests.current === version) requests.current++;
       clearTimeout(t);
     };
   }, [engine, conversationId, q, attempt]);
+  const more = async () => {
+    if (!cursor || loadingMore) return;
+    const version = generation.current;
+    setLoadingMore(true);
+    setMoreError(false);
+    try {
+      const page = await engine.searchMessagePage(q.trim(), conversationId, cursor);
+      if (generation.current !== version) return;
+      setResults((old) => [...new Map([...(old ?? []), ...page.items].map((m) => [m.id, m])).values()]);
+      setCursor(page.more ? page.nextCursor : null);
+    } catch {
+      if (generation.current === version) setMoreError(true);
+    } finally {
+      if (generation.current === version) setLoadingMore(false);
+    }
+  };
   const open = async (m: StoredMessage) => {
     setMissing(null);
     if (!(await jumpTo(engine, conversationId, m.id))) setMissing(uiText("messaging.interface.that_message_isn_t_loaded_in_this_conversation_any_more_d58914f"));
@@ -192,6 +229,16 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
               </li>
             ))}
           </ul>
+        )}
+        {moreError && (
+          <p className="banner danger" role="alert">
+            {l10n("messaging.interface.couldn_t_load_messages_try_again_9068b8c")}
+          </p>
+        )}
+        {cursor && (
+          <button className="btn btn-secondary btn-sm" disabled={loadingMore} onClick={() => void more()}>
+            {loadingMore ? l10n("common.status.loading") : moreError ? l10n("common.actions.retry") : l10n("messaging.interface.more_d47d7cb")}
+          </button>
         )}
       </div>
     </aside>

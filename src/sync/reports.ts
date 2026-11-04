@@ -84,6 +84,9 @@ export function goesToCommunity(reason: ReportReason, conversationType: string |
 }
 const zSent = z.object({ report: z.object({ id: z.string(), status: z.string(), to: openEnum(["community", "meldiq"]), repeated: z.boolean().default(false) }) });
 export type SentReport = z.infer<typeof zSent>["report"];
+export async function sendCommunityReport(engine: Engine, orgId: string, reason: ReportReason, note: string): Promise<SentReport> {
+  return (await engine.api.json("POST", `/v1/orgs/${encodeURIComponent(orgId)}/report`, zSent, { body: { reason, note: note.trim() || undefined } })).report;
+}
 export async function sendReport(
   engine: Engine,
   r: {

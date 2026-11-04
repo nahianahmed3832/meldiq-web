@@ -745,5 +745,10 @@
     "photo": "Fotografie",
     "video": "video",
     "audio": "audio"
-  }
+  },
+  "friendRequest": {
+    "note": "Notă (opțional)",
+    "privacy": "Doar destinatarul poate citi această notă. Este ștearsă când solicitarea se încheie."
+  },
+  "reportAlreadySent": "Această raportare a fost deja primită."
 }

@@ -745,5 +745,10 @@
     "photo": "Foto",
     "video": "video",
     "audio": "ljud"
-  }
+  },
+  "friendRequest": {
+    "note": "Anteckning (valfritt)",
+    "privacy": "Endast mottagaren kan läsa anteckningen. Den tas bort när förfrågan avslutas."
+  },
+  "reportAlreadySent": "Den här anmälan har redan tagits emot."
 }

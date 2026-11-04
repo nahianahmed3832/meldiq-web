@@ -68,6 +68,7 @@ export const zNavPrefs = z.object({
   communityThemes: z.boolean().optional(),
   expressionFavorites: z.array(z.string()).max(100).optional(),
   expressionRecents: z.array(z.string()).max(40).optional(),
+  quickReactions: z.array(z.string()).min(3).max(5).optional(),
 });
 export type NavPrefs = z.infer<typeof zNavPrefs>;
 export type NavSection = NavPrefs["sections"][number];
@@ -103,7 +104,8 @@ export type NavOp =
   | { op: "hide"; conversationId: string; hidden: boolean }
   | { op: "communityThemes"; on: boolean }
   | { op: "expressionFavorite"; id: string; on: boolean }
-  | { op: "expressionUsed"; id: string };
+  | { op: "expressionUsed"; id: string }
+  | { op: "quickReactions"; values: string[] };
 
 export type NavPlace = { k: "default" } | { k: "starred" } | { k: "section"; id: string };
 
@@ -212,6 +214,8 @@ function place(p: NavPrefs, id: string, sectionId: string | null, star: boolean)
 
 export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
   switch (o.op) {
+    case "quickReactions":
+      return { ...p, quickReactions: o.values };
     case "expressionFavorite":
       return { ...p, expressionFavorites: o.on ? [...new Set([...(p.expressionFavorites ?? []), o.id])].slice(-100) : (p.expressionFavorites ?? []).filter((id) => id !== o.id) };
     case "expressionUsed":
@@ -387,6 +391,9 @@ export class NavSync {
     this.publish();
     await this.host.save(PENDING_KEY, this.pending);
     await this.flush();
+  }
+  hasPending(workspaceId: string, op: NavOp["op"]): boolean {
+    return (this.pending[workspaceId] ?? []).some((item) => item.op === op);
   }
 
   /** Sends every workspace's unsent changes; one flush at a time. */

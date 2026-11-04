@@ -19,6 +19,7 @@ import { type ChimeState, chimeState, playChime, unlockChime } from "../../appli
 import { useT } from "../../i18n";
 import { InstallSetting } from "./InstallButton";
 import { ThemeChoice, PaletteChoice } from "../components/AppearanceControls";
+import { QuickReactionsSetting } from "./QuickReactionsSetting";
 export function NotificationsPage() {
   useLocaleRender();
   const engine = useEngine();
@@ -176,6 +177,7 @@ export function AppearancePage() {
     <>
       <h1>{t("settings_appearance")}</h1>
       <div className="card">
+        <QuickReactionsSetting />
         <div className="setting">
           <div className="lines">
             <strong>{t("ap_theme")}</strong>

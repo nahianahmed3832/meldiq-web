@@ -3,7 +3,7 @@ import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
 import { IdCard } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 import { autoRoleProblem } from "../../sync/permissionGroups";
@@ -21,6 +21,7 @@ function startDraft(overview: RolesOverview, role: Role | null, template?: strin
   const t = role ? null : (overview.templates.find((x) => x.key === template) ?? null);
   const from = role ?? t;
   return {
+    iconExpressionId: role?.extras?.iconExpressionId ?? null,
     name: role?.name ?? t?.name ?? "",
     description: from?.description ?? "",
     color: from ? (from.color ?? null) : ROLE_COLORS[0],
@@ -38,6 +39,7 @@ function extrasChange(draft: RoleDraft, role: Role | null): RoleExtrasChange | n
   const auto: AutoAssign = { mode: draft.autoMode, before: draft.autoMode === "joined_before" ? dayMs(draft.autoBefore) : null };
   const was = role?.extras ?? { color2: null, mentionable: false, autoAssign: { mode: "none", before: null } };
   const change: RoleExtrasChange = {};
+  if (draft.iconExpressionId !== (role?.extras?.iconExpressionId ?? null)) change.iconExpressionId = draft.iconExpressionId;
   if ((draft.color ? draft.color2 : null) !== was.color2) change.color2 = draft.color ? draft.color2 : null;
   if (draft.mentionable !== was.mentionable) change.mentionable = draft.mentionable;
   if (auto.mode !== was.autoAssign.mode || auto.before !== was.autoAssign.before) change.autoAssign = auto;
@@ -75,6 +77,8 @@ export function RoleEditor({
   const features = useOrbit((s) => s.server?.features ?? []);
   const extras = features.includes(PARITY_FEATURES.permissions);
   const [draft, setDraft] = useState<RoleDraft>(() => startDraft(overview, role, template));
+  // Role fields and extras use the established endpoints. Keep a successful first step if extras must be retried.
+  const persisted = useRef<Role | null>(role);
   const [tab, setTab] = useState<Tab>("display");
   const act = useAction();
   const readOnly = role !== null && !role.canEdit;
@@ -91,7 +95,8 @@ export function RoleEditor({
         denies: [...draft.denies],
         ...(features.includes("role-hoist") ? { hoist: draft.hoist } : {}),
       };
-      const saved = role ? await updateRole(engine, role, fields) : await createRole(engine, orgId, { ...fields, ...(template ? { template } : {}) });
+      const saved = persisted.current ? await updateRole(engine, persisted.current, fields) : await createRole(engine, orgId, { ...fields, ...(template ? { template } : {}) });
+      persisted.current = saved;
       const change = extras ? extrasChange(draft, role) : null;
       if (change) await setRoleExtras(engine, saved.id, change);
       onSaved();
@@ -148,6 +153,7 @@ export function RoleEditor({
         </div>
         {tab === "display" && (
           <RoleDisplayTab
+            orgId={orgId}
             draft={draft}
             patch={patch}
             readOnly={readOnly}

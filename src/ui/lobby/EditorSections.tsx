@@ -1,10 +1,11 @@
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
-import { ChevronRight, GripVertical, Lock } from "lucide-react";
+import { ArrowUp, ArrowDown, ChevronRight, GripVertical, Lock } from "lucide-react";
 import { useRef } from "react";
+import { useOrbit } from "../../application/orbit";
 import type { LobbySectionKey } from "../../api/lobbySchemas";
-import { cardState, moveSection, setSection } from "../../sync/lobbyDraft";
+import { cardState, moveLobbySection, orderedLobbySections, linkLobbyOrders, setSection } from "../../sync/lobbyDraft";
 import { useDragSort } from "../components/dragSort";
 import { Toggle } from "../components/Toggle";
 import { FeedUrl } from "./FeedUrl";
@@ -18,13 +19,21 @@ import type { LobbyEditor } from "./useLobbyEditor";
 export function EditorSections({ editor }: { editor: LobbyEditor }) {
   useLocaleRender();
   const { view } = useLobby();
+  const responsive = useOrbit((s) => s.server?.features.includes("lobby-responsive-order") ?? false);
   const list = useRef<HTMLDivElement>(null);
   useDragSort(list, (drag, target, at) =>
-    editor.change((d) => ({ ...d, sections: moveSection(d.sections, drag.id as LobbySectionKey, target.id as LobbySectionKey, at === "after" ? "after" : "before") })),
+    editor.change((d) => moveLobbySection(d, responsive && editor.phone, drag.id as LobbySectionKey, target.id as LobbySectionKey, at === "after" ? "after" : "before")),
   );
-  const classic = editor.draft.look.layout === "classic";
+  const classic = editor.draft.look.layout === "classic" && !editor.phone;
+  const ordered = orderedLobbySections(editor.draft, editor.phone);
   return (
     <div className="lobby-editor-stack">
+      {responsive && <Toggle checked={!!editor.draft.ordersLinked} onChange={(linked) => editor.change((d) => linkLobbyOrders(d, linked))} label={uiText("workspace.part3.linkLobbyOrders")} />}
+      {responsive && editor.phone && (
+        <button className="btn btn-secondary btn-sm" onClick={() => editor.change((d) => linkLobbyOrders(d, false))}>
+          {uiText("workspace.part3.resetPhoneOrder")}
+        </button>
+      )}
       <div className="lobby-sections" ref={list}>
         <div className="lobby-section-row fixed">
           <Lock size={14} className="faint" aria-hidden="true" />
@@ -40,11 +49,29 @@ export function EditorSections({ editor }: { editor: LobbyEditor }) {
           </button>
           <ChevronRight size={15} className="faint" aria-hidden="true" />
         </div>
-        {editor.draft.sections.map((s) => {
+        {ordered.map((s, index) => {
           const state = cardState(s.key, view);
           const label = SECTION_INFO[s.key].label;
           return (
             <div key={s.key} className={`lobby-section-row${s.shown ? "" : " off"}`} data-drag={s.key} data-drag-kind="lobby-section" data-drag-group={s.column}>
+              <span data-no-drag>
+                <button
+                  className="icon-btn"
+                  aria-label={`${uiText("organization.interface.move_up_c66feb5")}: ${label}`}
+                  disabled={index === 0}
+                  onClick={() => editor.change((d) => moveLobbySection(d, responsive && editor.phone, s.key, ordered[index - 1].key, "before"))}
+                >
+                  <ArrowUp size={14} />
+                </button>
+                <button
+                  className="icon-btn"
+                  aria-label={`${uiText("organization.interface.move_down_40bb50d")}: ${label}`}
+                  disabled={index === ordered.length - 1}
+                  onClick={() => editor.change((d) => moveLobbySection(d, responsive && editor.phone, s.key, ordered[index + 1].key, "after"))}
+                >
+                  <ArrowDown size={14} />
+                </button>
+              </span>
               <GripVertical size={15} className="lobby-grip" aria-hidden="true" />
               <button className="grow lobby-section-name" onClick={() => editor.select(s.key)}>
                 <span className="ellipsis">{label}</span>

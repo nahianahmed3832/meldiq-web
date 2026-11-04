@@ -745,5 +745,10 @@
     "photo": "Fotoğraf",
     "video": "video",
     "audio": "ses"
-  }
+  },
+  "friendRequest": {
+    "note": "Not (isteğe bağlı)",
+    "privacy": "Bu notu yalnızca alıcı okuyabilir. İstek sona erdiğinde silinir."
+  },
+  "reportAlreadySent": "Bu bildirim zaten alındı."
 }

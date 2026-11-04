@@ -17,8 +17,8 @@ import {
  */
 export type LookField = keyof LobbyLook;
 const LOOK_FIELDS: readonly LookField[] = ["layout", "accent", "background", "cards", "font", "bannerHeight", "title"];
-type Field = "enabled" | "tagline" | "buttons" | "about" | "mainChannelIds" | "faq" | "showWhoRunsIt" | "sections" | "leaderboards";
-const FIELDS: readonly Field[] = ["enabled", "tagline", "buttons", "about", "mainChannelIds", "faq", "showWhoRunsIt", "sections", "leaderboards"];
+type Field = "enabled" | "tagline" | "buttons" | "about" | "mainChannelIds" | "faq" | "showWhoRunsIt" | "sections" | "phoneOrder" | "ordersLinked" | "leaderboards";
+const FIELDS: readonly Field[] = ["enabled", "tagline", "buttons", "about", "mainChannelIds", "faq", "showWhoRunsIt", "sections", "phoneOrder", "ordersLinked", "leaderboards"];
 /** What PUT /v1/orgs/:orgId/lobby/settings takes: the revision, and only the fields that changed. */
 export interface LobbySettingsBody {
   rev: number;
@@ -39,6 +39,8 @@ export interface LobbySettingsBody {
   showWhoRunsIt?: boolean;
   look?: Partial<LobbyLook>;
   sections?: LobbySection[];
+  phoneOrder?: LobbySectionKey[];
+  ordersLinked?: boolean;
   leaderboards?: LobbyBoard[];
 }
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
@@ -78,6 +80,8 @@ export function settingsBody(saved: LobbySettings, draft: LobbySettings, rev: nu
     ...(changed.has("showWhoRunsIt") ? { showWhoRunsIt: c.showWhoRunsIt } : {}),
     ...(look.length ? { look: Object.fromEntries(look.map((f) => [f, c.look[f]])) as Partial<LobbyLook> } : {}),
     ...(changed.has("sections") ? { sections: c.sections } : {}),
+    ...(changed.has("phoneOrder") && c.phoneOrder ? { phoneOrder: c.phoneOrder } : {}),
+    ...(changed.has("ordersLinked") ? { ordersLinked: !!c.ordersLinked } : {}),
     ...(changed.has("leaderboards") ? { leaderboards: c.leaderboards } : {}),
   };
 }
@@ -232,4 +236,18 @@ export function togglePick(
 export function pickRolesAnswer(before: readonly string[], lobbyOptionIds: readonly string[], chosen: ReadonlySet<string>): string[] {
   const shown = new Set(lobbyOptionIds);
   return [...new Set([...before.filter((id) => !shown.has(id)), ...[...chosen].filter((id) => shown.has(id))])];
+}
+
+/** Both layouts retain their own order until an explicit link; all cards occur once. */
+export function orderedLobbySections(d: LobbySettings, phone: boolean): LobbySection[] {
+  if (!phone || d.ordersLinked || !d.phoneOrder) return d.sections;
+  const rank = new Map(d.phoneOrder.map((k, i) => [k, i]));
+  return [...d.sections].sort((a, b) => (rank.get(a.key) ?? 99) - (rank.get(b.key) ?? 99));
+}
+export function moveLobbySection(d: LobbySettings, phone: boolean, key: LobbySectionKey, target: LobbySectionKey, at: "before" | "after"): LobbySettings {
+  if (phone && !d.ordersLinked) return { ...d, phoneOrder: moveSection(orderedLobbySections(d, true), key, target, at).map((s) => s.key) };
+  return { ...d, phoneOrder: d.phoneOrder ?? d.sections.map((s) => s.key), sections: moveSection(d.sections, key, target, at) };
+}
+export function linkLobbyOrders(d: LobbySettings, linked: boolean): LobbySettings {
+  return { ...d, ordersLinked: linked, phoneOrder: d.sections.map((s) => s.key) };
 }

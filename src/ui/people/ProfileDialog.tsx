@@ -1,5 +1,7 @@
 import { ProfileContent } from "./ProfileContent";
 import { useLocaleRender } from "../../i18n/Localized";
+import { CustomEmojiImage } from "../community/CustomEmoji";
+import type { CustomEmojiRef } from "../../protocol/payload";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { interfaceLocale } from "../../i18n/format";
@@ -108,19 +110,22 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
         id: string;
         name: string;
         color: string | null;
+        iconExpression?: CustomEmojiRef;
       }[]
     | null
   >(null);
+  const roleScope = useOrbit((s) => s.orgs.find((o) => o.id === orgId));
   useEffect(() => {
-    if (!orgId || !profile) return;
+    setRoles(null);
+    if (!orgId || !profile || !roleScope) return;
     let alive = true;
     directory(engine, orgId, profile.username)
       .then((people) => alive && setRoles(people.find((p) => p.id === userId)?.customRoles ?? []))
-      .catch(() => undefined);
+      .catch(() => alive && setRoles([]));
     return () => {
       alive = false;
     };
-  }, [engine, orgId, userId, profile]);
+  }, [engine, orgId, userId, profile, roleScope]);
   useEffect(() => {
     let alive = true;
     userProfile(engine, userId)
@@ -393,7 +398,11 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
                 <div className="profile-roles">
                   {roles.map((r) => (
                     <span key={r.id} className="profile-role">
-                      <i style={{ background: r.color ?? "var(--text-3)" }} aria-hidden="true" />
+                      {r.iconExpression ? (
+                        <CustomEmojiImage id={r.iconExpression.id} name={r.iconExpression.name} sha256={r.iconExpression.sha256} size={16} />
+                      ) : (
+                        <i style={{ background: r.color ?? "var(--text-3)" }} aria-hidden="true" />
+                      )}
                       {r.name}
                     </span>
                   ))}

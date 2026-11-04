@@ -47,7 +47,8 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
   const [topic, setTopic] = useState(channel.topic ?? "");
   const [slowmode, setSlowmode] = useState(channel.slowmodeSec);
   const [forum, setForum] = useState(channel.format === "forum");
-  const [tags, setTags] = useState(channel.forumTags.map((t) => ({ id: t.id as string | undefined, name: t.name })));
+  const [tags, setTags] = useState(channel.forumTags.map((t) => ({ id: t.id as string | undefined, name: t.name, restricted: t.restricted ?? false })));
+  const [requireTag, setRequireTag] = useState(channel.requireForumTag ?? false);
   const [newTag, setNewTag] = useState("");
   const [guidelines, setGuidelines] = useState(channel.guidelines ?? "");
   const [busy, setBusy] = useState(false);
@@ -63,7 +64,8 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
       slowmode !== channel.slowmodeSec ||
       forum !== (channel.format === "forum") ||
       guidelines !== (channel.guidelines ?? "") ||
-      JSON.stringify(tags) !== JSON.stringify(channel.forumTags.map((t) => ({ id: t.id, name: t.name }))) ||
+      JSON.stringify(tags) !== JSON.stringify(channel.forumTags.map((t) => ({ id: t.id, name: t.name, restricted: t.restricted ?? false }))) ||
+      requireTag !== (channel.requireForumTag ?? false) ||
       JSON.stringify(options) !== JSON.stringify(originalOptions),
   );
   const submit = async (e: FormEvent) => {
@@ -78,6 +80,7 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
         ...(features.includes("slowmode") && textChannel ? { slowmodeSec: slowmode } : {}),
         ...(textChannel && features.includes("community-channels") ? { format: forum ? "forum" : "text" } : {}),
         ...(forum && features.includes("forum-tags") ? { forumTags: tags } : {}),
+        ...(forum && features.includes("forum-tag-policy") ? { requireForumTag: requireTag } : {}),
         ...(forum && features.includes("forum-guidelines") ? { guidelines: guidelines.trim() || null } : {}),
         ...(parity
           ? channel.voice
@@ -94,7 +97,7 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
   };
   const addTag = () => {
     const t = newTag.trim().slice(0, 20);
-    if (t && !tags.some((x) => x.name.toLowerCase() === t.toLowerCase())) setTags([...tags, { id: undefined, name: t }]);
+    if (t && !tags.some((x) => x.name.toLowerCase() === t.toLowerCase())) setTags([...tags, { id: undefined, name: t, restricted: false }]);
     setNewTag("");
   };
   // The reference's Overview | Permissions | Webhooks, each where it applies (community parity A1 and C).
@@ -168,6 +171,14 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
               {tags.map((t) => (
                 <span key={t.name} className="chip">
                   {t.name}
+                  {features.includes("forum-tag-policy") && (
+                    <input
+                      type="checkbox"
+                      aria-label={`${l10n("workspace.forumTags.restricted")}: ${t.name}`}
+                      checked={t.restricted}
+                      onChange={(e) => setTags(tags.map((tag) => (tag === t ? { ...tag, restricted: e.target.checked } : tag)))}
+                    />
+                  )}
                   <button
                     type="button"
                     className="icon-btn icon-btn-xs"
@@ -179,6 +190,12 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
                 </span>
               ))}
             </div>
+            {features.includes("forum-tag-policy") && (
+              <label className="row" style={{ gap: 8 }}>
+                <input type="checkbox" checked={requireTag} onChange={(e) => setRequireTag(e.target.checked)} />
+                {l10n("workspace.forumTags.required")}
+              </label>
+            )}
             <div className="row" style={{ gap: 6 }}>
               <input
                 id="ec-tag"

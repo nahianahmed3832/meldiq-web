@@ -2013,5 +2013,61 @@
       "storage": "Stored files (bytes)",
       "calls": "Call participant minutes"
     }
+  },
+  "eventCover": {
+    "label": "Event cover"
+  },
+  "roleIcon": {
+    "label": "Role icon"
+  },
+  "voiceChat": {
+    "label": "Room chat",
+    "help": "Join to start talking, or open Room chat without joining voice."
+  },
+  "partners": {
+    "label": "Partner application",
+    "intro": "Private to the owner and Meldiq reviewers. Review is manual; approval grants no badge.",
+    "statement": "Tell us about your community",
+    "guidelines": "Published community guidelines",
+    "moderation": "Moderation coverage",
+    "safety": "Safety and reporting process",
+    "activity": "Active community"
+  },
+  "auditChanges": {
+    "label": "Changes",
+    "before": "Before",
+    "after": "After"
+  },
+  "forumLayout": {
+    "label": "Post layout",
+    "list": "List",
+    "gallery": "Gallery"
+  },
+  "forumTags": {
+    "required": "Require a tag for new posts",
+    "restricted": "Moderators only",
+    "choose": "Choose at least one tag."
+  },
+  "part3": {
+    "cancelEvent": "Cancel event",
+    "confirmCancel": "Confirm cancellation",
+    "changeScope": "Apply change to",
+    "thisOccurrence": "This occurrence only",
+    "currentAndFuture": "Current and future occurrences",
+    "scopeHelp": "Changes to one occurrence preserve the future schedule and RSVP answers. Change repeat settings for the series.",
+    "locationType": "Event location",
+    "externalLocation": "External location",
+    "externalHelp": "Enter a place or HTTPS address. The visibility channel controls who can see this event.",
+    "visibilityChannel": "Visibility channel",
+    "locationRequired": "Enter an external location.",
+    "linkLobbyOrders": "Link desktop and phone order",
+    "resetPhoneOrder": "Reset phone order to desktop",
+    "selectionScope": "Select only loaded members (maximum 50). Owners are excluded.",
+    "selectedCount": "{selected} selected · {loaded} loaded · {total} matches",
+    "selectMember": "Select {name}",
+    "selectLoaded": "Select loaded members",
+    "bulkRoles": "Manage selected roles",
+    "allRoles": "All access levels",
+    "loadedCount": "{loaded} loaded · {total} matches"
   }
 }

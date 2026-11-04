@@ -70,8 +70,10 @@ export function FriendsView() {
       await fn();
       setTick((t) => t + 1);
       if (ok) setNote({ ok: true, text: ok });
+      return true;
     } catch (e) {
       setNote({ ok: false, text: e instanceof ApiError ? e.message : uiText("workspace.interface.that_didn_t_work_try_again_5da2573") });
+      return false;
     } finally {
       setBusy(false);
     }
@@ -145,7 +147,12 @@ export function FriendsView() {
         {tab === "add" ? (
           <AddFriend
             busy={busy}
-            onAdd={(u) => run(() => connect(engine, { username: u }), uiText("workspace.interface.friend_request_sent_to_value0_you_ll_be_connected_when_they_accep_ca3915a", { value0: u }))}
+            onAdd={(u, requestNote) =>
+              run(
+                () => connect(engine, { username: u, note: requestNote || undefined }),
+                uiText("workspace.interface.friend_request_sent_to_value0_you_ll_be_connected_when_they_accep_ca3915a", { value0: u }),
+              )
+            }
           />
         ) : (
           <>
@@ -212,6 +219,7 @@ export function FriendsView() {
                         p={r.user}
                         online={!!online[r.user.id]}
                         sub={uiText("workspace.interface.wants_to_connect_469da2b")}
+                        note={r.note ?? undefined}
                         actions={
                           <>
                             <button
@@ -327,21 +335,26 @@ export function FriendsView() {
     </section>
   );
 }
-function AddFriend({ busy, onAdd }: { busy: boolean; onAdd: (username: string) => void }) {
+function AddFriend({ busy, onAdd }: { busy: boolean; onAdd: (username: string, note?: string) => Promise<boolean> }) {
   useLocaleRender();
   const l10n = useLocalization();
   const [name, setName] = useState("");
+  const [requestNote, setRequestNote] = useState("");
+  const supportsNotes = useOrbit((s) => s.server?.features.includes("connection-request-notes"));
   const [error, setError] = useState<string | null>(null);
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
     const u = cleanUsername(name);
     if (!u) return setError(uiText("workspace.interface.type_their_username_like_nahian_98f2338"));
     setError(null);
-    onAdd(u);
-    setName("");
+    if ([...requestNote].length > 300) return;
+    if (await onAdd(u, supportsNotes ? requestNote.trim() : undefined)) {
+      setName("");
+      setRequestNote("");
+    }
   };
   return (
-    <form className="add-friend" onSubmit={submit}>
+    <form className="add-friend" onSubmit={(e) => void submit(e)}>
       <h2>
         <Localized k="workspace.interface.add_friend_0967ca7" />
       </h2>
@@ -356,10 +369,27 @@ function AddFriend({ busy, onAdd }: { busy: boolean; onAdd: (username: string) =
           aria-label={l10n("auth.username")}
           data-autofocus
         />
-        <button className="btn btn-primary" disabled={busy || !name.trim()}>
+        <button className="btn btn-primary" disabled={busy || !name.trim() || [...requestNote].length > 300}>
           <Localized k="workspace.interface.send_friend_request_dd1d3d4" />
         </button>
       </div>
+      {supportsNotes && (
+        <label className="field">
+          <span id="request-note-label">{l10n("messaging.friendRequest.note")}</span>
+          <textarea
+            className="input"
+            value={requestNote}
+            onChange={(e) => setRequestNote(e.target.value)}
+            maxLength={600}
+            rows={3}
+            aria-labelledby="request-note-label"
+            aria-describedby="request-note-privacy"
+          />
+          <small id="request-note-privacy" className="faint">
+            {l10n("messaging.friendRequest.privacy")} {[...requestNote].length}/300
+          </small>
+        </label>
+      )}
       {error && (
         <p className="field-error" role="alert">
           {error}

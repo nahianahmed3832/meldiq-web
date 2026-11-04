@@ -2013,5 +2013,61 @@
       "storage": "File memorizzati (byte)",
       "calls": "Procedura del partecipante alla chiamata"
     }
+  },
+  "eventCover": {
+    "label": "Copertina dell’evento"
+  },
+  "roleIcon": {
+    "label": "Icona del ruolo"
+  },
+  "voiceChat": {
+    "label": "Chat della stanza",
+    "help": "Entra per parlare oppure apri la chat senza collegarti alla voce."
+  },
+  "partners": {
+    "label": "Richiesta di partnership",
+    "intro": "Privata per il proprietario e i revisori Meldiq. La revisione è manuale; approvare non assegna badge.",
+    "statement": "Presenta la tua community",
+    "guidelines": "Linee guida della community pubblicate",
+    "moderation": "Copertura della moderazione",
+    "safety": "Procedura di sicurezza e segnalazione",
+    "activity": "Community attiva"
+  },
+  "auditChanges": {
+    "label": "Modifiche",
+    "before": "Prima",
+    "after": "Dopo"
+  },
+  "forumLayout": {
+    "label": "Layout dei post",
+    "list": "Elenco",
+    "gallery": "Galleria"
+  },
+  "forumTags": {
+    "required": "Richiedi un tag per i nuovi post",
+    "restricted": "Solo moderatori",
+    "choose": "Scegli almeno un tag."
+  },
+  "part3": {
+    "cancelEvent": "Annulla evento",
+    "confirmCancel": "Conferma annullamento",
+    "changeScope": "Applica modifica a",
+    "thisOccurrence": "Solo questa occorrenza",
+    "currentAndFuture": "Questa e le occorrenze future",
+    "scopeHelp": "La modifica di un’occorrenza conserva orari e risposte futuri. Modifica la ripetizione per l’intera serie.",
+    "locationType": "Luogo dell’evento",
+    "externalLocation": "Luogo esterno",
+    "externalHelp": "Inserisci un luogo o un indirizzo HTTPS. Il canale scelto determina chi vede l’evento.",
+    "visibilityChannel": "Canale di visibilità",
+    "locationRequired": "Inserisci un luogo esterno.",
+    "linkLobbyOrders": "Collega l’ordine di computer e telefono",
+    "resetPhoneOrder": "Ripristina sul telefono l’ordine del computer",
+    "selectionScope": "Seleziona solo i membri caricati (massimo 50). I proprietari sono esclusi.",
+    "selectedCount": "{selected} selezionati · {loaded} caricati · {total} risultati",
+    "selectMember": "Seleziona {name}",
+    "selectLoaded": "Seleziona membri caricati",
+    "bulkRoles": "Gestisci ruoli selezionati",
+    "allRoles": "Tutti i livelli di accesso",
+    "loadedCount": "{loaded} caricati · {total} risultati"
   }
 }

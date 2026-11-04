@@ -102,7 +102,17 @@ export const zDirectoryMember = zMember.extend({
     .transform((v) => v ?? null),
   /** Batch B12: the custom roles they hold; [hoist] roles head their own group in the member list, in role order. */
   customRoles: z
-    .array(z.object({ id: z.string(), name: z.string(), color: nullableString, hoist: z.boolean().default(false), position: z.number().default(0), color2: z.string().nullish() }))
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        color: nullableString,
+        hoist: z.boolean().default(false),
+        position: z.number().default(0),
+        color2: z.string().nullish(),
+        iconExpression: z.object({ id: z.string(), orgId: z.string(), name: z.string(), sha256: z.string(), animated: z.boolean() }).optional(),
+      }),
+    )
     .default([]),
   /** Community parity A1: their nickname in this community (null without one; absent on older servers). */
   nickname: z.string().nullish(),

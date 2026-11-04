@@ -72,11 +72,17 @@ test("the lobby: first visit, the live editor, templates and its settings page",
   await expect(lobby.getByText("Small games, late nights")).toBeVisible();
 
   await editor.getByRole("tab", { name: "Sections" }).click();
-  await expect(editor.getByRole("button", { name: /Main channels/ })).toBeVisible();
+  await expect(editor.getByRole("button", { name: /^Main channels(?: Empty| Nothing yet)?$/ })).toBeVisible();
   await shot(page, "editor-sections");
 
   await editor.getByRole("tab", { name: "Templates" }).click();
   await editor.getByRole("button", { name: /Gaming/ }).click();
+  const templatePreview = page.getByRole("dialog", { name: "Preview", exact: true });
+  await templatePreview.getByRole("button", { name: "Cancel", exact: true }).click();
+  expect((await alice.req("GET", `/v1/orgs/${org.id}/lobby/settings`)).settings.look.font).not.toBe("display");
+  await editor.getByRole("button", { name: /Gaming/ }).click();
+  await templatePreview.getByRole("button", { name: "Apply", exact: true }).click();
+  await expect(templatePreview).toHaveCount(0);
   await expect(lobby.locator(".lobby.layout-classic.font-display")).toBeVisible();
   await shot(page, "editor-template-gaming");
 

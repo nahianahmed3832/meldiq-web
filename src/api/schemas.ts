@@ -124,9 +124,10 @@ export const zConversation = z.object({
   /** "text", or "forum": posts with a title, each with its replies in a thread. */
   format: openEnum(["text", "forum"]).default("text"),
   forumTags: z
-    .array(z.object({ id: z.string(), name: z.string() }))
+    .array(z.object({ id: z.string(), name: z.string(), restricted: z.boolean().optional() }))
     .max(50)
     .default([]),
+  requireForumTag: z.boolean().optional(),
   /** Batch B8: a forum's post guidelines. */
   guidelines: nullableString,
   /** Batch B6b: a group's photo revision (GET /v1/conversations/:id/photo). */

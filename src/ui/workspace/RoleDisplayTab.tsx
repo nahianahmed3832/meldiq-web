@@ -6,8 +6,14 @@ import { Toggle } from "../components/Toggle";
 import { namePaint } from "../people/NameStyle";
 import type { AutoAssign } from "../../sync/roles";
 import { autoRoleProblem } from "../../sync/permissionGroups";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { expressions } from "../../sync/expressions";
+import { useLoad } from "./useLoad";
+import { ErrorLine } from "../components/SettingsCard";
+import { CustomEmojiImage } from "../community/CustomEmoji";
 /** A role being made or changed: what each tab edits. */
 export interface RoleDraft {
+  iconExpressionId: string | null;
   name: string;
   description: string;
   color: string | null;
@@ -22,6 +28,7 @@ export interface RoleDraft {
 }
 export const ROLE_COLORS = ["#C58BE0", "#E39B7B", "#E3C26F", "#6FBF8E", "#6FC6C9", "#7C9CE3", "#E37B9B", "#8C8FA3"];
 interface DisplayTabProps {
+  orgId: string;
   draft: RoleDraft;
   patch: (change: Partial<RoleDraft>) => void;
   readOnly: boolean;
@@ -58,9 +65,14 @@ function ColorRow({ label, value, onChange, disabled, allowNone }: { label: stri
   );
 }
 /** Display: name, colour (and the colour it fades into), description, member list, mentions and automatic assignment. */
-export function RoleDisplayTab({ draft, patch, readOnly, nameMax, descriptionMax, extras, hoistable }: DisplayTabProps) {
+export function RoleDisplayTab({ orgId, draft, patch, readOnly, nameMax, descriptionMax, extras, hoistable }: DisplayTabProps) {
   useLocaleRender();
   const l10n = useLocalization();
+  const engine = useEngine();
+  const iconsEnabled = useOrbit((s) => s.server?.features.includes("role-asset-icons") ?? false);
+  const assets = useLoad(() => (iconsEnabled ? expressions(engine, orgId, true) : Promise.resolve(null)), [engine, orgId, iconsEnabled]);
+  const icons = assets.data?.expressions.filter((e) => e.kind === "emoji" && !e.locked) ?? [];
+  const icon = icons.find((e) => e.id === draft.iconExpressionId);
   const colors = draft.color ? (draft.color2 && extras ? [draft.color, draft.color2] : [draft.color]) : null;
   const problem = extras ? autoRoleProblem(draft.autoMode, draft.grants.size, draft.denies.size) : null;
   return (
@@ -71,6 +83,35 @@ export function RoleDisplayTab({ draft, patch, readOnly, nameMax, descriptionMax
         </span>
         <input className="input" value={draft.name} maxLength={nameMax} disabled={readOnly} onChange={(e) => patch({ name: e.target.value })} data-autofocus />
       </label>
+      {iconsEnabled && (
+        <div className="field">
+          <label>
+            <span id="role-icon-label">{l10n("workspace.roleIcon.label")}</span>
+            <select
+              aria-labelledby="role-icon-label"
+              className="input"
+              value={draft.iconExpressionId ?? ""}
+              disabled={readOnly || assets.loading || !!assets.error}
+              onChange={(e) => patch({ iconExpressionId: e.target.value || null })}
+            >
+              <option value="">—</option>
+              {draft.iconExpressionId && !icon && <option value={draft.iconExpressionId}>—</option>}
+              {icons.map((e) => (
+                <option key={e.id} value={e.id}>
+                  :{e.name}:
+                </option>
+              ))}
+            </select>
+          </label>
+          {icon && <CustomEmojiImage id={icon.id} name={icon.name} sha256={icon.sha256} size={24} />}
+          <ErrorLine text={assets.error} />
+          {assets.error && (
+            <button type="button" className="btn btn-ghost btn-sm" onClick={assets.reload}>
+              {l10n("common.actions.retry")}
+            </button>
+          )}
+        </div>
+      )}
       <ColorRow
         label={l10n("settings.ap_colour")}
         value={draft.color}

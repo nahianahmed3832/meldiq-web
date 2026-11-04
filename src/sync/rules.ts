@@ -70,9 +70,10 @@ export function postedOf(p: Payload): Posted {
 }
 /** An edit from a server sender that carries boxes or a giveaway replaces them (a giveaway card when it ends). */
 function editedRich(rich: RichContent | null, p: Payload): RichContent | null {
-  if (p.embeds === undefined && p.giveaway === undefined) return rich;
+  const metadata = { ...(p.title === undefined ? {} : { title: cleanTitle(p.title) ?? undefined }), ...(p.tags === undefined ? {} : { tags: cleanTags(p.tags) }) };
+  if (p.embeds === undefined && p.giveaway === undefined) return Object.keys(metadata).length ? { ...rich, ...metadata } : rich;
   const { embeds: _e, buttons: _b, textFromEmbeds: _t, giveaway: _g, ...rest } = rich ?? {};
-  const next = { ...rest, ...postedOf(p) };
+  const next = { ...rest, ...postedOf(p), ...metadata };
   return Object.keys(next).length ? next : null;
 }
 const ORIGIN_ID = /^[A-Za-z0-9_-]{1,64}$/;
@@ -124,7 +125,7 @@ export function textMessage(p: Payload, item: QueueItem, mine: boolean, serverTs
 export function applyEdit(t: StoredMessage, senderUserId: string, p: Payload, serverTs: number): StoredMessage | null {
   if (t.senderUserId !== senderUserId || t.deleted) return null;
   const ids = p.mentions ? [...new Set(p.mentions)] : t.mentions;
-  return { ...t, text: p.text ?? "", editedAt: serverTs, mentions: ids, rich: editedRich(t.rich, p) };
+  return { ...t, text: p.text ?? t.text, editedAt: serverTs, mentions: ids, rich: editedRich(t.rich, p) };
 }
 /**
  * Deletion for everyone: the author's, or in a community channel a moderator's (community parity A1: there the server

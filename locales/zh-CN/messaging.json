@@ -745,5 +745,10 @@
     "photo": "照片",
     "video": "视频",
     "audio": "音频"
-  }
+  },
+  "friendRequest": {
+    "note": "备注（可选）",
+    "privacy": "只有接收者可以阅读此备注。请求结束后，备注将被删除。"
+  },
+  "reportAlreadySent": "此举报已收到。"
 }

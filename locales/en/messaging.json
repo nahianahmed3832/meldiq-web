@@ -745,5 +745,10 @@
     "photo": "photo",
     "video": "video",
     "audio": "audio"
-  }
+  },
+  "friendRequest": {
+    "note": "Note (optional)",
+    "privacy": "Only the recipient can read this note. It is deleted when the request ends."
+  },
+  "reportAlreadySent": "This report has already been received."
 }

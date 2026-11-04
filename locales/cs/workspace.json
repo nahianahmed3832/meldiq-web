@@ -2013,5 +2013,61 @@
       "storage": "Uložené soubory (bajtů)",
       "calls": "Zápisy z hovorů účastníků"
     }
+  },
+  "eventCover": {
+    "label": "Obrázek události"
+  },
+  "roleIcon": {
+    "label": "Ikona role"
+  },
+  "voiceChat": {
+    "label": "Chat místnosti",
+    "help": "Připojte se k hovoru nebo otevřete chat bez připojení k hlasu."
+  },
+  "partners": {
+    "label": "Žádost o partnerství",
+    "intro": "Soukromé pro vlastníka a hodnotitele Meldiq. Posouzení je ruční; schválení neuděluje odznak.",
+    "statement": "Povězte nám o své komunitě",
+    "guidelines": "Zveřejněná pravidla komunity",
+    "moderation": "Zajištěná moderace",
+    "safety": "Postup pro bezpečnost a hlášení",
+    "activity": "Aktivní komunita"
+  },
+  "auditChanges": {
+    "label": "Změny",
+    "before": "Před",
+    "after": "Po"
+  },
+  "forumLayout": {
+    "label": "Rozložení příspěvků",
+    "list": "Seznam",
+    "gallery": "Galerie"
+  },
+  "forumTags": {
+    "required": "Vyžadovat štítek pro nové příspěvky",
+    "restricted": "Pouze moderátoři",
+    "choose": "Vyberte alespoň jeden štítek."
+  },
+  "part3": {
+    "cancelEvent": "Zrušit událost",
+    "confirmCancel": "Potvrdit zrušení",
+    "changeScope": "Použít změnu na",
+    "thisOccurrence": "Pouze tento výskyt",
+    "currentAndFuture": "Tento a budoucí výskyty",
+    "scopeHelp": "Změna jednoho výskytu zachová budoucí rozvrh a odpovědi. Opakování měňte pro celou sérii.",
+    "locationType": "Místo události",
+    "externalLocation": "Externí místo",
+    "externalHelp": "Zadejte místo nebo adresu HTTPS. Vybraný kanál určuje, kdo událost uvidí.",
+    "visibilityChannel": "Kanál viditelnosti",
+    "locationRequired": "Zadejte externí místo.",
+    "linkLobbyOrders": "Propojit pořadí počítače a telefonu",
+    "resetPhoneOrder": "Obnovit v telefonu pořadí počítače",
+    "selectionScope": "Vyberte jen načtené členy (nejvýše 50). Vlastníci jsou vyloučeni.",
+    "selectedCount": "{selected} vybráno · {loaded} načteno · {total} shod",
+    "selectMember": "Vybrat {name}",
+    "selectLoaded": "Vybrat načtené členy",
+    "bulkRoles": "Spravovat role vybraných",
+    "allRoles": "Všechny úrovně přístupu",
+    "loadedCount": "{loaded} načteno · {total} shod"
   }
 }

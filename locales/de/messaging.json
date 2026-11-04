@@ -745,5 +745,10 @@
     "photo": "Foto",
     "video": "Videoaufnahme",
     "audio": "Audio"
-  }
+  },
+  "friendRequest": {
+    "note": "Notiz (optional)",
+    "privacy": "Nur der Empfänger kann diese Notiz lesen. Sie wird gelöscht, wenn die Anfrage endet."
+  },
+  "reportAlreadySent": "Diese Meldung wurde bereits empfangen."
 }

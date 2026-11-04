@@ -11,9 +11,8 @@ import { CallFailure } from "../../call/rules";
 import { roomPeople } from "../selectors";
 import { voiceRoom } from "./voiceRoomRules";
 /**
- * A voice channel is a room to talk in, not a chat (batch B14, android VoiceChannelScreen): who is in it (one person
- * gets the whole width, more share it two by two), Join voice or Open the call, and Invite people. No message list, no
- * composer and no message menu; the server refuses messages here too.
+ * The voice-room view shows who is in it, Join voice or Open the call, and Invite people. The associated Room chat is
+ * a separate view in ConversationView; opening it never invokes a call or requests microphone access.
  */
 export function VoiceRoomView({ c }: { c: Conversation }) {
   useLocaleRender();
@@ -22,6 +21,7 @@ export function VoiceRoomView({ c }: { c: Conversation }) {
   const users = useOrbit((s) => s.users);
   const myCall = useOrbit((s) => (s.call.phase === "idle" || s.call.phase === "ended" ? null : s.call.conversationId));
   const calling = useOrbit((s) => s.server?.calling === true);
+  const chatEnabled = useOrbit((s) => s.server?.features.includes("voice-channel-chat") ?? false);
   const room = voiceRoom({
     inThisRoom: myCall === c.id,
     inAnotherCall: myCall !== null && myCall !== c.id,
@@ -58,7 +58,7 @@ export function VoiceRoomView({ c }: { c: Conversation }) {
             <Localized k="calls.interface.no_one_is_here_yet_0d1bb83" />
           </h2>
           <p className="muted">
-            <Localized k="calls.interface.join_to_start_talking_voice_channels_are_for_talking_only_not_mes_8403a43" />
+            {chatEnabled ? <Localized k="workspace.voiceChat.help" /> : <Localized k="calls.interface.join_to_start_talking_voice_channels_are_for_talking_only_not_mes_8403a43" />}
           </p>
         </div>
       ) : (

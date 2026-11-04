@@ -37,6 +37,7 @@ export const zAutoAssign = z.object({
 });
 export type AutoAssign = z.infer<typeof zAutoAssign>;
 export const zRoleExtras = z.object({
+  iconExpressionId: z.string().nullable().optional(),
   color2: z
     .string()
     .nullish()
@@ -143,7 +144,24 @@ export async function transferOwnership(engine: Engine, orgId: string, userId: s
 
 const zAudit = z.object({
   entries: z.array(
-    z.object({ id: z.number(), at: z.number(), action: z.string(), actorId: z.string().nullable(), actorName: z.string().nullable(), target: z.string().nullable(), detail: z.string().nullable() }),
+    z.object({
+      id: z.number(),
+      at: z.number(),
+      action: z.string(),
+      actorId: z.string().nullable(),
+      actorName: z.string().nullable(),
+      target: z.string().nullable(),
+      detail: z.string().nullable(),
+      changes: z
+        .array(
+          z.object({
+            field: z.string(),
+            before: z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string())]),
+            after: z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string())]),
+          }),
+        )
+        .default([]),
+    }),
   ),
   nextBefore: z.number().nullable(),
 });
@@ -166,6 +184,7 @@ export async function setEveryone(engine: Engine, orgId: string, permissions: st
 }
 
 export interface RoleExtrasChange {
+  iconExpressionId?: string | null;
   color2?: string | null;
   mentionable?: boolean;
   autoAssign?: { mode: AutoAssign["mode"]; before?: number | null };

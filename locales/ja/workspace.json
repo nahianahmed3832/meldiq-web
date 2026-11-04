@@ -2013,5 +2013,61 @@
       "storage": "保存されたファイル (バイト)",
       "calls": "参加者の通話記録"
     }
+  },
+  "eventCover": {
+    "label": "イベントのカバー"
+  },
+  "roleIcon": {
+    "label": "ロールのアイコン"
+  },
+  "voiceChat": {
+    "label": "ルームチャット",
+    "help": "通話に参加して話すか、音声に参加せずルームチャットを開けます。"
+  },
+  "partners": {
+    "label": "パートナー申請",
+    "intro": "所有者と Meldiq の審査担当者のみが閲覧できます。審査は手動で、承認されてもバッジは付与されません。",
+    "statement": "コミュニティについて教えてください",
+    "guidelines": "公開されたコミュニティガイドライン",
+    "moderation": "モデレーション体制",
+    "safety": "安全対策と報告の手順",
+    "activity": "活発なコミュニティ"
+  },
+  "auditChanges": {
+    "label": "変更内容",
+    "before": "変更前",
+    "after": "変更後"
+  },
+  "forumLayout": {
+    "label": "投稿のレイアウト",
+    "list": "リスト",
+    "gallery": "ギャラリー"
+  },
+  "forumTags": {
+    "required": "新しい投稿にタグを必須にする",
+    "restricted": "モデレーターのみ",
+    "choose": "タグを少なくとも1つ選んでください。"
+  },
+  "part3": {
+    "cancelEvent": "イベントを中止",
+    "confirmCancel": "中止を確定",
+    "changeScope": "変更の適用範囲",
+    "thisOccurrence": "今回のみ",
+    "currentAndFuture": "今回以降のすべて",
+    "scopeHelp": "今回のみの変更では、今後の予定と出欠回答は維持されます。繰り返し設定はシリーズ全体で変更してください。",
+    "locationType": "イベントの場所",
+    "externalLocation": "外部の場所",
+    "externalHelp": "場所またはHTTPSアドレスを入力してください。選択したチャンネルによってイベントを見られる人が決まります。",
+    "visibilityChannel": "公開範囲のチャンネル",
+    "locationRequired": "外部の場所を入力してください。",
+    "linkLobbyOrders": "デスクトップとスマートフォンの順序を連動",
+    "resetPhoneOrder": "スマートフォンの順序をデスクトップに合わせる",
+    "selectionScope": "読み込み済みメンバーのみ選択します（最大50人）。オーナーは除外されます。",
+    "selectedCount": "{selected}人選択 · {loaded}人読み込み済み · {total}件一致",
+    "selectMember": "{name}を選択",
+    "selectLoaded": "読み込み済みメンバーを選択",
+    "bulkRoles": "選択したメンバーのロールを管理",
+    "allRoles": "すべてのアクセスレベル",
+    "loadedCount": "{loaded}人読み込み済み · {total}件一致"
   }
 }

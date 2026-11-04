@@ -41,6 +41,7 @@ import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
 import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
+import { DEFAULT_QUICK_REACTIONS } from "../../sync/quickReactions";
 import { RemindMeDialog } from "../later/RemindMeDialog";
 import type { RichContent, StoredMessage } from "../../model/types";
 import { nameTone } from "../components/Avatar";
@@ -77,7 +78,7 @@ import { canLink, messageLink } from "../../sync/messageLinks";
 import { PostedContent } from "./PostedContent";
 import { WebhookAvatar, WebhookName } from "./WebhookSender";
 import { useReactionRolesItem } from "../community/reactionRoles/useReactionRolesItem";
-export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
+export const QUICK_EMOJI = DEFAULT_QUICK_REACTIONS;
 /** The hover toolbar's icon size, as large as Discord's so each action is easy to hit. */
 const TOOL_ICON = 20;
 export interface MessageItemProps {
@@ -142,6 +143,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const savable = useOrbit((st) => st.server?.features.includes("saved-items") ?? false);
   const { mediaCards, swipeToReply, doubleTapReact, quickReaction, builderMode: builder } = usePrefs();
   const saved = useOrbit((st) => st.nav[PERSONAL]?.saved?.find((x) => x.messageId === m.id));
+  const quickEmoji = useOrbit((st) => st.nav[PERSONAL]?.quickReactions ?? DEFAULT_QUICK_REACTIONS);
   const more = useMenu();
   const picker = useMenu();
   // Touch screens have no hover toolbar: a long press opens the menu with quick reactions, reply and the rest.
@@ -267,7 +269,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             sender: p.senderName,
             at: m.sortTs,
             text: m.text,
-            quick: QUICK_EMOJI,
+            quick: quickEmoji,
             reacted: Object.entries(m.reactions)
               .filter(([, who]) => who.includes(p.myUserId))
               .map(([e]) => e),
@@ -313,7 +315,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           {
             custom: (
               <div className="menu-quick" role="group" aria-label={t("msg_quick_reactions")}>
-                {QUICK_EMOJI.map((e) => (
+                {quickEmoji.map((e) => (
                   <button
                     key={e}
                     className="icon-btn quick-emoji"
@@ -421,7 +423,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       {live && !editing && (
         <div className="msg-actions" role="toolbar" aria-label={t("msg_actions")}>
           {canAddReaction &&
-            QUICK_EMOJI.slice(0, 3).map((e) => (
+            quickEmoji.slice(0, 3).map((e) => (
               <button key={e} className="icon-btn quick-emoji" onClick={() => void engine.react(m, e)} aria-label={uiText("messaging.interface.react_value0_e09da0a", { value0: e })}>
                 {e}
               </button>

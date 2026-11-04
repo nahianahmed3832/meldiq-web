@@ -16,7 +16,7 @@ import { resolveLanguage, translate } from "../i18n";
  */
 const enc = encodeURIComponent;
 // ───────────── connections ─────────────
-const zEntry = z.object({ user: zMember, at: z.number() });
+const zEntry = z.object({ user: zMember, at: z.number(), note: z.string().nullable().optional() });
 export const zConnections = z.object({ connected: z.array(zMember), incoming: z.array(zEntry), outgoing: z.array(zEntry) });
 export type Connections = z.infer<typeof zConnections>;
 export type ConnectionState = "none" | "sent" | "received" | "connected";
@@ -41,9 +41,11 @@ export async function connect(
   to:
     | {
         userId: string;
+        note?: string;
       }
     | {
         username: string;
+        note?: string;
       },
 ): Promise<"pending" | "accepted"> {
   return (await engine.api.json("POST", "/v1/connections", z.object({ state: z.enum(["pending", "accepted"]) }), { body: to })).state;

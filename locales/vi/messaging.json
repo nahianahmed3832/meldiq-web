@@ -745,5 +745,10 @@
     "photo": "Ảnh",
     "video": "video",
     "audio": "âm thanh"
-  }
+  },
+  "friendRequest": {
+    "note": "Ghi chú (không bắt buộc)",
+    "privacy": "Chỉ người nhận mới có thể đọc ghi chú này. Ghi chú được xóa khi yêu cầu kết thúc."
+  },
+  "reportAlreadySent": "Báo cáo này đã được tiếp nhận."
 }

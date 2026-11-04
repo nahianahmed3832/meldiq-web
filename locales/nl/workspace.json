@@ -2013,5 +2013,61 @@
       "storage": "Opgeslagen bestanden (bytes)",
       "calls": "Oproepdeelnemersminuten"
     }
+  },
+  "eventCover": {
+    "label": "Omslag van evenement"
+  },
+  "roleIcon": {
+    "label": "Rolpictogram"
+  },
+  "voiceChat": {
+    "label": "Kamerchat",
+    "help": "Neem deel om te praten of open de chat zonder aan spraak deel te nemen."
+  },
+  "partners": {
+    "label": "Partneraanvraag",
+    "intro": "Privé voor de eigenaar en Meldiq-beoordelaars. Beoordeling is handmatig; goedkeuring geeft geen badge.",
+    "statement": "Vertel ons over je community",
+    "guidelines": "Gepubliceerde communityrichtlijnen",
+    "moderation": "Geregelde moderatie",
+    "safety": "Veiligheids- en meldingsprocedure",
+    "activity": "Actieve community"
+  },
+  "auditChanges": {
+    "label": "Wijzigingen",
+    "before": "Voor",
+    "after": "Na"
+  },
+  "forumLayout": {
+    "label": "Berichtindeling",
+    "list": "Lijst",
+    "gallery": "Galerij"
+  },
+  "forumTags": {
+    "required": "Tag verplichten voor nieuwe berichten",
+    "restricted": "Alleen moderators",
+    "choose": "Kies minimaal één tag."
+  },
+  "part3": {
+    "cancelEvent": "Evenement annuleren",
+    "confirmCancel": "Annulering bevestigen",
+    "changeScope": "Wijziging toepassen op",
+    "thisOccurrence": "Alleen deze keer",
+    "currentAndFuture": "Deze en toekomstige keren",
+    "scopeHelp": "Een wijziging voor één keer behoudt toekomstige tijden en antwoorden. Wijzig herhaling voor de hele reeks.",
+    "locationType": "Locatie van evenement",
+    "externalLocation": "Externe locatie",
+    "externalHelp": "Voer een plek of HTTPS-adres in. Het gekozen kanaal bepaalt wie het evenement ziet.",
+    "visibilityChannel": "Kanaal voor zichtbaarheid",
+    "locationRequired": "Voer een externe locatie in.",
+    "linkLobbyOrders": "Volgorde van desktop en telefoon koppelen",
+    "resetPhoneOrder": "Telefoonvolgorde naar desktop herstellen",
+    "selectionScope": "Selecteer alleen geladen leden (maximaal 50). Eigenaren zijn uitgesloten.",
+    "selectedCount": "{selected} geselecteerd · {loaded} geladen · {total} resultaten",
+    "selectMember": "{name} selecteren",
+    "selectLoaded": "Geladen leden selecteren",
+    "bulkRoles": "Rollen van selectie beheren",
+    "allRoles": "Alle toegangsniveaus",
+    "loadedCount": "{loaded} geladen · {total} resultaten"
   }
 }

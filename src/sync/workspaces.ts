@@ -130,6 +130,27 @@ export async function directory(engine: Engine, orgId: string, q = ""): Promise<
   const query = q.trim() ? `?q=${enc(q.trim().slice(0, 40))}` : "";
   return (await engine.api.json("GET", `/v1/orgs/${enc(orgId)}/members${query}`, z.object({ members: z.array(zDirectoryMember) }))).members;
 }
+export interface DirectoryPage {
+  members: DirectoryMember[];
+  total?: number;
+  ownerCount?: number;
+  nextAfter?: string | null;
+}
+export async function directoryPage(engine: Engine, orgId: string, q = "", role = "", after?: string): Promise<DirectoryPage> {
+  const query = new URLSearchParams({ limit: "50" });
+  if (q.trim()) query.set("q", q.trim().slice(0, 40));
+  if (role.startsWith("role:")) query.set("roleId", role.slice(5));
+  else if (role) query.set("role", role);
+  if (after) query.set("after", after);
+  return engine.api.json(
+    "GET",
+    `/v1/orgs/${enc(orgId)}/members?${query}`,
+    z.object({ members: z.array(zDirectoryMember), total: z.number().optional(), ownerCount: z.number().optional(), nextAfter: z.string().nullable().optional() }),
+  );
+}
+export async function bulkRoleMembers(engine: Engine, roleId: string, userIds: string[], add: boolean): Promise<string[]> {
+  return (await engine.api.json("POST", `/v1/roles/${enc(roleId)}/members/bulk`, z.object({ ok: z.literal(true), changed: z.array(z.string()) }), { body: { userIds, add } })).changed;
+}
 export async function changeMember(
   engine: Engine,
   orgId: string,

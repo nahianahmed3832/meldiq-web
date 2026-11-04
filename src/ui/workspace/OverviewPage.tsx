@@ -26,6 +26,8 @@ import { ProfileExtrasCards } from "./ProfileExtrasCards";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 import { SETTINGS_LIMITS } from "../../sync/communitySettings";
 import { DeleteCommunityDialog } from "../community/DeleteCommunityDialog";
+import { ReportDialog } from "../chat/ReportDialog";
+import { PartnerApplicationCard } from "./PartnerApplicationCard";
 interface OverviewPageProps {
   detail: OrgAdminDetail;
   onChanged: () => void;
@@ -39,8 +41,15 @@ export function OverviewPage({ detail, onChanged }: OverviewPageProps) {
   const { org, permissions: can, stats } = detail;
   const features = useOrbit((s) => s.server?.features ?? []);
   const community = features.includes("community-channels");
+  const [reporting, setReporting] = useState(false);
   return (
     <div className="ws-page">
+      {features.includes("community-reports") && (
+        <button className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }} onClick={() => setReporting(true)}>
+          {uiText("messaging.interface.report_value0_acf3105", { value0: org.name })}
+        </button>
+      )}
+      {reporting && <ReportDialog target={{ kind: "community", orgId: org.id, name: org.name }} onClose={() => setReporting(false)} />}
       <header className="ws-hero">
         <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={64} />
         <div className="grow">
@@ -67,6 +76,7 @@ export function OverviewPage({ detail, onChanged }: OverviewPageProps) {
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
       {!community && features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
       {features.includes("community-tags") && <TagCard detail={detail} onChanged={onChanged} />}
+      {features.includes("partner-applications") && org.myRole === "OWNER" && <PartnerApplicationCard orgId={org.id} />}
       {community && can.canManageOrg && features.includes(PARITY_FEATURES.settings) && <ProfileExtrasCards detail={detail} onChanged={onChanged} />}
       {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
       {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}

@@ -26,7 +26,7 @@ export interface LobbyEditor {
   setPreview: (p: boolean) => void;
   save: () => Promise<boolean>;
   cancel: () => void;
-  applyTemplate: (key: LobbyTemplateKey) => Promise<void>;
+  applyTemplate: (key: LobbyTemplateKey) => Promise<boolean>;
   /** The feed URL's state changed (created, rotated, deleted). */
   setFeed: (feed: LobbySettingsView["feed"]) => void;
 }
@@ -129,7 +129,7 @@ export function useLobbyEditor(
       select(null);
     },
     applyTemplate: async (key) => {
-      await run(() => applyLobbyTemplate(engine, orgId, key, saved.rev));
+      return run(() => applyLobbyTemplate(engine, orgId, key, saved.rev));
     },
     setFeed: (feed) => setSaved({ ...saved, feed }),
   };

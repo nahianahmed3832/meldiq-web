@@ -745,5 +745,10 @@
     "photo": "Zdjęcie",
     "video": "wideo",
     "audio": "dźwięk"
-  }
+  },
+  "friendRequest": {
+    "note": "Notatka (opcjonalnie)",
+    "privacy": "Tylko odbiorca może przeczytać tę notatkę. Zostanie usunięta po zakończeniu prośby."
+  },
+  "reportAlreadySent": "To zgłoszenie zostało już odebrane."
 }

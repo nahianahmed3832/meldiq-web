@@ -2013,5 +2013,61 @@
       "storage": "Depolanan dosyalar (bayt)",
       "calls": "Çağrı katılımcılarının dakikaları"
     }
+  },
+  "eventCover": {
+    "label": "Etkinlik kapağı"
+  },
+  "roleIcon": {
+    "label": "Rol simgesi"
+  },
+  "voiceChat": {
+    "label": "Oda sohbeti",
+    "help": "Konuşmak için katılın veya sese katılmadan oda sohbetini açın."
+  },
+  "partners": {
+    "label": "İş ortaklığı başvurusu",
+    "intro": "Yalnızca sahip ve Meldiq inceleyicileri görebilir. İnceleme elle yapılır; onay rozet vermez.",
+    "statement": "Topluluğunuzu anlatın",
+    "guidelines": "Yayımlanmış topluluk kuralları",
+    "moderation": "Moderasyon kapsamı",
+    "safety": "Güvenlik ve bildirim süreci",
+    "activity": "Etkin topluluk"
+  },
+  "auditChanges": {
+    "label": "Değişiklikler",
+    "before": "Önce",
+    "after": "Sonra"
+  },
+  "forumLayout": {
+    "label": "Gönderi düzeni",
+    "list": "Liste",
+    "gallery": "Galeri"
+  },
+  "forumTags": {
+    "required": "Yeni gönderiler için etiket iste",
+    "restricted": "Yalnızca moderatörler",
+    "choose": "En az bir etiket seçin."
+  },
+  "part3": {
+    "cancelEvent": "Etkinliği iptal et",
+    "confirmCancel": "İptali onayla",
+    "changeScope": "Değişikliği uygula",
+    "thisOccurrence": "Yalnızca bu gerçekleşmeye",
+    "currentAndFuture": "Bu ve gelecekteki gerçekleşmelere",
+    "scopeHelp": "Tek bir gerçekleşmeyi değiştirmek gelecekteki programı ve yanıtları korur. Tekrarı tüm seri için değiştirin.",
+    "locationType": "Etkinlik konumu",
+    "externalLocation": "Harici konum",
+    "externalHelp": "Bir yer veya HTTPS adresi girin. Seçilen kanal etkinliği kimin görebileceğini belirler.",
+    "visibilityChannel": "Görünürlük kanalı",
+    "locationRequired": "Harici bir konum girin.",
+    "linkLobbyOrders": "Masaüstü ve telefon sırasını bağla",
+    "resetPhoneOrder": "Telefon sırasını masaüstüne göre sıfırla",
+    "selectionScope": "Yalnızca yüklenen üyeleri seçin (en fazla 50). Sahipler hariçtir.",
+    "selectedCount": "{selected} seçili · {loaded} yüklendi · {total} eşleşme",
+    "selectMember": "{name} seç",
+    "selectLoaded": "Yüklenen üyeleri seç",
+    "bulkRoles": "Seçilen rolleri yönet",
+    "allRoles": "Tüm erişim düzeyleri",
+    "loadedCount": "{loaded} yüklendi · {total} eşleşme"
   }
 }

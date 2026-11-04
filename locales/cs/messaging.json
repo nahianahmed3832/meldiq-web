@@ -745,5 +745,10 @@
     "photo": "Foto",
     "video": "video",
     "audio": "zvuk"
-  }
+  },
+  "friendRequest": {
+    "note": "Poznámka (volitelné)",
+    "privacy": "Tuto poznámku si může přečíst pouze příjemce. Po ukončení žádosti se odstraní."
+  },
+  "reportAlreadySent": "Toto hlášení již bylo přijato."
 }

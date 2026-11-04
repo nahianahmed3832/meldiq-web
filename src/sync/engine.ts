@@ -116,7 +116,12 @@ export function UNREACHABLE() {
   return uiText("errors.unreachable");
 }
 /** GET /v2/messages/search (API 0.57.0). */
-const zSearchRes = z.object({ messages: z.array(zStoredEvent) });
+const zSearchRes = z.object({
+  messages: z.array(zStoredEvent),
+  changes: z.array(zStoredEvent).optional(),
+  more: z.boolean().optional(),
+  nextCursor: z.object({ serverTs: z.number().int().positive(), id: z.string() }).nullable().optional(),
+});
 /** GET /v2/messages/summary (API 0.57.0). */
 const zSummary = z.object({
   conversations: z.array(z.object({ conversationId: z.string(), last: zStoredEvent.nullable(), readUpTo: z.number(), unread: z.number(), mentions: z.number() })),
@@ -499,6 +504,12 @@ export class Engine implements EngineContext {
     >,
   ): Promise<void> {
     return this.nav.change(PERSONAL, op);
+  }
+  setQuickReactions(values: string[]): Promise<void> {
+    return this.nav.change(PERSONAL, { op: "quickReactions", values });
+  }
+  quickReactionsPending(): boolean {
+    return this.nav.hasPending(PERSONAL, "quickReactions");
   }
   /** Saved for later (android Home › Later): kept in the personal document, so every device of the person shows it. */
   later(
@@ -1484,7 +1495,41 @@ export class Engine implements EngineContext {
   }
   /** Messages on this browser matching [query]: words and filters (from:, has:, before:, after:; src/sync/searchQuery.ts). */
   async searchMessages(query: string, conversationId?: string): Promise<StoredMessage[]> {
+    return (await this.searchMessagePage(query, conversationId)).items;
+  }
+  /** An independently paged search, filtered by the server before LIMIT; never changes the active history window. */
+  async searchMessagePage(
+    query: string,
+    conversationId?: string,
+    cursor: CollectionCursor | null = null,
+    orgId?: string,
+  ): Promise<{ items: StoredMessage[]; more: boolean; nextCursor: CollectionCursor | null }> {
     const q = parseSearchQuery(query);
+    if (this.state.get().server?.features.includes("filtered-message-search")) {
+      const params = new URLSearchParams({ q: q.text.trim().slice(0, 200), limit: "50" });
+      if (conversationId) params.set("conversationId", conversationId);
+      if (orgId) params.set("orgId", orgId);
+      if (q.from) params.set("from", q.from);
+      if (q.mentions) params.set("mentions", q.mentions);
+      if (q.in) params.set("in", q.in);
+      if (q.has.length) params.set("has", q.has.join(","));
+      if (q.pinned !== undefined) params.set("pinned", String(q.pinned));
+      if (q.before !== null) params.set("before", String(q.before));
+      if (q.after !== null) params.set("after", String(q.after));
+      if (cursor) {
+        params.set("cursorTs", String(cursor.serverTs));
+        params.set("cursorId", cursor.id);
+      }
+      const res = await this.api.json("GET", `/v2/messages/search?${params}`, zSearchRes);
+      if (conversationId && res.messages.some((m) => m.conversationId !== conversationId)) throw new Error(uiText("workspace.interface.that_message_is_no_longer_available_aeb42eb"));
+      if (res.more && !res.nextCursor) throw new Error(uiText("messaging.interface.couldn_t_load_messages_try_again_9068b8c"));
+      for (const e of [...res.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
+      const selected = new Set(res.messages.map((m) => `${m.conversationId}:${m.id}`));
+      for (const e of res.changes ?? []) if (typeof e.payload.target === "string" && selected.has(`${e.conversationId}:${e.payload.target}`)) await this.receiver.ingest(e, 0, { history: true });
+      const items = (await Promise.all(res.messages.map((m) => this.store.message(m.id)))).filter((m): m is StoredMessage => !!m && !m.deleted);
+      void Promise.all([...new Set(items.map((m) => m.senderUserId))].map((id) => this.ensureUser(id).catch(() => undefined)));
+      return { items, more: res.more === true, nextCursor: res.nextCursor ?? null };
+    }
     // The server searches every message (API 0.57.0); its hits join what's loaded, then the filters apply as before.
     if (q.text.trim()) {
       const params = new URLSearchParams({ q: q.text.trim().slice(0, 200), limit: "100" });
@@ -1497,7 +1542,8 @@ export class Engine implements EngineContext {
       const u = this.state.get().users[m.senderUserId];
       return { name: u?.displayName ?? "", username: u?.username ?? "", me: mine };
     };
-    return this.store.findMessages((m) => matchesSearch(m, q, sender), conversationId ? 100 : 50, conversationId);
+    const items = await this.store.findMessages((m) => matchesSearch(m, q, sender), conversationId ? 100 : 50, conversationId);
+    return { items, more: false, nextCursor: null };
   }
   /** Recent root badges use server counts even when their replies aren't in the main timeline window. */
   refreshThreadCounts(conversationId: string): Promise<void> {
@@ -1522,13 +1568,25 @@ export class Engine implements EngineContext {
     return request;
   }
   /** A separate collection cursor never changes the main timeline or acknowledges messages as read. */
-  async messageCollection(conversationId: string, kind: CollectionKind, cursor: CollectionCursor | null = null, root?: string): Promise<MessageCollectionPage> {
+  async messageCollection(
+    conversationId: string,
+    kind: CollectionKind,
+    cursor: CollectionCursor | null = null,
+    root?: string,
+    forum?: { q: string; sort: "latest" | "newest"; tags: string; match: "any" | "all" },
+  ): Promise<MessageCollectionPage> {
     const q = new URLSearchParams({ kind, limit: "50" });
     if (cursor) {
       q.set("before", String(cursor.serverTs));
       q.set("beforeId", cursor.id);
     }
     if (root) q.set("root", root);
+    if (forum) {
+      if (forum.q.trim()) q.set("q", forum.q.trim());
+      q.set("sort", forum.sort);
+      if (forum.tags) q.set("tags", forum.tags);
+      q.set("match", forum.match);
+    }
     const page = await this.api.json("GET", `/v2/conversations/${encodeURIComponent(conversationId)}/message-collections?${q}`, zMessageCollection);
     const events = [...page.context, ...page.messages, ...page.changes];
     if (events.some((e) => e.conversationId !== conversationId)) throw new Error(uiText("workspace.interface.this_collection_contains_a_message_from_another_conversation_fd364c4"));

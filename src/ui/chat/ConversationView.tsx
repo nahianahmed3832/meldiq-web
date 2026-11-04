@@ -79,7 +79,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
     (a, b) => a.length === b.length && a.every((x, i) => x === b[i]),
   );
   const [replyTo, setReplyTo] = useState<StoredMessage | null>(null);
-  const drop = useFileDrop(!!c?.canPost);
+  const voiceChat = useFeature("voice-channel-chat");
+  const [chatRoom, setChatRoom] = useState<string | null>(null);
+  const drop = useFileDrop(!!c?.canPost && (!c.voice || (voiceChat && chatRoom === c.id)));
   const users = useOrbit((s) => s.users);
   const askedToConnect = !!useConnectionLists()?.incoming.some((e) => e.user.id === peer?.id);
   // API 0.65.0: the community's rules channel (a book icon, the rules on top, everyone reacts there).
@@ -102,6 +104,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
     if (first) onDialog({ kind: "identity", userId: first.userId });
   }, [engine, onDialog]);
   if (!c || !me) return null;
+  const showVoice = c.voice && (!voiceChat || chatRoom !== c.id);
   const isRules = c.type === "CHANNEL" && !!rules?.channelId && rules.channelId === c.id;
   const posting = postingState(c, rules ? { rulesChannel: rules } : null);
   const abilities = channelAbilities(c, access, permissionsOn);
@@ -159,14 +162,14 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         {/* Calls in a community happen in its voice rooms; a text channel has none to start (android round 7). */}
         {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
         {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
-        {c.type === "CHANNEL" && !c.voice && <ChannelBell c={c} />}
+        {c.type === "CHANNEL" && !showVoice && <ChannelBell c={c} />}
         {/* Community parity C: a ticket's Close (and a moderator's Join). */}
         {c.type === "CHANNEL" && c.orgId && <TicketHeaderActions c={c} />}
         {/* Community parity D: Wordy, played privately (and `/wordy` from the composer). */}
-        {c.type === "CHANNEL" && c.orgId && !c.voice && <WordyHeaderAction c={c} />}
+        {c.type === "CHANNEL" && c.orgId && !showVoice && <WordyHeaderAction c={c} />}
         {/* The reference header: bell, pins, members, then a search box. Phones keep the name, calls and the menu (as the
             Android app); pins and members are in the details the name opens, and search is on the list's header. */}
-        {!c.voice && (
+        {!showVoice && (
           <button
             className="icon-btn hide-sm"
             aria-pressed={route.panel === "pinned"}
@@ -231,7 +234,17 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      {c.voice ? (
+      {c.voice && voiceChat && (
+        <div className="segmented" role="group" aria-label={t("workspace.voiceChat.label")} style={{ margin: 8 }}>
+          <button aria-pressed={showVoice} onClick={() => setChatRoom(null)}>
+            {uiText("calls.interface.voice_room_aa0cfa3")}
+          </button>
+          <button aria-pressed={!showVoice} onClick={() => setChatRoom(c.id)}>
+            {t("workspace.voiceChat.label")}
+          </button>
+        </div>
+      )}
+      {showVoice ? (
         <VoiceRoomView c={c} />
       ) : c.type === "CHANNEL" && c.format === "forum" ? (
         <ForumView c={c} section={route.section} />
@@ -281,8 +294,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         <MessagesSkeleton />
       )}
 
-      {/* A voice channel is for talking: no messages (batch B14; the server refuses them too). Its room page has Join. */}
-      {(c.type === "CHANNEL" && c.format === "forum") || c.voice ? null : c.format === UNKNOWN ? (
+      {/* The associated room chat shares the ordinary composer and send pipeline; switching views never joins audio. */}
+      {(c.type === "CHANNEL" && c.format === "forum") || showVoice ? null : c.format === UNKNOWN ? (
         <div className="banner info" role="status" style={{ margin: 12 }}>
           <Localized k="messaging.interface.this_channel_is_of_a_kind_this_version_of_meldiq_web_can_t_post_i_23cc1da" />
         </div>

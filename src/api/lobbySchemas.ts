@@ -71,6 +71,8 @@ export const zLobbySettings = z.object({
   showWhoRunsIt: z.boolean().default(true),
   look: zLobbyLook,
   sections: z.array(zLobbySection).transform(knownSections),
+  phoneOrder: z.array(z.enum(LOBBY_SECTION_KEYS)).optional(),
+  ordersLinked: z.boolean().optional(),
   leaderboards: z
     .array(z.string())
     .default([])

@@ -43,7 +43,12 @@ const stale = (e: unknown): never => {
 };
 /** Saves a change made on revision [body.rev]; fields left out stay. */
 export async function saveLobby(engine: Engine, orgId: string, body: LobbySettingsBody): Promise<LobbySettingsView> {
-  const view = await engine.api.json("PUT", `${base(orgId)}/settings`, zLobbySettingsView, { body }).catch(stale);
+  const { phoneOrder, ordersLinked, ...legacy } = body;
+  void phoneOrder;
+  void ordersLinked;
+  const view = await engine.api
+    .json("PUT", `${base(orgId)}/settings`, zLobbySettingsView, { body: engine.state.get().server?.features.includes("lobby-responsive-order") ? body : legacy })
+    .catch(stale);
   void engine.refreshAll();
   return view;
 }

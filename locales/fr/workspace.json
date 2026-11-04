@@ -2013,5 +2013,61 @@
       "storage": "Fichiers stockés (octets)",
       "calls": "Procès-verbaux des participants aux appels"
     }
+  },
+  "eventCover": {
+    "label": "Image de couverture de l’événement"
+  },
+  "roleIcon": {
+    "label": "Icône du rôle"
+  },
+  "voiceChat": {
+    "label": "Discussion du salon",
+    "help": "Rejoignez le vocal pour parler ou ouvrez la discussion sans rejoindre le vocal."
+  },
+  "partners": {
+    "label": "Demande de partenariat",
+    "intro": "Privée pour le propriétaire et les évaluateurs Meldiq. La vérification est manuelle ; une approbation ne donne aucun badge.",
+    "statement": "Présentez votre communauté",
+    "guidelines": "Règles de communauté publiées",
+    "moderation": "Modération assurée",
+    "safety": "Procédure de sécurité et de signalement",
+    "activity": "Communauté active"
+  },
+  "auditChanges": {
+    "label": "Modifications",
+    "before": "Avant",
+    "after": "Après"
+  },
+  "forumLayout": {
+    "label": "Disposition des publications",
+    "list": "Liste",
+    "gallery": "Galerie"
+  },
+  "forumTags": {
+    "required": "Exiger une étiquette pour les nouvelles publications",
+    "restricted": "Modérateurs uniquement",
+    "choose": "Choisissez au moins une étiquette."
+  },
+  "part3": {
+    "cancelEvent": "Annuler l’événement",
+    "confirmCancel": "Confirmer l’annulation",
+    "changeScope": "Appliquer la modification à",
+    "thisOccurrence": "Cette occurrence uniquement",
+    "currentAndFuture": "Cette occurrence et les suivantes",
+    "scopeHelp": "Modifier une occurrence conserve le calendrier et les réponses futurs. Modifiez la répétition pour toute la série.",
+    "locationType": "Lieu de l’événement",
+    "externalLocation": "Lieu externe",
+    "externalHelp": "Saisissez un lieu ou une adresse HTTPS. Le canal choisi détermine qui voit l’événement.",
+    "visibilityChannel": "Canal de visibilité",
+    "locationRequired": "Saisissez un lieu externe.",
+    "linkLobbyOrders": "Lier l’ordre du bureau et du téléphone",
+    "resetPhoneOrder": "Rétablir l’ordre du bureau sur le téléphone",
+    "selectionScope": "Sélectionnez uniquement les membres chargés (50 maximum). Les propriétaires sont exclus.",
+    "selectedCount": "{selected} sélectionnés · {loaded} chargés · {total} résultats",
+    "selectMember": "Sélectionner {name}",
+    "selectLoaded": "Sélectionner les membres chargés",
+    "bulkRoles": "Gérer les rôles sélectionnés",
+    "allRoles": "Tous les niveaux d’accès",
+    "loadedCount": "{loaded} chargés · {total} résultats"
   }
 }

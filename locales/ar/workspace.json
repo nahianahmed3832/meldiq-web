@@ -2013,5 +2013,61 @@
       "storage": "الملفات المخزنة (بآلاف البايت)",
       "calls": "محاضر المكالمات"
     }
+  },
+  "eventCover": {
+    "label": "صورة غلاف الفعالية"
+  },
+  "roleIcon": {
+    "label": "أيقونة الرتبة"
+  },
+  "voiceChat": {
+    "label": "دردشة الغرفة",
+    "help": "انضم للتحدث، أو افتح دردشة الغرفة دون الانضمام للصوت."
+  },
+  "partners": {
+    "label": "طلب شراكة",
+    "intro": "خاص بالمالك ومراجعي Meldiq. المراجعة يدوية والموافقة لا تمنح شارة.",
+    "statement": "أخبرنا عن مجتمعك",
+    "guidelines": "إرشادات مجتمع منشورة",
+    "moderation": "تغطية الإشراف",
+    "safety": "عملية السلامة والإبلاغ",
+    "activity": "مجتمع نشط"
+  },
+  "auditChanges": {
+    "label": "التغييرات",
+    "before": "قبل",
+    "after": "بعد"
+  },
+  "forumLayout": {
+    "label": "تخطيط المنشورات",
+    "list": "قائمة",
+    "gallery": "معرض"
+  },
+  "forumTags": {
+    "required": "اشتراط وسم للمنشورات الجديدة",
+    "restricted": "للمشرفين فقط",
+    "choose": "اختر وسماً واحداً على الأقل."
+  },
+  "part3": {
+    "cancelEvent": "إلغاء الحدث",
+    "confirmCancel": "تأكيد الإلغاء",
+    "changeScope": "تطبيق التغيير على",
+    "thisOccurrence": "هذا الموعد فقط",
+    "currentAndFuture": "هذا الموعد والمواعيد القادمة",
+    "scopeHelp": "تغيير موعد واحد يحافظ على المواعيد القادمة والردود. غيّر التكرار للسلسلة كاملة.",
+    "locationType": "مكان الحدث",
+    "externalLocation": "مكان خارجي",
+    "externalHelp": "أدخل مكانًا أو عنوان HTTPS. تحدد القناة من يمكنه رؤية الحدث.",
+    "visibilityChannel": "قناة ظهور الحدث",
+    "locationRequired": "أدخل المكان الخارجي.",
+    "linkLobbyOrders": "ربط ترتيب الكمبيوتر والهاتف",
+    "resetPhoneOrder": "إعادة ترتيب الهاتف إلى ترتيب الكمبيوتر",
+    "selectionScope": "حدد الأعضاء المحمّلين فقط (50 كحد أقصى). يُستثنى المالكون.",
+    "selectedCount": "{selected} محدد · {loaded} محمّل · {total} مطابق",
+    "selectMember": "تحديد {name}",
+    "selectLoaded": "تحديد الأعضاء المحمّلين",
+    "bulkRoles": "إدارة أدوار المحددين",
+    "allRoles": "جميع مستويات الوصول",
+    "loadedCount": "{loaded} محمّل · {total} مطابق"
   }
 }

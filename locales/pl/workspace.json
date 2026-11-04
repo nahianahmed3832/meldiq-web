@@ -2013,5 +2013,61 @@
       "storage": "Przechowywane pliki (bajty)",
       "calls": "Protokół z rozmowy uczestnika"
     }
+  },
+  "eventCover": {
+    "label": "Okładka wydarzenia"
+  },
+  "roleIcon": {
+    "label": "Ikona roli"
+  },
+  "voiceChat": {
+    "label": "Czat pokoju",
+    "help": "Dołącz, aby rozmawiać, lub otwórz czat bez dołączania do rozmowy głosowej."
+  },
+  "partners": {
+    "label": "Wniosek partnerski",
+    "intro": "Prywatny dla właściciela i recenzentów Meldiq. Ocena jest ręczna; zatwierdzenie nie nadaje odznaki.",
+    "statement": "Opowiedz nam o swojej społeczności",
+    "guidelines": "Opublikowane zasady społeczności",
+    "moderation": "Zapewniona moderacja",
+    "safety": "Procedura bezpieczeństwa i zgłaszania",
+    "activity": "Aktywna społeczność"
+  },
+  "auditChanges": {
+    "label": "Zmiany",
+    "before": "Przed",
+    "after": "Po"
+  },
+  "forumLayout": {
+    "label": "Układ wpisów",
+    "list": "Lista",
+    "gallery": "Galeria"
+  },
+  "forumTags": {
+    "required": "Wymagaj tagu dla nowych wpisów",
+    "restricted": "Tylko moderatorzy",
+    "choose": "Wybierz co najmniej jeden tag."
+  },
+  "part3": {
+    "cancelEvent": "Odwołaj wydarzenie",
+    "confirmCancel": "Potwierdź odwołanie",
+    "changeScope": "Zastosuj zmianę do",
+    "thisOccurrence": "Tylko tego wystąpienia",
+    "currentAndFuture": "Tego i przyszłych wystąpień",
+    "scopeHelp": "Zmiana jednego wystąpienia zachowuje przyszły harmonogram i odpowiedzi. Powtarzanie zmieniaj dla całej serii.",
+    "locationType": "Miejsce wydarzenia",
+    "externalLocation": "Miejsce zewnętrzne",
+    "externalHelp": "Wpisz miejsce lub adres HTTPS. Wybrany kanał określa, kto widzi wydarzenie.",
+    "visibilityChannel": "Kanał widoczności",
+    "locationRequired": "Wpisz miejsce zewnętrzne.",
+    "linkLobbyOrders": "Połącz kolejność komputera i telefonu",
+    "resetPhoneOrder": "Przywróć w telefonie kolejność komputera",
+    "selectionScope": "Wybierz tylko wczytanych członków (maksymalnie 50). Właściciele są wykluczeni.",
+    "selectedCount": "{selected} wybranych · {loaded} wczytanych · {total} wyników",
+    "selectMember": "Wybierz {name}",
+    "selectLoaded": "Wybierz wczytanych członków",
+    "bulkRoles": "Zarządzaj wybranymi rolami",
+    "allRoles": "Wszystkie poziomy dostępu",
+    "loadedCount": "{loaded} wczytanych · {total} wyników"
   }
 }

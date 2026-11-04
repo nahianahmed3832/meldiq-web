@@ -2013,5 +2013,61 @@
       "storage": "Gespeicherte Dateien (Bytes)",
       "calls": "Anrufteilnehmerprotokolle"
     }
+  },
+  "eventCover": {
+    "label": "Titelbild der Veranstaltung"
+  },
+  "roleIcon": {
+    "label": "Rollensymbol"
+  },
+  "voiceChat": {
+    "label": "Raumchat",
+    "help": "Tritt zum Sprechen bei oder öffne den Raumchat ohne Sprachbeitritt."
+  },
+  "partners": {
+    "label": "Partnerantrag",
+    "intro": "Privat für den Eigentümer und Meldiq-Prüfer. Die Prüfung erfolgt manuell; die Genehmigung vergibt kein Abzeichen.",
+    "statement": "Erzähle uns von deiner Community",
+    "guidelines": "Veröffentlichte Community-Regeln",
+    "moderation": "Gesicherte Moderation",
+    "safety": "Sicherheits- und Meldeverfahren",
+    "activity": "Aktive Community"
+  },
+  "auditChanges": {
+    "label": "Änderungen",
+    "before": "Vorher",
+    "after": "Nachher"
+  },
+  "forumLayout": {
+    "label": "Beitragslayout",
+    "list": "Liste",
+    "gallery": "Galerie"
+  },
+  "forumTags": {
+    "required": "Tag für neue Beiträge verlangen",
+    "restricted": "Nur Moderatoren",
+    "choose": "Wähle mindestens ein Tag."
+  },
+  "part3": {
+    "cancelEvent": "Veranstaltung absagen",
+    "confirmCancel": "Absage bestätigen",
+    "changeScope": "Änderung anwenden auf",
+    "thisOccurrence": "Nur diesen Termin",
+    "currentAndFuture": "Diesen und künftige Termine",
+    "scopeHelp": "Änderungen an einem Termin erhalten den künftigen Zeitplan und Zusagen. Wiederholungen gelten für die Serie.",
+    "locationType": "Veranstaltungsort",
+    "externalLocation": "Externer Ort",
+    "externalHelp": "Ort oder HTTPS-Adresse eingeben. Der ausgewählte Kanal bestimmt, wer die Veranstaltung sieht.",
+    "visibilityChannel": "Kanal für die Sichtbarkeit",
+    "locationRequired": "Externen Ort eingeben.",
+    "linkLobbyOrders": "Reihenfolge für Desktop und Telefon verknüpfen",
+    "resetPhoneOrder": "Telefonreihenfolge auf Desktop zurücksetzen",
+    "selectionScope": "Nur geladene Mitglieder auswählen (höchstens 50). Eigentümer sind ausgeschlossen.",
+    "selectedCount": "{selected} ausgewählt · {loaded} geladen · {total} Treffer",
+    "selectMember": "{name} auswählen",
+    "selectLoaded": "Geladene Mitglieder auswählen",
+    "bulkRoles": "Rollen der Auswahl verwalten",
+    "allRoles": "Alle Zugriffsebenen",
+    "loadedCount": "{loaded} geladen · {total} Treffer"
   }
 }

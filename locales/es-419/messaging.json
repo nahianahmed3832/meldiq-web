@@ -745,5 +745,10 @@
     "photo": "Foto",
     "video": "video",
     "audio": "audio"
-  }
+  },
+  "friendRequest": {
+    "note": "Nota (opcional)",
+    "privacy": "Solo el destinatario puede leer esta nota. Se elimina cuando termina la solicitud."
+  },
+  "reportAlreadySent": "Este reporte ya se ha recibido."
 }

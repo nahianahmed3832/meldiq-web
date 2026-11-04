@@ -2013,5 +2013,61 @@
       "storage": "儲存的檔案(位元組)",
       "calls": "通話參與者分鐘"
     }
+  },
+  "eventCover": {
+    "label": "活動封面"
+  },
+  "roleIcon": {
+    "label": "身分組圖示"
+  },
+  "voiceChat": {
+    "label": "房間聊天",
+    "help": "加入語音開始交談，或在不加入語音的情況下開啟房間聊天。"
+  },
+  "partners": {
+    "label": "合作夥伴申請",
+    "intro": "僅擁有者和 Meldiq 審核人員可見。申請由人工審核；核准不會授予徽章。",
+    "statement": "介紹你的社群",
+    "guidelines": "已發布的社群準則",
+    "moderation": "管理人員值班",
+    "safety": "安全與檢舉流程",
+    "activity": "活躍的社群"
+  },
+  "auditChanges": {
+    "label": "變更",
+    "before": "變更前",
+    "after": "變更後"
+  },
+  "forumLayout": {
+    "label": "貼文版面",
+    "list": "清單",
+    "gallery": "圖庫"
+  },
+  "forumTags": {
+    "required": "新貼文必須新增標籤",
+    "restricted": "僅限管理員",
+    "choose": "請至少選擇一個標籤。"
+  },
+  "part3": {
+    "cancelEvent": "取消活動",
+    "confirmCancel": "確認取消",
+    "changeScope": "套用變更至",
+    "thisOccurrence": "僅本次活動",
+    "currentAndFuture": "本次及後續活動",
+    "scopeHelp": "僅變更本次活動會保留後續行程和出席回覆。重複設定需對整個系列變更。",
+    "locationType": "活動地點",
+    "externalLocation": "外部地點",
+    "externalHelp": "輸入地點或 HTTPS 網址。所選頻道決定誰可以查看此活動。",
+    "visibilityChannel": "可見範圍頻道",
+    "locationRequired": "請輸入外部地點。",
+    "linkLobbyOrders": "連結桌面與手機順序",
+    "resetPhoneOrder": "將手機順序重設為桌面順序",
+    "selectionScope": "僅選擇已載入的成員（最多 50 人）。不包括擁有者。",
+    "selectedCount": "已選 {selected} 人 · 已載入 {loaded} 人 · 共 {total} 個符合",
+    "selectMember": "選擇 {name}",
+    "selectLoaded": "選擇已載入的成員",
+    "bulkRoles": "管理所選成員的角色",
+    "allRoles": "所有存取層級",
+    "loadedCount": "已載入 {loaded} 人 · 共 {total} 個符合"
   }
 }

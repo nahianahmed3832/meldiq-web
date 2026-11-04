@@ -2013,5 +2013,61 @@
       "storage": "저장된 파일 (바이트)",
       "calls": "통화 참가자 분"
     }
+  },
+  "eventCover": {
+    "label": "이벤트 표지"
+  },
+  "roleIcon": {
+    "label": "역할 아이콘"
+  },
+  "voiceChat": {
+    "label": "방 채팅",
+    "help": "말하려면 참여하거나 음성에 참여하지 않고 방 채팅을 여세요."
+  },
+  "partners": {
+    "label": "파트너 신청",
+    "intro": "소유자와 Meldiq 심사자만 볼 수 있습니다. 수동으로 심사하며 승인되어도 배지가 부여되지 않습니다.",
+    "statement": "커뮤니티에 대해 알려 주세요",
+    "guidelines": "공개된 커뮤니티 가이드라인",
+    "moderation": "운영 및 중재 체계",
+    "safety": "안전 및 신고 절차",
+    "activity": "활발한 커뮤니티"
+  },
+  "auditChanges": {
+    "label": "변경 사항",
+    "before": "이전",
+    "after": "이후"
+  },
+  "forumLayout": {
+    "label": "게시물 레이아웃",
+    "list": "목록",
+    "gallery": "갤러리"
+  },
+  "forumTags": {
+    "required": "새 게시물에 태그 필수",
+    "restricted": "운영자만",
+    "choose": "태그를 하나 이상 선택하세요."
+  },
+  "part3": {
+    "cancelEvent": "이벤트 취소",
+    "confirmCancel": "취소 확인",
+    "changeScope": "변경 적용 범위",
+    "thisOccurrence": "이번 일정만",
+    "currentAndFuture": "이번 및 이후 일정",
+    "scopeHelp": "한 일정만 변경하면 향후 일정과 참석 응답은 유지됩니다. 반복 설정은 전체 시리즈에서 변경하세요.",
+    "locationType": "이벤트 장소",
+    "externalLocation": "외부 장소",
+    "externalHelp": "장소 또는 HTTPS 주소를 입력하세요. 선택한 채널에 따라 이벤트를 볼 수 있는 사람이 결정됩니다.",
+    "visibilityChannel": "공개 범위 채널",
+    "locationRequired": "외부 장소를 입력하세요.",
+    "linkLobbyOrders": "데스크톱과 휴대폰 순서 연결",
+    "resetPhoneOrder": "휴대폰 순서를 데스크톱 순서로 재설정",
+    "selectionScope": "불러온 멤버만 선택합니다(최대 50명). 소유자는 제외됩니다.",
+    "selectedCount": "{selected}명 선택 · {loaded}명 불러옴 · {total}명 일치",
+    "selectMember": "{name} 선택",
+    "selectLoaded": "불러온 멤버 선택",
+    "bulkRoles": "선택한 멤버의 역할 관리",
+    "allRoles": "모든 접근 수준",
+    "loadedCount": "{loaded}명 불러옴 · {total}명 일치"
   }
 }

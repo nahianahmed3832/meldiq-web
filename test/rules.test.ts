@@ -61,6 +61,12 @@ describe("payload wire format (android griip-payload-v1-vectors.json)", () => {
 });
 
 describe("applying received payloads (same outcome as the phone)", () => {
+  it("applies forum title/tag edits and preserves them through later text-only edits", () => {
+    const original = msg({ text: "Original body", rich: { title: "Original title", tags: ["old_tag"] } });
+    const tagged = applyEdit(original, "u-bob", { type: "edit", title: "Current title", tags: ["new_tag"] }, 2000)!;
+    expect(tagged).toMatchObject({ text: "Original body", rich: { title: "Current title", tags: ["new_tag"] } });
+    expect(applyEdit(tagged, "u-bob", { type: "edit", text: "Later body" }, 3000)).toMatchObject({ text: "Later body", rich: { title: "Current title", tags: ["new_tag"] } });
+  });
   it("only the author edits or deletes", () => {
     const m = msg();
     expect(applyEdit(m, "u-mallory", { type: "edit", text: "x" }, 2000)).toBeNull();

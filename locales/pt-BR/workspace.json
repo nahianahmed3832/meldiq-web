@@ -2013,5 +2013,61 @@
       "storage": "Arquivos armazenados (bytes)",
       "calls": "Minutos do participante da chamada"
     }
+  },
+  "eventCover": {
+    "label": "Capa do evento"
+  },
+  "roleIcon": {
+    "label": "Ícone do cargo"
+  },
+  "voiceChat": {
+    "label": "Chat da sala",
+    "help": "Entre para falar ou abra o chat sem entrar na conversa de voz."
+  },
+  "partners": {
+    "label": "Solicitação de parceria",
+    "intro": "Privada para o proprietário e os revisores do Meldiq. A análise é manual; a aprovação não concede selo.",
+    "statement": "Conte-nos sobre sua comunidade",
+    "guidelines": "Diretrizes da comunidade publicadas",
+    "moderation": "Cobertura de moderação",
+    "safety": "Processo de segurança e denúncias",
+    "activity": "Comunidade ativa"
+  },
+  "auditChanges": {
+    "label": "Alterações",
+    "before": "Antes",
+    "after": "Depois"
+  },
+  "forumLayout": {
+    "label": "Layout de publicações",
+    "list": "Lista",
+    "gallery": "Galeria"
+  },
+  "forumTags": {
+    "required": "Exigir uma tag em novas publicações",
+    "restricted": "Apenas moderadores",
+    "choose": "Escolha pelo menos uma tag."
+  },
+  "part3": {
+    "cancelEvent": "Cancelar evento",
+    "confirmCancel": "Confirmar cancelamento",
+    "changeScope": "Aplicar alteração a",
+    "thisOccurrence": "Somente esta ocorrência",
+    "currentAndFuture": "Esta e as próximas ocorrências",
+    "scopeHelp": "Alterar uma ocorrência mantém os horários e as respostas futuras. Altere a repetição para toda a série.",
+    "locationType": "Local do evento",
+    "externalLocation": "Local externo",
+    "externalHelp": "Digite um local ou endereço HTTPS. O canal escolhido define quem pode ver o evento.",
+    "visibilityChannel": "Canal de visibilidade",
+    "locationRequired": "Digite um local externo.",
+    "linkLobbyOrders": "Vincular a ordem do computador e do celular",
+    "resetPhoneOrder": "Redefinir a ordem do celular para a do computador",
+    "selectionScope": "Selecione apenas membros carregados (máximo de 50). Proprietários são excluídos.",
+    "selectedCount": "{selected} selecionados · {loaded} carregados · {total} resultados",
+    "selectMember": "Selecionar {name}",
+    "selectLoaded": "Selecionar membros carregados",
+    "bulkRoles": "Gerenciar funções selecionadas",
+    "allRoles": "Todos os níveis de acesso",
+    "loadedCount": "{loaded} carregados · {total} resultados"
   }
 }

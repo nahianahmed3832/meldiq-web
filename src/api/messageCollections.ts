@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { zStoredEvent } from "./schemas";
 
-export type CollectionKind = "pins" | "media" | "files" | "threads" | "thread";
+export type CollectionKind = "pins" | "media" | "files" | "threads" | "thread" | "forum";
 export interface CollectionCursor {
   serverTs: number;
   id: string;

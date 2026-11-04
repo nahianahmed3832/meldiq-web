@@ -2013,5 +2013,61 @@
       "storage": "存储的文件(字节)",
       "calls": "通话参与者分钟"
     }
+  },
+  "eventCover": {
+    "label": "活动封面"
+  },
+  "roleIcon": {
+    "label": "身份组图标"
+  },
+  "voiceChat": {
+    "label": "房间聊天",
+    "help": "加入语音开始交谈，或在不加入语音的情况下打开房间聊天。"
+  },
+  "partners": {
+    "label": "合作伙伴申请",
+    "intro": "仅所有者和 Meldiq 审核人员可见。申请由人工审核；批准不会授予徽章。",
+    "statement": "介绍你的社区",
+    "guidelines": "已发布的社区准则",
+    "moderation": "管理人员值守",
+    "safety": "安全与举报流程",
+    "activity": "活跃的社区"
+  },
+  "auditChanges": {
+    "label": "更改",
+    "before": "更改前",
+    "after": "更改后"
+  },
+  "forumLayout": {
+    "label": "帖子布局",
+    "list": "列表",
+    "gallery": "画廊"
+  },
+  "forumTags": {
+    "required": "新帖子必须添加标签",
+    "restricted": "仅限管理员",
+    "choose": "请至少选择一个标签。"
+  },
+  "part3": {
+    "cancelEvent": "取消活动",
+    "confirmCancel": "确认取消",
+    "changeScope": "应用更改至",
+    "thisOccurrence": "仅本次活动",
+    "currentAndFuture": "本次及后续活动",
+    "scopeHelp": "仅更改本次活动会保留后续日程和出席回复。重复设置需对整个系列更改。",
+    "locationType": "活动地点",
+    "externalLocation": "外部地点",
+    "externalHelp": "输入地点或 HTTPS 地址。所选频道决定谁可以查看此活动。",
+    "visibilityChannel": "可见范围频道",
+    "locationRequired": "请输入外部地点。",
+    "linkLobbyOrders": "关联桌面与手机顺序",
+    "resetPhoneOrder": "将手机顺序重置为桌面顺序",
+    "selectionScope": "仅选择已加载的成员（最多 50 人）。不包括所有者。",
+    "selectedCount": "已选 {selected} 人 · 已加载 {loaded} 人 · 共 {total} 个匹配",
+    "selectMember": "选择 {name}",
+    "selectLoaded": "选择已加载的成员",
+    "bulkRoles": "管理所选成员的角色",
+    "allRoles": "所有访问级别",
+    "loadedCount": "已加载 {loaded} 人 · 共 {total} 个匹配"
   }
 }

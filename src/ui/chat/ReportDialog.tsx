@@ -7,9 +7,10 @@ import { useState } from "react";
 import { ApiError } from "../../api/client";
 import { useEngine, useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
-import { goesToCommunity, REASON_LABEL, REPORT_CONTEXT, REPORT_NOTE_MAX, REPORT_REASONS, type ReportReason, reportContent, sendReport } from "../../sync/reports";
+import { goesToCommunity, REASON_LABEL, REPORT_CONTEXT, REPORT_NOTE_MAX, REPORT_REASONS, type ReportReason, reportContent, sendReport, sendCommunityReport } from "../../sync/reports";
 import { Dialog } from "../components/Overlay";
 export type ReportTarget =
+  | { kind: "community"; orgId: string; name: string }
   | {
       kind: "message";
       message: StoredMessage;
@@ -42,16 +43,17 @@ export function ReportDialog({ target, onBlock, onClose }: { target: ReportTarge
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<string | null>(null);
-  const personName = target.kind === "person" ? target.name : (users[target.message.senderUserId]?.displayName ?? uiText("messaging.interface.this_person_af49636"));
-  const community = reason ? (target.kind === "message" ? goesToCommunity(reason, target.conversationType, false) : goesToCommunity(reason, null, !!to)) : false;
-  const communityName = target.kind === "message" ? target.orgName : (target.communities.find((c) => c.id === to)?.name ?? null);
+  const personName = target.kind !== "message" ? target.name : (users[target.message.senderUserId]?.displayName ?? uiText("messaging.interface.this_person_af49636"));
+  const community = reason ? (target.kind === "message" ? goesToCommunity(reason, target.conversationType, false) : target.kind === "person" && goesToCommunity(reason, null, !!to)) : false;
+  const communityName = target.kind === "message" ? target.orgName : target.kind === "person" ? (target.communities.find((c) => c.id === to)?.name ?? null) : target.name;
   const send = async () => {
     if (!reason) return;
     setBusy(true);
     setError(null);
     try {
       let sent;
-      if (target.kind === "message") {
+      if (target.kind === "community") sent = await sendCommunityReport(engine, target.orgId, reason, note);
+      else if (target.kind === "message") {
         const m = target.message;
         const history = await engine.conversationMessages(target.conversationId, 200);
         const lines = history
@@ -70,7 +72,9 @@ export function ReportDialog({ target, onBlock, onClose }: { target: ReportTarge
       }
       setDone(
         sent.repeated
-          ? uiText("messaging.interface.you_already_reported_this_message_7a6edad")
+          ? target.kind === "community"
+            ? l10n("messaging.reportAlreadySent")
+            : uiText("messaging.interface.you_already_reported_this_message_7a6edad")
           : sent.to === "community"
             ? uiText("messaging.interface.report_sent_to_the_moderators_dd7f840")
             : uiText("messaging.interface.report_sent_to_meldiq_s_team_053dff4"),

@@ -39,6 +39,9 @@ const zMeeting = z.object({
   title: z.string(),
   description: z.string().nullable(),
   room: z.object({ id: z.string(), name: z.string().nullable() }).nullable(),
+  externalLocation: z.string().nullish(),
+  visibilityChannel: z.object({ id: z.string(), name: z.string().nullable() }).optional(),
+  occurrenceOverride: z.boolean().optional(),
   startsAt: z.number(),
   endsAt: z.number(),
   timeZone: z.string(),
@@ -48,6 +51,7 @@ const zMeeting = z.object({
   cancelled: z.boolean(),
   canEdit: z.boolean(),
   rev: z.number(),
+  coverId: z.string().nullish(),
   /** Batch B8b: how it repeats (null: once). */
   repeat: openEnum(["weekly", "biweekly", "monthly", "yearly"])
     .nullish()
@@ -94,6 +98,8 @@ export function repeatLabel(choice: EventRepeatChoice, startMs: number, zone: st
 }
 export interface MeetingInput {
   roomId: string;
+  externalLocation?: string | null;
+  scope?: "occurrence" | "series";
   title: string;
   description: string | null;
   startsAt: number;
@@ -116,11 +122,17 @@ export async function createMeeting(engine: Engine, orgId: string, input: Meetin
 export async function updateMeeting(engine: Engine, id: string, rev: number, input: MeetingInput): Promise<Meeting> {
   return (await engine.api.json("PUT", `/v1/meetings/${enc(id)}`, z.object({ meeting: zMeeting }), { body: { ...input, rev } })).meeting;
 }
-export async function cancelMeeting(engine: Engine, id: string): Promise<Meeting> {
-  return (await engine.api.json("POST", `/v1/meetings/${enc(id)}/cancel`, z.object({ meeting: zMeeting }), { body: {} })).meeting;
+export async function cancelMeeting(engine: Engine, id: string, scope: "occurrence" | "series" = "series", rev?: number): Promise<Meeting> {
+  return (await engine.api.json("POST", `/v1/meetings/${enc(id)}/cancel`, z.object({ meeting: zMeeting }), { body: { scope, rev } })).meeting;
 }
-export async function respondToMeeting(engine: Engine, id: string, response: MeetingResponse): Promise<Meeting> {
-  return (await engine.api.json("POST", `/v1/meetings/${enc(id)}/respond`, z.object({ meeting: zMeeting }), { body: { response } })).meeting;
+export async function setMeetingCover(engine: Engine, id: string, rev: number, image: Uint8Array): Promise<Meeting> {
+  return (await engine.api.json("PUT", `/v1/meetings/${enc(id)}/cover?rev=${rev}`, z.object({ meeting: zMeeting }), { raw: image })).meeting;
+}
+export async function removeMeetingCover(engine: Engine, id: string, rev: number): Promise<Meeting> {
+  return (await engine.api.json("DELETE", `/v1/meetings/${enc(id)}/cover?rev=${rev}`, z.object({ meeting: zMeeting }))).meeting;
+}
+export async function respondToMeeting(engine: Engine, id: string, response: MeetingResponse, rev?: number): Promise<Meeting> {
+  return (await engine.api.json("POST", `/v1/meetings/${enc(id)}/respond`, z.object({ meeting: zMeeting }), { body: { response, rev } })).meeting;
 }
 // ───── the editor's time rules (android MeetingRules): entered in the person's zone, sent as UTC with the zone ─────
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -200,7 +212,7 @@ export function whenText(startsAt: number, endsAt: number, zone: string): string
   return `${day}, ${hm(startsAt)}–${hm(endsAt)}`;
 }
 /** An iCalendar file for "Add to my calendar": Meldiq reads nothing from the calendar and asks for no permission. */
-export function meetingIcs(m: Pick<Meeting, "id" | "title" | "description" | "startsAt" | "endsAt" | "room">): string {
+export function meetingIcs(m: Pick<Meeting, "id" | "title" | "description" | "startsAt" | "endsAt" | "room" | "externalLocation">): string {
   const stamp = (t: number) =>
     new Date(t)
       .toISOString()
@@ -222,7 +234,7 @@ export function meetingIcs(m: Pick<Meeting, "id" | "title" | "description" | "st
     `DTEND:${stamp(m.endsAt)}`,
     `SUMMARY:${text(m.title)}`,
     ...(m.description ? [`DESCRIPTION:${text(m.description)}`] : []),
-    `LOCATION:${text(m.room?.name ? `Meldiq voice room #${m.room.name}` : "Meldiq")}`,
+    `LOCATION:${text(m.externalLocation ?? (m.room?.name ? `Meldiq voice room #${m.room.name}` : "Meldiq"))}`,
     "END:VEVENT",
     "END:VCALENDAR",
   ];

@@ -157,7 +157,9 @@ export interface ChannelChange extends ChannelOptionFields {
   forumTags?: {
     id?: string;
     name: string;
+    restricted?: boolean;
   }[];
+  requireForumTag?: boolean;
   guidelines?: string | null;
   slowmodeSec?: number;
 }

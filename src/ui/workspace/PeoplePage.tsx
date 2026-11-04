@@ -11,7 +11,7 @@ import { AddMembersDialog } from "./AddMembersDialog";
 import { useState } from "react";
 import type { DirectoryMember, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { changeMember, directory, removeMember } from "../../sync/workspaces";
+import { changeMember, removeMember } from "../../sync/workspaces";
 import { setGuestExpiry } from "../../sync/workspaceC5";
 import { assignableRoles, memberGroups, removalAllowed, roleName, titleChangeAllowed } from "../../sync/workspaceRules";
 import { ban, setTimeout_ } from "../../sync/community";
@@ -22,6 +22,9 @@ import { untilWhen } from "../format";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { useAction, useLoad } from "./useLoad";
+import { rolesOverview } from "../../sync/roles";
+import { useDirectoryPages } from "./useDirectoryPages";
+import { BulkMemberRoles } from "./BulkMemberRoles";
 import { Card, ErrorLine } from "../components/SettingsCard";
 /** The member directory: roles, titles and removals, offered by the server's rules (server/src/roles.ts). */
 export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
@@ -32,9 +35,25 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
   const [q, setQ] = useState("");
   const [term, setTerm] = useState("");
   const [version, setVersion] = useState(0);
-  const people = useLoad(() => (detail.permissions.canViewDirectory ? directory(engine, orgId, term) : Promise.resolve([])), [engine, orgId, term, version, detail]);
+  const [baseFilter, setBaseFilter] = useState("");
+  const people = useDirectoryPages(engine, orgId, term, baseFilter, version, detail.permissions.canViewDirectory);
+  const [selection, setSelection] = useState<{ scope: string; ids: Set<string> }>({ scope: "", ids: new Set() });
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const scope = JSON.stringify([engine.device.userId, orgId, term, baseFilter, version]);
+  const selected = selection.scope === scope ? selection.ids : new Set<string>();
+  const select = (id: string) =>
+    setSelection((prior) => {
+      const ids = new Set(prior.scope === scope ? prior.ids : []);
+      if (ids.has(id)) ids.delete(id);
+      else if (ids.size < 50) ids.add(id);
+      return { scope, ids };
+    });
+  const features = useOrbit((s) => s.server?.features ?? []);
+  const canViewRoles = detail.permissions.isOwner || detail.permissions.effective.includes("roles.view");
+  const roleFilters = useLoad(() => (canViewRoles ? rolesOverview(engine, orgId) : Promise.resolve(null)), [engine, orgId, canViewRoles]);
+  const canBulk = features.includes("bulk-role-members") && (detail.permissions.isOwner || detail.permissions.effective.includes("roles.assign"));
   const myRole = (detail.org.myRole ?? "MEMBER") as OrgRole;
-  const owners = (people.data ?? []).filter((m) => m.orgRole === "OWNER").length;
+  const owners = people.ownerCount ?? (people.data ?? []).filter((m) => m.orgRole === "OWNER").length;
   const [adding, setAdding] = useState(false);
   if (!detail.permissions.canViewDirectory) {
     return <Card title={uiText("calls.interface.people_7db2089")} sub={uiText("workspace.interface.guests_can_t_browse_the_community_directory_people_you_share_chan_5fe1a65")} />;
@@ -66,6 +85,7 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
           <Search size={16} className="faint" />
           <input
             value={q}
+            maxLength={40}
             onChange={(e) => setQ(e.target.value)}
             onBlur={() => setTerm(q)}
             placeholder={uiText("messaging.interface.search_by_name_or_username_851d675")}
@@ -73,7 +93,57 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
             style={{ border: 0, outline: "none", background: "transparent", flex: 1, padding: "10px 0" }}
           />
         </form>
-        <ErrorLine text={people.error} />
+        {features.includes("paged-community-directory") && (
+          <label className="field">
+            <span>{uiText("workspace.part3.allRoles")}</span>
+            <select className="input" value={baseFilter} onChange={(e) => setBaseFilter(e.target.value)}>
+              <option value="">{uiText("workspace.part3.allRoles")}</option>
+              {(["OWNER", "ADMIN", "MEMBER", "GUEST"] as const).map((r) => (
+                <option key={r} value={r}>
+                  {roleName(r)}
+                </option>
+              ))}
+              {canViewRoles &&
+                roleFilters.data?.roles
+                  .filter((r) => !r.archived)
+                  .map((r) => (
+                    <option key={r.id} value={`role:${r.id}`}>
+                      {r.name}
+                    </option>
+                  ))}
+            </select>
+          </label>
+        )}
+        <ErrorLine text={people.error ?? (canViewRoles ? roleFilters.error : null)} />
+        {canBulk && (
+          <div className="stack">
+            <p>{uiText("workspace.part3.selectionScope")}</p>
+            <p role="status">{uiText("workspace.part3.selectedCount", { selected: selected.size, loaded: people.data.length, total: people.total ?? people.data.length })}</p>
+            <div className="row">
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() =>
+                  setSelection({
+                    scope,
+                    ids: new Set(
+                      people.data
+                        .filter((m) => m.orgRole !== "OWNER")
+                        .slice(0, 50)
+                        .map((m) => m.id),
+                    ),
+                  })
+                }
+              >
+                {uiText("workspace.part3.selectLoaded")}
+              </button>
+              <button className="btn btn-secondary btn-sm" disabled={!selected.size} onClick={() => setBulkOpen(true)}>
+                {uiText("workspace.part3.bulkRoles")}
+              </button>
+            </div>
+          </div>
+        )}
+        {!canBulk && <p role="status">{uiText("workspace.part3.loadedCount", { loaded: people.data.length, total: people.total ?? people.data.length })}</p>}
+        {people.loading && <p role="status">{uiText("common.status.loading")}</p>}
         {memberGroups(people.data ?? []).map((g) => (
           <section key={g.role?.id ?? "members"} aria-label={g.role?.name ?? l10n("workspace.members")}>
             {(people.data ?? []).some((m) => m.customRoles.some((r) => r.hoist)) && (
@@ -83,22 +153,49 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
             )}
             <ul className="ws-list" aria-label={g.role?.name ?? l10n("workspace.members")} aria-busy={people.loading}>
               {g.members.map((m) => (
-                <MemberRow key={m.id} member={m} detail={detail} myRole={myRole} myId={engine.device.userId} owners={owners} onChanged={() => setVersion((v) => v + 1)} />
+                <MemberRow
+                  key={m.id}
+                  selected={canBulk ? selected.has(m.id) : undefined}
+                  onSelect={() => select(m.id)}
+                  member={m}
+                  detail={detail}
+                  myRole={myRole}
+                  myId={engine.device.userId}
+                  owners={owners}
+                  onChanged={() => setVersion((v) => v + 1)}
+                />
               ))}
             </ul>
           </section>
         ))}
-        {people.data?.length === 0 && (
+        {(people.nextAfter || people.error) && (
+          <button className="btn btn-secondary" disabled={people.loading} onClick={() => void people.more()}>
+            {people.error ? uiText("common.actions.retry") : uiText("common.actions.next")}
+          </button>
+        )}
+        {!people.loading && !people.error && people.data?.length === 0 && (
           <p className="faint">
             <Localized k="workspace.interface.no_one_matches_b7bab11" />
           </p>
         )}
       </Card>
+      {bulkOpen && selected.size > 0 && (
+        <BulkMemberRoles
+          key={scope}
+          orgId={orgId}
+          userIds={[...selected]}
+          onClose={() => setBulkOpen(false)}
+          onSaved={() => {
+            setVersion((v) => v + 1);
+            setSelection({ scope: "", ids: new Set() });
+          }}
+        />
+      )}
       {adding && <AddMembersDialog orgId={orgId} orgName={detail.org.name} onClose={() => setAdding(false)} onAdded={() => setVersion((v) => v + 1)} />}
     </div>
   );
 }
-function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myRole: OrgRole; myId: string; owners: number; onChanged: () => void }) {
+function MemberRow(props: { selected?: boolean; onSelect: () => void; member: DirectoryMember; detail: OrgAdminDetail; myRole: OrgRole; myId: string; owners: number; onChanged: () => void }) {
   useLocaleRender();
   const l10n = useLocalization();
   const { member: m, detail, myRole, myId, owners, onChanged } = props;
@@ -195,6 +292,9 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
   ];
   return (
     <li className="ws-row">
+      {props.selected !== undefined && (
+        <input type="checkbox" checked={props.selected} disabled={m.orgRole === "OWNER"} aria-label={uiText("workspace.part3.selectMember", { name: m.displayName })} onChange={props.onSelect} />
+      )}
       <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={36} online={m.online} decorative />
       <span className="lines grow">
         <span className="ellipsis">

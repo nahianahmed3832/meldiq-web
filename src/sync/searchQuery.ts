@@ -20,6 +20,9 @@ export interface SearchQuery {
   /** Times in ms: messages strictly before [before] and at or after [after]. */
   before: number | null;
   after: number | null;
+  mentions?: string;
+  in?: string;
+  pinned?: boolean;
 }
 
 const TOKEN = /(\w+):("([^"]*)"|\S+)/g;
@@ -53,6 +56,22 @@ export function parseSearchQuery(raw: string): SearchQuery {
         if (!q.has.includes(kind)) q.has.push(kind);
         return " ";
       }
+      case "mentions":
+        if (!v) return whole;
+        q.mentions = v.replace(/^@/, "").toLowerCase();
+        return " ";
+      case "in":
+        if (!v) return whole;
+        q.in = v.replace(/^#/, "");
+        return " ";
+      case "is":
+        if (v.toLowerCase() !== "pinned") return whole;
+        q.pinned = true;
+        return " ";
+      case "pinned":
+        if (!["true", "false"].includes(v.toLowerCase())) return whole;
+        q.pinned = v.toLowerCase() === "true";
+        return " ";
       case "before": {
         const t = dayStart(v);
         if (t === null) return whole;
@@ -81,7 +100,8 @@ export function parseSearchQuery(raw: string): SearchQuery {
 }
 
 /** Whether anything narrows the search besides the text. */
-export const hasFilters = (q: SearchQuery): boolean => q.from !== null || q.has.length > 0 || q.before !== null || q.after !== null;
+export const hasFilters = (q: SearchQuery): boolean =>
+  q.from !== null || q.has.length > 0 || q.before !== null || q.after !== null || q.in !== undefined || q.mentions !== undefined || q.pinned !== undefined;
 
 const LINK = /\bhttps?:\/\/\S/i;
 
@@ -103,6 +123,7 @@ export function matchesSearch(m: StoredMessage, q: SearchQuery, sender: (m: Stor
   if (q.text && !m.text.toLowerCase().includes(q.text.toLowerCase())) return false;
   if (q.before !== null && m.sortTs >= q.before) return false;
   if (q.after !== null && m.sortTs < q.after) return false;
+  if (q.pinned !== undefined && m.pinned !== q.pinned) return false;
   if (q.from !== null) {
     const s = sender(m);
     const mine = q.from === "me" || q.from === "you";

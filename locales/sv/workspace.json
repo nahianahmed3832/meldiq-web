@@ -2013,5 +2013,61 @@
       "storage": "Lagrade filer (byte)",
       "calls": "Samtalsdeltagarprotokoll"
     }
+  },
+  "eventCover": {
+    "label": "Evenemangsomslag"
+  },
+  "roleIcon": {
+    "label": "Rollikon"
+  },
+  "voiceChat": {
+    "label": "Rumschatt",
+    "help": "Anslut för att prata eller öppna chatten utan att ansluta till röst."
+  },
+  "partners": {
+    "label": "Partneransökan",
+    "intro": "Privat för ägaren och Meldiqs granskare. Granskningen är manuell; godkännande ger inget märke.",
+    "statement": "Berätta om din community",
+    "guidelines": "Publicerade communityregler",
+    "moderation": "Ordnad moderering",
+    "safety": "Säkerhets- och rapporteringsprocess",
+    "activity": "Aktiv community"
+  },
+  "auditChanges": {
+    "label": "Ändringar",
+    "before": "Före",
+    "after": "Efter"
+  },
+  "forumLayout": {
+    "label": "Inläggslayout",
+    "list": "Lista",
+    "gallery": "Galleri"
+  },
+  "forumTags": {
+    "required": "Kräv en tagg för nya inlägg",
+    "restricted": "Endast moderatorer",
+    "choose": "Välj minst en tagg."
+  },
+  "part3": {
+    "cancelEvent": "Ställ in evenemang",
+    "confirmCancel": "Bekräfta inställning",
+    "changeScope": "Tillämpa ändring på",
+    "thisOccurrence": "Bara detta tillfälle",
+    "currentAndFuture": "Detta och framtida tillfällen",
+    "scopeHelp": "En ändring av ett tillfälle bevarar framtida tider och svar. Ändra upprepning för hela serien.",
+    "locationType": "Evenemangets plats",
+    "externalLocation": "Extern plats",
+    "externalHelp": "Ange en plats eller HTTPS-adress. Den valda kanalen avgör vem som ser evenemanget.",
+    "visibilityChannel": "Kanal för synlighet",
+    "locationRequired": "Ange en extern plats.",
+    "linkLobbyOrders": "Länka ordning på dator och telefon",
+    "resetPhoneOrder": "Återställ telefonens ordning till datorns",
+    "selectionScope": "Välj bara inlästa medlemmar (högst 50). Ägare är undantagna.",
+    "selectedCount": "{selected} valda · {loaded} inlästa · {total} träffar",
+    "selectMember": "Välj {name}",
+    "selectLoaded": "Välj inlästa medlemmar",
+    "bulkRoles": "Hantera valda roller",
+    "allRoles": "Alla åtkomstnivåer",
+    "loadedCount": "{loaded} inlästa · {total} träffar"
   }
 }

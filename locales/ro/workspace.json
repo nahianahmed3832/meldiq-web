@@ -2013,5 +2013,61 @@
       "storage": "Fișiere stocate (octeți)",
       "calls": "Minutele participanților la apel"
     }
+  },
+  "eventCover": {
+    "label": "Coperta evenimentului"
+  },
+  "roleIcon": {
+    "label": "Pictograma rolului"
+  },
+  "voiceChat": {
+    "label": "Chatul camerei",
+    "help": "Alătură-te pentru a vorbi sau deschide chatul fără conectare vocală."
+  },
+  "partners": {
+    "label": "Cerere de parteneriat",
+    "intro": "Privată pentru proprietar și evaluatorii Meldiq. Evaluarea este manuală; aprobarea nu acordă o insignă.",
+    "statement": "Spune-ne despre comunitatea ta",
+    "guidelines": "Reguli ale comunității publicate",
+    "moderation": "Acoperire de moderare",
+    "safety": "Procedură de siguranță și raportare",
+    "activity": "Comunitate activă"
+  },
+  "auditChanges": {
+    "label": "Modificări",
+    "before": "Înainte",
+    "after": "După"
+  },
+  "forumLayout": {
+    "label": "Aspectul postărilor",
+    "list": "Listă",
+    "gallery": "Galerie"
+  },
+  "forumTags": {
+    "required": "Solicită o etichetă pentru postările noi",
+    "restricted": "Doar moderatori",
+    "choose": "Alege cel puțin o etichetă."
+  },
+  "part3": {
+    "cancelEvent": "Anulează evenimentul",
+    "confirmCancel": "Confirmă anularea",
+    "changeScope": "Aplică modificarea la",
+    "thisOccurrence": "Doar această apariție",
+    "currentAndFuture": "Aceasta și aparițiile viitoare",
+    "scopeHelp": "Modificarea unei apariții păstrează programul și răspunsurile viitoare. Schimbă repetarea pentru întreaga serie.",
+    "locationType": "Locul evenimentului",
+    "externalLocation": "Loc extern",
+    "externalHelp": "Introdu un loc sau o adresă HTTPS. Canalul ales stabilește cine vede evenimentul.",
+    "visibilityChannel": "Canal de vizibilitate",
+    "locationRequired": "Introdu un loc extern.",
+    "linkLobbyOrders": "Leagă ordinea de pe calculator și telefon",
+    "resetPhoneOrder": "Resetează ordinea telefonului după calculator",
+    "selectionScope": "Selectează doar membrii încărcați (maximum 50). Proprietarii sunt excluși.",
+    "selectedCount": "{selected} selectați · {loaded} încărcați · {total} rezultate",
+    "selectMember": "Selectează {name}",
+    "selectLoaded": "Selectează membrii încărcați",
+    "bulkRoles": "Gestionează rolurile selectate",
+    "allRoles": "Toate nivelurile de acces",
+    "loadedCount": "{loaded} încărcați · {total} rezultate"
   }
 }

@@ -2013,5 +2013,61 @@
       "storage": "Archivos almacenados (bytes)",
       "calls": "Minutos de participantes de llamadas"
     }
+  },
+  "eventCover": {
+    "label": "Portada del evento"
+  },
+  "roleIcon": {
+    "label": "Icono del rol"
+  },
+  "voiceChat": {
+    "label": "Chat de la sala",
+    "help": "Únete para hablar o abre el chat sin unirte a la voz."
+  },
+  "partners": {
+    "label": "Solicitud de asociación",
+    "intro": "Privada para el propietario y los revisores de Meldiq. La revisión es manual; aprobarla no otorga una insignia.",
+    "statement": "Cuéntanos sobre tu comunidad",
+    "guidelines": "Normas de comunidad publicadas",
+    "moderation": "Cobertura de moderación",
+    "safety": "Proceso de seguridad y reportes",
+    "activity": "Comunidad activa"
+  },
+  "auditChanges": {
+    "label": "Cambios",
+    "before": "Antes",
+    "after": "Después"
+  },
+  "forumLayout": {
+    "label": "Diseño de publicaciones",
+    "list": "Lista",
+    "gallery": "Galería"
+  },
+  "forumTags": {
+    "required": "Exigir una etiqueta en publicaciones nuevas",
+    "restricted": "Solo moderadores",
+    "choose": "Elige al menos una etiqueta."
+  },
+  "part3": {
+    "cancelEvent": "Cancelar evento",
+    "confirmCancel": "Confirmar cancelación",
+    "changeScope": "Aplicar cambio a",
+    "thisOccurrence": "Solo esta fecha",
+    "currentAndFuture": "Esta fecha y las futuras",
+    "scopeHelp": "Cambiar una fecha conserva los horarios y las respuestas futuras. Cambia la repetición para toda la serie.",
+    "locationType": "Lugar del evento",
+    "externalLocation": "Lugar externo",
+    "externalHelp": "Ingresa un lugar o una dirección HTTPS. El canal elegido determina quién ve el evento.",
+    "visibilityChannel": "Canal de visibilidad",
+    "locationRequired": "Ingresa un lugar externo.",
+    "linkLobbyOrders": "Vincular el orden de computadora y teléfono",
+    "resetPhoneOrder": "Restablecer el orden del teléfono al de computadora",
+    "selectionScope": "Selecciona solo miembros cargados (máximo 50). Se excluyen los propietarios.",
+    "selectedCount": "{selected} seleccionados · {loaded} cargados · {total} coincidencias",
+    "selectMember": "Seleccionar a {name}",
+    "selectLoaded": "Seleccionar miembros cargados",
+    "bulkRoles": "Gestionar roles seleccionados",
+    "allRoles": "Todos los niveles de acceso",
+    "loadedCount": "{loaded} cargados · {total} coincidencias"
   }
 }

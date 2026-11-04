@@ -25,6 +25,7 @@ export function FriendRow(p: {
   };
   online: boolean;
   sub?: string;
+  note?: string;
   onMessage?: () => void;
   actions?: React.ReactNode;
   more?: {
@@ -47,6 +48,7 @@ export function FriendRow(p: {
           {p.p.username && <small className="friend-handle"> @{p.p.username}</small>}
         </strong>
         <small className="ellipsis">{p.sub ?? (p.p.statusText || (p.online ? l10n("workspace.online") : l10n("messaging.people_offline")))}</small>
+        {p.note && <small style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{p.note}</small>}
       </span>
       <span className="friend-actions">
         {p.actions}
