@@ -1,0 +1,24 @@
+{
+  "apiCommit": "18a135c0",
+  "scope": "Implemented candidate slices, not complete broader-platform acceptance",
+  "validation": {
+    "postgresqlSuites": 10,
+    "postgresqlPassed": 48,
+    "typecheck": "PASS"
+  },
+  "migrations": {
+    "20261104002600_bot_platform_permissions.sql": "519d27beb94e66f25dc623064c87e32c25db52b665417343f8731ebe16d31477",
+    "20261104002700_bot_derived_credentials.sql": "05ff9b39941cb7ac794aff3c0e425e9c805e969b7e6c584b7136441a019ae4aa",
+    "20261104002800_bot_event_journal.sql": "031e0c83376621fea24aa53316f9e461f55eebcb748065c05b06a0dc366130f1",
+    "20261104002900_bot_invite_credentials.sql": "de470a1911cc856f2ec057f3be0f179c5fdc684a273bb1f305bbde943f2b4745"
+  },
+  "pending": [
+    "DM consent and DM events",
+    "rich interactions and modals",
+    "remaining REST surfaces and SDKs",
+    "permission review UI",
+    "hot-path/capacity measurements",
+    "whole-register reconciliation and complete staging release gates"
+  ],
+  "productionChanged": false
+}
