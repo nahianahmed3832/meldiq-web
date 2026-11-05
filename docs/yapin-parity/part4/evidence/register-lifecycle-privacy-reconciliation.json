@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-11-05T06:11:36.225Z",
+  "total": 568,
+  "owned": 238,
+  "updated": 5,
+  "totalOwnedRowsReconciled": 178,
+  "unownedUnchanged": 330,
+  "statusChanges": [
+    {
+      "id": "YAP-BOT-008",
+      "from": "IN_PROGRESS",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    }
+  ],
+  "acceptedRowsAdded": 0,
+  "historicalFieldsUnchanged": true,
+  "stableIdsPreserved": true,
+  "part4Implementation": {
+    "IMPLEMENTED_NOT_ACCEPTED": 158,
+    "NOT_STARTED_IN_THIS_PROGRAM": 41,
+    "RESEARCH_REQUIRED": 19,
+    "DEFERRED_DECISION": 14,
+    "IN_PROGRESS": 6
+  },
+  "allImplementation": {
+    "IMPLEMENTED_NOT_ACCEPTED": 244,
+    "RESEARCH_REQUIRED": 21,
+    "DEFERRED_DECISION": 31,
+    "ACCEPTED": 225,
+    "NOT_STARTED_IN_THIS_PROGRAM": 41,
+    "IN_PROGRESS": 6
+  },
+  "unchangedRowsSha256": "e9f3bbcc47d789e494d454fbeab31358fc804d8251306806f3867871d6b8c0b7",
+  "scope": "Scoped Starboard and Ticket follow-up. Ticket moves from in progress to implemented awaiting coordinated acceptance. No acceptance promotion."
+}

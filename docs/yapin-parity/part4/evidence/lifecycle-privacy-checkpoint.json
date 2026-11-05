@@ -1,0 +1,97 @@
+{
+  "recordedAt": "2026-11-05T06:14:39.202032+00:00",
+  "productionChanges": false,
+  "apiSource": "281255bb2571d8af4723b01aa138738e419fd78b",
+  "webContractPin": "d65d60984498fd4127751971d0935c4dd1d1296b",
+  "webTicketSource": "85b4cb3883df52b59cbbdc776a896ee1790e2ec5",
+  "priorCoordinatedArtifacts": {
+    "web": "d1258d1788a587f8d41ccb13c01a28fd868fd976",
+    "api": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+    "windows": "0d7956d9af7943df2ba70e94a57e355f8ab728a1",
+    "android": "188a7ac1758377c6624e863719320e66cec3fa78"
+  },
+  "apiArtifacts": "lifecycle-privacy-api-artifact.json",
+  "migrations": {
+    "sqlite": "server/migrations/110_ticket_lifecycle.sql",
+    "postgres": "supabase/migrations/20261105003500_ticket_lifecycle.sql",
+    "productionApplied": false
+  },
+  "starboard": {
+    "storedHistorySource": "0e964304",
+    "historyPg": 41,
+    "historyLegacy": {
+      "passed": 41,
+      "skipped": 2
+    },
+    "collectionsSearchSource": "89450637",
+    "collectionsSearchPg": 48,
+    "collectionsSearchLegacy": {
+      "passed": 65,
+      "skipped": 2
+    },
+    "scope": "New copy audience and prepared recipients at acceptance, authorized originals-only search, live source authorization on stored HTTP history/summaries/collections. Text and old count edits only in stored red probe. Queue/realtime replay, installed cache invalidation, real uploaded source media and old Logger/Ticket retained copies are unverified."
+  },
+  "tickets": {
+    "lifecycleApi": "6b39df21c343693094ec63d89042d2434a0fe9b3",
+    "lifecyclePg": 34,
+    "lifecycleLegacy": 46,
+    "currentPg": 59,
+    "currentLegacy": 50,
+    "browser": {
+      "passes": 2,
+      "viewports": [
+        "Chromium desktop",
+        "Chromium phone width"
+      ],
+      "apiSource": "6b39df21",
+      "backend": "SQLite in disposable development mode",
+      "scope": "Actual moderator desk. Revision conflict after close/reopen churn; then same channel and prior message after fresh review. Before whitespace-only formatting pass; no physical or ordinary-production-export claim."
+    },
+    "scope": "Authorized single assignee, reviewed release, revision-bound private reopen, current role/limits and preserved history. Transcript reads/publication require a current private destination with only source-authorized readers. Public notices preserved; historical stored transcripts unchanged."
+  },
+  "android": {
+    "receipt": "android-lifecycle-polls-checkpoint.json",
+    "source": "f86fb3a56ec293e5aa8d4bdb06d1a0053126b8cf",
+    "jvmPassed": 1056,
+    "jvmSkipped": 12,
+    "sourceFiles": 2140,
+    "deviceTestExecution": "pending by explicit owner choice"
+  },
+  "sdk": {
+    "files": 13,
+    "archiveBytes": 242302,
+    "sha256": "193a0b2f2f4055f4a1841401ee1d518eb23fc78087575208fd5f4164d99a77c7",
+    "apiSource": "281255bb2571d8af4723b01aa138738e419fd78b",
+    "webFixturesVerified": 798
+  },
+  "webStatic": {
+    "typecheck": true,
+    "focusedLint": true,
+    "locales": 28,
+    "keys": 6313,
+    "structuralErrors": 0,
+    "hardcodedCandidates": 0,
+    "linguisticReview": "pending"
+  },
+  "fullCurrentApiRegression": "running at receipt creation",
+  "logs": {
+    "starboard-search-collections-red.txt": "5dbcabe98c3d807e508c7031193753c978bcfaba4dc0dfe5370f308291676f35",
+    "starboard-search-collections-pg-final.txt": "a8bdf44a8e77fe61077c3c29f65a232da03bdb8794b5cf53dd12f347847047f7",
+    "starboard-search-collections-legacy.txt": "ba5fee54d2b9732a431d61e03e86f8ea7964332f9770316442d9fbe4078c8e10",
+    "starboard-search-collections-types.txt": "b776d13ae5e43c7d1d9e323aa81bd4ad2d60d79bf13658761b624c592cf72199",
+    "ticket-claim-reopen-red.txt": "51d05f93e3a24cebe35c13cfbb0840ea4c43b28718fb1211662deabccff65cfa",
+    "ticket-claim-reopen-pg.txt": "6e4737b5a2229eba1238a4e086c16562715a35553182aa8cd5a1b005c3de683a",
+    "ticket-revision-pg.txt": "ca6ce41eb7b628d0dde1ac4d6fa3859f0d6d304d766b9994cdcb2a0aaca643c9",
+    "ticket-revision-legacy.txt": "769c56eef397ba244d3bb0e69d9eced301bcf2ac417562431214b291ed2427b1",
+    "ticket-revision-types.txt": "b776d13ae5e43c7d1d9e323aa81bd4ad2d60d79bf13658761b624c592cf72199",
+    "ticket-transcript-red.txt": "3c20ba0039a20a592b96020a8aa7598a3fe69c3effe8fd63323be334f8b56c05",
+    "ticket-transcript-pg.txt": "78676d15b26647016206496d50fb8002e66f7befb26c7e1d78112e691a07cb11",
+    "ticket-transcript-legacy.txt": "ad44f8842211c9126b4186d28cea72058f47c95238bdbe23ea0b85eef709c39b",
+    "ticket-transcript-types.txt": "b776d13ae5e43c7d1d9e323aa81bd4ad2d60d79bf13658761b624c592cf72199",
+    "ticket-transcript-build.txt": "8faba247704fd05b0405aa62cf4b8db54c79f3b825d2d01323d657d65ff6f097",
+    "ticket-web-types.txt": "02f361bbb61b2b6d8aad95b807da063aa0f7e261301757eb47eb0cfe1a768fee",
+    "ticket-web-i18n.txt": "fca98b206a5a6aa760ad6fa4d808872cb373970eb460512b07284d5253ec3a96",
+    "ticket-web-lint.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ticket-web-browser.txt": "6233a52b925044cdadf263e2efe080ef537ee2f1d5e198291f9bc84c3e34f7e3"
+  }
+}

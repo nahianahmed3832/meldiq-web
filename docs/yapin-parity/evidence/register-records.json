@@ -6164,15 +6164,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Threshold, deduplication and initial private-channel exclusion pass. Existing derived posts are not withdrawn on source deletion or changed visibility; close that privacy gap.",
+    "Gap description": "Publication, history, summaries and collections enforce current source access; search only returns originals. Queue/realtime replay, client cache invalidation and authorized source-media rendering remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Threshold deduplicates reactions and source deletion or visibility change cannot leak private posts. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
     "Implementation status": "IN_PROGRESS",
-    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; skips private channels and the starboard itself. Full acceptance pending.",
+    "Testing status": "Part 4, 2026-11-05: PostgreSQL and SQLite/MongoDB cases reproduce and close wider source audiences, a change during reaction reads, old bodies/edits after source revocation or deletion, and search/collection exposure. See part4/evidence/lifecycle-privacy-checkpoint.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: Current lifecycle and source-audience evidence is recorded in part4/evidence/lifecycle-privacy-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BOT-007",
@@ -6202,15 +6202,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Open, private requester/staff access and close are covered. Claim and reopen are not implemented in the inspected ticket routes; complete the remaining lifecycle and leakage checks.",
+    "Gap description": "Private open, claim, release, close and revision-bound reopen are implemented and locally verified. New transcript publication is audience-checked. Existing transcript copies, current coordinated staging and installed staff/requester journeys are unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Requester and staff access survive open claim close and reopen without cross-ticket leakage. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "IN_PROGRESS",
-    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: opens a private channel only the opener and the moderators see, with the text first and a log line; lets only the opener or a moderator close a ticket: archived, out of the category, logged; lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close. Full acceptance pending.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Current 281255bb API passes PostgreSQL and SQLite/MongoDB ticket lifecycle/privacy cases. Compiled 6b39df21 plus the Web moderator desk passes two controlled Chromium viewports, including stale review rejection and reopening the original channel. See part4/evidence/lifecycle-privacy-checkpoint.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: Current lifecycle and source-audience evidence is recorded in part4/evidence/lifecycle-privacy-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BOT-009",
@@ -8045,15 +8045,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Initial threshold and source filtering pass. Attachment copy authorization and revocation after source deletion/visibility changes remain active work.",
+    "Gap description": "A source deleted or no longer readable is withheld from stored history and collections. Uploaded images still need a source-bound rendering and revocation test; direct cross-conversation attachment reuse is refused by the native send path.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "One source creates one authorized starboard item; private sources and deleted assets are excluded. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
     "Implementation status": "IN_PROGRESS",
-    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; skips private channels and the starboard itself. Full acceptance pending.",
+    "Testing status": "Part 4, 2026-11-05: Threshold, deduplication, role changes and redaction of old body/source pointers pass on PostgreSQL and SQLite/MongoDB. The stored-copy deletion test uses text, not an uploaded attachment. See part4/evidence/lifecycle-privacy-checkpoint.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: Current lifecycle and source-audience evidence is recorded in part4/evidence/lifecycle-privacy-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BOTOPT-015",
@@ -8083,15 +8083,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Custom emoji and initial private-source exclusion pass. Current source visibility changes and previously derived posts need additional protection.",
+    "Gap description": "Current source visibility and historical edits are checked at native HTTP read. Previously queued events and client caches still need scoped revocation qualification.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Only authorized emoji are accepted and excluded/private channel content never copies. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
     "Implementation status": "IN_PROGRESS",
-    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: its own emoji and self-stars; skips private channels and the starboard itself. Full acceptance pending.",
+    "Testing status": "Part 4, 2026-11-05: Existing custom emoji, exclusions and private-source cases pass; prepared-audience and scoped history/search/collection regression evidence is recorded in part4/evidence/lifecycle-privacy-checkpoint.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: Current lifecycle and source-audience evidence is recorded in part4/evidence/lifecycle-privacy-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BOTOPT-017",
@@ -8121,15 +8121,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Panel channel/limit validation and restricted staff/requester membership pass. Complete installed staff/requester journeys remain pending.",
+    "Gap description": "Controlled private panel and lifecycle checks pass. Installed staff/requester journeys, current release acceptance, and existing stored transcripts remain unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Panel creates only an authorized requester/staff channel and cannot inject extra permissions. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
     "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
-    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: checks the panels' channels and limits; opens a private channel only the opener and the moderators see, with the text first and a log line; lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close. Full acceptance pending.",
+    "Testing status": "Part 4, 2026-11-05: Ticket API suites verify panel validation, current staff/requester history after reopen, cap enforcement and transcript suppression in a public log or after an in-flight reader expansion. See part4/evidence/lifecycle-privacy-checkpoint.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: Current lifecycle and source-audience evidence is recorded in part4/evidence/lifecycle-privacy-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BOTOPT-019",

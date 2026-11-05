@@ -1,0 +1,50 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:39155) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39155) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/official_bots_activity.test.ts (22 tests | 2 failed | 20 skipped) 1220ms
+       × withholds the body and old count edits of a stored Starboard copy after source access is lost 41ms
+       × withholds an existing Starboard body and its source pointer when the original is deleted 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Starboard > withholds the body and old count edits of a stored Starboard copy after source access is lost
+AssertionError: expected '{"messages":[{"id":"m_8w1VU_G4LT9GKZS…' not to contain 'original source text that was previou…'
+
+Expected: "original source text that was previously readable"
+Received: "{"messages":[{"id":"m_8w1VU_G4LT9GKZSUm9L6Sg","conversationId":"c_su6G5wX0GCxwotPOImUiUQ","senderUserId":"u_CA8CvGkXvVOvbz9qgyOebw","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"⭐ 2 · obaana in #previously-readable\noriginal source text that was previously readable","starboard":{"channelId":"c_4VSy0QI1s63PB-0sD_LhmQ","messageId":"m_oba_1_1793857200354"}},"sentAt":1793857200370,"serverTs":1793857200370,"mentionAll":false,"importedBy":null}],"changes":[{"id":"m__oZ7L5JI2CwFklWKWR4LMw","conversationId":"c_su6G5wX0GCxwotPOImUiUQ","senderUserId":"u_CA8CvGkXvVOvbz9qgyOebw","senderDeviceId":null,"cls":"control","payload":{"type":"edit","target":"m_8w1VU_G4LT9GKZSUm9L6Sg","text":"⭐ 3 · obaana in #previously-readable\noriginal source text that was previously readable"},"sentAt":1793857200374,"serverTs":1793857200374,"mentionAll":false,"importedBy":null}],"more":false,"nextCursor":null}"
+
+ ❯ test/official_bots_activity.test.ts:431:41
+    429|       await expectStatus(dee.req("GET", `/v2/conversations/${source}/m…
+    430|       const after = await dee.req("GET", `/v2/conversations/${stars}/m…
+    431|       expect(JSON.stringify(after)).not.toContain(marker);
+       |                                         ^
+    432|       expect(JSON.stringify(await dee.req("GET", "/v2/messages/summary…
+    433|       expect(JSON.stringify(await owner.req("GET", `/v2/conversations/…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Starboard > withholds an existing Starboard body and its source pointer when the original is deleted
+AssertionError: expected '{"id":"m_txS5iVlEbmUe5DubXVjzcQ","con…' not to contain 'source content removed after the boar…'
+
+Expected: "source content removed after the board copied it"
+Received: "{"id":"m_txS5iVlEbmUe5DubXVjzcQ","conversationId":"c_su6G5wX0GCxwotPOImUiUQ","senderUserId":"u_CA8CvGkXvVOvbz9qgyOebw","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"⭐ 2 · obaana in #removed-original\nsource content removed after the board copied it","starboard":{"channelId":"c_37AWXoMOcLKQ4lU1KGZnzw","messageId":"m_oba_5_1793857200396"}},"sentAt":1793857200404,"serverTs":1793857200404,"mentionAll":false,"importedBy":null}"
+
+ ❯ test/official_bots_activity.test.ts:450:44
+    448|       await settle();
+    449|       const redacted = (await owner.req("GET", route)).messages.find((…
+    450|       expect(JSON.stringify(redacted)).not.toContain(marker);
+       |                                            ^
+    451|       expect(redacted.payload.starboard).toBeUndefined();
+    452|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 20 skipped (22)
+   Start at  13:39:55
+   Duration  5.32s (transform 1.79s, setup 0ms, import 2.87s, tests 1.22s, environment 0ms)
+

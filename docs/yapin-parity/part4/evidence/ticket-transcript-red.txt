@@ -1,0 +1,50 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:45870) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45870) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/official_bots_desk.test.ts (13 tests | 2 failed | 6 skipped) 1187ms
+       × logs a close notice without copying private transcript text to a public destination 26ms
+       × rechecks a private transcript's readers after the ticket history read has started 32ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/official_bots_desk.test.ts > official bots that work for the community, in postgres > Tickets > logs a close notice without copying private transcript text to a public destination
+AssertionError: expected '{"messages":[{"id":"m_BgU1p34b0n3oqvG…' not to contain 'synthetic confidential public-log pro…'
+
+Expected: "synthetic confidential public-log probe"
+Received: "{"messages":[{"id":"m_BgU1p34b0n3oqvGA996Rhg","conversationId":"c_oBwlVf65E8gtEn1LJ_U9Zg","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"📄 Transcript of Ticket #2 · Support\n[2026-11-05 06:05] Desk: @Helpers Ticket #2 · Support\nsynthetic confidential public-log probe\n[2026-11-05 06:05] Desk: Hi @obdmember2, Support will be right with you.\n[2026-11-05 06:05] Desk: 🔒 Ticket closed by obdowner"},"sentAt":1793858743418,"serverTs":1793858743418,"mentionAll":false,"importedBy":null},{"id":"m_X378G-TfaGTjN72QQZnlFQ","conversationId":"c_oBwlVf65E8gtEn1LJ_U9Zg","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"🔒 Ticket #2 · Support closed by obdowner"},"sentAt":1793858743415,"serverTs":1793858743415,"mentionAll":false,"importedBy":null},{"id":"m_qdMS_jnyUFy3nKOt5QnlzQ","conversationId":"c_oBwlVf65E8gtEn1LJ_U9Zg","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"🎫 Ticket #2 · Support opened by obdmember (#ticket-2-obdmember2)"},"sentAt":1793858743411,"serverTs":1793858743411,"mentionAll":false,"importedBy":null}],"changes":[],"more":false,"nextCursor":null}"
+
+ ❯ test/official_bots_desk.test.ts:149:44
+    147|         const result = await helper.req("GET", `/v2/conversations/${su…
+    148|         expect(JSON.stringify(result)).toContain(`Ticket #${ticket.num…
+    149|         expect(JSON.stringify(result)).not.toContain(marker);
+       |                                            ^
+    150|       } finally {
+    151|         await owner.req("PUT", `${endpoint}/config`, { enabled: true, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/official_bots_desk.test.ts > official bots that work for the community, in postgres > Tickets > rechecks a private transcript's readers after the ticket history read has started
+AssertionError: expected '[{"id":"m_12W9A2gZGePgSPxNpY_zsg","co…' not to contain 'synthetic confidential transcript rac…'
+
+Expected: "synthetic confidential transcript race probe"
+Received: "[{"id":"m_12W9A2gZGePgSPxNpY_zsg","conversationId":"c_z8NlI8X9LFRwg_H-YGVe5g","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"📄 Transcript of Ticket #3 · Support\n[2026-11-05 06:05] Desk: @Helpers Ticket #3 · Support\nsynthetic confidential transcript race probe\n[2026-11-05 06:05] Desk: Hi @obdmember2, Support will be right with you.\n[2026-11-05 06:05] Desk: 🔒 Ticket closed by obdowner"},"sentAt":1793858743453,"serverTs":1793858743453,"mentionAll":false,"importedBy":null},{"id":"m_YM5KP2_4yHBRBzw4bNIbZA","conversationId":"c_z8NlI8X9LFRwg_H-YGVe5g","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"🔒 Ticket #3 · Support closed by obdowner"},"sentAt":1793858743448,"serverTs":1793858743449,"mentionAll":false,"importedBy":null},{"id":"m_UndWIcHTVdH1QA3ZNmyuuQ","conversationId":"c_z8NlI8X9LFRwg_H-YGVe5g","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"🎫 Ticket #3 · Support opened by obdmember (#ticket-3-obdmember2)"},"sentAt":1793858743444,"serverTs":1793858743444,"mentionAll":false,"importedBy":null},{"id":"m_pc1uKPUTsJUW9TxD7e3bFQ","conversationId":"c_z8NlI8X9LFRwg_H-YGVe5g","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"📄 Transcript of Ticket #1 · Support\n[2026-11-05 06:05] Desk: @Helpers Ticket #1 · Support\nMy account got muted by mistake\n[2026-11-05 06:05] Desk: Hi @obdmember2, Support will be right with you.\n[2026-11-05 06:05] obdmember: Screenshots attached soon\n[2026-11-05 06:05] obdhelper: Looking into it\n[2026-11-05 06:05] Desk: 🔒 Ticket closed by obdowner"},"sentAt":1793858743400,"serverTs":1793858743400,"mentionAll":false,"importedBy":null},{"id":"m_FydCDnA0pMPAiESZ3vtQzg","conversationId":"c_z8NlI8X9LFRwg_H-YGVe5g","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"🔒 Ticket #1 · Support closed by obdowner"},"sentAt":1793858743397,"serverTs":1793858743397,"mentionAll":false,"importedBy":null},{"id":"m_0Lb946NhuYgd0couJE55WQ","conversationId":"c_z8NlI8X9LFRwg_H-YGVe5g","senderUserId":"u_2sEGCW4Dt5LY16puz7gc-A","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"🎫 Ticket #1 · Support opened by obdmember (#ticket-1-obdmember2)"},"sentAt":1793858743377,"serverTs":1793858743377,"mentionAll":false,"importedBy":null}]"
+
+ ❯ test/official_bots_desk.test.ts:175:57
+    173|         expect(added).toBe(true);
+    174|         await expectStatus(newcomer.req("GET", `/v2/conversations/${ti…
+    175|         expect(JSON.stringify(await history(logs))).not.toContain(mark…
+       |                                                         ^
+    176|       } finally {
+    177|         hook.mockRestore();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 5 passed | 6 skipped (13)
+   Start at  14:05:38
+   Duration  5.17s (transform 1.78s, setup 0ms, import 2.81s, tests 1.19s, environment 0ms)
+

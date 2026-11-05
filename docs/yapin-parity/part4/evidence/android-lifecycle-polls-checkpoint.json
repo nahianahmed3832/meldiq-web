@@ -1,0 +1,68 @@
+{
+  "recordedAt": "2026-11-05T05:48:22.622722+00:00",
+  "commit": "f86fb3a56ec293e5aa8d4bdb06d1a0053126b8cf",
+  "tree": "4f8c3661b06e4fe2567a3c57f076a44b28e40989",
+  "parent": "188a7ac1758377c6624e863719320e66cec3fa78",
+  "branch": "refs/heads/codex/yapin-parity-android-integration-20261105",
+  "apiContractSource": "946423018ed34130f10c440d9919b36b9694b97e",
+  "byteIdenticalApiContracts": "4002693f6864eb58d875118c0d8cc9259581375d",
+  "sourceFiles": 2140,
+  "changedPaths": [
+    "android/app/src/main/java/com/meldiq/android/data/api/ManagedPollApi.kt",
+    "android/app/src/main/java/com/meldiq/android/data/api/ThreadLifecycleApi.kt",
+    "android/app/src/main/java/com/meldiq/android/data/model/ManagedPoll.kt",
+    "android/app/src/main/java/com/meldiq/android/data/model/Models.kt",
+    "android/app/src/main/java/com/meldiq/android/data/model/PostedContent.kt",
+    "android/app/src/main/java/com/meldiq/android/data/model/RichRules.kt",
+    "android/app/src/main/java/com/meldiq/android/data/repo/ManagedPollController.kt",
+    "android/app/src/main/java/com/meldiq/android/data/repo/MessageRepository.kt",
+    "android/app/src/main/java/com/meldiq/android/data/repo/MessageSender.kt",
+    "android/app/src/main/java/com/meldiq/android/data/repo/ThreadLifecycleController.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/ConversationScreen.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/ConversationViewModel.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/ManagedPollPanel.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/MessageBubble.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/Polls.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/ThreadLifecyclePanel.kt",
+    "android/app/src/main/res/values/managed_polls.xml",
+    "android/app/src/main/res/values/thread_lifecycle.xml",
+    "android/app/src/test/java/com/meldiq/android/contract/RequestContractTest.kt",
+    "android/app/src/test/java/com/meldiq/android/data/repo/ManagedPollControllerTest.kt",
+    "android/app/src/test/java/com/meldiq/android/data/repo/ThreadLifecycleControllerTest.kt",
+    "android/app/src/test/java/com/meldiq/android/data/repo/ThreadPollHttpTest.kt",
+    "android/app/src/test/java/com/meldiq/android/ui/screens/conversation/ThreadPollPanelTest.kt"
+  ],
+  "allSourceHashesVerified": true,
+  "originalHeadPreserved": "285651477be0adbef73d8bec3359a02d781bd3f4",
+  "originalIndexSha256Preserved": "d6c8d2804e2640fb8b63e6ea7f95ae7d963acafaf7facda29bca6e7f7f75db39",
+  "jvm": {
+    "tests": 1068,
+    "skipped": 12,
+    "failures": 0,
+    "errors": 0,
+    "files": 202,
+    "passed": 1056
+  },
+  "focusedEarlier": 49,
+  "sourceArchive": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-android-source-f86fb3a5.tar.gz",
+    "bytes": 3070935,
+    "sha256": "0936fa1326ab982d50d116e6d030a74a3b69c99457c0eb1a54e9738abee32ccb"
+  },
+  "debugApk": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-lifecycle-polls-f86fb3a5-debug.apk",
+    "bytes": 157658250,
+    "sha256": "5c26d9d62275d7076bc9636f43a04f9d9ba2f63d79b69b7901b8c8eb34c797ca",
+    "applicationId": "com.meldiq.android.test",
+    "defaultServer": "http://localhost:8080",
+    "installed": false,
+    "published": false
+  },
+  "packaging": {
+    "runtimeAssets": 24,
+    "byteIdenticalToPriorQualifiedApk": true,
+    "contractCaptures": 0
+  },
+  "deviceTestCompile": "passed; compiled, not executed",
+  "physical": "pending by explicit owner choice"
+}

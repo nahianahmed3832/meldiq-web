@@ -1,0 +1,33 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:42131) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:42131) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/official_bots_activity.test.ts (23 tests | 1 failed | 22 skipped) 1368ms
+       × keeps Starboard snapshots out of search pagination and protects collection and thread context reads 52ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Starboard > keeps Starboard snapshots out of search pagination and protects collection and thread context reads
+AssertionError: expected '{"messages":[{"id":"m_NcwQDccZQ_7jtyY…' not to contain 'only the original should match this S…'
+
+Expected: "only the original should match this Starboard search"
+Received: "{"messages":[{"id":"m_NcwQDccZQ_7jtyYNk8GDJQ","conversationId":"c_Cf4dsmkjB1_zvllVpvuNNA","senderUserId":"u_9ykNkcXIAKxcbYoKGQ3a1w","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"⭐ 2 · obaana in #searchable-source\nonly the original should match this Starboard search","starboard":{"channelId":"c_aOx88QJOePXK1iXvvdaD5A","messageId":"m_oba_1_1793857807717"}},"sentAt":1793857807737,"serverTs":1793857807737,"mentionAll":false,"importedBy":null}],"context":[],"threads":[],"more":false,"nextCursor":null,"historySince":null,"changes":[{"id":"m_6b-EEmzg6HV7qeQ4z5Am0w","conversationId":"c_Cf4dsmkjB1_zvllVpvuNNA","senderUserId":"u_9ykNkcXIAKxcbYoKGQ3a1w","senderDeviceId":null,"cls":"control","payload":{"type":"edit","target":"m_NcwQDccZQ_7jtyYNk8GDJQ","text":"⭐ 3 · obaana in #searchable-source\nonly the original should match this Starboard search"},"sentAt":1793857807742,"serverTs":1793857807742,"mentionAll":false,"importedBy":null}]}"
+
+ ❯ test/official_bots_activity.test.ts:467:99
+    465|       expect(JSON.stringify(await dee.req("GET", thread))).toContain(m…
+    466|       await owner.req("PUT", `/v1/conversations/${source}/overwrites`,…
+    467|       for (const route of [page, thread]) expect(JSON.stringify(await …
+       |                                                                                                   ^
+    468|       const search = `/v2/messages/search?q=${encodeURIComponent(marke…
+    469|       expect(await dee.req("GET", search)).toEqual({ messages: [], cha…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 skipped (23)
+   Start at  13:50:01
+   Duration  6.11s (transform 2.12s, setup 0ms, import 3.49s, tests 1.37s, environment 0ms)
+

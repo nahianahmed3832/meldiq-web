@@ -1,0 +1,71 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:43697) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43697) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:43707) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43707) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/contracts.test.ts (5 tests | 1 failed) 1201ms
+     × keeps every golden fixture valid against its schema 206ms
+(node:43752) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43752) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/architecture_boundaries.test.ts (4 tests | 1 failed) 161ms
+     × lets a module touch another module's tables only where already listed 38ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/architecture_boundaries.test.ts > architecture boundaries > lets a module touch another module's tables only where already listed
+AssertionError: new table accesses that break the ownership rules: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "modules/organizations/posting/ticketDesk.ts -> conversation_members",
++ ]
+
+ ❯ checkAgainst test/architecture_boundaries.test.ts:241:63
+    239|   const added = now.filter((v) => !allowed.has(v));
+    240|   const gone = [...allowed].filter((v) => !now.includes(v));
+    241|   expect(added, `new ${what} that break the ownership rules`).toEqual(…
+       |                                                               ^
+    242|   expect(
+    243|     gone,
+ ❯ test/architecture_boundaries.test.ts:254:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/contracts.test.ts > contracts > keeps every golden fixture valid against its schema
+AssertionError: expected [ …(4) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "http/GET_v1_orgs_orgId_tickets.json: doesn't match its schema",
++   "http/POST_v1_orgs_orgId_tickets.json: doesn't match its schema",
++   "http/POST_v1_orgs_orgId_tickets_channelId_close.json: doesn't match its schema",
++   "http/POST_v1_orgs_orgId_tickets_channelId_join.json: doesn't match its schema",
++ ]
+
+ ❯ test/contracts.test.ts:67:17
+     65|       else if (!schema.safeParse(json).success) bad.push(`${rel}: does…
+     66|     }
+     67|     expect(bad).toEqual([]);
+       |                 ^
+     68|   });
+     69| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  2 failed | 32 passed (34)
+   Start at  13:56:52
+   Duration  10.02s (transform 1.73s, setup 0ms, import 4.11s, tests 4.41s, environment 0ms)
+

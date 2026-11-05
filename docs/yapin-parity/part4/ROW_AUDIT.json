@@ -2602,8 +2602,8 @@
       "owner": "PART 4",
       "state": "IN_PROGRESS",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; skips private channels and the starboard itself. Full acceptance pending.",
-      "remaining": "Threshold, deduplication and initial private-channel exclusion pass. Existing derived posts are not withdrawn on source deletion or changed visibility; close that privacy gap."
+      "testing": "Part 4, 2026-11-05: PostgreSQL and SQLite/MongoDB cases reproduce and close wider source audiences, a change during reaction reads, old bodies/edits after source revocation or deletion, and search/collection exposure. See part4/evidence/lifecycle-privacy-checkpoint.json.",
+      "remaining": "Publication, history, summaries and collections enforce current source access; search only returns originals. Queue/realtime replay, client cache invalidation and authorized source-media rendering remain open."
     },
     {
       "id": "YAP-BOT-007",
@@ -2616,10 +2616,10 @@
     {
       "id": "YAP-BOT-008",
       "owner": "PART 4",
-      "state": "IN_PROGRESS",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Controlled PostgreSQL cases passed at the recorded source: opens a private channel only the opener and the moderators see, with the text first and a log line; lets only the opener or a moderator close a ticket: archived, out of the category, logged; lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close. Full acceptance pending.",
-      "remaining": "Open, private requester/staff access and close are covered. Claim and reopen are not implemented in the inspected ticket routes; complete the remaining lifecycle and leakage checks."
+      "testing": "Part 4, 2026-11-05: Current 281255bb API passes PostgreSQL and SQLite/MongoDB ticket lifecycle/privacy cases. Compiled 6b39df21 plus the Web moderator desk passes two controlled Chromium viewports, including stale review rejection and reopening the original channel. See part4/evidence/lifecycle-privacy-checkpoint.json.",
+      "remaining": "Private open, claim, release, close and revision-bound reopen are implemented and locally verified. New transcript publication is audience-checked. Existing transcript copies, current coordinated staging and installed staff/requester journeys are unverified."
     },
     {
       "id": "YAP-BOT-009",
@@ -3394,8 +3394,8 @@
       "owner": "PART 4",
       "state": "IN_PROGRESS",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; skips private channels and the starboard itself. Full acceptance pending.",
-      "remaining": "Initial threshold and source filtering pass. Attachment copy authorization and revocation after source deletion/visibility changes remain active work."
+      "testing": "Part 4, 2026-11-05: Threshold, deduplication, role changes and redaction of old body/source pointers pass on PostgreSQL and SQLite/MongoDB. The stored-copy deletion test uses text, not an uploaded attachment. See part4/evidence/lifecycle-privacy-checkpoint.json.",
+      "remaining": "A source deleted or no longer readable is withheld from stored history and collections. Uploaded images still need a source-bound rendering and revocation test; direct cross-conversation attachment reuse is refused by the native send path."
     },
     {
       "id": "YAP-BOTOPT-015",
@@ -3410,8 +3410,8 @@
       "owner": "PART 4",
       "state": "IN_PROGRESS",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: its own emoji and self-stars; skips private channels and the starboard itself. Full acceptance pending.",
-      "remaining": "Custom emoji and initial private-source exclusion pass. Current source visibility changes and previously derived posts need additional protection."
+      "testing": "Part 4, 2026-11-05: Existing custom emoji, exclusions and private-source cases pass; prepared-audience and scoped history/search/collection regression evidence is recorded in part4/evidence/lifecycle-privacy-checkpoint.json.",
+      "remaining": "Current source visibility and historical edits are checked at native HTTP read. Previously queued events and client caches still need scoped revocation qualification."
     },
     {
       "id": "YAP-BOTOPT-017",
@@ -3426,8 +3426,8 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Controlled PostgreSQL cases passed at the recorded source: checks the panels' channels and limits; opens a private channel only the opener and the moderators see, with the text first and a log line; lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close. Full acceptance pending.",
-      "remaining": "Panel channel/limit validation and restricted staff/requester membership pass. Complete installed staff/requester journeys remain pending."
+      "testing": "Part 4, 2026-11-05: Ticket API suites verify panel validation, current staff/requester history after reopen, cap enforcement and transcript suppression in a public log or after an in-flight reader expansion. See part4/evidence/lifecycle-privacy-checkpoint.json.",
+      "remaining": "Controlled private panel and lifecycle checks pass. Installed staff/requester journeys, current release acceptance, and existing stored transcripts remain unverified."
     },
     {
       "id": "YAP-BOTOPT-019",

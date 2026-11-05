@@ -1,0 +1,19 @@
+{
+  "apiCommit": "281255bb2571d8af4723b01aa138738e419fd78b",
+  "build": "npm run build",
+  "scope": "Local tsc output and committed server subtree, without dependencies or Linux/container qualification.",
+  "source": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-source-281255bb.tar.gz",
+    "bytes": 10297138,
+    "files": 1246,
+    "sha256": "f5dd917975ac903a1f0bc6bb4b07547d0e48edf03023c36faadf607f40faee56"
+  },
+  "compiled": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-compiled-281255bb.tar.gz",
+    "bytes": 10278284,
+    "files": 1553,
+    "sha256": "8ab1281f1b2807e31c9a66cdb1e4feeef372604fb8e1db6bd77472f037d81d44"
+  },
+  "allArchiveBytesVerified": true,
+  "published": false
+}

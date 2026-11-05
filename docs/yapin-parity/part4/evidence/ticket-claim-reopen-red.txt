@@ -1,0 +1,53 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:43111) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43111) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/tickets.test.ts (14 tests | 2 failed) 1967ms
+     × assigns a ticket to one current moderator, rejects unauthorized actions, and permits explicit release 4ms
+     × reopens the same private ticket with its history, current staff, current limits, and a revision-bound review 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/tickets.test.ts > tickets with communities in postgres > assigns a ticket to one current moderator, rejects unauthorized actions, and permits explicit release
+Error: expected HTTP 403, got 404
+ ❯ expectStatus test/support/harness.ts:134:11
+    132|   } catch (e: any) {
+    133|     if (e?.status === status) return e.body;
+    134|     throw new Error(`expected HTTP ${status}, got ${e?.status ?? e}`);
+       |           ^
+    135|   }
+    136|   throw new Error(`expected HTTP ${status}, got success`);
+ ❯ test/tickets.test.ts:153:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/tickets.test.ts > tickets with communities in postgres > reopens the same private ticket with its history, current staff, current limits, and a revision-bound review
+AssertionError: expected undefined to match object { closedAt: Any<Number>, …(1) }
+
+- Expected:
+{
+  "closedAt": Any<Number>,
+  "revision": Any<Number>,
+}
+
++ Received:
+undefined
+
+ ❯ test/tickets.test.ts:172:20
+    170|     const closed = (await owner.req("GET", `${collection}?state=closed…
+    171|     const review = closed.find((ticket: { channelId: string }) => tick…
+    172|     expect(review).toMatchObject({ closedAt: expect.any(Number), revis…
+       |                    ^
+    173|     const reopen = `${collection}/${second}/reopen`;
+    174|     const body = { expectedRevision: review.revision };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 12 passed (14)
+   Start at  13:53:48
+   Duration  5.99s (transform 1.77s, setup 0ms, import 2.78s, tests 1.97s, environment 0ms)
+
