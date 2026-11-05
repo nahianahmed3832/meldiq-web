@@ -217,7 +217,7 @@ test("a failed upload shows progress, retains the draft transfer, and retries on
   await expect(transfer).toHaveClass(/sent/);
 });
 
-test("navigation removes Home and Activity and keeps communities reachable", async ({ page, isMobile }, info) => {
+test("mobile restores four tabs and desktop keeps its compact sidebars", async ({ page, isMobile }, info) => {
   const account = await onboard(page);
   await account.req("POST", "/v1/orgs", { name: "Navigation Lab" });
   await page.goto("/dms");
@@ -227,16 +227,23 @@ test("navigation removes Home and Activity and keeps communities reachable", asy
   const rail = page.locator(".rail");
   if (isMobile) {
     const tabs = page.getByRole("navigation", { name: "Sections", exact: true });
-    await expect(tabs.getByRole("button")).toHaveCount(2);
+    await expect(tabs.getByRole("button")).toHaveText(["Home", /^Messages/, /^Activity/, /You$/]);
     await expect(tabs.getByRole("button", { name: /^Messages/ })).toHaveAttribute("aria-current", "page");
-    await expect(tabs.getByRole("button", { name: /You$/ })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Communities", exact: true })).toHaveCount(0);
     await page.screenshot({ path: info.outputPath("navigation-messages.png"), animations: "disabled" });
-    await sidebar.getByRole("link", { name: "Communities", exact: true }).click();
+    await tabs.getByRole("button", { name: /^Activity/ }).click();
+    await expect(page).toHaveURL(/\/activity$/);
+    await expect(tabs.getByRole("button", { name: /^Activity/ })).toHaveAttribute("aria-current", "page");
+    const home = tabs.getByRole("button", { name: "Home", exact: true });
+    await home.click();
     const lobby = page.getByRole("region", { name: "Navigation Lab lobby", exact: true });
     await expect(lobby).toBeVisible();
-    await tabs.getByRole("button", { name: /^Messages/ }).click();
-    await sidebar.getByRole("link", { name: "Communities", exact: true }).click();
+    await home.click();
     await expect(rail.getByRole("button", { name: /^Navigation Lab/ })).toBeVisible();
+    await tabs.getByRole("button", { name: /^Messages/ }).click();
+    await expect(page).toHaveURL(/\/dms$/);
+    await tabs.getByRole("button", { name: /You$/ }).click();
+    await expect(page).toHaveURL(/\/settings\/you$/);
   } else {
     await rail.getByRole("button", { name: /^Navigation Lab/ }).click();
     await expect(sidebar.getByRole("button", { name: /Navigation Lab/ }).first()).toBeVisible();

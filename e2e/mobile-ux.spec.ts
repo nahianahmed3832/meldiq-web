@@ -171,19 +171,19 @@ test("keyboard shrink and pan retain latest and the older reading anchor; long i
   await fits(page.locator(".composer"), 0, 844);
 });
 
-test("Messages, Communities, and You remain reachable through rotation and history", async ({ page }, info) => {
+test("Home, Messages, Activity, and You remain reachable through rotation and history", async ({ page }, info) => {
   const { alice, dm } = await setup(page);
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Mobile community" });
   const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "mobile-room", scope: "ORG", kind: "PUBLIC" })).channel;
   await go(page, "/home");
   const tabs = page.getByRole("navigation", { name: "Sections", exact: true });
   await expect(page.getByRole("region", { name: "Mobile community lobby", exact: true })).toBeVisible();
-  await tabs.getByRole("button", { name: /^Messages/ }).click();
-  await expect(tabs.getByRole("button")).toHaveCount(2);
-  await expect(tabs.getByRole("button", { name: /^Messages/ })).toHaveAttribute("aria-current", "page");
-  await expect(tabs.getByRole("button", { name: /You$/ })).toBeVisible();
-  await page.screenshot({ path: info.outputPath("shortcut-messages.png"), animations: "disabled" });
-  await page.getByRole("link", { name: "Communities", exact: true }).click();
+  await expect(tabs.getByRole("button")).toHaveText(["Home", /^Messages/, /^Activity/, /You$/]);
+  const home = tabs.getByRole("button", { name: "Home", exact: true });
+  const messages = tabs.getByRole("button", { name: /^Messages/ });
+  const activity = tabs.getByRole("button", { name: /^Activity/ });
+  await expect(home).toHaveAttribute("aria-current", "page");
+  await home.click();
   await expect(page).toHaveURL(/\/home$/);
   await page
     .locator(".rail")
@@ -196,7 +196,14 @@ test("Messages, Communities, and You remain reachable through rotation and histo
   await expect(page).toHaveURL(new RegExp(channel.id));
   await expect(tabs).toBeHidden();
   await page.getByRole("button", { name: "Back to conversations", exact: true }).click();
-  await tabs.getByRole("button", { name: /^Messages/ }).click();
+  await activity.click();
+  await expect(page).toHaveURL(/\/activity$/);
+  await expect(activity).toHaveAttribute("aria-current", "page");
+  await messages.click();
+  await expect(page).toHaveURL(/\/dms$/);
+  await expect(messages).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("link", { name: "Communities", exact: true })).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath("mobile-navigation.png"), animations: "disabled" });
   await page
     .locator(".sidebar")
     .getByRole("link", { name: /Mobile Bob/ })

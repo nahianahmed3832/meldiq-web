@@ -134,11 +134,6 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         )}
         {/* Phones have no top bar on the lists (brief v4 §18): search, and in Messages a new message, sit here. */}
         <span className="side-head-phone">
-          {section === "dms" && (
-            <a className="btn btn-ghost btn-sm phone-communities" href="/home">
-              {t("workspace.interface.communities_c864f32")}
-            </a>
-          )}
           <button className="icon-btn" onClick={() => onDialog({ kind: "search" })} aria-label={uiText("workspace.interface.search_meldiq_7c5a6e1")} title={t("common.actions.search")}>
             <Search size={18} />
           </button>
