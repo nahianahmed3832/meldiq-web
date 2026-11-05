@@ -1,8 +1,8 @@
 {
   "format": 1,
-  "apiCommit": "16f43cf96a86b2a108dfaac6273aa98d8bae927b",
+  "apiCommit": "ba2dc287f63ac75617e983930c0606bd8427a8e8",
   "status": "preview source clients",
-  "archiveSha256": "193a0b2f2f4055f4a1841401ee1d518eb23fc78087575208fd5f4164d99a77c7",
+  "archiveSha256": "bb374d591f79a629be5cbe82b38e3e9786ba2d8e89718f1001b01b9b4a8a3c55",
   "files": [
     {
       "path": "README.md",
@@ -16,8 +16,8 @@
     },
     {
       "path": "docs/api/openapi.json",
-      "sha256": "649d7dfd9d4d9144248e8b2dde041227a69b212434f9a9e440060125dc05286a",
-      "bytes": 4141167
+      "sha256": "a21a340f1578ea82e6d126f2caab72ef8450d819b6c17875784617b97106950e",
+      "bytes": 4149831
     },
     {
       "path": "examples/commands.mjs",

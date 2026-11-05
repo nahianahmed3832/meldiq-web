@@ -9,6 +9,8 @@ import { ApiClient, ApiError } from "../../api/client";
 import type { AccountSessionGrant } from "../../api/accountSchemas";
 import { completeSocial, socialError, socialProviderName, startSocial, zSocialConfig, type SocialProvider, type SocialReceipt } from "../../auth/socialAuth";
 import { browserDeviceName } from "../../sync/session";
+import { acceptRegistrationPolicy, requestedRegistrationPolicy, type RegistrationPolicy } from "../../auth/registrationPolicy";
+import { TermsConsent } from "./TermsConsent";
 export function SocialSignIn({
   api,
   mode = "login",
@@ -26,7 +28,7 @@ export function SocialSignIn({
   mode?: "login" | "link";
   password?: string;
   totpCode?: string;
-  onSignedIn?: (grant: AccountSessionGrant) => void | Promise<void>;
+  onSignedIn?: (grant: AccountSessionGrant, consentAccepted?: boolean) => void | Promise<void>;
   onLinked?: () => void;
   deviceProof?: () => Promise<{
     deviceId: string;
@@ -39,6 +41,8 @@ export function SocialSignIn({
   const [busy, setBusy] = useState<SocialProvider | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<SocialReceipt | null>(null);
+  const [policy, setPolicy] = useState<RegistrationPolicy | null>(null);
+  const [accepted, setAccepted] = useState(false);
   const [needsInvite, setNeedsInvite] = useState(false);
   const [needsCode, setNeedsCode] = useState(false);
   const [invite, setInvite] = useState("");
@@ -54,6 +58,8 @@ export function SocialSignIn({
   const reset = () => {
     abort.current?.abort();
     setPending(null);
+    setPolicy(null);
+    setAccepted(false);
     setBusy(null);
     setError(null);
     setNeedsInvite(false);
@@ -75,6 +81,8 @@ export function SocialSignIn({
     };
   }, [api]);
   const finish = async (receipt: SocialReceipt, initial = false) => {
+    const controller = abort.current;
+    const policyAcceptance = !initial && policy && accepted ? acceptRegistrationPolicy(policy) : undefined;
     setError(null);
     try {
       const result = await completeSocial(
@@ -85,13 +93,25 @@ export function SocialSignIn({
           inviteCode: initial ? undefined : invite.trim() || undefined,
           totpCode: initial ? totpCode : code.trim() || totpCode || undefined,
           device: deviceProof ? await deviceProof() : undefined,
+          policyAcceptance,
         },
         mode === "link",
       );
+      if (controller?.signal.aborted) return;
       setPending(null);
-      if ("grant" in result) await onSignedIn?.(result.grant);
+      setPolicy(null);
+      setAccepted(false);
+      if ("grant" in result) await onSignedIn?.(result.grant, policyAcceptance !== undefined);
       else onLinked?.();
     } catch (e) {
+      if (controller?.signal.aborted) return;
+      const current = mode === "login" ? requestedRegistrationPolicy(e) : null;
+      if (current) {
+        setPolicy(current);
+        setAccepted(false);
+        setPending(receipt);
+        return;
+      }
       if (e instanceof ApiError && ["invite_required", "invalid_invite"].includes(e.code)) {
         setNeedsInvite(true);
         setPending(receipt);
@@ -113,6 +133,8 @@ export function SocialSignIn({
     setBusy(provider);
     setError(null);
     setPending(null);
+    setPolicy(null);
+    setAccepted(false);
     pendingProvider.current = provider;
     setInvite("");
     setCode("");
@@ -132,7 +154,7 @@ export function SocialSignIn({
     }
   };
   const continuePending = () => {
-    if (!pending || busy || (needsInvite && !invite.trim()) || (needsCode && !code.trim())) return;
+    if (!pending || busy || (policy && !accepted) || (needsInvite && !invite.trim()) || (needsCode && !code.trim())) return;
     setBusy(pendingProvider.current);
     void finish(pending).finally(() => setBusy(null));
   };
@@ -205,7 +227,8 @@ export function SocialSignIn({
               <input className="input" autoComplete="one-time-code" autoFocus={dedicated} value={code} onChange={(e) => setCode(e.target.value)} />
             </label>
           )}
-          <button type="button" className="btn btn-primary" disabled={!!busy || (needsInvite && !invite.trim()) || (needsCode && !code.trim())} onClick={continuePending}>
+          {policy && <TermsConsent id="provider-signup-terms" policy={policy} accepted={accepted} onChange={setAccepted} disabled={!!busy} />}
+          <button type="button" className="btn btn-primary" disabled={!!busy || (!!policy && !accepted) || (needsInvite && !invite.trim()) || (needsCode && !code.trim())} onClick={continuePending}>
             {t("common_continue")}
           </button>
         </div>

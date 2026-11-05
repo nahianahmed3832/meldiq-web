@@ -670,6 +670,10 @@
       "path": "/v1/calls/{id}/leave"
     },
     {
+      "method": "GET",
+      "path": "/v2/auth/registration-policy"
+    },
+    {
       "method": "POST",
       "path": "/v2/auth/register"
     },

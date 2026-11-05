@@ -10,6 +10,7 @@ import { openKeyBackup, sealKeyBackup, WrongBackupPassword } from "../crypto/key
 import { encodeRecoveryCode } from "../crypto/recoveryCode";
 import type { DeviceRecord } from "../model/types";
 import type { AccountApi } from "./accountApi";
+import type { RegistrationAcceptance } from "./registrationPolicy";
 /** Something the person can act on: the recovery key belongs to another account, the approval wasn't for this one. */
 export class SetupError extends Error {}
 const SEED_BYTES = 32;
@@ -19,12 +20,21 @@ interface Enrolled {
 async function certify(seed: Uint8Array, identityKey: string, keys: DeviceKeys): Promise<string> {
   return sign(await signingKeyFromSeed(seed), canonical.deviceCert(identityKey, keys.signingPublic, keys.encryptionPublic));
 }
-async function enroll(accounts: AccountApi, account: AccountView, seed: Uint8Array, identityKey: string, keys: DeviceKeys, deviceName: string, purpose: "register" | "add-device"): Promise<Enrolled> {
+async function enroll(
+  accounts: AccountApi,
+  account: AccountView,
+  seed: Uint8Array,
+  identityKey: string,
+  keys: DeviceKeys,
+  deviceName: string,
+  purpose: "register" | "add-device",
+  policyAcceptance?: RegistrationAcceptance,
+): Promise<Enrolled> {
   const certificate = await certify(seed, identityKey, keys);
   const nonce = await accounts.challenge();
   const signature = await sign(keys.signing.privateKey, canonical.authProof(purpose, nonce, keys.signingPublic));
   const device = { name: deviceName, signingKey: keys.signingPublic, encryptionKey: keys.encryptionPublic, certificate };
-  const r = await accounts.enroll(purpose === "register" ? { identityKey, device, nonce, signature } : { device, nonce, signature });
+  const r = await accounts.enroll(purpose === "register" ? { identityKey, device, nonce, signature, policyAcceptance } : { device, nonce, signature });
   return {
     device: {
       userId: r.userId,
@@ -91,6 +101,7 @@ export async function createIdentity(
   account: AccountView,
   deviceName: string,
   password?: string,
+  policyAcceptance?: RegistrationAcceptance,
 ): Promise<
   Enrolled & {
     recoveryCode: string;
@@ -99,7 +110,7 @@ export async function createIdentity(
   const seed = randomBytes(SEED_BYTES);
   try {
     const identityKey = await publicKeyFromSeed(seed);
-    const enrolled = await enroll(accounts, account, seed, identityKey, await generateDeviceKeys(), deviceName, "register");
+    const enrolled = await enroll(accounts, account, seed, identityKey, await generateDeviceKeys(), deviceName, "register", policyAcceptance);
     await backUpKeysIfMissing(accounts, account.id, seed, password);
     return { ...enrolled, recoveryCode: await encodeRecoveryCode(seed) };
   } finally {

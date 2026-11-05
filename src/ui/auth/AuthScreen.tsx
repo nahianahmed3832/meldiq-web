@@ -169,7 +169,7 @@ export function AuthScreen(props: {
           canSignUp={accounts?.registration ?? false}
           canLinkWithPhone={TEST_DEVICE_LINKING && (!accounts || accounts.legacyLogin)}
           passkeyRpId={passkeyRpId(server)}
-          onSignedIn={(g, password) => signedIn(g, password)}
+          onSignedIn={(g, password, accepted) => signedIn(g, password, accepted)}
           onUnverified={(email, password) => setStep({ k: "verify", email, password })}
           onSignUp={() => setStep({ k: "signUp" })}
           onForgot={(email) => setStep({ k: "forgot", email })}
@@ -183,6 +183,7 @@ export function AuthScreen(props: {
         <SignUpForm
           ctx={ctx}
           inviteRequired={server?.registration === "invite"}
+          versionedPolicy={server?.features.includes("registration-policy") === true}
           onSent={(email, password) => setStep({ k: "verify", email, password, sentAt: Date.now(), consentAccepted: true })}
           onBack={() => toSignIn()}
         />
@@ -238,6 +239,7 @@ export function AuthScreen(props: {
           deviceName={ctx.deviceName}
           password={step.password}
           consentAccepted={step.consentAccepted}
+          versionedPolicy={server?.features.includes("registration-policy") === true}
           onCreated={(device, code) => {
             const grant = step.creds.grant;
             startWelcome(step.account.id);

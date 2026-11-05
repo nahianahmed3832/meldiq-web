@@ -4,10 +4,11 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { SocialSignIn } from "./SocialSignIn";
 import { ArrowLeft, ChevronRight, KeyRound, LockKeyhole, Mail, MailX, Smartphone } from "lucide-react";
-import { cloneElement, isValidElement, type FormEvent, type ReactElement, type ReactNode, useState } from "react";
+import { cloneElement, isValidElement, type FormEvent, type ReactElement, type ReactNode, useEffect, useState } from "react";
 import type { AccountSessionGrant } from "../../api/accountSchemas";
 import { ApiError } from "../../api/client";
 import type { AccountApi } from "../../auth/accountApi";
+import { acceptRegistrationPolicy, requestedRegistrationPolicy, type RegistrationPolicy } from "../../auth/registrationPolicy";
 import { PasskeyCancelled, signInWithPasskey } from "../../auth/passkeys";
 import { cleanVerifyCode, emailProblem, nameProblem, normalizeEmail, PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
 import { AuthHeading, FormError, FormNotice, LinkButton } from "./AuthFrame";
@@ -57,7 +58,7 @@ export function SignInForm(props: {
   /** This page's relying party when the server offers passkeys here (auth/passkeys.ts passkeyRpId), else null. */
   passkeyRpId: string | null;
   /** [password] is absent after a passkey sign-in. */
-  onSignedIn: (grant: AccountSessionGrant, password?: string) => void;
+  onSignedIn: (grant: AccountSessionGrant, password?: string, consentAccepted?: boolean) => void;
   onUnverified: (email: string, password: string) => void;
   onSignUp: () => void;
   onForgot: (email: string) => void;
@@ -119,7 +120,7 @@ export function SignInForm(props: {
       <div className="auth-form" data-auth-step={socialActive ? "social" : "methods"}>
         {!socialActive && <AuthHeading title={t("signin_title")} sub={t("signin_sub")} />}
         {!socialActive && <FormNotice text={props.notice ?? null} />}
-        <SocialSignIn api={props.ctx.accounts.api} onSignedIn={props.onSignedIn} onStepChange={setSocialActive} disabled={busy} />
+        <SocialSignIn api={props.ctx.accounts.api} onSignedIn={(grant, accepted) => props.onSignedIn(grant, undefined, accepted)} onStepChange={setSocialActive} disabled={busy} />
         {!socialActive && (
           <>
             <div className="auth-divider" aria-hidden="true">
@@ -246,16 +247,40 @@ export function ChoiceButton({ icon, title, sub, onClick }: { icon: ReactNode; t
   );
 }
 // ───────────────────────── sign up ─────────────────────────
-export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; onSent: (email: string, password: string) => void; onBack: () => void }) {
+export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; versionedPolicy: boolean; onSent: (email: string, password: string) => void; onBack: () => void }) {
   useLocaleRender();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [invite, setInvite] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [policy, setPolicy] = useState<RegistrationPolicy | null>(null);
+  const [policyError, setPolicyError] = useState(false);
+  const [policyAttempt, setPolicyAttempt] = useState(0);
   const { busy, error, setError, run } = useSubmit();
   const t = useT();
+  useEffect(() => {
+    if (!props.versionedPolicy) return;
+    let current = true;
+    void props.ctx.accounts
+      .registrationPolicy()
+      .then((value) => {
+        if (current) {
+          setPolicy(value);
+          setPolicyError(!value);
+          setAccepted(false);
+        }
+      })
+      .catch(() => {
+        if (current) setPolicyError(true);
+      });
+    return () => {
+      current = false;
+    };
+  }, [props.ctx.accounts, props.versionedPolicy, policyAttempt]);
+  const policyReady = !props.versionedPolicy || policy !== null;
   const submit = () => {
+    if (!policyReady) return;
     const problem = nameProblem(name) ?? emailProblem(email) ?? passwordProblem(password, email) ?? (props.inviteRequired && !invite.trim() ? t("signup_invite_missing") : null);
     if (problem) return setError(problem);
     if (!accepted) {
@@ -263,7 +288,16 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
       return setError(t("auth.foundation.termsRequired"));
     }
     void run(async () => {
-      await props.ctx.accounts.register(name.trim(), normalizeEmail(email), password, invite.trim() || undefined);
+      try {
+        await props.ctx.accounts.register(name.trim(), normalizeEmail(email), password, invite.trim() || undefined, policy ? acceptRegistrationPolicy(policy) : undefined);
+      } catch (e) {
+        const current = requestedRegistrationPolicy(e);
+        if (current) {
+          setPolicy(current);
+          setAccepted(false);
+        }
+        throw e;
+      }
       props.onSent(normalizeEmail(email), password);
     });
   };
@@ -286,8 +320,26 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
           <input id="su-invite" className="input" value={invite} onChange={(e) => setInvite(e.target.value)} autoComplete="off" />
         </Field>
       )}
-      <TermsConsent id="su-terms" accepted={accepted} onChange={setAccepted} disabled={busy} />
-      <button className="btn btn-primary btn-lg" disabled={busy}>
+      {policyReady ? (
+        <TermsConsent id="su-terms" accepted={accepted} onChange={setAccepted} disabled={busy} policy={policy} />
+      ) : policyError ? (
+        <div>
+          <FormError text={t("errors.generic")} />
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => {
+              setPolicyError(false);
+              setPolicyAttempt((n) => n + 1);
+            }}
+          >
+            {t("common.actions.retry")}
+          </button>
+        </div>
+      ) : (
+        <p role="status">{t("common.status.loading")}</p>
+      )}
+      <button className="btn btn-primary btn-lg" disabled={busy || !policyReady}>
         {busy ? t("signup_busy") : t("signup_button")}
       </button>
     </form>

@@ -6,6 +6,7 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import type { AccountView } from "../../api/accountSchemas";
 import type { UnlockDelivery } from "../../auth/accountApi";
 import { createIdentity, enrollWithEmailCode, enrollWithSeed } from "../../auth/deviceSetup";
+import { acceptRegistrationPolicy, requestedRegistrationPolicy, type RegistrationPolicy } from "../../auth/registrationPolicy";
 import type { SetupCredentials } from "../../auth/setupCredentials";
 import { fingerprint } from "../../crypto/identity";
 import { decodeRecoveryCode } from "../../crypto/recoveryCode";
@@ -24,12 +25,17 @@ export function CreateIdentityView(props: {
   /** The sign-in password, to back the new keys up (server docs/KEY_BACKUP.md). */
   password?: string;
   consentAccepted?: boolean;
+  versionedPolicy: boolean;
   onCreated: (device: DeviceRecord, recoveryCode: string) => void;
   onSignOut: () => void;
 }) {
   useLocaleRender();
   const { busy, error, run } = useSubmit();
-  const [accepted, setAccepted] = useState(props.consentAccepted ?? false);
+  const [accepted, setAccepted] = useState(false);
+  const [policy, setPolicy] = useState<RegistrationPolicy | null>(null);
+  // For current servers only the account holder of a newly provisioned account
+  // gets a policy challenge here. Email and provider signup already recorded it.
+  const needsConsent = policy !== null || (!props.consentAccepted && !props.versionedPolicy);
   const t = useT();
   return (
     <div className="auth-form">
@@ -38,14 +44,23 @@ export function CreateIdentityView(props: {
         {t("create_body")}
       </p>
       <FormError text={error} />
-      {!props.consentAccepted && <TermsConsent id="identity-terms" accepted={accepted} onChange={setAccepted} disabled={busy} />}
+      {needsConsent && <TermsConsent id="identity-terms" accepted={accepted} onChange={setAccepted} disabled={busy} policy={policy} />}
       <button
         className="btn btn-primary btn-lg"
-        disabled={busy || !accepted}
+        disabled={busy || (needsConsent && !accepted)}
         onClick={() =>
           void run(async () => {
-            const r = await createIdentity(props.creds.accounts, props.account, props.deviceName, props.password);
-            props.onCreated(r.device, r.recoveryCode);
+            try {
+              const r = await createIdentity(props.creds.accounts, props.account, props.deviceName, props.password, policy ? acceptRegistrationPolicy(policy) : undefined);
+              props.onCreated(r.device, r.recoveryCode);
+            } catch (e) {
+              const current = requestedRegistrationPolicy(e);
+              if (current) {
+                setPolicy(current);
+                setAccepted(false);
+              }
+              throw e;
+            }
           })
         }
       >

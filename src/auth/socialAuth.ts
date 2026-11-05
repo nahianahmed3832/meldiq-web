@@ -119,6 +119,7 @@ export async function completeSocial(
     inviteCode?: string;
     totpCode?: string;
     deviceName: string;
+    policyAcceptance?: import("./registrationPolicy").RegistrationAcceptance;
     device?: {
       deviceId: string;
       nonce: string;

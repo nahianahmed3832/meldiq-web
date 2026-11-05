@@ -6,6 +6,7 @@ import type { KeyBackup } from "../crypto/keyBackup";
 import type { DeviceRecord } from "../model/types";
 import { type AccountSessionGrant, zAccepted, zAccountMe, zAccountSession, zAccountView, zEnrollResult, zOk, zSelected, zSessionList, zVerified, zWorkspacesV2 } from "../api/accountSchemas";
 import { z } from "zod";
+import { type RegistrationAcceptance, zRegistrationPolicyResponse } from "./registrationPolicy";
 /** Proof that this browser holds an existing device key: a fresh challenge signed with it (griip-auth-v1 "login"). */
 export interface DeviceProof {
   deviceId: string;
@@ -51,8 +52,14 @@ export class AccountApi {
   challenge(): Promise<string> {
     return this.api.json("POST", "/v1/auth/challenge", zChallenge, { auth: false, body: {} }).then((r) => r.nonce);
   }
-  register(name: string, email: string, password: string, inviteCode?: string): Promise<unknown> {
-    return this.api.json("POST", "/v2/auth/register", zAccepted, { auth: false, body: { name, email, password, ...(inviteCode ? { inviteCode } : {}) } });
+  registrationPolicy() {
+    return this.api.json("GET", "/v2/auth/registration-policy", zRegistrationPolicyResponse, { auth: false }).then(({ policy }) => policy);
+  }
+  register(name: string, email: string, password: string, inviteCode?: string, policyAcceptance?: RegistrationAcceptance): Promise<unknown> {
+    return this.api.json("POST", "/v2/auth/register", zAccepted, {
+      auth: false,
+      body: { name, email, password, ...(inviteCode ? { inviteCode } : {}), ...(policyAcceptance ? { policyAcceptance } : {}) },
+    });
   }
   verifyEmail(email: string, code: string, password: string): Promise<unknown> {
     return this.api.json("POST", "/v2/auth/email/verify", zVerified, { auth: false, body: { email, code, password } });
@@ -173,7 +180,7 @@ export class AccountApi {
     return this.api.json("GET", "/v2/workspaces", zWorkspacesV2);
   }
   /** Sets up this browser as a device of the account: with [identityKey] when it creates the account's identity. */
-  enroll(body: { identityKey?: string; username?: string; device: NewDevice; nonce: string; signature: string }) {
+  enroll(body: { identityKey?: string; username?: string; device: NewDevice; nonce: string; signature: string; policyAcceptance?: RegistrationAcceptance }) {
     return this.api.json("POST", "/v2/account/devices", zEnrollResult, { body });
   }
 }
