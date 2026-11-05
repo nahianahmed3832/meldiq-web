@@ -8,6 +8,7 @@ import { type Translate, useT } from "../../i18n";
 import { useProfileMenu } from "./ProfileMenu";
 interface TopBarProps {
   onMenu: () => void;
+  menuOpen?: boolean;
   onSearch: () => void;
   section: Section;
   /** The community on screen, for the page title and the search box's scope. */
@@ -17,7 +18,7 @@ interface TopBarProps {
  * The compact top bar (the floating redesign, 2026-10-28): where you are on the left, search in the middle, and
  * Activity, Saved, Settings and you on the right. On phones it steps aside where the lists carry their own headers.
  */
-export function TopBar({ onMenu, onSearch, section, orgId }: TopBarProps) {
+export function TopBar({ onMenu, menuOpen = false, onSearch, section, orgId }: TopBarProps) {
   useLocaleRender();
   const t = useT();
   const orgName = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId)?.name ?? null) : null));
@@ -32,7 +33,7 @@ export function TopBar({ onMenu, onSearch, section, orgId }: TopBarProps) {
   return (
     <header className="topbar">
       <div className="topbar-left">
-        <button className="icon-btn menu-toggle" onClick={onMenu} aria-label={uiText("workspace.interface.show_conversations_a50e7d6")}>
+        <button className="icon-btn menu-toggle" onClick={onMenu} aria-expanded={menuOpen} aria-label={uiText("workspace.interface.show_conversations_a50e7d6")}>
           <MenuIcon size={19} />
         </button>
         <span className="topbar-title ellipsis" title={title}>

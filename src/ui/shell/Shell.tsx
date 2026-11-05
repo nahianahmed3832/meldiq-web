@@ -367,7 +367,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   else if (section === "friends" || section === "dms") main = <FriendsView />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
   return (
-    <div className={`app${phoneFrame}`} data-connection={connection} onContextMenu={quietContextMenu}>
+    <div className={`app${phoneFrame}`} data-section={section} data-connection={connection} onContextMenu={quietContextMenu}>
       <SkipToContent />
       {/* Desktop: a slim brand bar across the window (the reference's title strip); everything else lives in the panels. */}
       <div className="brandbar" aria-hidden="true">
@@ -376,7 +376,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       </div>
       <Rail orgId={orgId} section={section} onDialog={ctx.open} />
       <div className={`workspace${settings ? "" : " with-sidebar"}`}>
-        <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} orgId={orgId} />
+        <TopBar menuOpen={drawer} onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} orgId={orgId} />
         <ConnectionBanner />
         <div className={`body${view.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
           {!settings && <Sidebar orgId={orgId} section={section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}

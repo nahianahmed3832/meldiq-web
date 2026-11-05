@@ -74,7 +74,7 @@ test("seen receipts survive main collection history and preserve the unread boun
   await page.screenshot({ path: info.outputPath("seen-receipts.png") });
 });
 
-test("call photos and measured connection latency show during an encrypted voice call", async ({ page, context }, info) => {
+test("call photos and measured connection latency show during an encrypted voice call", async ({ page, context, hasTouch, isMobile }, info) => {
   test.skip(nativePeerMissing() !== null, nativePeerMissing() ?? "");
   const owner = await onboard(page, context);
   const peer = await newPhone("callphoto", "Mina Rahman");
@@ -94,35 +94,44 @@ test("call photos and measured connection latency show during an encrypted voice
     const photos = stage.locator("figure.call-tile .avatar-photo");
     await expect(photos).toHaveCount(2);
     await expect.poll(() => photos.evaluateAll((els) => els.every((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0))).toBe(true);
-    const signal = page.getByRole("button", { name: /^Call connection:/ });
-    await signal.hover();
-    const tooltip = page.getByRole("tooltip");
+    const signal = stage.getByRole("button", { name: /^Call connection:/ });
+    if (hasTouch) await signal.tap();
+    else await signal.hover();
+    const tooltip = stage.getByRole("tooltip");
     await expect(tooltip).toBeVisible();
     await expect(tooltip.locator(".call-ping")).toHaveText(/^\d+ ms$/, { timeout: 25_000 });
     await expect(tooltip).toContainText("Round-trip latency to the call server");
     await page.screenshot({ path: info.outputPath("call-photos-and-latency.png") });
-    await page.mouse.move(800, 100);
+    if (!hasTouch) await page.mouse.move(800, 100);
     await signal.focus();
     await expect(tooltip).toBeVisible();
     await signal.press("Escape");
     await expect(tooltip).toBeHidden();
-    await page.setViewportSize({ width: 390, height: 844 });
+    if (!isMobile) await page.setViewportSize({ width: 390, height: 844 });
     await expect(photos).toHaveCount(2);
     expect(await stage.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
     await page.screenshot({ path: info.outputPath("call-phone.png") });
+    await expect(stage.getByRole("button", { name: "Hang up", exact: true })).toBeInViewport({ ratio: 1 });
     await stage.getByRole("button", { name: "Hang up", exact: true }).click();
   } finally {
     await call.media.leave();
   }
 });
 
-test("compact community header keeps name, Sparks and cover above a dense channel list", async ({ page, context }, info) => {
+test("compact community header keeps name, Sparks and cover above a dense channel list", async ({ page, context, isMobile }, info) => {
   const owner = await onboard(page, context);
   const { org } = await owner.req("POST", "/v1/orgs", { name: "The Makers Guild" });
   await owner.req("PUT", `/v1/orgs/${org.id}/banner`, fs.readFileSync("e2e/fixtures/photo.jpg"));
   const all = (await owner.req("GET", "/v1/conversations")).conversations as { id: string; orgId: string; name: string }[];
   const general = all.find((c) => c.orgId === org.id && c.name === "general")!;
   await page.goto(`/home/c/${general.id}`);
+  if (isMobile) {
+    await page.getByRole("button", { name: "Back to conversations", exact: true }).click();
+    const channels = page.getByRole("button", { name: "Show conversations", exact: true });
+    await expect(channels).toHaveAttribute("aria-expanded", "false");
+    await channels.click();
+    await expect(channels).toHaveAttribute("aria-expanded", "true");
+  }
   const side = page.getByRole("complementary", { name: "Conversations", exact: true });
   const head = side.locator(".side-head");
   await expect(head.getByRole("button", { name: /^Community: The Makers Guild/ })).toBeVisible();
@@ -133,15 +142,21 @@ test("compact community header keeps name, Sparks and cover above a dense channe
     const cover = el.querySelector(".community-cover")!.getBoundingClientRect();
     return { head: head.height, cover: cover.height, separate: cover.top >= head.bottom - 1, overflow: el.scrollWidth > el.clientWidth };
   });
-  expect(dims.head).toBeLessThanOrEqual(52);
+  expect(dims.head).toBeLessThanOrEqual(isMobile ? 64 : 52);
   expect(dims.cover).toBe(72);
   expect(dims.separate).toBe(true);
   expect(dims.overflow).toBe(false);
   await head.locator(".spark-goal.compact").click();
   await expect(page.getByRole("dialog").last()).toContainText("Spark");
   await page.keyboard.press("Escape");
+  if (isMobile) {
+    const channels = page.getByRole("button", { name: "Show conversations", exact: true });
+    await expect(channels).toHaveAttribute("aria-expanded", "false");
+    await channels.click();
+    await expect(channels).toHaveAttribute("aria-expanded", "true");
+  }
   await side.screenshot({ path: info.outputPath("community-sidebar.png") });
-  await page.setViewportSize({ width: 390, height: 844 });
+  if (!isMobile) await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`/home/c/${general.id}`);
   await expect(page.getByRole("region", { name: "Conversation: general", exact: true })).toBeVisible();
   expect(await page.locator("body").evaluate((el) => el.scrollWidth <= innerWidth)).toBe(true);

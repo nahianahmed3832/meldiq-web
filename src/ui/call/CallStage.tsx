@@ -1,3 +1,4 @@
+import { CallConnection } from "./CallConnection";
 import { useLocaleRender } from "../../i18n/Localized";
 import { BotTag } from "../components/BotTag";
 import { text as uiText } from "../../i18n";
@@ -68,6 +69,7 @@ export function CallStage() {
           </p>
         </div>
         {call.verification && !ended && <SecurityBadge call={call} open={verifyOpen} onToggle={() => setVerifyOpen((o) => !o)} />}
+        {!ended && <CallConnection call={call} />}
       </header>
       <div className="call-notes">
         {verifyOpen && call.verification && <Verification call={call} />}

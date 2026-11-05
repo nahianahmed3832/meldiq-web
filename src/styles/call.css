@@ -877,10 +877,21 @@ button.call-pill:hover {
   z-index: 100;
   pointer-events: none;
 }
-.call-connection:hover .call-connection-detail,
 .call-connection:focus-within .call-connection-detail,
 .call-connection.pinned .call-connection-detail {
   display: grid;
+}
+@media (hover: hover) {
+  .call-connection:hover .call-connection-detail {
+    display: grid;
+  }
+}
+.call-head .call-connection-detail {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  top: calc(100% + 10px);
+  bottom: auto;
+  max-width: calc(100vw - 32px);
 }
 .call-connection-detail strong {
   font-size: 12px;

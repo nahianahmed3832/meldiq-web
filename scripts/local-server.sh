@@ -13,12 +13,15 @@
 set -euo pipefail
 here="$(cd "$(dirname "$0")/.." && pwd)"
 dir="${ORBIT_SERVER_DIR:-}"
+# Qualification can exercise the actual TypeScript build output, without changing the default development launch.
+compiled="${ORBIT_SERVER_COMPILED:-0}"
+case "$compiled" in 0) entry="src/index.ts" ;; 1) entry="dist/index.js" ;; *) echo "ORBIT_SERVER_COMPILED must be 0 or 1" >&2; exit 1 ;; esac
 if [ -z "$dir" ]; then
   for c in "$here/../meldiq_android/server" "$here/../griip-mesage/server" "$here/../griip_message/server" "$here/../server"; do
-    if [ -f "$c/src/index.ts" ]; then dir="$c"; break; fi
+    if [ -f "$c/$entry" ]; then dir="$c"; break; fi
   done
 fi
-if [ -z "$dir" ] || [ ! -f "$dir/src/index.ts" ]; then
+if [ -z "$dir" ] || [ ! -f "$dir/$entry" ]; then
   echo "Meldiq server not found: install the neighboring meldiq_android/server checkout, or set ORBIT_SERVER_DIR to the matching release source." >&2
   exit 1
 fi
@@ -32,5 +35,8 @@ if [ "${1:-}" = "--calls" ] || [ "${ORBIT_CALLS:-0}" = "1" ]; then
   export LIVEKIT_API_SECRET="${LIVEKIT_API_SECRET:-orbit-dev-secret-for-local-testing-only-0001}"
   export LIVEKIT_PUBLIC_URL="${LIVEKIT_PUBLIC_URL:-ws://localhost:7880}"
   export LIVEKIT_API_URL="${LIVEKIT_API_URL:-http://127.0.0.1:${LIVEKIT_PORT:-7880}}"
+fi
+if [ "$compiled" = "1" ]; then
+  exec node dist/index.js
 fi
 exec npx tsx src/index.ts
