@@ -1,28 +1,22 @@
 import { expect, test } from "@playwright/test";
-import { link } from "./link";
-import { newPhone, testAddress } from "./phone";
+import { newPhone } from "./phone";
 import { hold } from "./touchInput";
+import { onboardNormalAccount } from "./normalAccount";
 
 /**
  * The full emoji picker (meldiq docs/EMOJI.md) in a real browser: search, skin tone, category tabs, typing an emoji
  * into the composer and reacting with one from the picker.
  */
-test.beforeEach(async ({ context }) => {
-  await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
-});
+test.use({ serviceWorkers: "block" });
 
-test("search, skin tone and categories, into the composer and as a reaction", async ({ page, hasTouch }) => {
-  const alice = await newPhone("emojialice", "Nadia Rahman");
-  await link(page, alice);
+test("search, skin tone and categories, into the composer and as a reaction", async ({ page, context, hasTouch }) => {
+  const alice = await onboardNormalAccount(page, context, "Nadia Rahman");
   const me = alice.userId;
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
   await bob.send(dm, { type: "text", text: "Pick an emoji" });
-  await page
-    .getByRole("complementary", { name: "Conversations" })
-    .getByRole("link", { name: /Bob Chen/ })
-    .click();
-  await expect(page.getByText("Pick an emoji")).toBeVisible();
+  await page.goto(`/dms/c/${dm}`);
+  await expect(page.getByRole("log", { name: "Messages" }).getByText("Pick an emoji", { exact: true })).toBeVisible();
 
   // Into the composer: search, with a skin tone chosen once.
   await page.getByRole("button", { name: "Insert emoji" }).click();

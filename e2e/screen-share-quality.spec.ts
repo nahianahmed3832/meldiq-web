@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { answerCall, nativePeerMissing } from "./callPeer";
-import { link } from "./link";
-import { newPhone, testAddress } from "./phone";
+import { onboardNormalAccount } from "./normalAccount";
+import { newPhone } from "./phone";
 
 /**
  * This browser shares its screen at High (1920×1080 at 60) and switches to Standard (1280×720 at 30) mid-share; the
@@ -11,25 +11,29 @@ import { newPhone, testAddress } from "./phone";
 test.skip(() => nativePeerMissing() !== null, nativePeerMissing() ?? "");
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "Chromium's fake screen capture");
 test.describe.configure({ timeout: 180_000 });
-test.use({ launchOptions: { args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream", "--auto-select-desktop-capture-source=Entire screen"] } });
+test.use({ serviceWorkers: "block", launchOptions: { args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream", "--auto-select-desktop-capture-source=Entire screen"] } });
 
-test.beforeEach(async ({ context }) => {
-  await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
-});
-
-/** "Sharing · High · 1920×1080 · 58 fps" → the numbers. */
+/** "Sharing · High · 1,920×1,080 · 58 fps" → the numbers for the English test locale. */
 function parsePill(text: string): { quality: string; width: number; height: number; fps: number } | null {
-  const m = /Sharing · (\w+) · (\d+)×(\d+) · (\d+) fps/.exec(text);
-  return m ? { quality: m[1], width: Number(m[2]), height: Number(m[3]), fps: Number(m[4]) } : null;
+  const m = /Sharing · (\w+) · (\d[\d,]*)×(\d[\d,]*) · (\d+) fps/.exec(text);
+  return m ? { quality: m[1], width: Number(m[2].replaceAll(",", "")), height: Number(m[3].replaceAll(",", "")), fps: Number(m[4]) } : null;
 }
 
-test("shares at High and at Standard: the capture and encoding follow the mode, the peer decodes it, and the UI says what's sent", async ({ page }) => {
-  const alice = await newPhone("alice", "Alice Rahman");
+test("shares at High and at Standard: the capture and encoding follow the mode, the peer decodes it, and the UI says what's sent", async ({ page, context }, info) => {
+  await page.addInitScript(() => {
+    const devices = navigator.mediaDevices;
+    if (!devices?.getDisplayMedia) return;
+    const capture = devices.getDisplayMedia.bind(devices);
+    let count = 0;
+    devices.getDisplayMedia = (...options) => {
+      document.documentElement.dataset.shareCaptureAttempts = String(++count);
+      return capture(...options);
+    };
+  });
+  const alice = await onboardNormalAccount(page, context, "Alice Rahman");
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id as string;
-  await alice.connect();
   await bob.connect();
-  await link(page, alice);
   await page.goto(`/dms/c/${dm}`);
   await page.getByRole("button", { name: "Start a voice call" }).click();
   const call = await answerCall(bob, false);
@@ -38,7 +42,12 @@ test("shares at High and at Standard: the capture and encoding follow the mode, 
     await expect(stage.getByRole("status")).toHaveText(/^\d+:\d\d$/, { timeout: 30_000 });
     await stage.getByRole("button", { name: "Share your screen" }).click();
     const dialog = page.getByRole("dialog", { name: "Share your screen" });
+    await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+    await expect(dialog).toBeHidden();
+    expect(await page.locator("html").getAttribute("data-share-capture-attempts")).toBeNull();
+    await stage.getByRole("button", { name: "Share your screen" }).click();
     await dialog.getByRole("radio", { name: /^High/ }).click();
+    const sharingStarted = performance.now();
     await dialog.getByRole("button", { name: "Share" }).click();
 
     const pill = stage.getByTestId("share-pill");
@@ -47,11 +56,9 @@ test("shares at High and at Standard: the capture and encoding follow the mode, 
     // The capture as the browser delivers it, and the encoder's output, a few seconds in.
     await page.waitForTimeout(6_000);
     const high = parsePill((await pill.textContent()) ?? "")!;
-    const stats = () => page.evaluate(() => (window as unknown as { __orbit: { state: { get(): { call: { shareStats: unknown } } } } }).__orbit.state.get().call.shareStats);
-    const captured = await stats();
     await expect.poll(() => call.media.received.video.frames, { timeout: 30_000 }).toBeGreaterThan(30);
     const peerWidthHigh = call.media.received.video.width ?? 0;
-    test.info().annotations.push({ type: "high", description: `sent ${high.width}×${high.height} at ${high.fps} fps; peer decoded width ${peerWidthHigh}; capture ${JSON.stringify(captured)}` });
+    const firstPositiveWindowMs = Math.round(performance.now() - sharingStarted);
     expect(high.quality).toBe("High");
     expect(high.height).toBeLessThanOrEqual(1080);
     expect(peerWidthHigh).toBeGreaterThan(0);
@@ -72,9 +79,9 @@ test("shares at High and at Standard: the capture and encoding follow the mode, 
     await expect.poll(() => call.media.received.video.frames, { timeout: 20_000 }).toBeGreaterThan(before + 20);
     await page.waitForTimeout(4_000);
     const standard = parsePill((await pill.textContent()) ?? "")!;
-    test.info().annotations.push({
-      type: "standard",
-      description: `sent ${standard.width}×${standard.height} at ${standard.fps} fps; peer decoded width ${call.media.received.video.width}; stats ${JSON.stringify(await stats())}`,
+    await info.attach("share-observed.json", {
+      body: JSON.stringify({ high, standard, peerWidthHigh, peerWidthStandard: call.media.received.video.width, firstPositiveWindowMs }),
+      contentType: "application/json",
     });
     expect(standard.fps).toBeLessThanOrEqual(31);
     expect(call.media.received.video.width ?? 0).toBeLessThanOrEqual(1280);
