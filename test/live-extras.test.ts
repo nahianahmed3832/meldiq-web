@@ -1,6 +1,7 @@
 import nodeCrypto from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { sendFiles } from "../src/sync/attachments";
+import { decryptFile } from "../src/crypto/attachment";
 import type { Engine } from "../src/sync/engine";
 import { forwardMessage } from "../src/sync/forward";
 import { block, blockedIds, myProfile, setPrivacy, unblock, updateMyProfile } from "../src/sync/profile";
@@ -83,6 +84,19 @@ describe("rich messages from the browser", () => {
     await expect(carol.req("GET", `/v1/attachments/${stored.attachments[0].id}`)).rejects.toThrow();
     expect((await web.store.message(fwd))?.forwarded).toBe(true);
   });
+
+  it("forwarding a chunked video preserves its bytes in the destination", async () => {
+    const video = nodeCrypto.randomBytes(26 * 1024 * 1024);
+    const source = new Blob([video], { type: "video/mp4" });
+    const original = await sendFiles(web, dmBob, [{ name: "clip.mp4", type: source.type, size: source.size, source, bytes: async () => new Uint8Array(video) }], "clip");
+    const stored = (await web.store.message(original))!;
+    const [{ messageId }] = await forwardMessage(web, stored, dmCarol);
+    const ref = (await at(carol, messageId)).payload.attachments[0];
+    expect(ref).toMatchObject({ name: "clip.mp4", size: video.length, chunk: 1024 * 1024 });
+    expect(ref.key).not.toBe(stored.attachments[0].key);
+    const ct: Buffer = await carol.req("GET", `/v1/attachments/${ref.id}`);
+    expect(Buffer.from(await decryptFile(ct, ref)).equals(video)).toBe(true);
+  }, 30_000);
 });
 
 describe("call history from the server's record", () => {

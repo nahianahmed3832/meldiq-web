@@ -12,9 +12,13 @@ test("community sheets keep nested actions, keyboard focus and every permitted s
   await owner.req("POST", "/v1/orgs", { name: "Mobile Settings Lab" });
   await owner.connect();
   await link(page, owner);
-  // New communities first open their lobby. Retapping Home returns to the rail and channel list.
+  // New communities first open their lobby. Messages provides the route back to the rail and channel list.
   await expect(page.getByRole("region", { name: "Mobile Settings Lab lobby", exact: true })).toBeVisible();
-  await page.getByRole("navigation", { name: "Sections", exact: true }).getByRole("button", { name: "Home", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Sections", exact: true })
+    .getByRole("button", { name: /^Messages/ })
+    .click();
+  await page.getByRole("link", { name: "Communities", exact: true }).click();
   const trigger = page.getByRole("button", { name: "Community: Mobile Settings Lab. Community menu" });
   await trigger.click();
   const menu = page.getByRole("menu", { name: "Mobile Settings Lab", exact: true });

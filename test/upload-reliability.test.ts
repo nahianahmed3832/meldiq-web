@@ -85,6 +85,47 @@ describe("upload recovery", () => {
     expect(await uploadPrepared(engine, "conversation", prepared, { checkpoint, send })).toBe("ready");
     expect(send).not.toHaveBeenCalled();
   });
+  it("signs a window together and uses exposed ETags without listing parts", async () => {
+    const { engine, api, send, stored } = fake();
+    const id = await uploadPrepared(engine, "c", prepared, {
+      send: async (req, progress, _signal, onETag) => {
+        await send(req, progress);
+        onETag?.(stored.get(Number(req.url.split("/").pop()))!.etag);
+        return "";
+      },
+    });
+    expect(id).toBe("ready");
+    const calls = api.json.mock.calls.filter(([, path]) => path.endsWith("/parts"));
+    expect(calls).toHaveLength(1);
+    expect(calls[0][0]).toBe("POST");
+    expect(calls[0][3]?.body?.parts?.map((p) => p.n)).toEqual([1, 2, 3]);
+  });
+  it("retries verification of a successful single PUT without transmitting it again", async () => {
+    let completed = false;
+    const json = vi.fn(async (_method: string, path: string) => {
+      if (path === "/v1/attachments/uploads") return { mode: "single", uploadId: "one", upload: signed };
+      if (path.endsWith("/complete")) {
+        if (!completed) throw new ApiError(0, "network", "verification reply lost");
+        return { id: "one", size: 12, expiresAt: 1 };
+      }
+      throw new Error(`unexpected ${path}`);
+    });
+    const engine = { api: { json, call: vi.fn() } } as unknown as Engine;
+    const send = vi.fn(async () => "");
+    let checkpoint: UploadCheckpoint | undefined;
+    await expect(
+      uploadPrepared(engine, "c", prepared, {
+        send,
+        onCheckpoint: (c) => {
+          checkpoint = c;
+        },
+      }),
+    ).rejects.toThrow("verification reply lost");
+    expect(checkpoint).toMatchObject({ singleUploaded: true });
+    completed = true;
+    expect(await uploadPrepared(engine, "c", prepared, { send, checkpoint })).toBe("one");
+    expect(send).toHaveBeenCalledTimes(1);
+  });
   it("refreshes an expired single PUT and treats a lost successful PUT as completion", async () => {
     vi.useFakeTimers();
     const json = vi.fn(async (_method: string, path: string) =>

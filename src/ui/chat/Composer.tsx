@@ -14,6 +14,7 @@ import type { Conversation, Member } from "../../api/schemas";
 import { useEngine } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
 import { ROUTE_EVENT } from "../../application/router";
+import { holdUpdates } from "../../application/updates";
 import type { StoredMessage } from "../../model/types";
 import type { RichContent } from "../../model/types";
 import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
@@ -74,8 +75,10 @@ export function Composer(props: ComposerProps) {
   const pickedRoles = useRef<MentionRole[]>([]);
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const [photoQuality, setPhotoQuality] = useState<"original" | "auto">("auto");
+  const [photoQuality, setPhotoQuality] = useState<"original" | "auto">("original");
   const preparing = useRef<AbortController | null>(null);
+  const inspecting = useRef(Promise.resolve());
+  const sendInProgress = useRef(false);
   useEffect(() => () => preparing.current?.abort(), []);
   const [busy, setBusy] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
@@ -220,16 +223,14 @@ export function Composer(props: ComposerProps) {
             : uiText("messaging.interface.value0_is_larger_than_this_server_accepts_value1_mb_per_file_aac32dd", { value0: tooBig.name, value1: Math.floor(limit / (1024 * 1024)) }),
         );
       }
-      if (!files.length) setPhotoQuality("auto");
-      // One picker accepts every type. Detect bounded signatures before showing previews or quality controls.
-      void Promise.all(
-        list
-          .filter((f) => f.size <= limit && f.size > 0)
-          .slice(0, MAX_FILES_PER_MESSAGE)
-          .map(inspectFile),
-      )
-        .then((detected) => setFiles((cur) => [...cur, ...detected].slice(0, MAX_FILES_PER_MESSAGE)))
-        .catch(() => engine.notice("error", uiText("messaging.interface.couldn_t_read_that_file_choose_it_again_7847574")));
+      // One picker accepts every type. Keep selection order even if two pick/drop operations overlap.
+      const batch = list.filter((f) => f.size <= limit && f.size > 0).slice(0, MAX_FILES_PER_MESSAGE);
+      inspecting.current = inspecting.current.then(async () => {
+        const results = await Promise.allSettled(batch.map(inspectFile));
+        const detected = results.flatMap((result) => (result.status === "fulfilled" ? [result.value] : []));
+        if (detected.length !== batch.length) engine.notice("error", uiText("messaging.interface.couldn_t_read_that_file_choose_it_again_7847574"));
+        setFiles((cur) => [...cur, ...detected].slice(0, MAX_FILES_PER_MESSAGE));
+      });
     },
     [engine, planUploadLimit, can.attach, files.length],
   );
@@ -273,7 +274,7 @@ export function Composer(props: ComposerProps) {
   };
   const send = async () => {
     const body = text.trim();
-    if ((!body && !files.length) || busy) return;
+    if ((!body && !files.length) || sendInProgress.current) return;
     // Over the plan's characters (server docs/MOJO.md): the note under the box says so; nothing is cut off.
     if (overCharLimit(body, charLimit)) return;
     // Community parity A1: headings need Use Big Text; said here instead of after the server refuses.
@@ -300,22 +301,26 @@ export function Composer(props: ComposerProps) {
     // starts the next message instead of joining this one or being wiped when this one finishes.
     setText("");
     if (!props.threadRoot) void engine.saveDraft(c.id, "");
+    sendInProgress.current = true;
+    const release = files.length ? holdUpdates() : undefined;
     try {
       if (files.length) {
         setBusy(uiText("messaging.interface.preparing_uploads_24fc8fc"));
-        // One at a time: decoding several large photos at once can run a phone's browser out of memory.
-        const prepared: File[] = [];
-        preparing.current = new AbortController();
-        for (const f of files) {
-          const inspected = await inspectFile(f);
-          const optimized =
-            photoQuality !== "original" && inspected.type.startsWith("video/")
-              ? await optimizeVideo(inspected, preparing.current.signal, (percent) => setBusy(uiText("messaging.interface.optimizing_video_value0_8b15d2b", { value0: percent })))
-              : await preparePhoto(inspected, photoQuality);
-          if (preparing.current.signal.aborted) throw new UploadCancelled();
-          prepared.push(optimized);
+        let prepared = files;
+        if (photoQuality === "auto") {
+          // Keep expensive decoders sequential, especially on low-memory phones.
+          prepared = [];
+          const controller = new AbortController();
+          preparing.current = controller;
+          for (const f of files) {
+            const optimized = f.type.startsWith("video/")
+              ? await optimizeVideo(f, controller.signal, (percent) => setBusy(uiText("messaging.interface.optimizing_video_value0_8b15d2b", { value0: percent })))
+              : await preparePhoto(f, "auto");
+            if (controller.signal.aborted) throw new UploadCancelled();
+            prepared.push(optimized);
+          }
+          preparing.current = null;
         }
-        preparing.current = null;
         // The transfer belongs to the app (sync/transfers.ts): it keeps going, with its progress shown above this box,
         // if this conversation is left; the same send while it runs joins it rather than starting another.
         await transfersOf(engine).start(
@@ -332,8 +337,8 @@ export function Composer(props: ComposerProps) {
         await engine.sendText(c.id, body, { ...opts, ...(customEmoji.length ? { rich: { customEmoji } } : {}), ...(roleMentions.length ? { roleMentions } : {}) });
       }
       if (slowed && !props.threadRoot) setLastSent(Date.now());
-      setFiles([]);
-      setPhotoQuality("auto");
+      setFiles((current) => current.filter((f) => !files.includes(f)));
+      setPhotoQuality("original");
       props.onCancelReply();
       engine.setTyping(c.id, false);
     } catch (e) {
@@ -344,6 +349,8 @@ export function Composer(props: ComposerProps) {
       if (!(e instanceof UploadCancelled) && !(e instanceof DOMException && e.name === "AbortError"))
         engine.notice("error", e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_send_096b34b"));
     } finally {
+      release?.();
+      sendInProgress.current = false;
       preparing.current = null;
       setBusy(null);
       input.current?.focus();
@@ -437,7 +444,14 @@ export function Composer(props: ComposerProps) {
         )}
         {files.length > 0 && (
           <>
-            <AttachmentDrafts files={files} disabled={!!busy} onRemove={(index) => setFiles((cur) => cur.filter((_, i) => i !== index))} />
+            <AttachmentDrafts
+              files={files}
+              disabled={!!busy}
+              onRemove={(index) => {
+                if (files.length === 1) setPhotoQuality("original");
+                setFiles((cur) => cur.filter((_, i) => i !== index));
+              }}
+            />
             {files.some((f) => f.type.startsWith("image/") || f.type.startsWith("video/")) && (
               <div className="attachment-quality">
                 <label>

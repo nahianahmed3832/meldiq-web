@@ -122,6 +122,27 @@ describe("transfers", () => {
     expect(sent[0].attachments[0]).toMatchObject({ size: big.length, chunk: CHUNK_BYTES });
   });
 
+  it("uploads files in parallel and publishes them in selection order even when they finish out of order", async () => {
+    const { engine, sent, fetchStub } = fakeEngine();
+    let releaseFirst!: () => void;
+    const first = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+    fetchStub.mockImplementation(async (_url, { body }) => {
+      if (body.size === 17) await first;
+      else releaseFirst();
+      return new Response(JSON.stringify({ id: `size-${body.size}`, size: body.size, expiresAt: 0 }));
+    });
+    const t = new Transfers(engine);
+    const selection = [file("first.bin", new Uint8Array(1)), file("second.bin", new Uint8Array(2))];
+    const ids = await Promise.all([t.start("c1", selection, "album"), t.start("c1", selection, "album")]);
+    expect(ids[0]).toBe(ids[1]);
+    expect((await settled(t, ids[0]))?.status).toBe("sent");
+    expect(fetchStub).toHaveBeenCalledTimes(2);
+    expect(sent).toHaveLength(1);
+    expect(sent[0].attachments.map(({ id }) => id)).toEqual(["size-17", "size-18"]);
+  });
+
   it("keeps no plaintext and no raw key in the browser's database, only ciphertext and a sealed key", async () => {
     const { engine, store } = fakeEngine(undefined, { failUploads: 99 });
     const t = new Transfers(engine);

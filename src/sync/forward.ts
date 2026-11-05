@@ -48,6 +48,7 @@ export async function forwardMessage(
     name: a.name,
     type: a.mime,
     size: a.size,
+    source: blobs[i],
     bytes: async () => new Uint8Array(await blobs[i].arrayBuffer()),
     ...(a.voice ? { voiceDurationMs: a.durationMs ?? 0 } : {}),
   }));

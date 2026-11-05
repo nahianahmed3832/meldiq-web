@@ -99,10 +99,6 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: 
   // The badges you hold now (API 0.65.0): from your own profile, and your Meldiq Plus plan's badge.
   const mojoMark: MojoMark | null = p?.mojo ?? (mojoBadge?.kind ? { badge: mojoBadge.kind, check: mojoBadge.check } : null);
   const held: NameBadgeKind[] = [...(mojoMark ? ["mojo" as const] : []), ...(p?.badges.includes("bug-hunter") ? ["bug-hunter" as const] : []), ...(p?.decorationArtist ? ["artist" as const] : [])];
-  useEffect(() => {
-    if (avatarInput.current) avatarInput.current.value = "";
-    if (bannerInput.current) bannerInput.current.value = "";
-  }, [version]);
   if (!me) return null;
   return (
     <div className="profile-look" aria-label={uiText("workspace.interface.look_a0de571")}>
@@ -159,7 +155,17 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: 
           <Localized k="settings.interface.animated_avatar_f5e99ab" />
         </h3>
         <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
-          <input ref={avatarInput} type="file" hidden accept="image/gif,image/webp,video/mp4,video/webm,video/quicktime" onChange={(e) => pickAvatar(e.target.files?.[0])} />
+          <input
+            ref={avatarInput}
+            type="file"
+            hidden
+            accept="image/gif,image/webp,video/mp4,video/webm,video/quicktime"
+            onChange={(e) => {
+              const selected = e.currentTarget.files?.[0];
+              e.currentTarget.value = "";
+              pickAvatar(selected);
+            }}
+          />
           <button className="btn btn-secondary btn-sm" disabled={!!busy} onClick={() => avatarInput.current?.click()}>
             <Clapperboard size={14} /> {p?.avatarMedia ? uiText("workspace.interface.change_c0bf75b") : uiText("settings.interface.add_a_gif_webp_or_clip_978154f")}
           </button>
@@ -179,7 +185,17 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: 
           <Localized k="settings.interface.banner_b7f4d98" />
         </h3>
         <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
-          <input ref={bannerInput} type="file" hidden accept="image/jpeg,image/png,image/webp,image/gif" onChange={(e) => pickBanner(e.target.files?.[0])} />
+          <input
+            ref={bannerInput}
+            type="file"
+            hidden
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            onChange={(e) => {
+              const selected = e.currentTarget.files?.[0];
+              e.currentTarget.value = "";
+              pickBanner(selected);
+            }}
+          />
           <button className="btn btn-secondary btn-sm" disabled={!!busy} onClick={() => bannerInput.current?.click()}>
             <ImagePlus size={14} /> {p?.profileBanner ? uiText("settings.interface.change_banner_6ca1984") : uiText("settings.interface.add_banner_e7d7d97")}
           </button>

@@ -24,7 +24,7 @@ import type { Engine } from "./engine";
  * - The message itself goes through the outbox (compose.ts), which already survives reloads.
  */
 export type TransferStatus = "running" | "interrupted" | "failed" | "sent" | "cancelled";
-export type FilePhase = "waiting" | "encrypting" | "uploading" | "previewing" | "done" | "failed" | "cancelled";
+export type FilePhase = "waiting" | "encrypting" | "uploading" | "verifying" | "previewing" | "done" | "failed" | "cancelled";
 export interface TransferFile {
   name: string;
   type: string;
@@ -47,6 +47,7 @@ export interface Transfer {
   status: TransferStatus;
   files: TransferFile[];
   error: string | null;
+  publishing?: boolean;
   createdAt: number;
 }
 /** What a picked file brings (the composer passes Files; tests pass Blobs with names). */
@@ -97,6 +98,7 @@ const KEY_PREFIX = "transfer:";
 const WRAP_KEY = "transfer-wrap-key";
 /** Progress reaches the screen at most this often. */
 const PROGRESS_MS = 150;
+const FILE_CONCURRENCY = 2;
 type Listener = () => void;
 /** The transfers of one signed-in browser (one per engine). */
 export class Transfers {
@@ -179,9 +181,11 @@ export class Transfers {
     if (tooBig) throw new AttachmentError(uiText("workspace.interface.value0_is_larger_than_this_server_accepts_per_file_9a0e037", { value0: tooBig.name }));
     const empty = files.find((f) => f.size === 0);
     if (empty) throw new AttachmentError(uiText("files.interface.value0_is_empty_9065ae7", { value0: empty.name }));
+    await this.load();
     const id = await operationId(conversationId, files, caption, opts);
     const existing = this.jobs.get(id);
-    if (existing && existing.status === "running") return id;
+    checkUploadSignal(this.aborts.get(id)?.signal);
+    if (existing?.status === "running" || this.aborts.has(id)) return id;
     const record: StoredTransfer = {
       id,
       conversationId,
@@ -218,29 +222,42 @@ export class Transfers {
         throw e;
       }
     }
-    this.emit(true);
     void this.run(id);
+    this.emit(true);
     return id;
   }
   /** Continues an interrupted or failed transfer (with the files chosen again, when some are needed). */
   resume(id: string, files?: OutgoingFile[]): void {
     const job = this.jobs.get(id);
     const rec = this.stored.get(id);
-    if (!job || !rec || job.status === "running") return;
+    if (!job || !rec || job.status === "running" || this.aborts.has(id)) return;
     if (files) {
       const sources = rec.files.map((f) => files.find((x) => x.name === f.name && x.size === f.size && (x.lastModified ?? 0) === f.lastModified)?.source ?? null);
       this.sources.set(id, sources);
     }
     job.status = "running";
     job.error = null;
-    job.files.forEach((f) => (f.needsFile = false));
-    this.emit(true);
+    job.files.forEach((f, i) => {
+      f.needsFile = false;
+      if (f.phase === "done") return;
+      Object.assign(f, { phase: "waiting", done: 0, total: 0, originalUploaded: !!rec.files[i].attachmentId });
+      delete f.speedBps;
+      delete f.remainingSeconds;
+    });
     void this.run(id);
+    this.emit(true);
   }
   cancel(id: string): void {
-    this.aborts.get(id)?.abort();
     const job = this.jobs.get(id);
-    if (job && job.status !== "running") void this.finish(id, "cancelled");
+    if (!job || job.publishing || job.status === "sent") return;
+    const running = this.aborts.get(id);
+    if (running) return running.abort();
+    if (job.status === "interrupted" || job.status === "failed") {
+      const abort = new AbortController();
+      abort.abort();
+      this.aborts.set(id, abort);
+      void this.finish(id, "cancelled").finally(() => this.aborts.delete(id));
+    }
   }
   /** Drops a finished, cancelled or failed transfer from the list. */
   dismiss(id: string): void {
@@ -256,69 +273,104 @@ export class Transfers {
     const abort = new AbortController();
     this.aborts.set(id, abort);
     const release = holdUpdates();
-    const refs: AttachmentRef[] = [];
-    let releaseSlot = () => {};
+    const refs: AttachmentRef[] = new Array(rec.files.length);
+    const pool = new AbortController();
+    const stop = () => pool.abort();
+    abort.signal.addEventListener("abort", stop, { once: true });
+    let next = 0;
+    let failure: { error: unknown; index: number } | undefined;
     try {
-      releaseSlot = await this.acquire(abort.signal);
-      for (const [i, f] of rec.files.entries()) {
-        const view = job.files[i];
-        checkUploadSignal(abort.signal);
-        let ref = await this.sendFile(id, i, f, view, abort.signal);
-        view.originalUploaded = true;
-        const source = this.sources.get(id)?.[i];
-        let previewSource: Blob | undefined;
-        if (!f.thumbnail && source && f.voiceDurationMs === undefined) {
-          view.phase = "previewing";
-          this.emit(true);
-          const preview = await mediaPreview(source, f.name, abort.signal);
-          if (preview) {
-            Object.assign(f, { w: preview.w, h: preview.h, durationMs: preview.durationMs });
-            f.thumbnail = { name: preview.file.name, type: preview.file.type, size: preview.file.size, lastModified: 0 };
-            previewSource = preview.file;
-            await this.save(id);
+      await Promise.all(
+        Array.from({ length: Math.min(FILE_CONCURRENCY, rec.files.length) }, async () => {
+          while (!pool.signal.aborted && next < rec.files.length) {
+            const index = next++;
+            let releaseSlot: (() => void) | undefined;
+            try {
+              releaseSlot = await this.acquire(pool.signal);
+              refs[index] = await this.sendWithPreview(id, index, rec.files[index], job.files[index], pool.signal);
+              checkUploadSignal(pool.signal);
+              job.files[index].phase = "done";
+              this.emit(true);
+            } catch (error) {
+              failure ??= { error, index };
+              pool.abort();
+            } finally {
+              releaseSlot?.();
+            }
           }
-        }
-        if (f.thumbnail && (previewSource || f.thumbnail.sealedKey)) {
-          try {
-            const thumbnail = await this.sendFile(id, i, f.thumbnail, view, abort.signal, { source: previewSource, preview: true });
-            const mime = thumbnail.mime;
-            if (mime !== "image/jpeg" && mime !== "image/png" && mime !== "image/webp") throw new AttachmentError(uiText("workspace.interface.the_generated_preview_format_is_unsupported_bc43c65"));
-            ref = { ...ref, thumbnail: { ...thumbnail, mime }, w: f.w, h: f.h, ...(f.durationMs !== undefined ? { durationMs: f.durationMs } : {}) };
-          } catch (e) {
-            if (e instanceof ApiError && ["quota_exceeded", "upload_limit", "storage_full", "too_large"].includes(e.code) && !abort.signal.aborted) {
-              delete f.thumbnail;
-              await this.save(id);
-              this.engine.notice("info", uiText("workspace.interface.the_preview_could_not_fit_in_your_storage_allowance_the_original_2f98eb1"));
-            } else throw e;
-          }
-        }
-        refs.push(ref);
-        checkUploadSignal(abort.signal);
-        view.phase = "done";
-        this.emit(true);
-      }
+        }),
+      );
+      if (failure) throw failure.error;
+      checkUploadSignal(abort.signal);
       rec.messageId ??= crypto.randomUUID();
       await this.save(id);
       checkUploadSignal(abort.signal);
+      job.publishing = true;
+      this.emit(true);
       await this.engine.sendText(rec.conversationId, rec.caption, { presetId: rec.messageId, replyTo: rec.replyTo, threadRoot: rec.threadRoot, attachments: refs });
       await this.finish(id, "sent");
     } catch (e) {
-      if (e instanceof UploadCancelled || abort.signal.aborted) return void (await this.finish(id, "cancelled"));
+      if (abort.signal.aborted) return void (await this.finish(id, "cancelled"));
       if (e instanceof NeedsFile) {
         job.status = "interrupted";
         job.files[e.index].needsFile = true;
         job.error = `Choose "${rec.files[e.index].name}" again to continue.`;
       } else {
         job.status = "failed";
-        const failed = job.files.find((f) => f.phase !== "done");
-        if (failed) failed.phase = "failed";
+        if (failure) job.files[failure.index].phase = "failed";
         job.error = e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_send_the_files_5381a8c");
       }
-      this.emit(true);
     } finally {
-      releaseSlot();
+      delete job.publishing;
+      abort.signal.removeEventListener("abort", stop);
       release();
       this.aborts.delete(id);
+      this.emit(true);
+    }
+  }
+  private async sendWithPreview(id: string, index: number, f: StoredFile, view: TransferFile, signal: AbortSignal): Promise<AttachmentRef> {
+    const source = this.sources.get(id)?.[index];
+    const previewAbort = new AbortController();
+    const cancelPreview = () => previewAbort.abort();
+    signal.addEventListener("abort", cancelPreview, { once: true });
+    // Generate the optional derivative during encryption and network I/O. The primary file has its own checkpoint.
+    const previewTask = source && !f.thumbnail?.sealedKey && f.voiceDurationMs === undefined ? mediaPreview(source, f.name, previewAbort.signal).catch(() => null) : null;
+    let ref: AttachmentRef;
+    try {
+      ref = await this.sendFile(id, index, f, view, signal);
+      view.originalUploaded = true;
+      let previewSource: Blob | undefined;
+      if (previewTask) {
+        view.phase = "previewing";
+        this.emit();
+        const preview = await previewTask;
+        if (preview) {
+          Object.assign(f, { w: preview.w, h: preview.h, durationMs: preview.durationMs });
+          f.thumbnail = { name: preview.file.name, type: preview.file.type, size: preview.file.size, lastModified: 0 };
+          previewSource = preview.file;
+        }
+      }
+      checkUploadSignal(signal);
+      if (!f.thumbnail || (!previewSource && !f.thumbnail.sealedKey)) return ref;
+      const derivative = f.thumbnail;
+      try {
+        const thumbnail = await this.sendFile(id, index, derivative, view, signal, { source: previewSource, preview: true });
+        const mime = thumbnail.mime;
+        if (mime === "image/jpeg" || mime === "image/png" || mime === "image/webp")
+          ref = { ...ref, thumbnail: { ...thumbnail, mime }, w: f.w, h: f.h, ...(f.durationMs !== undefined ? { durationMs: f.durationMs } : {}) };
+      } catch (e) {
+        checkUploadSignal(signal);
+        // A derivative can fail on a second storage request even though the original is ready to publish.
+        await this.abandonUpload(derivative);
+        delete f.thumbnail;
+        if (e instanceof ApiError && ["quota_exceeded", "upload_limit", "storage_full", "too_large"].includes(e.code))
+          this.engine.notice("info", uiText("workspace.interface.the_preview_could_not_fit_in_your_storage_allowance_the_original_2f98eb1"));
+      }
+      return ref;
+    } finally {
+      signal.removeEventListener("abort", cancelPreview);
+      cancelPreview();
+      await previewTask;
     }
   }
   /** A bounded queue across messages, with cancellation while waiting for a slot. */
@@ -330,7 +382,7 @@ export class Transfers {
         reject(new UploadCancelled(uiText("workspace.interface.upload_cancelled_13737e1")));
       };
       const check = () => {
-        if (this.active >= 2) return;
+        if (this.active >= FILE_CONCURRENCY) return;
         this.slots.delete(check);
         signal.removeEventListener("abort", abort);
         this.active++;
@@ -378,6 +430,9 @@ export class Transfers {
     const source = opts.source ?? (opts.preview ? null : this.sources.get(id)?.[i]) ?? null;
     // Large: encrypt once (unless a checkpoint has the ciphertext), then upload, continuing where it stopped.
     let prepared = this.prepared.get(id)?.[slot] ?? null;
+    const remember = (value: PreparedFile) => {
+      this.prepared.set(id, Object.assign(this.prepared.get(id) ?? [], { [slot]: value }));
+    };
     if (!prepared && f.ciphertext && f.sealedKey && f.nonce && f.sha256) {
       prepared = {
         name: f.name,
@@ -396,7 +451,9 @@ export class Transfers {
       view.phase = "encrypting";
       this.emit(true);
       if (f.size <= SINGLE_FORMAT_BYTES) {
-        const enc = await encryptFile(new Uint8Array(await source.arrayBuffer()));
+        const bytes = new Uint8Array(await source.arrayBuffer());
+        checkUploadSignal(signal);
+        const enc = await encryptFile(bytes);
         prepared = {
           name: f.name,
           type: f.type,
@@ -408,17 +465,24 @@ export class Transfers {
           voiceDurationMs: f.voiceDurationMs,
         };
       } else {
+        const encrypting = progress("encrypting");
         prepared = await prepareLarge(
           { name: f.name, type: f.type, size: f.size, source, slice: (a, b) => source.slice(a, b) },
-          { signal, voiceDurationMs: f.voiceDurationMs, onProgress: (p) => progress("encrypting")(p) },
+          { signal, voiceDurationMs: f.voiceDurationMs, onProgress: encrypting },
         );
         f.chunk = CHUNK_BYTES;
       }
+      remember(prepared);
       checkUploadSignal(signal);
+    }
+    if (!f.sealedKey) {
       Object.assign(f, { ciphertext: prepared.ciphertext, sealedKey: await this.seal(prepared.rawKey), nonce: toB64(prepared.nonce), sha256: prepared.sha256 });
       await this.save(id);
     }
-    this.prepared.set(id, Object.assign(this.prepared.get(id) ?? [], { [slot]: prepared }));
+    remember(prepared);
+    const uploading = progress("uploading");
+    const verifying = progress("verifying");
+    uploading({ done: 0, total: prepared.ciphertext.size });
     const attachmentId = await uploadPrepared(this.engine, this.stored.get(id)!.conversationId, prepared, {
       signal,
       checkpoint: f.checkpoint,
@@ -426,13 +490,16 @@ export class Transfers {
         f.checkpoint = c;
         await this.save(id);
       },
-      onProgress: (p) => progress("uploading")(p),
+      onProgress: (p) => (p.phase === "verifying" ? verifying : uploading)(p),
     });
     f.attachmentId = attachmentId;
     // Uploaded: the ciphertext needn't be kept any longer; the reference has everything the message needs.
     delete f.ciphertext;
     await this.save(id);
-    return this.ref(f, attachmentId, toB64(prepared.rawKey));
+    const ref = this.ref(f, attachmentId, toB64(prepared.rawKey));
+    prepared.rawKey.fill(0);
+    this.prepared.get(id)![slot] = null;
+    return ref;
   }
   private async refFromStored(f: StoredFile, attachmentId: string): Promise<AttachmentRef> {
     const raw = await this.unseal(f.sealedKey!);
@@ -458,14 +525,16 @@ export class Transfers {
       ...(f.voiceDurationMs !== undefined ? { voice: true, durationMs: Math.round(f.voiceDurationMs) } : {}),
     };
   }
+  private async abandonUpload(f: StoredFile): Promise<void> {
+    if (!f.attachmentId && f.checkpoint?.uploadId)
+      await this.engine.api.call("DELETE", `/v1/attachments/uploads/${encodeURIComponent(f.checkpoint.uploadId)}`, { signal: AbortSignal.timeout(5000) }).catch(() => undefined);
+  }
   private async finish(id: string, status: "sent" | "cancelled"): Promise<void> {
     const job = this.jobs.get(id);
     const rec = this.stored.get(id);
     if (status === "cancelled" && rec) {
       // Whatever reached the store for an unfinished upload is removed (the server also expires abandoned uploads).
-      for (const f of rec.files.flatMap((f) => (f.thumbnail ? [f, f.thumbnail] : [f]))) {
-        if (!f.attachmentId && f.checkpoint?.uploadId) await this.engine.api.call("DELETE", `/v1/attachments/uploads/${encodeURIComponent(f.checkpoint.uploadId)}`).catch(() => undefined);
-      }
+      await Promise.all(rec.files.flatMap((f) => (f.thumbnail ? [f, f.thumbnail] : [f])).map((f) => this.abandonUpload(f)));
     }
     await this.forget(id);
     if (job) {
@@ -478,7 +547,13 @@ export class Transfers {
           });
       job.error = null;
       // A sent message shows in the conversation; the finished transfer leaves the list shortly after.
-      if (status === "sent") setTimeout(() => (this.jobs.delete(id), this.emit(true)), 1500);
+      if (status === "sent")
+        setTimeout(() => {
+          if (this.jobs.get(id) === job) {
+            this.jobs.delete(id);
+            this.emit(true);
+          }
+        }, 1500);
     }
     this.emit(true);
   }

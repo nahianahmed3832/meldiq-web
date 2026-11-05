@@ -61,8 +61,11 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
       document.body.style.overflow = before;
     };
   }, []);
-  const { url, error, retry } = useBlobUrl(r, true);
+  const { url, error, retry, progress } = useBlobUrl(r, true, true);
   const video = isVideo(r);
+  const { url: poster } = useBlobUrl(r.thumbnail ?? r, video && !!r.thumbnail && !error);
+  const loadingLabel =
+    progress?.phase === "decrypting" ? uiText("messaging.interface.decrypting_value0_b77ff2c", { value0: r.name }) : uiText("messaging.interface.loading_value0_e87d0f1", { value0: r.name });
   const prev = at > 0 ? () => onMove(at - 1) : null;
   const next = at < items.length - 1 ? () => onMove(at + 1) : null;
   const count = items.length;
@@ -213,9 +216,15 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
             </button>
           </div>
         ) : !url ? (
-          <span className="spinner" aria-label={uiText("messaging.interface.decrypting_value0_b77ff2c", { value0: r.name })} />
+          <div className="viewer-loading">
+            {poster && <img src={poster} alt="" />}
+            <div className="viewer-loading-status">
+              <span role="status">{loadingLabel}</span>
+              <progress max={progress?.total || 1} value={progress?.done} aria-label={loadingLabel} />
+            </div>
+          </div>
         ) : video ? (
-          <VideoPlayer key={url} url={url} name={r.name} />
+          <VideoPlayer key={url} url={url} name={r.name} poster={poster ?? undefined} />
         ) : (
           <ZoomableImage key={url} url={url} name={r.name} retry={retry} />
         )}
@@ -252,7 +261,7 @@ function StripThumb({ r, current, onPick }: { r: AttachmentRef; current: boolean
       onClick={onPick}
       aria-label={uiText("billing.interface.value0_value1_6a77681", { value0: image ? uiText("messaging.interface.photo_d84eeba") : l10n("files.video"), value1: r.name })}
     >
-      {image && url ? <img src={url} alt="" /> : <Film size={18} aria-hidden="true" />}
+      {url ? <img src={url} alt="" /> : <Film size={18} aria-hidden="true" />}
     </button>
   );
 }
@@ -282,7 +291,7 @@ function ViewerCaption({ info }: { info: ViewerInfo }) {
 }
 const mmss = (s: number) => formatDuration((Number.isFinite(s) ? s : 0) * 1000);
 /** A video with Meldiq's controls: play/pause (or a click on the picture, or Space), time, seek, mute and volume, full screen. */
-export function VideoPlayer({ url, name }: { url: string; name: string }) {
+export function VideoPlayer({ url, name, poster }: { url: string; name: string; poster?: string }) {
   useLocaleRender();
   const l10n = useLocalization();
   const box = useRef<HTMLDivElement>(null);
@@ -314,6 +323,7 @@ export function VideoPlayer({ url, name }: { url: string; name: string }) {
       <video
         ref={v}
         src={url}
+        poster={poster}
         autoPlay
         playsInline
         aria-label={name}

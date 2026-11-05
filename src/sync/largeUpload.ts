@@ -1,7 +1,7 @@
 import { text as uiText } from "../i18n";
 import { z } from "zod";
-import { ApiError } from "../api/client";
-import { randomBytes, sha256, toB64 } from "../crypto/bytes";
+import { ApiError, toApiError } from "../api/client";
+import { randomBytes, toB64 } from "../crypto/bytes";
 import { CancelledError, encryptFileOnce } from "../crypto/cipherClient";
 import { CHUNK_BYTES, cipherSize, importChunkKey, type PlainSource } from "../crypto/fileStream";
 import type { AttachmentRef } from "../protocol/payload";
@@ -29,7 +29,7 @@ export interface LargeFile extends PlainSource {
   type: string;
 }
 export interface UploadProgress {
-  phase: "hashing" | "uploading";
+  phase: "hashing" | "uploading" | "verifying";
   done: number;
   total: number;
 }
@@ -43,20 +43,25 @@ export type BodySender = (
   },
   onSent: (bytes: number) => void,
   signal?: AbortSignal,
+  onETag?: (etag: string | null) => void,
 ) => Promise<string>;
 export class UploadCancelled extends Error {}
 /** Headers a page may not set; the browser sets them itself (content-length from the body, which is the signed size). */
 const FORBIDDEN = new Set(["content-length", "host", "connection"]);
 const settable = (headers: Record<string, string>) => Object.fromEntries(Object.entries(headers).filter(([k]) => !FORBIDDEN.has(k.toLowerCase())));
 /** XMLHttpRequest where it exists (fetch can't report upload progress), fetch elsewhere (tests). */
-export const sendBody: BodySender = (raw, onSent, signal) => {
+export const sendBody: BodySender = (raw, onSent, signal, onETag) => {
   if (signal?.aborted) return Promise.reject(new UploadCancelled(uiText("workspace.interface.upload_cancelled_13737e1")));
   const req = { ...raw, headers: settable(raw.headers) };
   if (typeof XMLHttpRequest === "undefined") {
     return fetch(req.url, { method: req.method, headers: req.headers, body: req.body, credentials: "omit", signal }).then(
       async (res) => {
-        if (!res.ok) throw new ApiError(res.status, "upload_failed", uiText("workspace.interface.the_upload_was_refused_value0_ac65b7a", { value0: res.status }));
+        if (!res.ok) {
+          if (req.method === "POST") throw await toApiError(res);
+          throw new ApiError(res.status, "upload_failed", uiText("workspace.interface.the_upload_was_refused_value0_ac65b7a", { value0: res.status }));
+        }
         onSent(req.body.size);
+        onETag?.(res.headers.get("etag"));
         return res.text();
       },
       (e: unknown) => {
@@ -70,20 +75,43 @@ export const sendBody: BodySender = (raw, onSent, signal) => {
     const x = new XMLHttpRequest();
     x.open(req.method, req.url);
     for (const [k, v] of Object.entries(req.headers)) x.setRequestHeader(k, v);
-    x.upload.onprogress = (e) => onSent(e.loaded);
+    let stall: ReturnType<typeof setTimeout>;
+    const watch = () => {
+      clearTimeout(stall);
+      // Slow links can take several minutes per part. Bound inactivity rather than total transfer time.
+      stall = setTimeout(() => {
+        reject(new ApiError(0, "network", uiText("workspace.interface.the_upload_timed_out_try_again_to_resume_9b28c59")));
+        x.abort();
+      }, 120000);
+    };
+    x.upload.onprogress = (e) => {
+      watch();
+      onSent(e.loaded);
+    };
     const abort = () => x.abort();
-    const cleanup = () => signal?.removeEventListener("abort", abort);
-    x.onloadend = cleanup;
-    x.timeout = 120000;
-    x.ontimeout = () => reject(new ApiError(0, "network", uiText("workspace.interface.the_upload_timed_out_try_again_to_resume_9b28c59")));
-    x.onload = () =>
-      x.status >= 200 && x.status < 300
-        ? resolve(x.responseText)
-        : reject(new ApiError(x.status, "upload_failed", uiText("workspace.interface.the_upload_was_refused_value0_ac65b7a", { value0: x.status })));
+    x.onloadend = () => {
+      clearTimeout(stall);
+      signal?.removeEventListener("abort", abort);
+    };
+    x.onload = () => {
+      if (x.status >= 200 && x.status < 300) {
+        onSent(req.body.size);
+        if (onETag) onETag(/^etag:\s*(.+)$/im.exec(x.getAllResponseHeaders())?.[1]?.trim() ?? null);
+        resolve(x.responseText);
+      } else if (x.status >= 400 && req.method === "POST") {
+        void toApiError(new Response(x.responseText, { status: x.status, headers: { "retry-after": x.getResponseHeader("retry-after") ?? "" } })).then(reject);
+      } else reject(new ApiError(x.status, "upload_failed", uiText("workspace.interface.the_upload_was_refused_value0_ac65b7a", { value0: x.status })));
+    };
     x.onerror = () => reject(new ApiError(0, "network", uiText("workspace.interface.the_upload_was_interrupted_check_your_connection_and_try_aga_76fb28a")));
     x.onabort = () => reject(new UploadCancelled(uiText("workspace.interface.upload_cancelled_13737e1")));
     signal?.addEventListener("abort", abort, { once: true });
-    x.send(req.body);
+    try {
+      x.send(req.body);
+      watch();
+    } catch (e) {
+      signal?.removeEventListener("abort", abort);
+      reject(e);
+    }
   });
 };
 /** A file encrypted once and ready to send (its ciphertext kept as a Blob), with what its reference needs. */
@@ -104,6 +132,7 @@ export interface UploadCheckpoint {
   uploadId?: string;
   mode?: "single" | "multipart";
   partSize?: number;
+  singleUploaded?: boolean;
   /** Kept before finalizing, so retry works even after S3 has assembled and removed the parts. */
   parts?: {
     n: number;
@@ -221,13 +250,22 @@ export async function uploadPrepared(
   const checkpoint: UploadCheckpoint = start ? { route: "direct", uploadId: start.uploadId, mode: start.mode, ...(start.mode === "multipart" ? { partSize: start.partSize } : {}) } : opts.checkpoint!;
   const complete = async (parts?: UploadCheckpoint["parts"]) => {
     checkUploadSignal(opts.signal);
+    opts.onProgress?.({ phase: "verifying", done: total, total });
     return (await engine.api.json("POST", `/v1/attachments/uploads/${enc}/complete`, zDone, { signal: opts.signal, body: parts ? { parts } : {} })).id;
   };
   try {
     if (checkpoint.parts) return await complete(checkpoint.parts);
     if (checkpoint.mode === "single") {
-      let signed =
-        start?.mode === "single" ? start.upload : (await engine.api.json("POST", `/v1/attachments/uploads/${enc}/url`, z.object({ upload: zPresigned }), { signal: opts.signal, body: {} })).upload;
+      if (checkpoint.singleUploaded) {
+        try {
+          return await complete();
+        } catch (e) {
+          if (!(e instanceof ApiError && e.code === "not_uploaded")) throw e;
+          await opts.onCheckpoint?.({ ...checkpoint, singleUploaded: false });
+        }
+      }
+      const renew = async () => (await engine.api.json("POST", `/v1/attachments/uploads/${enc}/url`, z.object({ upload: zPresigned }), { signal: opts.signal, body: {} })).upload;
+      let signed = start?.mode === "single" ? start.upload : await renew();
       for (let attempt = 1; ; attempt++) {
         checkUploadSignal(opts.signal);
         try {
@@ -236,33 +274,35 @@ export async function uploadPrepared(
         } catch (e) {
           // A lost successful PUT answer: verify through /complete instead of replacing the object.
           if (e instanceof ApiError && e.status === 412) break;
-          if (!(retryableUpload(e) || (e instanceof ApiError && e.status === 403)) || attempt >= PART_TRIES) throw e;
+          if (!retryableUpload(e) && !(e instanceof ApiError && e.status === 403)) throw e;
+          if (attempt >= PART_TRIES) {
+            if (!(e instanceof ApiError && e.code === "network") || (typeof navigator !== "undefined" && navigator.onLine === false)) throw e;
+            try {
+              return await complete();
+            } catch (verification) {
+              // An ambiguous verification failure must keep the direct session. Only a confirmed missing object can use the fallback.
+              if (!(verification instanceof ApiError && verification.code === "not_uploaded")) throw verification;
+            }
+            await engine.api.call("DELETE", `/v1/attachments/uploads/${enc}`, { signal: opts.signal }).catch(() => undefined);
+            return await viaApi();
+          }
+          report(0);
           await uploadBackoff(attempt, opts.signal);
-          signed = (await engine.api.json("POST", `/v1/attachments/uploads/${enc}/url`, z.object({ upload: zPresigned }), { signal: opts.signal, body: {} })).upload;
+          signed = await renew();
         }
       }
+      await opts.onCheckpoint?.({ ...checkpoint, singleUploaded: true });
       return await complete();
     }
     const partSize = checkpoint.partSize;
     if (!partSize || !Number.isSafeInteger(partSize) || partSize <= 0) throw new ApiError(0, "decode", uiText("workspace.interface.the_upload_part_size_is_invalid_d18c33b"));
-    return await sendParts(engine, enc, f.ciphertext, partSize, send, report, opts.signal, resuming, async (parts) => {
-      await opts.onCheckpoint?.({ ...checkpoint, parts });
-    });
+    const parts = await sendParts(engine, enc, f.ciphertext, partSize, send, report, opts.signal, resuming);
+    await opts.onCheckpoint?.({ ...checkpoint, parts });
+    return await complete(parts);
   } catch (e) {
     if (e instanceof UploadCancelled || opts.signal?.aborted) throw new UploadCancelled(uiText("workspace.interface.upload_cancelled_13737e1"));
     if (resuming && e instanceof ApiError && (e.status === 404 || e.status === 410)) {
       return uploadPrepared(engine, conversationId, f, { ...opts, checkpoint: undefined });
-    }
-    // Preserve the existing small-file CORS fallback without throwing away multipart progress.
-    if (checkpoint.mode === "single" && e instanceof ApiError && e.code === "network" && (typeof navigator === "undefined" || navigator.onLine !== false)) {
-      try {
-        return await complete();
-      } catch (verification) {
-        if (!(verification instanceof ApiError && ["network", "not_uploaded"].includes(verification.code))) throw verification;
-      }
-      const id = await viaApi();
-      await engine.api.call("DELETE", `/v1/attachments/uploads/${enc}`).catch(() => undefined);
-      return id;
     }
     if (e instanceof ApiError && e.code === "upload_incomplete") await opts.onCheckpoint?.({ ...checkpoint, parts: undefined });
     // Keep recoverable sessions and their parts. A network failure alone cannot diagnose CORS or justify discarding them.
@@ -295,7 +335,7 @@ export function uploadBackoff(attempt: number, signal?: AbortSignal): Promise<vo
     signal?.addEventListener("abort", abort, { once: true });
   });
 }
-/** The ciphertext's parts, [PART_CONCURRENCY] at a time, each retried on a dropped connection; then /complete. */
+/** Sign one batch per upload window. A retry signs only the affected part. */
 async function sendParts(
   engine: Engine,
   enc: string,
@@ -305,95 +345,147 @@ async function sendParts(
   report: (b: number) => void,
   signal: AbortSignal | undefined,
   resuming: boolean,
-  checkpoint: (parts: NonNullable<UploadCheckpoint["parts"]>) => Promise<void>,
-): Promise<string> {
-  const count = Math.max(1, Math.ceil(ct.size / partSize));
-  const sizeOf = (n: number) => Math.min(partSize, ct.size - (n - 1) * partSize);
-  const have = new Map<
-    number,
-    {
-      etag: string;
-      size: number;
-      sha256?: string | null;
+): Promise<NonNullable<UploadCheckpoint["parts"]>> {
+  const count = Math.ceil(ct.size / partSize);
+  const pending = new Map<number, number>();
+  const uploaded = new Map<number, { n: number; etag: string; sha256: string }>();
+  let uploadedBytes = 0;
+  const bodyOf = (n: number) => ct.slice((n - 1) * partSize, n * partSize);
+  // Blob.arrayBuffer owns its bytes. Hand the buffer to WebCrypto without an extra part-sized copy.
+  const hash = async (body: Blob) => toB64(new Uint8Array(await crypto.subtle.digest("SHA-256", await body.arrayBuffer())));
+  if (resuming) {
+    for (const part of (await engine.api.json("GET", `/v1/attachments/uploads/${enc}/parts`, zHave, { signal })).parts) {
+      if (part.n > count || !part.sha256 || !part.etag) continue;
+      checkUploadSignal(signal);
+      const body = bodyOf(part.n);
+      if (body.size !== part.size || (await hash(body)) !== part.sha256) continue;
+      uploaded.set(part.n, { n: part.n, etag: part.etag, sha256: part.sha256 });
+      uploadedBytes += body.size;
     }
-  >();
-  if (resuming) for (const p of (await engine.api.json("GET", `/v1/attachments/uploads/${enc}/parts`, zHave, { signal })).parts) if (p.n <= count) have.set(p.n, p);
-  const sent = new Map<number, number>();
-  for (const [n, p] of have) {
-    if (p.size !== sizeOf(n) || !p.sha256) continue;
-    checkUploadSignal(signal);
-    const hash = toB64(await sha256(new Uint8Array(await ct.slice((n - 1) * partSize, (n - 1) * partSize + sizeOf(n)).arrayBuffer())));
-    if (hash === p.sha256) sent.set(n, p.size);
   }
-  const shown = () => report([...sent.values()].reduce((a, b) => a + b, 0));
-  shown();
-  const hashes = new Map<number, string>();
-  const todo = Array.from({ length: count }, (_, i) => i + 1).filter((n) => !sent.has(n));
-  const one = async (n: number) => {
-    const body = ct.slice((n - 1) * partSize, (n - 1) * partSize + sizeOf(n));
-    const partHash = toB64(await sha256(new Uint8Array(await body.arrayBuffer())));
-    hashes.set(n, partHash);
+  const show = () => report(uploadedBytes + [...pending.values()].reduce((sum, bytes) => sum + bytes, 0));
+  show();
+  const todo = Array.from({ length: count }, (_, i) => i + 1).filter((n) => !uploaded.has(n));
+  const sign = async (parts: { n: number; size: number; sha256: string }[], signal?: AbortSignal) => {
     for (let attempt = 1; ; attempt++) {
-      if (signal?.aborted) throw new UploadCancelled(uiText("workspace.interface.upload_cancelled_13737e1"));
+      checkUploadSignal(signal);
       try {
-        const { parts } = await engine.api.json("POST", `/v1/attachments/uploads/${enc}/parts`, zParts, { signal, body: { parts: [{ n, size: body.size, sha256: partHash }] } });
-        const signed = parts.find((p) => p.n === n);
-        if (!signed) throw new ApiError(500, "server", uiText("workspace.interface.the_server_didn_t_sign_the_upload_9b72c90"));
-        await send({ method: "PUT", url: signed.upload.url, headers: signed.upload.headers, body }, (b) => (sent.set(n, b), shown()), signal);
-        sent.set(n, body.size);
-        shown();
-        return;
+        const result = await engine.api.json("POST", `/v1/attachments/uploads/${enc}/parts`, zParts, { signal, body: { parts } });
+        const signed = new Map(result.parts.map((part) => [part.n, part.upload]));
+        if (parts.some(({ n }) => !signed.has(n))) throw new ApiError(500, "server", uiText("workspace.interface.the_server_didn_t_sign_the_upload_9b72c90"));
+        return signed;
       } catch (e) {
-        if (!(retryableUpload(e) || (e instanceof ApiError && e.status === 403)) || attempt >= PART_TRIES || signal?.aborted) throw e;
-        sent.set(n, 0);
-        shown();
+        if (!retryableUpload(e) || attempt >= PART_TRIES) throw e;
         await uploadBackoff(attempt, signal);
       }
     }
   };
-  // A small pool: each runner takes the next part until none are left.
-  const queue = [...todo];
-  let failure: unknown;
   const pool = new AbortController();
+  const active = pool.signal;
   const stop = () => pool.abort();
+  checkUploadSignal(signal);
   signal?.addEventListener("abort", stop, { once: true });
-  const outerSignal = signal;
-  signal = pool.signal;
-  if (outerSignal?.aborted) pool.abort();
+  const prepareBatch = async (first: number) => {
+    checkUploadSignal(active);
+    const batch = await Promise.all(
+      todo.slice(first, first + PART_CONCURRENCY).map(async (n) => {
+        const body = bodyOf(n);
+        return { body, spec: { n, size: body.size, sha256: await hash(body) } };
+      }),
+    );
+    const signed = await sign(
+      batch.map(({ spec }) => spec),
+      active,
+    );
+    return batch.map((part) => ({ ...part, put: signed.get(part.spec.n)! }));
+  };
+  const batches = new Map<number, ReturnType<typeof prepareBatch>>();
+  const batchAt = (first: number) => {
+    let batch = batches.get(first);
+    if (!batch) {
+      batch = prepareBatch(first);
+      batches.set(first, batch);
+      // A prefetched window may be cancelled before a worker takes it.
+      void batch.catch(() => undefined);
+    }
+    return batch;
+  };
+  let cursor = 0;
+  const takePart = async () => {
+    checkUploadSignal(active);
+    const index = cursor++;
+    if (index >= todo.length) return null;
+    const offset = index % PART_CONCURRENCY;
+    const first = index - offset;
+    const batch = await batchAt(first);
+    // Have the next window ready while this one's bytes are in flight.
+    if (offset === 0 && first + PART_CONCURRENCY < todo.length) batchAt(first + PART_CONCURRENCY);
+    if (offset === batch.length - 1) batches.delete(first);
+    return batch[offset];
+  };
+  let failure: unknown;
   try {
     await Promise.all(
-      Array.from({ length: Math.min(PART_CONCURRENCY, queue.length) }, async () => {
+      Array.from({ length: Math.min(todo.length, PART_CONCURRENCY) }, async () => {
         try {
-          for (let n = queue.shift(); n !== undefined; n = queue.shift()) {
-            checkUploadSignal(signal);
-            await one(n);
+          for (let part = await takePart(); part; part = await takePart()) {
+            const { body, spec } = part;
+            const { n, sha256 } = spec;
+            let put = part.put;
+            let etag = "";
+            for (let attempt = 1; ; attempt++) {
+              checkUploadSignal(active);
+              try {
+                await send(
+                  { method: "PUT", url: put.url, headers: put.headers, body },
+                  (bytes) => {
+                    pending.set(n, Math.min(bytes, body.size));
+                    show();
+                  },
+                  active,
+                  (value) => {
+                    etag = value ?? "";
+                  },
+                );
+                break;
+              } catch (e) {
+                if (!(retryableUpload(e) || (e instanceof ApiError && e.status === 403)) || attempt >= PART_TRIES) throw e;
+                pending.delete(n);
+                show();
+                await uploadBackoff(attempt, active);
+                put = (await sign([spec], active)).get(n)!;
+              }
+            }
+            pending.delete(n);
+            uploaded.set(n, { n, etag, sha256 });
+            uploadedBytes += body.size;
+            show();
           }
         } catch (e) {
-          if (failure === undefined) failure = e;
+          failure ??= e;
           pool.abort();
         }
       }),
     );
-    if (failure !== undefined) throw failure;
-    checkUploadSignal(outerSignal);
+    if (pool.signal.aborted) throw failure;
+    checkUploadSignal(signal);
   } finally {
-    outerSignal?.removeEventListener("abort", stop);
+    signal?.removeEventListener("abort", stop);
+    await Promise.allSettled(batches.values());
   }
-  signal = outerSignal;
-  // The store's own record of each part (its ETag), read through the server: no ETag header is needed from S3.
-  const stored = new Map((await engine.api.json("GET", `/v1/attachments/uploads/${enc}/parts`, zHave, { signal })).parts.map((p) => [p.n, p.etag]));
-  const parts: {
-    n: number;
-    etag: string;
-    sha256: string;
-  }[] = [];
-  for (let n = 1; n <= count; n++) {
-    const h = hashes.get(n) ?? toB64(await sha256(new Uint8Array(await ct.slice((n - 1) * partSize, (n - 1) * partSize + sizeOf(n)).arrayBuffer())));
-    parts.push({ n, etag: stored.get(n) ?? "", sha256: h });
+  // Older bucket CORS rules hide ETag. Verify the missing ETags via the existing authorized endpoint.
+  if ([...uploaded.values()].some((part) => !part.etag)) {
+    const stored = new Map((await engine.api.json("GET", `/v1/attachments/uploads/${enc}/parts`, zHave, { signal })).parts.map((part) => [part.n, part]));
+    for (const part of uploaded.values()) {
+      if (part.etag) continue;
+      const kept = stored.get(part.n);
+      if (!kept?.etag || kept.size !== bodyOf(part.n).size || (kept.sha256 && kept.sha256 !== part.sha256)) {
+        throw new ApiError(409, "upload_incomplete", uiText("workspace.interface.the_server_didn_t_sign_the_upload_9b72c90"));
+      }
+      part.etag = kept.etag;
+    }
   }
-  await checkpoint(parts);
-  checkUploadSignal(signal);
-  return (await engine.api.json("POST", `/v1/attachments/uploads/${enc}/complete`, zDone, { signal, body: { parts } })).id;
+  return [...uploaded.values()].sort((a, b) => a.n - b.n);
 }
 /** For tests: forget that this tab switched to uploading through the API. */
 export function resetUploadRoute(): void {

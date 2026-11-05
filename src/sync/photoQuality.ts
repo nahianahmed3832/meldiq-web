@@ -71,7 +71,7 @@ export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = 
     ctx.drawImage(bitmap, 0, 0, size.width, size.height);
     const type = file.type;
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, jpeg));
-    if (!blob) throw new PhotoPrepareError(`"${file.name}" couldn't be prepared in this browser. Choose Original to send it as it is.`);
+    if (!blob || blob.type !== type) throw new PhotoPrepareError(`"${file.name}" couldn't be prepared in this browser. Choose Original to send it as it is.`);
     return new File([blob], encodedName(file.name, type), { type, lastModified: file.lastModified });
   } finally {
     bitmap.close();
@@ -81,7 +81,8 @@ export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = 
 export async function optimizePhoto(file: File): Promise<File> {
   if (!reencodable(file.type) || file.size > 32 * 1024 * 1024) return file;
   try {
-    if (expressionFormat(new Uint8Array(await file.arrayBuffer()))?.animated) return file;
+    // JPEG is a still format here. Avoid a second full read just to check for animation.
+    if (file.type !== "image/jpeg" && expressionFormat(new Uint8Array(await file.arrayBuffer()))?.animated) return file;
     const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
     try {
       // A longest-edge resize turns a long screenshot into unreadable, narrow text. Preserve these originals.
@@ -93,10 +94,10 @@ export async function optimizePhoto(file: File): Promise<File> {
       const context = canvas.getContext("2d");
       if (!context) return file;
       context.drawImage(bitmap, 0, 0, size.width, size.height);
-      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-      // Some browsers fall back to PNG. Keep valid fallback files correctly named and never inflate a small photo.
-      if (!blob || (blob.size >= file.size && size.width === bitmap.width && size.height === bitmap.height)) return file;
-      return new File([blob], encodedName(file.name, blob.type), { type: blob.type, lastModified: file.lastModified });
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, file.type, file.type === "image/jpeg" ? 0.88 : 0.85));
+      // An unsupported encoder may return PNG. Keep the source if the requested format cannot be produced.
+      if (!blob || blob.type !== file.type || blob.size === 0 || blob.size >= file.size * 0.9) return file;
+      return new File([blob], file.name, { type: file.type, lastModified: file.lastModified });
     } finally {
       bitmap.close();
     }

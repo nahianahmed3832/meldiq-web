@@ -34,7 +34,7 @@ function Draft({ file, onRemove, disabled }: { file: File; onRemove: () => void;
       <div className="attachment-draft-preview">
         {url && !failed ? (
           image ? (
-            <img src={url} alt={file.name} onError={() => setFailed(true)} />
+            <img src={url} alt={file.name} loading="lazy" decoding="async" onError={() => setFailed(true)} />
           ) : (
             <video
               src={url}
@@ -49,7 +49,7 @@ function Draft({ file, onRemove, disabled }: { file: File; onRemove: () => void;
         ) : (
           <FileText size={28} aria-hidden="true" />
         )}
-        <button className="icon-btn" disabled={disabled} onClick={onRemove} aria-label={uiText("messaging.interface.remove_value0_3028bf7", { value0: file.name })}>
+        <button type="button" className="icon-btn" disabled={disabled} onClick={onRemove} aria-label={uiText("messaging.interface.remove_value0_3028bf7", { value0: file.name })}>
           <X size={15} />
         </button>
       </div>

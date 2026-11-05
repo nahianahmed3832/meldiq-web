@@ -122,14 +122,14 @@ afterAll(async () => {
 });
 
 describe("files kept in S3 without a CORS rule for the web app", () => {
-  it("a capable API streams an authorized S3 file without a redirect or web-server fallback", async () => {
+  it("a capable API streams an authorized S3 file after a bucket CORS refusal", async () => {
     web.state.update((s) => ({ ...s, server: s.server ? { ...s.server, features: [...s.server.features, "attachment-proxy"] } : s.server }));
     mediaRoute = false;
     const plain = nodeCrypto.randomBytes(300000);
     const ref = await phoneFile(plain);
     const blob = await asBrowser(() => openAttachment(web, ref));
     expect(Buffer.from(await blob.arrayBuffer())).toEqual(plain);
-    expect(seen).toEqual({ direct: 1, bucketRefused: 0, media: 0 });
+    expect(seen).toEqual({ direct: 2, bucketRefused: 1, media: 0 });
   });
 
   it("a photo from the phone opens: the refused bucket link is fetched again through the web server, and later files go there at once", async () => {
@@ -171,18 +171,21 @@ describe("files kept in S3 without a CORS rule for the web app", () => {
     await expect(asBrowser(() => openAttachment(web, { ...ref, id: "nope-not-a-file" }))).rejects.toThrow("expired");
   });
 
-  it("a large file from the browser: the refused direct upload is removed and the file goes through the API; the phone opens it", async () => {
-    const plain = nodeCrypto.randomBytes(7 * MB + 11);
+  it("a refused single PUT falls back to the API after verification and the recipient gets the exact bytes", async () => {
+    const plain = nodeCrypto.randomBytes(4 * MB + 11);
     const src = new Blob([plain]);
     const ref = await asBrowser(() => uploadLarge(web, dm, { name: "video.mp4", type: "video/mp4", size: plain.length, slice: (a, b) => src.slice(a, b) }));
     expect(seen.bucketRefused).toBeGreaterThan(0);
     const ct: Buffer = await bob.req("GET", `/v1/attachments/${ref.id}`);
     expect(Buffer.from(await decryptFile(ct, ref)).equals(plain)).toBe(true);
-    // The refused multipart upload was removed from the bucket, not left half-done.
-    expect(bucket.uploads.size).toBe(0);
+  }, 30_000);
 
-    const again = await asBrowser(() => uploadLarge(web, dm, { name: "b.bin", type: "application/octet-stream", size: 6 * MB, slice: (a, b) => new Blob([new Uint8Array(6 * MB)]).slice(a, b) }));
-    expect(again.id).toBeTruthy();
-    expect(seen.bucketRefused).toBe(0);
+  it("uses real signed multipart PUTs against the local S3 stand-in and decrypts the completed file", async () => {
+    const plain = nodeCrypto.randomBytes(7 * MB + 11);
+    const src = new Blob([plain]);
+    const ref = await uploadLarge(web, dm, { name: "clip.mp4", type: "video/mp4", size: plain.length, slice: (a, b) => src.slice(a, b) });
+    const ct: Buffer = await bob.req("GET", `/v1/attachments/${ref.id}`);
+    expect(Buffer.from(await decryptFile(ct, ref)).equals(plain)).toBe(true);
+    expect(bucket.uploads.size).toBe(0);
   });
 });

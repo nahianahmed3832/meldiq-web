@@ -2815,7 +2815,41 @@ button.media-card {
 .transfer-bar {
   width: 100%;
   height: 4px;
-  accent-color: var(--accent);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+.transfer-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transform-origin: left center;
+}
+.transfer-bar:dir(rtl) > span {
+  transform-origin: right center;
+}
+.transfer-outcome {
+  flex: none;
+  color: var(--warning);
+}
+.transfer-row.sent .transfer-outcome {
+  color: var(--success);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .transfer-bar > span {
+    transition: transform 150ms ease-out;
+  }
+  .transfer-outcome,
+  .attachment-draft-preview > img,
+  .att-video-poster {
+    animation: media-reveal 150ms ease-out both;
+  }
+}
+@keyframes media-reveal {
+  from {
+    opacity: 0;
+  }
 }
 
 /* A GIF in a message (GifView.tsx). */

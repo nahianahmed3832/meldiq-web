@@ -3,7 +3,7 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { FileUp, RotateCw, X } from "lucide-react";
+import { Check, FileUp, RotateCw, TriangleAlert, X } from "lucide-react";
 import { useRef, useSyncExternalStore } from "react";
 import { useEngine } from "../../application/orbit";
 import { type Transfer, transfersOf } from "../../sync/transfers";
@@ -43,10 +43,13 @@ function TransferRow({ job }: { job: Transfer }) {
   const engine = useEngine();
   const transfers = transfersOf(engine);
   const pick = useRef<HTMLInputElement>(null);
-  const current = job.files.find((f) => f.phase !== "done") ?? job.files[job.files.length - 1];
+  const current = job.files.find((f) => f.phase === "uploading" && !f.originalUploaded) ?? job.files.find((f) => f.phase !== "done" && f.phase !== "waiting");
   const pct = current && current.total ? Math.floor((100 * current.done) / current.total) : 0;
   const total = job.files.reduce((sum, f) => sum + f.size, 0);
-  const uploaded = job.files.reduce((sum, f) => sum + (f.phase === "done" || f.originalUploaded ? f.size : f.phase === "uploading" && f.total ? f.size * Math.min(1, f.done / f.total) : 0), 0);
+  const uploaded = job.files.reduce(
+    (sum, f) => sum + (f.phase === "done" || f.phase === "verifying" || f.originalUploaded ? f.size : f.phase === "uploading" && f.total ? f.size * Math.min(1, f.done / f.total) : 0),
+    0,
+  );
   const overall = total ? Math.floor((100 * uploaded) / total) : 0;
   const what =
     job.status === "sent"
@@ -57,23 +60,44 @@ function TransferRow({ job }: { job: Transfer }) {
           ? (job.error ?? uiText("messaging.interface.couldn_t_send_2dbe38e"))
           : job.status === "interrupted"
             ? (job.error ?? uiText("messaging.interface.interrupted_continue_where_it_stopped_5553d3a"))
-            : current?.phase === "previewing"
-              ? uiText("workspace.interface.preparing_preview_11e66e1")
-              : current?.phase === "encrypting"
-                ? uiText("messaging.interface.encrypting_value0_f49356e", { value0: pct })
-                : current?.phase === "uploading"
-                  ? uiText("messaging.interface.uploading_value0_value1_of_value2_19c4172", { value0: pct, value1: mb(current.done), value2: mb(current.total) })
-                  : uiText("messaging.interface.waiting_612ffc5");
+            : job.publishing
+              ? uiText("messaging.interface.sending_e595f17")
+              : current?.originalUploaded
+                ? uiText("workspace.interface.preparing_preview_11e66e1")
+                : current?.phase === "encrypting"
+                  ? uiText("messaging.interface.encrypting_3ecd5a5")
+                  : current?.phase === "uploading"
+                    ? uiText("messaging.interface.uploading_de27240")
+                    : current?.phase === "verifying"
+                      ? uiText("messaging.interface.verifying_536244f")
+                      : uiText("messaging.interface.waiting_612ffc5");
+  const detail =
+    job.status !== "running" || current?.originalUploaded
+      ? null
+      : current?.phase === "uploading"
+        ? uiText("messaging.interface.uploading_value0_value1_of_value2_19c4172", { value0: pct, value1: mb(current.done), value2: mb(current.total) })
+        : current?.phase === "encrypting"
+          ? uiText("messaging.interface.encrypting_value0_f49356e", { value0: pct })
+          : null;
   const names = job.files.length === 1 ? job.files[0].name : uiText("files.counts.files", { count: job.files.length });
   const needsFiles = job.files.some((f) => f.needsFile);
   return (
     <li className={`transfer-row ${job.status}`}>
-      <FileUp size={16} aria-hidden="true" className="faint" />
+      {job.status === "sent" ? (
+        <Check size={16} aria-hidden="true" className="transfer-outcome" />
+      ) : job.status === "failed" || job.status === "interrupted" ? (
+        <TriangleAlert size={16} aria-hidden="true" className="transfer-outcome" />
+      ) : (
+        <FileUp size={16} aria-hidden="true" className="faint" />
+      )}
       <span className="transfer-text">
         <strong className="ellipsis">{names}</strong>
-        <small aria-live="polite">
-          {what}
-          {job.status === "running" && current?.phase === "uploading" && current.speedBps
+        <small>
+          <span className={detail ? "sr-only" : undefined} role="status">
+            {what}
+          </span>
+          {detail}
+          {detail && current?.phase === "uploading" && current.speedBps
             ? uiText("messaging.interface.value0_s_value1_ebab8d8", {
                 value0: mb(current.speedBps),
                 value1: current.remainingSeconds ? uiText("messaging.interface.about_s_left_ce60384", { value0: current.remainingSeconds }) : "",
@@ -81,7 +105,9 @@ function TransferRow({ job }: { job: Transfer }) {
             : ""}
         </small>
         {job.status === "running" && (
-          <progress className="transfer-bar" max={100} value={overall} aria-label={uiText("messaging.interface.overall_upload_value0_value1_aa37e0c", { value0: names, value1: overall })} />
+          <div className="transfer-bar" role="progressbar" aria-valuenow={overall} aria-label={uiText("messaging.interface.overall_upload_value0_value1_aa37e0c", { value0: names, value1: overall })}>
+            <span style={{ transform: `scaleX(${overall / 100})` }} />
+          </div>
         )}
         {job.files.length > 1 && (
           <details className="transfer-files">
@@ -99,14 +125,18 @@ function TransferRow({ job }: { job: Transfer }) {
                         ? uiText("messaging.interface.failed_031a8f0")
                         : f.phase === "cancelled"
                           ? uiText("messaging.interface.cancelled_d353a99")
-                          : f.phase === "previewing"
+                          : f.originalUploaded
                             ? uiText("messaging.interface.preparing_preview_2158038")
-                            : f.phase === "waiting"
-                              ? uiText("messaging.interface.queued_661ff40")
-                              : uiText("messaging.interface.value0_value1_0c6a80e", {
-                                  value0: f.phase === "encrypting" ? uiText("messaging.interface.encrypting_3ecd5a5") : uiText("messaging.interface.uploading_de27240"),
-                                  value1: f.total ? Math.floor((100 * f.done) / f.total) : 0,
-                                })}{" "}
+                            : f.phase === "verifying"
+                              ? uiText("messaging.interface.verifying_536244f")
+                              : f.phase === "previewing"
+                                ? uiText("messaging.interface.preparing_preview_2158038")
+                                : f.phase === "waiting"
+                                  ? uiText("messaging.interface.queued_661ff40")
+                                  : uiText("messaging.interface.value0_value1_0c6a80e", {
+                                      value0: f.phase === "encrypting" ? uiText("messaging.interface.encrypting_3ecd5a5") : uiText("messaging.interface.uploading_de27240"),
+                                      value1: f.total ? Math.floor((100 * f.done) / f.total) : 0,
+                                    })}{" "}
                     · {mb(f.size)}
                   </small>
                 </li>
@@ -115,7 +145,7 @@ function TransferRow({ job }: { job: Transfer }) {
           </details>
         )}
       </span>
-      {job.status === "running" && (
+      {job.status === "running" && !job.publishing && (
         <button
           className="icon-btn"
           onClick={() => transfers.cancel(job.id)}

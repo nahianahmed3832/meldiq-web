@@ -132,6 +132,12 @@ export async function sendFiles(
   checkUploadSignal(large?.signal);
   return engine.sendText(conversationId, caption, { ...opts, attachments });
 }
+interface MediaLoad {
+  promise: Promise<Blob>;
+  progress?: DownloadProgress;
+  listeners: Set<(p: DownloadProgress) => void>;
+}
+const inFlight = new WeakMap<Engine, Map<string, MediaLoad>>();
 const caches = new WeakMap<Engine, Map<string, Promise<Blob>>>();
 const cacheSizes = new WeakMap<Engine, Map<string, number>>();
 /** Files up to this size are kept decrypted for the page's life (instant reopening); larger ones are fetched each time. */
@@ -145,20 +151,41 @@ export function openAttachment(engine: Engine, ref: AttachmentRef, onProgress?: 
     return Promise.reject(new AttachmentError(uiText("files.interface.this_file_has_an_invalid_size_3a99924")));
   if (ref.chunk !== undefined && (!Number.isInteger(ref.chunk) || ref.chunk < 1024 || ref.chunk > 16 * 1024 * 1024))
     return Promise.reject(new AttachmentError(uiText("files.interface.this_file_has_an_unsupported_encryption_format_84f7ea1")));
-  const load = () => (ref.chunk !== undefined ? openChunked(engine, ref, onProgress, signal) : openSingle(engine, ref, onProgress, signal));
-  // A cancellable download has its own request, so cancelling it cannot break another viewer's download.
-  if (signal || onProgress) return load();
+  const load = (progress?: (p: DownloadProgress) => void) => (ref.chunk !== undefined ? openChunked(engine, ref, progress, signal) : openSingle(engine, ref, progress, signal));
+  // Cancellable downloads keep their own requests. Viewers can share a load and its progress.
+  if (signal) return load(onProgress);
   let cache = caches.get(engine);
-  if (!cache) {
+  let active = inFlight.get(engine);
+  if (!cache || !active) {
     cache = new Map();
+    active = new Map();
     caches.set(engine, cache);
+    inFlight.set(engine, active);
     cacheSizes.set(engine, new Map());
   }
   const sizes = cacheSizes.get(engine)!;
   const key = JSON.stringify([ref.id, ref.sha256, ref.key, ref.nonce, ref.chunk, ref.size, ref.mime]);
-  const running = cache.get(key);
-  if (running) return running;
-  const p = load();
+  const running = active.get(key);
+  if (running) {
+    if (onProgress) {
+      running.listeners.add(onProgress);
+      if (running.progress) onProgress(running.progress);
+    }
+    return running.promise;
+  }
+  const kept = cache.get(key);
+  if (kept) return kept;
+  const listeners = new Set<(p: DownloadProgress) => void>(onProgress ? [onProgress] : []);
+  let lastUpdate = 0;
+  const p = load((progress) => {
+    const now = performance.now();
+    if (progress.phase === entry.progress?.phase && progress.done < progress.total && now - lastUpdate < 150) return;
+    entry.progress = progress;
+    lastUpdate = now;
+    for (const listener of listeners) listener(progress);
+  });
+  const entry: MediaLoad = { promise: p, listeners };
+  active.set(key, entry);
   // Bound retained plaintext by total bytes per signed-in engine, not just bytes per file.
   const forget = () => {
     if (cache.get(key) === p) {
@@ -175,9 +202,20 @@ export function openAttachment(engine: Engine, ref: AttachmentRef, onProgress?: 
     sizes.delete(old);
     retained -= bytes;
   }
-  p.then(() => {
-    if (ref.size > CACHE_LIMIT) forget();
-  }, forget);
+  const settle = () => {
+    active.delete(key);
+    listeners.clear();
+  };
+  void p.then(
+    () => {
+      settle();
+      if (ref.size > CACHE_LIMIT) forget();
+    },
+    () => {
+      settle();
+      forget();
+    },
+  );
   return p;
 }
 export interface DownloadProgress {

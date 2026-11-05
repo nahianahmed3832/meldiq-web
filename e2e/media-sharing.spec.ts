@@ -65,9 +65,8 @@ test("a photo album and a document share one caption, retain original bytes and 
   await expect(page.locator(".attachment-draft")).toHaveCount(3);
   await expect(page.locator(".attachment-draft figcaption strong")).toHaveText(["first.jpg", "second.jpg", "note.txt"]);
   await expect(page.locator(".attachment-draft figcaption strong").first()).toBeInViewport({ ratio: 1 });
-  await expect(page.getByRole("checkbox", { name: "Original file", exact: true })).not.toBeChecked();
-  await page.getByRole("checkbox", { name: "Original file", exact: true }).check();
-  await page.screenshot({ path: info.outputPath("media-composer.png"), fullPage: true });
+  await expect(page.getByRole("checkbox", { name: "Original file", exact: true })).toBeChecked();
+  await page.screenshot({ path: info.outputPath("media-composer.png"), fullPage: true, animations: "disabled" });
   await page.getByRole("textbox", { name: /^Message / }).fill("Album and document");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   const message = page.locator(".msg").filter({ hasText: "Album and document" });
@@ -104,7 +103,8 @@ test("a selected video previews, uploads and plays inline and in the viewer", as
   await expect(page.locator('.composer input[type="file"]')).not.toHaveAttribute("capture");
   const choosing = page.waitForEvent("filechooser");
   await menu.getByRole("menuitem", { name: /^File/ }).click();
-  await (await choosing).setFiles({ name: "media-synthetic.mp4", mimeType: "application/octet-stream", buffer: fs.readFileSync(path.join(import.meta.dirname, "fixtures/media-synthetic.mp4")) });
+  const originalBytes = fs.readFileSync(path.join(import.meta.dirname, "fixtures/media-synthetic.mp4"));
+  await (await choosing).setFiles({ name: "media-synthetic.mp4", mimeType: "application/octet-stream", buffer: originalBytes });
   await expect(page.getByLabel("Preview media-synthetic.mp4")).toBeVisible();
   await page.getByRole("textbox", { name: /^Message / }).fill("Video sharing");
   await page.getByRole("button", { name: "Send", exact: true }).click();
@@ -115,10 +115,14 @@ test("a selected video previews, uploads and plays inline and in the viewer", as
   await expect.poll(() => inline.evaluate((v) => (v as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
   await message.getByRole("button", { name: /^Play video / }).click();
   await expect(page.locator(".lightbox video")).toBeVisible();
+  await expect.poll(() => page.locator(".lightbox video").evaluate((v) => (v as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
   await page.screenshot({ path: info.outputPath("media-video.png"), fullPage: true });
+  const downloading = page.waitForEvent("download");
+  await page.locator(".lightbox").getByRole("button", { name: "Download video", exact: true }).click();
+  expect(fs.readFileSync((await (await downloading).path())!)).toEqual(originalBytes);
 });
 
-test("media is optimized by default and Original file is the only optional choice", async ({ page }, info) => {
+test("compression is opt-in and keeps MP4 video and audio", async ({ page }, info) => {
   await conversation(page);
   const image = await page.evaluate(async () => {
     const canvas = document.createElement("canvas");
@@ -136,13 +140,16 @@ test("media is optimized by default and Original file is the only optional choic
     { name: "clip.mp4", mimeType: "video/mp4", buffer: sourceVideo },
   ]);
   const original = page.getByRole("checkbox", { name: "Original file", exact: true });
-  await expect(original).not.toBeChecked();
+  await expect(original).toBeChecked();
+  await original.uncheck();
   await expect(page.locator(".attachment-quality select")).toHaveCount(0);
   await page.screenshot({ path: info.outputPath("optimized-default.png"), fullPage: true });
   await page.getByRole("textbox", { name: /^Message / }).fill("Optimized media");
+  const startedAt = Date.now();
   await page.getByRole("button", { name: "Send", exact: true }).click();
   const message = page.locator(".msg").filter({ hasText: "Optimized media" });
   await expect(message).toHaveCount(1, { timeout: 60_000 });
+  const sendMs = Date.now() - startedAt;
   await message.getByRole("button", { name: /^Play .* inline$/ }).click();
   const video = message.locator("video");
   await expect(video).toBeVisible();
@@ -159,7 +166,9 @@ test("media is optimized by default and Original file is the only optional choic
     .click();
   const download = await downloading;
   const bytes = fs.readFileSync((await download.path())!);
+  expect(download.suggestedFilename()).toBe("clip.mp4");
   expect(bytes.length).toBeLessThan(sourceVideo.length);
+  await info.attach("compression-measurement", { body: JSON.stringify({ originalBytes: sourceVideo.length, optimizedBytes: bytes.length, sendMs }), contentType: "application/json" });
   const audible = await page.evaluate(async (bytes) => {
     const audio = new AudioContext();
     try {
@@ -172,5 +181,65 @@ test("media is optimized by default and Original file is the only optional choic
   expect(audible).toBe(true);
   await page.getByRole("button", { name: "Close", exact: true }).last().click();
   await page.locator(".composer input[type=file]").setInputFiles({ name: "next.jpg", mimeType: "image/jpeg", buffer: Buffer.from(image) });
-  await expect(original).not.toBeChecked();
+  await expect(original).toBeChecked();
+});
+
+test("a failed upload shows progress, retains the draft transfer, and retries once", async ({ page }, info) => {
+  await conversation(page);
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let attempts = 0;
+  await page.route("**/v1/attachments?*", async (route) => {
+    if (route.request().method() !== "POST" || ++attempts !== 1) return route.continue();
+    await pending;
+    await route.fulfill({ status: 503, json: { error: { code: "storage_unavailable", message: "Storage unavailable" } } });
+  });
+  const original = fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg"));
+  await page.locator(".composer input[type=file]").setInputFiles({ name: "retry.jpg", mimeType: "image/jpeg", buffer: original });
+  await expect(page.locator(".attachment-draft")).toHaveCount(1);
+  await page.getByRole("textbox", { name: /^Message / }).fill("Retry media once");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  const transfer = page.locator(".transfer-row").filter({ hasText: "retry.jpg" });
+  try {
+    await expect(transfer.getByRole("progressbar")).toBeVisible();
+    await expect(transfer.getByRole("button", { name: "Cancel sending retry.jpg" })).toBeVisible();
+    await page.screenshot({ path: info.outputPath("upload-progress.png"), fullPage: true });
+  } finally {
+    release();
+  }
+  const message = page.locator(".msg").filter({ hasText: "Retry media once" });
+  await expect(message).toHaveCount(0);
+  await expect(transfer).toHaveClass(/failed/);
+  await transfer.getByRole("button", { name: "Retry", exact: true }).click();
+  await expect(message).toHaveCount(1);
+  await expect(transfer).toHaveClass(/sent/);
+});
+
+test("navigation removes Home and Activity and keeps communities reachable", async ({ page, isMobile }, info) => {
+  const account = await onboard(page);
+  await account.req("POST", "/v1/orgs", { name: "Navigation Lab" });
+  await page.goto("/dms");
+  const sidebar = page.locator(".sidebar");
+  await expect(sidebar.getByRole("heading", { name: "Direct messages", exact: true, level: 2 })).toBeVisible();
+  for (const name of ["Home", "Activity"]) await expect(sidebar.getByRole("link", { name, exact: true })).toHaveCount(0);
+  const rail = page.locator(".rail");
+  if (isMobile) {
+    const tabs = page.getByRole("navigation", { name: "Sections", exact: true });
+    await expect(tabs.getByRole("button")).toHaveCount(2);
+    await expect(tabs.getByRole("button", { name: /^Messages/ })).toHaveAttribute("aria-current", "page");
+    await expect(tabs.getByRole("button", { name: /You$/ })).toBeVisible();
+    await page.screenshot({ path: info.outputPath("navigation-messages.png"), animations: "disabled" });
+    await sidebar.getByRole("link", { name: "Communities", exact: true }).click();
+    const lobby = page.getByRole("region", { name: "Navigation Lab lobby", exact: true });
+    await expect(lobby).toBeVisible();
+    await tabs.getByRole("button", { name: /^Messages/ }).click();
+    await sidebar.getByRole("link", { name: "Communities", exact: true }).click();
+    await expect(rail.getByRole("button", { name: /^Navigation Lab/ })).toBeVisible();
+  } else {
+    await rail.getByRole("button", { name: /^Navigation Lab/ }).click();
+    await expect(sidebar.getByRole("button", { name: /Navigation Lab/ }).first()).toBeVisible();
+    for (const name of ["Home", "Activity"]) await expect(sidebar.getByRole("link", { name, exact: true })).toHaveCount(0);
+  }
 });

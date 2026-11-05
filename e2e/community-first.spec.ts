@@ -3,9 +3,8 @@ import { link } from "./link";
 import { newPhone } from "./phone";
 
 /**
- * The community-first redesign (docs/MELDIQ_COMMUNITY_FIRST_BRIEF.md): the mascot opens messages, Activity and Saved sit
- * in the user panel and profile menu, round Create and Discover, the unread rule (one event: highlight; two or more: a count), the tab's
- * title count, and who reacted.
+ * The community-first redesign (docs/MELDIQ_COMMUNITY_FIRST_BRIEF.md): the mascot opens messages, Saved sits in the profile
+ * menu, and the rail has Create and Discover. The unread rule and reaction details have their own tests.
  */
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium: the rail and hover");
 
@@ -21,17 +20,17 @@ test("daily navigation stays accessible beside the compact community rail", asyn
   const rail = page.getByRole("navigation", { name: "Home, communities, create and discover" });
   await expect(rail).toBeVisible();
   await expect(rail.getByRole("link", { name: "Messages", exact: true })).toHaveCount(1);
-  const shortcuts = page.locator(".sidebar-primary");
-  for (const name of ["Home", "Activity"]) await expect(shortcuts.getByRole("link", { name, exact: true })).toBeVisible();
+  const sidebar = page.getByRole("complementary", { name: "Conversations" });
+  await expect(sidebar.getByRole("link", { name: "Home", exact: true })).toHaveCount(0);
+  await expect(sidebar.getByRole("link", { name: "Activity", exact: true })).toHaveCount(0);
 
   await rail.getByRole("link", { name: /^Messages/ }).click();
   await expect(page).toHaveURL(/\/dms$/);
   await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();
 
-  // Activity stays above the channel list. Saved is secondary in the profile menu.
+  await expect(sidebar.getByRole("link", { name: "Home", exact: true })).toHaveCount(0);
+  await expect(sidebar.getByRole("link", { name: "Activity", exact: true })).toHaveCount(0);
   const profileButton = page.locator(".user-panel-me:visible");
-  await shortcuts.getByRole("link", { name: "Activity", exact: true }).click();
-  await expect(page).toHaveURL(/\/activity$/);
   await profileButton.click();
   await page.getByRole("menuitem", { name: /^Saved for later/ }).click();
   await expect(page).toHaveURL(/\/later$/);

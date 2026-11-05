@@ -120,7 +120,7 @@ function renewed(credentials: Credentials, sent: string | null): boolean {
   const now = credentials.token();
   return !!now && now !== sent;
 }
-async function toApiError(res: Response): Promise<ApiError> {
+export async function toApiError(res: Response): Promise<ApiError> {
   const retryAfter = Number(res.headers.get("retry-after"));
   const retryAfterMs = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : undefined;
   try {

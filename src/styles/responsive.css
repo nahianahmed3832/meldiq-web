@@ -234,7 +234,7 @@
   }
   .tabbar {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     border-top: 1px solid var(--hairline);
     background: var(--rail-panel, var(--surface));
     padding-bottom: env(safe-area-inset-bottom);
@@ -341,15 +341,25 @@
   border-radius: 7px;
 }
 
-/* The list header's own search and new-message buttons: phones only (Sidebar.tsx). */
+/* The list header's navigation and actions: phones only (Sidebar.tsx). */
 .side-head-phone {
   display: none;
 }
 @media (max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
   .side-head-phone {
     display: inline-flex;
+    align-items: center;
     flex-shrink: 0;
     gap: 2px;
+  }
+  .side-head-phone .phone-communities {
+    min-height: 44px;
+    max-inline-size: 36vw;
+    padding-inline: 8px;
+    text-align: center;
+    text-decoration: none;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 

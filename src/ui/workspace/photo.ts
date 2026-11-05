@@ -39,16 +39,19 @@ async function croppedJpeg(file: File, width: number, height: number, maxBytes: 
   const bitmap = await createImageBitmap(file).catch(() => {
     throw new Error(uiText("workspace.interface.that_image_couldn_t_be_read_ce3f1dc"));
   });
-  // The largest centred part of the image with the target's shape.
-  const scale = Math.min(bitmap.width / width, bitmap.height / height);
-  const [sw, sh] = [width * scale, height * scale];
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
-  const g = canvas.getContext("2d");
-  if (!g) throw new Error(uiText("workspace.interface.this_browser_can_t_resize_images_849d3cd"));
-  g.drawImage(bitmap, (bitmap.width - sw) / 2, (bitmap.height - sh) / 2, sw, sh, 0, 0, width, height);
-  bitmap.close();
+  try {
+    // The largest centred part of the picture with the target's shape.
+    const scale = Math.min(bitmap.width / width, bitmap.height / height);
+    const [sw, sh] = [width * scale, height * scale];
+    const g = canvas.getContext("2d");
+    if (!g) throw new Error(uiText("workspace.interface.this_browser_can_t_resize_images_849d3cd"));
+    g.drawImage(bitmap, (bitmap.width - sw) / 2, (bitmap.height - sh) / 2, sw, sh, 0, 0, width, height);
+  } finally {
+    bitmap.close();
+  }
   for (const q of QUALITIES) {
     const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", q));
     if (blob && blob.size <= maxBytes) return new Uint8Array(await blob.arrayBuffer());

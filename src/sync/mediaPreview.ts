@@ -56,10 +56,16 @@ export async function mediaPreview(source: Blob, name: string, signal?: AbortSig
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
     ctx.drawImage(bitmap ?? video!, 0, 0, size.width, size.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.75));
-    if (!blob || !["image/webp", "image/png"].includes(blob.type) || blob.size > PREVIEW_MAX_BYTES || blob.size === 0) return null;
-    if (bitmap && blob.size >= source.size) return null;
-    return { file: new File([blob], `${name.replace(/\.[^.]*$/, "")}-preview.${blob.type === "image/png" ? "png" : "webp"}`, { type: blob.type }), w, h, durationMs };
+    const encode = (type: string) => new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.75));
+    const usable = (blob: Blob | null): blob is Blob => !!blob && blob.size > 0 && blob.size <= PREVIEW_MAX_BYTES && ["image/webp", "image/png", "image/jpeg"].includes(blob.type);
+    let blob = await encode("image/webp");
+    signal?.throwIfAborted();
+    // Video frames are opaque. JPEG can produce a small poster on browsers that cannot encode WebP.
+    if (!usable(blob) && video) blob = await encode("image/jpeg");
+    signal?.throwIfAborted();
+    if (!usable(blob) || (bitmap && blob.size >= source.size)) return null;
+    const ext = blob.type === "image/jpeg" ? "jpg" : blob.type.slice("image/".length);
+    return { file: new File([blob], `${name.replace(/\.[^.]*$/, "")}-preview.${ext}`, { type: blob.type }), w, h, durationMs };
   } catch (e) {
     if (signal?.aborted) throw e;
     return null; // An unavailable decoder never prevents sharing the original.

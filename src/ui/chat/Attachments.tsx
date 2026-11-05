@@ -168,11 +168,12 @@ export function MediaAttachment({ r }: { r: AttachmentRef }) {
   const l10n = useLocalization();
   const viewer = useViewer(r);
   const [open, setOpen] = useState(false);
-  const { url, error, loading } = useBlobUrl(r, open);
+  const inline = useRef<HTMLVideoElement>(null);
+  const { url, error, loading, retry, progress } = useBlobUrl(r, open, isVideo(r));
   const [tile, tileNear] = useNearScreen<HTMLButtonElement>();
   const { autoLoadPhotos } = usePrefs();
   const { url: poster } = useBlobUrl(r.thumbnail ?? r, !!r.thumbnail && autoLoadPhotos && tileNear);
-  if (error) return <FileAttachment r={r} error={error} />;
+  if (error && !isVideo(r)) return <FileAttachment r={r} error={error} />;
   if (isVideo(r))
     return (
       <>
@@ -181,6 +182,7 @@ export function MediaAttachment({ r }: { r: AttachmentRef }) {
           className="att-video-tile"
           onClick={(e) => {
             e.currentTarget.focus();
+            inline.current?.pause();
             viewer.open();
           }}
           aria-label={uiText("messaging.interface.play_video_value0_value1_c5f96eb", { value0: r.name, value1: bytes(r.size) })}
@@ -194,11 +196,32 @@ export function MediaAttachment({ r }: { r: AttachmentRef }) {
             <small>{bytes(r.size)}</small>
           </span>
         </button>
-        <button className="btn btn-ghost btn-sm" disabled={open && loading} onClick={() => setOpen(true)} aria-label={uiText("messaging.interface.play_value0_inline_b4960a2", { value0: r.name })}>
-          {open && loading ? uiText("messaging.interface.loading_video_bbef69c") : uiText("messaging.interface.play_inline_1c9883a")}
-        </button>
+        {error ? (
+          <>
+            <FileAttachment r={r} error={error} />
+            <button className="btn btn-ghost btn-sm" onClick={retry}>
+              {l10n("common.actions.retry")}
+            </button>
+          </>
+        ) : (
+          <button className="btn btn-ghost btn-sm" disabled={open && loading} onClick={() => setOpen(true)} aria-label={uiText("messaging.interface.play_value0_inline_b4960a2", { value0: r.name })}>
+            {open && loading
+              ? `${uiText("messaging.interface.loading_video_bbef69c")}${progress?.total ? ` · ${formatUiNumber(Math.floor((progress.done * 100) / progress.total))}%` : ""}`
+              : uiText("messaging.interface.play_inline_1c9883a")}
+          </button>
+        )}
         {open && url && (
-          <video className="att-inline-video" src={url} controls playsInline autoPlay preload="metadata" aria-label={uiText("messaging.interface.inline_video_value0_9f6acf0", { value0: r.name })} />
+          <video
+            ref={inline}
+            className="att-inline-video"
+            src={url}
+            poster={poster ?? undefined}
+            controls
+            playsInline
+            autoPlay
+            preload="metadata"
+            aria-label={uiText("messaging.interface.inline_video_value0_9f6acf0", { value0: r.name })}
+          />
         )}
         {viewer.own}
       </>
@@ -259,7 +282,7 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
         }}
         aria-label={uiText("messaging.interface.open_image_value0_10f084e", { value0: r.name })}
       >
-        <img src={url} alt={r.name} loading="lazy" onError={() => setDecodeFailed(true)} />
+        <img src={url} alt={r.name} loading="lazy" decoding="async" onError={() => setDecodeFailed(true)} />
       </button>
       {viewer.own}
     </>
@@ -300,7 +323,7 @@ function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen
       aria-label={more ? uiText("messaging.interface.open_photos_value0_more_ab65ac5", { value0: more }) : uiText("messaging.interface.open_image_value0_10f084e", { value0: r.name })}
     >
       {url ? (
-        <img src={url} alt="" loading="lazy" />
+        <img src={url} alt="" loading="lazy" decoding="async" />
       ) : error ? (
         <TriangleAlert size={18} />
       ) : autoLoadPhotos ? (

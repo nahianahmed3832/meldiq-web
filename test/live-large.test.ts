@@ -62,7 +62,13 @@ describe("large files", () => {
     });
     expect(got).toBe(plain.length);
     expect(hash.digest("hex")).toBe(nodeCrypto.createHash("sha256").update(plain).digest("hex"));
-    const opened = await openAttachment(web, ref);
+    const inline = openAttachment(web, ref);
+    const updates: string[] = [];
+    const viewer = openAttachment(web, ref, (p) => updates.push(p.phase));
+    expect(viewer).toBe(inline);
+    const opened = await viewer;
+    expect(updates).toContain("downloading");
+    expect(updates).toContain("decrypting");
     expect(Buffer.from(await opened.arrayBuffer()).equals(plain)).toBe(true);
     // A wrong hash is refused before anything is shown.
     await expect(openAttachment(web, { ...ref, id: up.id, sha256: b64(new Uint8Array(32)), name: "x" })).rejects.toThrow(/integrity/);
@@ -91,8 +97,12 @@ describe("direct uploads to S3 in parts (simulated store)", () => {
           return schema.parse({ mode: "multipart", uploadId: "a_1", partSize, partCount: Math.ceil(size / partSize), expiresAt: Date.now() + 1e6 });
         }
         if (method === "POST" && path.endsWith("/parts")) {
-          const [p] = opts.body.parts;
-          return schema.parse({ parts: [{ n: p.n, upload: { method: "PUT", url: `https://s3.test/part/${p.n}?sha=${encodeURIComponent(p.sha256)}&size=${p.size}`, headers: {}, expiresAt: 1 } }] });
+          return schema.parse({
+            parts: opts.body.parts.map((p: { n: number; sha256: string; size: number }) => ({
+              n: p.n,
+              upload: { method: "PUT", url: `https://s3.test/part/${p.n}?sha=${encodeURIComponent(p.sha256)}&size=${p.size}`, headers: {}, expiresAt: 1 },
+            })),
+          });
         }
         if (method === "GET" && path.endsWith("/parts")) return schema.parse({ parts: [...stored.entries()].map(([n, b]) => ({ n, etag: `"e${n}"`, size: b.length })) });
         if (method === "POST" && path.endsWith("/complete")) {

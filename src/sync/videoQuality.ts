@@ -4,8 +4,9 @@ import { checkUploadSignal } from "./largeUpload";
 const MAX_ENCODED_BYTES = 64 * 1024 * 1024;
 const VIDEO_BITRATE = 1800000;
 const AUDIO_BITRATE = 96000;
-export function videoMime(supported: (type: string) => boolean = (type) => typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(type)): string | null {
-  return ["video/mp4;codecs=avc1,mp4a.40.2", "video/mp4", "video/webm;codecs=vp8,opus"].find(supported) ?? null;
+function videoMime(source: string): string | null {
+  const formats = source === "video/webm" ? ["video/webm;codecs=vp8,opus"] : ["video/mp4;codecs=avc1,mp4a.40.2", "video/mp4"];
+  return typeof MediaRecorder === "undefined" ? null : (formats.find((type) => MediaRecorder.isTypeSupported(type)) ?? null);
 }
 export function videoDimensions(
   width: number,
@@ -20,11 +21,13 @@ export function videoDimensions(
 /** Re-encode to at most 720p/30fps, retaining audio. Already efficient videos need no further quality loss. */
 export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress: (percent: number) => void = () => {}): Promise<File> {
   checkUploadSignal(signal);
+  // Canvas recording runs in real time. Keep long clips and formats that would require container conversion.
+  if (file.type !== "video/mp4" && file.type !== "video/webm") return file;
   const failure = () => new Error(uiText("calls.interface.value0_couldn_t_be_optimized_here_select_original_file_to_send_it_8a4d9bf", { value0: file.name }));
   const url = URL.createObjectURL(file);
   const video = document.createElement("video");
   video.playsInline = true;
-  video.preload = "auto";
+  video.preload = "metadata";
   let audio: AudioContext | undefined;
   let stream: MediaStream | undefined;
   let recorder: MediaRecorder | undefined;
@@ -32,20 +35,25 @@ export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress
   let deadline: ReturnType<typeof setTimeout> | undefined;
   let cancel: (() => void) | undefined;
   try {
-    await new Promise<void>((resolve, reject) => {
-      const done = (error?: Error) => {
-        clearTimeout(deadline);
-        signal?.removeEventListener("abort", aborted);
-        video.onloadeddata = null;
-        video.onerror = null;
-        if (error) reject(error);
-        else resolve();
-      };
-      const aborted = () => done(signal?.reason instanceof Error ? signal.reason : new DOMException("Cancelled", "AbortError"));
-      signal?.addEventListener("abort", aborted, { once: true });
-      video.onloadeddata = () => done();
-      video.onerror = () => done(failure());
-      deadline = setTimeout(() => done(failure()), 15000);
+    const waitFor = (event: "loadedmetadata" | "loadeddata", start: () => void) =>
+      new Promise<void>((resolve, reject) => {
+        const finish = (error?: Error) => {
+          clearTimeout(deadline);
+          signal?.removeEventListener("abort", aborted);
+          video.removeEventListener(event, ready);
+          video.onerror = null;
+          if (error) reject(error);
+          else resolve();
+        };
+        const ready = () => finish();
+        const aborted = () => finish(new DOMException("Cancelled", "AbortError"));
+        signal?.addEventListener("abort", aborted, { once: true });
+        video.addEventListener(event, ready, { once: true });
+        video.onerror = () => finish(failure());
+        deadline = setTimeout(() => finish(failure()), 15000);
+        start();
+      });
+    await waitFor("loadedmetadata", () => {
       video.src = url;
       video.load();
     });
@@ -53,9 +61,15 @@ export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress
     const duration = video.duration;
     if (!Number.isFinite(duration) || duration <= 0 || !video.videoWidth || !video.videoHeight) throw failure();
     const dimensions = videoDimensions(video.videoWidth, video.videoHeight);
-    if (video.videoWidth <= 1280 && video.videoHeight <= 1280 && (file.size * 8) / duration <= VIDEO_BITRATE + AUDIO_BITRATE) return file;
-    const mime = videoMime();
-    if (!mime || typeof AudioContext === "undefined" || (duration * (VIDEO_BITRATE + AUDIO_BITRATE)) / 8 > MAX_ENCODED_BYTES) throw failure();
+    const estimated = (duration * (VIDEO_BITRATE + AUDIO_BITRATE)) / 8;
+    if (duration > 30 || estimated >= file.size * 0.85) return file;
+    const mime = videoMime(file.type);
+    if (!mime || typeof AudioContext === "undefined") return file;
+    if (video.readyState < 2)
+      await waitFor("loadeddata", () => {
+        video.preload = "auto";
+      });
+    checkUploadSignal(signal);
     const canvas = document.createElement("canvas");
     Object.assign(canvas, dimensions);
     const context = canvas.getContext("2d", { alpha: false });
@@ -67,13 +81,32 @@ export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress
     audio.createMediaElementSource(video).connect(destination);
     destination.stream.getAudioTracks().forEach((track) => stream!.addTrack(track));
     // Route the selected file's audio to the recorder only; no microphone permission or speaker playback.
-    await Promise.race([
-      audio.resume(),
-      new Promise<never>((_, reject) => {
-        deadline = setTimeout(() => reject(failure()), 5000);
-      }),
-    ]);
-    clearTimeout(deadline);
+    await new Promise<void>((resolve, reject) => {
+      const done = () => {
+        clearTimeout(deadline);
+        signal?.removeEventListener("abort", aborted);
+      };
+      const aborted = () => {
+        done();
+        reject(new DOMException("Cancelled", "AbortError"));
+      };
+      signal?.addEventListener("abort", aborted, { once: true });
+      deadline = setTimeout(() => {
+        done();
+        reject(failure());
+      }, 5000);
+      void audio!.resume().then(
+        () => {
+          done();
+          resolve();
+        },
+        (error: unknown) => {
+          done();
+          reject(error);
+        },
+      );
+    });
+    checkUploadSignal(signal);
     if (audio.state !== "running") throw failure();
     recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: VIDEO_BITRATE, audioBitsPerSecond: AUDIO_BITRATE });
     const chunks: Blob[] = [];
@@ -102,9 +135,14 @@ export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress
       video.onended = () => {
         if (recorder?.state === "recording") recorder.stop();
       };
+      let lastPercent = -1;
       timer = setInterval(() => {
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        onProgress(Math.min(99, Math.round((video.currentTime / duration) * 100)));
+        if (video.readyState >= 2) context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const percent = Math.min(95, Math.floor((video.currentTime / duration) * 20) * 5);
+        if (percent !== lastPercent) {
+          lastPercent = percent;
+          onProgress(percent);
+        }
       }, 1000 / 30);
       deadline = setTimeout(() => finish(failure()), duration * 1000 + 30000);
       recorder!.start(1000);
@@ -114,9 +152,9 @@ export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress
     const type = recorder.mimeType.split(";")[0];
     if (!bytes) throw failure();
     // Re-encoding a small/efficient original must never increase transfer size.
-    if (bytes >= file.size) return file;
+    if (type !== file.type || bytes >= file.size * 0.9) return file;
     onProgress(100);
-    return new File(chunks, file.name.replace(/\.[^.]+$/, "") + (type === "video/mp4" ? ".mp4" : ".webm"), { type, lastModified: file.lastModified });
+    return new File(chunks, file.name, { type, lastModified: file.lastModified });
   } finally {
     clearTimeout(deadline);
     clearInterval(timer);

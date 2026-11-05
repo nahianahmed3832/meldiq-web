@@ -171,16 +171,20 @@ test("keyboard shrink and pan retain latest and the older reading anchor; long i
   await fits(page.locator(".composer"), 0, 844);
 });
 
-test("main tabs, settings children, history and rotation preserve mobile navigation", async ({ page }) => {
+test("Messages, Communities, and You remain reachable through rotation and history", async ({ page }, info) => {
   const { alice, dm } = await setup(page);
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Mobile community" });
   const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "mobile-room", scope: "ORG", kind: "PUBLIC" })).channel;
   await go(page, "/home");
   const tabs = page.getByRole("navigation", { name: "Sections", exact: true });
   await expect(page.getByRole("region", { name: "Mobile community lobby", exact: true })).toBeVisible();
-  await tabs.getByRole("button", { name: "Home", exact: true }).click();
-  await expect(tabs).toBeVisible();
-  await expect(tabs.getByRole("button")).toHaveCount(4);
+  await tabs.getByRole("button", { name: /^Messages/ }).click();
+  await expect(tabs.getByRole("button")).toHaveCount(2);
+  await expect(tabs.getByRole("button", { name: /^Messages/ })).toHaveAttribute("aria-current", "page");
+  await expect(tabs.getByRole("button", { name: /You$/ })).toBeVisible();
+  await page.screenshot({ path: info.outputPath("shortcut-messages.png"), animations: "disabled" });
+  await page.getByRole("link", { name: "Communities", exact: true }).click();
+  await expect(page).toHaveURL(/\/home$/);
   await page
     .locator(".rail")
     .getByRole("button", { name: /^Mobile community/ })
@@ -202,8 +206,9 @@ test("main tabs, settings children, history and rotation preserve mobile navigat
   await expect(page.locator(".topbar")).toBeHidden();
   await expect(page.locator(".sidebar")).toBeHidden();
   await fits(page.locator(".composer"), 0, 390);
-  await go(page, "/settings/you");
-  await expect(tabs).toBeVisible();
+  await page.getByRole("button", { name: "Back to conversations", exact: true }).click();
+  await tabs.getByRole("button", { name: /You$/ }).click();
+  await expect(page).toHaveURL(/\/settings\/you$/);
   await go(page, "/settings/notifications");
   await expect(tabs).toBeHidden();
   await page.goBack();

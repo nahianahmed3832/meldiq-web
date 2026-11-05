@@ -83,11 +83,10 @@ test("compact rail keeps icons, unread badges and daily navigation usable", asyn
       return document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).includes(el);
     });
     expect(painted).toBe(true);
-    await page.locator(".sidebar-primary").getByRole("link", { name: "Activity", exact: true }).click();
-    await expect(page).toHaveURL(/\/activity$/);
-    await page.locator(".sidebar-primary").getByRole("link", { name: "Home", exact: true }).click();
+    await expect(page.locator('.sidebar a[href="/home"], .sidebar a[href="/activity"]')).toHaveCount(0);
     await rail.locator(".rail-home").click();
     await expect(page).toHaveURL(/\/dms$/);
+    await expect(page.locator('.sidebar a[href="/home"]:visible, .sidebar a[href="/activity"]')).toHaveCount(0);
     await rail.getByRole("button", { name: /Makers Guild/ }).click();
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

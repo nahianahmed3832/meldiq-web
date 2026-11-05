@@ -15,11 +15,11 @@ function canvas(alpha = 255, supported = true) {
 }
 afterEach(() => vi.unstubAllGlobals());
 describe("automatic photo upload and export", () => {
-  it("scales a static photo to 2560, encodes WebP and releases the bitmap", async () => {
+  it("scales a static photo to 2560, keeps JPEG and releases the bitmap", async () => {
     const { result, close } = canvas();
     const file = await optimizePhoto(new File([new Uint8Array(100)], "camera.jpeg", { type: "image/jpeg" }));
     expect([result.width, result.height]).toEqual([2560, 1280]);
-    expect([file.name, file.type]).toEqual(["camera.webp", "image/webp"]);
+    expect([file.name, file.type]).toEqual(["camera.jpeg", "image/jpeg"]);
     expect(close).toHaveBeenCalledOnce();
   });
   it.each([
@@ -51,6 +51,14 @@ describe("automatic photo upload and export", () => {
     expect(await photoDownload(file, file.name)).toEqual({ blob: file, name: file.name });
     expect(createImageBitmap).not.toHaveBeenCalled();
   });
+  it("keeps the original on encoder format fallback or negligible size savings", async () => {
+    const { result } = canvas();
+    const file = new File([new Uint8Array(100)], "camera.jpg", { type: "image/jpeg" });
+    result.toBlob = (done) => done(new Blob(["fallback"], { type: "image/png" }));
+    expect(await optimizePhoto(file)).toBe(file);
+    result.toBlob = (done) => done(new Blob([new Uint8Array(95)], { type: "image/jpeg" }));
+    expect(await optimizePhoto(file)).toBe(file);
+  });
   it("downloads every original without conversion or a filename change", async () => {
     canvas();
     for (const type of ["image/webp", "image/png", "image/jpeg", "image/avif"]) {
@@ -66,7 +74,7 @@ describe("per-upload quality choice", () => {
     const { preparePhoto } = await import("../src/sync/photoQuality");
     canvas();
     const source = new File([new Uint8Array(100)], "camera.jpg", { type: "image/jpeg" });
-    expect((await preparePhoto(source)).type).toBe("image/webp");
+    expect((await preparePhoto(source)).type).toBe("image/jpeg");
     expect(await preparePhoto(source, "original")).toBe(source);
   });
 });
