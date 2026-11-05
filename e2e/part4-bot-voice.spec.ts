@@ -90,7 +90,7 @@ for (const waitForMember of [false, true]) {
         });
         await bot.renewVoice(lease.leaseId);
         await expect.poll(() => media!.sustainedAudio(), { timeout: 30_000 }).toBeGreaterThan(5);
-        await expect.poll(() => media!.matchedToneFrames, { timeout: 30_000 }).toBeGreaterThan(10);
+      await expect.poll(() => media!.matchedToneFrames, { timeout: 30_000 }).toBeGreaterThanOrEqual(225);
         await stage.getByRole("button", { name: "Turn camera on", exact: true }).click();
         await expect.poll(() => media!.received.video.frames, { timeout: 30_000 }).toBeGreaterThan(5);
         await stage.getByRole("button", { name: "Turn camera off", exact: true }).click();
@@ -98,7 +98,8 @@ for (const waitForMember of [false, true]) {
         const tile = stage.locator("figure.call-tile").filter({ hasText: "Voice Helper" });
         await expect(tile.getByText("BOT", { exact: true })).toBeVisible();
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-        await page.screenshot({ path: `docs/yapin-parity/part4/screenshots/bot-voice-encrypted-${info.project.name}.png`, fullPage: true });
+      const admission = waitForMember ? "waiting" : "existing";
+      await page.screenshot({ path: `docs/yapin-parity/part4/screenshots/bot-voice-admission-${admission}-${info.project.name}.png`, fullPage: true });
         const approval = await owner.req("GET", `/v1/orgs/${org.id}/bots/${made.bot.id}/permissions`);
         await owner.req("PUT", `/v1/orgs/${org.id}/bots/${made.bot.id}/permissions`, { permissions: [], manifestRev: 1, rev: approval.rev });
         await expect.poll(() => media!.isConnected, { timeout: 20_000 }).toBe(false);
@@ -129,6 +130,7 @@ for (const waitForMember of [false, true]) {
               {
                 scope: "Local self-hosted LiveKit with actual native RTC and a continuous 997 Hz source; no physical-device claim",
                 admissionMode: waitForMember ? "waiting" : "existing",
+              apiSourceRevision: process.env.MELDIQ_E2E_API_REVISION ?? null,
                 project: info.project.name,
                 repetition: info.repeatEachIndex + 1,
                 refused: !replay,
@@ -146,9 +148,8 @@ for (const waitForMember of [false, true]) {
               null,
               2,
             ) + "\n";
-          const suffix = waitForMember ? "-waiting" : "";
-          await fs.writeFile(`docs/yapin-parity/part4/evidence/bot-voice-replay-${info.project.name}${suffix}.json`, receipt);
-          await fs.writeFile(`docs/yapin-parity/part4/evidence/bot-voice-replay-${info.project.name}${suffix}-run-${info.repeatEachIndex + 1}.json`, receipt);
+        await fs.writeFile(`docs/yapin-parity/part4/evidence/bot-voice-admission-${admission}-${info.project.name}.json`, receipt);
+        await fs.writeFile(`docs/yapin-parity/part4/evidence/bot-voice-admission-${admission}-${info.project.name}-run-${info.repeatEachIndex + 1}.json`, receipt);
           await info.attach("saved-media-replay", { body: receipt, contentType: "application/json" });
           await replay?.leave();
         }
