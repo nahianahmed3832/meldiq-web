@@ -1,40 +1,53 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-import { newPhone, testAddress } from "./phone";
-import { link } from "./link";
+import { testAddress } from "./phone";
+import { emailedCode } from "./mail";
+import { finishWelcome } from "./welcome";
 
-test.use({ actionTimeout: 15_000 });
+test.use({ serviceWorkers: "block", actionTimeout: 15_000 });
+test.setTimeout(120_000);
 test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
 });
 
 test("the developer screen downloads the exact pinned first-party SDK and guide", async ({ page }) => {
-  const owner = await newPhone("sdkdownload", "SDK Developer");
-  try {
-    await link(page, owner);
-    await page.goto("/settings/developer");
-    const help = page.getByRole("region", { name: "Bots", exact: true }).locator(".dev-how");
-    await help.locator("summary").click();
-    const manifestResponse = await page.request.get("/developers/bot-sdk/manifest.json");
-    expect(manifestResponse.ok()).toBe(true);
-    const manifest = await manifestResponse.json();
-    expect(manifest.apiCommit).toBe((await fs.readFile("test/contract-source.txt", "utf8")).trim());
-    expect(manifest.files).toHaveLength(13);
-    expect(manifest.files.map((file: { path: string }) => file.path)).toContain("javascript/voice.mjs");
-    expect(manifest.files.map((file: { path: string }) => file.path)).toContain("javascript/attachments.mjs");
-    expect(manifest.files.map((file: { path: string }) => file.path)).toContain("examples/voice-listener.mjs");
-    const [download] = await Promise.all([page.waitForEvent("download"), help.getByRole("link", { name: "Download · JavaScript / Python", exact: true }).click()]);
-    expect(await download.failure()).toBeNull();
-    expect(download.suggestedFilename()).toBe("meldiq-bot-sdk-preview.zip");
-    const bytes = await fs.readFile((await download.path())!);
-    expect(bytes.subarray(0, 2).toString()).toBe("PK");
-    expect(crypto.createHash("sha256").update(bytes).digest("hex")).toBe(manifest.archiveSha256);
-    const guide = help.getByRole("link", { name: "How bots work", exact: true });
-    const response = await page.request.get((await guide.getAttribute("href"))!);
-    expect(response.headers()["content-type"]).toContain("text/plain");
-    expect(await response.text()).toContain("Personal bot DMs require");
-  } finally {
-    await owner.disconnect();
-  }
+  const email = `sdk.${crypto.randomBytes(6).toString("hex")}@example.test`;
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Create an account", exact: true })).toBeVisible({ timeout: 30_000 });
+  await page.getByRole("button", { name: "Create an account", exact: true }).click();
+  await page.getByLabel("Your name", { exact: true }).fill("SDK Developer");
+  await page.getByLabel("Email", { exact: true }).fill(email);
+  await page.getByLabel("Password", { exact: true }).fill("a long enough password for SDK qualification");
+  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  await page.getByRole("button", { name: "Create account", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
+  await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));
+  await page.getByRole("button", { name: "Confirm", exact: true }).click();
+  await page.getByRole("button", { name: "Set up encryption", exact: true }).click();
+  await page.getByLabel("I've stored my recovery key somewhere safe.").check();
+  await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+  await finishWelcome(page);
+  await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
+  await page.goto("/settings/developer");
+  const help = page.getByRole("region", { name: "Bots", exact: true }).locator(".dev-how");
+  await help.locator("summary").click();
+  const manifestResponse = await page.request.get("/developers/bot-sdk/manifest.json");
+  expect(manifestResponse.ok()).toBe(true);
+  const manifest = await manifestResponse.json();
+  expect(manifest.apiCommit).toBe((await fs.readFile("test/contract-source.txt", "utf8")).trim());
+  expect(manifest.files).toHaveLength(13);
+  expect(manifest.files.map((file: { path: string }) => file.path)).toContain("javascript/voice.mjs");
+  expect(manifest.files.map((file: { path: string }) => file.path)).toContain("javascript/attachments.mjs");
+  expect(manifest.files.map((file: { path: string }) => file.path)).toContain("examples/voice-listener.mjs");
+  const [download] = await Promise.all([page.waitForEvent("download"), help.getByRole("link", { name: "Download · JavaScript / Python", exact: true }).click()]);
+  expect(await download.failure()).toBeNull();
+  expect(download.suggestedFilename()).toBe("meldiq-bot-sdk-preview.zip");
+  const bytes = await fs.readFile((await download.path())!);
+  expect(bytes.subarray(0, 2).toString()).toBe("PK");
+  expect(crypto.createHash("sha256").update(bytes).digest("hex")).toBe(manifest.archiveSha256);
+  const guide = help.getByRole("link", { name: "How bots work", exact: true });
+  const response = await page.request.get((await guide.getAttribute("href"))!);
+  expect(response.headers()["content-type"]).toContain("text/plain");
+  expect(await response.text()).toContain("Personal bot DMs require");
 });
