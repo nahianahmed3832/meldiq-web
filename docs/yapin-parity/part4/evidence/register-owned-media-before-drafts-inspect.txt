@@ -1,0 +1,1 @@
+{"kind":"table","sheet":"Feature register","address":"N300:P300","rows":1,"cols":3,"values":[["RESEARCH_REQUIRED","Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.","PART 4"]]}

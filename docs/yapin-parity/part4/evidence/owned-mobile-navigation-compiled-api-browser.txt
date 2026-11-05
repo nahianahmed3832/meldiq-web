@@ -1,0 +1,77 @@
+[WebServer] (node:54197) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:54197) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:54197) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:54231) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:54232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793837559566,"pid":54232,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  1 [phone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.9s)
+  ✘  2 [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (4.9s)
+(node:54292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793837574331,"pid":54292,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  3 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (8.0s)
+  ✘  4 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.1s)
+
+
+  1) [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 52
+    Received:    55
+
+      143 |     return { head: head.height, cover: cover.height, separate: cover.top >= head.bottom - 1, overflow: el.scrollWidth > el.clientWidth };
+      144 |   });
+    > 145 |   expect(dims.head).toBeLessThanOrEqual(52);
+          |                     ^
+      146 |   expect(dims.cover).toBe(72);
+      147 |   expect(dims.separate).toBe(true);
+      148 |   expect(dims.overflow).toBe(false);
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-receipts-sidebar.spec.ts:145:21
+
+    Error Context: test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 52
+    Received:    55
+
+      143 |     return { head: head.height, cover: cover.height, separate: cover.top >= head.bottom - 1, overflow: el.scrollWidth > el.clientWidth };
+      144 |   });
+    > 145 |   expect(dims.head).toBeLessThanOrEqual(52);
+          |                     ^
+      146 |   expect(dims.cover).toBe(72);
+      147 |   expect(dims.separate).toBe(true);
+      148 |   expect(dims.overflow).toBe(false);
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-receipts-sidebar.spec.ts:145:21
+
+    Error Context: test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+    [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+  2 passed (31.5s)

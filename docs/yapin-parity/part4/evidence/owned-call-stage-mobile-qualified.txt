@@ -1,0 +1,98 @@
+[WebServer] (node:53465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:53481) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:53482) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:53482) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:53482) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:53513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:53514) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793837348643,"pid":53514,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T08:09:11.859+0800	ERROR	livekit.pion.udp_mux	v4@v4.4.0/udp_mux.go:607	Failed to write packet: io: read/write on closed pipe
+[WebServer] github.com/pion/ice/v4.(*UDPMuxDefault).connWorker
+[WebServer] 	github.com/pion/ice/v4@v4.4.0/udp_mux.go:607
+  ✓  1 [phone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (8.5s)
+  ✘  2 [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (15.1s)
+(node:53637) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793837373905,"pid":53637,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  3 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (8.8s)
+  ✘  4 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (15.6s)
+
+
+  1) [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ }) with timeout 10000ms
+      - waiting for getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ })
+
+
+      132 |   const side = page.getByRole("complementary", { name: "Conversations", exact: true });
+      133 |   const head = side.locator(".side-head");
+    > 134 |   await expect(head.getByRole("button", { name: /^Community: The Makers Guild/ })).toBeVisible();
+          |                                                                                    ^
+      135 |   await expect(head.locator(".spark-goal.compact")).toBeVisible();
+      136 |   await expect(side.locator(".community-cover")).toBeVisible();
+      137 |   const dims = await side.evaluate((el) => {
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-receipts-sidebar.spec.ts:134:84
+
+    Error Context: test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ }) with timeout 10000ms
+      - waiting for getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ })
+
+
+      132 |   const side = page.getByRole("complementary", { name: "Conversations", exact: true });
+      133 |   const head = side.locator(".side-head");
+    > 134 |   await expect(head.getByRole("button", { name: /^Community: The Makers Guild/ })).toBeVisible();
+          |                                                                                    ^
+      135 |   await expect(head.locator(".spark-goal.compact")).toBeVisible();
+      136 |   await expect(side.locator(".community-cover")).toBeVisible();
+      137 |   const dims = await side.evaluate((el) => {
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-receipts-sidebar.spec.ts:134:84
+
+    Error Context: test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+    [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+  2 passed (55.0s)

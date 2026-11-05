@@ -1,0 +1,12 @@
+{
+  "recordedAt": "2026-11-04T23:54:33.967098+00:00",
+  "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+  "candidateFiles": 798,
+  "candidatePaths": 515,
+  "priorPaths": 433,
+  "priorPathsMissing": [],
+  "backup": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/android-target-before",
+  "production": "unchanged",
+  "candidateFileHashesRecorded": 798,
+  "legacyFilesRetainedCount": 0
+}

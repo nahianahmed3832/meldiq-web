@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-11-05T00:22:00.894826+00:00",
+  "webRuntimeCommit": "1fb387d22f533dc01bb5770e218950d5d2bc4d81",
+  "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+  "apiImplementationCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "build": "NEXT_PUBLIC_MELDIQ_TEST_LINKING=0 npm run build",
+  "testLinkingEnabled": false,
+  "files": 477,
+  "sourceMapsAndUncompiledTypescript": 0,
+  "archive": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-web-normal-1fb387d.tar.gz",
+    "bytes": 8894043,
+    "sha256": "2edda475bb5f982d4eb34eb02522dd0cedaefa76b39b1126032a139198886952"
+  },
+  "browser": {
+    "passed": 40,
+    "failed": 0,
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width",
+      "iphone-width"
+    ],
+    "apiEntry": "compiled dist/index.js",
+    "database": "owned loopback PostgreSQL with 34 candidate migrations; hosted Auth/Realtime test stubs",
+    "flows": [
+      "normal signup/encryption setup",
+      "persisted read receipts/unread boundary",
+      "actual encrypted native-SFU call and received participant photos",
+      "measured call-server RTT with mouse/focus/touch/Escape",
+      "configured lobby channel drawer, Sparks entry and responsive geometry",
+      "multiple photos/document/caption with original-byte downloads",
+      "video preview/inline/viewer playback",
+      "optimized defaults and explicit original file",
+      "named/anonymous poll ballots, percentages, reload, change, removal and close",
+      "image fit/zoom/pan/cross-message navigation"
+    ]
+  },
+  "physicalDevices": "pending by explicit owner choice",
+  "production": "not deployed"
+}

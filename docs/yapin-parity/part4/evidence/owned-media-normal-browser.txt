@@ -1,0 +1,126 @@
+[WebServer] (node:50535) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50587) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50588) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:50588) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:50593) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 32 tests using 1 worker
+
+(node:50594) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (7.9s)
+{"level":20,"time":1793836634443,"pid":50594,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   2 [chromium] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (8.7s)
+  ✓   3 [chromium] › e2e/call-receipts-sidebar.spec.ts:119:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.6s)
+  ✓   4 [chromium] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.3s)
+  ✓   5 [chromium] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (9.0s)
+  ✓   6 [chromium] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (14.5s)
+  ✓   7 [chromium] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (17.5s)
+  ✓   8 [chromium] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.2s)
+(node:50956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [firefox] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (12.2s)
+{"level":20,"time":1793836721071,"pid":50956,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  10 [firefox] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (9.6s)
+  ✓  11 [firefox] › e2e/call-receipts-sidebar.spec.ts:119:1 › compact community header keeps name, Sparks and cover above a dense channel list (7.2s)
+  ✓  12 [firefox] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.0s)
+  ✓  13 [firefox] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (5.0s)
+  ✓  14 [firefox] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (12.4s)
+  ✓  15 [firefox] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (17.6s)
+  ✓  16 [firefox] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (7.9s)
+(node:51300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  17 [webkit] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (8.2s)
+{"level":20,"time":1793836795631,"pid":51300,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  18 [webkit] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.9s)
+  ✓  19 [webkit] › e2e/call-receipts-sidebar.spec.ts:119:1 › compact community header keeps name, Sparks and cover above a dense channel list (6.2s)
+  ✓  20 [webkit] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.7s)
+  ✓  21 [webkit] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (7.8s)
+  ✓  22 [webkit] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (12.3s)
+  ✓  23 [webkit] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.0s)
+  ✓  24 [webkit] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.8s)
+(node:51622) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  25 [phone-width] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (6.6s)
+{"level":20,"time":1793836868956,"pid":51622,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✘  26 [phone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (25.5s)
+(node:51739) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  27 [phone-width] › e2e/call-receipts-sidebar.spec.ts:119:1 › compact community header keeps name, Sparks and cover above a dense channel list (13.8s)
+(node:51790) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  28 [phone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.2s)
+  ✓  29 [phone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (5.3s)
+  ✓  30 [phone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (9.8s)
+  ✓  31 [phone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (15.6s)
+  ✓  32 [phone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.1s)
+
+
+  1) [phone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call
+
+    TimeoutError: locator.hover: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /^Call connection:/ })
+
+
+       96 |     await expect.poll(() => photos.evaluateAll((els) => els.every((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0))).toBe(true);
+       97 |     const signal = page.getByRole("button", { name: /^Call connection:/ });
+    >  98 |     await signal.hover();
+          |                  ^
+       99 |     const tooltip = page.getByRole("tooltip");
+      100 |     await expect(tooltip).toBeVisible();
+      101 |     await expect(tooltip.locator(".call-ping")).toHaveText(/^\d+ ms$/, { timeout: 25_000 });
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-receipts-sidebar.spec.ts:98:18
+
+    Error Context: test-results/call-receipts-sidebar-call-30bfa-ing-an-encrypted-voice-call-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-receipts-sidebar-call-30bfa-ing-an-encrypted-voice-call-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-receipts-sidebar-call-30bfa-ing-an-encrypted-voice-call-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [phone-width] › e2e/call-receipts-sidebar.spec.ts:119:1 › compact community header keeps name, Sparks and cover above a dense channel list
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ }) with timeout 10000ms
+      - waiting for getByRole('complementary', { name: 'Conversations', exact: true }).locator('.side-head').getByRole('button', { name: /^Community: The Makers Guild/ })
+
+
+      126 |   const side = page.getByRole("complementary", { name: "Conversations", exact: true });
+      127 |   const head = side.locator(".side-head");
+    > 128 |   await expect(head.getByRole("button", { name: /^Community: The Makers Guild/ })).toBeVisible();
+          |                                                                                    ^
+      129 |   await expect(head.locator(".spark-goal.compact")).toBeVisible();
+      130 |   await expect(side.locator(".community-cover")).toBeVisible();
+      131 |   const dims = await side.evaluate((el) => {
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-receipts-sidebar.spec.ts:128:84
+
+    Error Context: test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [phone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call
+    [phone-width] › e2e/call-receipts-sidebar.spec.ts:119:1 › compact community header keeps name, Sparks and cover above a dense channel list
+  30 passed (5.6m)

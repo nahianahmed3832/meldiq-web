@@ -1,0 +1,1 @@
+{"kind":"table","sheet":"Feature register","address":"N282:P282","rows":1,"cols":3,"values":[["NOT_STARTED_IN_THIS_PROGRAM","Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.","PART 4"]]}

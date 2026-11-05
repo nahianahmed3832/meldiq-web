@@ -2248,10 +2248,10 @@
     {
       "id": "YAP-VOICE-012",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/call-receipts-sidebar.spec.ts verifies actual measured call-server RTT, encrypted native-SFU media, mouse/focus/touch/Escape access and phone layout. The full-screen call now reuses the existing connection control.",
+      "remaining": "Measured, measuring/unknown and attention states are implemented; the healthy local RTC path and responsive control pass. High-latency/stalled/failure timing and installed native quality reporting remain to qualify."
     },
     {
       "id": "YAP-VOICE-013",
@@ -2384,18 +2384,18 @@
     {
       "id": "YAP-MEDIA-001",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/media-sharing.spec.ts verifies the unified File entry, one unrestricted input without capture, selected media preview, explicit Send and normal email onboarding.",
+      "remaining": "The unified desktop/phone file entry is implemented and exercised with isolated photos, document and video drafts. Physical native pickers/capture, drag/drop variants and the complete failure/permission matrix remain open."
     },
     {
       "id": "YAP-MEDIA-002",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/media-sharing.spec.ts verifies two image drafts and a document in selected order, one caption, one message and byte-identical authorized downloads.",
+      "remaining": "Multiple native file drafts and album/document publication are implemented with a tested controlled path. Competitor draft limits remain unverified; removal/cancel/retry and the complete ordering/failure matrix still need acceptance."
     },
     {
       "id": "YAP-MEDIA-003",
@@ -2424,18 +2424,18 @@
     {
       "id": "YAP-MEDIA-006",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/media-sharing.spec.ts and e2e/poll-media.spec.ts verify fit/actual size, zoom, pan, closing, original-byte photo download and navigation across separate image messages.",
+      "remaining": "Image viewing, fit, zoom, pan and cross-message navigation are implemented and pass current browser journeys. Full focus restoration, revoked/stale URL, supported-format and installed native acceptance remain pending."
     },
     {
       "id": "YAP-MEDIA-007",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/media-sharing.spec.ts verifies synthetic MP4 preview, upload, loaded/playing inline media and viewer access. This is controlled browser media, not physical device or provider evidence.",
+      "remaining": "Inline and viewer video playback are implemented with a tested MP4 path. Exhaustive pause/seek/volume/fullscreen, format/error and revoked-access variants remain open; Yapin behavior stays documentation-only."
     },
     {
       "id": "YAP-MEDIA-008",
@@ -2456,10 +2456,10 @@
     {
       "id": "YAP-MEDIA-010",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. Original photo/document downloads match uploaded bytes. Native PostgreSQL bot_files.test.ts also covers real encrypted byte ranges and mid-stream approval withdrawal; calls_attachments.test.ts covers native conversation authorization and expiry. Exact API scope: part4/evidence/bot-files-checkpoint.json and bot-broader-regression-checkpoint.json.",
+      "remaining": "Authenticated native downloads, ranged streams and current admission checks are implemented and have bounded browser/API evidence. Full HEAD/resume/expiry/logout and large-object real-provider transfer/failure acceptance remain open."
     },
     {
       "id": "YAP-MEDIA-011",
@@ -3042,8 +3042,8 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Windows 1c1bb378f36e1ba10b85230b910261ca441bb92a imports Web a0a27ff82f9cf07bf157245271d513c66bbd9ae5 and checks 2294 upstream files, retaining 39 native adaptation entries and 26 documented differences. 109 shell and 999 embedded-Web cases pass with one skip using the current API source. Types/lint/build/localization and isolated macOS Electron SDK integrity checks have exact bounded receipts. Physical Windows installation/media/provider consent remain pending. Evidence: part4/evidence/bot-files-checkpoint.json and part4/evidence/native-integration-checkpoint.json. Nothing deployed.",
-      "remaining": "Committed Windows file/SDK integration is implemented in the controlled candidate. Full coordinated/native/provider acceptance and release remain open."
+      "testing": "Windows 3784e75d27e47e467f8e083b2c9cb1d16d982d3b imports Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81. All 2294 upstream hashes are checked with 39 documented adaptation entries and 26 actual differences, none unexplained. 109 shell and 999 embedded-Web cases pass with one skip; types/lint/build/localization and isolated darwin/arm64 Electron SDK/IPC/account-data/update/link checks pass. The initial locale-wait diagnostic and bounded four-worker clean rerun are recorded separately. Evidence: part4/evidence/native-integration-checkpoint.json.",
+      "remaining": "The current Web import and native safeguards are committed and locally qualified. Installed Windows media, provider consent, production distribution/signing and full native acceptance remain pending."
     },
     {
       "id": "YAP-RELEASE-002",
@@ -3090,16 +3090,16 @@
       "owner": "PART 4",
       "state": "IN_PROGRESS",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Web/API browser and native source checks have bounded passing receipts. Complete same-candidate native journeys, physical capture/push and provider/buyer consent remain pending. Evidence: part4/evidence/native-integration-checkpoint.json.",
-      "remaining": "Web/API browser and native source checks have bounded passing receipts. Complete same-candidate native journeys, physical capture/push and provider/buyer consent remain pending."
+      "testing": "Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81 and compiled API 031089388da4430fedfd7c85de1dd8c80964886e pass 40 current normal browser journeys. Android 5dc08d81bef51c2dc1114d387ccfb176d8189866 snapshots the combined sole workspace and current contracts: 1019 JVM passes, 12 skips, device-test compilation and a local debug APK; 2122 input hashes match. Windows 3784e75d27e47e467f8e083b2c9cb1d16d982d3b has bounded passing source/unit/build/smoke checks. Actual installed-client joint journeys remain pending. Evidence: part4/evidence/native-integration-checkpoint.json, android-combined-source-checkpoint.json and owned-normal-web-compiled-api-checkpoint.json.",
+      "remaining": "Immutable coordinated source and bounded Web/API/native artifacts exist. Actual Android/Web/Windows joint messaging/media/call journeys, full native managed-poll/thread UI and synchronization, physical capture/push, hosted consent and real buyer evidence remain open."
     },
     {
       "id": "YAP-RELEASE-008",
       "owner": "PART 4",
       "state": "IN_PROGRESS",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Dedicated Web/API/admin/Windows integration candidates exist. Full568-row disposition, remaining implementation, normal release export, full staging/performance/backup/restore/rollback and explicit final production authorization remain open. Nothing deployed. Evidence: part4/evidence/native-integration-checkpoint.json.",
-      "remaining": "Dedicated Web/API/admin/Windows integration candidates exist. Full568-row disposition, remaining implementation, normal release export, full staging/performance/backup/restore/rollback and explicit final production authorization remain open. Nothing deployed."
+      "testing": "Dedicated committed Web/API/admin/Windows and combined Android candidates are preserved. The ordinary Web archive, compiled API archive, native source/debug APK and Windows development renderer have exact checkpoint receipts. No production mutation or deployment occurred. Evidence: part4/evidence/native-integration-checkpoint.json, owned-normal-web-compiled-api-checkpoint.json and broader-bot-api-artifact.json.",
+      "remaining": "The coordinated candidate is active. Remaining owned implementation/acceptance, policy acceptance, Linux image/native distributables, full staging/performance/backup/restore/rollback and final explicit production authorization remain open."
     },
     {
       "id": "YAP-LOBBY-001",

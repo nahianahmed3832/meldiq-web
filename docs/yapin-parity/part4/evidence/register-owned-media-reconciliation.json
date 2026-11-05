@@ -1,0 +1,61 @@
+{
+  "recordedAt": "2026-11-05T00:50:48.095Z",
+  "total": 568,
+  "owned": 238,
+  "updated": 9,
+  "newlyQualifiedImplementedRows": 6,
+  "totalOwnedRowsReconciled": 141,
+  "unownedUnchanged": 330,
+  "statusChanges": [
+    {
+      "id": "YAP-VOICE-012",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-001",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-002",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-006",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-007",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-010",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    }
+  ],
+  "acceptedRowsAdded": 0,
+  "historicalFieldsUnchanged": true,
+  "stableIdsPreserved": true,
+  "part4Implementation": {
+    "NOT_STARTED_IN_THIS_PROGRAM": 77,
+    "IMPLEMENTED_NOT_ACCEPTED": 124,
+    "RESEARCH_REQUIRED": 20,
+    "DEFERRED_DECISION": 14,
+    "IN_PROGRESS": 3
+  },
+  "allImplementation": {
+    "IMPLEMENTED_NOT_ACCEPTED": 210,
+    "RESEARCH_REQUIRED": 22,
+    "DEFERRED_DECISION": 31,
+    "ACCEPTED": 225,
+    "NOT_STARTED_IN_THIS_PROGRAM": 77,
+    "IN_PROGRESS": 3
+  },
+  "unchangedRowsSha256": "e9f3bbcc47d789e494d454fbeab31358fc804d8251306806f3867871d6b8c0b7",
+  "scope": "Bounded normal-browser/compiled-API media and immutable native source qualification. Remaining acceptance explicit. Not full Part4 acceptance."
+}

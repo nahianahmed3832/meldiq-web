@@ -32,5 +32,6 @@
     ],
     "database": "Owned loopback PostgreSQL with 34 candidate migrations; hosted Auth/Realtime test stubs",
     "log": "bot-media-disclosure-normal-auth-browser.txt"
-  }
+  },
+  "supersededBy": "owned-normal-web-compiled-api-checkpoint.json"
 }

@@ -1,0 +1,69 @@
+[WebServer] (node:55020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:55020) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:55020) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:55028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 40 tests using 1 worker
+
+(node:55030) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (6.6s)
+{"level":20,"time":1793837716017,"pid":55030,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T08:15:19.198+0800	ERROR	livekit.pion.udp_mux	v4@v4.4.0/udp_mux.go:607	Failed to write packet: io: read/write on closed pipe
+[WebServer] github.com/pion/ice/v4.(*UDPMuxDefault).connWorker
+[WebServer] 	github.com/pion/ice/v4@v4.4.0/udp_mux.go:607
+  ✓   2 [chromium] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.4s)
+  ✓   3 [chromium] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (4.9s)
+  ✓   4 [chromium] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (4.3s)
+  ✓   5 [chromium] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (4.5s)
+  ✓   6 [chromium] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (9.8s)
+  ✓   7 [chromium] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (15.5s)
+  ✓   8 [chromium] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.0s)
+(node:55243) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [firefox] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (7.9s)
+{"level":20,"time":1793837780558,"pid":55243,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  10 [firefox] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (9.1s)
+  ✓  11 [firefox] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (8.8s)
+  ✓  12 [firefox] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (8.4s)
+  ✓  13 [firefox] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (6.1s)
+  ✓  14 [firefox] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (12.2s)
+  ✓  15 [firefox] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.9s)
+  ✓  16 [firefox] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (7.5s)
+(node:55813) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  17 [webkit] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (8.0s)
+{"level":20,"time":1793837858733,"pid":55813,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  18 [webkit] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.3s)
+  ✓  19 [webkit] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.9s)
+  ✓  20 [webkit] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.1s)
+  ✓  21 [webkit] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (7.6s)
+  ✓  22 [webkit] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (12.5s)
+  ✓  23 [webkit] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.7s)
+  ✓  24 [webkit] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.6s)
+(node:56061) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  25 [phone-width] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (6.6s)
+{"level":20,"time":1793837931270,"pid":56061,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  26 [phone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.6s)
+  ✓  27 [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.0s)
+  ✓  28 [phone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.3s)
+  ✓  29 [phone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (5.0s)
+  ✓  30 [phone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (10.4s)
+  ✓  31 [phone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (15.0s)
+  ✓  32 [phone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.7s)
+(node:56349) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  33 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (9.7s)
+{"level":20,"time":1793838000607,"pid":56349,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  34 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.6s)
+  ✓  35 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (6.3s)
+  ✓  36 [iphone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.4s)
+  ✓  37 [iphone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (7.9s)
+  ✓  38 [iphone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (12.0s)
+  ✓  39 [iphone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (15.7s)
+  ✓  40 [iphone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.1s)
+
+  40 passed (6.0m)

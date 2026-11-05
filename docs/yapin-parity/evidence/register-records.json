@@ -5328,15 +5328,15 @@
     "Screenshot reference": "screenshots/legacy/07-voice-video/03-muted-call-controls.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Measured, measuring/unknown and attention states are implemented; the healthy local RTC path and responsive control pass. High-latency/stalled/failure timing and installed native quality reporting remain to qualify.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Show measured and unknown connection state without inventing RTT or delivered quality. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-CALL; C-PERMISSIONS; C-MEDIA; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/call-receipts-sidebar.spec.ts verifies actual measured call-server RTT, encrypted native-SFU media, mouse/focus/touch/Escape access and phone layout. The full-screen call now reuses the existing connection control.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-VOICE-013",
@@ -5651,15 +5651,15 @@
     "Screenshot reference": "screenshots/current/50-phone-composer.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "The unified desktop/phone file entry is implemented and exercised with isolated photos, document and video drafts. Physical native pickers/capture, drag/drop variants and the complete failure/permission matrix remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Unified file entry handles supported file kinds on desktop and phone without silently sending a draft. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MEDIA; C-MESSAGE; C-PERMISSIONS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/media-sharing.spec.ts verifies the unified File entry, one unrestricted input without capture, selected media preview, explicit Send and normal email onboarding.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/50-phone-composer.txt."
+    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/50-phone-composer.txt. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-MEDIA-002",
@@ -5670,15 +5670,15 @@
     "Screenshot reference": "screenshots/current/50-phone-composer.jpg",
     "Verification status": "UNVERIFIED_RESTRICTED",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Multiple native file drafts and album/document publication are implemented with a tested controlled path. Competitor draft limits remain unverified; removal/cancel/retry and the complete ordering/failure matrix still need acceptance.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Determine competitor draft limits; accept Meldiq preview remove cancel ordering and retry with isolated data. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MEDIA; C-MESSAGE; C-PERMISSIONS; C-ENTITLEMENTS",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/media-sharing.spec.ts verifies two image drafts and a document in selected order, one caption, one message and byte-identical authorized downloads.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/50-phone-composer.txt."
+    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/50-phone-composer.txt. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-MEDIA-003",
@@ -5746,15 +5746,15 @@
     "Screenshot reference": "screenshots/legacy/11-customization/13-gif-private-chat.jpg",
     "Verification status": "VERIFIED_WORKFLOW_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Image viewing, fit, zoom, pan and cross-message navigation are implemented and pass current browser journeys. Full focus restoration, revoked/stale URL, supported-format and installed native acceptance remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Authorized images open fit zoom and close with correct focus and stale/revoked URLs fail safely. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MEDIA; C-MESSAGE; C-PERMISSIONS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/media-sharing.spec.ts and e2e/poll-media.spec.ts verify fit/actual size, zoom, pan, closing, original-byte photo download and navigation across separate image messages.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-MEDIA-007",
@@ -5765,15 +5765,15 @@
     "Screenshot reference": "screenshots/current/public-announcement.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Inline and viewer video playback are implemented with a tested MP4 path. Exhaustive pause/seek/volume/fullscreen, format/error and revoked-access variants remain open; Yapin behavior stays documentation-only.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Playback pause seek volume fullscreen and error states work with supported formats and revoked access. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MEDIA; C-MESSAGE; C-PERMISSIONS; C-ENTITLEMENTS",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. e2e/media-sharing.spec.ts verifies synthetic MP4 preview, upload, loaded/playing inline media and viewer access. This is controlled browser media, not physical device or provider evidence.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-announcement.txt."
+    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-announcement.txt. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-MEDIA-008",
@@ -5822,15 +5822,15 @@
     "Screenshot reference": "screenshots/current/50-phone-composer.jpg",
     "Verification status": "UNVERIFIED_RESTRICTED",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Authenticated native downloads, ranged streams and current admission checks are implemented and have bounded browser/API evidence. Full HEAD/resume/expiry/logout and large-object real-provider transfer/failure acceptance remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Accept authenticated range HEAD resume expiry and logout revocation on Meldiq's current gateway. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MEDIA; C-MESSAGE; C-PERMISSIONS; C-ENTITLEMENTS",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Evidence: part4/evidence/owned-normal-web-compiled-api-checkpoint.json and owned-normal-compiled-current-browser.txt. Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81; compiled API 031089388da4430fedfd7c85de1dd8c80964886e. All 40 cases pass on Chromium, Firefox, WebKit, phone-width and iPhone-width against local PostgreSQL with hosted Auth/Realtime stubs. Original photo/document downloads match uploaded bytes. Native PostgreSQL bot_files.test.ts also covers real encrypted byte ranges and mid-stream approval withdrawal; calls_attachments.test.ts covers native conversation authorization and expiry. Exact API scope: part4/evidence/bot-files-checkpoint.json and bot-broader-regression-checkpoint.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/50-phone-composer.txt."
+    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/50-phone-composer.txt. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-MEDIA-011",
@@ -7209,15 +7209,15 @@
     "Screenshot reference": "screenshots/current/public-download.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Committed Windows file/SDK integration is implemented in the controlled candidate. Full coordinated/native/provider acceptance and release remain open.",
+    "Gap description": "The current Web import and native safeguards are committed and locally qualified. Installed Windows media, provider consent, production distribution/signing and full native acceptance remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Meldiq Windows bundles the accepted Web version and preserves native session and callback behavior. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MESSAGE; C-CALL; C-MEDIA; C-ENTITLEMENTS; C-RELEASE",
     "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
-    "Testing status": "Windows 1c1bb378f36e1ba10b85230b910261ca441bb92a imports Web a0a27ff82f9cf07bf157245271d513c66bbd9ae5 and checks 2294 upstream files, retaining 39 native adaptation entries and 26 documented differences. 109 shell and 999 embedded-Web cases pass with one skip using the current API source. Types/lint/build/localization and isolated macOS Electron SDK integrity checks have exact bounded receipts. Physical Windows installation/media/provider consent remain pending. Evidence: part4/evidence/bot-files-checkpoint.json and part4/evidence/native-integration-checkpoint.json. Nothing deployed.",
+    "Testing status": "Windows 3784e75d27e47e467f8e083b2c9cb1d16d982d3b imports Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81. All 2294 upstream hashes are checked with 39 documented adaptation entries and 26 actual differences, none unexplained. 109 shell and 999 embedded-Web cases pass with one skip; types/lint/build/localization and isolated darwin/arm64 Electron SDK/IPC/account-data/update/link checks pass. The initial locale-wait diagnostic and bounded four-worker clean rerun are recorded separately. Evidence: part4/evidence/native-integration-checkpoint.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-download.txt. Meldiq source lead: Android consolidated source; Windows release activation workspace; deploy manifests. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-download.txt. Part 4: updated to committed bot-file/native-event/gateway/media/Windows evidence on 2026-11-05. See part4/BOT_CONTRACT_MATRIX.json, part4/PROGRESS.md and source/native checkpoint receipts. Competitor verification fields are preserved. IMPLEMENTED_NOT_ACCEPTED is source/proven local scope, with remaining acceptance explicit. Nothing deployed."
+    "Notes": "Yapin evidence: evidence/public-download.txt. Meldiq source lead: Android consolidated source; Windows release activation workspace; deploy manifests. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-download.txt. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-RELEASE-002",
@@ -7323,15 +7323,15 @@
     "Screenshot reference": "NONE — multi-client acceptance unverified",
     "Verification status": "UNVERIFIED_RESTRICTED",
     "Meldiq existing status": "PARTIAL",
-    "Gap description": "Web/API browser and native source checks have bounded passing receipts. Complete same-candidate native journeys, physical capture/push and provider/buyer consent remain pending.",
+    "Gap description": "Immutable coordinated source and bounded Web/API/native artifacts exist. Actual Android/Web/Windows joint messaging/media/call journeys, full native managed-poll/thread UI and synchronization, physical capture/push, hosted consent and real buyer evidence remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "One controlled Web Android and Windows matrix verifies durable state permission revocation and compatible payloads. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MESSAGE; C-CALL; C-MEDIA; C-ENTITLEMENTS; C-RELEASE",
     "Implementation status": "IN_PROGRESS",
-    "Testing status": "Web/API browser and native source checks have bounded passing receipts. Complete same-candidate native journeys, physical capture/push and provider/buyer consent remain pending. Evidence: part4/evidence/native-integration-checkpoint.json.",
+    "Testing status": "Web 1fb387d22f533dc01bb5770e218950d5d2bc4d81 and compiled API 031089388da4430fedfd7c85de1dd8c80964886e pass 40 current normal browser journeys. Android 5dc08d81bef51c2dc1114d387ccfb176d8189866 snapshots the combined sole workspace and current contracts: 1019 JVM passes, 12 skips, device-test compilation and a local debug APK; 2122 input hashes match. Windows 3784e75d27e47e467f8e083b2c9cb1d16d982d3b has bounded passing source/unit/build/smoke checks. Actual installed-client joint journeys remain pending. Evidence: part4/evidence/native-integration-checkpoint.json, android-combined-source-checkpoint.json and owned-normal-web-compiled-api-checkpoint.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-download.txt. Meldiq source lead: Android consolidated source; Windows release activation workspace; deploy manifests. Web baseline 3cc3c03; source presence is not runtime acceptance. Part 4: reconciled to committed source and bounded evidence on 2026-11-05. See part4/BOT_CONTRACT_MATRIX.json, part4/PROGRESS.md and source/native checkpoint receipts. Competitor verification fields are preserved. IMPLEMENTED_NOT_ACCEPTED is source/proven local scope, with remaining acceptance explicit. Nothing deployed."
+    "Notes": "Yapin evidence: evidence/public-download.txt. Meldiq source lead: Android consolidated source; Windows release activation workspace; deploy manifests. Web baseline 3cc3c03; source presence is not runtime acceptance. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-RELEASE-008",
@@ -7342,15 +7342,15 @@
     "Screenshot reference": "NONE — planning task",
     "Verification status": "UNVERIFIED_RESTRICTED",
     "Meldiq existing status": "UNVERIFIED",
-    "Gap description": "Dedicated Web/API/admin/Windows integration candidates exist. Full568-row disposition, remaining implementation, normal release export, full staging/performance/backup/restore/rollback and explicit final production authorization remain open. Nothing deployed.",
+    "Gap description": "The coordinated candidate is active. Remaining owned implementation/acceptance, policy acceptance, Linux image/native distributables, full staging/performance/backup/restore/rollback and final explicit production authorization remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Part 4 integrates accepted feature IDs on then-current baseline and obtains explicit authorization for any production mutation. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MESSAGE; C-CALL; C-MEDIA; C-ENTITLEMENTS; C-RELEASE",
     "Implementation status": "IN_PROGRESS",
-    "Testing status": "Dedicated Web/API/admin/Windows integration candidates exist. Full568-row disposition, remaining implementation, normal release export, full staging/performance/backup/restore/rollback and explicit final production authorization remain open. Nothing deployed. Evidence: part4/evidence/native-integration-checkpoint.json.",
+    "Testing status": "Dedicated committed Web/API/admin/Windows and combined Android candidates are preserved. The ordinary Web archive, compiled API archive, native source/debug APK and Windows development renderer have exact checkpoint receipts. No production mutation or deployment occurred. Evidence: part4/evidence/native-integration-checkpoint.json, owned-normal-web-compiled-api-checkpoint.json and broader-bot-api-artifact.json.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-download.txt. Meldiq source lead: Android consolidated source; Windows release activation workspace; deploy manifests. Web baseline 3cc3c03; source presence is not runtime acceptance. Part 4: reconciled to committed source and bounded evidence on 2026-11-05. See part4/BOT_CONTRACT_MATRIX.json, part4/PROGRESS.md and source/native checkpoint receipts. Competitor verification fields are preserved. IMPLEMENTED_NOT_ACCEPTED is source/proven local scope, with remaining acceptance explicit. Nothing deployed."
+    "Notes": "Yapin evidence: evidence/public-download.txt. Meldiq source lead: Android consolidated source; Windows release activation workspace; deploy manifests. Web baseline 3cc3c03; source presence is not runtime acceptance. Part 4: current controlled Web/API/native source qualification recorded on 2026-11-05. See part4/evidence/owned-normal-web-compiled-api-checkpoint.json, native-integration-checkpoint.json and PROGRESS.md. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-LOBBY-001",

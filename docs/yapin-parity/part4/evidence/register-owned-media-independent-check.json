@@ -1,0 +1,27 @@
+{
+  "rows": 568,
+  "uniqueIds": 568,
+  "changedRows": [
+    "YAP-VOICE-012",
+    "YAP-MEDIA-001",
+    "YAP-MEDIA-002",
+    "YAP-MEDIA-006",
+    "YAP-MEDIA-007",
+    "YAP-MEDIA-010",
+    "YAP-RELEASE-001",
+    "YAP-RELEASE-007",
+    "YAP-RELEASE-008"
+  ],
+  "implementationPromotions": [
+    "YAP-VOICE-012",
+    "YAP-MEDIA-001",
+    "YAP-MEDIA-002",
+    "YAP-MEDIA-006",
+    "YAP-MEDIA-007",
+    "YAP-MEDIA-010"
+  ],
+  "acceptedRowsAdded": 0,
+  "unownedRowsUnchanged": 330,
+  "allOtherFieldsPreserved": true,
+  "rowAuditMatches": true
+}

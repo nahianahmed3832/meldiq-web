@@ -1,0 +1,54 @@
+{
+  "recordedAt": "2026-11-05T00:40:50.277696+00:00",
+  "commit": "5dc08d81bef51c2dc1114d387ccfb176d8189866",
+  "parent": "7a5862328e955bf955ed715dc6825eeafa671e72",
+  "tree": "43eb72d95d29f93da1eb9f1ce6163f78c0f07351",
+  "branch": "refs/heads/codex/yapin-parity-android-integration-20261105",
+  "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+  "originalHeadPreserved": "285651477be0adbef73d8bec3359a02d781bd3f4",
+  "originalIndexSha256Preserved": "d6c8d2804e2640fb8b63e6ea7f95ae7d963acafaf7facda29bca6e7f7f75db39",
+  "sourceFiles": 2122,
+  "changedPathsFromBotVoiceCheckpoint": 1250,
+  "scope": "Current combined Android source and all packaged shared assets, excluding ignored configuration, build outputs, signing material and unrelated backend/deploy/brand work. No additional Android worktree or checkout.",
+  "qualification": "Full JVM tests, device-test compilation, development debug APK build and actual asset-content checks passed",
+  "physicalDevices": "pending by explicit owner choice",
+  "published": false,
+  "nativeUiLimits": [
+    "Managed poll controls and full thread lifecycle UI are not qualified by decoding event frames.",
+    "Thread preference events update the local projection; complete bidirectional/reconnect synchronization remains pending."
+  ],
+  "assetIgnoreGuidance": "https://developer.android.com/reference/tools/gradle-api/8.13/com/android/build/api/dsl/AndroidResources#ignoreAssetsPattern()",
+  "testFiles": 195,
+  "tests": 1031,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 12,
+  "passed": 1019,
+  "sourceHashesRechecked": 2122,
+  "allSourceHashesMatch": true,
+  "originalBranchAndIndexStillPreserved": true,
+  "strictResponseDecoderExceptions": 0,
+  "requestSchemaKnownExceptions": 4,
+  "packaging": {
+    "contractCaptureFilesBefore": 1197,
+    "contractCaptureFilesNow": 0,
+    "runtimeAssetsPreservedByteForByte": 24,
+    "stickerCatalogPresent": true,
+    "sourceDirectoryExcludeWasIneffective": true,
+    "effectiveControl": "AGP androidResources.ignoreAssetsPattern with existing/default ignore patterns retained"
+  },
+  "sourceArchive": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-android-source-5dc08d81.tar.gz",
+    "bytes": 3096394,
+    "sha256": "4f4b12bfda7b033e6383c1f4ad11063ced53dde67faa51443eee4627aa414a8a"
+  },
+  "apk": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-android-check-5dc08d81.apk",
+    "bytes": 156902968,
+    "sha256": "e75e8122d9f6fcb51eccc60a669e976ac30f1e915238dacd86bdec4a91c5de5b",
+    "applicationId": "com.meldiq.android.test",
+    "variant": "side-by-side development debug; localhost:8080; not a production distribution artifact",
+    "installed": false
+  },
+  "compiledDeviceTestsWereNotExecuted": true
+}

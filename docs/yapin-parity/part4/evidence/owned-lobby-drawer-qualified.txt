@@ -1,0 +1,72 @@
+[WebServer] (node:54437) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:54437) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:54437) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:54465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:54466) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (25.8s)
+(node:54601) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (29.5s)
+
+
+  1) [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+
+    TimeoutError: locator.screenshot: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for getByRole('complementary', { name: 'Conversations', exact: true })
+
+
+      150 |   await expect(page.getByRole("dialog").last()).toContainText("Spark");
+      151 |   await page.keyboard.press("Escape");
+    > 152 |   await side.screenshot({ path: info.outputPath("community-sidebar.png") });
+          |              ^
+      153 |   if (!isMobile) await page.setViewportSize({ width: 390, height: 844 });
+      154 |   await page.goto(`/home/c/${general.id}`);
+      155 |   await expect(page.getByRole("region", { name: "Conversation: general", exact: true })).toBeVisible();
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-receipts-sidebar.spec.ts:152:14
+
+    Error Context: test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+
+    TimeoutError: locator.screenshot: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for getByRole('complementary', { name: 'Conversations', exact: true })
+
+
+      150 |   await expect(page.getByRole("dialog").last()).toContainText("Spark");
+      151 |   await page.keyboard.press("Escape");
+    > 152 |   await side.screenshot({ path: info.outputPath("community-sidebar.png") });
+          |              ^
+      153 |   if (!isMobile) await page.setViewportSize({ width: 390, height: 844 });
+      154 |   await page.goto(`/home/c/${general.id}`);
+      155 |   await expect(page.getByRole("region", { name: "Conversation: general", exact: true })).toBeVisible();
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-receipts-sidebar.spec.ts:152:14
+
+    Error Context: test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-receipts-sidebar-comp-4a423--above-a-dense-channel-list-iphone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list
+    [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list

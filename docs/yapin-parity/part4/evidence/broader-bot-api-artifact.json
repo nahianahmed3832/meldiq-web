@@ -1,0 +1,20 @@
+{
+  "recordedAt": "2026-11-05T00:12:59.241318+00:00",
+  "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+  "implementationCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "build": "npm run build; TypeScript 5.9.3",
+  "sourceArchive": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-source-03108938.tar.gz",
+    "bytes": 10286268,
+    "sha256": "b58312501845554c949f34a7f01173dee7e636c95380371e9fef9a437499863a"
+  },
+  "compiledArchive": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-compiled-03108938.tar.gz",
+    "bytes": 10334458,
+    "sha256": "fb9479102bc2f63161f48ff22a4e9001b7b7f2da93c4ad1d87a30e1a685070fe",
+    "files": 1552,
+    "nodeDependenciesBundled": false
+  },
+  "qualification": "TypeScript build and 40 browser journeys on the compiled entry point pass against owned loopback PostgreSQL. Linux container build is pending; no local container runtime is available.",
+  "deployment": "not deployed"
+}

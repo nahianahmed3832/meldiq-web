@@ -1,0 +1,38 @@
+{
+  "recordedAt": "2026-11-04T23:50:13.351Z",
+  "total": 568,
+  "owned": 238,
+  "updated": 57,
+  "unownedUnchanged": 330,
+  "changedFields": [
+    "Testing status",
+    "Gap description",
+    "Notes"
+  ],
+  "historicalFieldsUnchanged": true,
+  "stableIdsPreserved": true,
+  "part4Implementation": {
+    "NOT_STARTED_IN_THIS_PROGRAM": 80,
+    "RESEARCH_REQUIRED": 23,
+    "DEFERRED_DECISION": 14,
+    "IMPLEMENTED_NOT_ACCEPTED": 118,
+    "IN_PROGRESS": 3
+  },
+  "allImplementation": {
+    "IMPLEMENTED_NOT_ACCEPTED": 204,
+    "RESEARCH_REQUIRED": 25,
+    "DEFERRED_DECISION": 31,
+    "ACCEPTED": 225,
+    "NOT_STARTED_IN_THIS_PROGRAM": 80,
+    "IN_PROGRESS": 3
+  },
+  "unchangedRowsSha256": "e9f3bbcc47d789e494d454fbeab31358fc804d8251306806f3867871d6b8c0b7",
+  "scope": "Bot-file/native-event/gateway/media/Windows evidence follow-up; statuses and historical reference fields preserved. Not full Part4 acceptance.",
+  "independentComparison": {
+    "baselineWebCommit": "a0a27ff82f9cf07bf157245271d513c66bbd9ae5",
+    "changedOwnedRows": 57,
+    "allStatusesPreserved": true,
+    "allHistoricalFieldsPreserved": true,
+    "unownedRowsExactlyEqual": 330
+  }
+}
