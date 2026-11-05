@@ -1,0 +1,35 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:25507) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25507) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/official_bots_activity.test.ts (17 tests | 1 failed | 16 skipped) 1374ms
+       × does not publish a prepared Logger event after its manager disables it 59ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Logger > does not publish a prepared Logger event after its manager disables it
+AssertionError: expected [ Array(1) ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/official_bots_activity.test.ts:221:42
+    219|         release();
+    220|         await pending;
+    221|         expect(await lines(logs, botId)).toHaveLength(before);
+       |                                          ^
+    222|       } finally {
+    223|         release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 skipped (17)
+   Start at  12:43:59
+   Duration  7.66s (transform 2.97s, setup 0ms, import 4.97s, tests 1.37s, environment 0ms)

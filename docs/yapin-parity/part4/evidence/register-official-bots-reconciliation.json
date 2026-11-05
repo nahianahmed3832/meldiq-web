@@ -1,0 +1,192 @@
+{
+  "recordedAt": "2026-11-05T04:51:40.447Z",
+  "total": 568,
+  "owned": 238,
+  "updated": 32,
+  "newlyQualifiedImplementedRows": 28,
+  "activeFollowups": 4,
+  "totalOwnedRowsReconciled": 178,
+  "unownedUnchanged": 330,
+  "statusChanges": [
+    {
+      "id": "YAP-BOT-001",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-002",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-003",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-004",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-005",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-006",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-BOT-007",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-008",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-BOT-009",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-010",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-011",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOT-012",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-001",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-002",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-003",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-004",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-005",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-006",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-007",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-008",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-009",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-010",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-011",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-012",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-013",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-014",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-BOTOPT-015",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-016",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-BOTOPT-017",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-018",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-019",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BOTOPT-020",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    }
+  ],
+  "acceptedRowsAdded": 0,
+  "historicalFieldsUnchanged": true,
+  "stableIdsPreserved": true,
+  "part4Implementation": {
+    "IMPLEMENTED_NOT_ACCEPTED": 157,
+    "NOT_STARTED_IN_THIS_PROGRAM": 41,
+    "RESEARCH_REQUIRED": 19,
+    "DEFERRED_DECISION": 14,
+    "IN_PROGRESS": 7
+  },
+  "allImplementation": {
+    "IMPLEMENTED_NOT_ACCEPTED": 243,
+    "RESEARCH_REQUIRED": 21,
+    "DEFERRED_DECISION": 31,
+    "ACCEPTED": 225,
+    "NOT_STARTED_IN_THIS_PROGRAM": 41,
+    "IN_PROGRESS": 7
+  },
+  "unchangedRowsSha256": "e9f3bbcc47d789e494d454fbeab31358fc804d8251306806f3867871d6b8c0b7",
+  "scope": "Official bot features have row-specific scoped cases; four rows retain active privacy or lifecycle gaps. Complete acceptance remains open."
+}

@@ -1114,7 +1114,7 @@
       "owner": "PART 3",
       "state": "ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Passed local controlled Web/API checks: api:quick_reactions.test.ts: quick reaction preferences (postgres) persists 3\u20135 distinct choices, preserves older client omissions, isolates accounts and rejects stale writes | web:part3-social.spec.ts#quick reactions: three-to-five quick reactions persist on the account and drive the message menu [chromium]; three-to-five quick reactions persist on the account and drive the message menu [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-009. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
+      "testing": "Passed local controlled Web/API checks: api:quick_reactions.test.ts: quick reaction preferences (postgres) persists 3–5 distinct choices, preserves older client omissions, isolates accounts and rejects stale writes | web:part3-social.spec.ts#quick reactions: three-to-five quick reactions persist on the account and drive the message menu [chromium]; three-to-five quick reactions persist on the account and drive the message menu [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-009. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
       "remaining": "No remaining defect in the recorded local Web/API scope. Current-production source reconciliation, controlled migration/deployment and installed-client/provider acceptance remain Part 4 release work."
     },
     {
@@ -1202,7 +1202,7 @@
       "owner": "PART 3",
       "state": "ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Passed local controlled Web/API checks: api:thread_lifecycle.test.ts: thread lifecycle (postgres) separates author close/reopen from moderator lock, rejects stale changes and controls current reply/vote authority; thread lifecycle (postgres) deletes all replies in bounded resumable batches, retains a text parent and forbids format-race widening; 1 additional passing cases recorded | unit:threads.test.ts: Activity \u203a Thread replies (android ThreadActivityRules) lists threads I started or replied in, with replies from others since I last looked or replied; Activity \u203a Thread replies (android ThreadActivityRules) puts unseen threads first and forgets what was seen; 3 additional passing cases recorded | web:part3-threads.spec.ts: thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [chromium]; thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-020. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
+      "testing": "Passed local controlled Web/API checks: api:thread_lifecycle.test.ts: thread lifecycle (postgres) separates author close/reopen from moderator lock, rejects stale changes and controls current reply/vote authority; thread lifecycle (postgres) deletes all replies in bounded resumable batches, retains a text parent and forbids format-race widening; 1 additional passing cases recorded | unit:threads.test.ts: Activity › Thread replies (android ThreadActivityRules) lists threads I started or replied in, with replies from others since I last looked or replied; Activity › Thread replies (android ThreadActivityRules) puts unseen threads first and forgets what was seen; 3 additional passing cases recorded | web:part3-threads.spec.ts: thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [chromium]; thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-020. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
       "remaining": "No remaining defect in the recorded local Web/API scope. Current-production source reconciliation, controlled migration/deployment and installed-client/provider acceptance remain Part 4 release work."
     },
     {
@@ -2034,8 +2034,8 @@
       "owner": "PART 3",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Passed local controlled Web/API checks: api:push_wakeup.test.ts: registering a device's endpoint needs a signed-in device that hasn't been removed; registering a device's endpoint keeps one endpoint per device, and an endpoint moves to the device that registered it last; 22 additional passing cases recorded | api:push_transport.test.ts: the HTTPS wake-up request POSTs an empty body to the pinned address, with transport headers only; the HTTPS wake-up request returns the push server's status, and never follows a redirect; 3 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-NOTIFY-007. No production or physical-device acceptance is implied. Pending criterion: Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner\u2019s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence. Final execution totals and exact environment: part3/validation.json.",
-      "remaining": "Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner\u2019s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence."
+      "testing": "Passed local controlled Web/API checks: api:push_wakeup.test.ts: registering a device's endpoint needs a signed-in device that hasn't been removed; registering a device's endpoint keeps one endpoint per device, and an endpoint moves to the device that registered it last; 22 additional passing cases recorded | api:push_transport.test.ts: the HTTPS wake-up request POSTs an empty body to the pinned address, with transport headers only; the HTTPS wake-up request returns the push server's status, and never follows a redirect; 3 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-NOTIFY-007. No production or physical-device acceptance is implied. Pending criterion: Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner’s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence. Final execution totals and exact environment: part3/validation.json.",
+      "remaining": "Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner’s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence."
     },
     {
       "id": "YAP-NOTIFY-008",
@@ -2560,98 +2560,98 @@
     {
       "id": "YAP-BOT-001",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: is advertised with a catalog of nine bots, all but Alerts available without a YouTube API key; shows a community's bots to members, settings only to editors, and nothing to outsiders; turns a bot on as a bot member with its own name and picture, and off again keeping its settings. Full acceptance pending.",
+      "remaining": "Desktop Chromium covers catalog, configuration and diagnostics. Native settings and the full multi-role failure matrix remain pending."
     },
     {
       "id": "YAP-BOT-002",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: Welcomer greets a newcomer once with the placeholders filled, and sends a test; checks the channels and roles settings name. Full acceptance pending.",
+      "remaining": "A controlled member join and test send pass. Reconnect, all destination access changes and native UI remain pending."
     },
     {
       "id": "YAP-BOT-003",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: Helper answers commands where it can post, and !help lists every bot's commands. Full acceptance pending.",
+      "remaining": "Help and a permitted command execute on the existing API and desktop Chromium. Native cancellation/error and broader command coverage remain pending."
     },
     {
       "id": "YAP-BOT-004",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: gives 15–25 XP at most once a minute, not for commands or one-character messages; with Bots+: boosts XP, gives role rewards and says the community's own line in its channel. Full acceptance pending.",
+      "remaining": "Server cooldown, level-up and role rewards pass. Multi-device replay and current privacy projections are not fully accepted."
     },
     {
       "id": "YAP-BOT-005",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: logs edits with the text before, and deletions with the last text, never pinging; requires private destinations for Logger content and member logs; does not publish a prepared Logger event after its manager disables it. Full acceptance pending.",
+      "remaining": "Current publication requires a configured private destination and still-enabled Logger. Older stored entries and installed-client configuration are outside this check."
     },
     {
       "id": "YAP-BOT-006",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IN_PROGRESS",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; skips private channels and the starboard itself. Full acceptance pending.",
+      "remaining": "Threshold, deduplication and initial private-channel exclusion pass. Existing derived posts are not withdrawn on source deletion or changed visibility; close that privacy gap."
     },
     {
       "id": "YAP-BOT-007",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: posts a card people enter with 🎉, shown on the lobby, and draws members only when it ends, even after a restart; ends early with !gend, and says so when nobody entered; with Bots+: longer, more winners and only members with the required role. Full acceptance pending.",
+      "remaining": "Timed selection, restart and eligibility pass; the existing reroll command still needs a focused success/replay case. No prize was awarded outside fixtures."
     },
     {
       "id": "YAP-BOT-008",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IN_PROGRESS",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: opens a private channel only the opener and the moderators see, with the text first and a log line; lets only the opener or a moderator close a ticket: archived, out of the category, logged; lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close. Full acceptance pending.",
+      "remaining": "Open, private requester/staff access and close are covered. Claim and reopen are not implemented in the inspected ticket routes; complete the remaining lifecycle and leakage checks."
     },
     {
       "id": "YAP-BOT-009",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: is unavailable, and refuses, on a server without a YouTube API key; posts only uploads published after a channel was added, each once, pinging the role; changes and stops following. Full acceptance pending.",
+      "remaining": "Missing configuration, fake-source deduplication and watch changes pass. Live YouTube credentials, quotas and failure recovery remain pending."
     },
     {
       "id": "YAP-BOT-010",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: keeps streaks going from yesterday, and one game a day; plays privately from the apps, posting only the finished board; posts yesterday's recap once just after midnight UTC; processes a persisted Wordy community on its first startup tick after billing is ready. Full acceptance pending.",
+      "remaining": "Daily state, private guesses, recap and restart are controlled tests. Cross-client rollover and installed-native qualification remain pending."
     },
     {
       "id": "YAP-BOT-011",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: gives the role on reacting and takes it back when the reaction comes off; never takes back a role someone gave by hand; stops giving a role that gained an administrative power. Full acceptance pending.",
+      "remaining": "Native authority, manual assignment preservation and removal pass at the recorded predecessor. Current browser/native and reconnect matrices remain pending."
     },
     {
       "id": "YAP-BOT-012",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: refuses Plus extras without Bots+, and keeps them paused while it's gone; falls back to the free limits while Bots+ is gone, keeping what was set; is granted and taken away by platform admins, with an end date and a reason. Full acceptance pending.",
+      "remaining": "Operator-grant and free fallback are tested. Real catalog checkout and paid renewal/provider evidence are outside these fixtures."
     },
     {
       "id": "YAP-BOT-013",
@@ -3288,162 +3288,162 @@
     {
       "id": "YAP-BOTOPT-001",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: Welcomer greets a newcomer once with the placeholders filled, and sends a test; checks the channels and roles settings name. Full acceptance pending.",
+      "remaining": "Placeholder expansion, mention handling and channel validation pass; desktop setup is covered. Current native destination changes remain pending."
     },
     {
       "id": "YAP-BOTOPT-002",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: Welcomer says goodbye only with Bots+; refuses Plus extras without Bots+, and keeps them paused while it's gone. Full acceptance pending.",
+      "remaining": "Goodbye is gated and free welcome stays. Multi-line random selection and cross-client settings qualification remain pending."
     },
     {
       "id": "YAP-BOTOPT-003",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: reads !roll, !roll 20 and !roll 2d6 within sane limits; Helper answers commands where it can post, and !help lists every bot's commands. Full acceptance pending.",
+      "remaining": "Bounded dice inputs and representative command delivery pass. Complete rate-limit and client interaction cases remain pending."
     },
     {
       "id": "YAP-BOTOPT-004",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: Helper's away note answers a mention once per person and ends with the next message; answers !rank and !top, and fills the lobby's Levels board. Full acceptance pending.",
+      "remaining": "Away notice deduplication and community leaderboard output pass. Broader privacy and client switch cases remain pending."
     },
     {
       "id": "YAP-BOTOPT-005",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: Helper runs a community's own commands with Bots+ only. Full acceptance pending.",
+      "remaining": "Current entitlement-gated custom execution passes; manager validation and negative input matrix are not completely accepted."
     },
     {
       "id": "YAP-BOTOPT-006",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: are floor(√(XP / 100)); gives 15–25 XP at most once a minute, not for commands or one-character messages. Full acceptance pending.",
+      "remaining": "Actual formula and repeat-message cooldown pass. Distributed/retry performance and all member types remain pending."
     },
     {
       "id": "YAP-BOTOPT-007",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: announces a level-up where they chat, with Meldiq's line; with Bots+: boosts XP, gives role rewards and says the community's own line in its channel. Full acceptance pending.",
+      "remaining": "Default and Bots+ configured level-up announcements pass. Destination revocation and duplicate delivery across reconnect remain pending."
     },
     {
       "id": "YAP-BOTOPT-008",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: boosts XP, gives role rewards and says the community's own line in its channel; refuses Plus extras without Bots+, and keeps them paused while it's gone. Full acceptance pending.",
+      "remaining": "Current grant affects XP and free fallback stays. Real paid transitions and cross-client display remain unverified."
     },
     {
       "id": "YAP-BOTOPT-009",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: boosts XP, gives role rewards and says the community's own line in its channel; checks the channels and roles settings name. Full acceptance pending.",
+      "remaining": "Reward assignment and configuration validation pass in bounded cases. Complete higher-role, downgrade and replay coverage remains pending."
     },
     {
       "id": "YAP-BOTOPT-010",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: logs edits with the text before, and deletions with the last text, never pinging; suppresses restored public Logger destinations and reports the configuration problem; does not publish a prepared Logger event after its manager disables it. Full acceptance pending.",
+      "remaining": "Public-destination reproduction is closed for new publication. Private editor-selected destinations remain; historical stored output and broader retention are not changed."
     },
     {
       "id": "YAP-BOTOPT-011",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: logs joins (new accounts flagged), leaves, kicks, bans, unbans, timeouts and roles with who did it; suppresses a restored public member-log destination without exposing a timeout reason. Full acceptance pending.",
+      "remaining": "Actor/target/action output and legacy public-destination suppression pass; full retention and native moderation journeys remain pending."
     },
     {
       "id": "YAP-BOTOPT-012",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: member events in their own channel, and channels left out; requires private destinations for Logger content and member logs; suppresses a restored public member-log destination without exposing a timeout reason. Full acceptance pending.",
+      "remaining": "Private separate routing and denial of old public settings pass. Installed settings and actual paid-provider state remain pending."
     },
     {
       "id": "YAP-BOTOPT-013",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: member events in their own channel, and channels left out; never logs its own channel. Full acceptance pending.",
+      "remaining": "Excluded sources do not produce a log. The current publication guard rechecks effective settings; broader retry/reconfiguration cases remain pending."
     },
     {
       "id": "YAP-BOTOPT-014",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IN_PROGRESS",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; skips private channels and the starboard itself. Full acceptance pending.",
+      "remaining": "Initial threshold and source filtering pass. Attachment copy authorization and revocation after source deletion/visibility changes remain active work."
     },
     {
       "id": "YAP-BOTOPT-015",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; with Bots+: its own emoji and self-stars. Full acceptance pending.",
+      "remaining": "Free self-star exclusion and configured Bots+ behavior pass. Full queued/replayed-reaction and client settings matrix remains pending."
     },
     {
       "id": "YAP-BOTOPT-016",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IN_PROGRESS",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: its own emoji and self-stars; skips private channels and the starboard itself. Full acceptance pending.",
+      "remaining": "Custom emoji and initial private-source exclusion pass. Current source visibility changes and previously derived posts need additional protection."
     },
     {
       "id": "YAP-BOTOPT-017",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: take winners after the duration and keep to the free or Bots+ limits; with Bots+: longer, more winners and only members with the required role; posts a card people enter with 🎉, shown on the lobby, and draws members only when it ends, even after a restart. Full acceptance pending.",
+      "remaining": "Server capacity, current eligibility and restart behavior pass; reroll and stronger replay checks remain pending."
     },
     {
       "id": "YAP-BOTOPT-018",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: checks the panels' channels and limits; opens a private channel only the opener and the moderators see, with the text first and a log line; lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close. Full acceptance pending.",
+      "remaining": "Panel channel/limit validation and restricted staff/requester membership pass. Complete installed staff/requester journeys remain pending."
     },
     {
       "id": "YAP-BOTOPT-019",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: is unavailable, and refuses, on a server without a YouTube API key; posts only uploads published after a channel was added, each once, pinging the role. Full acceptance pending.",
+      "remaining": "Configured fake source and absent-key paths pass. Live provider quota, malformed response and retry integration remain open."
     },
     {
       "id": "YAP-BOTOPT-020",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Controlled PostgreSQL cases passed at the recorded source: keeps streaks going from yesterday, and one game a day; posts yesterday's recap once just after midnight UTC; processes a persisted Wordy community on its first startup tick after billing is ready. Full acceptance pending.",
+      "remaining": "Deterministic daily state, recap and startup are covered. Full cross-client scheduler and installed-client acceptance remain pending."
     },
     {
       "id": "YAP-OPS-001",

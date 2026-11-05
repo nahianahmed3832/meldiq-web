@@ -1,0 +1,81 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:19575) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19575) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/contracts.test.ts (5 tests | 5 skipped) 8805ms
+(node:19779) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19779) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:19786) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19786) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/contract_coverage.test.ts (9 tests | 9 skipped) 9942ms
+(node:19876) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19876) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/contract_coverage.test.ts [ test/contract_coverage.test.ts ]
+Error: PostgreSQL bootstrap table inventory is incomplete
+ ❯ PostgresRows.open src/infrastructure/database/rows/postgresRows.ts:43:42
+     41|         JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='m…
+     42|       const byOid=new Map(relations.rows.map(relation=>[Number(relatio…
+     43|       if(byOid.size!==specs.length)throw new Error("PostgreSQL bootstr…
+       |                                          ^
+     44|       // pg's row-event API decodes each row directly into the cache w…
+     45|       // Batch eight SELECTs per round trip, retaining the same read-o…
+ ❯ openPostgresRuntime src/app/postgresRuntime.ts:53:16
+ ❯ buildApp src/app/server.ts:374:9
+ ❯ startServer test/support/harness.ts:81:13
+ ❯ test/contract_coverage.test.ts:17:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  test/contract_coverage.test.ts [ test/contract_coverage.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/contract_coverage.test.ts:26:24
+     24|   for (const c of [owner, mod, member, applicant]) await c.connect();
+     25| });
+     26| afterAll(async () => h.close());
+       |                        ^
+     27|
+     28| describe("contract coverage", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  test/contracts.test.ts > contracts
+Error: PostgreSQL bootstrap table inventory is incomplete
+ ❯ PostgresRows.open src/infrastructure/database/rows/postgresRows.ts:43:42
+     41|         JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='m…
+     42|       const byOid=new Map(relations.rows.map(relation=>[Number(relatio…
+     43|       if(byOid.size!==specs.length)throw new Error("PostgreSQL bootstr…
+       |                                          ^
+     44|       // pg's row-event API decodes each row directly into the cache w…
+     45|       // Batch eight SELECTs per round trip, retaining the same read-o…
+ ❯ openPostgresRuntime src/app/postgresRuntime.ts:53:16
+ ❯ buildApp src/app/server.ts:374:9
+ ❯ startServer test/support/harness.ts:81:13
+ ❯ test/contracts.test.ts:22:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  test/contracts.test.ts > contracts
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/contracts.test.ts:24:26
+     22|     h = await startServer();
+     23|   });
+     24|   afterAll(async () => h.close());
+       |                          ^
+     25|
+     26|   it("docs/api is what the schemas generate (run npm run contracts aft…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  9 passed | 14 skipped (23)
+   Start at  12:17:38
+   Duration  51.25s (transform 11.66s, setup 0ms, import 26.70s, tests 21.06s, environment 0ms)

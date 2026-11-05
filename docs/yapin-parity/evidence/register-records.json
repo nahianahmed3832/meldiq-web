@@ -6069,15 +6069,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Desktop Chromium covers catalog, configuration and diagnostics. Native settings and the full multi-role failure matrix remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Install state config permissions health and uninstall are explicit per server. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: is advertised with a catalog of nine bots, all but Alerts available without a YouTube API key; shows a community's bots to members, settings only to editors, and nothing to outsiders; turns a bot on as a bot member with its own name and picture, and off again keeping its settings. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-002",
@@ -6088,15 +6088,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "A controlled member join and test send pass. Reconnect, all destination access changes and native UI remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Accept join template channel and error paths with an isolated member event. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: Welcomer greets a newcomer once with the placeholders filled, and sends a test; checks the channels and roles settings name. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-003",
@@ -6107,15 +6107,15 @@
     "Screenshot reference": "screenshots/legacy/09-bots-integrations/04-helper-working-private.jpg",
     "Verification status": "VERIFIED_WORKFLOW_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Help and a permitted command execute on the existing API and desktop Chromium. Native cancellation/error and broader command coverage remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Enable only in a test server; help and a representative permitted command execute once and report failures. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: Helper answers commands where it can post, and !help lists every bot's commands. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-004",
@@ -6126,15 +6126,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Server cooldown, level-up and role rewards pass. Multi-device replay and current privacy projections are not fully accepted.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Use server-owned XP cooldown and role eligibility; test duplicate events and privacy. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: gives 15–25 XP at most once a minute, not for commands or one-character messages; with Bots+: boosts XP, gives role rewards and says the community's own line in its channel. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-005",
@@ -6145,15 +6145,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Current publication requires a configured private destination and still-enabled Logger. Older stored entries and installed-client configuration are outside this check.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Only approved destinations receive event metadata; sensitive content follows actual retention rules. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: logs edits with the text before, and deletions with the last text, never pinging; requires private destinations for Logger content and member logs; does not publish a prepared Logger event after its manager disables it. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-006",
@@ -6164,15 +6164,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Threshold, deduplication and initial private-channel exclusion pass. Existing derived posts are not withdrawn on source deletion or changed visibility; close that privacy gap.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Threshold deduplicates reactions and source deletion or visibility change cannot leak private posts. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IN_PROGRESS",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; skips private channels and the starboard itself. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-007",
@@ -6183,15 +6183,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Timed selection, restart and eligibility pass; the existing reroll command still needs a focused success/replay case. No prize was awarded outside fixtures.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Controlled fixture tests eligibility close winner selection reroll and idempotent scheduling; no real prize action in audit. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: posts a card people enter with 🎉, shown on the lobby, and draws members only when it ends, even after a restart; ends early with !gend, and says so when nobody entered; with Bots+: longer, more winners and only members with the required role. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-008",
@@ -6202,15 +6202,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Open, private requester/staff access and close are covered. Claim and reopen are not implemented in the inspected ticket routes; complete the remaining lifecycle and leakage checks.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Requester and staff access survive open claim close and reopen without cross-ticket leakage. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IN_PROGRESS",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: opens a private channel only the opener and the moderators see, with the text first and a log line; lets only the opener or a moderator close a ticket: archived, out of the category, logged; lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-009",
@@ -6221,15 +6221,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Missing configuration, fake-source deduplication and watch changes pass. Live YouTube credentials, quotas and failure recovery remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Configured provider failure polling and retry cannot duplicate posts or expose private credentials. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: is unavailable, and refuses, on a server without a YouTube API key; posts only uploads published after a channel was added, each once, pinging the role; changes and stops following. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-010",
@@ -6240,15 +6240,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Daily state, private guesses, recap and restart are controlled tests. Cross-client rollover and installed-native qualification remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Day boundaries shared state scoring and replay rules are deterministic in isolated fixtures. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: keeps streaks going from yesterday, and one game a day; plays privately from the apps, posting only the finished board; posts yesterday's recap once just after midnight UTC; processes a persisted Wordy community on its first startup tick after billing is ready. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-011",
@@ -6259,15 +6259,15 @@
     "Screenshot reference": "screenshots/current/47-message-menu.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native authority, manual assignment preservation and removal pass at the recorded predecessor. Current browser/native and reconnect matrices remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Role add/remove is server-authorized on reaction change and never grants a higher privilege. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: gives the role on reacting and takes it back when the reaction comes off; never takes back a role someone gave by hand; stops giving a role that gained an administrative power. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/47-message-menu.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/47-message-menu.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-012",
@@ -6278,15 +6278,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Operator-grant and free fallback are tested. Real catalog checkout and paid renewal/provider evidence are outside these fixtures.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Enforce actual Meldiq catalog flags per server without disabling free base functionality. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-PERMISSIONS; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: refuses Plus extras without Bots+, and keeps them paused while it's gone; falls back to the free limits while Bots+ is gone, keeping what was set; is granted and taken away by platform admins, with an end date and a reason. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/34-server-bots.txt. Meldiq source lead: src/ui/workspace/bots; src/sync/officialBots.ts; src/sync/officialBotRules.ts; backend officialBots. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOT-013",
@@ -7798,15 +7798,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Placeholder expansion, mention handling and channel validation pass; desktop setup is covered. Current native destination changes remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Validate template variables mention handling and an explicit accessible destination. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: Welcomer greets a newcomer once with the placeholders filled, and sends a test; checks the channels and roles settings name. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-002",
@@ -7817,15 +7817,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Goodbye is gated and free welcome stays. Multi-line random selection and cross-client settings qualification remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Accept only catalog-enabled extras and keep ordinary welcome behavior free. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: Welcomer says goodbye only with Bots+; refuses Plus extras without Bots+, and keeps them paused while it's gone. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-003",
@@ -7836,15 +7836,15 @@
     "Screenshot reference": "screenshots/legacy/09-bots-integrations/04-helper-working-private.jpg",
     "Verification status": "VERIFIED_WORKFLOW_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Bounded dice inputs and representative command delivery pass. Complete rate-limit and client interaction cases remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Deterministic bounded tests cover argument validation and rate limits; no unrelated user is contacted. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: reads !roll, !roll 20 and !roll 2d6 within sane limits; Helper answers commands where it can post, and !help lists every bot's commands. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Only !help response was executed historically; random-utility commands were listed, not run."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Only !help response was executed historically; random-utility commands were listed, not run. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-004",
@@ -7855,15 +7855,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Away notice deduplication and community leaderboard output pass. Broader privacy and client switch cases remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "AFK and rank data stay within configured community scope and privacy rules. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: Helper's away note answers a mention once per person and ends with the next message; answers !rank and !top, and fills the lobby's Levels board. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-005",
@@ -7874,15 +7874,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Current entitlement-gated custom execution passes; manager validation and negative input matrix are not completely accepted.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Only authorized managers configure safe commands and disabled entitlements cannot execute them. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: Helper runs a community's own commands with Bots+ only. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-006",
@@ -7893,15 +7893,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Actual formula and repeat-message cooldown pass. Distributed/retry performance and all member types remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Use Meldiq's approved formula and ledger; repeated events in a cooldown cannot double award. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: are floor(√(XP / 100)); gives 15–25 XP at most once a minute, not for commands or one-character messages. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-007",
@@ -7912,15 +7912,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Default and Bots+ configured level-up announcements pass. Destination revocation and duplicate delivery across reconnect remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Destination permissions template validation and duplicate suppression are accepted. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: announces a level-up where they chat, with Meldiq's line; with Bots+: boosts XP, gives role rewards and says the community's own line in its channel. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-008",
@@ -7931,15 +7931,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Current grant affects XP and free fallback stays. Real paid transitions and cross-client display remain unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Only catalog-approved boost applies and transitions do not retroactively duplicate XP. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: boosts XP, gives role rewards and says the community's own line in its channel; refuses Plus extras without Bots+, and keeps them paused while it's gone. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-009",
@@ -7950,15 +7950,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Reward assignment and configuration validation pass in bounded cases. Complete higher-role, downgrade and replay coverage remains pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Reject privileged and higher roles and process crossings idempotently. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: boosts XP, gives role rewards and says the community's own line in its channel; checks the channels and roles settings name. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-010",
@@ -7969,15 +7969,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Public-destination reproduction is closed for new publication. Private editor-selected destinations remain; historical stored output and broader retention are not changed.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Apply Meldiq's actual privacy retention and authorized destination policy; do not copy content to public channels. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: logs edits with the text before, and deletions with the last text, never pinging; suppresses restored public Logger destinations and reports the configuration problem; does not publish a prepared Logger event after its manager disables it. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-011",
@@ -7988,15 +7988,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Actor/target/action output and legacy public-destination suppression pass; full retention and native moderation journeys remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Events contain correct actor target and time and omit secret state. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: logs joins (new accounts flagged), leaves, kicks, bans, unbans, timeouts and roles with who did it; suppresses a restored public member-log destination without exposing a timeout reason. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-012",
@@ -8007,15 +8007,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Private separate routing and denial of old public settings pass. Installed settings and actual paid-provider state remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Only authorized destinations are selectable and entitlement removal falls back safely. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: member events in their own channel, and channels left out; requires private destinations for Logger content and member logs; suppresses a restored public member-log destination without exposing a timeout reason. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-013",
@@ -8026,15 +8026,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Excluded sources do not produce a log. The current publication guard rechecks effective settings; broader retry/reconfiguration cases remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Exclusion is enforced before content is copied and remains effective during retries. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: member events in their own channel, and channels left out; never logs its own channel. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-014",
@@ -8045,15 +8045,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Initial threshold and source filtering pass. Attachment copy authorization and revocation after source deletion/visibility changes remain active work.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "One source creates one authorized starboard item; private sources and deleted assets are excluded. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IN_PROGRESS",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; skips private channels and the starboard itself. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-015",
@@ -8064,15 +8064,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Free self-star exclusion and configured Bots+ behavior pass. Full queued/replayed-reaction and client settings matrix remains pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Enforce the configured rule atomically when reactions are added removed or replayed. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: copies a message once enough other people star it, then follows its count; with Bots+: its own emoji and self-stars. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-016",
@@ -8083,15 +8083,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Custom emoji and initial private-source exclusion pass. Current source visibility changes and previously derived posts need additional protection.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Only authorized emoji are accepted and excluded/private channel content never copies. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IN_PROGRESS",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: with Bots+: its own emoji and self-stars; skips private channels and the starboard itself. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-017",
@@ -8102,15 +8102,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Server capacity, current eligibility and restart behavior pass; reroll and stronger replay checks remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Capacity eligibility and reward selection are server-owned and replay-safe. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: take winners after the duration and keep to the free or Bots+ limits; with Bots+: longer, more winners and only members with the required role; posts a card people enter with 🎉, shown on the lobby, and draws members only when it ends, even after a restart. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-018",
@@ -8121,15 +8121,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Panel channel/limit validation and restricted staff/requester membership pass. Complete installed staff/requester journeys remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Panel creates only an authorized requester/staff channel and cannot inject extra permissions. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: checks the panels' channels and limits; opens a private channel only the opener and the moderators see, with the text first and a log line; lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-019",
@@ -8140,15 +8140,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Configured fake source and absent-key paths pass. Live provider quota, malformed response and retry integration remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Poll only configured providers and handle missing credentials quota malformed data and duplicate updates. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: is unavailable, and refuses, on a server without a YouTube API key; posts only uploads published after a channel was added, each once, pinging the role. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-BOTOPT-020",
@@ -8159,15 +8159,15 @@
     "Screenshot reference": "screenshots/current/34-server-bots.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Deterministic daily state, recap and startup are covered. Full cross-client scheduler and installed-client acceptance remain pending.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Day rollover scheduler retry and shared answer state are consistent for all allowed clients. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-BOT; C-PERMISSIONS; C-MESSAGE; C-POINTS; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Controlled PostgreSQL cases passed at the recorded source: keeps streaks going from yesterday, and one game a day; posts yesterday's recap once just after midnight UTC; processes a persisted Wordy community on its first startup tick after billing is ready. Full acceptance pending.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt."
+    "Notes": "Yapin evidence: evidence/legacy/31-server-bots-ax.txt. Meldiq source lead: src/ui/workspace/bots; backend officialBots; current feature gates require acceptance. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Current screen evidence: evidence/34-server-bots.txt. Part 4: official-bot source and controlled case review recorded on 2026-11-05. See part4/evidence/official-bots-row-evidence.json and register-official-bots-reconciliation.json for exact source, case and remaining scope. Historical competitor evidence is preserved; nothing deployed."
   },
   {
     "Feature ID": "YAP-OPS-001",

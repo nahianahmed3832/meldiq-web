@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-11-05T04:39:01.012408+00:00",
+  "commit": "188a7ac1758377c6624e863719320e66cec3fa78",
+  "parent": "68b31f7f7f9ba5e22b312ea5b8a097650892cb34",
+  "tree": "275d943ca28de5db7ae94a01acaddafd7d12674f",
+  "branch": "refs/heads/codex/yapin-parity-android-integration-20261105",
+  "apiSource": "946423018ed34130f10c440d9919b36b9694b97e",
+  "sourceFiles": 2127,
+  "changedPaths": [
+    "android/app/src/main/java/com/meldiq/android/data/api/ApiClient.kt",
+    "android/app/src/main/java/com/meldiq/android/data/api/ThreadFollowApi.kt",
+    "android/app/src/main/java/com/meldiq/android/data/db/Database.kt",
+    "android/app/src/main/java/com/meldiq/android/data/repo/FollowedThreads.kt",
+    "android/app/src/main/java/com/meldiq/android/data/repo/MessageReceiver.kt",
+    "android/app/src/main/java/com/meldiq/android/data/repo/MessageRepository.kt",
+    "android/app/src/main/java/com/meldiq/android/data/repo/ThreadFollowingSync.kt",
+    "android/app/src/main/java/com/meldiq/android/di/AppContainer.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/components/Inputs.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/ConversationScreen.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/ConversationViewModel.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/home/HomeViewModels.kt",
+    "android/app/src/test/java/com/meldiq/android/contract/RequestContractTest.kt",
+    "android/app/src/test/java/com/meldiq/android/data/repo/ThreadFollowHttpTest.kt",
+    "android/app/src/test/java/com/meldiq/android/data/repo/ThreadFollowRoomTest.kt",
+    "android/app/src/test/java/com/meldiq/android/data/repo/ThreadFollowingSyncTest.kt",
+    "shared/contracts/android-target/README.md",
+    "shared/contracts/android-target/openapi.json"
+  ],
+  "allSourceHashesVerified": true,
+  "originalHeadPreserved": "285651477be0adbef73d8bec3359a02d781bd3f4",
+  "originalIndexSha256Preserved": "d6c8d2804e2640fb8b63e6ea7f95ae7d963acafaf7facda29bca6e7f7f75db39",
+  "jvm": {
+    "files": 198,
+    "tests": 1052,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 12,
+    "passed": 1040
+  },
+  "focusedEarlier": {
+    "passed": 38,
+    "scope": "before final participant-header follow-up; final full run includes that follow-up"
+  },
+  "archive": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-android-source-188a7ac1.tar.gz",
+    "bytes": 3058325,
+    "sha256": "e3d1971dcc973ac34730ffa1850d9e8c2eabed102c567af3f1661cf1d69df687",
+    "allBytesVerified": true
+  },
+  "physical": "pending by explicit owner choice",
+  "deviceTestCompile": "passed; compiled, not executed",
+  "debugApk": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-thread-follow-188a7ac1-debug.apk",
+    "bytes": 156915843,
+    "sha256": "68138ea150a8e9aafd07c7315531993c098ea9fd34227ad68c14134fd62384b2",
+    "applicationId": "com.meldiq.android.test",
+    "variant": "debug",
+    "defaultServer": "http://localhost:8080",
+    "installed": false,
+    "published": false
+  },
+  "published": false,
+  "packaging": {
+    "runtimeAssets": 24,
+    "byteIdenticalToPriorQualifiedApk": true,
+    "contractCaptures": 0,
+    "priorApkStillMatchesRecordedHash": true
+  },
+  "allSourceHashesVerifiedAfterBuild": true
+}

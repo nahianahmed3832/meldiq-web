@@ -1,0 +1,4 @@
+wrote openapi.json, realtime.schema.json, bot-gateway.schema.json, COVERAGE.md to docs/api
+(node:26215) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26215) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time

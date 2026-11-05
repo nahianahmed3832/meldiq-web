@@ -1,0 +1,42 @@
+{
+  "windowsSource": "0d7956d9af7943df2ba70e94a57e355f8ab728a1",
+  "webSource": "d1258d1788a587f8d41ccb13c01a28fd868fd976",
+  "apiSource": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+  "verifiedUpstreamFiles": 2373,
+  "documentedAdaptations": 39,
+  "actualDifferences": 26,
+  "unexplained": 0,
+  "developmentBuild": "passed",
+  "rendererContractCases": 4,
+  "isolatedElectron": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "versions": {
+      "app": "0.3.0",
+      "electron": "45.2.1",
+      "chromium": "156.0.8078.75"
+    },
+    "offlineSmokeMs": 3051,
+    "developerAssets": {
+      "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+      "files": 13,
+      "valid": true
+    },
+    "checks": [
+      "local renderer with network blocked",
+      "pinned packaged SDK manifest and archive integrity",
+      "sandbox and context isolation",
+      "untrusted IPC rejection",
+      "clear cache preserves localStorage and IndexedDB identity",
+      "cache clearing blocked during communication",
+      "economy effects",
+      "native settings",
+      "payment popup has no native bridge and blocks restart",
+      "native invitation captured by the existing join workflow"
+    ],
+    "status": "passed",
+    "windowsInstallation": "not tested by this smoke"
+  },
+  "installedWindows": "pending",
+  "published": false
+}

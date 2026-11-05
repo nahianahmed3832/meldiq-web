@@ -1,0 +1,20 @@
+{
+  "apiSource": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+  "source": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-source-7f4cefeb.tar.gz",
+    "bytes": 10303221,
+    "sha256": "cc0585e72b488d29ec942f62c54c4bb6ca7de8cee505a27bd682c20eb8559409",
+    "files": 1245,
+    "allArchivedBytesVerified": true
+  },
+  "compiled": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-compiled-7f4cefeb.tar.gz",
+    "bytes": 10270048,
+    "sha256": "91f71807a47d6c3530caa2d5141d77302e3e34e77089293a55938a461ae48b46",
+    "files": 1552,
+    "allArchivedBytesVerified": true
+  },
+  "openapiRealtimeGatewayAndSdkByteIdenticalTo": "946423018ed34130f10c440d9919b36b9694b97e",
+  "qualification": "58 PostgreSQL official-bot cases, 33 legacy activity cases, TypeScript typecheck, build and generated-contract check. Fresh whole candidate regression and Linux image remain pending.",
+  "deployed": false
+}

@@ -2,15 +2,15 @@
 
 Status: **OPEN — required work remains**. This filename is required by the project brief; it does not mark the project finished.
 
-The broader bot platform is included in committed Web/API candidates. Controlled tests prove scoped native operations, credential revocation, recipient consent, private interactions, encrypted file upload/publication/download, native event lifecycles, SDK integrity and encrypted bot audio through existing-room and opt-in waiting admission. The complete combined Android source is now an immutable candidate with 1,019 JVM passes, 12 skips, compiled device-test sources and a checked development APK. Windows imports the current Web runtime with isolated Electron verification. Installed-native acceptance remains open.
+The broader bot platform is included in committed Web/API candidates. Controlled checks cover scoped native operations, credentials, recipient consent, private interactions, files, native events, SDK integrity, encrypted existing/waiting voice and official Logger safeguards. Android `188a7ac1` adds profile-bound thread-follow synchronization; 1,040 JVM tests passed, 12 skipped, device tests compiled and the development APK was verified. Current Windows source preserves its native adaptations. Installed-native acceptance remains open.
 
-The register still contains all 568 stable rows. Original competitor observations and verification labels are preserved. The bot matrix describes 98 source counterparts awaiting complete acceptance and one approved destination-move deferral. The master Part 4 reconciliation has 129 implemented-but-unaccepted rows, 14 approved deferrals, three active integration rows and 92 rows awaiting their remaining owned review/work. Prior local acceptances from Parts 2/3 are not promoted to production or all-client acceptance.
+The register still contains all 568 stable rows with original competitor observations. The bot matrix records 98 source counterparts awaiting complete acceptance and one approved destination-move deferral. The Part 4 reconciliation now covers 178 rows and records 157 implemented-but-unaccepted rows, 14 approved deferrals, seven active rows and 60 rows retaining their prior research/program-not-started state. Prior Parts 2/3 local acceptances are unchanged.
 
 | Whole-project register measure | Current count and limit |
 | --- | --- |
 | Bounded local `ACCEPTED` | 225: Part 2 has 19; Part 3 has 206; Part 4 has zero. |
-| Implemented, awaiting acceptance | 215: Part 2 has 84; Part 3 has two; Part 4 has 129. |
-| Other states | 73 program-not-started, 21 research, three in progress and 31 `DEFERRED_DECISION`. |
+| Implemented, awaiting acceptance | 243: Part 2 has 84; Part 3 has two; Part 4 has 157. |
+| Other states | 41 program-not-started, 21 research, seven in progress and 31 `DEFERRED_DECISION`. |
 | Outside bounded acceptance | 343 rows, including the 31 recorded deferrals; 312 are in other non-accepted states. This arithmetic does not establish approval of every deferral. |
 | Recorded Yapin interactions/workflows | 58: 24 current interactions and 34 historical workflows. Another 291 rows are UI observations; 219 remain unverified. These categories are distinct from Meldiq implementation. |
 | Original Meldiq baseline | Two observed live UI rows, 375 source-present, 51 partial, 125 unverified, seven missing in inspected Web and eight intentional differences. Source presence does not prove runtime availability. |

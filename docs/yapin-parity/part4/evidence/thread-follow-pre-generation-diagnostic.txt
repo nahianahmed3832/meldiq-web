@@ -1,0 +1,57 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:16423) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16423) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:16702) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16702) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/contracts.test.ts (5 tests | 1 failed) 20453ms
+     × docs/api is what the schemas generate (run npm run contracts after changing them) 1060ms
+(node:16799) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16799) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:16836) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16836) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/contracts.test.ts > contracts > docs/api is what the schemas generate (run npm run contracts after changing them)
+AssertionError: openapi.json: expected '{\n  "openapi": "3.1.0",\n  "info": {…' to be '{\n  "openapi": "3.1.0",\n  "info": {…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -5550,14 +5550,10 @@
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "following": {
+                      "type": "boolean"
+-                   },
+-                   "ifUnset": {
+-                     "description": "Import an older local preference only if this account has no existing choice. The response returns the preserved or newly stored value.",
+-                     "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "following"
+                  ],
+
+ ❯ test/contracts.test.ts:28:72
+     26|   it("docs/api is what the schemas generate (run npm run contracts aft…
+     27|     for (const [name, text] of Object.entries(renderContracts())) {
+     28|       expect(fs.readFileSync(path.join(API_DOCS, name), "utf8"), name)…
+       |                                                                        ^
+     29|     }
+     30|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 22 passed (23)
+   Start at  12:04:04
+   Duration  122.84s (transform 33.33s, setup 0ms, import 67.30s, tests 45.49s, environment 1ms)

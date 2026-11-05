@@ -1,0 +1,14 @@
+{
+  "baseWeb": "8b4d656430a2cd459f3912ce320443fbc3d64e3a",
+  "webSource": "d1258d1788a587f8d41ccb13c01a28fd868fd976",
+  "apiSource": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+  "files": [
+    "public/developers/bot-sdk/manifest.json",
+    "test/contract-source.txt"
+  ],
+  "upstreamFiles": 2373,
+  "documentedAdaptations": 39,
+  "actualDifferences": 26,
+  "unexplainedDifferences": [],
+  "scope": "Provenance pin only; SDK archive bytes and desktop runtime source unchanged. Local build qualification pending."
+}

@@ -1,0 +1,10 @@
+{
+  "apiSource": "946423018ed34130f10c440d9919b36b9694b97e",
+  "sourceArchive": "/tmp/meldiq-part4/releases/meldiq-api-source-94642301.tar.gz",
+  "bytes": 10301990,
+  "sha256": "4233a8a9f81e8f41c9a822625e69ae1e17e931656d7d3a1d1087ba93dd335b55",
+  "trackedServerFiles": 1245,
+  "allArchivedBytesMatchCommittedSource": true,
+  "qualification": "Conditional-import targeted API and contract checks pass; whole runtime regression remains scoped to predecessor 02206c88. New compiled archive pending.",
+  "deployed": false
+}

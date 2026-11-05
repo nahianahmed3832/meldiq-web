@@ -1,0 +1,52 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:24552) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:24552) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/official_bots_activity.test.ts (15 tests | 2 failed | 13 skipped) 1378ms
+       × requires private destinations for Logger content and member logs 7ms
+       × suppresses restored public Logger destinations and reports the configuration problem 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Logger > requires private destinations for Logger content and member logs
+Error: expected HTTP 400, got success
+ ❯ expectStatus test/support/harness.ts:136:9
+    134|     throw new Error(`expected HTTP ${status}, got ${e?.status ?? e}`);
+    135|   }
+    136|   throw new Error(`expected HTTP ${status}, got success`);
+       |         ^
+    137| }
+    138|
+ ❯ test/official_bots_activity.test.ts:175:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Logger > suppresses restored public Logger destinations and reports the configuration problem
+AssertionError: expected { label: 'channelId', ok: true, …(1) } to match object { ok: false }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
++   "ok": true,
+  }
+
+ ❯ test/official_bots_activity.test.ts:191:100
+    189|         await h.ctx.officialBots.rows.save({ ...original, settings: JS…
+    190|         const diagnostics = await owner.req("GET", `${base()}/logger/d…
+    191|         expect(diagnostics.checks.find((check: { label: string }) => c…
+       |                                                                                                    ^
+    192|         const message = await say(ana, secret, "private source before …
+    193|         await send(ana, secret, { type: "edit", target: message, text:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 13 skipped (15)
+   Start at  12:39:12
+   Duration  6.32s (transform 2.28s, setup 0ms, import 3.69s, tests 1.38s, environment 0ms)

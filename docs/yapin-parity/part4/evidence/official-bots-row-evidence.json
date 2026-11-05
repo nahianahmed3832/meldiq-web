@@ -1,0 +1,679 @@
+{
+  "apiSource": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+  "currentApiScope": {
+    "files": 5,
+    "passed": 58,
+    "backend": "PostgreSQL"
+  },
+  "legacyActivityScope": {
+    "files": 1,
+    "passed": 33,
+    "backend": "SQLite/MongoDB"
+  },
+  "historicalTicketsAndReactionRoles": {
+    "source": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+    "passed": 22
+  },
+  "historicalBrowserScope": {
+    "runtime": "1fb387d22f533dc01bb5770e218950d5d2bc4d81",
+    "test": "e4465a2815513f0897eeb3c472abbca1838466c5",
+    "compiledApi": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "case": "official bots: turn on, rename, set up, test, and see them work",
+    "desktopChromiumPassed": 1,
+    "unsupportedBrowserProjectsSkipped": 3,
+    "evidence": "owned-voice-bots-final-browser.txt"
+  },
+  "rows": {
+    "YAP-BOT-001": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "is advertised with a catalog of nine bots, all but Alerts available without a YouTube API key",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "shows a community's bots to members, settings only to editors, and nothing to outsiders",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "turns a bot on as a bot member with its own name and picture, and off again keeping its settings",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Desktop Chromium covers catalog, configuration and diagnostics. Native settings and the full multi-role failure matrix remain pending."
+    },
+    "YAP-BOT-002": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "Welcomer greets a newcomer once with the placeholders filled, and sends a test",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "checks the channels and roles settings name",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "A controlled member join and test send pass. Reconnect, all destination access changes and native UI remain pending."
+    },
+    "YAP-BOT-003": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "Helper answers commands where it can post, and !help lists every bot's commands",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Help and a permitted command execute on the existing API and desktop Chromium. Native cancellation/error and broader command coverage remain pending."
+    },
+    "YAP-BOT-004": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "gives 15–25 XP at most once a minute, not for commands or one-character messages",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "with Bots+: boosts XP, gives role rewards and says the community's own line in its channel",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Server cooldown, level-up and role rewards pass. Multi-device replay and current privacy projections are not fully accepted."
+    },
+    "YAP-BOT-005": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "logs edits with the text before, and deletions with the last text, never pinging",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "requires private destinations for Logger content and member logs",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "does not publish a prepared Logger event after its manager disables it",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Current publication requires a configured private destination and still-enabled Logger. Older stored entries and installed-client configuration are outside this check."
+    },
+    "YAP-BOT-006": {
+      "status": "IN_PROGRESS",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "copies a message once enough other people star it, then follows its count",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "skips private channels and the starboard itself",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Threshold, deduplication and initial private-channel exclusion pass. Existing derived posts are not withdrawn on source deletion or changed visibility; close that privacy gap."
+    },
+    "YAP-BOT-007": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "posts a card people enter with 🎉, shown on the lobby, and draws members only when it ends, even after a restart",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "ends early with !gend, and says so when nobody entered",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "with Bots+: longer, more winners and only members with the required role",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Timed selection, restart and eligibility pass; the existing reroll command still needs a focused success/replay case. No prize was awarded outside fixtures."
+    },
+    "YAP-BOT-008": {
+      "status": "IN_PROGRESS",
+      "cases": [
+        {
+          "file": "server/test/tickets.test.ts",
+          "case": "opens a private channel only the opener and the moderators see, with the text first and a log line",
+          "source": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+          "evidence": "bot-voice-wait-full-api-pg-final.txt"
+        },
+        {
+          "file": "server/test/tickets.test.ts",
+          "case": "lets only the opener or a moderator close a ticket: archived, out of the category, logged",
+          "source": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+          "evidence": "bot-voice-wait-full-api-pg-final.txt"
+        },
+        {
+          "file": "server/test/official_bots_desk.test.ts",
+          "case": "lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Open, private requester/staff access and close are covered. Claim and reopen are not implemented in the inspected ticket routes; complete the remaining lifecycle and leakage checks."
+    },
+    "YAP-BOT-009": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_desk.test.ts",
+          "case": "is unavailable, and refuses, on a server without a YouTube API key",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_desk.test.ts",
+          "case": "posts only uploads published after a channel was added, each once, pinging the role",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_desk.test.ts",
+          "case": "changes and stops following",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Missing configuration, fake-source deduplication and watch changes pass. Live YouTube credentials, quotas and failure recovery remain pending."
+    },
+    "YAP-BOT-010": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "keeps streaks going from yesterday, and one game a day",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "plays privately from the apps, posting only the finished board",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "posts yesterday's recap once just after midnight UTC",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_startup.test.ts",
+          "case": "processes a persisted Wordy community on its first startup tick after billing is ready",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Daily state, private guesses, recap and restart are controlled tests. Cross-client rollover and installed-native qualification remain pending."
+    },
+    "YAP-BOT-011": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/reaction_roles.test.ts",
+          "case": "gives the role on reacting and takes it back when the reaction comes off",
+          "source": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+          "evidence": "bot-voice-wait-full-api-pg-final.txt"
+        },
+        {
+          "file": "server/test/reaction_roles.test.ts",
+          "case": "never takes back a role someone gave by hand",
+          "source": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+          "evidence": "bot-voice-wait-full-api-pg-final.txt"
+        },
+        {
+          "file": "server/test/reaction_roles.test.ts",
+          "case": "stops giving a role that gained an administrative power",
+          "source": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+          "evidence": "bot-voice-wait-full-api-pg-final.txt"
+        }
+      ],
+      "remaining": "Native authority, manual assignment preservation and removal pass at the recorded predecessor. Current browser/native and reconnect matrices remain pending."
+    },
+    "YAP-BOT-012": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "refuses Plus extras without Bots+, and keeps them paused while it's gone",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_desk.test.ts",
+          "case": "falls back to the free limits while Bots+ is gone, keeping what was set",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "is granted and taken away by platform admins, with an end date and a reason",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Operator-grant and free fallback are tested. Real catalog checkout and paid renewal/provider evidence are outside these fixtures."
+    },
+    "YAP-BOTOPT-001": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "Welcomer greets a newcomer once with the placeholders filled, and sends a test",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "checks the channels and roles settings name",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Placeholder expansion, mention handling and channel validation pass; desktop setup is covered. Current native destination changes remain pending."
+    },
+    "YAP-BOTOPT-002": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "Welcomer says goodbye only with Bots+",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "refuses Plus extras without Bots+, and keeps them paused while it's gone",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Goodbye is gated and free welcome stays. Multi-line random selection and cross-client settings qualification remain pending."
+    },
+    "YAP-BOTOPT-003": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "reads !roll, !roll 20 and !roll 2d6 within sane limits",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "Helper answers commands where it can post, and !help lists every bot's commands",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Bounded dice inputs and representative command delivery pass. Complete rate-limit and client interaction cases remain pending."
+    },
+    "YAP-BOTOPT-004": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "Helper's away note answers a mention once per person and ends with the next message",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "answers !rank and !top, and fills the lobby's Levels board",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Away notice deduplication and community leaderboard output pass. Broader privacy and client switch cases remain pending."
+    },
+    "YAP-BOTOPT-005": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "Helper runs a community's own commands with Bots+ only",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Current entitlement-gated custom execution passes; manager validation and negative input matrix are not completely accepted."
+    },
+    "YAP-BOTOPT-006": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "are floor(√(XP / 100))",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "gives 15–25 XP at most once a minute, not for commands or one-character messages",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Actual formula and repeat-message cooldown pass. Distributed/retry performance and all member types remain pending."
+    },
+    "YAP-BOTOPT-007": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "announces a level-up where they chat, with Meldiq's line",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "with Bots+: boosts XP, gives role rewards and says the community's own line in its channel",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Default and Bots+ configured level-up announcements pass. Destination revocation and duplicate delivery across reconnect remain pending."
+    },
+    "YAP-BOTOPT-008": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "with Bots+: boosts XP, gives role rewards and says the community's own line in its channel",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "refuses Plus extras without Bots+, and keeps them paused while it's gone",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Current grant affects XP and free fallback stays. Real paid transitions and cross-client display remain unverified."
+    },
+    "YAP-BOTOPT-009": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "with Bots+: boosts XP, gives role rewards and says the community's own line in its channel",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots.test.ts",
+          "case": "checks the channels and roles settings name",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Reward assignment and configuration validation pass in bounded cases. Complete higher-role, downgrade and replay coverage remains pending."
+    },
+    "YAP-BOTOPT-010": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "logs edits with the text before, and deletions with the last text, never pinging",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "suppresses restored public Logger destinations and reports the configuration problem",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "does not publish a prepared Logger event after its manager disables it",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Public-destination reproduction is closed for new publication. Private editor-selected destinations remain; historical stored output and broader retention are not changed."
+    },
+    "YAP-BOTOPT-011": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "logs joins (new accounts flagged), leaves, kicks, bans, unbans, timeouts and roles with who did it",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "suppresses a restored public member-log destination without exposing a timeout reason",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Actor/target/action output and legacy public-destination suppression pass; full retention and native moderation journeys remain pending."
+    },
+    "YAP-BOTOPT-012": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "with Bots+: member events in their own channel, and channels left out",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "requires private destinations for Logger content and member logs",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "suppresses a restored public member-log destination without exposing a timeout reason",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Private separate routing and denial of old public settings pass. Installed settings and actual paid-provider state remain pending."
+    },
+    "YAP-BOTOPT-013": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "with Bots+: member events in their own channel, and channels left out",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "never logs its own channel",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Excluded sources do not produce a log. The current publication guard rechecks effective settings; broader retry/reconfiguration cases remain pending."
+    },
+    "YAP-BOTOPT-014": {
+      "status": "IN_PROGRESS",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "copies a message once enough other people star it, then follows its count",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "skips private channels and the starboard itself",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Initial threshold and source filtering pass. Attachment copy authorization and revocation after source deletion/visibility changes remain active work."
+    },
+    "YAP-BOTOPT-015": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "copies a message once enough other people star it, then follows its count",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "with Bots+: its own emoji and self-stars",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Free self-star exclusion and configured Bots+ behavior pass. Full queued/replayed-reaction and client settings matrix remains pending."
+    },
+    "YAP-BOTOPT-016": {
+      "status": "IN_PROGRESS",
+      "cases": [
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "with Bots+: its own emoji and self-stars",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_activity.test.ts",
+          "case": "skips private channels and the starboard itself",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Custom emoji and initial private-source exclusion pass. Current source visibility changes and previously derived posts need additional protection."
+    },
+    "YAP-BOTOPT-017": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "take winners after the duration and keep to the free or Bots+ limits",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "with Bots+: longer, more winners and only members with the required role",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "posts a card people enter with 🎉, shown on the lobby, and draws members only when it ends, even after a restart",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Server capacity, current eligibility and restart behavior pass; reroll and stronger replay checks remain pending."
+    },
+    "YAP-BOTOPT-018": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/tickets.test.ts",
+          "case": "checks the panels' channels and limits",
+          "source": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+          "evidence": "bot-voice-wait-full-api-pg-final.txt"
+        },
+        {
+          "file": "server/test/tickets.test.ts",
+          "case": "opens a private channel only the opener and the moderators see, with the text first and a log line",
+          "source": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+          "evidence": "bot-voice-wait-full-api-pg-final.txt"
+        },
+        {
+          "file": "server/test/official_bots_desk.test.ts",
+          "case": "lets the support role see and hear about new tickets, says the welcome line, and logs a transcript on close",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Panel channel/limit validation and restricted staff/requester membership pass. Complete installed staff/requester journeys remain pending."
+    },
+    "YAP-BOTOPT-019": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_desk.test.ts",
+          "case": "is unavailable, and refuses, on a server without a YouTube API key",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_desk.test.ts",
+          "case": "posts only uploads published after a channel was added, each once, pinging the role",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Configured fake source and absent-key paths pass. Live provider quota, malformed response and retry integration remain open."
+    },
+    "YAP-BOTOPT-020": {
+      "status": "IMPLEMENTED_NOT_ACCEPTED",
+      "cases": [
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "keeps streaks going from yesterday, and one game a day",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_games.test.ts",
+          "case": "posts yesterday's recap once just after midnight UTC",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        },
+        {
+          "file": "server/test/official_bots_startup.test.ts",
+          "case": "processes a persisted Wordy community on its first startup tick after billing is ready",
+          "source": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+          "evidence": "official-bot-logger-final-pg.txt"
+        }
+      ],
+      "remaining": "Deterministic daily state, recap and startup are covered. Full cross-client scheduler and installed-client acceptance remain pending."
+    }
+  },
+  "accepted": 0,
+  "physical": "pending by owner choice",
+  "deployed": false
+}

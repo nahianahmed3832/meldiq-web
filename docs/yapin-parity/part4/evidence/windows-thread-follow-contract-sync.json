@@ -1,0 +1,15 @@
+{
+  "baseWeb": "cfdf5481222a2f6070ca723c36569cbe4a0df69d",
+  "webSource": "8b4d656430a2cd459f3912ce320443fbc3d64e3a",
+  "apiSource": "946423018ed34130f10c440d9919b36b9694b97e",
+  "files": [
+    "public/developers/bot-sdk/manifest.json",
+    "public/developers/meldiq-bot-sdk-preview.zip",
+    "test/contract-source.txt"
+  ],
+  "upstreamFiles": 2373,
+  "documentedAdaptations": 39,
+  "actualDifferences": 26,
+  "unexplainedDifferences": [],
+  "scope": "Contract/SDK refresh only; renderer and shell product source unchanged. New build/tests pending."
+}

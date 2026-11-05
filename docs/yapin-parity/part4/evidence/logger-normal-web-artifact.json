@@ -1,0 +1,35 @@
+{
+  "source": "d1258d1788a587f8d41ccb13c01a28fd868fd976",
+  "productRuntime": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
+  "apiCompiledSource": "7f4cefeb0ab84379919b1d8633872f7dc9a44f88",
+  "archive": "/tmp/meldiq-part4/releases/meldiq-web-normal-d1258d1.tar.gz",
+  "bytes": 8866304,
+  "sha256": "aeb90ae9278321baa51c5baa7a67fa039d7b3ce0633c903d598177b0cb9301b9",
+  "files": 478,
+  "allArchivedBytesVerified": true,
+  "sourceMaps": 0,
+  "rawTypescript": 0,
+  "developmentTestLinking": false,
+  "sdk": {
+    "files": 13,
+    "bytes": 241659,
+    "sha256": "66076eecebea5272c81689d04a2c72bd3dd31c2a3952b6892181bf0d57f00967"
+  },
+  "browser": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width",
+      "iphone-width"
+    ],
+    "ordinarySignupAndSdkIntegrity": true,
+    "physical": false,
+    "serviceWorkersBlocked": true
+  },
+  "stage": "disposable loopback PostgreSQL, 34 additive migrations, hosted Auth/Realtime stubs",
+  "deployed": false
+}
