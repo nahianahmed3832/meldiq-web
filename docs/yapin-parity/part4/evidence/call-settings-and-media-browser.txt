@@ -1,0 +1,52 @@
+[WebServer] (node:71228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:71228) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:71228) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:71252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 25 tests using 1 worker
+
+(node:71253) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793863798657,"pid":71253,"hostname":"[local host]","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   1 [chromium] › e2e/call-receipts-sidebar.spec.ts:40:1 › call photos and measured connection latency show during an encrypted voice call (9.2s)
+  ✓   2 [chromium] › e2e/call-settings-capture.spec.ts:14:1 › the microphone check uses selected processing and releases its capture tracks (5.4s)
+  ✓   3 [chromium] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.9s)
+  ✓   4 [chromium] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (5.0s)
+  ✓   5 [chromium] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (10.9s)
+(node:71565) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793863838732,"pid":71565,"hostname":"[local host]","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   6 [firefox] › e2e/call-receipts-sidebar.spec.ts:40:1 › call photos and measured connection latency show during an encrypted voice call (9.9s)
+  -   7 [firefox] › e2e/call-settings-capture.spec.ts:14:1 › the microphone check uses selected processing and releases its capture tracks
+  ✓   8 [firefox] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.3s)
+  ✓   9 [firefox] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (7.1s)
+  ✓  10 [firefox] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (13.1s)
+(node:71803) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793863877719,"pid":71803,"hostname":"[local host]","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  11 [webkit] › e2e/call-receipts-sidebar.spec.ts:40:1 › call photos and measured connection latency show during an encrypted voice call (9.6s)
+  -  12 [webkit] › e2e/call-settings-capture.spec.ts:14:1 › the microphone check uses selected processing and releases its capture tracks
+  ✓  13 [webkit] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.3s)
+  ✓  14 [webkit] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (11.1s)
+  ✓  15 [webkit] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (16.1s)
+(node:72513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793863922638,"pid":72513,"hostname":"[local host]","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  16 [phone-width] › e2e/call-receipts-sidebar.spec.ts:40:1 › call photos and measured connection latency show during an encrypted voice call (8.3s)
+  -  17 [phone-width] › e2e/call-settings-capture.spec.ts:14:1 › the microphone check uses selected processing and releases its capture tracks
+  ✓  18 [phone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.8s)
+  ✓  19 [phone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (5.5s)
+  ✓  20 [phone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (10.7s)
+(node:72822) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793863956051,"pid":72822,"hostname":"[local host]","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  21 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:40:1 › call photos and measured connection latency show during an encrypted voice call (9.2s)
+  -  22 [iphone-width] › e2e/call-settings-capture.spec.ts:14:1 › the microphone check uses selected processing and releases its capture tracks
+  ✓  23 [iphone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.0s)
+  ✓  24 [iphone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (9.9s)
+  ✓  25 [iphone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (20.9s)
+
+  4 skipped
+  21 passed (3.5m)

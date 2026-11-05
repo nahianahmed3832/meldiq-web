@@ -1,0 +1,155 @@
+{
+  "recordedAt": "2026-11-05T07:45:29.672Z",
+  "total": 568,
+  "owned": 238,
+  "updated": 36,
+  "totalOwnedRowsReconciled": 238,
+  "unownedUnchanged": 330,
+  "statusChanges": [
+    {
+      "id": "YAP-VOICE-003",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-004",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-005",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-VOICE-008",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-009",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-015",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-016",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-017",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-018",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-VOICE-019",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-028",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-005",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-008",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-009",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-011",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-EXPR-001",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-EXPR-004",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-EXPR-005",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-EXPR-008",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-004",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-008",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-012",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-013",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-RELEASE-003",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-RELEASE-004",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    }
+  ],
+  "acceptedRowsAdded": 0,
+  "historicalFieldsUnchanged": true,
+  "stableIdsPreserved": true,
+  "part4Implementation": {
+    "IMPLEMENTED_NOT_ACCEPTED": 199,
+    "IN_PROGRESS": 14,
+    "NOT_STARTED_IN_THIS_PROGRAM": 8,
+    "DEFERRED_DECISION": 14,
+    "RESEARCH_REQUIRED": 3
+  },
+  "allImplementation": {
+    "IMPLEMENTED_NOT_ACCEPTED": 285,
+    "RESEARCH_REQUIRED": 5,
+    "DEFERRED_DECISION": 31,
+    "ACCEPTED": 225,
+    "IN_PROGRESS": 14,
+    "NOT_STARTED_IN_THIS_PROGRAM": 8
+  },
+  "unchangedRowsSha256": "e9f3bbcc47d789e494d454fbeab31358fc804d8251306806f3867871d6b8c0b7",
+  "scope": "All remaining 36 Part 4 rows reviewed with exact controlled evidence or an explicit gap. No acceptance promotion."
+}

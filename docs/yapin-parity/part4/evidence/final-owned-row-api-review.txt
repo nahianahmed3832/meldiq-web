@@ -1,0 +1,102 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:77523) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77523) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/standalone_commerce_paypal.test.ts > separate PayPal products (sqlite) > offers one-time Sparks with no Plus offer or gift checkout enabled 197ms
+ ✓ test/standalone_commerce_paypal.test.ts > separate PayPal products (sqlite) > protects one-time purchases from another account and rejects client-supplied prices 77ms
+ ✓ test/standalone_commerce_paypal.test.ts > separate PayPal products (sqlite) > allows only community owners to start Bots+ and keeps its benefits separate from personal Plus 226ms
+ ✓ test/standalone_commerce_paypal.test.ts > separate PayPal products (mongodb) > offers one-time Sparks with no Plus offer or gift checkout enabled 82ms
+ ✓ test/standalone_commerce_paypal.test.ts > separate PayPal products (mongodb) > protects one-time purchases from another account and rejects client-supplied prices 66ms
+ ✓ test/standalone_commerce_paypal.test.ts > separate PayPal products (mongodb) > allows only community owners to start Bots+ and keeps its benefits separate from personal Plus 153ms
+(node:77701) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77701) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > redeems an attachment grant with fresh authorization and denies a revoked session 95ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > uses the versioned API relay accepted by packaged Windows for new and refreshed upload URLs 17ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > preserves old desktop upload sessions and only publishes after a verified promotion 34ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > server-info offers direct uploads 3ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > encrypted on the phone, stored as is, downloaded by members only, and decrypts (AES-256-GCM, like the app) 673ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > only members who may post get an upload; nobody else can see or finish someone's upload 12ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > a presigned upload accepts exactly the announced bytes, once 21ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > refuses files over the limit, over the quota, and too many open uploads 29ms
+PostgreSQL API parity failure call sites (no request values):
+    at /Volumes/code_files/meldiq_parity_integration_api/server/test/direct_uploads.test.ts:267:80
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Volumes/code_files/meldiq_supabase_migration/server/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > large files go in parts: interrupted parts are sent again, the upload resumes from what S3 has, and completes 148ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > recovers multipart completion after S3 commits but the metadata write fails 60ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > rechecks posting permission and entitlements before renewing or completing an upload 18ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > abandoned uploads expire and their objects and parts are removed; nothing recorded is touched 15ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > someone removed from the conversation while uploading can't finish; their object is removed 17ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > when S3 is unavailable the server says so (503), keeps the upload open, and completes once S3 is back 523ms
+ ✓ test/direct_uploads.test.ts > direct uploads to S3 > a fresh URL can be issued for a single upload that wasn't started in time 6ms
+ ✓ test/direct_uploads.test.ts > direct uploads on a server that stores files on its disk > aren't offered, and the existing upload path is unchanged 49ms
+(node:77803) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77803) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/billing.test.ts > lifecycle rules > allow only the documented transitions 1ms
+ ✓ test/billing.test.ts > lifecycle rules > grant the plan while trialing or active, and while past due only within the grace days 0ms
+ ✓ test/billing.test.ts > lifecycle rules > retry failed events with growing, capped delays 0ms
+ ✓ test/billing.test.ts > sandbox provider > accepts a body signed with the secret, as sent 2ms
+ ✓ test/billing.test.ts > sandbox provider > refuses a missing, wrong or stale signature, and a changed body 1ms
+ ✓ test/billing.test.ts > sandbox provider > needs a long secret, and an unknown provider stops the server 1ms
+ ✓ test/billing.test.ts > with the sandbox provider > the plan catalog > creates a draft, publishes it, and freezes published terms 35ms
+ ✓ test/billing.test.ts > with the sandbox provider > the plan catalog > refuses bad terms, duplicate keys and reused provider prices 13ms
+ ✓ test/billing.test.ts > with the sandbox provider > the plan catalog > is managed only by roles with billing.manage, and seen by billing.view 12ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > only owners see billing and start a checkout; the plan must be offered 15ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > refuses unsigned or tampered webhooks and counts them 11ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > never attaches a subscription to an organization without our checkout 8ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > starts the trial from the provider's event, and the plan's limits apply 30ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > acknowledges a duplicate delivery without applying it twice 3ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > ignores an event older than the state already applied 2ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > keeps an invoice that arrives before its subscription and applies it on retry 24ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > keeps the plan through the grace days after a failed payment, and refuses impossible moves 16ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > shows subscriptions, their history and invoices to billing.view roles only 17ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > lets billing admins replay a failed event, with a reason 9ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > compares a subscription with the provider, and re-applies the provider's state with a reason 9ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > gives events up after the last attempt 9ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > reports figures per currency, with their definitions 17ms
+ ✓ test/billing.test.ts > with the sandbox provider > checkout and subscriptions > keeps an existing subscriber's terms when the plan changes 8ms
+ ✓ test/billing.test.ts > with the sandbox provider > operator limits > need an end date, except a super admin's explicit choice, and stop at it 16ms
+ ✓ test/billing.test.ts > without a provider > prepares plans but can't publish, sell, or receive webhooks 50ms
+(node:77879) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77879) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/gifs.test.ts > GIF search > says plainly when it isn't set up, and offers nothing that would fail 8ms
+ ✓ test/gifs.test.ts > GIF search > searches and lists popular GIFs through the server, with the content filter, never logging the words in a URL 13ms
+ ✓ test/gifs.test.ts > GIF search > fetches media only from the provider's own hosts 4ms
+(node:77938) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77938) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/points.test.ts > points kept in postgres > gives nothing to accounts under a day old 238ms
+ ✓ test/points.test.ts > points kept in postgres > counts the daily visit once a day, however often the apps check in 91ms
+ ✓ test/points.test.ts > points kept in postgres > adds 30 for each 7 days in a row, and starts the streak again after a missed day 92ms
+ ✓ test/points.test.ts > points kept in postgres > counts a chat minute once however many messages it has, 5 points per 5 minutes, at most 25 a day 173ms
+ ✓ test/points.test.ts > points kept in postgres > finishes the daily quests from real messages: 3 chats, 3 reactions and a reply to others 554ms
+ ✓ test/points.test.ts > points kept in postgres > claims one-time quests when the account meets them 40ms
+ ✓ test/points.test.ts > points kept in postgres > keeps achievement awards through reloads and missed streaks without inflating the wallet or quest totals 29ms
+ ✓ test/points.test.ts > points kept in postgres > levels up for 100 points, refuses without them, and shows the level on profiles 73ms
+ ✓ test/points.test.ts > points kept in postgres > pays an inviter 100 once the person they brought has stayed 7 days, at most 10 a month 224ms
+ ✓ test/points.test.ts > points kept in postgres > earns 1.5 times on Meldiq Plus 17ms
+ ✓ test/points.test.ts > the points store > never spends below zero, even with level-ups at once 2ms
+(node:78011) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78011) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/call_screen_shares.test.ts > screen sharing on a live call > members outside the call see who starts and stops sharing; cameras don't count 304ms
+ ✓ test/call_screen_shares.test.ts > screen sharing on a live call > someone who leaves while sharing stops showing as sharing, even without an unpublish 33ms
+ ✓ test/call_screen_shares.test.ts > screen sharing on a live call > an ended call carries no sharing, and the next call starts clean 26ms
+ ✓ test/call_screen_shares.test.ts > screen sharing on a live call > people outside the conversation learn nothing about its calls 0ms
+(node:78103) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78103) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/media_publication.test.ts > publishing completed attachments > refuses missing, foreign, duplicate, size-mismatched and hash-mismatched attachments 57ms
+ ✓ test/media_publication.test.ts > publishing completed attachments > retains originals and bounded encrypted previews only after publication, with an idempotent message id 73ms
+ ✓ test/media_publication.test.ts > publishing completed attachments > retains completed files beyond their original window without making unsent files public 23ms
+ ✓ test/media_publication.test.ts > publishing completed attachments > cleans new unsent completed objects while preserving legacy records and published media 32ms
+
+ Test Files  7 passed (7)
+      Tests  69 passed (69)
+   Start at  15:41:40
+   Duration  89.28s (transform 7.78s, setup 0ms, import 21.21s, tests 64.73s, environment 0ms)

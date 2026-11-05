@@ -1,0 +1,28 @@
+[WebServer] (node:76775) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:76775) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:76775) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:76800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:76804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/emoji.spec.ts:12:1 › search, skin tone and categories, into the composer and as a reaction (8.4s)
+(node:76867) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793864434805,"pid":76867,"hostname":"[local host]","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T15:40:52.729+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-f13efc05c83514b7faad389a", "roomID": "RM_MputzhYZpScJ", "participant": "u_so1_zrqmzCupQFsdYCLiKA.d_dResGLBEvXutK527Q4nh-w", "participantID": "PA_yP6zpqGFkCB2", "remote": false, "transport": "PUBLISHER", "label": "_lossy", "error": "[0x7ccffd200008] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+[WebServer] 2026-11-05T15:40:52.729+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-f13efc05c83514b7faad389a", "roomID": "RM_MputzhYZpScJ", "participant": "u_so1_zrqmzCupQFsdYCLiKA.d_dResGLBEvXutK527Q4nh-w", "participantID": "PA_yP6zpqGFkCB2", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "[0x7ccffd200008] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+[WebServer] 2026-11-05T15:40:52.729+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-f13efc05c83514b7faad389a", "roomID": "RM_MputzhYZpScJ", "participant": "u_so1_zrqmzCupQFsdYCLiKA.d_dResGLBEvXutK527Q4nh-w", "participantID": "PA_yP6zpqGFkCB2", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "[0x7ccffd200008] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+  ✓  2 [chromium] › e2e/screen-share-quality.spec.ts:22:1 › shares at High and at Standard: the capture and encoding follow the mode, the peer decodes it, and the UI says what's sent (26.4s)
+(node:77052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [phone-width] › e2e/emoji.spec.ts:12:1 › search, skin tone and categories, into the composer and as a reaction (9.6s)
+(node:77167) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  4 [phone-width] › e2e/screen-share-quality.spec.ts:22:1 › shares at High and at Standard: the capture and encoding follow the mode, the peer decodes it, and the UI says what's sent
+
+  1 skipped
+  3 passed (54.0s)

@@ -1,0 +1,17 @@
+{
+  "high": {
+    "quality": "High",
+    "width": 1920,
+    "height": 1080,
+    "fps": 20
+  },
+  "standard": {
+    "quality": "Standard",
+    "width": 1280,
+    "height": 720,
+    "fps": 20
+  },
+  "peerWidthHigh": 1920,
+  "peerWidthStandard": 1280,
+  "firstPositiveWindowMs": 8470
+}

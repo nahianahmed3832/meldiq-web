@@ -1,0 +1,50 @@
+[WebServer] (node:70465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:70465) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:70465) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:70476) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:70477) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › e2e/call-settings-capture.spec.ts:10:1 › the microphone check uses selected processing and releases its capture tracks (5.7s)
+
+
+  1) [chromium] › e2e/call-settings-capture.spec.ts:10:1 › the microphone check uses selected processing and releases its capture tracks
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "autoGainControl": false,
+    -   "echoCancellation": false,
+    +   "autoGainControl": true,
+    +   "echoCancellation": true,
+        "noiseSuppression": true,
+      }
+
+      41 |   await expect(page.getByRole("meter", { name: "Microphone level", exact: true })).toBeVisible();
+      42 |   await expect.poll(() => page.evaluate(() => (window as ProbeWindow).captureProbe.tracks.some((t) => t.kind === "audio" && t.readyState === "live"))).toBe(true);
+    > 43 |   expect(await page.evaluate(() => (window as ProbeWindow).captureProbe.constraints.at(-1)?.audio)).toMatchObject({
+         |                                                                                                     ^
+      44 |     noiseSuppression: true, echoCancellation: false, autoGainControl: false,
+      45 |   });
+      46 |   await page.getByRole("button", { name: "Stop", exact: true }).click();
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-settings-capture.spec.ts:43:101
+
+    Error Context: test-results/call-settings-capture-the--aff05-releases-its-capture-tracks-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-settings-capture-the--aff05-releases-its-capture-tracks-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-settings-capture-the--aff05-releases-its-capture-tracks-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › e2e/call-settings-capture.spec.ts:10:1 › the microphone check uses selected processing and releases its capture tracks

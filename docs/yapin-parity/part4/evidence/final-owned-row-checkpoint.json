@@ -1,0 +1,552 @@
+{
+  "scope": "All 36 previously unreconciled Part 4 rows. No release acceptance promotion. Sources and controlled tests are distinguished from unrun criteria.",
+  "apiSource": "ba2dc287f63ac75617e983930c0606bd8427a8e8",
+  "webRuntimeSource": "f619e1c36bfe8026a77f5f110cff33ac3339bb70",
+  "e2eTestFollowup": "2c2c47cf0589fb97eacefb40d5944d716d55ff0d",
+  "androidSource": "2612aa2d570630255c9939314356ffd1a69691f5",
+  "windowsDevelopmentSource": "4713fb68f976c57cb3c5c6a703227b0897b1037e",
+  "logs": {
+    "final-owned-row-api-review.txt": "29b95b5445c0db3ae4b8ea92635df388f9446ae4488efca0ce120649684e8ea7",
+    "call-settings-and-media-browser.txt": "063e62d8da41d4eb375b0b0d39f93887f1be4952cf175282fd54d2168369322c",
+    "expressions-screen-browser-final.txt": "9bd738f08a1e102d0fb9a1e8a0107d31b066bf5cf7e244232ba764155a0c1eae",
+    "web-f619e1c-full.txt": "5795a1d0669dbe74d23d3d2f496b92a575b505e84704f33ba0998096ee4597a6"
+  },
+  "rows": {
+    "YAP-VOICE-003": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "Web CallsPage.tsx enumerates input and output devices and checks setSinkId support.",
+        "call-settings-and-media-browser.txt — the microphone check uses selected processing and releases its capture tracks."
+      ],
+      "remaining": "The desktop browser showed both selectors and exercised a fake microphone. Hot unplug, unsupported output routing and physical-device switching remain unverified."
+    },
+    "YAP-VOICE-004": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "call-settings-and-media-browser.txt — the microphone check uses selected processing and releases its capture tracks."
+      ],
+      "remaining": "Explicit Start opened a fake microphone/camera, exposed a level meter and stopped all tracks on Stop. Real device permission and measured sensitivity remain separate."
+    },
+    "YAP-VOICE-005": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IN_PROGRESS",
+      "sourceOrCases": [
+        "call-settings-and-media-browser.txt — the microphone check selects the zero output slider value.",
+        "Web livekitSession.ts and CallsPage.tsx apply device-local call volume."
+      ],
+      "remaining": "Call output volume is implemented. Actual silence across audio devices remains unmeasured. The soundboard and a separate soundboard volume control are deferred by owner choice."
+    },
+    "YAP-VOICE-007": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "sourceOrCases": [
+        "Web call/rules.ts and CallsPage.tsx: browser audio processing uses standard WebRTC constraints."
+      ],
+      "remaining": "No separate AI processor was found in the scoped Web call path. No AI quality or CPU claim is made. A processor, device support and quality/CPU evidence remain open."
+    },
+    "YAP-VOICE-008": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/call-controls.test.ts > call rules > noise reduction turns noise suppression and level on or off, echo cancellation stays; the meter is the root of the RMS.",
+        "call-settings-and-media-browser.txt — the preview passes the selected noise suppression constraint."
+      ],
+      "remaining": "Standard WebRTC noise suppression is passed to call and preview capture. Physical quality and track replacement across browsers and installed clients remain open."
+    },
+    "YAP-VOICE-009": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "call-settings-and-media-browser.txt — the microphone check uses selected processing and releases its capture tracks.",
+        "Web livekitSession.ts applies the same audioProcessing helper to live calls."
+      ],
+      "remaining": "A Chromium reproduction showed the preview ignored echo cancellation and automatic gain. It now uses the same selected constraints as the call path. Physical effect and browser fallback remain unmeasured."
+    },
+    "YAP-VOICE-010": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "sourceOrCases": [
+        "Web call/rules.ts, CallsPage.tsx and Android pre-call meter: input level is displayed, not exposed as an independent noise-gate threshold."
+      ],
+      "remaining": "A separate adjustable sensitivity threshold is not qualified. Quiet speech and real device noise gating still require a defined setting and physical acceptance."
+    },
+    "YAP-VOICE-015": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "expressions-screen-browser-final.txt — ordinary Chromium screen share cancels before invoking display capture and publishes only after Share.",
+        "test/screen-share-support.test.ts > explains missing capture APIs while keeping watching separate from publishing."
+      ],
+      "remaining": "The Meldiq chooser and Cancel pass with a synthetic screen. Physical OS selection, denial and notification handling remain separate."
+    },
+    "YAP-VOICE-016": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "expressions-screen-browser-final.txt — Chromium selected Standard and the native SDK decoded the changed share.",
+        "test/share-quality.test.ts > encodes each rung at its rate and bitrate, scaling the capture down to the rung's height."
+      ],
+      "remaining": "The local browser and native peer measured the Standard cap. Adaptation logic has unit coverage. Real network delivery, older clients and the hosted catalog need their own evidence."
+    },
+    "YAP-VOICE-017": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "expressions-screen-browser-final.txt — Chromium selected High, the peer decoded it and the UI explained the capture frame-rate shortfall.",
+        "Previously scoped API mojo.test.ts: gives everyone in a boosted server its screen shares and voice, never less than their own plan."
+      ],
+      "remaining": "High requests up to 1080p60, but this synthetic capture ran below 60 fps and disclosed the limit. Real entitlements, installed capture and sustained delivery remain unverified."
+    },
+    "YAP-VOICE-018": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "IN_PROGRESS",
+      "sourceOrCases": [
+        "test/call-controls.test.ts > shares with the chosen quality and sound, changes it during the share, and says when someone else stops.",
+        "Web ShareViews.tsx labels Include sound only where browser capture supports it."
+      ],
+      "remaining": "The selected option passes to the adapter. Delivered desktop/application audio and unsupported OS/browser variants were not measured with a real source."
+    },
+    "YAP-VOICE-019": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/call-controls.test.ts > watches the first share, keeps it when another starts, and moves on when it ends.",
+        "test/share-quality.test.ts > leaves the people on screen when the viewer chose them, and never watches your own share.",
+        "Web ShareViews.tsx has explicit stop watching and supported fullscreen actions."
+      ],
+      "remaining": "Viewer selection, concurrent shares and presenter replacement have controlled coverage. Fullscreen, keyboard and installed viewer behavior across supported clients remain open."
+    },
+    "YAP-VOICE-028": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "call-settings-and-media-browser.txt — five browser projects matched digits and emoji to the native SDK peer key.",
+        "test/call-keys.test.ts > derives the same verification code as the Android algorithm, from the key and the call id."
+      ],
+      "remaining": "The normal browser path shows matching code and an encrypted state after media verification. The native test peer is not installed Android. Keep unsupported and problem modes separate from verified call encryption."
+    },
+    "YAP-MEDIA-005": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/media_publication.test.ts > publishing completed attachments > refuses missing, foreign, duplicate, size-mismatched and hash-mismatched attachments",
+        "test/direct_uploads.test.ts > direct uploads to S3 > a presigned upload accepts exactly the announced bytes, once"
+      ],
+      "remaining": "The API checks attachment identity, size and digest before publication; the S3 check used a stand-in. The API does not thereby scan plaintext for malware. Do not advertise malware inspection."
+    },
+    "YAP-MEDIA-008": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/voice-playback.test.ts > starting B pauses A at once, through one audio element, and both show the right state.",
+        "test/voice-playback.test.ts > stops when its player goes away, and on sign-out forgets everything.",
+        "Web VoiceBar.tsx separates start, preview, discard and send."
+      ],
+      "remaining": "The current composer and playback path are present, and playback lifecycle has unit coverage. Device permission denial, physical recording and installed preview are unverified."
+    },
+    "YAP-MEDIA-009": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/gallery.test.ts > puts photos and videos in the media grid and documents in files, newest first.",
+        "test/gallery.test.ts > leaves out deleted messages, voice messages and repeats of the same attachment.",
+        "DetailsTabs.tsx uses the authorized media collection; see Starboard replay/media checkpoint for the later source-visibility boundary."
+      ],
+      "remaining": "Gallery classification, omission and authorized collection paths are present. All-client pagination, search and revocation in an already open gallery remain open."
+    },
+    "YAP-MEDIA-011": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "IN_PROGRESS",
+      "sourceOrCases": [
+        "test/media_publication.test.ts > publishing completed attachments > retains completed files beyond their original window without making unsent files public",
+        "test/media_publication.test.ts > publishing completed attachments > cleans new unsent completed objects while preserving legacy records and published media",
+        "Prepared Privacy 2026-11-04.1 distinguishes message timers and file retention."
+      ],
+      "remaining": "Published objects and cleanup of unpublished objects have separate behavior. A disappearing-message timer does not establish storage erasure. Hosted storage lifecycle, legal retention schedule and historical URLs still require proof."
+    },
+    "YAP-MEDIA-012": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "RESEARCH_REQUIRED",
+      "sourceOrCases": [
+        "call-settings-and-media-browser.txt — two phone-width browser projects exercise media picker/playback with synthetic files.",
+        "Android source snapshot 2612aa2d compiles device tests; no physical execution."
+      ],
+      "remaining": "The owner chose Web/API testing and physical-device checks pending. Android OS capture denial, local file provider, codec and keyboard behavior remain unverified."
+    },
+    "YAP-EXPR-001": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "expressions-screen-browser-final.txt — desktop and phone-width search, skin tone, categories, composer insertion, focus and reaction.",
+        "test/emoji.test.ts > has Unicode's nine groups in order and every emoji once."
+      ],
+      "remaining": "Ordinary Chromium browser flows pass. Installed native accessibility and other input locales remain separate."
+    },
+    "YAP-EXPR-004": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IN_PROGRESS",
+      "sourceOrCases": [
+        "Web ExpressionLibrary.tsx renders star controls and navPrefs.ts stores bounded expressionFavorites.",
+        "test/nav-prefs.test.ts > merges with a change another device made meanwhile instead of overwriting it (shared preference mechanism)."
+      ],
+      "remaining": "Existing custom expression favorites use account navigation preferences. A dedicated touch, cross-account and membership revocation exercise remains open."
+    },
+    "YAP-EXPR-005": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "IN_PROGRESS",
+      "sourceOrCases": [
+        "expressions-screen-browser-final.txt — recent ordering is exposed in the tested picker.",
+        "Web emoji/catalog.ts and Android EmojiData.kt currently store standard emoji recents in device-wide preferences."
+      ],
+      "remaining": "Recent emoji appear after selection, but current storage is shared across accounts on the same client. Account isolation and accepted-use semantics are unfinished."
+    },
+    "YAP-EXPR-008": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/gifs.test.ts > GIF search > searches and lists popular GIFs through the server, with the content filter, never logging the words in a URL",
+        "Web Composer.tsx closes the picker and sends a single selected GIF with a fallback link."
+      ],
+      "remaining": "The existing immediate-send contract is visible in source, and provider search was tested with a stand-in. Hosted media retrieval, rapid repeat/double-send and installed selectors still need direct acceptance."
+    },
+    "YAP-EXPR-009": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "sourceOrCases": [
+        "Web ExpressionPicker.tsx GifTile has a Send GIF action; ExpressionLibrary.tsx stars custom expressions, not provider GIFs."
+      ],
+      "remaining": "A separate saved provider GIF list and expired/revoked provider identity behavior were not found in the scoped source. No signed URLs should be stored as favorites."
+    },
+    "YAP-DEV-009": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "RESEARCH_REQUIRED",
+      "sourceOrCases": [
+        "API bots/events.ts and gateway.ts serve approved durable pull and socket events. Channel webhooks accept inbound posts."
+      ],
+      "remaining": "A signed outbound event delivery transport is distinct from the existing gateway and inbound webhooks. Endpoint trust, SSRF controls, signing/rotation, retry, replay and revocation remain open."
+    },
+    "YAP-BILL-004": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/billing.test.ts > with the sandbox provider > checkout and subscriptions > shows subscriptions, their history and invoices to billing.view roles only",
+        "Public account billing and Admin Subscriptions.tsx display provider-backed state."
+      ],
+      "remaining": "Subscription projections and access controls pass with a sandbox provider. Real recurring items, cancellation and failed/empty states across supported account clients are not fully verified."
+    },
+    "YAP-BILL-007": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "sourceOrCases": [
+        "Previously scoped mojo.test.ts verifies the current Plus badge and hide preference. Web ShownBadgePicker.tsx displays eligible badges."
+      ],
+      "remaining": "No tenure-based badge progression is approved or qualified. Existing Plus badge and hide behavior stay in place. Tenure policy and lifecycle handling remain open if wanted."
+    },
+    "YAP-BILL-008": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "Previously scoped mojo.test.ts — assigns Sparks, pauses slots beyond a lapsed plan and moves or withdraws a Spark."
+      ],
+      "remaining": "Meldiq uses its own Spark allotment and eligibility, including lapsed plan handling. No Yapin allotment or price was copied; real hosted plan lifecycle needs buyer evidence."
+    },
+    "YAP-BILL-012": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/standalone_commerce_paypal.test.ts > separate PayPal products (sqlite) > allows only community owners to start Bots+ and keeps its benefits separate from personal Plus",
+        "test/standalone_commerce_paypal.test.ts > separate PayPal products (mongodb) > allows only community owners to start Bots+ and keeps its benefits separate from personal Plus",
+        "Native Bots+ grant and catalog contracts are preserved."
+      ],
+      "remaining": "SQLite/MongoDB provider stand-ins passed owner checkout and separation from personal Plus. Hosted purchase, cancellation and free bot continuity still need exact end-to-end evidence."
+    },
+    "YAP-BILL-013": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "test/points.test.ts > points kept in postgres > counts the daily visit once a day, however often the apps check in",
+        "test/points.test.ts > the points store > never spends below zero, even with level-ups at once"
+      ],
+      "remaining": "The existing Embers/points ledger is preserved and tests exercise earned activity and concurrent spending. No paid exchange, transfer, cash-out or creator settlement is added."
+    },
+    "YAP-BILL-015": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "sourceOrCases": [
+        "Current mojo.ts and bot directory source expose explicit quota and owner listing states."
+      ],
+      "remaining": "Do not advertise faster creator/bot review. The scoped product has no approved paid queue priority. Existing bot capacity is driven by current entitlement rules."
+    },
+    "YAP-RELEASE-002": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "RESEARCH_REQUIRED",
+      "sourceOrCases": [
+        "Windows desktop main, settings and provider connection source reviewed for local game process detection."
+      ],
+      "remaining": "An automatic game process/activity publisher with an opt-out was not found. Existing connected accounts are a different capability. No game detection or sharing claim is made."
+    },
+    "YAP-RELEASE-003": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "Windows desktop/main/main.ts implements tray and startAtLogin, with busy guards.",
+        "Windows 4713fb6 macOS Electron IPC/SDK development smoke; 109 shell cases."
+      ],
+      "remaining": "Tray and startup controls are present. A Windows install must still test close, exit, startup, active calls and pending sends. macOS smoke is not Windows acceptance."
+    },
+    "YAP-RELEASE-004": {
+      "prior": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
+      "sourceOrCases": [
+        "Windows signed-release.test.ts accepts pinned signed metadata and revalidates downloaded bytes before installation.",
+        "Windows updater.test.ts rejects failed signatures and feed changes while verifying.",
+        "Unsigned NSIS development installer generated; not distributed."
+      ],
+      "remaining": "The candidate verifies manifests, replay state and file bytes; busy and profile protection have controlled tests. Actual signed upgrade, rollback and Authenticode are pending."
+    },
+    "YAP-OPS-004": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "sourceOrCases": [
+        "Status lib/status/store.ts derives percentiles from measured probe observations; public screen remains simple."
+      ],
+      "remaining": "Synthetic probes are not real-user percentiles. Consent, collection, sampling and aggregate RUM acceptance remain open; do not claim current public cohort data."
+    },
+    "YAP-OPS-005": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "sourceOrCases": [
+        "Current report separates loopback timings, browser engine tests and unrun installed/physical journeys."
+      ],
+      "remaining": "The public status does not currently show verified comparable desktop/phone cohorts. Define controlled cohort measurements separately before publishing a comparison."
+    },
+    "YAP-OPS-006": {
+      "prior": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "sourceOrCases": [
+        "Current release artifacts have immutable source hashes. Status product uses incident history and probe metrics."
+      ],
+      "remaining": "No public chart annotation from immutable release events is qualified. Release correlation belongs in operator evidence unless a public design is approved."
+    }
+  },
+  "production": false,
+  "checkedInLogHashes": {
+    "final-owned-row-api-review.txt": "ba5746faebb9a484118712e136ca04820ea15f3037889c5ea5732881486ff67c",
+    "call-settings-and-media-browser.txt": "c6625619baffbaed892eb19dedf0a619c98ba919c8beec0d70c2a0b2d69b1e00",
+    "expressions-screen-browser-final.txt": "4647fd1d19018f20d3a621c99ee966f4e207c72fbd4fe936f5deec5bc371db4f",
+    "web-f619e1c-full.txt": "37dd0cc34f683ac91d8cff524130d25973514973ea51460f4ade27f816dc400e"
+  },
+  "logNormalization": "Hostnames and final blank lines normalized in checked-in copies.",
+  "all36ExactFieldChanges": {
+    "YAP-VOICE-003": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-004": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-005": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-007": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-008": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-009": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-010": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-015": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-016": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-017": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-018": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-019": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-VOICE-028": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-MEDIA-005": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-MEDIA-008": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-MEDIA-009": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-MEDIA-011": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-MEDIA-012": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-EXPR-001": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-EXPR-004": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-EXPR-005": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-EXPR-008": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-EXPR-009": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-DEV-009": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-BILL-004": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-BILL-007": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-BILL-008": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-BILL-012": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-BILL-013": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-BILL-015": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-RELEASE-002": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-RELEASE-003": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-RELEASE-004": [
+      "Gap description",
+      "Implementation status",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-OPS-004": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-OPS-005": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ],
+    "YAP-OPS-006": [
+      "Gap description",
+      "Notes",
+      "Testing status"
+    ]
+  },
+  "all238RowsAccountedFor": true,
+  "renderedSamplesReviewed": true,
+  "spreadsheetErrorScanMatches": 0
+}

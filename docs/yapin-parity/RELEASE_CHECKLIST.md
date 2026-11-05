@@ -8,7 +8,7 @@ Status: open. Production authorization must follow a complete validated candidat
 - [x] Qualify recipient consent, private controls, pinned SDK downloads and existing/waiting encrypted bot voice in controlled Web/API flows.
 - [x] Add private bounded media cleanup metadata and test failed-removal/restart recovery.
 - [x] Disclose complete room-media reception and qualify 15 continuous-source saved-grant probes without claiming provider JWT invalidation or instantaneous revocation.
-- [x] Reconcile 202 Part 4 register rows, including 32 official-bot rows, without changing 330 other-owned rows or historical reference fields.
+- [x] Reconcile all 238 Part 4 register rows, including 32 official-bot rows, without changing 330 other-owned rows or historical reference fields.
 - [x] Restrict official Logger publication to private destinations and verify restored settings and disable races.
 - [x] Qualify the reviewed Ticket claim/release/reopen lifecycle and current transcript audience checks in local API and two Chromium viewports.
 - [ ] Finish Starboard client cache revalidation and live media updates. Native HTTP, queue/realtime replay and source-bound media now have scoped API passes.
@@ -25,7 +25,8 @@ Status: open. Production authorization must follow a complete validated candidat
 - [ ] Qualify installed-native, reconnect, cross-client and notification journeys.
 - [x] Implement optional durable 13+ and exact Terms/Privacy acceptance for email, new provider accounts and first provisioned activation; validate controlled Web/API flows and current native source.
 - [ ] Confirm retention/provider details, publish approved immutable policy revisions, validate installed clients and activate together in the coordinated release.
-- [ ] Reconcile the remaining owned register rows with exact source, test and remaining-work evidence.
+- [x] Reconcile all 238 owned rows with exact source/test evidence or explicit remaining-work boundaries.
+- [ ] Close remaining required per-row implementation and acceptance criteria.
 - [ ] Run the complete same-candidate backend/admin/native regressions and critical Web journeys.
 - [ ] Measure load, login, messaging/history, upload/download, voice/video/share and recovery against a defined baseline.
 - [x] Archive ordinary Web `d1258d1` with development linking disabled; all five normal SDK journeys pass against compiled API `7f4cefeb`. Prior ordinary artifacts and the 45-case checkpoint retain their recorded source scopes.
