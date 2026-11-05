@@ -73,7 +73,16 @@
     "hardcodedCandidates": 0,
     "linguisticReview": "pending"
   },
-  "fullCurrentApiRegression": "running at receipt creation",
+  "fullCurrentApiRegression": {
+    "commit": "281255bb2571d8af4723b01aa138738e419fd78b",
+    "passed": 1938,
+    "skipped": 23,
+    "failed": 0,
+    "passingFiles": 236,
+    "skippedFiles": 4,
+    "durationSeconds": 865.54,
+    "log": "api-281255bb-full-pg.txt"
+  },
   "logs": {
     "starboard-search-collections-red.txt": "5dbcabe98c3d807e508c7031193753c978bcfaba4dc0dfe5370f308291676f35",
     "starboard-search-collections-pg-final.txt": "a8bdf44a8e77fe61077c3c29f65a232da03bdb8794b5cf53dd12f347847047f7",
@@ -92,6 +101,39 @@
     "ticket-web-types.txt": "02f361bbb61b2b6d8aad95b807da063aa0f7e261301757eb47eb0cfe1a768fee",
     "ticket-web-i18n.txt": "fca98b206a5a6aa760ad6fa4d808872cb373970eb460512b07284d5253ec3a96",
     "ticket-web-lint.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "ticket-web-browser.txt": "6233a52b925044cdadf263e2efe080ef537ee2f1d5e198291f9bc84c3e34f7e3"
+    "ticket-web-browser.txt": "6233a52b925044cdadf263e2efe080ef537ee2f1d5e198291f9bc84c3e34f7e3",
+    "ticket-normal-web-tests.txt": "6c285f6b14d0d7b3692243a6662e45f675d4303ea0794f05a90495c3b8fc349b",
+    "ticket-normal-web-tests-final.txt": "26333be6bec33efbc78da93b39d9aa04ee47d48aba5579038459d8f715385428",
+    "ticket-normal-web-build.txt": "2c4144af25350ccde2a74c5219d8c26fa6b05e37c3c721730565d01aa0056b04",
+    "ticket-normal-browser.txt": "49b7fe150e5c87f91aab67435d9d41ba551ace9eb6a866d4494f73dc1ad4771c",
+    "ticket-wire-fixture-capture.txt": "52143ecdcbd1c309807996aa0cd8b3ca7cd7a7ab8feb47bc88bce8a9248365ca",
+    "ticket-wire-contracts.txt": "c5b8449aaf649505522fcdbae918f741a7e3c7d43f4d41af78d5ca7f56073806",
+    "ticket-windows-types.txt": "5527d4aa0d01721a7fdd437441bbb5e1d54aea13ec1ed18633927d73c1306373",
+    "ticket-windows-lint.txt": "68a36c030d5bd0cf2921b43ad906c9fb6053649067f204397599f8e50e433db0",
+    "ticket-windows-i18n.txt": "0780b31fb42a70caa9be09e3cdc680b47a1c75c92197612d034494835ad766b3",
+    "ticket-windows-renderer.txt": "89cb17c56d28f996d2315a5ca776c8ee806cfaaf52f6325983e4a4840ae7680b",
+    "ticket-windows-shell.txt": "394eb0f43dc3420976163c07d9fa930572a851ea46f4a8ca41f6a76cdf7d4676",
+    "ticket-windows-build.txt": "f4985d6361b6c493363ef2c900086dfcb4481b459448383624ff98373bb11026",
+    "ticket-windows-smoke.txt": "1e6f54216a773e99d97eaf4d18e96ab25bc81920c36717ee24bf5c8889a75965",
+    "api-281255bb-full-pg.txt": "6284b8b4f115eddd1f12cafc242294f0f55c19dab66ec6f15fe2606d6baf1bda"
+  },
+  "currentCoordinatedArtifacts": {
+    "web": "68883055d1b2dac17378687338d7c32b9af68cb4",
+    "webReceipt": "ticket-normal-web-artifact.json",
+    "apiRuntime": "281255bb2571d8af4723b01aa138738e419fd78b",
+    "apiContractPin": "16f43cf96a86b2a108dfaac6273aa98d8bae927b",
+    "windows": "62a10bb9bceb53d20cfb62a4dfaae310a67ab394",
+    "windowsReceipt": "ticket-windows-checkpoint.json",
+    "android": "f86fb3a56ec293e5aa8d4bdb06d1a0053126b8cf",
+    "admin": "8a10c4b (earlier bounded qualification)"
+  },
+  "contractCapture": {
+    "apiContractCommit": "16f43cf96a86b2a108dfaac6273aa98d8bae927b",
+    "runtimeByteIdentical": true,
+    "captured": 3,
+    "apiCaptureTests": 14,
+    "apiContractTests": 5,
+    "webContractFixtureFiles": 801,
+    "webFocusedCases": 68
   }
 }

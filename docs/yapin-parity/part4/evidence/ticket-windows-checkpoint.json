@@ -1,0 +1,55 @@
+{
+  "commit": "62a10bb9bceb53d20cfb62a4dfaae310a67ab394",
+  "upstreamWeb": "68883055d1b2dac17378687338d7c32b9af68cb4",
+  "upstreamVerified": 2377,
+  "documentedAdaptations": 39,
+  "actualExplainedDifferences": 26,
+  "renderer": {
+    "passed": 1001,
+    "skipped": 1,
+    "files": 150
+  },
+  "shell": {
+    "passed": 109,
+    "files": 7
+  },
+  "build": {
+    "version": "0.3.0",
+    "commit": "62a10bb9bceb53d20cfb62a4dfaae310a67ab394",
+    "timestamp": "2026-11-05T06:30:39.105Z",
+    "channel": "stable",
+    "distribution": "development",
+    "updateLab": false
+  },
+  "smoke": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "versions": {
+      "app": "0.3.0",
+      "electron": "45.2.1",
+      "chromium": "156.0.8078.75"
+    },
+    "offlineSmokeMs": 2075,
+    "developerAssets": {
+      "source": "16f43cf96a86b2a108dfaac6273aa98d8bae927b",
+      "files": 13,
+      "valid": true
+    },
+    "checks": [
+      "local renderer with network blocked",
+      "pinned packaged SDK manifest and archive integrity",
+      "sandbox and context isolation",
+      "untrusted IPC rejection",
+      "clear cache preserves localStorage and IndexedDB identity",
+      "cache clearing blocked during communication",
+      "economy effects",
+      "native settings",
+      "payment popup has no native bridge and blocks restart",
+      "native invitation captured by the existing join workflow"
+    ],
+    "status": "passed",
+    "windowsInstallation": "not tested by this smoke"
+  },
+  "windowsInstallation": "pending",
+  "distributed": false
+}

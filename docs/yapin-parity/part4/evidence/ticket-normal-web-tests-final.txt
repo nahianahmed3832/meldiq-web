@@ -1,0 +1,17 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_web
+
+(node:51099) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51112) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51115) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51119) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  4 passed (4)
+      Tests  68 passed (68)
+   Start at  14:25:32
+   Duration  4.84s (transform 759ms, setup 145ms, import 2.28s, tests 1.74s, environment 0ms)
+

@@ -1,0 +1,31 @@
+[WebServer] (node:51475) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:51475) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:51475) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:51488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+(node:51492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (6.3s)
+  ✓   2 [chromium] › e2e/ticket-lifecycle.spec.ts:39:1 › a moderator claims, releases, and reopens a private ticket from the desk (12.8s)
+(node:51647) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 [firefox] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (10.3s)
+  ✓   4 [firefox] › e2e/ticket-lifecycle.spec.ts:39:1 › a moderator claims, releases, and reopens a private ticket from the desk (8.7s)
+(node:51764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [webkit] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (6.9s)
+  ✓   6 [webkit] › e2e/ticket-lifecycle.spec.ts:39:1 › a moderator claims, releases, and reopens a private ticket from the desk (11.9s)
+(node:51940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [phone-width] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (7.0s)
+  ✓   8 [phone-width] › e2e/ticket-lifecycle.spec.ts:39:1 › a moderator claims, releases, and reopens a private ticket from the desk (7.3s)
+(node:52051) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [iphone-width] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (8.6s)
+  ✓  10 [iphone-width] › e2e/ticket-lifecycle.spec.ts:39:1 › a moderator claims, releases, and reopens a private ticket from the desk (8.3s)
+
+  10 passed (2.0m)

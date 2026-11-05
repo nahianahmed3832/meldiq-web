@@ -1,0 +1,564 @@
+
+> meldiq-desktop@0.3.0 build
+> node scripts/build.mjs
+
+Production and development builder configurations match the installed electron-builder schema.
+Canonical macOS application icon verified.
+Canonical Windows branding and all nine ICO resolutions verified.
+┌─────────┬────────────┬───────┬──────────┬─────────┬──────────────┐
+│ (index) │ translated │ total │ coverage │ missing │ untranslated │
+├─────────┼────────────┼───────┼──────────┼─────────┼──────────────┤
+│ en      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ bn      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ hi      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ ur      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ zh-CN   │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ zh-TW   │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ ja      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ ko      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ id      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ vi      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ th      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ ar      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ tr      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ pt-BR   │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ es-419  │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ es-ES   │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ fr      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ de      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ it      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ nl      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ pl      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ ru      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ uk      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ ro      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ sv      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ cs      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ el      │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+│ pt-PT   │ 6313       │ 6313  │ '100%'   │ 0       │ 0            │
+└─────────┴────────────┴───────┴──────────┴─────────┴──────────────┘
+0 structural errors; 0 hardcoded source candidates. Complete: true
+vite v7.3.7 building client environment for production...
+transforming...
+node_modules/lucide-react/dist/esm/Icon.mjs (2:0): Module level directives cause errors when bundled, "use client" in "node_modules/lucide-react/dist/esm/Icon.mjs" was ignored.
+node_modules/lucide-react/dist/esm/context.mjs (2:0): Module level directives cause errors when bundled, "use client" in "node_modules/lucide-react/dist/esm/context.mjs" was ignored.
+node_modules/zod/v4/core/util.js (400:0): A comment
+
+"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+
+in "node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/zod/v4/core/regexes.js (74:0): A comment
+
+"/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+ * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+ * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+
+in "node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/next-intl/dist/esm/production/shared/NextIntlClientProvider.js (1:0): Module level directives cause errors when bundled, "use client" in "node_modules/next-intl/dist/esm/production/shared/NextIntlClientProvider.js" was ignored.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_parity_integration_windows/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+
+"/* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+
+"/* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+
+"// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+
+"//   /* @__PURE__ */ oidNist(0x07),"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+
+"//   /* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+
+"//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+
+"//   /* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+
+"//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_parity_integration_windows/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_parity_integration_windows/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_parity_integration_windows/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_parity_integration_windows/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_parity_integration_windows/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+
+"/* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+
+"/* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+
+"// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+
+"//   /* @__PURE__ */ oidNist(0x07),"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+
+"//   /* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+
+"//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+
+"//   /* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+
+"//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+✓ 3210 modules transformed.
+rendering chunks...
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/common.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/auth.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/onboarding.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/workspace.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/messaging.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/calls.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/files.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/organization.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/settings.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/notifications.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/billing.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/errors.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/locales/en/admin.json is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/runtime.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/i18n/english.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/application/accountSwitch.ts is dynamically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/application/webPush.ts but also statically imported by /Volumes/code_files/meldiq_parity_integration_windows/packages/web/src/ui/shell/AccountActions.tsx, dynamic import will not move module into another chunk.
+
+computing gzip size...
+../../dist/renderer/assets/__vite-browser-external-9wXp6ZBx.js      0.03 kB
+../../dist/renderer/index.html                                      0.48 kB │ gzip:   0.31 kB
+../../dist/renderer/assets/cipher.worker-DvTfUKHU.js               31.48 kB
+../../dist/renderer/assets/e2eeWorker-dpadYrHO.js                 103.87 kB
+../../dist/renderer/assets/index-BfMS_6Cz.css                     347.57 kB │ gzip:  66.91 kB
+../../dist/renderer/assets/__vite-browser-external-BIHI7g3E.js      0.03 kB │ gzip:   0.05 kB
+../../dist/renderer/assets/admin-B5JiNg1h.js                        0.24 kB │ gzip:   0.19 kB
+../../dist/renderer/assets/admin-CSna-fb8.js                        0.24 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/lock-BxVA2vLu.js                         0.24 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/admin-oyWVFTwx.js                        0.24 kB │ gzip:   0.22 kB
+../../dist/renderer/assets/admin-DwzY-7ME.js                        0.25 kB │ gzip:   0.20 kB
+../../dist/renderer/assets/admin-D7ia_ZmY.js                        0.25 kB │ gzip:   0.20 kB
+../../dist/renderer/assets/admin-B5NjP34h.js                        0.26 kB │ gzip:   0.22 kB
+../../dist/renderer/assets/admin-DUK0N1Xo.js                        0.26 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/admin-BFG7Sr51.js                        0.27 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/admin-CUW3_zM2.js                        0.27 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/admin-DyS7kjaB.js                        0.27 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/admin-Cs5yT3nD.js                        0.27 kB │ gzip:   0.20 kB
+../../dist/renderer/assets/admin-DeUD6Og9.js                        0.27 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/admin-Db2hXTvI.js                        0.27 kB │ gzip:   0.22 kB
+../../dist/renderer/assets/admin-C2TdOwL8.js                        0.28 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/admin-C33UgtrN.js                        0.28 kB │ gzip:   0.24 kB
+../../dist/renderer/assets/admin-U8YAuItl.js                        0.28 kB │ gzip:   0.21 kB
+../../dist/renderer/assets/admin-D1P0H3DL.js                        0.29 kB │ gzip:   0.22 kB
+../../dist/renderer/assets/admin-DGh5Dqp1.js                        0.29 kB │ gzip:   0.23 kB
+../../dist/renderer/assets/admin--_YQhZd4.js                        0.30 kB │ gzip:   0.25 kB
+../../dist/renderer/assets/admin-DsTCCi3Z.js                        0.30 kB │ gzip:   0.27 kB
+../../dist/renderer/assets/admin-D0RHehXz.js                        0.30 kB │ gzip:   0.25 kB
+../../dist/renderer/assets/laptop-Bv4fNLhs.js                       0.34 kB │ gzip:   0.25 kB
+../../dist/renderer/assets/admin-DokfvnNM.js                        0.35 kB │ gzip:   0.27 kB
+../../dist/renderer/assets/admin-CVk4FfuF.js                        0.36 kB │ gzip:   0.28 kB
+../../dist/renderer/assets/admin-wDf79JdM.js                        0.38 kB │ gzip:   0.27 kB
+../../dist/renderer/assets/admin-D-opaZYw.js                        0.39 kB │ gzip:   0.28 kB
+../../dist/renderer/assets/crown-DyVki8aI.js                        0.40 kB │ gzip:   0.27 kB
+../../dist/renderer/assets/admin-ChFDUIyj.js                        0.42 kB │ gzip:   0.27 kB
+../../dist/renderer/assets/admin-DUW_RDst.js                        0.44 kB │ gzip:   0.28 kB
+../../dist/renderer/assets/index.esm-vMhAsJOw.js                    0.74 kB │ gzip:   0.41 kB
+../../dist/renderer/assets/notifications-Dto1k25k.js                1.50 kB │ gzip:   0.80 kB
+../../dist/renderer/assets/notifications-DI7hpHSM.js                1.50 kB │ gzip:   0.80 kB
+../../dist/renderer/assets/notifications-BFAX91-8.js                1.60 kB │ gzip:   0.73 kB
+../../dist/renderer/assets/notifications-BRzERqbm.js                1.61 kB │ gzip:   0.77 kB
+../../dist/renderer/assets/notifications-B31BGkMg.js                1.62 kB │ gzip:   0.73 kB
+../../dist/renderer/assets/notifications-BFcTLOeQ.js                1.64 kB │ gzip:   0.76 kB
+../../dist/renderer/assets/notifications-DNRXUMjs.js                1.65 kB │ gzip:   0.77 kB
+../../dist/renderer/assets/notifications-CKvfoaBe.js                1.66 kB │ gzip:   0.84 kB
+../../dist/renderer/assets/notifications-aXDqnRbh.js                1.66 kB │ gzip:   0.78 kB
+../../dist/renderer/assets/notifications-xF49Ql1R.js                1.67 kB │ gzip:   0.77 kB
+../../dist/renderer/assets/notifications-DBMJypj2.js                1.67 kB │ gzip:   0.81 kB
+../../dist/renderer/assets/notifications-C5gBrl4p.js                1.68 kB │ gzip:   0.77 kB
+../../dist/renderer/assets/notifications-BqK0MLTm.js                1.68 kB │ gzip:   0.77 kB
+../../dist/renderer/assets/notifications-B_j54Xk7.js                1.68 kB │ gzip:   0.77 kB
+../../dist/renderer/assets/notifications-DokLcvMR.js                1.68 kB │ gzip:   0.79 kB
+../../dist/renderer/assets/notifications-CNREwae0.js                1.70 kB │ gzip:   0.77 kB
+../../dist/renderer/assets/notifications-DsEPIrdz.js                1.74 kB │ gzip:   0.82 kB
+../../dist/renderer/assets/notifications-BZAZXkl8.js                1.76 kB │ gzip:   0.77 kB
+../../dist/renderer/assets/notifications-BcdP1_k_.js                1.76 kB │ gzip:   0.87 kB
+../../dist/renderer/assets/notifications-BZwvuePN.js                1.89 kB │ gzip:   0.85 kB
+../../dist/renderer/assets/notifications-CHWvdPXl.js                2.02 kB │ gzip:   0.91 kB
+../../dist/renderer/assets/notifications-CClhBTt5.js                2.08 kB │ gzip:   0.88 kB
+../../dist/renderer/assets/notifications-CYEJ8t4T.js                2.12 kB │ gzip:   0.92 kB
+../../dist/renderer/assets/notifications-DP1fq_gT.js                2.18 kB │ gzip:   0.97 kB
+../../dist/renderer/assets/notifications-Cg7DrcGT.js                2.40 kB │ gzip:   0.90 kB
+../../dist/renderer/assets/notifications-5jA9YsRQ.js                2.49 kB │ gzip:   0.95 kB
+../../dist/renderer/assets/notifications-DBJWynTD.js                2.64 kB │ gzip:   0.97 kB
+../../dist/renderer/assets/common-Bad3n1ji.js                       3.38 kB │ gzip:   1.54 kB
+../../dist/renderer/assets/common-DiNFBJ5Z.js                       3.38 kB │ gzip:   1.53 kB
+../../dist/renderer/assets/common-CkFSaTWL.js                       3.41 kB │ gzip:   1.35 kB
+../../dist/renderer/assets/common-CNrhF5wx.js                       3.56 kB │ gzip:   1.58 kB
+../../dist/renderer/assets/common-BSYZ4uPq.js                       3.66 kB │ gzip:   1.53 kB
+../../dist/renderer/assets/common-MXWwUZwx.js                       3.75 kB │ gzip:   1.67 kB
+../../dist/renderer/assets/common-C1xAR_HG.js                       3.76 kB │ gzip:   1.48 kB
+../../dist/renderer/assets/common-Bnwe8D_Z.js                       3.99 kB │ gzip:   1.57 kB
+../../dist/renderer/assets/common-BKoXiR_f.js                       4.05 kB │ gzip:   1.57 kB
+../../dist/renderer/assets/common-CyZosYms.js                       4.12 kB │ gzip:   1.63 kB
+../../dist/renderer/assets/common-DAU8sA-Y.js                       4.33 kB │ gzip:   1.59 kB
+../../dist/renderer/assets/common-B8jho8hY.js                       4.40 kB │ gzip:   1.62 kB
+../../dist/renderer/assets/common-BtquSVxn.js                       4.41 kB │ gzip:   1.63 kB
+../../dist/renderer/assets/common-nOG2pTC9.js                       4.46 kB │ gzip:   1.68 kB
+../../dist/renderer/assets/common-DuKNNB4H.js                       4.50 kB │ gzip:   1.68 kB
+../../dist/renderer/assets/common-BDZvjaT1.js                       4.51 kB │ gzip:   1.65 kB
+../../dist/renderer/assets/common-Cn2SwwNL.js                       4.57 kB │ gzip:   1.75 kB
+../../dist/renderer/assets/common-BPS16DFY.js                       4.65 kB │ gzip:   1.75 kB
+../../dist/renderer/assets/common-DKWxv-eX.js                       4.75 kB │ gzip:   1.69 kB
+../../dist/renderer/assets/common-PKjN--nj.js                       4.86 kB │ gzip:   1.84 kB
+../../dist/renderer/assets/onboarding-0vYThSmY.js                   4.88 kB │ gzip:   2.31 kB
+../../dist/renderer/assets/onboarding-CvBWF0Os.js                   4.89 kB │ gzip:   2.30 kB
+../../dist/renderer/assets/common-Bpit1IJo.js                       4.91 kB │ gzip:   1.84 kB
+../../dist/renderer/assets/onboarding-JnZQuc2j.js                   5.09 kB │ gzip:   2.07 kB
+../../dist/renderer/assets/common-DVk_4jBO.js                       5.14 kB │ gzip:   1.95 kB
+../../dist/renderer/assets/onboarding-BxgrC6eO.js                   5.34 kB │ gzip:   2.19 kB
+../../dist/renderer/assets/common-Mcxx8Pdd.js                       5.34 kB │ gzip:   1.77 kB
+../../dist/renderer/assets/onboarding-nnfsYHg5.js                   5.35 kB │ gzip:   2.28 kB
+../../dist/renderer/assets/onboarding-Bi_wpsQp.js                   5.37 kB │ gzip:   2.20 kB
+../../dist/renderer/assets/onboarding-DtnpmyyE.js                   5.39 kB │ gzip:   2.16 kB
+../../dist/renderer/assets/onboarding-CDO7uCMA.js                   5.40 kB │ gzip:   2.29 kB
+../../dist/renderer/assets/onboarding-SjKeB4Yv.js                   5.42 kB │ gzip:   2.35 kB
+../../dist/renderer/assets/onboarding-Bsjzjh2W.js                   5.44 kB │ gzip:   2.24 kB
+../../dist/renderer/assets/onboarding-AN_CJfZJ.js                   5.47 kB │ gzip:   2.31 kB
+../../dist/renderer/assets/onboarding-SpbukAhH.js                   5.50 kB │ gzip:   2.25 kB
+../../dist/renderer/assets/onboarding-D-2UAJ4M.js                   5.58 kB │ gzip:   2.23 kB
+../../dist/renderer/assets/onboarding-CVj2MJV-.js                   5.59 kB │ gzip:   2.23 kB
+../../dist/renderer/assets/common-C1Peymx1.js                       5.69 kB │ gzip:   1.78 kB
+../../dist/renderer/assets/onboarding-DfS4g4Ft.js                   5.75 kB │ gzip:   2.37 kB
+../../dist/renderer/assets/onboarding-CpytDlvU.js                   5.79 kB │ gzip:   2.33 kB
+../../dist/renderer/assets/onboarding-CqbWXDWh.js                   5.82 kB │ gzip:   2.34 kB
+../../dist/renderer/assets/common-VHI_F4Ex.js                       6.09 kB │ gzip:   2.05 kB
+../../dist/renderer/assets/files-B20xJGf_.js                        6.12 kB │ gzip:   3.39 kB
+../../dist/renderer/assets/onboarding-CXGsnnQv.js                   6.13 kB │ gzip:   2.37 kB
+../../dist/renderer/assets/files-BUZdWmdp.js                        6.13 kB │ gzip:   3.40 kB
+../../dist/renderer/assets/onboarding-WL-U2Pl4.js                   6.16 kB │ gzip:   2.48 kB
+../../dist/renderer/assets/common-DlfTJPIo.js                       6.18 kB │ gzip:   2.08 kB
+../../dist/renderer/assets/files-BJoyJOqT.js                        6.40 kB │ gzip:   3.05 kB
+../../dist/renderer/assets/files-DDjqt4G6.js                        6.46 kB │ gzip:   3.16 kB
+../../dist/renderer/assets/LinkScreen-lX1dSY9y.js                   6.50 kB │ gzip:   2.26 kB
+../../dist/renderer/assets/files-D53noeTf.js                        6.54 kB │ gzip:   3.25 kB
+../../dist/renderer/assets/files-QrdFnb5B.js                        6.60 kB │ gzip:   3.16 kB
+../../dist/renderer/assets/onboarding-BWx6mXDW.js                   6.61 kB │ gzip:   2.42 kB
+../../dist/renderer/assets/files-BRdkaxzs.js                        6.63 kB │ gzip:   3.42 kB
+../../dist/renderer/assets/files-DcI8acSl.js                        6.65 kB │ gzip:   3.22 kB
+../../dist/renderer/assets/files-C6phuNkC.js                        6.66 kB │ gzip:   3.22 kB
+../../dist/renderer/assets/files-DgtWQjqb.js                        6.67 kB │ gzip:   3.34 kB
+../../dist/renderer/assets/files-Dj-eiW15.js                        6.68 kB │ gzip:   3.23 kB
+../../dist/renderer/assets/files-C24dlNAe.js                        6.68 kB │ gzip:   3.23 kB
+../../dist/renderer/assets/common-C8qHxyFM.js                       6.69 kB │ gzip:   2.21 kB
+../../dist/renderer/assets/files-D-4MsHNx.js                        6.76 kB │ gzip:   3.23 kB
+../../dist/renderer/assets/files-3GcpaDVb.js                        6.81 kB │ gzip:   3.30 kB
+../../dist/renderer/assets/files-BpUiCxMe.js                        6.91 kB │ gzip:   3.32 kB
+../../dist/renderer/assets/files-6Cu2r7iZ.js                        6.94 kB │ gzip:   3.30 kB
+../../dist/renderer/assets/files-Dr_b5UeB.js                        7.09 kB │ gzip:   3.49 kB
+../../dist/renderer/assets/files-CF_cE-2j.js                        7.14 kB │ gzip:   3.36 kB
+../../dist/renderer/assets/onboarding-XN85XvU2.js                   7.19 kB │ gzip:   2.54 kB
+../../dist/renderer/assets/files-BW7kG_iW.js                        7.48 kB │ gzip:   3.58 kB
+../../dist/renderer/assets/files-C8062qoF.js                        7.62 kB │ gzip:   3.53 kB
+../../dist/renderer/assets/onboarding-OSiPaaZg.js                   7.96 kB │ gzip:   2.76 kB
+../../dist/renderer/assets/onboarding-O01i2zg-.js                   8.08 kB │ gzip:   2.78 kB
+../../dist/renderer/assets/files-DzK1mZl0.js                        8.09 kB │ gzip:   3.53 kB
+../../dist/renderer/assets/files-vVr8fwmW.js                        8.84 kB │ gzip:   3.80 kB
+../../dist/renderer/assets/onboarding-Bwh1TJ8R.js                   9.12 kB │ gzip:   2.88 kB
+../../dist/renderer/assets/onboarding-CNRMqOsH.js                   9.13 kB │ gzip:   2.54 kB
+../../dist/renderer/assets/files-CpbIoadF.js                        9.14 kB │ gzip:   3.91 kB
+../../dist/renderer/assets/onboarding-pp7brhxN.js                   9.36 kB │ gzip:   2.55 kB
+../../dist/renderer/assets/onboarding-ZO8B5MPA.js                   9.40 kB │ gzip:   2.66 kB
+../../dist/renderer/assets/files-bVJUvH-k.js                        9.46 kB │ gzip:   4.00 kB
+../../dist/renderer/assets/files-a83WZ9fT.js                       10.13 kB │ gzip:   3.68 kB
+../../dist/renderer/assets/files-Dq9ItyiX.js                       10.31 kB │ gzip:   3.74 kB
+../../dist/renderer/assets/files-KI0aGpvi.js                       10.72 kB │ gzip:   3.82 kB
+../../dist/renderer/assets/lobbyContext-BlNT8RK3.js                12.65 kB │ gzip:   4.37 kB
+../../dist/renderer/assets/auth-B5GBYh7X.js                        14.81 kB │ gzip:   6.46 kB
+../../dist/renderer/assets/auth-D1Vd6XjX.js                        14.87 kB │ gzip:   6.48 kB
+../../dist/renderer/assets/auth-Bmyb9JpJ.js                        15.44 kB │ gzip:   5.98 kB
+../../dist/renderer/assets/auth-tKnKHpPk.js                        15.90 kB │ gzip:   6.29 kB
+../../dist/renderer/assets/auth-Bnqd5LVy.js                        15.94 kB │ gzip:   6.25 kB
+../../dist/renderer/assets/auth-Sojbqq4A.js                        15.97 kB │ gzip:   6.17 kB
+../../dist/renderer/assets/auth-BC7YmcaE.js                        15.97 kB │ gzip:   6.47 kB
+../../dist/renderer/assets/auth-DEOBoMa-.js                        15.98 kB │ gzip:   6.19 kB
+../../dist/renderer/assets/auth-BgynVsAx.js                        15.99 kB │ gzip:   6.32 kB
+../../dist/renderer/assets/auth-CJmBAXSw.js                        16.06 kB │ gzip:   6.53 kB
+../../dist/renderer/assets/auth-vYocTawL.js                        16.16 kB │ gzip:   6.27 kB
+../../dist/renderer/assets/auth-CV0mOQr5.js                        16.36 kB │ gzip:   6.41 kB
+../../dist/renderer/assets/auth-i72xPmtL.js                        16.79 kB │ gzip:   6.36 kB
+../../dist/renderer/assets/auth-OkKDGNdG.js                        16.80 kB │ gzip:   6.36 kB
+../../dist/renderer/assets/auth-CC8gI3KD.js                        17.19 kB │ gzip:   6.46 kB
+../../dist/renderer/assets/auth-CY9RtfdV.js                        17.23 kB │ gzip:   6.54 kB
+../../dist/renderer/assets/auth-BR8xnPlI.js                        17.33 kB │ gzip:   6.63 kB
+../../dist/renderer/assets/auth-C8SwOK07.js                        18.11 kB │ gzip:   6.56 kB
+../../dist/renderer/assets/auth-B726eWeA.js                        18.66 kB │ gzip:   6.61 kB
+../../dist/renderer/assets/auth-BsBB8nE7.js                        19.19 kB │ gzip:   6.71 kB
+../../dist/renderer/assets/auth-C_L9CEkr.js                        20.73 kB │ gzip:   6.90 kB
+../../dist/renderer/assets/calls-DLpCpUju.js                       21.82 kB │ gzip:   9.64 kB
+../../dist/renderer/assets/calls-B8pyYxfL.js                       21.82 kB │ gzip:   9.67 kB
+../../dist/renderer/assets/auth-D2QBsdro.js                        22.51 kB │ gzip:   7.31 kB
+../../dist/renderer/assets/auth-CsnqgQz3.js                        22.80 kB │ gzip:   7.41 kB
+../../dist/renderer/assets/calls-Dj1Bzr28.js                       23.15 kB │ gzip:   9.30 kB
+../../dist/renderer/assets/calls-Cv7Zl1Xh.js                       23.29 kB │ gzip:   9.09 kB
+../../dist/renderer/assets/errors-ClJRkct0.js                      23.31 kB │ gzip:   9.19 kB
+../../dist/renderer/assets/errors-BozS-h4y.js                      23.45 kB │ gzip:   9.23 kB
+../../dist/renderer/assets/calls-CwPsCHcV.js                       23.55 kB │ gzip:   9.52 kB
+../../dist/renderer/assets/calls-9VRncij7.js                       23.68 kB │ gzip:   9.88 kB
+../../dist/renderer/assets/calls-CANpj3Z_.js                       23.71 kB │ gzip:   9.44 kB
+../../dist/renderer/assets/calls-C4j8IVXQ.js                       23.77 kB │ gzip:   9.42 kB
+../../dist/renderer/assets/calls-DWJKUl7S.js                       23.83 kB │ gzip:   9.54 kB
+../../dist/renderer/assets/calls-CEfom_4M.js                       24.02 kB │ gzip:   9.74 kB
+../../dist/renderer/assets/calls-DEiQgEmi.js                       24.12 kB │ gzip:   9.56 kB
+../../dist/renderer/assets/calls-CMS9rHUM.js                       24.12 kB │ gzip:   9.57 kB
+../../dist/renderer/assets/calls-D2fWtd3Q.js                       24.31 kB │ gzip:   9.80 kB
+../../dist/renderer/assets/calls-WtOrdSrK.js                       24.32 kB │ gzip:   9.54 kB
+../../dist/renderer/assets/calls-DnQg1S1m.js                       24.56 kB │ gzip:   9.68 kB
+../../dist/renderer/assets/calls-C3MkU-UN.js                       24.90 kB │ gzip:   9.84 kB
+../../dist/renderer/assets/calls-PwtfqY37.js                       25.13 kB │ gzip:   9.90 kB
+../../dist/renderer/assets/auth-DLQOa7_6.js                        25.70 kB │ gzip:   7.60 kB
+../../dist/renderer/assets/calls-BYqZDx9t.js                       25.74 kB │ gzip:   9.61 kB
+../../dist/renderer/assets/calls-CJSIbJqg.js                       25.91 kB │ gzip:  10.08 kB
+../../dist/renderer/assets/errors-CyECw-HO.js                      26.00 kB │ gzip:   8.41 kB
+../../dist/renderer/assets/errors-ChkMovEx.js                      26.03 kB │ gzip:   9.11 kB
+../../dist/renderer/assets/auth-Dk_se6-C.js                        26.44 kB │ gzip:   7.16 kB
+../../dist/renderer/assets/errors-CRACb71i.js                      26.78 kB │ gzip:   8.94 kB
+../../dist/renderer/assets/auth-BWuEsPoO.js                        26.79 kB │ gzip:   7.09 kB
+../../dist/renderer/assets/errors-BRSANT9u.js                      26.98 kB │ gzip:   9.74 kB
+../../dist/renderer/assets/errors-BazJwol1.js                      27.22 kB │ gzip:   9.06 kB
+../../dist/renderer/assets/errors-Z_bh5bAo.js                      27.35 kB │ gzip:   9.05 kB
+../../dist/renderer/assets/errors-DYeJzEua.js                      27.41 kB │ gzip:   9.06 kB
+../../dist/renderer/assets/errors-BMf8HDqK.js                      27.50 kB │ gzip:   9.08 kB
+../../dist/renderer/assets/calls-Cdk_-0yZ.js                       27.60 kB │ gzip:  10.06 kB
+../../dist/renderer/assets/errors-CVvftFAz.js                      27.64 kB │ gzip:   9.64 kB
+../../dist/renderer/assets/index.esm-Xf07Ehhd.js                   27.94 kB │ gzip:   8.99 kB
+../../dist/renderer/assets/auth-bO_za0Im.js                        28.10 kB │ gzip:   7.27 kB
+../../dist/renderer/assets/errors-kGK_Fkqs.js                      28.18 kB │ gzip:   9.18 kB
+../../dist/renderer/assets/errors-BBGlx3My.js                      28.20 kB │ gzip:   9.44 kB
+../../dist/renderer/assets/errors-Yb_TdrlQ.js                      28.20 kB │ gzip:   9.20 kB
+../../dist/renderer/assets/calls-DdnOBIAo.js                       29.57 kB │ gzip:  10.26 kB
+../../dist/renderer/assets/errors-yKg4Ug8f.js                      29.61 kB │ gzip:   9.78 kB
+../../dist/renderer/assets/errors-4Of2T8Mh.js                      29.66 kB │ gzip:   9.46 kB
+../../dist/renderer/assets/errors-CJ_9qg1p.js                      30.92 kB │ gzip:   9.34 kB
+../../dist/renderer/assets/errors-DzKc6Wht.js                      31.00 kB │ gzip:   9.63 kB
+../../dist/renderer/assets/calls-CqyTc_nP.js                       31.70 kB │ gzip:  10.79 kB
+../../dist/renderer/assets/calls-C06Ftb9A.js                       31.98 kB │ gzip:  10.90 kB
+../../dist/renderer/assets/errors-9nNVgm0o.js                      33.24 kB │ gzip:  10.01 kB
+../../dist/renderer/assets/errors-w-cJg9L3.js                      33.96 kB │ gzip:  10.09 kB
+../../dist/renderer/assets/index.esm-jmErPdvC.js                   34.16 kB │ gzip:   9.72 kB
+../../dist/renderer/assets/calls-DQahiL0q.js                       34.38 kB │ gzip:  11.28 kB
+../../dist/renderer/assets/BotPermissions-CM3xwaeL.js              36.41 kB │ gzip:  13.32 kB
+../../dist/renderer/assets/calls-BRUrt10J.js                       36.57 kB │ gzip:  10.28 kB
+../../dist/renderer/assets/calls-jgM_C8h4.js                       37.79 kB │ gzip:  10.57 kB
+../../dist/renderer/assets/errors-BbL2Vqx7.js                      38.38 kB │ gzip:  10.46 kB
+../../dist/renderer/assets/calls-CuAAd3nM.js                       38.49 kB │ gzip:  10.68 kB
+../../dist/renderer/assets/errors-CgtZYUkS.js                      42.65 kB │ gzip:  11.48 kB
+../../dist/renderer/assets/errors-BZAauUkX.js                      43.17 kB │ gzip:  11.31 kB
+../../dist/renderer/assets/messaging-DeQSWBYA.js                   45.56 kB │ gzip:  19.43 kB
+../../dist/renderer/assets/messaging-C0k5KDjG.js                   45.62 kB │ gzip:  19.47 kB
+../../dist/renderer/assets/LobbyPage-BWYWx4u0.js                   47.19 kB │ gzip:  13.61 kB
+../../dist/renderer/assets/messaging-B3Js1pm8.js                   47.54 kB │ gzip:  18.49 kB
+../../dist/renderer/assets/messaging-BLTSb3Yl.js                   47.76 kB │ gzip:  19.11 kB
+../../dist/renderer/assets/errors-Bbs0iqXM.js                      47.78 kB │ gzip:  11.62 kB
+../../dist/renderer/assets/messaging-C4ZMUWaO.js                   47.83 kB │ gzip:  18.89 kB
+../../dist/renderer/assets/messaging-IdQeMy0K.js                   48.98 kB │ gzip:  19.82 kB
+../../dist/renderer/assets/messaging-BOCFVC8i.js                   49.00 kB │ gzip:  19.16 kB
+../../dist/renderer/assets/messaging-aTJCaQpe.js                   49.41 kB │ gzip:  19.81 kB
+../../dist/renderer/assets/messaging-BuVMvk44.js                   49.43 kB │ gzip:  19.28 kB
+../../dist/renderer/assets/messaging-Bl_sg_kZ.js                   49.43 kB │ gzip:  19.30 kB
+../../dist/renderer/assets/messaging-ChVThkSP.js                   49.48 kB │ gzip:  19.32 kB
+../../dist/renderer/assets/messaging-wL04iLlM.js                   49.49 kB │ gzip:  19.32 kB
+../../dist/renderer/assets/messaging-B92aHXt0.js                   49.50 kB │ gzip:  19.31 kB
+../../dist/renderer/assets/messaging-Ch4OvURz.js                   50.22 kB │ gzip:  19.67 kB
+../../dist/renderer/assets/messaging-CXxxG2rP.js                   50.38 kB │ gzip:  19.58 kB
+../../dist/renderer/assets/messaging-UxyJ-26Y.js                   50.87 kB │ gzip:  19.62 kB
+../../dist/renderer/assets/messaging-CLuL_Aav.js                   51.76 kB │ gzip:  19.75 kB
+../../dist/renderer/assets/errors-CZAp7Nuz.js                      51.97 kB │ gzip:  10.88 kB
+../../dist/renderer/assets/errors-NCFe0vOB.js                      52.79 kB │ gzip:  11.36 kB
+../../dist/renderer/assets/messaging-IyKCKGjk.js                   52.91 kB │ gzip:  19.44 kB
+../../dist/renderer/assets/billing-CUvYEHik.js                     54.31 kB │ gzip:  20.80 kB
+../../dist/renderer/assets/messaging-CFivqQF7.js                   54.37 kB │ gzip:  19.99 kB
+../../dist/renderer/assets/billing-BNuemoep.js                     54.37 kB │ gzip:  20.86 kB
+../../dist/renderer/assets/messaging-yCgcXk7I.js                   56.73 kB │ gzip:  20.42 kB
+../../dist/renderer/assets/errors-XnvoI6_0.js                      57.67 kB │ gzip:  11.39 kB
+../../dist/renderer/assets/billing-B3STK-rQ.js                     57.77 kB │ gzip:  20.17 kB
+../../dist/renderer/assets/billing-5ugBKmb9.js                     57.97 kB │ gzip:  19.64 kB
+../../dist/renderer/assets/billing-CFWAuq_T.js                     58.36 kB │ gzip:  20.53 kB
+../../dist/renderer/assets/billing-DZMYkZ5l.js                     58.92 kB │ gzip:  20.47 kB
+../../dist/renderer/assets/billing-B5Jcp0X6.js                     58.93 kB │ gzip:  21.26 kB
+../../dist/renderer/assets/messaging-UxlVND8P.js                   59.24 kB │ gzip:  20.49 kB
+../../dist/renderer/assets/billing-AUGBk8kq.js                     59.28 kB │ gzip:  20.46 kB
+../../dist/renderer/assets/billing-_dp8LT1B.js                     59.29 kB │ gzip:  20.47 kB
+../../dist/renderer/assets/billing-BHU53e6Q.js                     59.33 kB │ gzip:  20.24 kB
+../../dist/renderer/assets/billing-D0UjwILd.js                     59.36 kB │ gzip:  20.26 kB
+../../dist/renderer/assets/billing-DCek2xif.js                     59.72 kB │ gzip:  20.40 kB
+../../dist/renderer/assets/billing-S5m6TDcR.js                     60.01 kB │ gzip:  21.42 kB
+../../dist/renderer/assets/organization-Biqi18eb.js                60.31 kB │ gzip:  24.51 kB
+../../dist/renderer/assets/organization-BvbBWdVe.js                60.47 kB │ gzip:  24.57 kB
+../../dist/renderer/assets/billing-BidwBd-0.js                     60.70 kB │ gzip:  21.00 kB
+../../dist/renderer/assets/billing-Dzq69qPe.js                     60.99 kB │ gzip:  21.17 kB
+../../dist/renderer/assets/billing-DNisYMl9.js                     61.35 kB │ gzip:  20.76 kB
+../../dist/renderer/assets/billing-BDOOHxja.js                     62.20 kB │ gzip:  21.00 kB
+../../dist/renderer/assets/billing-BZBx-uiR.js                     64.55 kB │ gzip:  20.79 kB
+../../dist/renderer/assets/messaging-WRHpxJAc.js                   64.61 kB │ gzip:  21.80 kB
+../../dist/renderer/assets/messaging-CwYcS-H2.js                   64.91 kB │ gzip:  21.82 kB
+../../dist/renderer/assets/organization-DzY5LhC4.js                64.99 kB │ gzip:  23.01 kB
+../../dist/renderer/assets/organization-IK6j8ysN.js                64.99 kB │ gzip:  23.74 kB
+../../dist/renderer/assets/organization-BLe29CPW.js                65.46 kB │ gzip:  24.24 kB
+../../dist/renderer/assets/billing-C_gBGCg7.js                     65.94 kB │ gzip:  21.78 kB
+../../dist/renderer/assets/organization-xRcU7qt2.js                66.25 kB │ gzip:  25.17 kB
+../../dist/renderer/assets/organization-Fb13lkSL.js                66.43 kB │ gzip:  24.23 kB
+../../dist/renderer/assets/organization-B6k3GRmE.js                66.66 kB │ gzip:  24.11 kB
+../../dist/renderer/assets/organization-D8ctRG6H.js                66.66 kB │ gzip:  24.19 kB
+../../dist/renderer/assets/organization-NMA1Juk0.js                66.69 kB │ gzip:  24.18 kB
+../../dist/renderer/assets/organization-CRAlm42U.js                66.95 kB │ gzip:  24.14 kB
+../../dist/renderer/assets/organization-PfGu7OHA.js                66.96 kB │ gzip:  24.14 kB
+../../dist/renderer/assets/organization-BSil2Yt_.js                67.18 kB │ gzip:  25.14 kB
+../../dist/renderer/assets/billing-DpoPV7z8.js                     67.49 kB │ gzip:  21.88 kB
+../../dist/renderer/assets/organization-C_J3s6Q8.js                68.27 kB │ gzip:  24.85 kB
+../../dist/renderer/assets/settings-C3VQzS5v.js                    68.61 kB │ gzip:  30.31 kB
+../../dist/renderer/assets/settings-CSYfvxxi.js                    68.88 kB │ gzip:  30.36 kB
+../../dist/renderer/assets/messaging-teUkJ6EJ.js                   69.67 kB │ gzip:  22.72 kB
+../../dist/renderer/assets/organization-Mn6oonIu.js                69.82 kB │ gzip:  25.27 kB
+../../dist/renderer/assets/organization-CvedNfHa.js                70.23 kB │ gzip:  24.78 kB
+../../dist/renderer/assets/organization-DROjCSHo.js                70.64 kB │ gzip:  24.98 kB
+../../dist/renderer/assets/settings-CzD-L5b2.js                    72.08 kB │ gzip:  28.43 kB
+../../dist/renderer/assets/organization-CB73sWc8.js                72.41 kB │ gzip:  24.41 kB
+../../dist/renderer/assets/settings-DW7Tycbw.js                    73.01 kB │ gzip:  29.10 kB
+../../dist/renderer/assets/organization-DDb9zczk.js                74.00 kB │ gzip:  25.41 kB
+../../dist/renderer/assets/messaging-DesjQ9R3.js                   74.00 kB │ gzip:  21.57 kB
+../../dist/renderer/assets/billing-CNih4__v.js                     74.14 kB │ gzip:  22.58 kB
+../../dist/renderer/assets/settings-C1CsWNKC.js                    74.25 kB │ gzip:  29.92 kB
+../../dist/renderer/assets/settings-g0dnr2Fv.js                    74.49 kB │ gzip:  29.97 kB
+../../dist/renderer/assets/messaging-Wk3QUvoY.js                   74.54 kB │ gzip:  21.34 kB
+../../dist/renderer/assets/settings-DzFrXC0N.js                    74.55 kB │ gzip:  29.59 kB
+../../dist/renderer/assets/settings-DkeucpuT.js                    74.84 kB │ gzip:  30.94 kB
+../../dist/renderer/assets/settings-RycPp9y2.js                    75.01 kB │ gzip:  29.78 kB
+../../dist/renderer/assets/settings-DNwsFEGn.js                    75.31 kB │ gzip:  30.78 kB
+../../dist/renderer/assets/settings-Cl-rx0RM.js                    75.40 kB │ gzip:  29.86 kB
+../../dist/renderer/assets/messaging-B10fu4Gp.js                   76.60 kB │ gzip:  21.54 kB
+../../dist/renderer/assets/settings-wrv7JRHf.js                    76.65 kB │ gzip:  30.17 kB
+../../dist/renderer/assets/settings-9M915NTz.js                    76.65 kB │ gzip:  30.44 kB
+../../dist/renderer/assets/settings-r4j15y0h.js                    76.70 kB │ gzip:  30.16 kB
+../../dist/renderer/assets/settings-f92tilOB.js                    77.40 kB │ gzip:  30.59 kB
+../../dist/renderer/assets/organization-u5RTAu46.js                78.32 kB │ gzip:  26.12 kB
+../../dist/renderer/assets/settings-oOlAEB93.js                    78.88 kB │ gzip:  30.42 kB
+../../dist/renderer/assets/settings-CXX1tDaz.js                    79.13 kB │ gzip:  30.62 kB
+../../dist/renderer/assets/billing-ChajLH-8.js                     79.60 kB │ gzip:  23.99 kB
+../../dist/renderer/assets/billing-D8ZOYGTq.js                     80.32 kB │ gzip:  23.93 kB
+../../dist/renderer/assets/settings-BqsUD_y0.js                    82.73 kB │ gzip:  30.24 kB
+../../dist/renderer/assets/billing-x_M0kTPP.js                     84.12 kB │ gzip:  24.39 kB
+../../dist/renderer/assets/organization-Czc2ONPc.js                84.24 kB │ gzip:  26.41 kB
+../../dist/renderer/assets/settings-Bx2YNfpV.js                    84.39 kB │ gzip:  31.37 kB
+../../dist/renderer/assets/settings-_GycrVFD.js                    88.62 kB │ gzip:  31.86 kB
+../../dist/renderer/assets/organization-B-Yb62Ht.js                91.77 kB │ gzip:  27.93 kB
+../../dist/renderer/assets/organization-XpoGF3ep.js                92.80 kB │ gzip:  28.27 kB
+../../dist/renderer/assets/billing-BJd8rkUC.js                     94.22 kB │ gzip:  23.72 kB
+../../dist/renderer/assets/settings-BaAh44pE.js                    94.80 kB │ gzip:  32.46 kB
+../../dist/renderer/assets/billing-GpwZhV08.js                     97.07 kB │ gzip:  23.66 kB
+../../dist/renderer/assets/organization-Dyp5SIcF.js                99.42 kB │ gzip:  28.99 kB
+../../dist/renderer/assets/billing-7cbX-WyE.js                    100.14 kB │ gzip:  24.14 kB
+../../dist/renderer/assets/settings-B_ZJUw-l.js                   104.01 kB │ gzip:  34.59 kB
+../../dist/renderer/assets/settings-DsQZduon.js                   104.80 kB │ gzip:  35.12 kB
+../../dist/renderer/assets/organization-CefNla8H.js               105.58 kB │ gzip:  27.28 kB
+../../dist/renderer/assets/organization-DY9VgQMY.js               109.78 kB │ gzip:  28.32 kB
+../../dist/renderer/assets/settings-DWpGQ79T.js                   113.15 kB │ gzip:  35.75 kB
+../../dist/renderer/assets/organization-Cbe2HMbd.js               116.20 kB │ gzip:  28.35 kB
+../../dist/renderer/assets/settings-BeYjLUxr.js                   121.57 kB │ gzip:  34.93 kB
+../../dist/renderer/assets/settings-BSTGXiwX.js                   125.75 kB │ gzip:  34.22 kB
+../../dist/renderer/assets/settings-re7DGUGw.js                   129.46 kB │ gzip:  35.07 kB
+../../dist/renderer/assets/emoji-e7wuC5XA.js                      140.73 kB │ gzip:  40.23 kB
+../../dist/renderer/assets/workspace-Cw9FcrCs.js                  146.68 kB │ gzip:  61.95 kB
+../../dist/renderer/assets/workspace-Dj_Cg0Q0.js                  146.93 kB │ gzip:  62.08 kB
+../../dist/renderer/assets/workspace-TLaV1fWw.js                  154.49 kB │ gzip:  58.45 kB
+../../dist/renderer/assets/workspace-nNMQYS1H.js                  154.61 kB │ gzip:  60.01 kB
+../../dist/renderer/assets/workspace-ClVI_2M_.js                  156.48 kB │ gzip:  61.12 kB
+../../dist/renderer/assets/workspace-VkEtOB3j.js                  157.87 kB │ gzip:  61.22 kB
+../../dist/renderer/assets/workspace-Bc3xoQGM.js                  158.21 kB │ gzip:  63.28 kB
+../../dist/renderer/assets/workspace-BySL2Hip.js                  158.73 kB │ gzip:  61.06 kB
+../../dist/renderer/assets/workspace-DsaO9FM1.js                  158.77 kB │ gzip:  61.11 kB
+../../dist/renderer/assets/workspace-cwsnZGn9.js                  159.29 kB │ gzip:  61.21 kB
+../../dist/renderer/assets/workspace-3cvi-ERN.js                  160.23 kB │ gzip:  62.95 kB
+../../dist/renderer/assets/workspace-Cw7Wxdd6.js                  160.39 kB │ gzip:  61.42 kB
+../../dist/renderer/assets/workspace-CDPtx5RI.js                  160.41 kB │ gzip:  61.43 kB
+../../dist/renderer/assets/workspace-CGNR9f3a.js                  162.12 kB │ gzip:  62.48 kB
+../../dist/renderer/assets/workspace-CvHx1PLT.js                  163.71 kB │ gzip:  63.04 kB
+../../dist/renderer/assets/workspace-DcxjosLh.js                  165.52 kB │ gzip:  62.48 kB
+../../dist/renderer/assets/workspace-CHKIAYTJ.js                  167.75 kB │ gzip:  63.05 kB
+../../dist/renderer/assets/workspace-D6v4AZF1.js                  172.70 kB │ gzip:  61.69 kB
+../../dist/renderer/assets/workspace-Du5T3jvk.js                  175.99 kB │ gzip:  64.29 kB
+../../dist/renderer/assets/workspace-D15CeVJ8.js                  182.43 kB │ gzip:  65.03 kB
+../../dist/renderer/assets/workspace-Dm5eHZzL.js                  195.28 kB │ gzip:  66.05 kB
+../../dist/renderer/assets/workspace-DBN4zals.js                  211.88 kB │ gzip:  70.50 kB
+../../dist/renderer/assets/workspace-DNDDc_10.js                  212.16 kB │ gzip:  70.10 kB
+../../dist/renderer/assets/workspace-CMMVE5kV.js                  228.56 kB │ gzip:  72.56 kB
+../../dist/renderer/assets/StagedSignInCheck-BEOWTg5a.js          234.65 kB │ gzip:  62.27 kB
+../../dist/renderer/assets/WorkspaceView-Bk8P0v2H.js              242.44 kB │ gzip:  62.51 kB
+../../dist/renderer/assets/workspace-D4vtwvJo.js                  245.91 kB │ gzip:  69.01 kB
+../../dist/renderer/assets/workspace-BdR9kiTD.js                  246.27 kB │ gzip:  70.85 kB
+../../dist/renderer/assets/workspace-COnFJ4uy.js                  258.68 kB │ gzip:  71.21 kB
+../../dist/renderer/assets/SettingsView-Dss9SLpO.js               399.48 kB │ gzip: 103.82 kB
+../../dist/renderer/assets/livekitSession-CzCKhPB8.js             573.85 kB │ gzip: 151.48 kB
+../../dist/renderer/assets/Shell-DnmqSSpu.js                      858.16 kB │ gzip: 248.68 kB
+../../dist/renderer/assets/index-p4sm5CLE.js                    1,424.92 kB │ gzip: 464.96 kB
+✓ built in 5.86s
+Built Meldiq 0.3.0, development/stable, 62a10bb9bceb.

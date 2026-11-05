@@ -30,7 +30,9 @@ Status: open. Production authorization must follow a complete validated candidat
 - [x] Archive ordinary Web `d1258d1` with development linking disabled; all five normal SDK journeys pass against compiled API `7f4cefeb`. Prior ordinary artifacts and the 45-case checkpoint retain their recorded source scopes.
 - [x] Archive source/compiled API `02206c88` after its 1,921-pass/23-skip whole regression; earlier `03108938` archives remain retained.
 - [x] Archive source/compiled API `7f4cefeb` after scoped Logger qualification; whole current-candidate regression remains open.
-- [x] Verify scoped server source and compiled archives for API `281255bb`; whole current regression is running.
+- [x] Verify scoped server source and compiled archives for API `281255bb`; whole PostgreSQL run passes 1,938 cases with 23 skips.
+- [x] Archive ordinary Web `68883055` and qualify 10 signup/SDK/ticket cases against compiled `281255bb` on fresh 35-migration loopback PostgreSQL.
+- [x] Validate desktop `62a10bb` source/import, 1,001 renderer cases, 109 shell cases and macOS Electron development smoke.
 - [ ] Build the Linux API image and production native distributables; local compiled/debug artifacts do not qualify distribution.
 - [ ] Create the remaining coordinated native/API release artifacts and recheck final artifact identities.
 - [ ] Rehearse fresh staging migrations and all critical journeys against the coordinated candidate.
