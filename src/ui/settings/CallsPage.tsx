@@ -125,7 +125,7 @@ export function CallsPage() {
         </label>
       </div>
 
-      <PreCallCheck noiseReduction={prefs.noiseReduction} />
+      <PreCallCheck noiseReduction={prefs.noiseReduction} echoCancellation={prefs.echoCancellation} autoGain={prefs.autoGain} />
 
       <h2 className="settings-group">
         <Localized k="calls.interface.input_mode_3fa818f" />
@@ -287,7 +287,7 @@ async function openForCheck(
   }
 }
 /** Check microphone and camera (android PreCallCheckSheet): a level bar that moves when you speak, and your picture. */
-function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
+function PreCallCheck({ noiseReduction, echoCancellation, autoGain }: { noiseReduction: boolean; echoCancellation?: boolean; autoGain?: boolean }) {
   useLocaleRender();
   const l10n = useLocalization();
   const [on, setOn] = useState(false);
@@ -307,7 +307,7 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
     const el = video.current;
     (async () => {
       try {
-        const opened = await openForCheck({ ...audioProcessing(noiseReduction), ...(mic ? { deviceId: { exact: mic } } : {}) }, cam);
+        const opened = await openForCheck({ ...audioProcessing(noiseReduction, { echoCancellation, autoGain }), ...(mic ? { deviceId: { exact: mic } } : {}) }, cam);
         stream = opened.stream;
         if (!alive) return stream.getTracks().forEach((t) => t.stop());
         const list = await navigator.mediaDevices.enumerateDevices();
@@ -347,7 +347,7 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
       if (el) el.srcObject = null;
       setLevel(0);
     };
-  }, [on, mic, cam, noiseReduction]);
+  }, [on, mic, cam, noiseReduction, echoCancellation, autoGain]);
   const mics = devices.filter((d) => d.kind === "audioinput");
   const cams = devices.filter((d) => d.kind === "videoinput");
   return (
