@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import path from "node:path";
 import { emailedCode } from "./mail";
 import { testAddress } from "./phone";
+import { finishWelcome } from "./welcome";
 test.use({ serviceWorkers: "block", actionTimeout: 20_000 });
 test.setTimeout(120_000);
 async function onboard(page: Page, context: BrowserContext) {
@@ -27,6 +28,7 @@ async function onboard(page: Page, context: BrowserContext) {
   await page.getByRole("button", { name: "Set up encryption", exact: true }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+  await finishWelcome(page);
   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
   const req = async (method: string, path: string, data?: Record<string, unknown> | Buffer) => {
     expect(authorization).toMatch(/^Bearer /);
