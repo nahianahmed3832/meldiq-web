@@ -10,12 +10,27 @@ test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile,
 test.describe.configure({ timeout: 120_000 });
 test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
+  // Observe real media elements in this test context; production exports expose no private player hook.
+  await context.addInitScript(() => {
+    const audios: HTMLAudioElement[] = [];
+    Object.defineProperty(window, "__meldiqTestAudios", { value: audios, configurable: true });
+    window.Audio = new Proxy(window.Audio, {
+      construct(target, args) {
+        const audio = Reflect.construct(target, args) as HTMLAudioElement;
+        audios.push(audio);
+        return audio;
+      },
+    });
+  });
 });
 
-type Snapshot = { key: string | null; status: string; positionMs: number };
-const playback = (page: Page) => page.evaluate(() => (window as unknown as { __voicePlayback: { snapshot(): Snapshot } }).__voicePlayback.snapshot());
-/** Whether the page's one voice player is really playing (not paused, time moving). */
-const audioPlaying = (page: Page) => page.evaluate(() => (window as unknown as { __voicePlayback: { audio: HTMLAudioElement | null } }).__voicePlayback.audio?.paused === false);
+const playback = (page: Page) =>
+  page.evaluate(() => {
+    const clips = (window as unknown as { __meldiqTestAudios: HTMLAudioElement[] }).__meldiqTestAudios.filter((audio) => audio.getAttribute("src")?.startsWith("blob:"));
+    return { sources: clips.length, playing: clips.filter((audio) => !audio.paused && !audio.ended && audio.currentTime > 0).length, positionMs: Math.round((clips.at(-1)?.currentTime ?? 0) * 1000) };
+  });
+/** Real HTMLAudioElement playback advances; component state alone cannot satisfy this check. */
+const audioPlaying = async (page: Page) => (await playback(page)).playing === 1;
 
 async function record(page: Page, ms: number): Promise<void> {
   await page.getByRole("button", { name: "Record a voice message" }).click();
@@ -33,8 +48,8 @@ test("starting a voice message pauses the one playing, rapid clicks leave one pl
   const other = (await alice.req("POST", "/v1/conversations/dm", { userId: carol.userId })).conversation.id as string;
   await link(page, alice);
   await page.goto(`/dms/c/${dm}`);
-  await record(page, 3_000);
-  await record(page, 3_000);
+  await record(page, 6_000);
+  await record(page, 6_000);
   const voices = page.locator(".voice-msg");
   await expect(voices).toHaveCount(2, { timeout: 30_000 });
   const [a, b] = [voices.nth(0), voices.nth(1)];
@@ -75,6 +90,6 @@ test("starting a voice message pauses the one playing, rapid clicks leave one pl
     .first()
     .click();
   await expect(page).toHaveURL(new RegExp(other));
-  await expect.poll(async () => (await playback(page)).status).toBe("idle");
+  await expect.poll(async () => (await playback(page)).sources).toBe(0);
   await expect.poll(() => audioPlaying(page)).toBe(false);
 });

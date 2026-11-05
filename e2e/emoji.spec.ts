@@ -35,9 +35,13 @@ test("search, skin tone and categories, into the composer and as a reaction", as
   await page.getByRole("menuitem", { name: "thumbs up" }).click();
   await expect(page.getByRole("textbox", { name: /Message/ })).toHaveValue(/👍🏽/);
 
+  // A pick returns focus to the composer; reopen it to insert another emoji with the saved tone.
+  await expect(search).toHaveCount(0);
+  await page.getByRole("button", { name: "Insert emoji" }).click();
+  await page.getByRole("searchbox", { name: "Search emoji and expressions", exact: true }).fill("thumbs up");
   await page.getByRole("menuitem", { name: "thumbs up", exact: true }).click();
   await expect(page.getByRole("textbox", { name: /Message/ })).toHaveValue(/👍🏽👍🏽/);
-  await page.getByRole("button", { name: "Close expression picker" }).click();
+  await expect(page.getByRole("textbox", { name: /Message/ })).toBeFocused();
 
   // A reaction from the picker: the Flags tab jumps to its section; recent emoji come first next time.
   // Keyboard and touch both open the message menu without depending on hover timing.
@@ -47,7 +51,8 @@ test("search, skin tone and categories, into the composer and as a reaction", as
     await page.getByRole("menu", { name: "Message" }).getByRole("button", { name: "Add reaction" }).click();
   } else {
     await message.focus();
-    await page.keyboard.press("Shift+F10");
+    await expect(message).toBeFocused();
+    await message.press("Shift+F10");
     await page.getByRole("menu", { name: "Message", exact: true }).getByRole("button", { name: "Add reaction" }).click();
   }
   await expect(page.getByRole("heading", { name: "Recently used" })).toBeVisible();

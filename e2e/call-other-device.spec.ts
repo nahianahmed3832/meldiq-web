@@ -23,6 +23,7 @@ test("joining the call on another device moves this browser out of it, still sig
   await alice.connect();
   await bob.connect();
   await link(page, alice);
+  await page.goto(`/dms/c/${dm}`);
   const call = await placeCall(bob, dm, false);
   let phoneMedia: NativeMedia | null = null;
   try {
@@ -45,7 +46,7 @@ test("joining the call on another device moves this browser out of it, still sig
     // This browser is still signed in and in sync.
     await expect(stage).toHaveCount(0, { timeout: 10_000 });
     await bob.send(dm, { type: "text", text: "still here?" });
-    await expect(page.getByText("still here?")).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByRole("log", { name: "Messages", exact: true }).getByText("still here?", { exact: true })).toBeVisible({ timeout: 20_000 });
   } finally {
     await call.media.leave();
     await phoneMedia?.leave();
