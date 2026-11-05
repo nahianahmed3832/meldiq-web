@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-11-05T03:44:34.670671+00:00",
+  "apiSourceCommit": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "implementationCommit": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "build": "npm run build; TypeScript 5.9.3; unchanged clean source after build",
+  "sourceArchive": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-source-02206c88.tar.gz",
+    "bytes": 10301252,
+    "sha256": "a067959f2266781eecdf05ea57e2a24879e67ab6ed6e4e08fc2bd7b3398c869d",
+    "files": 1245
+  },
+  "compiledArchive": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-compiled-02206c88.tar.gz",
+    "bytes": 10343655,
+    "sha256": "28230a4b763793bed8055b69b2a016dd8a47900a090fa9a44d762c36a9a1312a",
+    "files": 1552,
+    "nodeDependenciesBundled": false,
+    "allArchivedBytesMatchBuild": true
+  },
+  "qualification": "Fresh complete PostgreSQL-default regression: 236 files pass/4 skip; 1921 cases pass/23 skip. Ten actual synthetic RTC cases and five normal email/encryption/welcome/SDK browser downloads pass against this compiled entry. Earlier full-run S3 retry failure and 18-case passing follow-up are retained.",
+  "deployment": "not deployed; Linux image and production native distributions remain pending"
+}

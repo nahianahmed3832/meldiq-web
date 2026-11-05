@@ -137,5 +137,5 @@
   "apiToolsAndRecoveryCommit": "0095613a5de977a995d5728ec7fc62cf7a0703e3",
   "webProductApplicationCommit": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
   "historicalFullApiQualificationCommit": "43d837cbb30c2b25a7643bae37cf8fd68add8404",
-  "apiQualificationScope": "First full run: 1920 passed/1 existing local S3 retry failure/23 skipped; storage follow-up 18/18 passed; fresh full regression running"
+  "apiQualificationScope": "Fresh complete PostgreSQL-default regression: 1921 pass/23 skip; 236 files pass/4 skip. Earlier S3 retry failure and passing 18-case follow-up remain separate."
 }

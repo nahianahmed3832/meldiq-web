@@ -23,7 +23,7 @@ Status: open. Production authorization must follow a complete validated candidat
 - [ ] Run the complete same-candidate backend/admin/native regressions and critical Web journeys.
 - [ ] Measure load, login, messaging/history, upload/download, voice/video/share and recovery against a defined baseline.
 - [x] Archive normal Web `6557813` with development linking disabled and five passing normal SDK journeys against API `02206c88`; retain the prior 45-case ordinary checkpoint at its exact compiled API scope.
-- [ ] Archive current API source/compiled output `02206c88` after its clean whole regression; earlier `03108938` archives remain retained.
+- [x] Archive source/compiled API `02206c88` after its fresh 1,921-pass/23-skip whole regression; earlier `03108938` archives remain retained.
 - [ ] Build the Linux API image and production native distributables; local compiled/debug artifacts do not qualify distribution.
 - [ ] Create the remaining coordinated native/API release artifacts and recheck final artifact identities.
 - [ ] Rehearse fresh staging migrations and all critical journeys against the coordinated candidate.

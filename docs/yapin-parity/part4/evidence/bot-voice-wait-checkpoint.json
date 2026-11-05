@@ -22,7 +22,14 @@
       "passed": 18,
       "failed": 0
     },
-    "freshCompleteRun": "running; no clean full-regression claim yet"
+    "freshCompleteRun": {
+      "passed": 1921,
+      "failed": 0,
+      "skipped": 23,
+      "passingFiles": 236,
+      "skippedFiles": 4,
+      "durationSeconds": 1633.1
+    }
   },
   "browser": {
     "passed": 10,
@@ -83,5 +90,6 @@
     "applicationSourceUnchangedFrom": "5dc08d81",
     "sourceHashes": 2122,
     "originalBranchAndIndexPreserved": true
-  }
+  },
+  "apiArtifacts": "bot-voice-wait-api-artifact.json"
 }
