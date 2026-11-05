@@ -188,10 +188,11 @@ export function undecryptable(item: QueueItem, reason: string): StoredMessage {
 type FileKind = "photo" | "video" | "file";
 const kindOf = (mime: string): FileKind => (mime.toLowerCase().startsWith("image/") ? "photo" : mime.toLowerCase().startsWith("video/") ? "video" : "file");
 /** The sidebar line for a message (android MessageRepository.preview and AttachmentPolicy.preview). */
-type PreviewMessage = Pick<StoredMessage, "deleted" | "kind" | "text" | "attachments" | "rich" | "call" | "outgoing">;
+type PreviewMessage = Pick<StoredMessage, "deleted" | "kind" | "text" | "attachments" | "rich" | "call" | "outgoing" | "starboard">;
 
 export function previewLabel(m: PreviewMessage): PreviewLabel | undefined {
   if (m.deleted) return { kind: "deleted" };
+  if (m.starboard) return undefined;
   if (m.kind === "call") return { kind: "call", video: !!m.call?.video, outgoing: m.outgoing, info: m.call?.info };
   if (m.kind === "undecryptable") return { kind: "undecryptable" };
   if (m.rich?.contact) return undefined;
@@ -238,6 +239,7 @@ export function conversationPreview(local: ConversationLocal | null | undefined)
 }
 
 export function preview(m: PreviewMessage): string {
+  if (m.starboard && !m.deleted) return uiText("workspace.interface.starboard_channel_c5ca090");
   const label = previewLabel(m);
   if (label) return formatPreviewLabel(label);
   if (m.rich?.contact) return `👤 ${m.rich.contact.name}`;

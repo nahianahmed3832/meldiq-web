@@ -5,6 +5,7 @@ import type { AppState, Me, UserLite } from "../state/store";
 import type { LocalStore } from "../store/db";
 import type { CommunityData } from "./community";
 import type { NavPrefs } from "./navPrefs";
+import { hideCachedStarboard } from "./starboardProjection";
 
 /**
  * What this browser keeps of the app between page loads (the owner, 2026-10-30: "Yes, keep snapshot"), so a reload or a
@@ -62,7 +63,7 @@ export function snapshotOf(s: AppState, recent: readonly string[]): SnapshotData
     nav: s.nav,
     communities: s.communities,
     recent: kept,
-    messages: Object.fromEntries(kept.map((id) => [id, s.messages[id]!.items.slice(-SNAPSHOT_MESSAGES)])),
+    messages: Object.fromEntries(kept.map((id) => [id, s.messages[id]!.items.slice(-SNAPSHOT_MESSAGES).map(hideCachedStarboard)])),
   };
 }
 

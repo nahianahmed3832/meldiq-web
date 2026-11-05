@@ -8,9 +8,9 @@ import type { EngineContext } from "./context";
 import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable, unsupported } from "./rules";
 import { applyClose, applyVote } from "./polls";
 import { reactionAllowed } from "./expressions";
+import { hideCachedStarboard, starboardProjection, STARBOARD_UNAVAILABLE } from "./starboardProjection";
 
 const MAX_FAILURES = 3;
-
 /**
  * Turns delivery-queue items into this browser's state (android MessageRepository.handleItem / apply). An item is
  * acknowledged only once its effect is stored, or it was deliberately dropped (undecryptable, unknown type, duplicate).
@@ -86,13 +86,48 @@ export class Receiver {
       payload: { cls: e.cls, sentAt: e.sentAt, serverTs: e.serverTs, ...(e.mentionAll ? { mentionAll: true } : {}) },
     };
     const existing = await this.ctx.store.message(e.id);
-    if (existing && e.cls === "message" && existing.kind !== "undecryptable") return; // already here
+    const projection = starboardProjection(e);
+    const duplicate = existing && e.cls === "message" && existing.kind !== "undecryptable";
+    if (
+      duplicate &&
+      (!projection ||
+        existing.deleted ||
+        existing.conversationId !== e.conversationId ||
+        existing.senderUserId !== e.senderUserId ||
+        existing.senderDeviceId !== "" ||
+        (projection === "available" && !opts.history))
+    )
+      return;
     const payload = parsePayload(JSON.stringify(e.payload));
     if (!payload) return this.recordUnsupported(item, "unreadable payload");
     // Imported history cannot introduce active third-party controls.
     if (e.importedBy) delete payload.botComponents;
     const conversation = await this.ctx.ensureConversation(e.conversationId);
-    await this.apply(payload, item, conversation, e.senderUserId === this.ctx.device.userId, e.serverTs, existing?.kind === "undecryptable", opts.history === true);
+    if (projection && duplicate) {
+      // Current server authority replaces older text, buttons, embeds and attachment keys even when the ID is unchanged.
+      const fresh = textMessage(payload, item, existing.outgoing, e.serverTs, receivedMentions(payload, false, conversation?.type ?? null));
+      const next: StoredMessage = {
+        ...fresh,
+        starboard: projection,
+        status: existing.status,
+        pinned: existing.pinned,
+        reactions: existing.reactions,
+        readBy: existing.readBy,
+        deliveredTo: existing.deliveredTo,
+      };
+      const updated = projection === "unavailable" ? hideCachedStarboard(next) : next;
+      await this.ctx.store.putMessage(updated);
+      if (!opts.history && this.ctx.state.get().messages[updated.conversationId]?.items.some((m) => m.id === updated.id)) this.ctx.show(updated);
+      if (!opts.history) await this.ctx.refreshPreview(updated.conversationId);
+      return;
+    }
+    if (e.cls === "control" && e.senderDeviceId === null && !e.importedBy && payload.type === "edit" && payload.text === STARBOARD_UNAVAILABLE) {
+      // A replayed, redacted count edit must also clear older rich content already present on this device.
+      return this.change(payload, item, e.serverTs, (m) =>
+        m.senderUserId === e.senderUserId && !m.deleted && m.senderDeviceId === "" ? hideCachedStarboard({ ...m, starboard: "unavailable" }) : null,
+      );
+    }
+    await this.apply(payload, item, conversation, e.senderUserId === this.ctx.device.userId, e.serverTs, existing?.kind === "undecryptable", opts.history === true, projection);
     if (!opts.history && ["text", "edit", "delete", "pin", "reaction", "vote", "poll_close"].includes(payload.type)) this.ctx.state.update((s) => ({ ...s, collectionRev: s.collectionRev + 1 }));
   }
 
@@ -146,12 +181,23 @@ export class Receiver {
   }
 
   /** [history]: loaded from the server's history, not just arrived: shown, never unread, notified or marked read. */
-  private async apply(pl: Payload, item: QueueItem, conv: Conversation | null, mine: boolean, serverTs: number, replacesPlaceholder: boolean, history = false): Promise<void> {
+  private async apply(
+    pl: Payload,
+    item: QueueItem,
+    conv: Conversation | null,
+    mine: boolean,
+    serverTs: number,
+    replacesPlaceholder: boolean,
+    history = false,
+    projection?: StoredMessage["starboard"],
+  ): Promise<void> {
     const { store, device } = this.ctx;
     switch (pl.type) {
       case "text": {
         const mentions = receivedMentions(pl, item.payload.mentionAll === true, conv?.type ?? null);
-        const m = textMessage(pl, item, mine, serverTs, mentions);
+        const fresh = textMessage(pl, item, mine, serverTs, mentions);
+        const projected = projection ? { ...fresh, starboard: projection } : fresh;
+        const m = projection === "unavailable" ? hideCachedStarboard(projected) : projected;
         if (replacesPlaceholder) await store.putMessage(m);
         else if (!(await store.insertMessageIfAbsent(m))) return;
         if (!mine && !history) await this.ctx.ensureUser(item.senderUserId);
@@ -169,7 +215,7 @@ export class Receiver {
         return;
       }
       case "edit":
-        return this.change(pl, item, serverTs, (t) => applyEdit(t, item.senderUserId, pl, serverTs));
+        return this.change(pl, item, serverTs, (t) => (t.starboard === "unavailable" ? null : applyEdit(t, item.senderUserId, pl, serverTs)));
       case "delete":
         return this.change(pl, item, serverTs, (t) => applyDelete(t, item.senderUserId, this.communityChannel(conv, item.conversationId)));
       case "reaction":

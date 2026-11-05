@@ -58,6 +58,7 @@ import type { Reminder } from "./reminderRules";
 import { deriveReminderKey } from "../crypto/reminderKeys";
 import { publicKeyFromSeed } from "../crypto/ed25519";
 import { Receiver } from "./receiver";
+import { hideCachedStarboard, starboardProjection } from "./starboardProjection";
 import { CallLog } from "./callLog";
 import { Compose } from "./compose";
 import { ConversationLocals } from "./locals";
@@ -415,7 +416,8 @@ export class Engine implements EngineContext {
           if (version === this.windowVersions.get(id) && this.fromSnapshot.has(id)) {
             const items = await this.store.latestMessages(id, PAGE);
             if (version !== this.windowVersions.get(id)) return page;
-            this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
+            const confirmed = new Set(page.messages.map((m) => m.id));
+            this.set((s) => withMessages(s, id, items.map((m) => confirmed.has(m.id) ? m : hideCachedStarboard(m)), this.serverPages.get(id)?.more ?? items.length === PAGE));
             this.fromSnapshot.delete(id);
           }
           return page;
@@ -1189,6 +1191,7 @@ export class Engine implements EngineContext {
     if (around && !page.messages.some((m) => m.id === around)) throw new Error(uiText("workspace.interface.that_message_is_no_longer_available_aeb42eb"));
     for (const e of [...page.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
     for (const e of page.changes) await this.receiver.ingest(e, 0, { history: true });
+    if (page.messages.some(starboardProjection)) await this.refreshPreview(id);
     if (version === this.windowVersions.get(id)) {
       const prev = before !== null ? this.serverPages.get(id) : undefined;
       this.serverPages.set(id, { oldest: page.messages.at(-1)?.serverTs ?? prev?.oldest ?? null, more: page.more, nextCursor: page.nextCursor });
@@ -1214,7 +1217,7 @@ export class Engine implements EngineContext {
         ...s.messages,
         [id]: {
           ...s.messages[id],
-          items: s.messages[id]?.items ?? [],
+          items: s.messages[id]?.items.map(hideCachedStarboard) ?? [],
           hasMore: false,
           opening,
           historyReady: false,
@@ -1239,7 +1242,7 @@ export class Engine implements EngineContext {
     if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
     const newest = page?.messages[0];
     const newer = (m: StoredMessage) => ["SENDING", "FAILED", "HELD"].includes(m.status) || !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
-    const items = page ? [...received.filter((m): m is StoredMessage => !!m), ...cached.filter(newer)] : cached;
+    const items = page ? [...received.filter((m): m is StoredMessage => !!m), ...cached.filter(newer).map(hideCachedStarboard)] : cached.map(hideCachedStarboard);
     this.fromSnapshot.delete(id);
     this.viewReady = true;
     this.set((s) => {
@@ -1271,7 +1274,7 @@ export class Engine implements EngineContext {
     const latest = await this.store.latestMessages(id, PAGE);
     if (this.viewingId !== id) return;
     if (latest.some((m) => m.id === messageId)) {
-      this.set((s) => withMessages(s, id, latest, this.serverPages.get(id)?.more ?? true));
+      this.set((s) => withMessages(s, id, latest.map(hideCachedStarboard), this.serverPages.get(id)?.more ?? true));
       return;
     }
     await this.loadAround(id, messageId);
@@ -1312,7 +1315,7 @@ export class Engine implements EngineContext {
     this.set((s) => {
       const known = new Set(items.map((m) => m.id));
       const arrivals = s.messages[id]?.items.filter((m) => newer(m) && !known.has(m.id)) ?? [];
-      const next = withMessages(s, id, [...items, ...latest.filter(newer), ...arrivals], page.more);
+      const next = withMessages(s, id, [...items, ...latest.filter(newer).map(hideCachedStarboard), ...arrivals], page.more);
       return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, detached: false, historyReady: true } } };
     });
   }
@@ -1348,7 +1351,7 @@ export class Engine implements EngineContext {
         ? await this.fetchHistory(id, cursor.nextCursor?.serverTs ?? Math.min(cursor.oldest ?? Number.MAX_SAFE_INTEGER, first.serverTs ?? first.sortTs), undefined, cursor.nextCursor?.id)
         : null;
       if (version !== this.windowVersions.get(id)) return;
-      const older = page ? (await Promise.all(page.messages.map((m) => this.store.message(m.id)))).filter((m): m is StoredMessage => !!m) : await this.store.latestMessages(id, PAGE, first);
+      const older = page ? (await Promise.all(page.messages.map((m) => this.store.message(m.id)))).filter((m): m is StoredMessage => !!m) : (await this.store.latestMessages(id, PAGE, first)).map(hideCachedStarboard);
       if (version !== this.windowVersions.get(id)) return;
       this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], page ? page.more : older.length === PAGE));
     } catch (e) {

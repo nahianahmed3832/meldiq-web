@@ -132,6 +132,8 @@ function toStored(m: z.infer<typeof zMessageEntity>): StoredMessage | null {
 
 /** How a downloaded message meets this browser's copy (android HistoryCodec.merge): only later edits and deletions change it. */
 export function mergeHistory(local: StoredMessage | null, remote: StoredMessage): StoredMessage | null {
+  // Account history cannot re-authorize a projection of content from another channel.
+  if (local?.starboard || remote.starboard) return null;
   if (!local) return remote;
   if (remote.deleted && !local.deleted) return { ...local, deleted: true, text: "", attachments: [], rich: null };
   if ((remote.editedAt ?? 0) > (local.editedAt ?? 0) && !local.deleted) return { ...local, text: remote.text, editedAt: remote.editedAt, rich: remote.rich };
@@ -140,6 +142,7 @@ export function mergeHistory(local: StoredMessage | null, remote: StoredMessage)
 
 /** Kept in the history once settled (android HistoryCodec.uploadable): not while sending, failed or held, never undecryptable. */
 export function historyUploadable(m: StoredMessage): boolean {
+  if (m.starboard) return false;
   return m.kind !== "undecryptable" && m.status !== "SENDING" && m.status !== "FAILED" && m.status !== "HELD";
 }
 

@@ -114,6 +114,8 @@ export interface StoredMessage {
   call: CallEntry | null;
   rich: RichContent | null;
   forwarded: boolean;
+  /** Native Starboard copies are projected against the original channel on every server read. */
+  starboard?: "available" | "unavailable";
 }
 
 /** The small presentation facts needed to re-label a cached preview; never message text or attachment keys. */

@@ -3,6 +3,22 @@
   "routes": [
     {
       "method": "GET",
+      "path": "/v2/developer/bots/{id}/event-webhook"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/developer/bots/{id}/event-webhook"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/developer/bots/{id}/event-webhook"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/developer/bots/{id}/event-webhook/activate"
+    },
+    {
+      "method": "GET",
       "path": "/v2/bots/{botId}/direct-messages"
     },
     {
@@ -2625,6 +2641,9 @@
   "errors": {
     "bot_cursor_expired": [
       410
+    ],
+    "bot_event_webhooks_unavailable": [
+      503
     ],
     "bot_events_unavailable": [
       503

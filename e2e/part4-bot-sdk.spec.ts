@@ -49,5 +49,8 @@ test("the developer screen downloads the exact pinned first-party SDK and guide"
   const guide = help.getByRole("link", { name: "How bots work", exact: true });
   const response = await page.request.get((await guide.getAttribute("href"))!);
   expect(response.headers()["content-type"]).toContain("text/plain");
-  expect(await response.text()).toContain("Personal bot DMs require");
+  const guideText = await response.text();
+  expect(guideText).toContain("Personal bot DMs require");
+  expect(guideText).toContain("verifyEventWebhook");
+  expect(guideText).toContain("endpoint.verify");
 });
