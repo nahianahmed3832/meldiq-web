@@ -1,0 +1,18 @@
+
+> meldiq-desktop@0.3.0 test:web
+> npm test --workspace packages/web test/contract-fixtures.test.ts
+
+
+> meldiq-web@0.5.0-beta test
+> vitest run --exclude 'test/live*.test.ts' test/contract-fixtures.test.ts
+
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_windows/packages/web
+
+(node:69534) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  15:23:43
+   Duration  2.42s (transform 328ms, setup 50ms, import 1.30s, tests 934ms, environment 0ms)

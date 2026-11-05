@@ -1,0 +1,29 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:61178) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:61178) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/signup_policy.test.ts (7 tests | 1 failed | 6 skipped) 1050ms
+     × requires the account holder's declaration before operator-provisioned identity activation 57ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/signup_policy.test.ts > signup policy in postgres > requires the account holder's declaration before operator-provisioned identity activation
+Error: expected HTTP 409, got success
+ ❯ expectStatus test/support/harness.ts:136:9
+    134|     throw new Error(`expected HTTP ${status}, got ${e?.status ?? e}`);
+    135|   }
+    136|   throw new Error(`expected HTTP ${status}, got success`);
+       |         ^
+    137| }
+    138|
+ ❯ test/signup_policy.test.ts:119:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  15:04:50
+   Duration  5.35s (transform 1.86s, setup 0ms, import 2.97s, tests 1.05s, environment 0ms)

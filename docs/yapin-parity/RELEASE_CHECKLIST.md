@@ -23,7 +23,8 @@ Status: open. Production authorization must follow a complete validated candidat
 - [x] Implement Android account follow/import/reconnect logic; verify 1,040 JVM cases, device-test compilation, exact source hashes and development APK.
 - [x] Implement Android managed poll and thread lifecycle UI; 1,056 JVM passes/12 skips, device-test compilation and a verified debug APK.
 - [ ] Qualify installed-native, reconnect, cross-client and notification journeys.
-- [ ] Implement and qualify durable 13+ and Terms/Privacy acceptance using the approved company details.
+- [x] Implement optional durable 13+ and exact Terms/Privacy acceptance for email, new provider accounts and first provisioned activation; validate controlled Web/API flows and current native source.
+- [ ] Confirm retention/provider details, publish approved immutable policy revisions, validate installed clients and activate together in the coordinated release.
 - [ ] Reconcile the remaining owned register rows with exact source, test and remaining-work evidence.
 - [ ] Run the complete same-candidate backend/admin/native regressions and critical Web journeys.
 - [ ] Measure load, login, messaging/history, upload/download, voice/video/share and recovery against a defined baseline.

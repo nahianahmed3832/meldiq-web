@@ -8,7 +8,7 @@ Prior local handoff: [Part 3 report](handoffs/PART_3_REPORT.md), [domain contrac
 
 Part 2 handoff remains [available](handoffs/PART_2_REPORT.md), with [shared interfaces](part2/SHARED_INTERFACES.md) and 118 row dispositions. Its 19 local acceptances are unchanged. No local source-only or fixture result implies production deployment or all-client acceptance.
 
-Owner decisions: minimum age **13+**; operator **GRIIPBUDDY LLC, Wyoming**, `contact@griipbuddy.com`, supplied Cheyenne address. [Prepared policies/release requirements](part2/legal/RELEASE_NOTES.md) replace the earlier unknown-age planning assumption, but the live policy and server acceptance ledger are not updated yet.
+Owner decisions: minimum age **13+**; operator **GRIIPBUDDY LLC, Wyoming**, `contact@griipbuddy.com`, supplied Cheyenne address. [Prepared policies/release requirements](part2/legal/RELEASE_NOTES.md) replace the earlier unknown-age planning assumption, and an inactive-by-default versioned ledger is implemented in the current local candidate. The live policy is unchanged.
 
 ## Read order and source of truth
 

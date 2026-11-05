@@ -1,0 +1,20 @@
+
+> meldiq-desktop@0.3.0 test:auth-restart
+> node scripts/auth-restart-smoke.mjs --signup-policy
+
+{
+  "recordedAt": "2026-11-05T07:22:58.825Z",
+  "platform": "darwin",
+  "scope": "real Electron safeStorage and cold process restart; loopback fake completion endpoint; no real session/provider",
+  "passed": [
+    "pending PKCE proof is OS encrypted on disk",
+    "cold launch accepts only the saved flow callback",
+    "restored proof reaches the existing backend exchange",
+    "completion removes the pending proof",
+    "new account policy uses exact revisions and retries the same proof only after explicit review"
+  ],
+  "counts": {
+    "passed": 5,
+    "failed": 0
+  }
+}

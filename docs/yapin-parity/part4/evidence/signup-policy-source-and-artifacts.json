@@ -1,0 +1,38 @@
+{
+  "apiCommit": "ba2dc287f63ac75617e983930c0606bd8427a8e8",
+  "webCommit": "c81c4c4bc21a5b1de497d3fb348195d190389076",
+  "apiSource": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-source-ba2dc287.tar.gz",
+    "files": 1251,
+    "bytes": 10305198,
+    "sha256": "d35bce928ff1c53391165ff6bd713a2cd8b8427415cd0bd5334a213f574b01a2"
+  },
+  "apiCompiled": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-api-compiled-ba2dc287.tar.gz",
+    "files": 1560,
+    "bytes": 10284811,
+    "sha256": "59ebef501b6be6cda6328dbeb69d62aff33c1f1246de18980f04348addc136c9"
+  },
+  "webExport": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-web-normal-c81c4c4.tar.gz",
+    "files": 478,
+    "bytes": 8874530,
+    "sha256": "7cca220b865847e7cdd04cca5e55f90d70d8181f660755d932d8b462e8627a71"
+  },
+  "landingSourcePatch": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-public-signup-policy-review.patch",
+    "files": 10,
+    "bytes": 35650,
+    "sha256": "34701fe75b943de4d500368bd77a5d3a27b4e423d0686cea4b7bce386de45803"
+  },
+  "landingExport": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-public-policy-review-export.tar.gz",
+    "files": 160,
+    "bytes": 1841298,
+    "sha256": "b06670cb604e82e3be32e47d28c084d6ef31197339ce9143c5a01958e348b0ba"
+  },
+  "allArchiveBytesVerified": true,
+  "ordinaryWebTestLinking": false,
+  "draftPolicyPublished": false,
+  "production": false
+}

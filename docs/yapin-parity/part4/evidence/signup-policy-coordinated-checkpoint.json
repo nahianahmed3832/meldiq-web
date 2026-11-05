@@ -1,0 +1,60 @@
+{
+  "api": "ba2dc287f63ac75617e983930c0606bd8427a8e8",
+  "web": "c81c4c4bc21a5b1de497d3fb348195d190389076",
+  "windows": "4713fb68f976c57cb3c5c6a703227b0897b1037e",
+  "android": "2612aa2d570630255c9939314356ffd1a69691f5",
+  "checks": {
+    "apiEmailAndSocial": {
+      "commit": "523c5d46a6eb641fbc867502a35c8690ddfd955e",
+      "postgres": 75,
+      "sqliteMongoFocused": 12,
+      "socialProviderStandIns": true
+    },
+    "operatorActivation": {
+      "postgres": 28,
+      "sqliteMongo": 27,
+      "beforeFix": "unattested activation succeeded in PostgreSQL"
+    },
+    "ordinaryWeb": {
+      "browserPasses": 10,
+      "projects": [
+        "Chromium",
+        "Firefox",
+        "WebKit",
+        "phone-width",
+        "iPhone-width"
+      ],
+      "focusedUnitPasses": 15,
+      "contractFixtures": 802
+    },
+    "publicLanding": {
+      "exportDraftRevisions": 2,
+      "unknownRevision404": true,
+      "chromiumPublicSignupEmailVerificationAndSignIn": true,
+      "production": false
+    },
+    "windows": {
+      "rendererPasses": 1000,
+      "rendererSkips": 2,
+      "focusedWithExplicitContractSource": 4,
+      "shellPasses": 109,
+      "threeNativeMergePathsPreserved": true,
+      "upstreamFiles": 2380,
+      "actualNativeDifferences": 26,
+      "macElectronColdRestartPolicy": 5,
+      "macElectronSDKSmoke": true,
+      "installedWindows": false,
+      "nsis": "macOS compiler spawn -86"
+    },
+    "android": {
+      "jvmPasses": 1060,
+      "jvmSkips": 12,
+      "jvmFiles": 202,
+      "deviceTestsCompiled": true,
+      "deviceTestsExecuted": false,
+      "debugApkVerified": true
+    }
+  },
+  "policyEnabledInProduction": false,
+  "production": false
+}

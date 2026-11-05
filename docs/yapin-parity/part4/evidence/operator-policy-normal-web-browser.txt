@@ -1,0 +1,31 @@
+[WebServer] (node:62092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:62092) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:62092) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:62101) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+(node:62103) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/signup-policy.spec.ts:9:1 › signup shows the exact policy revision and requires a new review after a stale submission (4.8s)
+  ✓   2 [chromium] › e2e/signup-policy.spec.ts:52:1 › an operator-provisioned account reviews the advertised policy before first encryption setup (2.1s)
+(node:62165) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 [firefox] › e2e/signup-policy.spec.ts:9:1 › signup shows the exact policy revision and requires a new review after a stale submission (5.7s)
+  ✓   4 [firefox] › e2e/signup-policy.spec.ts:52:1 › an operator-provisioned account reviews the advertised policy before first encryption setup (3.3s)
+(node:62233) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [webkit] › e2e/signup-policy.spec.ts:9:1 › signup shows the exact policy revision and requires a new review after a stale submission (5.1s)
+  ✓   6 [webkit] › e2e/signup-policy.spec.ts:52:1 › an operator-provisioned account reviews the advertised policy before first encryption setup (3.1s)
+(node:62326) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [phone-width] › e2e/signup-policy.spec.ts:9:1 › signup shows the exact policy revision and requires a new review after a stale submission (4.4s)
+  ✓   8 [phone-width] › e2e/signup-policy.spec.ts:52:1 › an operator-provisioned account reviews the advertised policy before first encryption setup (1.9s)
+(node:62407) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [iphone-width] › e2e/signup-policy.spec.ts:9:1 › signup shows the exact policy revision and requires a new review after a stale submission (4.7s)
+  ✓  10 [iphone-width] › e2e/signup-policy.spec.ts:52:1 › an operator-provisioned account reviews the advertised policy before first encryption setup (2.8s)
+
+  10 passed (48.8s)

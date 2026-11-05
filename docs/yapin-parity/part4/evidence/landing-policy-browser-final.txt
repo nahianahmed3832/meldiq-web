@@ -1,0 +1,7 @@
+Meldiq site on http://127.0.0.1:4198 (API http://127.0.0.1:8098)
+(node:62782) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62782) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+{"level":40,"time":1793862642840,"pid":62782,"hostname":"[local host]","msg":"LIVEKIT_* not configured: voice/video calling is disabled"}
+Both static policy revisions render draft labels, revision markers and noindex; unknown revision is 404.
+Public signup: no declaration blocks POST; stale revision rejected; form reset preserves email; fresh exact revision succeeds; email verification and sign-in pass.

@@ -1,0 +1,64 @@
+{
+  "commit": "2612aa2d570630255c9939314356ffd1a69691f5",
+  "tree": "783b53576d954a7a8baeb43b4c8005760517f859",
+  "parent": "f86fb3a56ec293e5aa8d4bdb06d1a0053126b8cf",
+  "branch": "refs/heads/codex/yapin-parity-android-integration-20261105",
+  "apiContractSource": "ba2dc287f63ac75617e983930c0606bd8427a8e8",
+  "sourceFiles": 2143,
+  "changedPaths": [
+    "android/app/src/main/java/com/meldiq/android/data/account/AccountApi.kt",
+    "android/app/src/main/java/com/meldiq/android/data/account/AccountModels.kt",
+    "android/app/src/main/java/com/meldiq/android/data/account/AccountRepository.kt",
+    "android/app/src/main/java/com/meldiq/android/data/account/DeviceSetup.kt",
+    "android/app/src/main/java/com/meldiq/android/data/account/RegistrationPolicy.kt",
+    "android/app/src/main/java/com/meldiq/android/data/account/SocialAuth.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/account/AccountFlowViewModel.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/account/AccountOnboarding.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/account/AccountScreens.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/account/DeviceSetupScreens.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/account/PolicyConsent.kt",
+    "android/app/src/main/java/com/meldiq/android/ui/screens/account/SocialSignIn.kt",
+    "android/app/src/main/res/values-bn/strings_account.xml",
+    "android/app/src/main/res/values-zh-rCN/strings_account.xml",
+    "android/app/src/main/res/values/strings_account.xml",
+    "android/app/src/test/java/com/meldiq/android/data/account/AccountApiContractTest.kt",
+    "android/app/src/test/java/com/meldiq/android/data/account/AccountFakes.kt",
+    "android/app/src/test/java/com/meldiq/android/ui/screens/account/AccountFlowViewModelTest.kt",
+    "android/i18n/strings_account.py",
+    "shared/contracts/android-target/README.md",
+    "shared/contracts/android-target/fixtures/http/GET_v2_auth_registration-policy.json",
+    "shared/contracts/android-target/openapi.json"
+  ],
+  "allSourceHashesVerified": true,
+  "originalHeadPreserved": "285651477be0adbef73d8bec3359a02d781bd3f4",
+  "originalIndexSha256Preserved": "d6c8d2804e2640fb8b63e6ea7f95ae7d963acafaf7facda29bca6e7f7f75db39",
+  "jvm": {
+    "tests": 1072,
+    "skipped": 12,
+    "failures": 0,
+    "errors": 0,
+    "passed": 1060,
+    "files": 202
+  },
+  "sourceArchive": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-android-source-2612aa2d.tar.gz",
+    "bytes": 3127615,
+    "sha256": "0548845cc54da9f70fbf8483d51810c057490db11adcb857de9be6fa9cd9c21d"
+  },
+  "debugApk": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-registration-policy-2612aa2d-debug.apk",
+    "bytes": 157662658,
+    "sha256": "3e7446eea212b56ab31eeeb9d55a0cca8db43e1002c7ee60b44eada85d6a7ee5",
+    "applicationId": "com.meldiq.android.test",
+    "defaultServer": "http://localhost:8080",
+    "installed": false,
+    "published": false
+  },
+  "packaging": {
+    "runtimeAssets": 24,
+    "byteIdenticalToPriorQualifiedApk": true,
+    "contractCaptures": 0
+  },
+  "deviceTestCompile": "passed; compiled, not executed",
+  "physical": "pending by explicit owner choice"
+}
