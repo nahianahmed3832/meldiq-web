@@ -38,13 +38,20 @@ interface Pair {
 test("Part 4: joining muted captures nothing until explicit unmute", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("orbit.prefs.v1", JSON.stringify({ joinMuted: true }));
-    const original = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    const devices = navigator.mediaDevices;
+    const prototype = Object.getPrototypeOf(devices) as MediaDevices;
+    const original = prototype.getUserMedia;
     const audit = { captures: 0 };
     Object.assign(window, { __part4Capture: audit });
-    navigator.mediaDevices.getUserMedia = (...args) => {
-      audit.captures++;
-      return original(...args);
-    };
+    // Observe the MediaDevices prototype as well: WebKit can replace the navigator's instance.
+    Object.defineProperty(prototype, "getUserMedia", {
+      configurable: true,
+      writable: true,
+      value: function (this: MediaDevices, ...args: Parameters<MediaDevices["getUserMedia"]>) {
+        audit.captures++;
+        return Reflect.apply(original, this, args);
+      },
+    });
   });
   const { bob } = await setUp(page);
   await page
@@ -60,6 +67,11 @@ test("Part 4: joining muted captures nothing until explicit unmute", async ({ pa
     expect(call.media.received.audio.frames).toBe(0);
     await s.getByRole("button", { name: "Unmute", exact: true }).click();
     await heardBrowser(call.media);
+    await test.info().attach("capture-observer.json", { body: JSON.stringify(await page.evaluate(() => ({
+      audit: (window as unknown as { __part4Capture: { captures: number } }).__part4Capture,
+      currentMethod: navigator.mediaDevices.getUserMedia.toString(),
+      frames: window.frames.length,
+    }))), contentType: "application/json" });
     expect(await page.evaluate(() => (window as unknown as { __part4Capture: { captures: number } }).__part4Capture.captures)).toBeGreaterThan(0);
     await s.getByRole("button", { name: "Hang up" }).click();
   } finally {
@@ -413,6 +425,12 @@ test("deafen silences the call both ways and undeafen puts it back as it was (ba
     // The microphone went off with it, and every incoming audio element is muted.
     await expect(s.getByRole("button", { name: "Unmute" })).toBeVisible();
     await expect.poll(() => page.evaluate(() => Array.from(document.querySelectorAll("[data-orbit-call-audio] audio")).map((a) => (a as HTMLAudioElement).muted))).not.toContain(false);
+    // The receiver may drain audio already queued before the mute. Require sustained silence after that buffer.
+    await expect.poll(async () => {
+      const before = call.media.received.audio.audible;
+      await page.waitForTimeout(500);
+      return call.media.received.audio.audible - before;
+    }, { timeout: 10_000 }).toBe(0);
     const heardBefore = call.media.received.audio.audible;
     await page.waitForTimeout(2_000);
     expect(call.media.received.audio.audible - heardBefore).toBeLessThan(10);
