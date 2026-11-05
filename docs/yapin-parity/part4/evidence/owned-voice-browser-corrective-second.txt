@@ -1,0 +1,20 @@
+[WebServer] (node:59421) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:59421) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:59421) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:59484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:59485) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793839483494,"pid":59485,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T08:44:44.953+0800	ERROR	livekit.pion.udp_mux	v4@v4.4.0/udp_mux.go:607	Failed to write packet: io: read/write on closed pipe
+[WebServer] github.com/pion/ice/v4.(*UDPMuxDefault).connWorker
+[WebServer] 	github.com/pion/ice/v4@v4.4.0/udp_mux.go:607
+{"level":20,"time":1793839484960,"pid":59485,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  1 [chromium] › e2e/call-other-device.spec.ts:19:1 › joining the call on another device moves this browser out of it, still signed in, and the call goes on (9.6s)
+  ✓  2 [chromium] › e2e/emoji.spec.ts:14:1 › search, skin tone and categories, into the composer and as a reaction (6.1s)
+
+  2 passed (21.0s)

@@ -1,0 +1,88 @@
+[WebServer] (node:58792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:58792) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:58792) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:58815) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:58816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793839187170,"pid":58816,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793839188279,"pid":58816,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✘  1 [chromium] › e2e/call-other-device.spec.ts:19:1 › joining the call on another device moves this browser out of it, still signed in, and the call goes on (8.7s)
+(node:58862) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [chromium] › e2e/emoji.spec.ts:14:1 › search, skin tone and categories, into the composer and as a reaction (1.5m)
+(node:59073) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [chromium] › e2e/voice-playback.spec.ts:43:1 › starting a voice message pauses the one playing, rapid clicks leave one playing, and leaving stops it (18.5s)
+
+
+  1) [chromium] › e2e/call-other-device.spec.ts:19:1 › joining the call on another device moves this browser out of it, still signed in, and the call goes on
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('still here?')
+    Expected: visible
+    Error: strict mode violation: getByText('still here?') resolved to 2 elements:
+        1) <small class="grow ellipsis">still here?</small> aka getByRole('link', { name: 'Bob Chen' })
+        2) <p class="md-p">still here?</p> aka getByRole('log', { name: 'Messages' }).getByText('still here?')
+
+    Call log:
+      - Expect "toBeVisible" getByText('still here?') with timeout 20000ms
+      - waiting for getByText('still here?')
+
+
+      47 |     await expect(stage).toHaveCount(0, { timeout: 10_000 });
+      48 |     await bob.send(dm, { type: "text", text: "still here?" });
+    > 49 |     await expect(page.getByText("still here?")).toBeVisible({ timeout: 20_000 });
+         |                                                 ^
+      50 |   } finally {
+      51 |     await call.media.leave();
+      52 |     await phoneMedia?.leave();
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/call-other-device.spec.ts:49:49
+
+    Error Context: test-results/call-other-device-joining--40d1e-ned-in-and-the-call-goes-on-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/call-other-device-joining--40d1e-ned-in-and-the-call-goes-on-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/call-other-device-joining--40d1e-ned-in-and-the-call-goes-on-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/emoji.spec.ts:14:1 › search, skin tone and categories, into the composer and as a reaction
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('menu', { name: 'Message', exact: true }).getByRole('button', { name: 'Add reaction' })
+
+
+      52 |     await message.focus();
+      53 |     await page.keyboard.press("Shift+F10");
+    > 54 |     await page.getByRole("menu", { name: "Message", exact: true }).getByRole("button", { name: "Add reaction" }).click();
+         |                                                                                                                  ^
+      55 |   }
+      56 |   await expect(page.getByRole("heading", { name: "Recently used" })).toBeVisible();
+      57 |   await page.getByRole("tab", { name: "Flags" }).click();
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/emoji.spec.ts:54:114
+
+    Error Context: test-results/emoji-search-skin-tone-and-7174d--composer-and-as-a-reaction-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/emoji-search-skin-tone-and-7174d--composer-and-as-a-reaction-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/emoji-search-skin-tone-and-7174d--composer-and-as-a-reaction-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › e2e/call-other-device.spec.ts:19:1 › joining the call on another device moves this browser out of it, still signed in, and the call goes on
+    [chromium] › e2e/emoji.spec.ts:14:1 › search, skin tone and categories, into the composer and as a reaction
+  1 passed (2.1m)

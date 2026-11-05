@@ -1,0 +1,15 @@
+(node:63820) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63820) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+/Volumes/code_files/meldiq_parity_integration_api/server/src/infrastructure/database/postgres/config.ts:8
+  if (!value) throw new Error("DATABASE_MODE=supabase requires SUPABASE_DATABASE_URL");
+                    ^
+
+Error: DATABASE_MODE=supabase requires SUPABASE_DATABASE_URL
+    at postgresConfig (/Volumes/code_files/meldiq_parity_integration_api/server/src/infrastructure/database/postgres/config.ts:8:21)
+    at loadConfig (/Volumes/code_files/meldiq_parity_integration_api/server/src/app/config.ts:604:15)
+    at startServer (/Volumes/code_files/meldiq_parity_integration_api/server/test/support/harness.ts:40:18)
+    at <anonymous> (/Volumes/code_files/meldiq_parity_integration_api/server/scripts/rehearse-parity-recovery.ts:37:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v25.8.0

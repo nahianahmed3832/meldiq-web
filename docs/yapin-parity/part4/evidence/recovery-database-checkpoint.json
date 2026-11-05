@@ -1,0 +1,40 @@
+{
+  "recordedAt": "2026-11-05T01:29:01.000Z",
+  "scope": "owned loopback fixture database restore and credential quarantine; no production actions",
+  "sourceDatabase": "meldiq_parity_stage_recovery_source5",
+  "targetDatabase": "meldiq_parity_stage_rollback_recovery5",
+  "postgresTools": "pg_dump (PostgreSQL) 17.11 (Homebrew)",
+  "consistentReadOnlySnapshot": true,
+  "encryptedBackup": true,
+  "fullDecryptAndRestore": true,
+  "tables": 308,
+  "rows": 124,
+  "rowChecksumsMatch": true,
+  "schemaAndAclSha256": "4821b44436c091ec4c6b20611b9c0e7b5c96f05098016a89bf250ca749dc9e2b",
+  "schemaIndexesTriggersPoliciesGrantsMatch": true,
+  "sequenceStatesMatch": true,
+  "mediaEvictionLedgerEmpty": true,
+  "quarantine": {
+    "bots": 1,
+    "botIdentitiesDisabled": 1,
+    "activeCredentialRevisionsWithdrawn": 1,
+    "derivedWebhooksRotated": 1,
+    "derivedInvitationsRevoked": 1,
+    "priorBotHashLookupsDenied": true,
+    "humanIdentitiesUnchanged": true
+  },
+  "archive": {
+    "file": "database.dump.age",
+    "sha256": "ad03c07f2ed1fb41d9cdc0211908d0dfc1f522c44fd2de0d1f37fa1e89c40d6d",
+    "bytes": 996000
+  },
+  "notProven": [
+    "production backup/provider recovery",
+    "application private keys and object-store restoration",
+    "role-global recovery on a fresh PostgreSQL cluster",
+    "old API/runtime and installed native journeys",
+    "reverse-proxy bot route hold installation",
+    "complete rollback after production writes"
+  ],
+  "requirement": "Before an older API runs, hold bot/developer/interaction/installation routes at the proxy, drain/stop all writers and media, preserve new schema/consent data, quarantine derived credentials, then verify ordinary journeys. Credential quarantine alone does not enforce missing predecessor policy."
+}

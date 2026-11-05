@@ -38,5 +38,7 @@
     ]
   },
   "physicalDevices": "pending by explicit owner choice",
-  "production": "not deployed"
+  "production": "not deployed",
+  "supersededBy": "integrated-icons-normal-artifact.json",
+  "historicalQualificationRetained": true
 }

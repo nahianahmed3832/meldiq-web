@@ -1,0 +1,153 @@
+[WebServer] (node:61997) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:61997) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:61997) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:62005) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:62006) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793840347311,"pid":62006,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  1 [firefox] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (7.7s)
+{"level":20,"time":1793840353361,"pid":62006,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  2 [firefox] › e2e/calls.spec.ts:405:1 › deafen silences the call both ways and undeafen puts it back as it was (batch B10) (8.9s)
+(node:62046) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793840364941,"pid":62046,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  3 [firefox] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (7.2s)
+{"level":20,"time":1793840371179,"pid":62046,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  4 [firefox] › e2e/calls.spec.ts:405:1 › deafen silences the call both ways and undeafen puts it back as it was (batch B10) (9.1s)
+(node:62117) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793840382754,"pid":62117,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✘  5 [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (7.6s)
+(node:62189) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793840391827,"pid":62189,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  6 [webkit] › e2e/calls.spec.ts:405:1 › deafen silences the call both ways and undeafen puts it back as it was (batch B10) (10.9s)
+(node:62227) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793840403548,"pid":62227,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T09:00:05.805+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-5f9877879e001f9ad01b0444", "roomID": "RM_vGrVXgtThaTD", "participant": "u_6zzJHKDFRXvlSXNkul2d3w.d_xbehNFb9VXf1A8U32NlB8A", "participantID": "PA_v452DPpnr3q2", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "[0x4eec1d96388] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+[WebServer] 2026-11-05T09:00:05.805+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-5f9877879e001f9ad01b0444", "roomID": "RM_vGrVXgtThaTD", "participant": "u_6zzJHKDFRXvlSXNkul2d3w.d_xbehNFb9VXf1A8U32NlB8A", "participantID": "PA_v452DPpnr3q2", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "[0x4eec1d96388] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+  ✘  7 [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (7.9s)
+(node:62260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793840412264,"pid":62260,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  8 [webkit] › e2e/calls.spec.ts:405:1 › deafen silences the call both ways and undeafen puts it back as it was (batch B10) (10.2s)
+[WebServer] 2026-11-05T09:00:17.140+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-6df6a7066d0135d8412595d6", "roomID": "RM_gUuELfvBALB5", "participant": "u_rviX-GTNu9m-4EhfhzU3nQ.d_sALVh4-Q8cYJR65rdlXq1w", "participantID": "PA_bHSQwGcoiBci", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "[0x4eec35e4388] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+[WebServer] 2026-11-05T09:00:17.140+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-6df6a7066d0135d8412595d6", "roomID": "RM_gUuELfvBALB5", "participant": "u_rviX-GTNu9m-4EhfhzU3nQ.d_sALVh4-Q8cYJR65rdlXq1w", "participantID": "PA_bHSQwGcoiBci", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "[0x4eec35e4388] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+
+
+  1) [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      67 |     await s.getByRole("button", { name: "Unmute", exact: true }).click();
+      68 |     await heardBrowser(call.media);
+    > 69 |     expect(await page.evaluate(() => (window as unknown as { __part4Capture: { captures: number } }).__part4Capture.captures)).toBeGreaterThan(0);
+         |                                                                                                                                ^
+      70 |     await s.getByRole("button", { name: "Hang up" }).click();
+      71 |   } finally {
+      72 |     await call.media.leave();
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/calls.spec.ts:69:128
+
+    attachment #1: call-tracks-0.json (text/plain) ─────────────────────────────────────────────────
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: page-0.txt (text/plain) ─────────────────────────────────────────────────────────
+    http://127.0.0.1:5691/home/c/c_wmK6lXEu34tvGNdDLo7kaw
+
+    Skip to main content
+    Meldiq
+    Direct messages
+    Home
+    Activity
+    Invite friends to Meldiq
+    Share your link to get them chatting
+    Invite
+    Friends
+    Create group
+    DIRECT MESSAGES
+    BC
+    Bob Chen
+    0:02
+    1
+    Voice Connected
+    Bob Chen · 0:01
+    Turn camera on
+    Share your scre...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      67 |     await s.getByRole("button", { name: "Unmute", exact: true }).click();
+      68 |     await heardBrowser(call.media);
+    > 69 |     expect(await page.evaluate(() => (window as unknown as { __part4Capture: { captures: number } }).__part4Capture.captures)).toBeGreaterThan(0);
+         |                                                                                                                                ^
+      70 |     await s.getByRole("button", { name: "Hang up" }).click();
+      71 |   } finally {
+      72 |     await call.media.leave();
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/calls.spec.ts:69:128
+
+    attachment #1: call-tracks-0.json (text/plain) ─────────────────────────────────────────────────
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: page-0.txt (text/plain) ─────────────────────────────────────────────────────────
+    http://127.0.0.1:5691/home/c/c_W39Sy-UGlNL5ldIqR5QJ9w
+
+    Skip to main content
+    Meldiq
+    Direct messages
+    Home
+    Activity
+    Invite friends to Meldiq
+    Share your link to get them chatting
+    Invite
+    Friends
+    Create group
+    DIRECT MESSAGES
+    BC
+    Bob Chen
+    0:02
+    1
+    Voice Connected
+    Bob Chen · 0:01
+    Turn camera on
+    Share your scre...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit-repeat1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit-repeat1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit-repeat1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute
+    [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute
+  6 passed (1.3m)

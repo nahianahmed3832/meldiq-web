@@ -1,0 +1,251 @@
+[WebServer] (node:65774) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:65774) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:65774) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:65785) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 45 tests using 1 worker
+
+(node:65786) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (6.8s)
+{"level":20,"time":1793841663584,"pid":65786,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   2 [chromium] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.0s)
+  ✓   3 [chromium] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (4.8s)
+  ✓   4 [chromium] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (4.8s)
+  ✓   5 [chromium] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (5.0s)
+  ✓   6 [chromium] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (10.0s)
+  ✓   7 [chromium] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (15.9s)
+  ✓   8 [chromium] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.1s)
+  ✘   9 [chromium] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline (12.8s)
+(node:66618) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [firefox] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (9.8s)
+{"level":20,"time":1793841752300,"pid":66618,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  11 [firefox] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (16.9s)
+  ✓  12 [firefox] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (10.2s)
+  ✓  13 [firefox] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (7.3s)
+  ✓  14 [firefox] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (6.0s)
+  ✓  15 [firefox] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (11.1s)
+  ✓  16 [firefox] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (17.1s)
+  ✓  17 [firefox] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (7.9s)
+  ✘  18 [firefox] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline (13.2s)
+(node:69392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [webkit] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (8.5s)
+{"level":20,"time":1793841844415,"pid":69392,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  20 [webkit] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.9s)
+  ✓  21 [webkit] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.9s)
+  ✓  22 [webkit] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.0s)
+  ✓  23 [webkit] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (8.0s)
+  ✓  24 [webkit] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (12.2s)
+  ✓  25 [webkit] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.3s)
+  ✓  26 [webkit] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.8s)
+  ✘  27 [webkit] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline (13.6s)
+(node:69713) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  28 [phone-width] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (6.7s)
+{"level":20,"time":1793841931673,"pid":69713,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T09:25:34.841+0800	ERROR	livekit.pion.udp_mux	v4@v4.4.0/udp_mux.go:607	Failed to write packet: io: read/write on closed pipe
+[WebServer] github.com/pion/ice/v4.(*UDPMuxDefault).connWorker
+[WebServer] 	github.com/pion/ice/v4@v4.4.0/udp_mux.go:607
+  ✓  29 [phone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.5s)
+  ✓  30 [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.2s)
+  ✓  31 [phone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (4.5s)
+  ✓  32 [phone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (4.6s)
+  ✓  33 [phone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (10.0s)
+  ✓  34 [phone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.2s)
+  ✓  35 [phone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (7.9s)
+  ✘  36 [phone-width] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline (13.5s)
+(node:70122) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  37 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (8.1s)
+{"level":20,"time":1793842010768,"pid":70122,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  38 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.3s)
+  ✓  39 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (6.3s)
+  ✓  40 [iphone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.5s)
+  ✓  41 [iphone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (7.4s)
+  ✓  42 [iphone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (12.6s)
+  ✓  43 [iphone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.1s)
+  ✓  44 [iphone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.3s)
+  ✘  45 [iphone-width] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline (13.6s)
+
+
+  1) [chromium] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.app[data-connection="online"]').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.app[data-connection="online"]').first() with timeout 10000ms
+      - waiting for locator('.app[data-connection="online"]').first()
+
+
+      28 |   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
+      29 |   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+    > 30 |   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
+         |                                                                        ^
+      31 |   const req = async (method: string, path: string, data?: Record<string, unknown> | Buffer) => {
+      32 |     expect(authorization).toMatch(/^Bearer /);
+      33 |     const response = await page.request.fetch(`${process.env.ORBIT_E2E_API}${path}`, {
+        at onboard (/Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:30:72)
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:45:3
+
+    Error Context: test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.app[data-connection="online"]').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.app[data-connection="online"]').first() with timeout 10000ms
+      - waiting for locator('.app[data-connection="online"]').first()
+
+
+      28 |   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
+      29 |   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+    > 30 |   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
+         |                                                                        ^
+      31 |   const req = async (method: string, path: string, data?: Record<string, unknown> | Buffer) => {
+      32 |     expect(authorization).toMatch(/^Bearer /);
+      33 |     const response = await page.request.fetch(`${process.env.ORBIT_E2E_API}${path}`, {
+        at onboard (/Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:30:72)
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:45:3
+
+    Error Context: test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.app[data-connection="online"]').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.app[data-connection="online"]').first() with timeout 10000ms
+      - waiting for locator('.app[data-connection="online"]').first()
+
+
+      28 |   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
+      29 |   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+    > 30 |   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
+         |                                                                        ^
+      31 |   const req = async (method: string, path: string, data?: Record<string, unknown> | Buffer) => {
+      32 |     expect(authorization).toMatch(/^Bearer /);
+      33 |     const response = await page.request.fetch(`${process.env.ORBIT_E2E_API}${path}`, {
+        at onboard (/Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:30:72)
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:45:3
+
+    Error Context: test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-webkit/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [phone-width] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.app[data-connection="online"]').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.app[data-connection="online"]').first() with timeout 10000ms
+      - waiting for locator('.app[data-connection="online"]').first()
+
+
+      28 |   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
+      29 |   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+    > 30 |   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
+         |                                                                        ^
+      31 |   const req = async (method: string, path: string, data?: Record<string, unknown> | Buffer) => {
+      32 |     expect(authorization).toMatch(/^Bearer /);
+      33 |     const response = await page.request.fetch(`${process.env.ORBIT_E2E_API}${path}`, {
+        at onboard (/Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:30:72)
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:45:3
+
+    Error Context: test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [iphone-width] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.app[data-connection="online"]').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.app[data-connection="online"]').first() with timeout 10000ms
+      - waiting for locator('.app[data-connection="online"]').first()
+
+
+      28 |   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
+      29 |   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+    > 30 |   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
+         |                                                                        ^
+      31 |   const req = async (method: string, path: string, data?: Record<string, unknown> | Buffer) => {
+      32 |     expect(authorization).toMatch(/^Bearer /);
+      33 |     const response = await page.request.fetch(`${process.env.ORBIT_E2E_API}${path}`, {
+        at onboard (/Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:30:72)
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/universal-icons.spec.ts:45:3
+
+    Error Context: test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-iphone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-iphone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/universal-icons-semantic-n-8d46d--retain-local-icons-offline-iphone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [chromium] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+    [firefox] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+    [webkit] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+    [phone-width] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+    [iphone-width] › e2e/universal-icons.spec.ts:44:1 › semantic navigation and settings retain local icons offline
+  40 passed (7.2m)

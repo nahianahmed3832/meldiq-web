@@ -1,7 +1,7 @@
 {
-  "recordedAt": "2026-11-05T00:53:03.424464+00:00",
+  "recordedAt": "2026-11-05T01:39:19.605993+00:00",
   "status": "native source checkpoints; full coordinated/native release remains open",
-  "webRuntimeCommit": "1fb387d22f533dc01bb5770e218950d5d2bc4d81",
+  "webRuntimeCommit": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
   "apiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
   "apiQualificationCommit": "43d837cbb30c2b25a7643bae37cf8fd68add8404",
   "android": {
@@ -59,13 +59,13 @@
     "compiledDeviceTestsWereNotExecuted": true
   },
   "windows": {
-    "commit": "3784e75d27e47e467f8e083b2c9cb1d16d982d3b",
-    "upstreamFilesChecked": 2294,
+    "commit": "a4694825e52dda88af62264ae8cfd1cf47bb2a32",
+    "upstreamFilesChecked": 2373,
     "documentedAdaptationEntries": 39,
     "actualSourceDifferences": 26,
     "unexplainedDifferences": 0,
     "shellTests": 109,
-    "embeddedWebTests": 999,
+    "embeddedWebTests": 1001,
     "embeddedWebSkipped": 1,
     "typecheckExitCode": 0,
     "lintExitCode": 0,
@@ -74,13 +74,13 @@
     "localeStructuralErrors": 0,
     "localeHardcodedCandidates": 0,
     "linguisticReview": "pending",
-    "isolatedSmoke": "passed on darwin/arm64 Electron: pinned current SDK integrity, IPC isolation, cache/account-data preservation, update holds and native link capture; no physical Windows claim",
+    "isolatedSmoke": "passed after current a469482 development build on darwin/arm64 Electron: SDK identity, IPC isolation, account-data preservation, update holds and native links; not installed Windows",
     "smokeIsPhysicalWindowsEvidence": false,
     "windowsInstallAndProviderConsent": "pending",
     "distribution": "development; not published",
     "sdkFiles": 13,
     "embeddedWebApiSource": "current API via ORBIT_SERVER_DIR; formerly skipped contract source comparison now passes",
-    "webRuntimeCommit": "1fb387d22f533dc01bb5770e218950d5d2bc4d81",
+    "webRuntimeCommit": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
     "initialLocaleWaitDiagnostic": {
       "passed": 998,
       "failed": 1,
@@ -90,11 +90,14 @@
       "passed": 6
     },
     "freshFullRun": {
-      "passed": 999,
-      "skipped": 1,
+      "passed": 1001,
       "failed": 0,
+      "skipped": 1,
       "maxWorkers": 4
-    }
+    },
+    "webSourceCommit": "b92182efa91484562a2b40921be6f8ad3479c319",
+    "finalIconMirrorHashes": 36,
+    "typesLintBuild": "passed"
   },
   "remaining": [
     "complete installed-native same-candidate journeys",
@@ -109,5 +112,6 @@
   ],
   "production": "not deployed",
   "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
-  "webTestQualificationCommit": "705b2ad"
+  "webTestQualificationCommit": "b92182efa91484562a2b40921be6f8ad3479c319",
+  "apiToolsAndRecoveryCommit": "0095613a5de977a995d5728ec7fc62cf7a0703e3"
 }

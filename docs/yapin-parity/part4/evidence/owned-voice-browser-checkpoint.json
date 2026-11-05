@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-11-05T01:34:50.040821+00:00",
+  "webRuntimeCommit": "1fb387d22f533dc01bb5770e218950d5d2bc4d81",
+  "testCommit": "e4465a2815513f0897eeb3c472abbca1838466c5",
+  "apiCompiledSource": "031089388da4430fedfd7c85de1dd8c80964886e",
+  "passed": 45,
+  "failed": 0,
+  "skipped": 11,
+  "projects": [
+    "chromium",
+    "firefox",
+    "webkit",
+    "phone-width"
+  ],
+  "scope": "actual synthetic encrypted RTC, muted capture, PTT, bad key, denied mic, minimize controls, deafen, supported network recovery, voice room navigation, device handoff, voice playback, emoji and official-bot setup",
+  "skips": "browser/native support conditions in the cases; physical checks remain pending",
+  "diagnostics": "earlier 43-pass/two-failure/11-skip run and focused observer/buffer corrections are retained; not summed",
+  "currentIconsRuntime": "f8e378b has identical call/crypto/voice/emoji product source; newer navigation icons are separately qualified"
+}

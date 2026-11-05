@@ -1,0 +1,126 @@
+[WebServer] (node:63226) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:63226) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:63226) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:63253) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 56 tests using 1 worker
+
+(node:63254) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793840872851,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793840874081,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   1 [chromium] › e2e/call-other-device.spec.ts:19:1 › joining the call on another device moves this browser out of it, still signed in, and the call goes on (8.7s)
+{"level":20,"time":1793840880107,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   2 [chromium] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (7.3s)
+{"level":20,"time":1793840887304,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   3 [chromium] › e2e/calls.spec.ts:82:1 › Part 4: push-to-talk releases audio when the browser loses focus (7.1s)
+{"level":20,"time":1793840894136,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   4 [chromium] › e2e/calls.spec.ts:152:1 › a video call from the phone app rings here and connects with media verified encrypted both ways (9.7s)
+{"level":20,"time":1793840904049,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   5 [chromium] › e2e/calls.spec.ts:222:1 › the browser calls the phone app; each side decrypts the other's audio (9.6s)
+{"level":20,"time":1793840914663,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   6 [chromium] › e2e/calls.spec.ts:251:1 › a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send (7.5s)
+{"level":20,"time":1793840920998,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   7 [chromium] › e2e/calls.spec.ts:330:1 › media under the wrong key is reported as a problem and never shown as encrypted (7.3s)
+{"level":20,"time":1793840933134,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   8 [chromium] › e2e/calls.spec.ts:354:1 › a refused microphone is explained: no call goes out, and an answered call connects listen-only (9.9s)
+{"level":20,"time":1793840938848,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   9 [chromium] › e2e/calls.spec.ts:388:1 › a call survives losing the network for a few seconds (29.0s)
+{"level":20,"time":1793840967683,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  10 [chromium] › e2e/calls.spec.ts:411:1 › deafen silences the call both ways and undeafen puts it back as it was (batch B10) (10.5s)
+  ✓  11 [chromium] › e2e/emoji.spec.ts:14:1 › search, skin tone and categories, into the composer and as a reaction (5.8s)
+  ✓  12 [chromium] › e2e/official-bots.spec.ts:22:1 › official bots: turn on, rename, set up, test, and see them work (11.5s)
+  ✓  13 [chromium] › e2e/voice-playback.spec.ts:43:1 › starting a voice message pauses the one playing, rapid clicks leave one playing, and leaving stops it (18.0s)
+{"level":20,"time":1793841009677,"pid":63254,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  14 [chromium] › e2e/voice-room.spec.ts:18:1 › a voice channel opens as its room: who's in it, Join voice, then Open the call, and no message box (batch B14) (6.7s)
+(node:63735) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  15 [firefox] › e2e/call-other-device.spec.ts:19:1 › joining the call on another device moves this browser out of it, still signed in, and the call goes on
+{"level":20,"time":1793841022936,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  16 [firefox] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (7.3s)
+{"level":20,"time":1793841028705,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  17 [firefox] › e2e/calls.spec.ts:82:1 › Part 4: push-to-talk releases audio when the browser loses focus (5.8s)
+{"level":20,"time":1793841034287,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  18 [firefox] › e2e/calls.spec.ts:152:1 › a video call from the phone app rings here and connects with media verified encrypted both ways (7.4s)
+{"level":20,"time":1793841041937,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  19 [firefox] › e2e/calls.spec.ts:222:1 › the browser calls the phone app; each side decrypts the other's audio (7.0s)
+{"level":20,"time":1793841050765,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  20 [firefox] › e2e/calls.spec.ts:251:1 › a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send (8.5s)
+{"level":20,"time":1793841057643,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  21 [firefox] › e2e/calls.spec.ts:330:1 › media under the wrong key is reported as a problem and never shown as encrypted (7.5s)
+{"level":20,"time":1793841071638,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T09:11:12.638+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-970d8a3f2362d966ed4f1f5c", "roomID": "RM_uact8NxewAHe", "participant": "u_8X_Kfv7iRvW5rU33am1UwA.d_n2xxunTlP146rYnBBbW-yA", "participantID": "PA_WNW3wGWHxm6M", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "[0x49d8b4934708] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+[WebServer] 2026-11-05T09:11:12.638+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-970d8a3f2362d966ed4f1f5c", "roomID": "RM_uact8NxewAHe", "participant": "u_8X_Kfv7iRvW5rU33am1UwA.d_n2xxunTlP146rYnBBbW-yA", "participantID": "PA_WNW3wGWHxm6M", "remote": false, "transport": "PUBLISHER", "label": "_lossy", "error": "[0x49d8b4934708] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+[WebServer] 2026-11-05T09:11:12.638+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-970d8a3f2362d966ed4f1f5c", "roomID": "RM_uact8NxewAHe", "participant": "u_8X_Kfv7iRvW5rU33am1UwA.d_n2xxunTlP146rYnBBbW-yA", "participantID": "PA_WNW3wGWHxm6M", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "[0x49d8b4934708] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+  ✓  22 [firefox] › e2e/calls.spec.ts:354:1 › a refused microphone is explained: no call goes out, and an answered call connects listen-only (11.9s)
+  -  23 [firefox] › e2e/calls.spec.ts:388:1 › a call survives losing the network for a few seconds
+{"level":20,"time":1793841077164,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  24 [firefox] › e2e/calls.spec.ts:411:1 › deafen silences the call both ways and undeafen puts it back as it was (batch B10) (9.1s)
+  ✓  25 [firefox] › e2e/emoji.spec.ts:14:1 › search, skin tone and categories, into the composer and as a reaction (6.8s)
+  -  26 [firefox] › e2e/official-bots.spec.ts:22:1 › official bots: turn on, rename, set up, test, and see them work
+  -  27 [firefox] › e2e/voice-playback.spec.ts:43:1 › starting a voice message pauses the one playing, rapid clicks leave one playing, and leaving stops it
+{"level":20,"time":1793841089754,"pid":63735,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  28 [firefox] › e2e/voice-room.spec.ts:18:1 › a voice channel opens as its room: who's in it, Join voice, then Open the call, and no message box (batch B14) (6.5s)
+(node:63968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  29 [webkit] › e2e/call-other-device.spec.ts:19:1 › joining the call on another device moves this browser out of it, still signed in, and the call goes on
+{"level":20,"time":1793841103716,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  30 [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (8.3s)
+{"level":20,"time":1793841110384,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  31 [webkit] › e2e/calls.spec.ts:82:1 › Part 4: push-to-talk releases audio when the browser loses focus (6.6s)
+{"level":20,"time":1793841116186,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  32 [webkit] › e2e/calls.spec.ts:152:1 › a video call from the phone app rings here and connects with media verified encrypted both ways (7.4s)
+{"level":20,"time":1793841123935,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  33 [webkit] › e2e/calls.spec.ts:222:1 › the browser calls the phone app; each side decrypts the other's audio (7.4s)
+{"level":20,"time":1793841132168,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  34 [webkit] › e2e/calls.spec.ts:251:1 › a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send (7.5s)
+{"level":20,"time":1793841138982,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  35 [webkit] › e2e/calls.spec.ts:330:1 › media under the wrong key is reported as a problem and never shown as encrypted (8.1s)
+{"level":20,"time":1793841151935,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  36 [webkit] › e2e/calls.spec.ts:354:1 › a refused microphone is explained: no call goes out, and an answered call connects listen-only (11.1s)
+  -  37 [webkit] › e2e/calls.spec.ts:388:1 › a call survives losing the network for a few seconds
+{"level":20,"time":1793841158702,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  38 [webkit] › e2e/calls.spec.ts:411:1 › deafen silences the call both ways and undeafen puts it back as it was (batch B10) (9.4s)
+  ✓  39 [webkit] › e2e/emoji.spec.ts:14:1 › search, skin tone and categories, into the composer and as a reaction (7.7s)
+  -  40 [webkit] › e2e/official-bots.spec.ts:22:1 › official bots: turn on, rename, set up, test, and see them work
+  -  41 [webkit] › e2e/voice-playback.spec.ts:43:1 › starting a voice message pauses the one playing, rapid clicks leave one playing, and leaving stops it
+{"level":20,"time":1793841172180,"pid":63968,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  42 [webkit] › e2e/voice-room.spec.ts:18:1 › a voice channel opens as its room: who's in it, Join voice, then Open the call, and no message box (batch B14) (7.1s)
+[WebServer] 2026-11-05T09:12:58.629+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-b94c76a625700757255dfd9c", "roomID": "RM_vpRRFXShnZZ8", "participant": "u_FEvU4O7KiDgHlW1JXtFvDg.d_3lqpyVDU29RGJSQuKI6DPg", "participantID": "PA_KCgD7vgdppNc", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+[WebServer] 2026-11-05T09:12:58.629+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-b94c76a625700757255dfd9c", "roomID": "RM_vpRRFXShnZZ8", "participant": "u_FEvU4O7KiDgHlW1JXtFvDg.d_3lqpyVDU29RGJSQuKI6DPg", "participantID": "PA_KCgD7vgdppNc", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+(node:64239) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  43 [phone-width] › e2e/call-other-device.spec.ts:19:1 › joining the call on another device moves this browser out of it, still signed in, and the call goes on
+{"level":20,"time":1793841186199,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  44 [phone-width] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (8.4s)
+{"level":20,"time":1793841193421,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  45 [phone-width] › e2e/calls.spec.ts:82:1 › Part 4: push-to-talk releases audio when the browser loses focus (7.2s)
+{"level":20,"time":1793841200232,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T09:13:24.501+0800	ERROR	livekit.pion.udp_mux	v4@v4.4.0/udp_mux.go:607	Failed to write packet: io: read/write on closed pipe
+[WebServer] github.com/pion/ice/v4.(*UDPMuxDefault).connWorker
+[WebServer] 	github.com/pion/ice/v4@v4.4.0/udp_mux.go:607
+  ✓  46 [phone-width] › e2e/calls.spec.ts:152:1 › a video call from the phone app rings here and connects with media verified encrypted both ways (9.9s)
+{"level":20,"time":1793841210657,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  47 [phone-width] › e2e/calls.spec.ts:222:1 › the browser calls the phone app; each side decrypts the other's audio (9.9s)
+{"level":20,"time":1793841220755,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T09:13:41.650+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-92a378bbf350a1c43542e19f", "roomID": "RM_r5JXr4bUBTuW", "participant": "u_sWwY8N_Uk50aZvweX279pg.d_xIiycCZ1JtTW5TyKuKcf5g", "participantID": "PA_5vjgXCwSTPDQ", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+[WebServer] 2026-11-05T09:13:41.650+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-92a378bbf350a1c43542e19f", "roomID": "RM_r5JXr4bUBTuW", "participant": "u_sWwY8N_Uk50aZvweX279pg.d_xIiycCZ1JtTW5TyKuKcf5g", "participantID": "PA_5vjgXCwSTPDQ", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+  ✓  48 [phone-width] › e2e/calls.spec.ts:251:1 › a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send (7.2s)
+{"level":20,"time":1793841227382,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  49 [phone-width] › e2e/calls.spec.ts:330:1 › media under the wrong key is reported as a problem and never shown as encrypted (7.5s)
+{"level":20,"time":1793841239396,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  50 [phone-width] › e2e/calls.spec.ts:354:1 › a refused microphone is explained: no call goes out, and an answered call connects listen-only (9.4s)
+{"level":20,"time":1793841244276,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  51 [phone-width] › e2e/calls.spec.ts:388:1 › a call survives losing the network for a few seconds (27.8s)
+{"level":20,"time":1793841272744,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  52 [phone-width] › e2e/calls.spec.ts:411:1 › deafen silences the call both ways and undeafen puts it back as it was (batch B10) (11.7s)
+  ✓  53 [phone-width] › e2e/emoji.spec.ts:14:1 › search, skin tone and categories, into the composer and as a reaction (6.2s)
+  -  54 [phone-width] › e2e/official-bots.spec.ts:22:1 › official bots: turn on, rename, set up, test, and see them work
+  -  55 [phone-width] › e2e/voice-playback.spec.ts:43:1 › starting a voice message pauses the one playing, rapid clicks leave one playing, and leaving stops it
+{"level":20,"time":1793841286697,"pid":64239,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  56 [phone-width] › e2e/voice-room.spec.ts:18:1 › a voice channel opens as its room: who's in it, Join voice, then Open the call, and no message box (batch B14) (6.5s)
+
+  11 skipped
+  45 passed (7.2m)

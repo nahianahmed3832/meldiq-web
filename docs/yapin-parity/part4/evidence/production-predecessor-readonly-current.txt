@@ -1,0 +1,2 @@
+/opt/meldiq-web/releases/0.5.0-beta-universal-icons-ddaf497
+griip-internal-messaging-api:0.76.1-pg-b9e6f005-locales-cc61eb40-5facb4c cc61eb40cd991c4ae843cd31a0d43f793f2f480f

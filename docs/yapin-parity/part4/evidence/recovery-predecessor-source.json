@@ -1,0 +1,5 @@
+{
+  "commit": "cc61eb40cd991c4ae843cd31a0d43f793f2f480f",
+  "archiveSha256": "2414906c8db6f8532d80095c8fe083ac779261acd35fa26f351b047c0ba49092",
+  "scope": "exact tracked predecessor server and shared contracts; current installed dependencies; owned loopback testing only"
+}

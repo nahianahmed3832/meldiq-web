@@ -1,0 +1,73 @@
+[WebServer] (node:70989) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:70989) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:70989) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:71058) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 45 tests using 1 worker
+
+(node:71060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (7.1s)
+{"level":20,"time":1793842277172,"pid":71060,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   2 [chromium] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.7s)
+  ✓   3 [chromium] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.1s)
+  ✓   4 [chromium] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.5s)
+  ✓   5 [chromium] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (5.3s)
+  ✓   6 [chromium] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (9.3s)
+  ✓   7 [chromium] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (15.5s)
+  ✓   8 [chromium] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (7.9s)
+  ✓   9 [chromium] › e2e/universal-icons.spec.ts:46:1 › semantic navigation and settings retain local icons offline (4.7s)
+(node:71273) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [firefox] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (8.2s)
+{"level":20,"time":1793842348506,"pid":71273,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  11 [firefox] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (8.1s)
+  ✓  12 [firefox] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.9s)
+  ✓  13 [firefox] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.9s)
+  ✓  14 [firefox] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (5.8s)
+  ✓  15 [firefox] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (10.6s)
+  ✓  16 [firefox] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.5s)
+  ✓  17 [firefox] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.2s)
+  ✓  18 [firefox] › e2e/universal-icons.spec.ts:46:1 › semantic navigation and settings retain local icons offline (5.7s)
+(node:71465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [webkit] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (7.7s)
+{"level":20,"time":1793842424322,"pid":71465,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T09:33:47.540+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-12953a2bc31c75eea388a23b", "roomID": "RM_UiUk2m9sxVGm", "participant": "u_XDtbIYK-5CLNoy3Siy6Mig.d_iWR3mWQwoXGAx4t-UEeO5w", "participantID": "PA_Ht2kotnsPc9g", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "[0x2a5f6e666388] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+[WebServer] 2026-11-05T09:33:47.540+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-12953a2bc31c75eea388a23b", "roomID": "RM_UiUk2m9sxVGm", "participant": "u_XDtbIYK-5CLNoy3Siy6Mig.d_iWR3mWQwoXGAx4t-UEeO5w", "participantID": "PA_Ht2kotnsPc9g", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "[0x2a5f6e666388] abort chunk, with following errors: user initiated abort: (User Initiated Abort: Close called)"}
+  ✓  20 [webkit] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (8.0s)
+  ✓  21 [webkit] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (6.9s)
+  ✓  22 [webkit] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (8.0s)
+  ✓  23 [webkit] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (7.8s)
+  ✓  24 [webkit] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (16.8s)
+  ✓  25 [webkit] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.3s)
+  ✓  26 [webkit] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.7s)
+  ✓  27 [webkit] › e2e/universal-icons.spec.ts:46:1 › semantic navigation and settings retain local icons offline (5.7s)
+(node:71833) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  28 [phone-width] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (6.1s)
+{"level":20,"time":1793842510667,"pid":71833,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  29 [phone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.7s)
+  ✓  30 [phone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (5.3s)
+  ✓  31 [phone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.0s)
+  ✓  32 [phone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (4.9s)
+  ✓  33 [phone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (11.1s)
+  ✓  34 [phone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.3s)
+  ✓  35 [phone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (7.5s)
+  ✓  36 [phone-width] › e2e/universal-icons.spec.ts:46:1 › semantic navigation and settings retain local icons offline (4.7s)
+(node:72058) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  37 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:48:1 › seen receipts survive main collection history and preserve the unread boundary (8.1s)
+{"level":20,"time":1793842582765,"pid":72058,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  38 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:77:1 › call photos and measured connection latency show during an encrypted voice call (7.2s)
+  ✓  39 [iphone-width] › e2e/call-receipts-sidebar.spec.ts:121:1 › compact community header keeps name, Sparks and cover above a dense channel list (6.2s)
+  ✓  40 [iphone-width] › e2e/media-sharing.spec.ts:57:1 › a photo album and a document share one caption, retain original bytes and support zoom (5.4s)
+  ✓  41 [iphone-width] › e2e/media-sharing.spec.ts:92:1 › a selected video previews, uploads and plays inline and in the viewer (7.4s)
+  ✓  42 [iphone-width] › e2e/media-sharing.spec.ts:121:1 › media is optimized by default and Original file is the only optional choice (14.1s)
+  ✓  43 [iphone-width] › e2e/poll-media.spec.ts:69:1 › poll percentages, named and hidden ballots survive reload, change, remove and close (16.3s)
+  ✓  44 [iphone-width] › e2e/poll-media.spec.ts:171:1 › long originals fit completely, zoom and pan, and navigate across separate image messages (8.4s)
+  ✓  45 [iphone-width] › e2e/universal-icons.spec.ts:46:1 › semantic navigation and settings retain local icons offline (4.7s)
+
+  45 passed (6.5m)

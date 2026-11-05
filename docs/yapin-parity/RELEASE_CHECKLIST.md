@@ -22,7 +22,7 @@ Status: open. Production authorization must follow a complete validated candidat
 - [ ] Reconcile the remaining owned register rows with exact source, test and remaining-work evidence.
 - [ ] Run the complete same-candidate backend/admin/native regressions and critical Web journeys.
 - [ ] Measure load, login, messaging/history, upload/download, voice/video/share and recovery against a defined baseline.
-- [x] Rebuild/archive ordinary Web runtime `1fb387d` with test-device linking disabled; qualify 40 email/media/poll/navigation journeys on five browser projects against the compiled API and local PostgreSQL with 34 migrations.
+- [x] Rebuild/archive ordinary Web runtime `f8e378b` with test-device linking disabled; qualify 45 email/media/poll/navigation/icon journeys on five browser projects against the compiled API and local PostgreSQL with 34 migrations.
 - [x] Compile/archive current API source `03108938`; preserve separate source and compiled archive identities.
 - [ ] Build the Linux API image and production native distributables; local compiled/debug artifacts do not qualify distribution.
 - [ ] Create the remaining coordinated native/API release artifacts and recheck final artifact identities.

@@ -1,0 +1,81 @@
+(node:63966) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63966) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+node:internal/errors:998
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /opt/homebrew/Cellar/node/25.8.0/bin/node scripts/rehearse-parity-database.mjs postgresql://meldiq_part4_test@127.0.0.1:55444/meldiq_parity_stage_recovery_source1 postgresql://meldiq_part4_test@127.0.0.1:55444/meldiq_parity_stage_rollback_recovery1 /tmp/meldiq-part4/recovery-rehearsal2/database-backup
+/Volumes/code_files/meldiq_supabase_migration/server/node_modules/pg/lib/client.js:694
+          Error.captureStackTrace(err)
+                ^
+
+error: function gen_random_bytes(integer) does not exist
+    at /Volumes/code_files/meldiq_supabase_migration/server/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Volumes/code_files/meldiq_parity_integration_api/server/scripts/rehearse-parity-database.mjs:131:18 {
+  length: 218,
+  severity: 'ERROR',
+  code: '42883',
+  detail: undefined,
+  hint: 'No function matches the given name and argument types. You might need to add explicit type casts.',
+  position: '42',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_func.c',
+  line: '636',
+  routine: 'ParseFuncOrColumn'
+}
+
+Node.js v25.8.0
+
+    at genericNodeError (node:internal/errors:998:15)
+    at wrappedFn (node:internal/errors:543:14)
+    at ChildProcess.exithandler (node:child_process:417:12)
+    at ChildProcess.emit (node:events:508:20)
+    at maybeClose (node:internal/child_process:1108:16)
+    at Socket.<anonymous> (node:internal/child_process:480:11)
+    at Socket.emit (node:events:508:20)
+    at Pipe.<anonymous> (node:net:350:12) {
+  code: 1,
+  killed: false,
+  signal: null,
+  cmd: '/opt/homebrew/Cellar/node/25.8.0/bin/node scripts/rehearse-parity-database.mjs postgresql://meldiq_part4_test@127.0.0.1:55444/meldiq_parity_stage_recovery_source1 postgresql://meldiq_part4_test@127.0.0.1:55444/meldiq_parity_stage_rollback_recovery1 /tmp/meldiq-part4/recovery-rehearsal2/database-backup',
+  stdout: '',
+  stderr: '/Volumes/code_files/meldiq_supabase_migration/server/node_modules/pg/lib/client.js:694\n' +
+    '          Error.captureStackTrace(err)\n' +
+    '                ^\n' +
+    '\n' +
+    'error: function gen_random_bytes(integer) does not exist\n' +
+    '    at /Volumes/code_files/meldiq_supabase_migration/server/node_modules/pg/lib/client.js:694:17\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n' +
+    '    at async file:///Volumes/code_files/meldiq_parity_integration_api/server/scripts/rehearse-parity-database.mjs:131:18 {\n' +
+    '  length: 218,\n' +
+    "  severity: 'ERROR',\n" +
+    "  code: '42883',\n" +
+    '  detail: undefined,\n' +
+    "  hint: 'No function matches the given name and argument types. You might need to add explicit type casts.',\n" +
+    "  position: '42',\n" +
+    '  internalPosition: undefined,\n' +
+    '  internalQuery: undefined,\n' +
+    '  where: undefined,\n' +
+    '  schema: undefined,\n' +
+    '  table: undefined,\n' +
+    '  column: undefined,\n' +
+    '  dataType: undefined,\n' +
+    '  constraint: undefined,\n' +
+    "  file: 'parse_func.c',\n" +
+    "  line: '636',\n" +
+    "  routine: 'ParseFuncOrColumn'\n" +
+    '}\n' +
+    '\n' +
+    'Node.js v25.8.0\n'
+}
+
+Node.js v25.8.0

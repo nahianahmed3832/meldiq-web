@@ -1,0 +1,70 @@
+[WebServer] (node:62653) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:62653) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:62653) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:62661) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:62662) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793840616745,"pid":62662,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✘  1 [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute (8.4s)
+
+
+  1) [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      72 |       frames: window.frames.length,
+      73 |     }))), contentType: "application/json" });
+    > 74 |     expect(await page.evaluate(() => (window as unknown as { __part4Capture: { captures: number } }).__part4Capture.captures)).toBeGreaterThan(0);
+         |                                                                                                                                ^
+      75 |     await s.getByRole("button", { name: "Hang up" }).click();
+      76 |   } finally {
+      77 |     await call.media.leave();
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/calls.spec.ts:74:128
+
+    attachment #2: call-tracks-0.json (text/plain) ─────────────────────────────────────────────────
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: page-0.txt (text/plain) ─────────────────────────────────────────────────────────
+    http://127.0.0.1:5691/home/c/c_uUY8HyMIX__VgATRj23S2Q
+
+    Skip to main content
+    Meldiq
+    Direct messages
+    Home
+    Activity
+    Invite friends to Meldiq
+    Share your link to get them chatting
+    Invite
+    Friends
+    Create group
+    DIRECT MESSAGES
+    BC
+    Bob Chen
+    0:02
+    1
+    Voice Connected
+    Bob Chen · 0:01
+    Turn camera on
+    Share your scre...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/calls-Part-4-joining-muted-ea635-thing-until-explicit-unmute-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › e2e/calls.spec.ts:38:1 › Part 4: joining muted captures nothing until explicit unmute

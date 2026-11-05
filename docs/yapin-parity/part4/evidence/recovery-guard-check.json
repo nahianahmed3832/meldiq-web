@@ -1,0 +1,37 @@
+{
+  "recordedAt": "2026-11-05T01:30:40.340Z",
+  "passed": 7,
+  "results": [
+    {
+      "case": "hosted-source",
+      "rejected": true
+    },
+    {
+      "case": "hosted-target",
+      "rejected": true
+    },
+    {
+      "case": "non-owned-target",
+      "rejected": true
+    },
+    {
+      "case": "relative-output",
+      "rejected": true
+    },
+    {
+      "case": "existing-target",
+      "rejected": true
+    },
+    {
+      "case": "source-application-connected",
+      "rejected": true
+    },
+    {
+      "case": "pending-media-cleanup",
+      "rejected": true
+    }
+  ],
+  "existingTargetAndSourcePreserved": true,
+  "rejectedWriterAndMediaCasesCreatedNoDatabase": true,
+  "scope": "actual CLI refusals on owned local fixture databases; no production actions"
+}

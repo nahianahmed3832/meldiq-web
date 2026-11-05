@@ -1,0 +1,31 @@
+{
+  "recordedAt": "2026-11-05T01:39:19.605993+00:00",
+  "runtimeCommit": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
+  "testQualificationCommit": "b92182efa91484562a2b40921be6f8ad3479c319",
+  "testLinkingEnabled": false,
+  "files": 478,
+  "sourceMapsOrRawTypescript": 0,
+  "archive": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-web-normal-f8e378b.tar.gz",
+    "bytes": 8899146,
+    "sha256": "97659798b81d74c9fd05126f73a34208941f006ae5597e25790bfa6708bd62fd"
+  },
+  "qualification": "150 Web files: 998 passes/one skip; types/lint/localization, catalogue/offline checks and ordinary export pass. Fresh complete 45-case normal browser batch passes on five projects against compiled API/owned PostgreSQL.",
+  "production": "not deployed by this work",
+  "browser": {
+    "passed": 45,
+    "failed": 0,
+    "skipped": 0,
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width",
+      "iphone-width"
+    ],
+    "testLinkingEnabled": false,
+    "apiCompiledSource": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "hostedAuthRealtime": "local test stubs",
+    "serviceWorkers": "blocked in these feature suites; no offline transport claim"
+  }
+}
