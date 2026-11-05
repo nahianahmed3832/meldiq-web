@@ -61,7 +61,7 @@ describe("Starboard's projection replaces previously authorized cached data", ()
       await page(r, hidden);
       await page(r, { ...base, cls: "control", id: "old-count", serverTs: 2000, payload: { type: "edit", target: base.id, text: "Old count included original text" } });
       const refreshed = (await store.message(base.id))!;
-      expect(refreshed).toMatchObject({ starboard: "unavailable", text: "Original message unavailable.", attachments: [], rich: null, pinned: true, reactions: { "⭐": ["u_me"] } });
+      expect(refreshed).toMatchObject({ starboard: "unavailable", text: "That message is no longer available.", attachments: [], rich: null, pinned: true, reactions: { "⭐": ["u_me"] } });
       expect(mergeHistory(refreshed, { ...prior, editedAt: 9000 })).toBeNull();
       // A subsequent authorized history response may supply the source again.
       await page(r, original);

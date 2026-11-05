@@ -1,5 +1,6 @@
 import type { StoredEvent } from "../api/schemas";
 import type { StoredMessage } from "../model/types";
+import { text as t } from "../i18n";
 
 export const STARBOARD_UNAVAILABLE = "Original message unavailable.";
 
@@ -15,7 +16,7 @@ export function hideCachedStarboard(message: StoredMessage): StoredMessage {
   return {
     ...message,
     starboard: "unavailable",
-    text: STARBOARD_UNAVAILABLE,
+    text: t("workspace.interface.that_message_is_no_longer_available_aeb42eb"),
     attachments: [],
     rich: null,
     replyToId: null,
