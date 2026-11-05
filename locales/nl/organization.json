@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Gesloten tickets",
+    "none_closed": "Geen gesloten tickets.",
+    "claim": "Oppakken",
+    "release": "Toewijzing opheffen",
+    "assigned": "Toegewezen aan {name}",
+    "reopen": "Heropenen",
+    "review": "Dit ticket heropenen?",
+    "history": "Het privékanaal wordt heropend met de gespreksgeschiedenis."
+  },
   "community": "Community",
   "channels": "Kanalen",
   "roles": "Rollen",

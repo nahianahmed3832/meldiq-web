@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "已关闭的工单",
+    "none_closed": "没有已关闭的工单。",
+    "claim": "领取工单",
+    "release": "取消领取",
+    "assigned": "已分配给 {name}",
+    "reopen": "重新打开",
+    "review": "重新打开此工单？",
+    "history": "私密频道将连同对话记录一起重新打开。"
+  },
   "community": "社区",
   "channels": "频道",
   "roles": "角色",

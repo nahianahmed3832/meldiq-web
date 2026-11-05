@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Solicitudes cerradas",
+    "none_closed": "No hay solicitudes cerradas.",
+    "claim": "Asumir solicitud",
+    "release": "Quitar asignación",
+    "assigned": "Asignada a {name}",
+    "reopen": "Reabrir",
+    "review": "¿Reabrir esta solicitud?",
+    "history": "El canal privado se reabrirá con su historial de conversación."
+  },
   "community": "Comunidad",
   "channels": "Canales",
   "roles": "Roles",

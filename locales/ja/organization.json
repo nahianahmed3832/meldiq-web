@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "クローズ済みのチケット",
+    "none_closed": "クローズ済みのチケットはありません。",
+    "claim": "担当する",
+    "release": "担当を解除",
+    "assigned": "担当者：{name}",
+    "reopen": "再開",
+    "review": "このチケットを再開しますか？",
+    "history": "プライベートチャンネルが会話履歴を保持したまま再開します。"
+  },
   "community": "コミュニティ",
   "channels": "チャンネル",
   "roles": "ロール",

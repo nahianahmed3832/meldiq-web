@@ -8,7 +8,7 @@ import { type FormEvent, useState } from "react";
 import { ApiError } from "../../../api/client";
 import { useEngine, useOrbit } from "../../../application/orbit";
 import { navigate } from "../../../application/router";
-import { closeTicket, openTicket } from "../../../sync/posting/api";
+import { closeTicket, openTicket, reopenTicket } from "../../../sync/posting/api";
 import { TICKET_ABOUT_MAX, ticketError } from "../../../sync/posting/tickets";
 import { Dialog } from "../../components/Overlay";
 /**
@@ -148,6 +148,52 @@ export function CloseTicketDialog({ orgId, channelId, onClose }: { orgId: string
         <p className="muted" style={{ margin: 0 }}>
           <Localized k="organization.interface.the_channel_is_archived_everyone_in_it_can_still_read_it_nobody_c_469209e" />
         </p>
+      </div>
+    </Dialog>
+  );
+}
+
+export function ReopenTicketDialog({ orgId, review, onClose }: { orgId: string; review: { channelId: string; revision: number }; onClose: () => void }) {
+  const l10n = useLocalization();
+  const engine = useEngine();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const reopen = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await reopenTicket(engine, orgId, review.channelId, review.revision);
+      onClose();
+    } catch (err) {
+      setError(ticketError(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <Dialog
+      title={l10n("organization.tickets_lifecycle.review")}
+      onClose={onClose}
+      footer={
+        <>
+          <button className="btn btn-secondary" disabled={busy} onClick={onClose}>
+            {l10n("common.actions.cancel")}
+          </button>
+          <button className="btn btn-primary" disabled={busy || error !== null} onClick={() => void reopen()}>
+            {l10n("organization.tickets_lifecycle.reopen")}
+          </button>
+        </>
+      }
+    >
+      <div className="dialog-body">
+        <p className="muted" style={{ margin: 0 }}>
+          {l10n("organization.tickets_lifecycle.history")}
+        </p>
+        {error && (
+          <div className="banner danger" role="alert">
+            {error}
+          </div>
+        )}
       </div>
     </Dialog>
   );

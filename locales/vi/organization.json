@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Yêu cầu đã đóng",
+    "none_closed": "Không có yêu cầu đã đóng.",
+    "claim": "Nhận xử lý",
+    "release": "Bỏ phân công",
+    "assigned": "Đã giao cho {name}",
+    "reopen": "Mở lại",
+    "review": "Mở lại yêu cầu này?",
+    "history": "Kênh riêng tư sẽ mở lại cùng lịch sử cuộc trò chuyện."
+  },
   "community": "Cộng đồng",
   "channels": "Kênh",
   "roles": "Vai trò",

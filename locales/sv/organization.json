@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Stängda ärenden",
+    "none_closed": "Inga stängda ärenden.",
+    "claim": "Ta ärendet",
+    "release": "Ta bort tilldelning",
+    "assigned": "Tilldelat {name}",
+    "reopen": "Öppna igen",
+    "review": "Öppna det här ärendet igen?",
+    "history": "Den privata kanalen öppnas igen med sin konversationshistorik."
+  },
   "community": "Community",
   "channels": "Kanaler",
   "roles": "Roller",

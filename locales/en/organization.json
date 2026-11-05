@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Closed tickets",
+    "none_closed": "No closed tickets.",
+    "claim": "Claim",
+    "release": "Release claim",
+    "assigned": "Assigned to {name}",
+    "reopen": "Reopen",
+    "review": "Reopen this ticket?",
+    "history": "The private channel will reopen with its conversation history."
+  },
   "community": "Community",
   "channels": "Channels",
   "roles": "Roles",

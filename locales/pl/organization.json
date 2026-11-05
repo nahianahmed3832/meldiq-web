@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Zamknięte zgłoszenia",
+    "none_closed": "Brak zamkniętych zgłoszeń.",
+    "claim": "Przejmij",
+    "release": "Cofnij przypisanie",
+    "assigned": "Przypisano do: {name}",
+    "reopen": "Otwórz ponownie",
+    "review": "Otworzyć ponownie to zgłoszenie?",
+    "history": "Kanał prywatny zostanie ponownie otwarty wraz z historią rozmowy."
+  },
   "community": "Społeczność",
   "channels": "Kanały",
   "roles": "Role",

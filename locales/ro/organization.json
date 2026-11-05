@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Tichete închise",
+    "none_closed": "Nu există tichete închise.",
+    "claim": "Preia tichetul",
+    "release": "Anulează atribuirea",
+    "assigned": "Atribuit lui {name}",
+    "reopen": "Redeschide",
+    "review": "Redeschizi acest tichet?",
+    "history": "Canalul privat se va redeschide cu istoricul conversației."
+  },
   "community": "Comunitate",
   "channels": "Canale",
   "roles": "Roluri",

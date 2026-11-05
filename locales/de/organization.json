@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Geschlossene Tickets",
+    "none_closed": "Keine geschlossenen Tickets.",
+    "claim": "Übernehmen",
+    "release": "Zuweisung aufheben",
+    "assigned": "Zugewiesen an {name}",
+    "reopen": "Erneut öffnen",
+    "review": "Dieses Ticket erneut öffnen?",
+    "history": "Der private Kanal wird mit seinem Gesprächsverlauf erneut geöffnet."
+  },
   "community": "Community",
   "channels": "Kanäle",
   "roles": "Rollen",

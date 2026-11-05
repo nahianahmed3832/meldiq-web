@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Tickets fermés",
+    "none_closed": "Aucun ticket fermé.",
+    "claim": "Prendre en charge",
+    "release": "Annuler l’attribution",
+    "assigned": "Attribué à {name}",
+    "reopen": "Rouvrir",
+    "review": "Rouvrir ce ticket ?",
+    "history": "Le canal privé sera rouvert avec son historique de conversation."
+  },
   "community": "Communauté",
   "channels": "Salons",
   "roles": "Rôles",

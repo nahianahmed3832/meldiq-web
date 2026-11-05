@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Chamados fechados",
+    "none_closed": "Nenhum chamado fechado.",
+    "claim": "Assumir chamado",
+    "release": "Remover atribuição",
+    "assigned": "Atribuído a {name}",
+    "reopen": "Reabrir",
+    "review": "Reabrir este chamado?",
+    "history": "O canal privado será reaberto com o histórico da conversa."
+  },
   "community": "Comunidade",
   "channels": "Canais",
   "roles": "Cargos",

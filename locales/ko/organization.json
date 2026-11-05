@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "종료된 티켓",
+    "none_closed": "종료된 티켓이 없습니다.",
+    "claim": "담당하기",
+    "release": "담당 해제",
+    "assigned": "담당자: {name}",
+    "reopen": "다시 열기",
+    "review": "이 티켓을 다시 열까요?",
+    "history": "비공개 채널이 대화 기록과 함께 다시 열립니다."
+  },
   "community": "커뮤니티",
   "channels": "채널",
   "roles": "역할",

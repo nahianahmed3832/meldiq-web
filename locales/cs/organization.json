@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Uzavřené požadavky",
+    "none_closed": "Žádné uzavřené požadavky.",
+    "claim": "Převzít",
+    "release": "Uvolnit požadavek",
+    "assigned": "Přiřazeno: {name}",
+    "reopen": "Znovu otevřít",
+    "review": "Znovu otevřít tento požadavek?",
+    "history": "Soukromý kanál se znovu otevře včetně historie konverzace."
+  },
   "community": "Komunita",
   "channels": "Kanály",
   "roles": "Role",

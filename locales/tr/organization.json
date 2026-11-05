@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Kapatılan talepler",
+    "none_closed": "Kapatılan talep yok.",
+    "claim": "Talebi üstlen",
+    "release": "Atamayı kaldır",
+    "assigned": "Atanan kişi: {name}",
+    "reopen": "Yeniden aç",
+    "review": "Bu talep yeniden açılsın mı?",
+    "history": "Özel kanal, konuşma geçmişiyle birlikte yeniden açılacak."
+  },
   "community": "Topluluk",
   "channels": "Kanallar",
   "roles": "Roller",

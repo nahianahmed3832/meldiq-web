@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "Tiket ditutup",
+    "none_closed": "Tidak ada tiket yang ditutup.",
+    "claim": "Ambil tiket",
+    "release": "Lepas penugasan",
+    "assigned": "Ditugaskan kepada {name}",
+    "reopen": "Buka kembali",
+    "review": "Buka kembali tiket ini?",
+    "history": "Kanal privat akan dibuka kembali bersama riwayat percakapannya."
+  },
   "community": "Komunitas",
   "channels": "Kanal",
   "roles": "Peran",

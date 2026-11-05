@@ -1,4 +1,14 @@
 {
+  "tickets_lifecycle": {
+    "closed": "已關閉的工單",
+    "none_closed": "沒有已關閉的工單。",
+    "claim": "認領工單",
+    "release": "取消認領",
+    "assigned": "已指派給 {name}",
+    "reopen": "重新開啟",
+    "review": "重新開啟這張工單？",
+    "history": "私人頻道會保留對話記錄並重新開啟。"
+  },
   "community": "社群",
   "channels": "頻道",
   "roles": "身分組",

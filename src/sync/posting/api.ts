@@ -12,6 +12,7 @@ export const POSTING_FEATURES = {
   webhooks: "channel-webhooks",
   reactionRoles: "reaction-roles",
   tickets: "community-tickets",
+  ticketLifecycle: "ticket-lifecycle",
 } as const;
 
 const enc = encodeURIComponent;
@@ -161,6 +162,8 @@ const zTicket = z.object({
   openedAt: z.number(),
   closedAt: nullableTime,
   closedBy: zPerson.nullish().transform((v) => v ?? null),
+  claimedBy: zPerson.nullish().transform((v) => v ?? null),
+  revision: z.number().int().nonnegative().optional(),
   joined: z.boolean().default(false),
 });
 export type Ticket = z.infer<typeof zTicket>;
@@ -197,6 +200,23 @@ export async function openTicket(engine: Engine, orgId: string, open: { panelId:
 /** Open tickets: all of them for moderators, the viewer's own otherwise. */
 export async function openTickets(engine: Engine, orgId: string): Promise<Ticket[]> {
   return (await engine.api.json("GET", tickets(orgId), zTicketList)).tickets;
+}
+
+export async function closedTickets(engine: Engine, orgId: string): Promise<Ticket[]> {
+  return (await engine.api.json("GET", `${tickets(orgId)}?state=closed`, zTicketList)).tickets;
+}
+
+export async function assignTicket(engine: Engine, orgId: string, channelId: string, releaseRevision?: number): Promise<Ticket> {
+  const path = `${tickets(orgId)}/${enc(channelId)}/claim`;
+  const { ticket } =
+    releaseRevision === undefined ? await engine.api.json("POST", path, zTicketOut) : await engine.api.json("DELETE", path, zTicketOut, { body: { expectedRevision: releaseRevision } });
+  return ticket;
+}
+
+export async function reopenTicket(engine: Engine, orgId: string, channelId: string, expectedRevision: number): Promise<Ticket> {
+  const { ticket } = await engine.api.json("POST", `${tickets(orgId)}/${enc(channelId)}/reopen`, zTicketOut, { body: { expectedRevision } });
+  void engine.refreshAll().catch(() => undefined);
+  return ticket;
 }
 
 export async function joinTicket(engine: Engine, orgId: string, channelId: string): Promise<Ticket> {
