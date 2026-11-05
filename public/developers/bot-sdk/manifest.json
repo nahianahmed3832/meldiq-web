@@ -1,13 +1,13 @@
 {
   "format": 1,
-  "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+  "apiCommit": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
   "status": "preview source clients",
-  "archiveSha256": "e182cb81a15d0570a3eb3a0397570495a490779e2eac44739519b7d78df6ec6c",
+  "archiveSha256": "c4470d263d0e45d5c49414f3e9d1e786eab0914c46dc316eb9aafc3f7b9f5601",
   "files": [
     {
       "path": "README.md",
-      "sha256": "ee66c154567d3d9c8db87d77ba48108bd0c49c6e905041ed864becec69e15f28",
-      "bytes": 17626
+      "sha256": "51402d4ff286f5bc48bb40665c4bd72b839901f6c077c171c040af084c238636",
+      "bytes": 19099
     },
     {
       "path": "docs/api/bot-gateway.schema.json",
@@ -16,8 +16,8 @@
     },
     {
       "path": "docs/api/openapi.json",
-      "sha256": "c6bf830eefc1ca01085bb1fb2445cdb5f8c436dc7888e373e5d4523a35efd601",
-      "bytes": 4105291
+      "sha256": "9c8f081752dc6dee10754a93525811d2fedffa7ef363337e2ecc0e2dbf82c30d",
+      "bytes": 4111815
     },
     {
       "path": "examples/commands.mjs",
@@ -31,8 +31,8 @@
     },
     {
       "path": "examples/voice-listener.mjs",
-      "sha256": "a16df79311f4b11e724b4b065920267033322e1a6a2422bd6bb4e165c8b4750e",
-      "bytes": 3363
+      "sha256": "d9c2395ffe3afa017b9805a6dfbba0d9ca1d8656d47e2afce8b645de3c631a04",
+      "bytes": 3496
     },
     {
       "path": "javascript/attachments.mjs",
@@ -46,8 +46,8 @@
     },
     {
       "path": "javascript/index.mjs",
-      "sha256": "8d84cf57a5df2ec1038d1713a32d0959622fdaf26da1efecf6bb43f45313ff4e",
-      "bytes": 8968
+      "sha256": "8801ba1b152a69d04f1473599103c6ae9f05f11259df925cb3d90d567fb32ebd",
+      "bytes": 9192
     },
     {
       "path": "javascript/package.json",
@@ -66,8 +66,8 @@
     },
     {
       "path": "python/meldiq_bot.py",
-      "sha256": "0f0d6423dd7178d120a1031da27417c9922e87545a2f9924f4132c05f19ceef2",
-      "bytes": 10477
+      "sha256": "a140c9956a76a5a8451e21bd159a962ef2d25c23b0cf495bd89a5934b74a9cb2",
+      "bytes": 10707
     }
   ]
 }
