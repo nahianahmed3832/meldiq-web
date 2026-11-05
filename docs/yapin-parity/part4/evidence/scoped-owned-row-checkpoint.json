@@ -1,0 +1,223 @@
+{
+  "apiSource": "bdb6bdcd187e074c3b26de223794e64009e8bc8f",
+  "apiBackend": "disposable loopback PostgreSQL, 35 migrations",
+  "apiPasses": 129,
+  "apiFiles": 11,
+  "webFocus": "68883055; posting tools and contract tests within 68 scoped passes",
+  "statusSource": "0c3d825 (owning repository, read only)",
+  "publicStatusChecks": {
+    "page": 200,
+    "status": 503,
+    "apiMetrics": 503,
+    "localPasses": 12,
+    "productionMutation": false
+  },
+  "rows": {
+    "YAP-VOICE-013": {
+      "cases": [
+        "test/voice_rooms.test.ts > voice rooms > lets a manager mute someone's microphone and remove them from the call"
+      ],
+      "remaining": "Native moderator mute/disconnect passes with an SFU control-plane stand-in. Live track removal, installed flows and bans require their separate evidence. Destination moves remain deferred.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-VOICE-014": {
+      "cases": [
+        "test/voice_rooms.test.ts > voice rooms > queues raised hands, lowers them on request or when someone leaves",
+        "test/voice_rooms.test.ts > voice rooms > closes when the last person leaves, and refuses hands outside voice rooms"
+      ],
+      "remaining": "Native request/withdraw/leave queue behavior passes. Full speaker promotion/demotion with live media and installed clients remains unverified.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-MEDIA-003": {
+      "cases": [
+        "test/mojo.test.ts > Meldiq Plus > the catalog > never offers a larger file than the server takes (FILE_MAX_BYTES)",
+        "test/mojo.test.ts > Meldiq Plus > limits > refuses a file larger than the plan before reading it, and a community's Sparks raise it"
+      ],
+      "remaining": "Current plan and boosted-community limits pass at the native admission boundary. Real hosted multipart/provider limits remain unverified. No quota or price changed.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-MEDIA-004": {
+      "cases": [
+        "test/quotas.test.ts > resolution > checks every scope: a person's exception doesn't get past their organization's or the platform's limit",
+        "test/quotas.test.ts > enforcement in the running server > refuses an upload past this month's allowance, and a failed upload costs nothing",
+        "test/quotas.test.ts > accounting > doesn't let two parallel operations both take the last of an allowance"
+      ],
+      "remaining": "Scoped quota accounting and failed-upload release pass. Exact hourly/daily policy windows, supported sources and hosted upload limits still need qualification.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-EXPR-002": {
+      "cases": [
+        "test/community_expressions.test.ts > community emoji and stickers > are uploaded by people with expressions.manage, with a checked name and image",
+        "test/community_expressions.test.ts > image checks > know PNG, GIF and WebP, and whether they move",
+        "test/community_expressions.test.ts > uploads at the same moment > can't give two emoji the same name (batch B13)"
+      ],
+      "remaining": "Native permission, name/format validation and duplicate upload protection pass. Browser animation, quota recovery and installed clients need same-candidate checks.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-EXPR-003": {
+      "cases": [
+        "test/community_expressions.test.ts > community emoji and stickers > are listed and served to members only, and the image matches its hash"
+      ],
+      "remaining": "Native source asset membership and hash are enforced. Complete cross-community/DM selection, membership withdrawal and cached rendering remain unverified.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-EXPR-006": {
+      "cases": [
+        "test/community_expressions.test.ts > community emoji and stickers > are limited per community",
+        "test/community_expressions.test.ts > community emoji and stickers > are renamed and removed by managers"
+      ],
+      "remaining": "Native expression capacity and authorized removal pass. Client replacement/recovery and installed behavior are still open.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-EXPR-007": {
+      "cases": [
+        "test/gifs.test.ts > GIF search > says plainly when it isn't set up, and offers nothing that would fail",
+        "test/gifs.test.ts > GIF search > searches and lists popular GIFs through the server, with the content filter, never logging the words in a URL",
+        "test/gifs.test.ts > GIF search > fetches media only from the provider's own hosts"
+      ],
+      "remaining": "Native search/trending and provider-origin limits pass with a local provider stand-in. Hosted attribution, real provider rate limiting and all-client selection remain open.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-EXPR-010": {
+      "cases": [
+        "test/community_expressions.test.ts > community emoji and stickers > are uploaded by people with expressions.manage, with a checked name and image",
+        "test/community_expressions.test.ts > community emoji and stickers > are listed and served to members only, and the image matches its hash",
+        "test/community_expressions.test.ts > community emoji and stickers > are limited per community",
+        "test/mojo.test.ts > Meldiq Plus > custom emoji and stickers > keeps one pool per person across communities, and locks (never deletes) what a lapsed plan no longer covers"
+      ],
+      "remaining": "The existing custom sticker assets and entitlement checks are preserved. Actual send/view and installed journey acceptance remain open.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-DEV-004": {
+      "cases": [
+        "test/bot_directory.test.ts > bot directory with communities in postgres > starts unlisted; only the owner sees and changes a listing, and only public bots can be listed",
+        "test/bot_directory.test.ts > bot directory with communities in postgres > lists bots with install counts and slash commands, sorted and filtered",
+        "test/bot_directory.test.ts > bot directory with communities in postgres > drops bots that are unlisted or made private, keeping when they were first listed"
+      ],
+      "remaining": "Owner-controlled listing and visibility gates pass. The inspected native listing has no qualified separate pending/approved/rejected operator review or suspension journey.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-DEV-011": {
+      "cases": [
+        "test/channel_webhooks.test.ts > channel webhooks with communities in postgres > posts Discord's JSON as a channel message with boxes, buttons and the webhook's name",
+        "test/channel_webhooks.test.ts > channel webhooks with communities in postgres > validates strictly: https only, Discord's limits, something to show",
+        "test/channel_webhooks.test.ts > channel webhooks with communities in postgres > never lets people's own messages carry boxes, buttons or webhook details"
+      ],
+      "remaining": "Native permission and safe rich message rules plus Web JSON import and preview checks pass. Same-candidate installed builder workflow remains unverified.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-DEV-015": {
+      "cases": [
+        "test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > makes, lists, changes and deletes apps, showing the secret once and only https or localhost redirects",
+        "test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > allows 10 apps per person",
+        "test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > rotates the client secret: the old one stops working at once"
+      ],
+      "remaining": "Native app owner lifecycle, safe redirects, cap and one-time secret handling pass. Complete Developer UI and installed registration remain open.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-DEV-016": {
+      "cases": [
+        "test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > runs the full code flow with PKCE: consent info, code, tokens, userinfo with the verified email",
+        "test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > refuses a wrong verifier, a reused code (revoking what it gave) and a code without PKCE from a public client",
+        "test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > checks the redirect, the scopes and the PKCE method, and denying returns access_denied",
+        "test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > lists the apps you signed in to and revokes one: its tokens stop at once"
+      ],
+      "remaining": "Native OAuth scope, PKCE, redirect and revocation checks pass. Hosted consent and installed relying-party journeys remain unverified. Existing Google/Discord login is separate.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-BILL-001": {
+      "cases": [
+        "test/mojo.test.ts > Meldiq Plus > the catalog > lists Free and Plus while keeping legacy Go grants usable, and what's on sale at the published prices",
+        "test/mojo.test.ts > Meldiq Plus > the catalog > works out limits the same way everywhere",
+        "test/mojo.test.ts > Meldiq Plus > closes Go to new checkouts and gifts while the existing Go account keeps its plan"
+      ],
+      "remaining": "Native plan catalog and legacy grant compatibility pass. Actual hosted terms, checkout eligibility and provider-backed acceptance remain separate.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-BILL-002": {
+      "cases": [
+        "test/billing_plus_terms.test.ts > approved recurring Plus terms > creates monthly from server-owned terms and refuses a submitted price",
+        "test/billing_plus_terms.test.ts > approved recurring Plus terms > verifies the provider cadence and preserves the three-month entitlement period",
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > never grants on ACTIVE without a verified payment and prevents binding another account's subscription"
+      ],
+      "remaining": "Server-owned recurring terms and verified-payment gating pass with test provider responses. A real hosted buyer purchase is not verified. Cards/vaulting/renewals remain disabled.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-BILL-003": {
+      "cases": [
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > prices a gift from the existing catalog and deduplicates concurrent create requests",
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > binds private gift links to verified payment, rotates secrets and atomically grants once",
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > encrypts email recipients, delivers only verified gifts and requires the matching verified account",
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > does not grant a gift on approval, GET, cancellation or a declined capture"
+      ],
+      "remaining": "Private gift links, verified receipt requirements and atomic one-time grants pass against provider stand-ins. Live buyer and recipient delivery are unverified.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-BILL-005": {
+      "cases": [
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > preserves existing free time while scheduling and cancelling an approved unpaid subscription",
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > independently verifies Plus activation, failed renewal, recovery, cancellation and paid-period expiration"
+      ],
+      "remaining": "Cancellation and continued earned/paid time pass against controlled provider responses. Real provider withdrawal, jurisdiction-specific terms and installed UI remain open.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-BILL-006": {
+      "cases": [
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > independently verifies Plus activation, failed renewal, recovery, cancellation and paid-period expiration",
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > records renewals and safely synchronizes suspension, reactivation and provider expiration",
+        "test/billing_paypal.test.ts > PayPal through authenticated billing APIs > isolates a failed provider read and never expires a verified paid subscription on a 404"
+      ],
+      "remaining": "Failed funding/recovery lifecycle and isolation pass with a provider stand-in. No live renewal, card or buyer behavior is verified or enabled by this work.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-BILL-009": {
+      "cases": [
+        "test/mojo.test.ts > Meldiq Plus > Meldiq Spark > buys standalone one-time Sparks through Stripe without a personal plan",
+        "test/mojo.test.ts > Meldiq Plus > Meldiq Spark > can't give the same Spark twice, even at once",
+        "test/mojo.test.ts > Meldiq Plus > Meldiq Spark > moves a Spark and takes it back, keeping the history"
+      ],
+      "remaining": "Meldiq Spark is the intended native counterpart. Purchase state and allocation pass with a provider stand-in, with no new price or entitlement change. Real buyer acceptance remains open.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-BILL-010": {
+      "cases": [
+        "test/mojo.test.ts > Meldiq Plus > Meldiq Spark > adds up members' Sparks toward the next level",
+        "test/mojo.test.ts > Meldiq Plus > limits > gives everyone in a boosted server its screen shares and voice, never less than their own plan",
+        "test/mojo.test.ts > Meldiq Plus > Meldiq Spark > pauses Sparks beyond a lapsed plan instead of deleting them, and lowers the level at once"
+      ],
+      "remaining": "Native level and benefit recalculation pass. Hosted checkout and delivered media quality need their separate acceptance.",
+      "source": "bdb6bdcd (API)"
+    },
+    "YAP-OPS-001": {
+      "cases": [
+        "status: public.test.ts, service-minutes.test.ts, read-cache.test.ts (12 passing); public HTTP probes at 06:41 UTC"
+      ],
+      "remaining": "Twelve current status domain/cache tests pass, including stale evidence and failed service dependencies. The public data endpoint returned 503; current live component health is unverified.",
+      "source": "0c3d825 (status, read only)"
+    },
+    "YAP-OPS-002": {
+      "cases": [
+        "status: public.test.ts, service-minutes.test.ts, read-cache.test.ts (12 passing); public HTTP probes at 06:41 UTC"
+      ],
+      "remaining": "Local rollup tests preserve unknown days, measured failures and the denominator. The public 90-day endpoint returned 503; live strips and coverage are unverified.",
+      "source": "0c3d825 (status, read only)"
+    },
+    "YAP-OPS-003": {
+      "cases": [
+        "status: public.test.ts, service-minutes.test.ts, read-cache.test.ts (12 passing); public HTTP probes at 06:41 UTC"
+      ],
+      "remaining": "Source renders the existing timestamped API probe median and leaves missing buckets empty. The live metrics endpoint returned 503, so no current chart value is claimed.",
+      "source": "0c3d825 (status, read only)"
+    },
+    "YAP-OPS-007": {
+      "cases": [
+        "status: public.test.ts, service-minutes.test.ts, read-cache.test.ts (12 passing); public HTTP probes at 06:41 UTC"
+      ],
+      "remaining": "Source separates active/recovered incidents, resolved history and unavailable data. Local status tests pass; the live backend returned 503, so current incident history is unverified.",
+      "source": "0c3d825 (status, read only)"
+    }
+  },
+  "apiLogSha256": "c2878e440c2cacc22e71ce726acb0eda326918a3a22c40fbbe9eb20025c24d4b",
+  "statusLogSha256": "39cba2e03ffa033ec4842b04dd067ffdf561d47a4cbb814cfe8c9c8b8bd9bb0c",
+  "acceptancePromotions": 0
+}

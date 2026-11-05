@@ -1,14 +1,129 @@
 {
-  "recordedAt": "2026-11-05T06:11:36.225Z",
+  "recordedAt": "2026-11-05T06:44:24.296Z",
   "total": 568,
   "owned": 238,
-  "updated": 5,
-  "totalOwnedRowsReconciled": 178,
+  "updated": 24,
+  "totalOwnedRowsReconciled": 202,
   "unownedUnchanged": 330,
   "statusChanges": [
     {
-      "id": "YAP-BOT-008",
-      "from": "IN_PROGRESS",
+      "id": "YAP-VOICE-013",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-VOICE-014",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-003",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-MEDIA-004",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-EXPR-002",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-EXPR-003",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-EXPR-006",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-EXPR-007",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-EXPR-010",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-DEV-004",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IN_PROGRESS"
+    },
+    {
+      "id": "YAP-DEV-011",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-DEV-015",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-DEV-016",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-001",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-002",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-003",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-005",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-006",
+      "from": "RESEARCH_REQUIRED",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-009",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-BILL-010",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-OPS-001",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-OPS-002",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-OPS-003",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
+      "to": "IMPLEMENTED_NOT_ACCEPTED"
+    },
+    {
+      "id": "YAP-OPS-007",
+      "from": "NOT_STARTED_IN_THIS_PROGRAM",
       "to": "IMPLEMENTED_NOT_ACCEPTED"
     }
   ],
@@ -16,20 +131,20 @@
   "historicalFieldsUnchanged": true,
   "stableIdsPreserved": true,
   "part4Implementation": {
-    "IMPLEMENTED_NOT_ACCEPTED": 158,
-    "NOT_STARTED_IN_THIS_PROGRAM": 41,
-    "RESEARCH_REQUIRED": 19,
+    "IMPLEMENTED_NOT_ACCEPTED": 179,
+    "NOT_STARTED_IN_THIS_PROGRAM": 25,
+    "RESEARCH_REQUIRED": 11,
     "DEFERRED_DECISION": 14,
-    "IN_PROGRESS": 6
+    "IN_PROGRESS": 9
   },
   "allImplementation": {
-    "IMPLEMENTED_NOT_ACCEPTED": 244,
-    "RESEARCH_REQUIRED": 21,
+    "IMPLEMENTED_NOT_ACCEPTED": 265,
+    "RESEARCH_REQUIRED": 13,
     "DEFERRED_DECISION": 31,
     "ACCEPTED": 225,
-    "NOT_STARTED_IN_THIS_PROGRAM": 41,
-    "IN_PROGRESS": 6
+    "NOT_STARTED_IN_THIS_PROGRAM": 25,
+    "IN_PROGRESS": 9
   },
   "unchangedRowsSha256": "e9f3bbcc47d789e494d454fbeab31358fc804d8251306806f3867871d6b8c0b7",
-  "scope": "Scoped Starboard and Ticket follow-up. Ticket moves from in progress to implemented awaiting coordinated acceptance. No acceptance promotion."
+  "scope": "24 reviewed existing voice, media, expression, developer, billing and public status rows. 21 remain implemented awaiting acceptance; three retain active gaps. No acceptance promotion."
 }

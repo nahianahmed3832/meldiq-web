@@ -1,0 +1,20 @@
+✔ public services hide probe inventory and regional details (2.63075ms)
+✔ database outage affects messaging while unrelated website remains operational (0.299959ms)
+✔ missing service or unknown required dependency cannot report all systems operational (0.247541ms)
+✔ unrecorded days stay empty and measured uptime preserves failed observations (0.256542ms)
+✔ feature subscriptions retain dependent incident matching and automated copy is readable (0.236958ms)
+✔ one failed file path or realtime channel is partial; an unmonitored receipt cannot be green (0.267958ms)
+✔ uncommissioned device and checkout checks retain real backend health and check uptime (0.295208ms)
+✔ backend evidence preserves missing dependencies, stale monitoring and real failures (0.280458ms)
+✔ commissioned end-to-end evidence is required before full service health is advertised (0.305625ms)
+✔ public read bursts share one query, but expired data is not served (1.842375ms)
+✔ failed reads are retried and ingestion invalidates cached health (0.288791ms)
+✔ one minute of service uptime needs every required regional observation; two failures count once (4.133708ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 158.178125

@@ -1,0 +1,55 @@
+{
+  "queueReplay": {
+    "api": "ea6273b9ba8ac38f67df8842188e389832fc1cbe",
+    "pgPasses": 55,
+    "legacyPasses": 50,
+    "legacySkips": 2,
+    "separatePagePGPasses": 1,
+    "separatePageLegacyPasses": 2,
+    "acceptance": "REST and WebSocket fallback/reconnect/backlog reproject official bot snapshots using current source authority. Revoked content becomes a safe placeholder with the original queue ID. Separate old edits follow only the exact authenticated mirror target."
+  },
+  "sourceImages": {
+    "api": "bdb6bdcd187e074c3b26de223794e64009e8bc8f",
+    "pgPasses": 50,
+    "legacyPasses": 53,
+    "legacySkips": 2,
+    "acceptance": "One encrypted PNG uploaded through native API, authorized board projection and decrypted download with matching digest. Revoked viewer receives no reference and source download returns 404; expiry omits preview; deletion removes source text. No durable second copy of file keys or source media."
+  },
+  "open": [
+    "Previously delivered browser and native cached copies",
+    "Initial live media presentation can require HTTP/history refresh",
+    "Already issued URLs or downloaded copies",
+    "Narrow source-deletion race during initial publication",
+    "Full combined current candidate qualification"
+  ],
+  "production": false,
+  "logs": {
+    "starboard-queue-replay-build.txt": "56c7e8944d3825293b0f34c6e7bec9525c1a4b5136eb06f7c05fb800e76adde6",
+    "starboard-queue-replay-legacy.txt": "5267b9c090a811bb17fdfb0d90af1d591cd6517220c586b203d2f33a82fdca28",
+    "starboard-queue-replay-pg.txt": "a60e33dd08c7f4d3b0466615435aea7084505d56dfa1a1967aa17176f753c72d",
+    "starboard-queue-replay-red.txt": "1b89e59edd83f0c8b8d3eaacbb11639e8c0244d1c7ac15b82248bb92aa6fc22b",
+    "starboard-queue-replay-separated-legacy.txt": "6451febed281ed1b13de1d8480cfbee889f3c686ff02960d1e440dc2322a0467",
+    "starboard-queue-replay-separated-pg.txt": "2dc0da80d6020b0fcc1926d89753380fbfa375bbb6c984bbcd9280cfb93a829f",
+    "starboard-queue-replay-types.txt": "d46d45e4fcb88bf5bd038ec066b58cab9c0b2d689cb652e5a55a9526607aa038",
+    "starboard-source-image-build.txt": "56c7e8944d3825293b0f34c6e7bec9525c1a4b5136eb06f7c05fb800e76adde6",
+    "starboard-source-image-legacy.txt": "d564200754c77dee072ceb0a5e11341eeac5dce9f6128ca0183c42e954a9f660",
+    "starboard-source-image-pg.txt": "863706682ede62d2cd727dfa905b84c7c149a5c8e62c3cebbcdd9aa01c7cf170",
+    "starboard-source-image-red.txt": "886d1eeb25c9926da05d18d496c3fef4a0d086b26d9f8fdafc1d4cfcdf7e4dec",
+    "starboard-source-image-types.txt": "d46d45e4fcb88bf5bd038ec066b58cab9c0b2d689cb652e5a55a9526607aa038"
+  },
+  "rawLogHashes": {
+    "starboard-queue-replay-build.txt": "8faba247704fd05b0405aa62cf4b8db54c79f3b825d2d01323d657d65ff6f097",
+    "starboard-queue-replay-legacy.txt": "5e14251484cf50d18e580e0ca52fb8cd454286fd982abfc9f4b4b5f6273f6c71",
+    "starboard-queue-replay-pg.txt": "d701adb8aa76ac63801772861c87bf19cd392ea1956622ba160868fac6a8915a",
+    "starboard-queue-replay-red.txt": "48ce39496b3fa077bb26d2252463c41c63f7529a6905b01f623c0968eabbc193",
+    "starboard-queue-replay-separated-legacy.txt": "9f7659d12e26e2df594ab135aa62ff71c40fb8516f1269b4b80e4219063bca33",
+    "starboard-queue-replay-separated-pg.txt": "b8ac49f4b5c85311f15e812e58026e8262589602f5661ca510cf3e940ee10d28",
+    "starboard-queue-replay-types.txt": "b776d13ae5e43c7d1d9e323aa81bd4ad2d60d79bf13658761b624c592cf72199",
+    "starboard-source-image-build.txt": "8faba247704fd05b0405aa62cf4b8db54c79f3b825d2d01323d657d65ff6f097",
+    "starboard-source-image-legacy.txt": "e08302757154e7f01bfed042492d9e96dd5207c84ded9244af485412c8d9f85b",
+    "starboard-source-image-pg.txt": "f65716525c7bead439d3d3d5ece9477baddd1dd384fd88eb8dd7068c01d244e0",
+    "starboard-source-image-red.txt": "dd9aec322feaf16fe3d554df69f31e117d9ba3e3b75ce4c64e798dcdea4aff5b",
+    "starboard-source-image-types.txt": "b776d13ae5e43c7d1d9e323aa81bd4ad2d60d79bf13658761b624c592cf72199"
+  },
+  "logNormalization": "Only trailing blank lines removed from checked-in log copies."
+}

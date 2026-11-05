@@ -2256,18 +2256,18 @@
     {
       "id": "YAP-VOICE-013",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native moderator mute/disconnect passes with an SFU control-plane stand-in. Live track removal, installed flows and bans require their separate evidence. Destination moves remain deferred."
     },
     {
       "id": "YAP-VOICE-014",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native request/withdraw/leave queue behavior passes. Full speaker promotion/demotion with live media and installed clients remains unverified."
     },
     {
       "id": "YAP-VOICE-015",
@@ -2400,18 +2400,18 @@
     {
       "id": "YAP-MEDIA-003",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Current plan and boosted-community limits pass at the native admission boundary. Real hosted multipart/provider limits remain unverified. No quota or price changed."
     },
     {
       "id": "YAP-MEDIA-004",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IN_PROGRESS",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Scoped quota accounting and failed-upload release pass. Exact hourly/daily policy windows, supported sources and hosted upload limits still need qualification."
     },
     {
       "id": "YAP-MEDIA-005",
@@ -2488,18 +2488,18 @@
     {
       "id": "YAP-EXPR-002",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native permission, name/format validation and duplicate upload protection pass. Browser animation, quota recovery and installed clients need same-candidate checks."
     },
     {
       "id": "YAP-EXPR-003",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IN_PROGRESS",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native source asset membership and hash are enforced. Complete cross-community/DM selection, membership withdrawal and cached rendering remain unverified."
     },
     {
       "id": "YAP-EXPR-004",
@@ -2520,18 +2520,18 @@
     {
       "id": "YAP-EXPR-006",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native expression capacity and authorized removal pass. Client replacement/recovery and installed behavior are still open."
     },
     {
       "id": "YAP-EXPR-007",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native search/trending and provider-origin limits pass with a local provider stand-in. Hosted attribution, real provider rate limiting and all-client selection remain open."
     },
     {
       "id": "YAP-EXPR-008",
@@ -2552,10 +2552,10 @@
     {
       "id": "YAP-EXPR-010",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "The existing custom sticker assets and entitlement checks are preserved. Actual send/view and installed journey acceptance remain open."
     },
     {
       "id": "YAP-BOT-001",
@@ -2760,10 +2760,10 @@
     {
       "id": "YAP-DEV-004",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IN_PROGRESS",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Owner-controlled listing and visibility gates pass. The inspected native listing has no qualified separate pending/approved/rejected operator review or suspension journey."
     },
     {
       "id": "YAP-DEV-005",
@@ -2816,10 +2816,10 @@
     {
       "id": "YAP-DEV-011",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native permission and safe rich message rules plus Web JSON import and preview checks pass. Same-candidate installed builder workflow remains unverified."
     },
     {
       "id": "YAP-DEV-012",
@@ -2848,18 +2848,18 @@
     {
       "id": "YAP-DEV-015",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native app owner lifecycle, safe redirects, cap and one-time secret handling pass. Complete Developer UI and installed registration remain open."
     },
     {
       "id": "YAP-DEV-016",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native OAuth scope, PKCE, redirect and revocation checks pass. Hosted consent and installed relying-party journeys remain unverified. Existing Google/Discord login is separate."
     },
     {
       "id": "YAP-DEV-017",
@@ -2872,26 +2872,26 @@
     {
       "id": "YAP-BILL-001",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native plan catalog and legacy grant compatibility pass. Actual hosted terms, checkout eligibility and provider-backed acceptance remain separate."
     },
     {
       "id": "YAP-BILL-002",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Live PayPal subscriptions are configured and current offer is USD 4.99/month; real approved-buyer completion, server-confirmed activation and settlement remain unaccepted."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Server-owned recurring terms and verified-payment gating pass with test provider responses. A real hosted buyer purchase is not verified. Cards/vaulting/renewals remain disabled."
     },
     {
       "id": "YAP-BILL-003",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Private gift links, verified receipt requirements and atomic one-time grants pass against provider stand-ins. Live buyer and recipient delivery are unverified."
     },
     {
       "id": "YAP-BILL-004",
@@ -2904,18 +2904,18 @@
     {
       "id": "YAP-BILL-005",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Cancellation/refund source exists; real provider nonrenewal, withdrawal/refund, benefit retention and signed-webhook handling remain unaccepted."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Cancellation and continued earned/paid time pass against controlled provider responses. Real provider withdrawal, jurisdiction-specific terms and installed UI remain open."
     },
     {
       "id": "YAP-BILL-006",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Lifecycle handlers exist; actual provider renewal/failure/grace/restoration and duplicate/reordered webhook evidence are outstanding. Card recurrence remains disabled."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Failed funding/recovery lifecycle and isolation pass with a provider stand-in. No live renewal, card or buyer behavior is verified or enabled by this work."
     },
     {
       "id": "YAP-BILL-007",
@@ -2936,18 +2936,18 @@
     {
       "id": "YAP-BILL-009",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing Meldiq behavior differs intentionally or has a separate policy; preserve until an explicit decision."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Meldiq Spark is the intended native counterpart. Purchase state and allocation pass with a provider stand-in, with no new price or entitlement change. Real buyer acceptance remains open."
     },
     {
       "id": "YAP-BILL-010",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Native level and benefit recalculation pass. Hosted checkout and delivered media quality need their separate acceptance."
     },
     {
       "id": "YAP-BILL-011",
@@ -3448,26 +3448,26 @@
     {
       "id": "YAP-OPS-001",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Twelve current status domain/cache tests pass, including stale evidence and failed service dependencies. The public data endpoint returned 503; current live component health is unverified."
     },
     {
       "id": "YAP-OPS-002",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Local rollup tests preserve unknown days, measured failures and the denominator. The public 90-day endpoint returned 503; live strips and coverage are unverified."
     },
     {
       "id": "YAP-OPS-003",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Independent status/probe infrastructure exists; equivalent sampled API chart, units, aggregation and freshness were not accepted."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Source renders the existing timestamped API probe median and leaves missing buckets empty. The live metrics endpoint returned 503, so no current chart value is claimed."
     },
     {
       "id": "YAP-OPS-004",
@@ -3496,10 +3496,10 @@
     {
       "id": "YAP-OPS-007",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
+      "remaining": "Source separates active/recovered incidents, resolved history and unavailable data. Local status tests pass; the live backend returned 503, so current incident history is unverified."
     },
     {
       "id": "YAP-PERM-001",

@@ -8,10 +8,10 @@ Status: open. Production authorization must follow a complete validated candidat
 - [x] Qualify recipient consent, private controls, pinned SDK downloads and existing/waiting encrypted bot voice in controlled Web/API flows.
 - [x] Add private bounded media cleanup metadata and test failed-removal/restart recovery.
 - [x] Disclose complete room-media reception and qualify 15 continuous-source saved-grant probes without claiming provider JWT invalidation or instantaneous revocation.
-- [x] Reconcile 178 Part 4 register rows, including 32 official-bot rows, without changing 330 other-owned rows or historical reference fields.
+- [x] Reconcile 202 Part 4 register rows, including 32 official-bot rows, without changing 330 other-owned rows or historical reference fields.
 - [x] Restrict official Logger publication to private destinations and verify restored settings and disable races.
 - [x] Qualify the reviewed Ticket claim/release/reopen lifecycle and current transcript audience checks in local API and two Chromium viewports.
-- [ ] Finish Starboard queue/realtime, cache invalidation and authorized source-media qualification. Native HTTP history/summaries/collections and original-only search have scoped passes.
+- [ ] Finish Starboard client cache revalidation and live media updates. Native HTTP, queue/realtime replay and source-bound media now have scoped API passes.
 - [x] Preserve six approved Part 4 product deferrals and the earlier destination-move decision.
 - [x] Commit the Windows import and preserve documented native adaptations.
 - [x] Compile the sole combined Android workspace and record its bounded native source/crypto checks.

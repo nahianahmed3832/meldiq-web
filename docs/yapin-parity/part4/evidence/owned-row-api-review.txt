@@ -1,0 +1,170 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:55123) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55123) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/mojo.test.ts > Meldiq Plus > the catalog > lists Free and Plus while keeping legacy Go grants usable, and what's on sale at the published prices 6ms
+ ✓ test/mojo.test.ts > Meldiq Plus > the catalog > never offers a larger file than the server takes (FILE_MAX_BYTES) 0ms
+ ✓ test/mojo.test.ts > Meldiq Plus > the catalog > works out limits the same way everywhere 0ms
+ ✓ test/mojo.test.ts > Meldiq Plus > plans come from verified billing only > gives each person their plan's perks; signing in gives nothing 9ms
+ ✓ test/mojo.test.ts > Meldiq Plus > plans come from verified billing only > answers a device session too (linked before email sign-in), and asks it to sign in with email to buy 10ms
+ ✓ test/mojo.test.ts > Meldiq Plus > plans come from verified billing only > refuses the Spark add-on through the plan checkout (it has its own, by quantity) 1ms
+ ✓ test/mojo.test.ts > Meldiq Plus > Meldiq Spark > lets a Go member give their one Spark: it counts toward level 1 (two Sparks) for everyone in it 21ms
+ ✓ test/mojo.test.ts > Meldiq Plus > Meldiq Spark > adds up members' Sparks toward the next level 9ms
+ ✓ test/mojo.test.ts > Meldiq Plus > Meldiq Spark > can't give the same Spark twice, even at once 7ms
+ ✓ test/mojo.test.ts > Meldiq Plus > Meldiq Spark > buys standalone one-time Sparks through Stripe without a personal plan 47ms
+ ✓ test/mojo.test.ts > Meldiq Plus > Meldiq Spark > preserves legacy recurring Spark slots after the one-time purchase launch 7ms
+ ✓ test/mojo.test.ts > Meldiq Plus > Meldiq Spark > pauses Sparks beyond a lapsed plan instead of deleting them, and lowers the level at once 5ms
+ ✓ test/mojo.test.ts > Meldiq Plus > Meldiq Spark > moves a Spark and takes it back, keeping the history 15ms
+ ✓ test/mojo.test.ts > Meldiq Plus > limits > bounds the encrypted size of messages by plan, whatever the client says 60ms
+ ✓ test/mojo.test.ts > Meldiq Plus > limits > refuses a file larger than the plan before reading it, and a community's Sparks raise it 29ms
+ ✓ test/mojo.test.ts > Meldiq Plus > limits > gives everyone in a boosted server its screen shares and voice, never less than their own plan 0ms
+ ✓ test/mojo.test.ts > Meldiq Plus > custom emoji and stickers > keeps one pool per person across communities, and locks (never deletes) what a lapsed plan no longer covers 82ms
+ ✓ test/mojo.test.ts > Meldiq Plus > enforcement > applies plan limits once Meldiq Plus is on sale (MOJO_ENFORCE=auto), and keeps everyone's old limits until then 2020ms
+ ✓ test/mojo.test.ts > Meldiq Plus > badges > shows Plus and Meldiq Check in member lists, and hides them on request without changing the plan 11ms
+ ✓ test/mojo.test.ts > Meldiq Plus > closes Go to new checkouts and gifts while the existing Go account keeps its plan 2ms
+ ✓ test/mojo.test.ts > Meldiq Plus > gifts > prices a gift on the server and makes it the friend's only once Stripe says it's paid 15ms
+ ✓ test/mojo.test.ts > Meldiq Plus > gifts > can't be started once refunded 7ms
+(node:55186) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55186) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/quotas.test.ts > resolution > prefers override > own > plan > default, and ignores expired overrides 159ms
+ ✓ test/quotas.test.ts > resolution > lets a hard default cap narrower allocations, never raise them 151ms
+ ✓ test/quotas.test.ts > resolution > checks every scope: a person's exception doesn't get past their organization's or the platform's limit 153ms
+ ✓ test/quotas.test.ts > resolution > validates policies and refuses modes a key can't enforce 154ms
+ ✓ test/quotas.test.ts > accounting > doesn't let two parallel operations both take the last of an allowance 155ms
+ ✓ test/quotas.test.ts > accounting > commits what was really used, releases failures, and treats a repeated key as the same operation 152ms
+ ✓ test/quotas.test.ts > accounting > gives back reservations nobody settled once they expire, and records it 153ms
+ ✓ test/quotas.test.ts > accounting > starts a new period at the UTC month boundary without deleting the old one 151ms
+ ✓ test/quotas.test.ts > accounting > observes without refusing, warns at the level, and allows the grace in soft mode 150ms
+ ✓ test/quotas.test.ts > accounting > keeps policy history: a change supersedes, a removal ends, nothing is deleted 151ms
+ ✓ test/quotas.test.ts > enforcement in the running server > changes nothing and writes nothing while no policy exists 9ms
+ ✓ test/quotas.test.ts > enforcement in the running server > refuses an upload past this month's allowance, and a failed upload costs nothing 25ms
+ ✓ test/quotas.test.ts > enforcement in the running server > refuses a realtime connection past a person's allowance, while sign-in stays possible 17ms
+ ✓ test/quotas.test.ts > enforcement in the running server > scopes a person to their community when the conversation belongs to one 0ms
+(node:55210) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55210) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/gifs.test.ts > GIF search > says plainly when it isn't set up, and offers nothing that would fail 5ms
+ ✓ test/gifs.test.ts > GIF search > searches and lists popular GIFs through the server, with the content filter, never logging the words in a URL 9ms
+ ✓ test/gifs.test.ts > GIF search > fetches media only from the provider's own hosts 3ms
+(node:55250) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55250) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > is advertised, and only holders of webhooks.manage see or make webhooks 6ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > gives a new webhook a friendly name and shows its token once, keeping only a hash 5ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > posts Discord's JSON as a channel message with boxes, buttons and the webhook's name 13ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > validates strictly: https only, Discord's limits, something to show 10ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > refuses unknown and wrong tokens alike, and a new address retires the old one 7ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > isn't held up by slowmode, but an archived channel refuses it 15ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > never lets people's own messages carry boxes, buttons or webhook details 2ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > makes a post for holders of webhooks.manage, and needs a title in a forum 12ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > renames, sets a picture members can fetch, and messages name it 15ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > stops at 10 per channel 23ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > deletes a webhook: its address stops working and what it posted stays 11ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks with communities in postgres > limits posts per webhook address 73ms
+ ✓ test/channel_webhooks.test.ts > channel webhooks switched off (CHANNEL_WEBHOOKS=off) > aren't advertised and their routes answer 503 787ms
+ ✓ test/channel_webhooks.test.ts > webhook payloads > makes text from the boxes when there's no content, for apps that can't show boxes 0ms
+ ✓ test/channel_webhooks.test.ts > webhook payloads > takes the poster's name and picture over the webhook's 0ms
+ ✓ test/channel_webhooks.test.ts > webhook payloads > refuses a box with nothing in it 0ms
+ ✓ test/channel_webhooks.test.ts > webhook payloads > never logs a webhook's token 0ms
+(node:55296) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55296) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/bot_directory.test.ts > bot directory with communities in postgres > starts unlisted; only the owner sees and changes a listing, and only public bots can be listed 9ms
+ ✓ test/bot_directory.test.ts > bot directory with communities in postgres > lists bots with install counts and slash commands, sorted and filtered 15ms
+ ✓ test/bot_directory.test.ts > bot directory with communities in postgres > drops bots that are unlisted or made private, keeping when they were first listed 7ms
+ ✓ test/bot_directory.test.ts > bot directory switched off > answers 503 and hides the feature 9ms
+(node:55305) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55305) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/billing_paypal.test.ts > PayPal Sandbox configuration > separates Sandbox from explicitly enabled production live charges 2ms
+ ✓ test/billing_paypal.test.ts > PayPal Sandbox configuration > uses exact minor-unit parsing 0ms
+ ✓ test/billing_paypal.test.ts > PayPal Sandbox configuration > gates subscriptions and verifies the real plan price, currency and billing interval 2ms
+ ✓ test/billing_paypal.test.ts > keeps the provider's monthly anchor through short months when cancellation omits next billing 1ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > exposes only public configuration and rejects unauthenticated purchases and forged amounts 6ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > prices a gift from the existing catalog and deduplicates concurrent create requests 8ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > binds private gift links to verified payment, rotates secrets and atomically grants once 80ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > encrypts email recipients, delivers only verified gifts and requires the matching verified account 40ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > queues gift credit behind an active renewal without changing its mandate or paid time 79ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > does not grant a gift on approval, GET, cancellation or a declined capture 4ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > captures on the server, verifies amounts, records one payment and enforces ownership 8ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > rejects a capture with the wrong merchant or payable amount 3ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > requires explicit refund confirmation, billing permission and an audit entry; retries refund only once 14ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > verifies the complete webhook body with PayPal, rejects bad signatures and deduplicates durably 5ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > keeps an unfinished checkout separate from a free signup trial and never cancels an unapproved mandate 46ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > expires a definitively missing unpaid checkout and allows a fresh purchase without pretending to cancel it 38ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > isolates a failed provider read and never expires a verified paid subscription on a 404 63ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > preserves existing free time while scheduling and cancelling an approved unpaid subscription 37ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > independently verifies Plus activation, failed renewal, recovery, cancellation and paid-period expiration 42ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > records renewals and safely synchronizes suspension, reactivation and provider expiration 44ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > applies an early refund before completion and never resurrects the refunded gift 7ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > removes only the reversed gift grant, leaving other grants intact 35ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > recovers a durable received event after a process interruption 1ms
+ ✓ test/billing_paypal.test.ts > PayPal through authenticated billing APIs > never grants on ACTIVE without a verified payment and prevents binding another account's subscription 32ms
+(node:55322) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55322) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/billing_program.test.ts > billing_grants in MongoDB > keeps its columns, so its collection validator never needs collMod (production's database user can't run it) 1ms
+ ✓ test/billing_program.test.ts > the trial program in the console > follows the environment until an operator saves it: off here, so nobody gets a trial 32ms
+ ✓ test/billing_program.test.ts > the trial program in the console > lets only billing managers change it, with a passkey check and a reason 6ms
+ ✓ test/billing_program.test.ts > the trial program in the console > turns on at once: the price list shows the trial, and every account gets it from then 29ms
+ ✓ test/billing_program.test.ts > the trial program in the console > gives and ends free periods by hand, after the free period an account already has 41ms
+ ✓ test/billing_program.test.ts > the trial program in the console > finds an account by email only for roles that may see emails 32ms
+ ✓ test/billing_program.test.ts > the trial program in the console > counts invites in the figures and on the account 62ms
+ ✓ test/billing_program.test.ts > the trial program in the console > turning off stops new trials and invite bonuses, and keeps the free periods already given 59ms
+ ✓ test/billing_program.test.ts > the trial program in the console > starts on a future date only from then, and can hand the decision back to the environment 32ms
+ ✓ test/billing_program.test.ts > the trial program in the console > Meldiq Plus's enforcement and limits > start from the built-in numbers, not enforced while nothing is on sale 4ms
+ ✓ test/billing_program.test.ts > the trial program in the console > Meldiq Plus's enforcement and limits > turn enforcement on and change a plan's numbers, at once, for the server and the apps' catalog 6ms
+ ✓ test/billing_program.test.ts > the trial program in the console > Meldiq Plus's enforcement and limits > refuse numbers out of bounds and Spark levels that don't rise, and changes from roles that can't manage billing 5ms
+ ✓ test/billing_program.test.ts > the trial program in the console > Meldiq Plus's enforcement and limits > edit bots and the screen-share ceiling, but never a higher plan below a lower one 5ms
+ ✓ test/billing_program.test.ts > the trial program in the console > Meldiq Plus's enforcement and limits > change prices with no payment provider: the list price only, checked and audited 9ms
+ ✓ test/billing_program.test.ts > the trial program in the console > Meldiq Plus's enforcement and limits > hand enforcement back to the environment, and show gifts and Sparks as metadata 3ms
+(node:55334) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55334) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > is advertised in the server's features 3ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > makes, lists, changes and deletes apps, showing the secret once and only https or localhost redirects 16ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > allows 10 apps per person 47ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > runs the full code flow with PKCE: consent info, code, tokens, userinfo with the verified email 14ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > gives the email only with the email scope, and the avatar only when everyone may see it 16ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > refuses a wrong verifier, a reused code (revoking what it gave) and a code without PKCE from a public client 22ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > checks the redirect, the scopes and the PKCE method, and denying returns access_denied 9ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > rotates refresh tokens, and a replaced one presented again ends the sign-in 19ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > keeps OAuth access tokens off every other route, and sessions off userinfo 8ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > lists the apps you signed in to and revokes one: its tokens stop at once 12ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > rotates the client secret: the old one stops working at once 9ms
+ ✓ test/oauth_apps.test.ts > Log in with Meldiq on PostgreSQL > deletes an owner's apps with their account 68ms
+(node:55350) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55350) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/billing_plus_terms.test.ts > approved recurring Plus terms > keeps all three intervals active on the same Plus product, with exact integer savings 2ms
+ ✓ test/billing_plus_terms.test.ts > approved recurring Plus terms > creates monthly from server-owned terms and refuses a submitted price 71ms
+ ✓ test/billing_plus_terms.test.ts > approved recurring Plus terms > creates quarterly from server-owned terms and refuses a submitted price 34ms
+ ✓ test/billing_plus_terms.test.ts > approved recurring Plus terms > creates yearly from server-owned terms and refuses a submitted price 32ms
+ ✓ test/billing_plus_terms.test.ts > approved recurring Plus terms > verifies the provider cadence and preserves the three-month entitlement period 2ms
+(node:55373) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55373) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/voice_rooms.test.ts > text channels (round 7) > refuses to start a call in a text channel, while DMs still ring 19ms
+ ✓ test/voice_rooms.test.ts > voice rooms > advertises the feature and creates a voice channel 5ms
+ ✓ test/voice_rooms.test.ts > voice rooms > opens without ringing anyone, is active at once, and the next person joins the same call 14ms
+ ✓ test/voice_rooms.test.ts > voice rooms > queues raised hands, lowers them on request or when someone leaves 14ms
+ ✓ test/voice_rooms.test.ts > voice rooms > lets a manager mute someone's microphone and remove them from the call 10ms
+ ✓ test/voice_rooms.test.ts > voice rooms > closes when the last person leaves, and refuses hands outside voice rooms 12ms
+ ✓ test/voice_rooms.test.ts > messages in voice channels (batch B14) > allows the approved associated text chat while call controls keep independent voice permission 24ms
+(node:55386) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55386) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/community_expressions.test.ts > image checks > know PNG, GIF and WebP, and whether they move 1ms
+ ✓ test/community_expressions.test.ts > community emoji and stickers > are uploaded by people with expressions.manage, with a checked name and image 13ms
+ ✓ test/community_expressions.test.ts > community emoji and stickers > are listed and served to members only, and the image matches its hash 4ms
+ ✓ test/community_expressions.test.ts > community emoji and stickers > are renamed and removed by managers 7ms
+ ✓ test/community_expressions.test.ts > community emoji and stickers > are limited per community 6ms
+ ✓ test/community_expressions.test.ts > uploads at the same moment > can't give two emoji the same name (batch B13) 9ms
+
+ Test Files  11 passed (11)
+      Tests  129 passed (129)
+   Start at  14:41:19
+   Duration  33.90s (transform 2.66s, setup 0ms, import 11.84s, tests 19.31s, environment 1ms)

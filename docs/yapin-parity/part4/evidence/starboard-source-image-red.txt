@@ -1,0 +1,35 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:54024) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54024) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/official_bots_activity.test.ts (25 tests | 1 failed | 24 skipped) 1062ms
+       × shows an uploaded Starboard image only through the current readable original 33ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Starboard > shows an uploaded Starboard image only through the current readable original
+AssertionError: expected null to deeply equal Any<String>
+
+- Expected:
+Any<String>
+
++ Received:
+null
+
+ ❯ test/official_bots_activity.test.ts:532:22
+    530|       await settle();
+    531|       const mirror = h.ctx.ws.get<{ star_message_id: string | null }>(…
+    532|       expect(mirror).toEqual(expect.any(String));
+       |                      ^
+    533|       const board = `/v2/conversations/${stars}/messages?around=${mirr…
+    534|       const image = (await dee.req("GET", board)).messages.find((m: St…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 24 skipped (25)
+   Start at  14:36:16
+   Duration  5.07s (transform 1.77s, setup 0ms, import 2.82s, tests 1.06s, environment 0ms)

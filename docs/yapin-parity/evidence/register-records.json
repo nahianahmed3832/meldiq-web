@@ -5347,15 +5347,15 @@
     "Screenshot reference": "screenshots/legacy/07-voice-video/03-muted-call-controls.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native moderator mute/disconnect passes with an SFU control-plane stand-in. Live track removal, installed flows and bans require their separate evidence. Destination moves remain deferred.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Authorized moderator actions are enforced on media tokens and live tracks; members cannot self-escalate. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-CALL; C-PERMISSIONS; C-MEDIA; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-VOICE-014",
@@ -5366,15 +5366,15 @@
     "Screenshot reference": "screenshots/current/public-roadmap.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native request/withdraw/leave queue behavior passes. Full speaker promotion/demotion with live media and installed clients remains unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Controlled audience cannot publish until granted speaker authority and demotion stops publication. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-CALL; C-PERMISSIONS; C-MEDIA; C-ENTITLEMENTS",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-roadmap.txt."
+    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-roadmap.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-VOICE-015",
@@ -5689,15 +5689,15 @@
     "Screenshot reference": "screenshots/current/public-plus.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Current plan and boosted-community limits pass at the native admission boundary. Real hosted multipart/provider limits remain unverified. No quota or price changed.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Meldiq validates its own catalog bytes before upload and on completion; displayed units match definitions. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MEDIA; C-MESSAGE; C-PERMISSIONS; C-ENTITLEMENTS",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-plus.txt."
+    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-plus.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-MEDIA-004",
@@ -5708,15 +5708,15 @@
     "Screenshot reference": "screenshots/current/public-roadmap.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Scoped quota accounting and failed-upload release pass. Exact hourly/daily policy windows, supported sources and hosted upload limits still need qualification.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Use approved Meldiq retention/quota rules; show remaining limit and retry time without classifying quota as network failure. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-MEDIA; C-MESSAGE; C-PERMISSIONS; C-ENTITLEMENTS",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IN_PROGRESS",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-roadmap.txt."
+    "Notes": "Yapin evidence: evidence/50-phone-composer.txt. Meldiq source lead: src/sync/attachments.ts; src/sync/largeUpload.ts; src/ui/chat/Attachments.tsx; backend files and media gateway. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-roadmap.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-MEDIA-005",
@@ -5898,15 +5898,15 @@
     "Screenshot reference": "screenshots/legacy/11-customization/12-custom-emoji-and-cross-server.jpg",
     "Verification status": "VERIFIED_WORKFLOW_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native permission, name/format validation and duplicate upload protection pass. Browser animation, quota recovery and installed clients need same-candidate checks.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Validated original asset preserves supported animation and saved format; quota errors retain the draft. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-EXPRESSION; C-MEDIA; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-EXPR-003",
@@ -5917,15 +5917,15 @@
     "Screenshot reference": "screenshots/legacy/11-customization/12-custom-emoji-and-cross-server.jpg",
     "Verification status": "VERIFIED_WORKFLOW_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native source asset membership and hash are enforced. Complete cross-community/DM selection, membership withdrawal and cached rendering remain unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Membership-authorized catalog works in supported DMs and communities; revoked sources fail safely. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-EXPRESSION; C-MEDIA; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IN_PROGRESS",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-EXPR-004",
@@ -5974,15 +5974,15 @@
     "Screenshot reference": "screenshots/current/35-server-supercharge.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native expression capacity and authorized removal pass. Client replacement/recovery and installed behavior are still open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Client and server enforce current Meldiq catalog slots and handle deletion/replacement predictably. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-EXPRESSION; C-MEDIA; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/35-server-supercharge.txt."
+    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/35-server-supercharge.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-EXPR-007",
@@ -5993,15 +5993,15 @@
     "Screenshot reference": "screenshots/legacy/11-customization/13-gif-private-chat.jpg",
     "Verification status": "VERIFIED_WORKFLOW_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native search/trending and provider-origin limits pass with a local provider stand-in. Hosted attribution, real provider rate limiting and all-client selection remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Configured provider search handles empty rate-limited and unavailable states and preserves attribution policy. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-EXPRESSION; C-MEDIA; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-EXPR-008",
@@ -6050,15 +6050,15 @@
     "Screenshot reference": "screenshots/current/public-roadmap.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "The existing custom sticker assets and entitlement checks are preserved. Actual send/view and installed journey acceptance remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Preserve existing Meldiq sticker packs; accept sending viewing quotas and permissions rather than deleting an advantage. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-EXPRESSION; C-MEDIA; C-MESSAGE; C-ENTITLEMENTS",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-roadmap.txt."
+    "Notes": "Yapin evidence: evidence/legacy/133-custom-emoji-sent-ax.txt. Meldiq source lead: src/ui/chat/ExpressionPicker.tsx; ExpressionLibrary.tsx; src/sync/expressions.ts; src/sync/prepareExpression.ts. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-roadmap.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BOT-001",
@@ -6544,15 +6544,15 @@
     "Screenshot reference": "screenshots/current/public-developers.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Owner-controlled listing and visibility gates pass. The inspected native listing has no qualified separate pending/approved/rejected operator review or suspension journey.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Private pending approved rejected and suspended states are enforced and auditable. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-OAUTH; C-PERMISSIONS; C-MESSAGE",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IN_PROGRESS",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-developers.txt. Meldiq source lead: src/ui/developer; src/ui/oauth/ConsentPage.tsx; src/sync/developer.ts; backend bots/oauth/posting. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-developers.txt."
+    "Notes": "Yapin evidence: evidence/public-developers.txt. Meldiq source lead: src/ui/developer; src/ui/oauth/ConsentPage.tsx; src/sync/developer.ts; backend bots/oauth/posting. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-developers.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-DEV-005",
@@ -6677,15 +6677,15 @@
     "Screenshot reference": "screenshots/legacy/09-bots-integrations/02-public-developer-docs.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native permission and safe rich message rules plus Web JSON import and preview checks pass. Same-candidate installed builder workflow remains unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Input validation and preview are safe; importing JSON cannot carry script or secrets to unrelated destinations. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-OAUTH; C-PERMISSIONS; C-MESSAGE",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-developers.txt. Meldiq source lead: src/ui/developer; src/ui/oauth/ConsentPage.tsx; src/sync/developer.ts; backend bots/oauth/posting. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/public-developers.txt. Meldiq source lead: src/ui/developer; src/ui/oauth/ConsentPage.tsx; src/sync/developer.ts; backend bots/oauth/posting. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-DEV-012",
@@ -6753,15 +6753,15 @@
     "Screenshot reference": "screenshots/current/11-developer.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native app owner lifecycle, safe redirects, cap and one-time secret handling pass. Complete Developer UI and installed registration remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Owner-only registration validates redirect URIs and displays actual scopes without granting access. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-OAUTH; C-PERMISSIONS; C-MESSAGE",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-developers.txt. Meldiq source lead: src/ui/developer; src/ui/oauth/ConsentPage.tsx; src/sync/developer.ts; backend bots/oauth/posting. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/11-developer.txt."
+    "Notes": "Yapin evidence: evidence/public-developers.txt. Meldiq source lead: src/ui/developer; src/ui/oauth/ConsentPage.tsx; src/sync/developer.ts; backend bots/oauth/posting. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/11-developer.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-DEV-016",
@@ -6772,15 +6772,15 @@
     "Screenshot reference": "screenshots/current/public-developers.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native OAuth scope, PKCE, redirect and revocation checks pass. Hosted consent and installed relying-party journeys remain unverified. Existing Google/Discord login is separate.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "User sees exact scope and audience; code reuse redirect mismatch and revoked-grant races fail safely. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-BOT; C-OAUTH; C-PERMISSIONS; C-MESSAGE",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-developers.txt. Meldiq source lead: src/ui/developer; src/ui/oauth/ConsentPage.tsx; src/sync/developer.ts; backend bots/oauth/posting. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-developers.txt."
+    "Notes": "Yapin evidence: evidence/public-developers.txt. Meldiq source lead: src/ui/developer; src/ui/oauth/ConsentPage.tsx; src/sync/developer.ts; backend bots/oauth/posting. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-developers.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-DEV-017",
@@ -6810,15 +6810,15 @@
     "Screenshot reference": "screenshots/current/16-plus.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native plan catalog and legacy grant compatibility pass. Actual hosted terms, checkout eligibility and provider-backed acceptance remain separate.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Render current Meldiq catalog prices units benefits and availability; no hardcoded competitor price migration. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-ENTITLEMENTS; C-BILLING; C-AUDIT",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/16-plus.txt."
+    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/16-plus.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BILL-002",
@@ -6829,15 +6829,15 @@
     "Screenshot reference": "screenshots/current/16-plus.jpg",
     "Verification status": "UNVERIFIED_RESTRICTED",
     "Meldiq existing status": "PARTIAL",
-    "Gap description": "Live PayPal subscriptions are configured and current offer is USD 4.99/month; real approved-buyer completion, server-confirmed activation and settlement remain unaccepted.",
+    "Gap description": "Server-owned recurring terms and verified-payment gating pass with test provider responses. A real hosted buyer purchase is not verified. Cards/vaulting/renewals remain disabled.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Authorized buyer approves through provider; signed server evidence activates entitlement exactly once. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-ENTITLEMENTS; C-BILLING; C-AUDIT",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/16-plus.txt."
+    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/16-plus.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BILL-003",
@@ -6848,15 +6848,15 @@
     "Screenshot reference": "screenshots/current/16-plus.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Private gift links, verified receipt requirements and atomic one-time grants pass against provider stand-ins. Live buyer and recipient delivery are unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Meldiq gift purchase delivery recipient redemption and existing ownership follow current catalog and idempotent server state. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-ENTITLEMENTS; C-BILLING; C-AUDIT",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/16-plus.txt."
+    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/16-plus.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BILL-004",
@@ -6886,15 +6886,15 @@
     "Screenshot reference": "screenshots/current/public-cancel.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PARTIAL",
-    "Gap description": "Cancellation/refund source exists; real provider nonrenewal, withdrawal/refund, benefit retention and signed-webhook handling remain unaccepted.",
+    "Gap description": "Cancellation and continued earned/paid time pass against controlled provider responses. Real provider withdrawal, jurisdiction-specific terms and installed UI remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Accept real approved provider cancellation/refund lifecycle and preserve already-paid benefits per policy. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-ENTITLEMENTS; C-BILLING; C-AUDIT",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-cancel.txt."
+    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-cancel.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BILL-006",
@@ -6905,15 +6905,15 @@
     "Screenshot reference": "NONE — paid lifecycle unverified",
     "Verification status": "UNVERIFIED_RESTRICTED",
     "Meldiq existing status": "PARTIAL",
-    "Gap description": "Lifecycle handlers exist; actual provider renewal/failure/grace/restoration and duplicate/reordered webhook evidence are outstanding. Card recurrence remains disabled.",
+    "Gap description": "Failed funding/recovery lifecycle and isolation pass with a provider stand-in. No live renewal, card or buyer behavior is verified or enabled by this work.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Meldiq needs approved real-provider evidence for renewal failure grace restoration and duplicate webhooks. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-ENTITLEMENTS; C-BILLING; C-AUDIT",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance."
+    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BILL-007",
@@ -6962,15 +6962,15 @@
     "Screenshot reference": "screenshots/current/35-server-supercharge.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "INTENTIONAL_DIFFERENCE",
-    "Gap description": "Existing Meldiq behavior differs intentionally or has a separate policy; preserve until an explicit decision.",
+    "Gap description": "Meldiq Spark is the intended native counterpart. Purchase state and allocation pass with a provider stand-in, with no new price or entitlement change. Real buyer acceptance remains open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Meldiq Spark stays its current one-time product unless a separate product decision changes it; enforce catalog atomically. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-ENTITLEMENTS; C-BILLING; C-AUDIT",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/35-server-supercharge.txt."
+    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/35-server-supercharge.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BILL-010",
@@ -6981,15 +6981,15 @@
     "Screenshot reference": "screenshots/current/35-server-supercharge.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Native level and benefit recalculation pass. Hosted checkout and delivered media quality need their separate acceptance.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Use Meldiq thresholds two five eight and actual entitlements; accept effective benefits across members and clients. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-ENTITLEMENTS; C-BILLING; C-AUDIT",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/35-server-supercharge.txt."
+    "Notes": "Yapin evidence: evidence/16-plus.txt. Meldiq source lead: src/sync/mojo.ts; deployed src/ui/billing; backend PayPal adapter; live public catalog. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/35-server-supercharge.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-BILL-011",
@@ -8178,15 +8178,15 @@
     "Screenshot reference": "screenshots/current/public-status.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Twelve current status domain/cache tests pass, including stale evidence and failed service dependencies. The public data endpoint returned 503; current live component health is unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Meldiq status reflects independently measured component state and distinguishes unknown from healthy. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-RELEASE; C-MESSAGE; C-CALL; C-MEDIA",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-status.txt. Meldiq source lead: Independent status workspace /Volumes/code_files/meldiq_server_status; deployment topology in CURRENT_ARCHITECTURE.md. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-status.txt."
+    "Notes": "Yapin evidence: evidence/public-status.txt. Meldiq source lead: Independent status workspace /Volumes/code_files/meldiq_server_status; deployment topology in CURRENT_ARCHITECTURE.md. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-status.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-OPS-002",
@@ -8197,15 +8197,15 @@
     "Screenshot reference": "screenshots/current/public-status.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Local rollup tests preserve unknown days, measured failures and the denominator. The public 90-day endpoint returned 503; live strips and coverage are unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P2",
     "Acceptance criteria": "Date ranges denominators missing samples and incident exclusions are explicit and consistent. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-RELEASE; C-MESSAGE; C-CALL; C-MEDIA",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-status.txt. Meldiq source lead: Independent status workspace /Volumes/code_files/meldiq_server_status; deployment topology in CURRENT_ARCHITECTURE.md. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-status.txt."
+    "Notes": "Yapin evidence: evidence/public-status.txt. Meldiq source lead: Independent status workspace /Volumes/code_files/meldiq_server_status; deployment topology in CURRENT_ARCHITECTURE.md. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-status.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-OPS-003",
@@ -8216,15 +8216,15 @@
     "Screenshot reference": "screenshots/current/public-status.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PARTIAL",
-    "Gap description": "Independent status/probe infrastructure exists; equivalent sampled API chart, units, aggregation and freshness were not accepted.",
+    "Gap description": "Source renders the existing timestamped API probe median and leaves missing buckets empty. The live metrics endpoint returned 503, so no current chart value is claimed.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Use actual timestamped probes and label sampling scope; no browser-tool duration becomes a service metric. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-RELEASE; C-MESSAGE; C-CALL; C-MEDIA",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-status.txt. Meldiq source lead: Independent status workspace /Volumes/code_files/meldiq_server_status; deployment topology in CURRENT_ARCHITECTURE.md. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-status.txt."
+    "Notes": "Yapin evidence: evidence/public-status.txt. Meldiq source lead: Independent status workspace /Volumes/code_files/meldiq_server_status; deployment topology in CURRENT_ARCHITECTURE.md. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-status.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-OPS-004",
@@ -8292,15 +8292,15 @@
     "Screenshot reference": "screenshots/current/public-status.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Source separates active/recovered incidents, resolved history and unavailable data. Local status tests pass; the live backend returned 503, so current incident history is unverified.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Incident start impact recovery and absence of data remain distinct and independently auditable. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-RELEASE; C-MESSAGE; C-CALL; C-MEDIA",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "Part 4, 2026-11-05: Named source/runtime evidence in part4/evidence/scoped-owned-row-checkpoint.json. Tests are local and do not qualify installed clients or hosted providers.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/public-status.txt. Meldiq source lead: Independent status workspace /Volumes/code_files/meldiq_server_status; deployment topology in CURRENT_ARCHITECTURE.md. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-status.txt."
+    "Notes": "Yapin evidence: evidence/public-status.txt. Meldiq source lead: Independent status workspace /Volumes/code_files/meldiq_server_status; deployment topology in CURRENT_ARCHITECTURE.md. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-status.txt. Part 4: Current scoped source and named tests are recorded in part4/evidence/scoped-owned-row-checkpoint.json. Historical observations remain unchanged; no production deployment."
   },
   {
     "Feature ID": "YAP-PERM-001",

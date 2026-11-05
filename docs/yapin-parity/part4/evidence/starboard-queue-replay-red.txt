@@ -1,0 +1,80 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:52260) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52260) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/official_bots_activity.test.ts (24 tests | 1 failed | 23 skipped) 2743ms
+       × redacts queued Starboard bodies and old edits for a revoked reader in REST and WebSocket replay 145ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Starboard > redacts queued Starboard bodies and old edits for a revoked reader in REST and WebSocket replay
+AssertionError: expected '[{"id":21,"kind":"message","conversat…' not to contain 'synthetic private Starboard replay ca…'
+
+Expected: "synthetic private Starboard replay canary"
+Received: "[{"id":21,"kind":"message","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","messageId":"m_64_fcUd8KBJ9sx7tz0D8nQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":"bot-u_lKF5B_usOYl8wwSEmUH7UA","createdAt":1793860141301,"expiresAt":1794464941301,"payload":{"v":2,"event":{"id":"m_64_fcUd8KBJ9sx7tz0D8nQ","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"⭐ 2 · obaana in #replay-source\nsynthetic private Starboard replay canary","starboard":{"channelId":"c_B1E2VWCWTmX7bUk6Y6lesg","messageId":"m_oba_1_1793860141250"}},"sentAt":1793860141301,"serverTs":1793860141301,"mentionAll":false,"importedBy":null}}},{"id":26,"kind":"message","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","messageId":"m_Kp9LV8Um6zY_jyrzwP-R1g","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":"bot-u_lKF5B_usOYl8wwSEmUH7UA","createdAt":1793860141318,"expiresAt":1794464941318,"payload":{"v":2,"event":{"id":"m_Kp9LV8Um6zY_jyrzwP-R1g","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":null,"cls":"control","payload":{"type":"edit","target":"m_64_fcUd8KBJ9sx7tz0D8nQ","text":"⭐ 3 · obaana in #replay-source\nsynthetic private Starboard replay canary"},"sentAt":1793860141317,"serverTs":1793860141318,"mentionAll":false,"importedBy":null}}}]"
+
+ ❯ test/official_bots_activity.test.ts:490:48
+    488|       const revoked = await queued(dee);
+    489|       expect(revoked.map((item) => item.id)).toEqual(before.map((item)…
+    490|       expect.soft(JSON.stringify(revoked)).not.toContain(marker);
+       |                                                ^
+    491|       expect.soft(JSON.stringify(revoked)).not.toContain(message);
+    492|       expect(JSON.stringify(await queued(owner))).toContain(marker);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Starboard > redacts queued Starboard bodies and old edits for a revoked reader in REST and WebSocket replay
+AssertionError: expected '[{"id":21,"kind":"message","conversat…' not to contain 'm_oba_1_1793860141250'
+
+Expected: "m_oba_1_1793860141250"
+Received: "[{"id":21,"kind":"message","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","messageId":"m_64_fcUd8KBJ9sx7tz0D8nQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":"bot-u_lKF5B_usOYl8wwSEmUH7UA","createdAt":1793860141301,"expiresAt":1794464941301,"payload":{"v":2,"event":{"id":"m_64_fcUd8KBJ9sx7tz0D8nQ","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"⭐ 2 · obaana in #replay-source\nsynthetic private Starboard replay canary","starboard":{"channelId":"c_B1E2VWCWTmX7bUk6Y6lesg","messageId":"m_oba_1_1793860141250"}},"sentAt":1793860141301,"serverTs":1793860141301,"mentionAll":false,"importedBy":null}}},{"id":26,"kind":"message","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","messageId":"m_Kp9LV8Um6zY_jyrzwP-R1g","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":"bot-u_lKF5B_usOYl8wwSEmUH7UA","createdAt":1793860141318,"expiresAt":1794464941318,"payload":{"v":2,"event":{"id":"m_Kp9LV8Um6zY_jyrzwP-R1g","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":null,"cls":"control","payload":{"type":"edit","target":"m_64_fcUd8KBJ9sx7tz0D8nQ","text":"⭐ 3 · obaana in #replay-source\nsynthetic private Starboard replay canary"},"sentAt":1793860141317,"serverTs":1793860141318,"mentionAll":false,"importedBy":null}}}]"
+
+ ❯ test/official_bots_activity.test.ts:491:48
+    489|       expect(revoked.map((item) => item.id)).toEqual(before.map((item)…
+    490|       expect.soft(JSON.stringify(revoked)).not.toContain(marker);
+    491|       expect.soft(JSON.stringify(revoked)).not.toContain(message);
+       |                                                ^
+    492|       expect(JSON.stringify(await queued(owner))).toContain(marker);
+    493|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Starboard > redacts queued Starboard bodies and old edits for a revoked reader in REST and WebSocket replay
+AssertionError: expected '[{"id":21,"kind":"message","conversat…' not to contain 'synthetic private Starboard replay ca…'
+
+Expected: "synthetic private Starboard replay canary"
+Received: "[{"id":21,"kind":"message","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","messageId":"m_64_fcUd8KBJ9sx7tz0D8nQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":"bot-u_lKF5B_usOYl8wwSEmUH7UA","createdAt":1793860141301,"expiresAt":1794464941301,"payload":{"v":2,"event":{"id":"m_64_fcUd8KBJ9sx7tz0D8nQ","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"⭐ 2 · obaana in #replay-source\nsynthetic private Starboard replay canary","starboard":{"channelId":"c_B1E2VWCWTmX7bUk6Y6lesg","messageId":"m_oba_1_1793860141250"}},"sentAt":1793860141301,"serverTs":1793860141301,"mentionAll":false,"importedBy":null}}},{"id":26,"kind":"message","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","messageId":"m_Kp9LV8Um6zY_jyrzwP-R1g","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":"bot-u_lKF5B_usOYl8wwSEmUH7UA","createdAt":1793860141318,"expiresAt":1794464941318,"payload":{"v":2,"event":{"id":"m_Kp9LV8Um6zY_jyrzwP-R1g","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":null,"cls":"control","payload":{"type":"edit","target":"m_64_fcUd8KBJ9sx7tz0D8nQ","text":"⭐ 3 · obaana in #replay-source\nsynthetic private Starboard replay canary"},"sentAt":1793860141317,"serverTs":1793860141318,"mentionAll":false,"importedBy":null}}}]"
+
+ ❯ test/official_bots_activity.test.ts:500:52
+    498|         const delivered = dee.events.slice(start).filter((event) => ev…
+    499|         expect(delivered.map((item) => item.id)).toEqual(before.map((i…
+    500|         expect.soft(JSON.stringify(delivered)).not.toContain(marker);
+       |                                                    ^
+    501|         expect.soft(JSON.stringify(delivered)).not.toContain(message);
+    502|       } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  test/official_bots_activity.test.ts > official bots following a community in postgres > Starboard > redacts queued Starboard bodies and old edits for a revoked reader in REST and WebSocket replay
+AssertionError: expected '[{"id":21,"kind":"message","conversat…' not to contain 'm_oba_1_1793860141250'
+
+Expected: "m_oba_1_1793860141250"
+Received: "[{"id":21,"kind":"message","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","messageId":"m_64_fcUd8KBJ9sx7tz0D8nQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":"bot-u_lKF5B_usOYl8wwSEmUH7UA","createdAt":1793860141301,"expiresAt":1794464941301,"payload":{"v":2,"event":{"id":"m_64_fcUd8KBJ9sx7tz0D8nQ","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":null,"cls":"message","payload":{"type":"text","text":"⭐ 2 · obaana in #replay-source\nsynthetic private Starboard replay canary","starboard":{"channelId":"c_B1E2VWCWTmX7bUk6Y6lesg","messageId":"m_oba_1_1793860141250"}},"sentAt":1793860141301,"serverTs":1793860141301,"mentionAll":false,"importedBy":null}}},{"id":26,"kind":"message","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","messageId":"m_Kp9LV8Um6zY_jyrzwP-R1g","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":"bot-u_lKF5B_usOYl8wwSEmUH7UA","createdAt":1793860141318,"expiresAt":1794464941318,"payload":{"v":2,"event":{"id":"m_Kp9LV8Um6zY_jyrzwP-R1g","conversationId":"c_2lHZtjcRdTwcHxj1JAb4xQ","senderUserId":"u_lKF5B_usOYl8wwSEmUH7UA","senderDeviceId":null,"cls":"control","payload":{"type":"edit","target":"m_64_fcUd8KBJ9sx7tz0D8nQ","text":"⭐ 3 · obaana in #replay-source\nsynthetic private Starboard replay canary"},"sentAt":1793860141317,"serverTs":1793860141318,"mentionAll":false,"importedBy":null}}}]"
+
+ ❯ test/official_bots_activity.test.ts:501:52
+    499|         expect(delivered.map((item) => item.id)).toEqual(before.map((i…
+    500|         expect.soft(JSON.stringify(delivered)).not.toContain(marker);
+    501|         expect.soft(JSON.stringify(delivered)).not.toContain(message);
+       |                                                    ^
+    502|       } finally {
+    503|         await dee.disconnect();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 skipped (24)
+   Start at  14:28:49
+   Duration  12.42s (transform 5.90s, setup 0ms, import 8.02s, tests 2.74s, environment 0ms)
