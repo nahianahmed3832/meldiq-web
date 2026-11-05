@@ -103,45 +103,66 @@ interface EmojiPrefs {
   tone: number;
 }
 
-function read(): EmojiPrefs {
+function readTone(): number {
   try {
-    const recent = (JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]") as unknown[]).filter((e): e is string => typeof e === "string" && isReaction(e));
     const tone = Number(localStorage.getItem(TONE_KEY) ?? 0);
-    return { recent: recent.slice(0, MAX_RECENT), tone: Number.isInteger(tone) && tone >= 0 && tone <= TONE_COUNT ? tone : 0 };
+    return Number.isInteger(tone) && tone >= 0 && tone <= TONE_COUNT ? tone : 0;
   } catch {
-    return { recent: [], tone: 0 };
+    return 0;
   }
 }
 
-let prefs: EmojiPrefs = read();
+// An old, browser-wide recent list has no owner and cannot be assigned to a saved account.
+export function emojiPrefsScope(store: string, user: string): string {
+  return `${RECENT_KEY}:${JSON.stringify([store, user])}`;
+}
+const profiles = new Map<string, EmojiPrefs>();
+let deviceTone = readTone();
 const listeners = new Set<() => void>();
+const subscribe = (l: () => void) => {
+  listeners.add(l);
+  return () => listeners.delete(l);
+};
 
-function save(next: EmojiPrefs) {
-  prefs = next;
+function snapshot(scope: string): EmojiPrefs {
+  const cached = profiles.get(scope);
+  if (cached) return cached;
+  let recent: string[] = [];
   try {
-    localStorage.setItem(RECENT_KEY, JSON.stringify(next.recent));
-    localStorage.setItem(TONE_KEY, String(next.tone));
+    const raw: unknown = JSON.parse(localStorage.getItem(scope) ?? "[]");
+    if (Array.isArray(raw)) recent = raw.filter((e): e is string => typeof e === "string" && isReaction(e)).slice(0, MAX_RECENT);
   } catch {
-    // Storage blocked: the choice lasts for this page only.
+    // Invalid or unavailable profile storage starts with an empty list.
+  }
+  const next = { recent, tone: deviceTone };
+  profiles.set(scope, next);
+  return next;
+}
+
+export function emojiUsed(scope: string, emoji: string) {
+  if (!isReaction(emoji)) return;
+  const prefs = snapshot(scope);
+  const recent = [emoji, ...prefs.recent.filter((e) => e !== emoji)].slice(0, MAX_RECENT);
+  profiles.set(scope, { ...prefs, recent });
+  try {
+    localStorage.setItem(scope, JSON.stringify(recent));
+  } catch {
+    // Storage blocked: this profile's choice lasts for the current page.
   }
   listeners.forEach((l) => l());
 }
 
-export function emojiUsed(emoji: string) {
-  if (!isReaction(emoji)) return;
-  save({ ...prefs, recent: [emoji, ...prefs.recent.filter((e) => e !== emoji)].slice(0, MAX_RECENT) });
-}
-
 export function setEmojiTone(tone: number) {
-  save({ ...prefs, tone: Math.max(0, Math.min(TONE_COUNT, Math.round(tone))) });
+  deviceTone = Math.max(0, Math.min(TONE_COUNT, Math.round(tone)));
+  for (const [scope, value] of profiles) profiles.set(scope, { ...value, tone: deviceTone });
+  try {
+    localStorage.setItem(TONE_KEY, String(deviceTone));
+  } catch {
+    // The device's tone can still be used on the current page.
+  }
+  listeners.forEach((l) => l());
 }
 
-export function useEmojiPrefs(): EmojiPrefs {
-  return useSyncExternalStore(
-    (l) => {
-      listeners.add(l);
-      return () => listeners.delete(l);
-    },
-    () => prefs,
-  );
+export function useEmojiPrefs(scope: string): EmojiPrefs {
+  return useSyncExternalStore(subscribe, () => snapshot(scope));
 }

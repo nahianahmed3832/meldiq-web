@@ -6,7 +6,8 @@ import { Clock, Coffee, Flag, Lightbulb, type LucideIcon, PawPrint, PersonStandi
 import type { Expression, ExpressionList } from "../../sync/expressions";
 import { CustomEmojiImage } from "../community/CustomEmoji";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { type EmojiGroup, type EmojiItem, emojiUsed, inTone, loadCatalog, searchEmoji, setEmojiTone, useEmojiPrefs } from "../../emoji/catalog";
+import { type EmojiGroup, type EmojiItem, emojiPrefsScope, emojiUsed, inTone, loadCatalog, searchEmoji, setEmojiTone, useEmojiPrefs } from "../../emoji/catalog";
+import { useEngine } from "../../application/orbit";
 const RECENT = "recent";
 const COMMUNITY = "community";
 const TABS: {
@@ -120,6 +121,8 @@ export interface CommunityPick {
 }
 export function EmojiPicker({ onPick, community, query: sharedQuery, embedded = false }: { onPick: (emoji: string) => void; community?: CommunityPick; query?: string; embedded?: boolean }) {
   const l10n = useLocalization();
+  const engine = useEngine();
+  const prefsScope = emojiPrefsScope(engine.store.name, engine.device.userId);
 
   const [groups, setGroups] = useState<EmojiGroup[] | null>(null);
   const [failed, setFailed] = useState(false);
@@ -127,7 +130,7 @@ export function EmojiPicker({ onPick, community, query: sharedQuery, embedded = 
   const query = sharedQuery ?? localQuery;
   const [choosingTone, setChoosingTone] = useState(false);
   const [current, setCurrent] = useState<string | null>(null);
-  const { recent, tone } = useEmojiPrefs();
+  const { recent, tone } = useEmojiPrefs(prefsScope);
   const search = useRef<HTMLInputElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -147,7 +150,7 @@ export function EmojiPicker({ onPick, community, query: sharedQuery, embedded = 
   }, [embedded]);
   const results = useMemo(() => (groups && query.trim() ? searchEmoji(groups, query) : []), [groups, query]);
   const pick = (emoji: string) => {
-    emojiUsed(emoji);
+    emojiUsed(prefsScope, emoji);
     onPick(emoji);
   };
   const jump = (id: string) => {

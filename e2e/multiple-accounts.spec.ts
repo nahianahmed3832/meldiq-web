@@ -80,10 +80,17 @@ test("two real account sessions survive switching, cancellation, reload and logo
   await peer.send(bobDm, { type: "text", text: "Private message only for Bob" });
   await page.goto(`/dms/c/${bobDm}`);
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private message only for Bob");
+  await page.getByRole("button", { name: "Insert emoji", exact: true }).click();
+  await page.getByRole("searchbox", { name: "Search emoji and expressions" }).fill("red heart");
+  await page.getByRole("menuitem", { name: "red heart", exact: true }).click();
+  await expect(page.getByRole("textbox", { name: /^Message/ })).toHaveValue("❤️");
   await choose(page, "Alice Saved", isMobile);
   await page.goto(`/dms/c/${aliceDm}`);
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private message only for Alice");
   await expect(page.getByRole("log", { name: "Messages" })).not.toContainText("Private message only for Bob");
+  await page.getByRole("button", { name: "Insert emoji", exact: true }).click();
+  await expect(page.getByRole("searchbox", { name: "Search emoji and expressions" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Recently used", exact: true })).toHaveCount(0);
   await page.reload();
   await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private message only for Alice");
@@ -103,6 +110,10 @@ test("two real account sessions survive switching, cancellation, reload and logo
   await page.reload();
   await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private message only for Bob");
+  await page.getByRole("button", { name: "Insert emoji", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Recently used", exact: true })).toBeVisible();
+  await expect(page.locator('[data-section="recent"]').getByRole("menuitem", { name: "❤️", exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
   await openAccounts(page, isMobile);
   await expect(page.getByRole(isMobile ? "button" : "menuitemradio", { name: /Alice Saved/ })).toHaveCount(0);
 });

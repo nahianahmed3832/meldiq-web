@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useState, type KeyboardEvent } from "react";
-import { type EmojiGroup, loadCatalog, searchEmoji, inTone, useEmojiPrefs, emojiUsed } from "../../emoji/catalog";
+import { type EmojiGroup, loadCatalog, searchEmoji, inTone, useEmojiPrefs, emojiUsed, emojiPrefsScope } from "../../emoji/catalog";
+import { useEngine } from "../../application/orbit";
 import { activeEmojiQuery } from "../../sync/emojiCompletion";
 import type { Expression, ExpressionList } from "../../sync/expressions";
 import { text as t } from "../../i18n";
@@ -7,13 +8,15 @@ import { CustomEmojiImage } from "../community/CustomEmoji";
 type Range = NonNullable<ReturnType<typeof activeEmojiQuery>>;
 type Choice = { key: string; name: string; text: string; expression?: Expression };
 export function useEmojiCompletion({ scope, list, onPick }: { scope: string; list: ExpressionList | null; onPick: (choice: Choice, range: Range) => void }) {
+  const engine = useEngine();
+  const prefsScope = emojiPrefsScope(engine.store.name, engine.device.userId);
   const id = useId(),
     [query, setQuery] = useState<(Range & { scope: string }) | null>(null),
     [groups, setGroups] = useState<EmojiGroup[] | null>(null),
     [failure, setFailure] = useState(false),
     [index, setIndex] = useState(0),
     [retry, setRetry] = useState(0);
-  const { tone } = useEmojiPrefs();
+  const { tone } = useEmojiPrefs(prefsScope);
   const current = query?.scope === scope ? query : null;
   useEffect(() => {
     if (!current) return;
@@ -44,7 +47,7 @@ export function useEmojiCompletion({ scope, list, onPick }: { scope: string; lis
   const clear = () => setQuery(null);
   const pick = (choice: Choice) => {
     if (current) {
-      if (!choice.expression) emojiUsed(choice.text);
+      if (!choice.expression) emojiUsed(prefsScope, choice.text);
       onPick(choice, current);
       clear();
     }
