@@ -207,9 +207,10 @@ export async function closedTickets(engine: Engine, orgId: string): Promise<Tick
 }
 
 export async function assignTicket(engine: Engine, orgId: string, channelId: string, releaseRevision?: number): Promise<Ticket> {
-  const path = `${tickets(orgId)}/${enc(channelId)}/claim`;
   const { ticket } =
-    releaseRevision === undefined ? await engine.api.json("POST", path, zTicketOut) : await engine.api.json("DELETE", path, zTicketOut, { body: { expectedRevision: releaseRevision } });
+    releaseRevision === undefined
+      ? await engine.api.json("POST", `${tickets(orgId)}/${enc(channelId)}/claim`, zTicketOut)
+      : await engine.api.json("DELETE", `${tickets(orgId)}/${enc(channelId)}/claim`, zTicketOut, { body: { expectedRevision: releaseRevision } });
   return ticket;
 }
 
