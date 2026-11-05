@@ -5119,15 +5119,15 @@
     "Screenshot reference": "screenshots/legacy/07-voice-video/03-muted-call-controls.jpg",
     "Verification status": "VERIFIED_WORKFLOW_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Existing native voice-room join/leave and accurate call state are exercised with real synthetic RTC; old source presence is now backed by controlled execution. Installed/native joint journeys and full failure-matrix acceptance remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Controlled participants join and leave with accurate connecting connected failed and disconnected states. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-CALL; C-PERMISSIONS; C-MEDIA; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "e2e/voice-room.spec.ts and e2e/calls.spec.ts: browser/native-peer room navigation, join, minimize/reopen, encrypted calls and disconnect. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: controlled existing voice qualification recorded on 2026-11-05. See part4/evidence/owned-voice-browser-checkpoint.json and register-owned-voice-reconciliation.json. Product source paths remain unchanged from the executed voice checkpoint to Web 6557813. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-VOICE-002",
@@ -5138,15 +5138,15 @@
     "Screenshot reference": "screenshots/legacy/07-voice-video/03-muted-call-controls.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Join-muted and deafen behavior are implemented and exercised with explicit capture/publication and silence observations. Physical microphone/output privacy checks and complete installed-client acceptance remain pending by owner choice.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "No microphone track publishes before explicit unmute; deafen state is consistent across controls. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-CALL; C-PERMISSIONS; C-MEDIA; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "e2e/calls.spec.ts: explicit getUserMedia capture observation before unmute, actual encrypted audio, deafen silence and bounded undeafen recovery; WebKit prototype observation and Firefox buffer-drain diagnostics are retained. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: controlled existing voice qualification recorded on 2026-11-05. See part4/evidence/owned-voice-browser-checkpoint.json and register-owned-voice-reconciliation.json. Product source paths remain unchanged from the executed voice checkpoint to Web 6557813. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-VOICE-003",
@@ -5214,15 +5214,15 @@
     "Screenshot reference": "screenshots/current/08-voice-audio.jpg",
     "Verification status": "OBSERVED_UI_CURRENT",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Voice activity and push-to-talk remain implemented; key release and blur stop publication in controlled browser tests. The combined held-key/reconnect matrix, operating-system shortcuts and physical input behavior remain unaccepted.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Push-to-talk releases publication reliably on keyup blur and reconnect; browser limitations are explicit. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-CALL; C-PERMISSIONS; C-MEDIA; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "e2e/calls.spec.ts: push-to-talk key/blur release with actual media; supported network recovery is separately exercised on Chromium. No claim that separate checks establish every combined reconnect/shortcut case. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/08-voice-audio.txt."
+    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/08-voice-audio.txt. Part 4: controlled existing voice qualification recorded on 2026-11-05. See part4/evidence/owned-voice-browser-checkpoint.json and register-owned-voice-reconciliation.json. Product source paths remain unchanged from the executed voice checkpoint to Web 6557813. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-VOICE-007",
@@ -5309,15 +5309,15 @@
     "Screenshot reference": "screenshots/legacy/07-voice-video/03-muted-call-controls.jpg",
     "Verification status": "OBSERVED_UI_HISTORICAL",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Mute, deafen, disconnect and minimize/reopen controls remain available in current call layouts, with controlled audio/privacy and keyboard positioning checks. Complete installed-native reachability and hardware/network failure acceptance remain open.",
     "Assigned implementation part": "PART 4",
     "Priority": "P0",
     "Acceptance criteria": "Every control remains reachable on phone and keyboard; reconnect respects privacy state. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-CALL; C-PERMISSIONS; C-MEDIA; C-ENTITLEMENTS",
-    "Implementation status": "NOT_STARTED_IN_THIS_PROGRAM",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "e2e/calls.spec.ts and e2e/call-other-device.spec.ts: mute/deafen behavior, keyboard mini-call movement, call navigation and account-preserving device handoff; support-condition skips stay explicit. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior."
+    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Historical evidence is dated 2026-11-01; recheck only the affected uncertain behavior. Part 4: controlled existing voice qualification recorded on 2026-11-05. See part4/evidence/owned-voice-browser-checkpoint.json and register-owned-voice-reconciliation.json. Product source paths remain unchanged from the executed voice checkpoint to Web 6557813. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-VOICE-012",
@@ -5480,15 +5480,15 @@
     "Screenshot reference": "screenshots/current/public-roadmap.jpg",
     "Verification status": "UNVERIFIED_DOCS",
     "Meldiq existing status": "PRESENT_SOURCE",
-    "Gap description": "Existing source or UI found; accept the behavior on the target release before changing it.",
+    "Gap description": "Meldiq camera calls are retained and exercised through actual synthetic encrypted RTC, including wrong-key rejection. This is not proof of Yapin camera delivery, physical camera capture or installed-native/provider acceptance.",
     "Assigned implementation part": "PART 4",
     "Priority": "P1",
     "Acceptance criteria": "Retain Meldiq's existing camera implementation; do not describe Yapin camera delivery as tested or shipped. Also apply the shared failure and permission matrix in PROJECT_CONTROL.md.",
     "Dependencies": "C-AUTH; C-CALL; C-PERMISSIONS; C-MEDIA; C-ENTITLEMENTS",
-    "Implementation status": "RESEARCH_REQUIRED",
-    "Testing status": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
+    "Implementation status": "IMPLEMENTED_NOT_ACCEPTED",
+    "Testing status": "e2e/calls.spec.ts: real synthetic browser/native-peer encrypted video/audio, camera controls, wrong-key failure and permission refusal; current bot-media camera reception is separately qualified. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
     "Owner": "PART 4",
-    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-roadmap.txt."
+    "Notes": "Yapin evidence: evidence/legacy/154-voice-muted-join-ax.txt. Meldiq source lead: src/call; src/ui/call; src/ui/chat/VoiceRoomView.tsx; backend calls and LiveKit modules. Web baseline 3cc3c03; source presence is not runtime acceptance. Current screen evidence: evidence/public-roadmap.txt. Part 4: controlled existing voice qualification recorded on 2026-11-05. See part4/evidence/owned-voice-browser-checkpoint.json and register-owned-voice-reconciliation.json. Product source paths remain unchanged from the executed voice checkpoint to Web 6557813. Historical competitor fields are preserved. Remaining acceptance is explicit; nothing deployed."
   },
   {
     "Feature ID": "YAP-VOICE-021",

@@ -1,0 +1,31 @@
+{
+  "recordedAt": "2026-11-05T03:03:36.589022+00:00",
+  "runtimeCommit": "65578132c8556a1727be0a6d70198bc3790258fb",
+  "productAppRuntime": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
+  "testQualificationCommit": "cfdf5481222a2f6070ca723c36569cbe4a0df69d",
+  "apiCompiledSource": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "testLinkingEnabled": false,
+  "files": 478,
+  "sourceMapsOrRawTypescript": 0,
+  "archive": {
+    "path": "/tmp/meldiq-part4/releases/meldiq-web-normal-6557813.tar.gz",
+    "bytes": 8900245,
+    "sha256": "b70e1e3da0808df0e7f0112c3843c4f3124ceec42276043f48374b9ef31e7d97"
+  },
+  "qualification": "Normal export, types/lint, pinned SDK check and normal email/encryption/welcome/SDK browser download pass on all five projects. Prior 45-case ordinary checkpoint remains scoped to its recorded compiled API.",
+  "browser": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width",
+      "iphone-width"
+    ],
+    "hostedAuthRealtime": "local test stubs",
+    "serviceWorkers": "blocked in these feature suites; no offline transport claim"
+  },
+  "production": "not deployed"
+}

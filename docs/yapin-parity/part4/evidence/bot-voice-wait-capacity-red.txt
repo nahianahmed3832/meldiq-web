@@ -1,0 +1,38 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:86392) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:86392) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/bot_voice_wait.test.ts (13 tests | 1 failed | 12 skipped) 14138ms
+     × shares the native capacity reservation between a fresh join and a pending activation 14124ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/bot_voice_wait.test.ts > opt-in bot waiting for the first human voice member > shares the native capacity reservation between a fresh join and a pending activation
+AssertionError: expected [ 200, 200 ] to deeply equal [ 200, 409 ]
+
+- Expected
++ Received
+
+  [
+    200,
+-   409,
++   200,
+  ]
+
+ ❯ test/bot_voice_wait.test.ts:322:59
+    320|       } finally { release(); }
+    321|       const results = await Promise.all([joining, activating!]);
+    322|       expect(results.map((value) => value.status).sort()).toEqual([200…
+       |                                                           ^
+    323|       expect(h.ctx.bots.voice.reserved(opened.call.id)).toHaveLength(1…
+    324|       expect(await pendingRows()).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 skipped (13)
+   Start at  10:25:34
+   Duration  51.40s (transform 17.14s, setup 0ms, import 29.14s, tests 14.14s, environment 0ms)

@@ -1,0 +1,87 @@
+{
+  "recordedAt": "2026-11-05T02:56:11.268174+00:00",
+  "apiSource": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "webSource": "65578132c8556a1727be0a6d70198bc3790258fb",
+  "webProductRuntime": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
+  "focusedApi": {
+    "files": 7,
+    "passed": 50,
+    "failed": 0
+  },
+  "fullApiRegression": {
+    "first": {
+      "passed": 1920,
+      "failed": 1,
+      "skipped": 23,
+      "passingFiles": 235,
+      "failedFiles": 1,
+      "skippedFiles": 4,
+      "failure": "local fake S3 temporary retry case; no new runtime source changed"
+    },
+    "storageFollowup": {
+      "passed": 18,
+      "failed": 0
+    },
+    "freshCompleteRun": "running; no clean full-regression claim yet"
+  },
+  "browser": {
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "projects": [
+      "chromium",
+      "firefox",
+      "iphone-width",
+      "phone-width",
+      "webkit"
+    ],
+    "modes": [
+      "existing",
+      "waiting"
+    ],
+    "minimumPositiveControlToneFrames": 489,
+    "maximumRevokedMatchedToneFrames": 0,
+    "samplesWithRawReplayFrames": [
+      {
+        "project": "phone-width",
+        "mode": "waiting",
+        "frames": 2
+      }
+    ],
+    "removalMsRange": [
+      141.575499999999,
+      847.018333
+    ],
+    "firstDiagnostic": {
+      "passed": 9,
+      "failed": 1,
+      "cause": "Firefox ICE failed before bot admission; trace retained outside Git"
+    }
+  },
+  "sdk": {
+    "apiCommit": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+    "files": 13,
+    "bytes": 241576,
+    "sha256": "c4470d263d0e45d5c49414f3e9d1e786eab0914c46dc316eb9aafc3f7b9f5601"
+  },
+  "raceRegressions": [
+    "No signing while durable cleanup ledger is blocked",
+    "Fresh joins and waiting activations share the final capacity slot"
+  ],
+  "limits": [
+    "Local synthetic RTC; not physical capture or installed-native acceptance",
+    "One sample received two unmatched audio frames; no zero-content or instantaneous-revocation claim",
+    "Saved JWT invalidation and unreachable SFU control-plane timings are not proved",
+    "Current contract-only Android qualification passes; installed-native UI and physical acceptance remain open"
+  ],
+  "productionChanged": false,
+  "normalExport": "bot-voice-wait-normal-artifact.json; 5/5 normal email/encryption/welcome/SDK downloads passed",
+  "windows": "1f3f6c3: current build, static/icon/source checks, isolated Electron smoke and fresh 1001-pass/1-skip renderer suite passed",
+  "android": {
+    "commit": "68b31f7f7f9ba5e22b312ea5b8a097650892cb34",
+    "targetedContractCasesPassed": 8,
+    "applicationSourceUnchangedFrom": "5dc08d81",
+    "sourceHashes": 2122,
+    "originalBranchAndIndexPreserved": true
+  }
+}

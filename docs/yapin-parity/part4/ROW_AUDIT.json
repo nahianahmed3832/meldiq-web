@@ -1114,7 +1114,7 @@
       "owner": "PART 3",
       "state": "ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Passed local controlled Web/API checks: api:quick_reactions.test.ts: quick reaction preferences (postgres) persists 3–5 distinct choices, preserves older client omissions, isolates accounts and rejects stale writes | web:part3-social.spec.ts#quick reactions: three-to-five quick reactions persist on the account and drive the message menu [chromium]; three-to-five quick reactions persist on the account and drive the message menu [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-009. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
+      "testing": "Passed local controlled Web/API checks: api:quick_reactions.test.ts: quick reaction preferences (postgres) persists 3\u20135 distinct choices, preserves older client omissions, isolates accounts and rejects stale writes | web:part3-social.spec.ts#quick reactions: three-to-five quick reactions persist on the account and drive the message menu [chromium]; three-to-five quick reactions persist on the account and drive the message menu [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-009. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
       "remaining": "No remaining defect in the recorded local Web/API scope. Current-production source reconciliation, controlled migration/deployment and installed-client/provider acceptance remain Part 4 release work."
     },
     {
@@ -1202,7 +1202,7 @@
       "owner": "PART 3",
       "state": "ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Passed local controlled Web/API checks: api:thread_lifecycle.test.ts: thread lifecycle (postgres) separates author close/reopen from moderator lock, rejects stale changes and controls current reply/vote authority; thread lifecycle (postgres) deletes all replies in bounded resumable batches, retains a text parent and forbids format-race widening; 1 additional passing cases recorded | unit:threads.test.ts: Activity › Thread replies (android ThreadActivityRules) lists threads I started or replied in, with replies from others since I last looked or replied; Activity › Thread replies (android ThreadActivityRules) puts unseen threads first and forgets what was seen; 3 additional passing cases recorded | web:part3-threads.spec.ts: thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [chromium]; thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-020. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
+      "testing": "Passed local controlled Web/API checks: api:thread_lifecycle.test.ts: thread lifecycle (postgres) separates author close/reopen from moderator lock, rejects stale changes and controls current reply/vote authority; thread lifecycle (postgres) deletes all replies in bounded resumable batches, retains a text parent and forbids format-race widening; 1 additional passing cases recorded | unit:threads.test.ts: Activity \u203a Thread replies (android ThreadActivityRules) lists threads I started or replied in, with replies from others since I last looked or replied; Activity \u203a Thread replies (android ThreadActivityRules) puts unseen threads first and forgets what was seen; 3 additional passing cases recorded | web:part3-threads.spec.ts: thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [chromium]; thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-020. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
       "remaining": "No remaining defect in the recorded local Web/API scope. Current-production source reconciliation, controlled migration/deployment and installed-client/provider acceptance remain Part 4 release work."
     },
     {
@@ -2034,8 +2034,8 @@
       "owner": "PART 3",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Passed local controlled Web/API checks: api:push_wakeup.test.ts: registering a device's endpoint needs a signed-in device that hasn't been removed; registering a device's endpoint keeps one endpoint per device, and an endpoint moves to the device that registered it last; 22 additional passing cases recorded | api:push_transport.test.ts: the HTTPS wake-up request POSTs an empty body to the pinned address, with transport headers only; the HTTPS wake-up request returns the push server's status, and never follows a redirect; 3 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-NOTIFY-007. No production or physical-device acceptance is implied. Pending criterion: Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner’s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence. Final execution totals and exact environment: part3/validation.json.",
-      "remaining": "Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner’s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence."
+      "testing": "Passed local controlled Web/API checks: api:push_wakeup.test.ts: registering a device's endpoint needs a signed-in device that hasn't been removed; registering a device's endpoint keeps one endpoint per device, and an endpoint moves to the device that registered it last; 22 additional passing cases recorded | api:push_transport.test.ts: the HTTPS wake-up request POSTs an empty body to the pinned address, with transport headers only; the HTTPS wake-up request returns the push server's status, and never follows a redirect; 3 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-NOTIFY-007. No production or physical-device acceptance is implied. Pending criterion: Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner\u2019s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence. Final execution totals and exact environment: part3/validation.json.",
+      "remaining": "Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner\u2019s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence."
     },
     {
       "id": "YAP-NOTIFY-008",
@@ -2160,18 +2160,18 @@
     {
       "id": "YAP-VOICE-001",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Yapin bounded workflow recorded 2026-11-01; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "e2e/voice-room.spec.ts and e2e/calls.spec.ts: browser/native-peer room navigation, join, minimize/reopen, encrypted calls and disconnect. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
+      "remaining": "Existing native voice-room join/leave and accurate call state are exercised with real synthetic RTC; old source presence is now backed by controlled execution. Installed/native joint journeys and full failure-matrix acceptance remain open."
     },
     {
       "id": "YAP-VOICE-002",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "e2e/calls.spec.ts: explicit getUserMedia capture observation before unmute, actual encrypted audio, deafen silence and bounded undeafen recovery; WebKit prototype observation and Firefox buffer-drain diagnostics are retained. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
+      "remaining": "Join-muted and deafen behavior are implemented and exercised with explicit capture/publication and silence observations. Physical microphone/output privacy checks and complete installed-client acceptance remain pending by owner choice."
     },
     {
       "id": "YAP-VOICE-003",
@@ -2200,10 +2200,10 @@
     {
       "id": "YAP-VOICE-006",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "e2e/calls.spec.ts: push-to-talk key/blur release with actual media; supported network recovery is separately exercised on Chromium. No claim that separate checks establish every combined reconnect/shortcut case. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
+      "remaining": "Voice activity and push-to-talk remain implemented; key release and blur stop publication in controlled browser tests. The combined held-key/reconnect matrix, operating-system shortcuts and physical input behavior remain unaccepted."
     },
     {
       "id": "YAP-VOICE-007",
@@ -2240,10 +2240,10 @@
     {
       "id": "YAP-VOICE-011",
       "owner": "PART 4",
-      "state": "NOT_STARTED_IN_THIS_PROGRAM",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "OBSERVED_UI_HISTORICAL",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "e2e/calls.spec.ts and e2e/call-other-device.spec.ts: mute/deafen behavior, keyboard mini-call movement, call navigation and account-preserving device handoff; support-condition skips stay explicit. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
+      "remaining": "Mute, deafen, disconnect and minimize/reopen controls remain available in current call layouts, with controlled audio/privacy and keyboard positioning checks. Complete installed-native reachability and hardware/network failure acceptance remain open."
     },
     {
       "id": "YAP-VOICE-012",
@@ -2312,10 +2312,10 @@
     {
       "id": "YAP-VOICE-020",
       "owner": "PART 4",
-      "state": "RESEARCH_REQUIRED",
+      "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Yapin workflow not executed; Meldiq acceptance NOT_RUN in Part 1.",
-      "remaining": "Existing source or UI found; accept the behavior on the target release before changing it."
+      "testing": "e2e/calls.spec.ts: real synthetic browser/native-peer encrypted video/audio, camera controls, wrong-key failure and permission refusal; current bot-media camera reception is separately qualified. Retained checkpoint: part4/evidence/owned-voice-browser-checkpoint.json (45 pass/11 support-condition skips across four browser projects; API compiled source 03108938). Product call/crypto/chat/sync/protocol paths are unchanged between Web 1fb387d and 6557813. No production or physical-device acceptance.",
+      "remaining": "Meldiq camera calls are retained and exercised through actual synthetic encrypted RTC, including wrong-key rejection. This is not proof of Yapin camera delivery, physical camera capture or installed-native/provider acceptance."
     },
     {
       "id": "YAP-VOICE-021",

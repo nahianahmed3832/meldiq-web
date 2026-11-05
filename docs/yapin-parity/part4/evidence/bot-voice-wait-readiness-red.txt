@@ -1,0 +1,35 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:83817) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83817) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/bot_voice_wait.test.ts (12 tests | 1 failed | 11 skipped) 1770ms
+     × never issues a concurrent key-read grant while cleanup persistence is blocked 1769ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/bot_voice_wait.test.ts > opt-in bot waiting for the first human voice member > never issues a concurrent key-read grant while cleanup persistence is blocked
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/bot_voice_wait.test.ts:442:41
+    440|         ]);
+    441|         expect(await pendingRows()).toBe(0);
+    442|         expect(issue.mock.calls.length).toBe(0);
+       |                                         ^
+    443|         release();
+    444|         await Promise.all(requests);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  10:16:25
+   Duration  8.84s (transform 3.61s, setup 0ms, import 5.70s, tests 1.77s, environment 0ms)

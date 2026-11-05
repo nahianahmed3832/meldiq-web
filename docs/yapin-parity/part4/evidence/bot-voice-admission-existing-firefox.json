@@ -1,0 +1,18 @@
+{
+  "scope": "Local self-hosted LiveKit with actual native RTC and a continuous 997 Hz source; no physical-device claim",
+  "admissionMode": "existing",
+  "apiSourceRevision": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "project": "firefox",
+  "repetition": 1,
+  "refused": false,
+  "connectedAtEnd": false,
+  "audioFrames": 0,
+  "sustainedAudioFrames": 0,
+  "matchedSourceToneFrames": 0,
+  "positiveControlToneFrames": 2768,
+  "referencePublishingAtEnd": true,
+  "referencePublishedFramesAtReplay": 85,
+  "referencePublishedFramesAtEnd": 91,
+  "disconnectedAfterMs": 847.018333,
+  "probeElapsedMs": 852.9749159999992
+}

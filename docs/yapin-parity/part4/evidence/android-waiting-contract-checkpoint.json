@@ -1,0 +1,65 @@
+{
+  "recordedAt": "2026-11-05T03:14:10.118408+00:00",
+  "commit": "68b31f7f7f9ba5e22b312ea5b8a097650892cb34",
+  "parent": "5dc08d81bef51c2dc1114d387ccfb176d8189866",
+  "tree": "c980f8b5c5cd37464361d0da1a05df3e2a5feaed",
+  "branch": "refs/heads/codex/yapin-parity-android-integration-20261105",
+  "apiSourceCommit": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "originalHeadPreserved": "285651477be0adbef73d8bec3359a02d781bd3f4",
+  "originalIndexSha256Preserved": "d6c8d2804e2640fb8b63e6ea7f95ae7d963acafaf7facda29bca6e7f7f75db39",
+  "sourceFiles": 2122,
+  "changedPathsFromBotVoiceCheckpoint": 1249,
+  "scope": "Current combined Android source and all packaged shared assets, excluding ignored configuration, build outputs, signing material and unrelated backend/deploy/brand work. No additional Android worktree or checkout.",
+  "qualification": "Three targeted JVM contract classes pass; full app-source qualification remains at unchanged 5dc08d81",
+  "physicalDevices": "pending by explicit owner choice",
+  "published": false,
+  "nativeUiLimits": [
+    "Managed poll controls and full thread lifecycle UI are not qualified by decoding event frames.",
+    "Thread preference events update the local projection; complete bidirectional/reconnect synchronization remains pending."
+  ],
+  "assetIgnoreGuidance": "https://developer.android.com/reference/tools/gradle-api/8.13/com/android/build/api/dsl/AndroidResources#ignoreAssetsPattern()",
+  "contractOnlyChange": true,
+  "changedPaths": [
+    "shared/contracts/android-target/openapi.json",
+    "shared/contracts/android-target/README.md"
+  ],
+  "targetedClasses": [
+    {
+      "name": "com.meldiq.android.contract.ContractFixturesTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.meldiq.android.contract.RequestContractTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.meldiq.android.contract.ApiRoutesTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "targetedTests": 8,
+  "targetedPassed": 8,
+  "targetedSkipped": 0,
+  "sourceHashesRechecked": 2122,
+  "originalBranchAndIndexStillPreserved": true,
+  "fullApplicationQualificationCommit": "5dc08d81bef51c2dc1114d387ccfb176d8189866",
+  "compilerExecution": "in-process; one worker; 2560 MiB Gradle heap; command-line override only",
+  "compilerGuidance": "https://kotlinlang.org/docs/compiler-execution-strategy.html",
+  "deviceTestsExecuted": false,
+  "sourceArchive": {
+    "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-android-source-68b31f7f.tar.gz",
+    "bytes": 3048497,
+    "sha256": "09941a170e883cea10ef52c924e254fdee24f0dbf9b87861f2481ef3be45e32f",
+    "files": 2122,
+    "allArchivedHashesMatch": true
+  }
+}

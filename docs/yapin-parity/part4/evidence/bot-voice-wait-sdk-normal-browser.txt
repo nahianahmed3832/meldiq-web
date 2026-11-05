@@ -1,0 +1,26 @@
+[WebServer] (node:99335) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:99335) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:99335) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:99376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:99381) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (16.5s)
+(node:99475) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [firefox] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (28.4s)
+(node:99606) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [webkit] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (14.5s)
+(node:99656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [phone-width] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (23.9s)
+(node:99773) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [iphone-width] › e2e/part4-bot-sdk.spec.ts:14:1 › the developer screen downloads the exact pinned first-party SDK and guide (13.8s)
+
+  5 passed (2.3m)

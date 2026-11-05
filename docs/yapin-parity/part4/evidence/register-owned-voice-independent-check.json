@@ -1,0 +1,54 @@
+{
+  "total": 568,
+  "changedRows": [
+    {
+      "id": "YAP-VOICE-001",
+      "fields": [
+        "Gap description",
+        "Implementation status",
+        "Testing status",
+        "Notes"
+      ]
+    },
+    {
+      "id": "YAP-VOICE-002",
+      "fields": [
+        "Gap description",
+        "Implementation status",
+        "Testing status",
+        "Notes"
+      ]
+    },
+    {
+      "id": "YAP-VOICE-006",
+      "fields": [
+        "Gap description",
+        "Implementation status",
+        "Testing status",
+        "Notes"
+      ]
+    },
+    {
+      "id": "YAP-VOICE-011",
+      "fields": [
+        "Gap description",
+        "Implementation status",
+        "Testing status",
+        "Notes"
+      ]
+    },
+    {
+      "id": "YAP-VOICE-020",
+      "fields": [
+        "Gap description",
+        "Implementation status",
+        "Testing status",
+        "Notes"
+      ]
+    }
+  ],
+  "otherOwnedUnchanged": 330,
+  "historicalColumnsUnchanged": true,
+  "acceptedPromotions": 0,
+  "independentCsvComparison": "passed"
+}

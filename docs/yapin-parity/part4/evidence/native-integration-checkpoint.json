@@ -1,9 +1,9 @@
 {
-  "recordedAt": "2026-11-05T01:39:19.605993+00:00",
+  "recordedAt": "2026-11-05T03:11:21.652780+00:00",
   "status": "native source checkpoints; full coordinated/native release remains open",
-  "webRuntimeCommit": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
-  "apiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
-  "apiQualificationCommit": "43d837cbb30c2b25a7643bae37cf8fd68add8404",
+  "webRuntimeCommit": "65578132c8556a1727be0a6d70198bc3790258fb",
+  "apiCommit": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "apiQualificationCommit": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
   "android": {
     "recordedAt": "2026-11-05T00:40:50.277696+00:00",
     "commit": "5dc08d81bef51c2dc1114d387ccfb176d8189866",
@@ -56,10 +56,23 @@
       "variant": "side-by-side development debug; localhost:8080; not a production distribution artifact",
       "installed": false
     },
-    "compiledDeviceTestsWereNotExecuted": true
+    "compiledDeviceTestsWereNotExecuted": true,
+    "contractRefresh": {
+      "commit": "68b31f7f7f9ba5e22b312ea5b8a097650892cb34",
+      "apiSource": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+      "applicationSourceUnchanged": true,
+      "targetedQualification": "8/8 cases in three JVM contract classes passed; all 2122 source hashes match and original branch/index preserved",
+      "sourceArchive": {
+        "path": "/Volumes/code_files/meldiq_android/artifacts/yapin-parity-20261105/meldiq-android-source-68b31f7f.tar.gz",
+        "bytes": 3048497,
+        "sha256": "09941a170e883cea10ef52c924e254fdee24f0dbf9b87861f2481ef3be45e32f",
+        "files": 2122,
+        "allArchivedHashesMatch": true
+      }
+    }
   },
   "windows": {
-    "commit": "a4694825e52dda88af62264ae8cfd1cf47bb2a32",
+    "commit": "1f3f6c31149737451060b8780c49dc2c79006d9f",
     "upstreamFilesChecked": 2373,
     "documentedAdaptationEntries": 39,
     "actualSourceDifferences": 26,
@@ -74,13 +87,13 @@
     "localeStructuralErrors": 0,
     "localeHardcodedCandidates": 0,
     "linguisticReview": "pending",
-    "isolatedSmoke": "passed after current a469482 development build on darwin/arm64 Electron: SDK identity, IPC isolation, account-data preservation, update holds and native links; not installed Windows",
+    "isolatedSmoke": "passed after current 1f3f6c3 development build on darwin/arm64 Electron; not installed Windows",
     "smokeIsPhysicalWindowsEvidence": false,
     "windowsInstallAndProviderConsent": "pending",
     "distribution": "development; not published",
     "sdkFiles": 13,
-    "embeddedWebApiSource": "current API via ORBIT_SERVER_DIR; formerly skipped contract source comparison now passes",
-    "webRuntimeCommit": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
+    "embeddedWebApiSource": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+    "webRuntimeCommit": "65578132c8556a1727be0a6d70198bc3790258fb",
     "initialLocaleWaitDiagnostic": {
       "passed": 998,
       "failed": 1,
@@ -93,16 +106,24 @@
       "passed": 1001,
       "failed": 0,
       "skipped": 1,
-      "maxWorkers": 4
+      "maxWorkers": 1,
+      "files": 150
     },
-    "webSourceCommit": "b92182efa91484562a2b40921be6f8ad3479c319",
+    "webSourceCommit": "cfdf5481222a2f6070ca723c36569cbe4a0df69d",
     "finalIconMirrorHashes": 36,
-    "typesLintBuild": "passed"
+    "typesLintBuild": "passed",
+    "priorQualifiedCheckpoint": "a4694825e52dda88af62264ae8cfd1cf47bb2a32",
+    "unchangedShellSourceFrom": "a4694825e52dda88af62264ae8cfd1cf47bb2a32",
+    "currentRendererDiagnostic": {
+      "passed": 1000,
+      "failed": 1,
+      "skipped": 1,
+      "failure": "localization audit timeout during concurrent checks; unchanged test passes in fresh complete single-worker run"
+    }
   },
   "remaining": [
     "complete installed-native same-candidate journeys",
     "native managed-poll/thread UI and bidirectional/reconnect follow synchronization",
-    "bot empty-room initiation",
     "remaining owned adapter/event/client variants",
     "defined-baseline performance",
     "legal acceptance ledger",
@@ -111,7 +132,10 @@
     "remaining owned register review and completion"
   ],
   "production": "not deployed",
-  "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
-  "webTestQualificationCommit": "b92182efa91484562a2b40921be6f8ad3479c319",
-  "apiToolsAndRecoveryCommit": "0095613a5de977a995d5728ec7fc62cf7a0703e3"
+  "apiSourceCommit": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "webTestQualificationCommit": "cfdf5481222a2f6070ca723c36569cbe4a0df69d",
+  "apiToolsAndRecoveryCommit": "0095613a5de977a995d5728ec7fc62cf7a0703e3",
+  "webProductApplicationCommit": "f8e378b29bf3cadbf6bf8f5f7c25a2a228f553b0",
+  "historicalFullApiQualificationCommit": "43d837cbb30c2b25a7643bae37cf8fd68add8404",
+  "apiQualificationScope": "First full run: 1920 passed/1 existing local S3 retry failure/23 skipped; storage follow-up 18/18 passed; fresh full regression running"
 }

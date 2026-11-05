@@ -1,0 +1,18 @@
+{
+  "scope": "Local self-hosted LiveKit with actual native RTC and a continuous 997 Hz source; no physical-device claim",
+  "admissionMode": "waiting",
+  "apiSourceRevision": "02206c886908ade2b3e7f9d8c44c93fadd973b04",
+  "project": "phone-width",
+  "repetition": 1,
+  "refused": false,
+  "connectedAtEnd": false,
+  "audioFrames": 2,
+  "sustainedAudioFrames": 0,
+  "matchedSourceToneFrames": 0,
+  "positiveControlToneFrames": 521,
+  "referencePublishingAtEnd": true,
+  "referencePublishedFramesAtReplay": 54,
+  "referencePublishedFramesAtEnd": 59,
+  "disconnectedAfterMs": 166.89216600000145,
+  "probeElapsedMs": 517.8772080000017
+}

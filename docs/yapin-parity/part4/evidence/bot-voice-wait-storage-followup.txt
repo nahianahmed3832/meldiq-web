@@ -1,0 +1,11 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:2694) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2694) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+
+ Test Files  1 passed (1)
+      Tests  18 passed (18)
+   Start at  11:12:11
+   Duration  12.17s (transform 2.37s, setup 0ms, import 3.75s, tests 7.17s, environment 0ms)

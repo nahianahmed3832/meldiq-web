@@ -1,0 +1,107 @@
+[WebServer] (node:92936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:92936) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:92936) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:92967) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+(node:92994) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793846419745,"pid":92994,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846420590,"pid":92994,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T10:40:56.144+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-8ddc69641e0e94500da0172b", "roomID": "RM_t6Qmd8Cw6YmV", "participant": "u_KiAC9iNCEXmaElYs3fyBcA.botvoice_C7cdSy1o6iMwKtWphh0GBw", "participantID": "PA_3Qze3sNMjvGG", "remote": false, "transport": "PUBLISHER", "label": "_lossy", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+[WebServer] 2026-11-05T10:40:56.147+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-8ddc69641e0e94500da0172b", "roomID": "RM_t6Qmd8Cw6YmV", "participant": "u_KiAC9iNCEXmaElYs3fyBcA.botvoice_C7cdSy1o6iMwKtWphh0GBw", "participantID": "PA_3Qze3sNMjvGG", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+[WebServer] 2026-11-05T10:40:56.144+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-8ddc69641e0e94500da0172b", "roomID": "RM_t6Qmd8Cw6YmV", "participant": "u_KiAC9iNCEXmaElYs3fyBcA.botvoice_C7cdSy1o6iMwKtWphh0GBw", "participantID": "PA_3Qze3sNMjvGG", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+[WebServer] 2026-11-05T10:40:57.191+0800	ERROR	livekit.pion.udp_mux	v4@v4.4.0/udp_mux.go:607	Failed to write packet: io: read/write on closed pipe
+[WebServer] github.com/pion/ice/v4.(*UDPMuxDefault).connWorker
+[WebServer] 	github.com/pion/ice/v4@v4.4.0/udp_mux.go:607
+{"level":20,"time":1793846457199,"pid":92994,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   1 [chromium] › e2e/part4-bot-voice.spec.ts:17:3 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (1.1m)
+{"level":20,"time":1793846480401,"pid":92994,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846482235,"pid":92994,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T10:41:33.189+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-e5d445281a14371aa4c40af6", "roomID": "RM_V6k6dMzhaVCb", "participant": "u_jIyeJJu6R73CTImmmQsjMw.botvoice_TdzkzSPTsVYxsO1YuIXSJw", "participantID": "PA_6PZgtexGBnWZ", "remote": false, "transport": "PUBLISHER", "label": "_lossy", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+[WebServer] 2026-11-05T10:41:33.189+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-e5d445281a14371aa4c40af6", "roomID": "RM_V6k6dMzhaVCb", "participant": "u_jIyeJJu6R73CTImmmQsjMw.botvoice_TdzkzSPTsVYxsO1YuIXSJw", "participantID": "PA_6PZgtexGBnWZ", "remote": false, "transport": "PUBLISHER", "label": "_data_track", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+[WebServer] 2026-11-05T10:41:33.189+0800	WARN	livekit.transport	rtc/transport.go:976	error reading data channel	{"room": "griip-e5d445281a14371aa4c40af6", "roomID": "RM_V6k6dMzhaVCb", "participant": "u_jIyeJJu6R73CTImmmQsjMw.botvoice_TdzkzSPTsVYxsO1YuIXSJw", "participantID": "PA_6PZgtexGBnWZ", "remote": false, "transport": "PUBLISHER", "label": "_reliable", "error": "dtls timeout: read/write timeout: context deadline exceeded"}
+{"level":20,"time":1793846494245,"pid":92994,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   2 [chromium] › e2e/part4-bot-voice.spec.ts:17:3 › a bot waiting in an empty channel receives a member's key and exchanges encrypted audio before revocation (37.6s)
+(node:93799) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   3 [firefox] › e2e/part4-bot-voice.spec.ts:17:3 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (1.2m)
+(node:94168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793846635147,"pid":94168,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846636204,"pid":94168,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846647807,"pid":94168,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   4 [firefox] › e2e/part4-bot-voice.spec.ts:17:3 › a bot waiting in an empty channel receives a member's key and exchanges encrypted audio before revocation (46.9s)
+(node:94652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793846699423,"pid":94652,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846701609,"pid":94652,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846712780,"pid":94652,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   5 [webkit] › e2e/part4-bot-voice.spec.ts:17:3 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (52.2s)
+{"level":20,"time":1793846741221,"pid":94652,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846742554,"pid":94652,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846756147,"pid":94652,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   6 [webkit] › e2e/part4-bot-voice.spec.ts:17:3 › a bot waiting in an empty channel receives a member's key and exchanges encrypted audio before revocation (40.6s)
+(node:95098) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793846782121,"pid":95098,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846782923,"pid":95098,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T10:46:30.244+0800	WARN	livekit	service/rtcservice.go:685	error writing to request sink	{"connID": "CO_QwiDDSaaJepU", "error": "stream closed", "room": "griip-cad38ff7a78fb7a655f14b80", "roomID": "RM_pbw7VJSAVwib", "participant": "u_ZK0ilhn1Uu1-MT3ac1wQpg.botvoice_hQ9dTeTnrJtK3P4Kv0b6cA", "participantID": "PA_KJ6rU7MHq5Eq", "joinDuration": "0s"}
+{"level":20,"time":1793846790817,"pid":95098,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   7 [phone-width] › e2e/part4-bot-voice.spec.ts:17:3 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (25.9s)
+{"level":20,"time":1793846800301,"pid":95098,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846800523,"pid":95098,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T10:46:45.959+0800	WARN	livekit	service/rtcservice.go:685	error writing to request sink	{"connID": "CO_u2on3eDBYrmx", "error": "stream closed", "room": "griip-2d021714a1e3e8cf6d7d84f8", "roomID": "RM_KsmxqH92AyWD", "participant": "u_QJbbLImE4o5AT2j4csN1cg.botvoice_Q8tXhOKNuMW2EXRRC5qgBA", "participantID": "PA_GMNG3qPb7LBi", "joinDuration": "0s"}
+[WebServer] 2026-11-05T10:46:45.960+0800	ERROR	livekit.pion.udp_mux	v4@v4.4.0/udp_mux.go:607	Failed to write packet: io: read/write on closed pipe
+[WebServer] github.com/pion/ice/v4.(*UDPMuxDefault).connWorker
+[WebServer] 	github.com/pion/ice/v4@v4.4.0/udp_mux.go:607
+{"level":20,"time":1793846806155,"pid":95098,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   8 [phone-width] › e2e/part4-bot-voice.spec.ts:17:3 › a bot waiting in an empty channel receives a member's key and exchanges encrypted audio before revocation (14.9s)
+(node:95364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793846819358,"pid":95364,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846819611,"pid":95364,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T10:47:05.494+0800	WARN	livekit	service/rtcservice.go:685	error writing to request sink	{"connID": "CO_7pjqxnznQuGZ", "error": "stream closed", "room": "griip-8466d3b953ea89bec12c9e39", "roomID": "RM_dnfngz3yGCKD", "participant": "u_zkdslop_jmU1-5uqz20XGQ.botvoice_jxCp9pU2pSaCcPIr-FZEOQ", "participantID": "PA_NDo4pbEbE3im", "joinDuration": "0s"}
+{"level":20,"time":1793846825854,"pid":95364,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   9 [iphone-width] › e2e/part4-bot-voice.spec.ts:17:3 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (17.7s)
+{"level":20,"time":1793846834230,"pid":95364,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846834509,"pid":95364,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793846840503,"pid":95364,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  10 [iphone-width] › e2e/part4-bot-voice.spec.ts:17:3 › a bot waiting in an empty channel receives a member's key and exchanges encrypted audio before revocation (14.0s)
+
+
+  1) [firefox] › e2e/part4-bot-voice.spec.ts:17:3 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    Call Log:
+    - Timeout 30000ms exceeded while waiting on the predicate
+
+      58 |             { timeout: 30_000 },
+      59 |           )
+    > 60 |           .toBe(true);
+         |            ^
+      61 |         const initial = pendingLease ?? (await bot.joinVoice(channel.id, { requestId: crypto.randomUUID() }));
+      62 |         leaseId = initial.leaseId;
+      63 |         let delivered: any;
+        at /Volumes/code_files/meldiq_parity_integration_web/e2e/part4-bot-voice.spec.ts:60:12
+
+    Error Context: test-results/part4-bot-voice-a-dedicate-92281-ted-audio-before-revocation-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/part4-bot-voice-a-dedicate-92281-ted-audio-before-revocation-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/part4-bot-voice-a-dedicate-92281-ted-audio-before-revocation-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox] › e2e/part4-bot-voice.spec.ts:17:3 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation
+  9 passed (8.0m)
