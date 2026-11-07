@@ -20,10 +20,10 @@ test("a voice channel opens as its room: who's in it, Join voice, then Open the 
   const bob = await newPhone("bob", "Bob Chen");
   await alice.connect();
   await bob.connect();
-  const { org } = await alice.req("POST", "/v1/orgs", { name: "Voice Lab" });
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Voice Lab for Customer Support and Operations" });
   const { invite } = await alice.req("POST", `/v1/orgs/${org.id}/invites`, { role: "MEMBER", maxUses: 1, expiresInHours: 1 });
   await bob.req("POST", "/v1/invites/accept", { code: invite.code });
-  const { channel } = await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "hangout", voice: true });
+  const { channel } = await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "customer-support-meeting-room", voice: true });
   await bob.req("POST", `/v1/conversations/${channel.id}/join`).catch(() => undefined);
 
   // Bob opens the room as the phone app does: the call API, then the room's key in an encrypted call_invite.
@@ -46,6 +46,30 @@ test("a voice channel opens as its room: who's in it, Join voice, then Open the 
 
     const stage = page.locator("section.call-stage").and(page.getByRole("region", { name: /^Call with/ }));
     await expect(stage).toBeVisible();
+    if ((page.viewportSize()?.width ?? 0) >= 961) {
+      const frame = await stage.evaluate((el) => {
+        const rect = el.getBoundingClientRect();
+        const body = document.querySelector(".workspace > .body")!.getBoundingClientRect();
+        const main = document.querySelector(".workspace > .body > .main")!.getBoundingClientRect();
+        return [rect.left - main.left, rect.top - body.top, rect.right - body.right, rect.bottom - body.bottom];
+      });
+      expect(frame).toEqual([0, 0, 0, 0]);
+
+      const panel = page.getByRole("region", { name: "Your call" });
+      await expect(panel.getByText("Voice Connected")).toBeVisible();
+      const buttons = panel.getByRole("button");
+      await expect(buttons).toHaveCount(7);
+      for (const button of await buttons.all()) await button.hover({ trial: true });
+      expect(
+        await panel.evaluate((el) => {
+          const panel = el.getBoundingClientRect();
+          return Array.from(el.querySelectorAll("button")).every((button) => {
+            const bounds = button.getBoundingClientRect();
+            return bounds.left >= panel.left && bounds.right <= panel.right;
+          });
+        }),
+      ).toBe(true);
+    }
     await stage.getByRole("button", { name: "Minimise the call" }).click();
     await expect(room.getByRole("button", { name: "Open the call" })).toBeVisible();
     await expect(room.getByText("In the room — 2")).toBeVisible({ timeout: 20_000 });

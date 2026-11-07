@@ -69,7 +69,6 @@ export function CallStage() {
           </p>
         </div>
         {call.verification && !ended && <SecurityBadge call={call} open={verifyOpen} onToggle={() => setVerifyOpen((o) => !o)} />}
-        {!ended && <CallConnection call={call} />}
       </header>
       <div className="call-notes">
         {verifyOpen && call.verification && <Verification call={call} />}
@@ -277,8 +276,9 @@ function Controls({
   return (
     <div className="call-controls-wrap">
       {/* The pills and the screens being shared share one row (wrapping on narrow windows), so a share costs the stage no height. */}
-      {(media || (live && call.shares.length > 0)) && (
+      {live && (
         <div className="call-pills">
+          <CallConnection call={call} />
           {media && (
             <>
               {/* Batch B10 (android CallOverlay's Deafen pill). */}
@@ -293,7 +293,7 @@ function Controls({
               <SharePill call={call} />
             </>
           )}
-          {live && <StreamTray call={call} />}
+          <StreamTray call={call} />
         </div>
       )}
       <div className="call-controls">

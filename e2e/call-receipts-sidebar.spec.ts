@@ -67,10 +67,12 @@ test("call photos and measured connection latency show during an encrypted voice
     if (hasTouch) await security.tap();
     else await security.click();
     await expect(panel).toBeHidden();
-    const signal = stage.getByRole("button", { name: /^Call connection:/ });
+    const latencyArea = (page.viewportSize()?.width ?? 0) >= 961 ? page.getByRole("region", { name: "Your call" }) : stage.locator(".call-controls-wrap");
+    const signal = latencyArea.getByRole("button", { name: /^Call connection:/ });
+    await expect(page.getByRole("button", { name: /^Call connection:/ })).toHaveCount(1);
     if (hasTouch) await signal.tap();
     else await signal.hover();
-    const tooltip = stage.getByRole("tooltip");
+    const tooltip = latencyArea.getByRole("tooltip");
     await expect(tooltip).toBeVisible();
     await expect(tooltip.locator(".call-ping")).toHaveText(/^\d+ ms$/, { timeout: 25_000 });
     await expect(tooltip).toContainText("Round-trip latency to the call server");
