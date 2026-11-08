@@ -71,3 +71,25 @@ test("wear one of Meldiq's decorations, and send your own in for review", async 
   const submissions = (await alice.req("GET", "/v2/decorations/mine")).submissions;
   expect(submissions).toEqual([expect.objectContaining({ name: "Violet ring", status: "pending" })]);
 });
+
+test("classic avatar frames fill their overlay in desktop DM rows", async ({ page, isMobile }) => {
+  test.skip(isMobile, "the desktop sidebar sizes its channel icons separately");
+  const alice = await newPhone("alice", "Alice Rahman");
+  const bob = await newPhone("bob", "Bob Chen");
+  const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
+  await bob.req("PUT", "/v1/users/me/profile-style", { decoration: "ember" });
+  await link(page, alice);
+  await page.goto("/dms");
+
+  const row = page.locator(`.sidebar .side-item[href="/dms/c/${dm}"]`);
+  const frame = row.locator(".deco-ember > .avatar-frame-art");
+  await expect(frame).toBeVisible();
+  const { artwork, overlay } = await frame.evaluate((svg) => ({
+    artwork: svg.getBoundingClientRect().toJSON(),
+    overlay: svg.parentElement!.getBoundingClientRect().toJSON(),
+  }));
+  expect(artwork.width).toBeCloseTo(overlay.width);
+  expect(artwork.height).toBeCloseTo(overlay.height);
+  expect(artwork.x).toBeCloseTo(overlay.x);
+  expect(artwork.y).toBeCloseTo(overlay.y);
+});

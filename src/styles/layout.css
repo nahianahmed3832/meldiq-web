@@ -874,7 +874,7 @@
     min-height: 36px;
     font-size: var(--fs-md);
   }
-  .sidebar .side-item .glyph svg {
+  .sidebar .side-item .glyph > svg {
     width: 18px;
     height: 18px;
   }
