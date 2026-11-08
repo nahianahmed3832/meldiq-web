@@ -10,6 +10,7 @@ import { AddonCheckoutPage } from "./AddonCheckoutPage";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Crown, Gift, LockKeyhole, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
+import type { PlusTerm } from "../../api/mojoSchemas";
 import { type PayPalConfig, type PayPalPurchase, zPayPalCheckout } from "../../api/paypalSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
@@ -54,8 +55,17 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   );
   const selectedTerm = draft.product === "plus" ? (draft.term ?? "monthly") : "monthly";
   const termOffer = catalog?.plusTerms.find((t) => (gift ? t.months === draft.months : t.key === selectedTerm));
-  const price = gift ? (catalog?.onSale.gifts ? catalog.onSale.plus : null) : selectedTerm === "monthly" ? catalog?.onSale.plus : termOffer?.available ? termOffer : null;
-  const amount = purchase?.amountMinor ?? (gift ? (termOffer?.amountMinor ?? (price?.amountMinor ?? 0) * draft.months) : (termOffer?.amountMinor ?? price?.amountMinor ?? 0));
+  const priceForTerm = (term: PlusTerm["key"]) => (term === "monthly" ? catalog?.onSale.plus : catalog?.plusTerms.find((offer) => offer.key === term && offer.available));
+  const price = gift ? (catalog?.onSale.gifts ? catalog.onSale.plus : null) : priceForTerm(selectedTerm);
+  const blockedTerm = !gift && !!catalog && !price && !saved.purchaseId;
+  const fallbackTerm = priceForTerm("monthly") ? ({ key: "monthly", months: 1 } as const) : catalog?.plusTerms.find((term) => priceForTerm(term.key));
+  const termLabel = (months: number) => (months === 1 ? l10n("billing.monthly") : formatUnit(months, "month"));
+  const chooseTerm = (term: PlusTerm["key"]) => {
+    if (!priceForTerm(term)) return;
+    setAccepted(false);
+    selectCheckout(userId, { product: "plus", term });
+  };
+  const amount = purchase?.amountMinor ?? (gift ? (termOffer?.amountMinor ?? (price?.amountMinor ?? 0) * draft.months) : (price?.amountMinor ?? termOffer?.amountMinor ?? 0));
   const months = purchase && purchase.interval !== "one_time" ? (purchase.interval === "year" ? 12 : 1) * (purchase.billingFrequency ?? 1) : gift ? draft.months : (termOffer?.months ?? 1);
   const cadence = months === 1 ? uiText("billing.interface.month_a5c7d17") : formatUnit(months, "month");
   const savings = termOffer && !gift ? termOffer.savingsMinor : 0;
@@ -233,7 +243,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     </span>
                   )}
                 </div>
-                {config && (
+                {config && !blockedTerm && (
                   <p className="muted">
                     {sandbox
                       ? uiText("billing.interface.this_is_a_test_purchase_no_real_money_is_taken_3939868")
@@ -254,6 +264,18 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                   </div>
                   <Check size={16} aria-hidden="true" />
                 </div>
+                {blockedTerm && (
+                  <div className="banner info checkout-term-recovery">
+                    <span role="status">
+                      <Localized k="billing.interface.this_offer_is_not_available_for_purchase_yet_e158f85" />
+                    </span>
+                    {fallbackTerm && (
+                      <button type="button" className="btn btn-secondary" onClick={() => chooseTerm(fallbackTerm.key)}>
+                        {l10n("common.actions.continue")} · {termLabel(fallbackTerm.months)}
+                      </button>
+                    )}
+                  </div>
+                )}
                 {!gift && catalog && catalog.plusTerms.length > 0 && (
                   <fieldset className="plus-term-choices" disabled={!!purchase}>
                     <legend>
@@ -261,17 +283,9 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     </legend>
                     {catalog.plusTerms.map((t) => (
                       <label className={`plus-term-option${selectedTerm === t.key ? " selected" : ""}`} key={t.key}>
-                        <input
-                          type="radio"
-                          name="plus-term"
-                          checked={selectedTerm === t.key}
-                          onChange={() => {
-                            setAccepted(false);
-                            selectCheckout(userId, { product: "plus", term: t.key });
-                          }}
-                        />
+                        <input type="radio" name="plus-term" checked={selectedTerm === t.key} disabled={!priceForTerm(t.key)} onChange={() => chooseTerm(t.key)} />
                         <span>
-                          <strong>{t.months === 1 ? l10n("billing.monthly") : formatUnit(t.months, "month")}</strong>
+                          <strong>{termLabel(t.months)}</strong>
                           <small>
                             <Localized
                               k="billing.interface.billed_every_45e2ceb"
@@ -286,7 +300,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                               />
                             </small>
                           )}
-                          {!t.available && !(t.key === "monthly" && catalog.onSale.plus) && (
+                          {!priceForTerm(t.key) && (
                             <small>
                               <Localized k="billing.interface.not_available_for_purchase_yet_fda50e8" />
                             </small>
@@ -301,33 +315,37 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     )}
                   </fieldset>
                 )}
-                <PaymentMethods value={method} cardStatus={cards.status} retry={() => setAttempt((value) => value + 1)} onChange={chooseMethod} />
-                <p className="checkout-security">
-                  <LockKeyhole size={15} aria-hidden="true" />
-                  <span>
-                    <Localized k="billing.interface.paypal_securely_handles_payment_authorization_meldiq_never_sees_y_24415a3" />
-                  </span>
-                </p>
-                <label className="checkout-agreement">
-                  <input ref={agreement} type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} />
-                  <span>
-                    <Localized
-                      k="billing.interface.i_agree_to_the_and_have_read_the_0182142"
-                      slots={[
-                        <a href="https://meldiq.app/legal/terms" target="_blank" rel="noreferrer">
-                          <Localized k="billing.interface.terms_of_service_4afa55b" />
-                        </a>,
-                        l10n("messaging.meldling_and"),
-                        <a href="https://meldiq.app/legal/billing" target="_blank" rel="noreferrer">
-                          <Localized k="billing.interface.subscription_terms_0220f09" />
-                        </a>,
-                        <a href="https://meldiq.app/legal/privacy" target="_blank" rel="noreferrer">
-                          <Localized k="billing.interface.privacy_policy_506ff39" />
-                        </a>,
-                      ]}
-                    />
-                  </span>
-                </label>
+                {!blockedTerm && (
+                  <>
+                    <PaymentMethods value={method} cardStatus={cards.status} retry={() => setAttempt((value) => value + 1)} onChange={chooseMethod} />
+                    <p className="checkout-security">
+                      <LockKeyhole size={15} aria-hidden="true" />
+                      <span>
+                        <Localized k="billing.interface.paypal_securely_handles_payment_authorization_meldiq_never_sees_y_24415a3" />
+                      </span>
+                    </p>
+                    <label className="checkout-agreement">
+                      <input ref={agreement} type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} />
+                      <span>
+                        <Localized
+                          k="billing.interface.i_agree_to_the_and_have_read_the_0182142"
+                          slots={[
+                            <a href="https://meldiq.app/legal/terms" target="_blank" rel="noreferrer">
+                              <Localized k="billing.interface.terms_of_service_4afa55b" />
+                            </a>,
+                            l10n("messaging.meldling_and"),
+                            <a href="https://meldiq.app/legal/billing" target="_blank" rel="noreferrer">
+                              <Localized k="billing.interface.subscription_terms_0220f09" />
+                            </a>,
+                            <a href="https://meldiq.app/legal/privacy" target="_blank" rel="noreferrer">
+                              <Localized k="billing.interface.privacy_policy_506ff39" />
+                            </a>,
+                          ]}
+                        />
+                      </span>
+                    </label>
+                  </>
+                )}
                 {error && (
                   <div className="banner danger" role="alert">
                     {error}
@@ -348,12 +366,12 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     <Localized k="billing.interface.recurring_paypal_payments_are_not_available_for_this_app_yet_f931f8c" />
                   </p>
                 )}
-                {catalog && !price && (
+                {catalog && !price && !purchase && !blockedTerm && (
                   <p role="status" className="muted">
                     <Localized k="billing.interface.this_offer_is_not_available_for_purchase_yet_e158f85" />
                   </p>
                 )}
-                {!accepted && (
+                {!accepted && !blockedTerm && (
                   <p className="checkout-hint">
                     <Localized k="billing.interface.agree_to_the_terms_to_continue_with_paypal_b54866d" />
                   </p>
@@ -438,76 +456,80 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                   </p>
                 </div>
               </div>
-              <dl className="checkout-breakdown">
-                <div>
-                  <dt>
+              {!blockedTerm && (
+                <>
+                  <dl className="checkout-breakdown">
+                    <div>
+                      <dt>
+                        {gift
+                          ? uiText("billing.interface.native_count_4736ea779", { value0: formatUnit(draft.months, "month"), value1: "" })
+                          : uiText("billing.interface.plus_every_value0_5ad9a72", { value0: cadence })}
+                      </dt>
+                      <dd>{money(amount, currency)}</dd>
+                    </div>
+                    <div>
+                      <dt>
+                        <Localized k="billing.interface.tax_added_fb1952a" />
+                      </dt>
+                      <dd>{money(0, currency)}</dd>
+                    </div>
+                    <div className="checkout-total">
+                      <dt>
+                        {gift ? uiText("billing.interface.total_c9b3c38") : uiText("billing.interface.total_today_edff0a6")}
+                        <small>
+                          {gift
+                            ? uiText("billing.interface.one_time_purchase_905ac4e")
+                            : deferred
+                              ? uiText("billing.interface.first_payment_value0_47c7b57", { value0: startDate })
+                              : uiText("billing.interface.renews_every_value0_2e59e40", { value0: cadence })}
+                        </small>
+                      </dt>
+                      <dd>
+                        {money(deferred ? 0 : amount, currency)}
+                        <small>{currency}</small>
+                      </dd>
+                    </div>
+                  </dl>
+                  {gift && (
+                    <p className="checkout-renewal">
+                      <Localized
+                        k="billing.interface.gift_for_0c0aa66"
+                        slots={[
+                          <strong>{recipient}</strong>,
+                          draft.note && (
+                            <>
+                              <Localized k="billing.interface.your_note_fcd67a2" slots={[<br />, draft.note]} />
+                            </>
+                          ),
+                        ]}
+                      />
+                    </p>
+                  )}
+                  <p className="checkout-renewal">
                     {gift
-                      ? uiText("billing.interface.native_count_4736ea779", { value0: formatUnit(draft.months, "month"), value1: "" })
-                      : uiText("billing.interface.plus_every_value0_5ad9a72", { value0: cadence })}
-                  </dt>
-                  <dd>{money(amount, currency)}</dd>
-                </div>
-                <div>
-                  <dt>
-                    <Localized k="billing.interface.tax_added_fb1952a" />
-                  </dt>
-                  <dd>{money(0, currency)}</dd>
-                </div>
-                <div className="checkout-total">
-                  <dt>
-                    {gift ? uiText("billing.interface.total_c9b3c38") : uiText("billing.interface.total_today_edff0a6")}
-                    <small>
-                      {gift
-                        ? uiText("billing.interface.one_time_purchase_905ac4e")
-                        : deferred
-                          ? uiText("billing.interface.first_payment_value0_47c7b57", { value0: startDate })
-                          : uiText("billing.interface.renews_every_value0_2e59e40", { value0: cadence })}
-                    </small>
-                  </dt>
-                  <dd>
-                    {money(deferred ? 0 : amount, currency)}
-                    <small>{currency}</small>
-                  </dd>
-                </div>
-              </dl>
-              {gift && (
-                <p className="checkout-renewal">
-                  <Localized
-                    k="billing.interface.gift_for_0c0aa66"
-                    slots={[
-                      <strong>{recipient}</strong>,
-                      draft.note && (
-                        <>
-                          <Localized k="billing.interface.your_note_fcd67a2" slots={[<br />, draft.note]} />
-                        </>
-                      ),
-                    ]}
-                  />
-                </p>
-              )}
-              <p className="checkout-renewal">
-                {gift
-                  ? uiText("billing.interface.one_payment_no_automatic_renewal_your_friend_chooses_when_to_star_02c5c24")
-                  : deferred
-                    ? uiText("billing.interface.value0_value1_on_value2_then_every_value3_until_you_cancel_your_e_01ea896", {
-                        value0: money(amount, currency),
-                        value1: currency,
-                        value2: startDate,
-                        value3: cadence,
-                      })
-                    : uiText("billing.interface.then_value0_value1_every_value2_until_you_cancel_cancel_from_bill_fbdcfd3", { value0: money(amount, currency), value1: currency, value2: cadence })}
-              </p>
-              {!gift && (
-                <div className="plus-support-summary">
-                  <strong>
-                    {savings > 0
-                      ? uiText("billing.interface.you_save_value0_versus_monthly_billing_c6a2e7f", { value0: money(savings, currency) })
-                      : uiText("billing.interface.support_meldiq_with_plus_285e978")}
-                  </strong>
-                  <p>
-                    <Localized k="billing.interface.your_subscription_helps_support_servers_storage_bandwidth_securit_fe7c2a4" slots={[money(amount, currency)]} />
+                      ? uiText("billing.interface.one_payment_no_automatic_renewal_your_friend_chooses_when_to_star_02c5c24")
+                      : deferred
+                        ? uiText("billing.interface.value0_value1_on_value2_then_every_value3_until_you_cancel_your_e_01ea896", {
+                            value0: money(amount, currency),
+                            value1: currency,
+                            value2: startDate,
+                            value3: cadence,
+                          })
+                        : uiText("billing.interface.then_value0_value1_every_value2_until_you_cancel_cancel_from_bill_fbdcfd3", { value0: money(amount, currency), value1: currency, value2: cadence })}
                   </p>
-                </div>
+                  {!gift && (
+                    <div className="plus-support-summary">
+                      <strong>
+                        {savings > 0
+                          ? uiText("billing.interface.you_save_value0_versus_monthly_billing_c6a2e7f", { value0: money(savings, currency) })
+                          : uiText("billing.interface.support_meldiq_with_plus_285e978")}
+                      </strong>
+                      <p>
+                        <Localized k="billing.interface.your_subscription_helps_support_servers_storage_bandwidth_securit_fe7c2a4" slots={[money(amount, currency)]} />
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
               {plus && (
                 <ul className="checkout-perks">

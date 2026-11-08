@@ -611,6 +611,12 @@
   }
 }
 
+.checkout-term-recovery {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
 .plus-term-choices {
   border: none;
   padding: 0;
@@ -630,6 +636,9 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   cursor: pointer;
+}
+.plus-term-option:has(input:disabled) {
+  cursor: default;
 }
 .plus-term-option.selected {
   border-color: var(--brand);

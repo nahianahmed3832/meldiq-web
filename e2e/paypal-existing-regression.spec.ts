@@ -41,13 +41,14 @@ window[namespace] = { FUNDING: { CARD: 'card' }, Buttons: (options) => {
   };
 } };
 `;
-async function checkout(page: Page, deferred = false) {
+async function checkout(page: Page, deferred = false, yearlyAvailable = false) {
   const alice = await newPhone("paypalcheckout", "Checkout Tester");
   await alice.connect();
   await link(page, alice);
   const catalog = await (await page.request.get("/v2/mojo/catalog")).json();
   await page.route("**/v2/mojo/catalog", async (route) => {
     catalog.onSale = { mode: "live", go: null, plus: { currency: "USD", amountMinor: 499 }, spark: null, gifts: true };
+    if (yearlyAvailable) catalog.plusTerms = catalog.plusTerms.map((term: { key: string }) => (term.key === "yearly" ? { ...term, available: true } : term));
     await route.fulfill({ json: catalog });
   });
   await page.route("**/v2/billing/account", (route) => route.fulfill({ json: { available: true, provider: "paypal", subscription: null, portal: false } }));
@@ -106,6 +107,52 @@ test("branded review, official payment control, backend-only confirmation and re
   await page.getByRole("button", { name: "Check purchase status" }).click();
   await expect(page.getByRole("heading", { name: "Welcome to Plus." })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("a saved unavailable yearly draft can switch to monthly and approve a deferred PayPal renewal", async ({ page }) => {
+  const { purchase, userId } = await checkout(page, true);
+  const yearly = page.getByRole("radio", { name: /^12 months/ });
+  await expect(yearly).toBeDisabled();
+  await expect(page.getByRole("radio", { name: /^3 months/ })).toBeDisabled();
+  await page.evaluate((id) => {
+    sessionStorage.setItem(`meldiq.paypal.sandbox.${id}`, JSON.stringify({ draft: { product: "plus", term: "yearly" }, requestKey: crypto.randomUUID(), purchaseId: null, completed: false }));
+  }, userId);
+  await page.reload();
+  await expect(yearly).toBeChecked();
+  await expect(page.getByText("This offer is not available for purchase yet.")).toBeVisible();
+  await expect(page.locator(".checkout-total")).toHaveCount(0);
+  await expect(page.getByRole("checkbox")).toHaveCount(0);
+  await expect(page.locator("paypal-button")).toHaveCount(0);
+  await page.getByRole("button", { name: "Continue · Monthly" }).click();
+  await expect(page.getByRole("radio", { name: /^Monthly/ })).toBeChecked();
+  await expect(page.locator(".checkout-total")).toContainText("0.00");
+  await expect(page.getByRole("checkbox")).not.toBeChecked();
+  await page.route("**/v2/billing/paypal/checkouts", async (route) => {
+    expect(route.request().postDataJSON()).toMatchObject({ product: "plus", term: "monthly" });
+    await route.fulfill({ json: purchase });
+  });
+  await page.route("**/v2/billing/paypal/checkouts/chk_test/confirm", (route) => route.fulfill({ json: { ...purchase, approved: true } }));
+  await page.getByRole("button", { name: "Review and pay with PayPal" }).click();
+  await page.getByRole("checkbox").check();
+  await page.locator("paypal-button").click();
+  await expect(page.getByRole("heading", { name: "Your Plus renewal is scheduled." })).toBeVisible();
+});
+
+test("an available yearly offer uses its own quote and requires consent again", async ({ page }) => {
+  const { purchase } = await checkout(page, false, true);
+  await page.getByRole("checkbox").check();
+  await page.getByRole("radio", { name: /^12 months/ }).check();
+  await expect(page.locator(".checkout-total")).toContainText("49.99");
+  await expect(page.getByRole("checkbox")).not.toBeChecked();
+  const yearly = { ...purchase, interval: "year", amountMinor: 4999 };
+  await page.route("**/v2/billing/paypal/checkouts", async (route) => {
+    expect(route.request().postDataJSON()).toMatchObject({ product: "plus", term: "yearly" });
+    await route.fulfill({ json: yearly });
+  });
+  await page.route("**/v2/billing/paypal/checkouts/chk_test/confirm", (route) => route.fulfill({ json: { ...yearly, confirmed: true } }));
+  await page.getByRole("checkbox").check();
+  await page.locator("paypal-button").click();
+  await expect(page.getByRole("heading", { name: "Welcome to Plus." })).toBeVisible();
 });
 
 test("gift checkout reviews the recipient and starts a one-time PayPal purchase", async ({ page }) => {
