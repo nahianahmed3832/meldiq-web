@@ -4,6 +4,8 @@
   "checkout": "结账",
   "monthly": "按月",
   "yearly": "按年",
+  "expressCheckout": "快捷结账",
+  "reviewWithPayPal": "核对订单并使用 PayPal 支付",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "无法加载模块:About到这里去看看! 再试一次",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "无法找到该页面 在\"计费\"中查看其状态。",

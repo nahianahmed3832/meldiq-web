@@ -4,6 +4,8 @@
   "checkout": "Finalizare comandă",
   "monthly": "Lunar",
   "yearly": "Anual",
+  "expressCheckout": "Plată rapidă",
+  "reviewWithPayPal": "Verifică comanda și plătește cu PayPal",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "Checkout-ul securizat nu s-a putut încărca. Încearcă din nou.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "Această comandă nu a putut fi reluată. Verificați starea sa în Facturare.",

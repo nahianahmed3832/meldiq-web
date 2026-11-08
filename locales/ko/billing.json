@@ -4,6 +4,8 @@
   "checkout": "결제",
   "monthly": "월간",
   "yearly": "연간",
+  "expressCheckout": "빠른 결제",
+  "reviewWithPayPal": "주문을 확인하고 PayPal로 결제",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "보안 체크아웃을 불러올 수 없습니다. 다시 시도해 보세요.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "이 체크아웃을 재개할 수 없습니다. Billing에서 상태를 검토합니다.",

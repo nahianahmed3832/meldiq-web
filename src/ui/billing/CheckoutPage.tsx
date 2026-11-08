@@ -10,7 +10,7 @@ import { AddonCheckoutPage } from "./AddonCheckoutPage";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Crown, Gift, LockKeyhole, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
-import { type PayPalConfig, type PayPalPurchase, zPayPalCheckout, zPayPalConfig } from "../../api/paypalSchemas";
+import { type PayPalConfig, type PayPalPurchase, zPayPalCheckout } from "../../api/paypalSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { BrandMark } from "../components/BrandMark";
@@ -18,7 +18,8 @@ import { money, size } from "../mojo/mojoFormat";
 import { readCheckout, writeCheckout, selectCheckout } from "./checkoutDraft";
 import { usePayPalCardSdk } from "./PayPalCardButton";
 import { CheckoutPaymentButton } from "./CheckoutPaymentButton";
-import { PaymentMethods, type PaymentMethod } from "./PaymentMethods";
+import { ExpressPayPal, PaymentMethods, type PaymentMethod } from "./PaymentMethods";
+import { fetchPayPalCheckoutConfig } from "./checkoutConfig";
 const billing = () => navigate({ section: "settings", settingsPage: "billing" });
 const endedStatuses = new Set(["expired", "incomplete_expired", "canceled", "failed", "refunded"]);
 /** Meldiq owns the review and confirmation. The API owns pricing, payment verification and all entitlements. */
@@ -35,10 +36,15 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   const [purchase, setPurchase] = useState<PayPalPurchase | null>(null);
   const [accepted, setAccepted] = useState(false);
   const [method, setMethod] = useState<PaymentMethod>("paypal");
+  const agreement = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const chooseMethod = (value: PaymentMethod) => {
+    setMethod(value);
+    setError(null);
+  };
   const draft = saved.draft;
   const gift = draft.product === "gift";
   const cards = usePayPalCardSdk(config, !gift, attempt);
@@ -48,7 +54,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   );
   const selectedTerm = draft.product === "plus" ? (draft.term ?? "monthly") : "monthly";
   const termOffer = catalog?.plusTerms.find((t) => (gift ? t.months === draft.months : t.key === selectedTerm));
-  const price = !gift && selectedTerm !== "monthly" ? (termOffer?.available ? termOffer : null) : catalog?.onSale.plus;
+  const price = gift ? (catalog?.onSale.gifts ? catalog.onSale.plus : null) : selectedTerm === "monthly" ? catalog?.onSale.plus : termOffer?.available ? termOffer : null;
   const amount = purchase?.amountMinor ?? (gift ? (termOffer?.amountMinor ?? (price?.amountMinor ?? 0) * draft.months) : (termOffer?.amountMinor ?? price?.amountMinor ?? 0));
   const months = purchase && purchase.interval !== "one_time" ? (purchase.interval === "year" ? 12 : 1) * (purchase.billingFrequency ?? 1) : gift ? draft.months : (termOffer?.months ?? 1);
   const cadence = months === 1 ? uiText("billing.interface.month_a5c7d17") : formatUnit(months, "month");
@@ -60,6 +66,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   const startDate = config?.billingStartAt ? new Intl.DateTimeFormat(interfaceLocale(), { dateStyle: "medium" }).format(config.billingStartAt) : null;
   const complete = purchase?.confirmed === true || (purchase?.approved === true && deferred);
   const closed = purchase != null && endedStatuses.has(purchase.status);
+  const canPay = config && online && (price || purchase) && !closed && (gift || config.subscriptions);
   const remember = useCallback(
     (value: ReturnType<typeof readCheckout>) => {
       savedRef.current = value;
@@ -92,15 +99,13 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   );
   useEffect(() => {
     let disposed = false;
-    writeCheckout(userId, savedRef.current);
-    void engine.mojo.refresh();
-    void engine.api
-      .json("GET", "/v2/billing/paypal/config", zPayPalConfig)
+    void fetchPayPalCheckoutConfig(engine.api)
       .then((c) => {
         if (!disposed) setConfig(c);
       })
       .catch((e: unknown) => {
-        if (!disposed)
+        if (!disposed) {
+          setConfig(null);
           setError(
             e instanceof ApiError && e.status === 404
               ? uiText("billing.interface.paypal_checkout_is_not_available_on_this_server_yet_73c03ac")
@@ -108,7 +113,15 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                 ? e.message
                 : uiText("billing.interface.checkout_could_not_load_9614d64"),
           );
+        }
       });
+    return () => {
+      disposed = true;
+    };
+  }, [engine, attempt]);
+  useEffect(() => {
+    writeCheckout(userId, savedRef.current);
+    void engine.mojo.refresh();
     const q = new URLSearchParams(location.search);
     const canceled = q.get("checkout") === "canceled" || q.get("gift") === "canceled";
     const returned = q.has("checkout") || q.has("gift") || q.has("token") || q.has("subscription_id");
@@ -116,9 +129,6 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
     if (canceled) setMessage(uiText("billing.interface.you_closed_paypal_checkout_check_the_purchase_status_before_tryin_35eff7a"));
     // Query parameters never identify a purchase or prove payment. Only the stored, account-owned ID is used.
     if (savedRef.current.purchaseId) void verify(returned && !canceled);
-    return () => {
-      disposed = true;
-    };
   }, [engine, userId, verify]);
   const create = async () => {
     setError(null);
@@ -203,10 +213,17 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
             <p>{gift ? uiText("billing.interface.a_thoughtful_upgrade_for_someone_you_love_talking_to_8c4febe") : uiText("billing.interface.your_conversations_a_little_more_possibility_ba71e0b")}</p>
           </div>
           <div className="checkout-layout">
+            {canPay && (
+              <ExpressPayPal
+                onReview={() => {
+                  chooseMethod("paypal");
+                  agreement.current?.focus();
+                }}
+              />
+            )}
             <div className="checkout-payment">
               <section className="checkout-card" aria-labelledby="checkout-payment-title">
                 <div className="checkout-card-heading">
-                  <span className="checkout-step">1</span>
                   <h2 id="checkout-payment-title">
                     <Localized k="billing.interface.your_payment_96cd398" />
                   </h2>
@@ -284,18 +301,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     )}
                   </fieldset>
                 )}
-                <h3>
-                  <Localized k="billing.interface.payment_method_b948ac0" />
-                </h3>
-                <PaymentMethods
-                  value={method}
-                  cardStatus={cards.status}
-                  retry={() => setAttempt((value) => value + 1)}
-                  onChange={(value) => {
-                    setMethod(value);
-                    setError(null);
-                  }}
-                />
+                <PaymentMethods value={method} cardStatus={cards.status} retry={() => setAttempt((value) => value + 1)} onChange={chooseMethod} />
                 <p className="checkout-security">
                   <LockKeyhole size={15} aria-hidden="true" />
                   <span>
@@ -303,7 +309,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                   </span>
                 </p>
                 <label className="checkout-agreement">
-                  <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} />
+                  <input ref={agreement} type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} />
                   <span>
                     <Localized
                       k="billing.interface.i_agree_to_the_and_have_read_the_0182142"
@@ -352,11 +358,6 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     <Localized k="billing.interface.agree_to_the_terms_to_continue_with_paypal_b54866d" />
                   </p>
                 )}
-                {!accepted && (
-                  <p className="checkout-hint">
-                    <Localized k="billing.interface.agree_to_the_terms_to_continue_with_paypal_b54866d" />
-                  </p>
-                )}
                 {closed && (
                   <div className="banner info" role="status">
                     <Localized k="billing.interface.this_checkout_has_ended_start_a_new_checkout_if_you_want_to_purch_3d5a0ac" />
@@ -367,7 +368,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     <Localized k="billing.interface.start_a_new_checkout_0b5e45e" />
                   </button>
                 )}
-                {config && accepted && online && (price || purchase) && !closed && (gift || config.subscriptions) && (
+                {canPay && accepted && (
                   <CheckoutPaymentButton
                     key={attempt}
                     config={config}
@@ -416,7 +417,6 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
             </div>
             <aside className="checkout-card checkout-summary" aria-labelledby="checkout-summary-title">
               <div className="checkout-card-heading">
-                <span className="checkout-step">2</span>
                 <h2 id="checkout-summary-title">
                   <Localized k="billing.interface.order_summary_6c200a8" />
                 </h2>
@@ -424,17 +424,19 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
               <div className="checkout-plan-art">
                 <span>{gift ? <Gift size={30} aria-hidden="true" /> : <Crown size={30} aria-hidden="true" />}</span>
                 <Sparkles size={18} className="checkout-art-spark" aria-hidden="true" />
-                <span className="checkout-kicker">
-                  <Localized k="billing.interface.meldiq_plus_5c68974" />
-                </span>
-                <h3>
-                  <Localized k="billing.interface.plus_0800d83" slots={[gift ? uiText("billing.interface.gift_14f4725") : ""]} />
-                </h3>
-                <p>
-                  {gift
-                    ? uiText("billing.interface.native_count_648eb6957", { value0: formatUnit(draft.months, "month"), value1: "" })
-                    : uiText("billing.interface.more_of_what_brings_you_together_9337df7")}
-                </p>
+                <div className="checkout-plan-detail">
+                  <span className="checkout-kicker">
+                    <Localized k="billing.interface.meldiq_plus_5c68974" />
+                  </span>
+                  <h3>
+                    <Localized k="billing.interface.plus_0800d83" slots={[gift ? uiText("billing.interface.gift_14f4725") : ""]} />
+                  </h3>
+                  <p>
+                    {gift
+                      ? uiText("billing.interface.native_count_648eb6957", { value0: formatUnit(draft.months, "month"), value1: "" })
+                      : uiText("billing.interface.more_of_what_brings_you_together_9337df7")}
+                  </p>
+                </div>
               </div>
               <dl className="checkout-breakdown">
                 <div>

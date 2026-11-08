@@ -4,6 +4,8 @@
   "checkout": "Finalizar compra",
   "monthly": "Mensal",
   "yearly": "Anual",
+  "expressCheckout": "Pagamento expresso",
+  "reviewWithPayPal": "Reveja a encomenda e pague com PayPal",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "O checkout seguro não pôde carregar. Tente novamente.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "Este checkout não pôde ser retomado. Revise o status no Faturamento.",

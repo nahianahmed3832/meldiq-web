@@ -4,6 +4,8 @@
   "checkout": "Finalizacja zakupu",
   "monthly": "Miesięcznie",
   "yearly": "Rocznie",
+  "expressCheckout": "Szybkie zakupy",
+  "reviewWithPayPal": "Sprawdź zamówienie i zapłać przez PayPal",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "Nie można załadować bezpiecznej kasy. Spróbuj jeszcze raz.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "Nie można było wznowić tej transakcji. Sprawdź jego status w sekcji Rozliczenia.",

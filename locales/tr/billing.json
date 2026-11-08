@@ -4,6 +4,8 @@
   "checkout": "Ödeme",
   "monthly": "Aylık",
   "yearly": "Yıllık",
+  "expressCheckout": "Hızlı ödeme",
+  "reviewWithPayPal": "Siparişi inceleyin ve PayPal ile ödeyin",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "Güvenli ödeme yüklenemedi. Tekrar deneyelim.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "Bu kontrol devam edemedi. Bilgilendirme''de durumunu inceleyin.",

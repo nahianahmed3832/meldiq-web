@@ -4,6 +4,8 @@
   "checkout": "চেকআউট",
   "monthly": "মাসিক",
   "yearly": "বার্ষিক",
+  "expressCheckout": "দ্রুত চেকআউট",
+  "reviewWithPayPal": "অর্ডার পর্যালোচনা করে PayPal দিয়ে পেমেন্ট করুন",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "নিরাপদ চেকআউট লোড করা যায়নি। পুনরায় চেষ্টা করুন।",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "এই চেকআউট পুনরায় আরম্ভ করা যায়নি। বিলিং-এ এর অবস্থা পরীক্ষা করুন।",

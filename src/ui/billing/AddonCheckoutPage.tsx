@@ -8,13 +8,14 @@ import { ArrowLeft, Bot, CheckCircle2, LockKeyhole, ShieldCheck, Sparkles } from
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
-import { type PayPalConfig, type PayPalPurchase, zPayPalCheckout, zPayPalConfig } from "../../api/paypalSchemas";
+import { type PayPalConfig, type PayPalPurchase, zPayPalCheckout } from "../../api/paypalSchemas";
 import { BrandMark } from "../components/BrandMark";
 import { money } from "../mojo/mojoFormat";
 import { type CheckoutDraft, readCheckout, selectCheckout, writeCheckout } from "./checkoutDraft";
 import { usePayPalCardSdk } from "./PayPalCardButton";
 import { CheckoutPaymentButton } from "./CheckoutPaymentButton";
-import { PaymentMethods, type PaymentMethod } from "./PaymentMethods";
+import { ExpressPayPal, PaymentMethods, type PaymentMethod } from "./PaymentMethods";
+import { fetchPayPalCheckoutConfig } from "./checkoutConfig";
 type Addon = Extract<
   CheckoutDraft,
   {
@@ -33,10 +34,15 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   const [purchase, setPurchase] = useState<PayPalPurchase | null>(null);
   const [accepted, setAccepted] = useState(false);
   const [method, setMethod] = useState<PaymentMethod>("paypal");
+  const agreement = useRef<HTMLInputElement>(null);
   const [checking, setChecking] = useState(false);
   const [awaiting, setAwaiting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const chooseMethod = (value: PaymentMethod) => {
+    setMethod(value);
+    setError(null);
+  };
   const spark = draft.product === "spark";
   const cards = usePayPalCardSdk(config, !spark, attempt);
   const quantity = spark ? draft.quantity : 1;
@@ -71,10 +77,13 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   );
   useEffect(() => {
     let active = true;
-    void engine.api
-      .json("GET", "/v2/billing/paypal/config", zPayPalConfig)
+    void fetchPayPalCheckoutConfig(engine.api)
       .then((value) => active && setConfig(value))
-      .catch(() => active && setError(uiText("billing.interface.secure_checkout_could_not_load_try_again_9832920")));
+      .catch(() => {
+        if (!active) return;
+        setConfig(null);
+        setError(uiText("billing.interface.secure_checkout_could_not_load_try_again_9832920"));
+      });
     return () => {
       active = false;
     };
@@ -148,6 +157,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   };
   const closed = purchase && !purchase.confirmed && ["expired", "failed", "refunded", "canceled", "incomplete_expired"].includes(purchase.status);
   const enabled = config && (spark ? config.sparks : config.botsPlus) && price?.currency === "USD";
+  const canPay = enabled && online && !closed;
   const back = () => {
     if (draft.product === "bots_plus") {
       setPrefs({ orgId: draft.orgId });
@@ -211,10 +221,17 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
             </p>
           </div>
           <div className="checkout-layout">
+            {canPay && (
+              <ExpressPayPal
+                onReview={() => {
+                  chooseMethod("paypal");
+                  agreement.current?.focus();
+                }}
+              />
+            )}
             <div className="checkout-payment">
               <section className="checkout-card" aria-labelledby="addon-payment-title">
                 <div className="checkout-card-heading">
-                  <span className="checkout-step">1</span>
                   <h2 id="addon-payment-title">
                     <Localized k="billing.interface.your_payment_96cd398" />
                   </h2>
@@ -242,18 +259,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                     </p>
                   </div>
                 </div>
-                <h3>
-                  <Localized k="billing.interface.payment_method_b948ac0" />
-                </h3>
-                <PaymentMethods
-                  value={method}
-                  cardStatus={cards.status}
-                  retry={() => setAttempt((value) => value + 1)}
-                  onChange={(value) => {
-                    setMethod(value);
-                    setError(null);
-                  }}
-                />
+                <PaymentMethods value={method} cardStatus={cards.status} retry={() => setAttempt((value) => value + 1)} onChange={chooseMethod} />
                 <p className="checkout-security">
                   <LockKeyhole size={15} aria-hidden="true" />
                   <span>
@@ -261,7 +267,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                   </span>
                 </p>
                 <label className="checkout-agreement">
-                  <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
+                  <input ref={agreement} type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
                   <span>
                     <Localized
                       k="billing.interface.and_agree_to_the_and_and_have_read_the_ecba6c2"
@@ -307,7 +313,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                     <Localized k="billing.interface.agree_to_the_terms_to_continue_to_payment_4eaafb7" />
                   </p>
                 )}
-                {enabled && accepted && online && !closed && (
+                {canPay && accepted && (
                   <CheckoutPaymentButton
                     key={attempt}
                     config={config}
@@ -373,16 +379,17 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
             </div>
             <aside className="checkout-card checkout-summary" aria-labelledby="addon-summary-title">
               <div className="checkout-card-heading">
-                <span className="checkout-step">2</span>
                 <h2 id="addon-summary-title">
                   <Localized k="billing.interface.order_summary_6c200a8" />
                 </h2>
               </div>
               <div className="checkout-plan-art">
                 <span>{spark ? <Sparkles size={30} aria-hidden="true" /> : <Bot size={30} aria-hidden="true" />}</span>
-                <span className="checkout-kicker">{spark ? uiText("billing.interface.meldiq_spark_ec1690b") : uiText("billing.interface.community_bots_aaae633")}</span>
-                <h3>{spark ? countLabel(quantity, "sparks") : uiText("billing.interface.bots_475bc2f")}</h3>
-                <p>{spark ? uiText("billing.interface.more_for_the_communities_you_love_1cec053") : community}</p>
+                <div className="checkout-plan-detail">
+                  <span className="checkout-kicker">{spark ? uiText("billing.interface.meldiq_spark_ec1690b") : uiText("billing.interface.community_bots_aaae633")}</span>
+                  <h3>{spark ? countLabel(quantity, "sparks") : uiText("billing.interface.bots_475bc2f")}</h3>
+                  <p>{spark ? uiText("billing.interface.more_for_the_communities_you_love_1cec053") : community}</p>
+                </div>
               </div>
               <dl className="checkout-breakdown">
                 <div>

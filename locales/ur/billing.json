@@ -4,6 +4,8 @@
   "checkout": "چیک آؤٹ",
   "monthly": "ماہانہ",
   "yearly": "سالانہ",
+  "expressCheckout": "فوری چیک آؤٹ",
+  "reviewWithPayPal": "آرڈر کا جائزہ لیں اور PayPal سے ادائیگی کریں",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "محفوظ چک آؤٹ لوڈ نہیں کیا جاسکتا. دوبارہ کوشش کرو.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "یہ چیک آئوٽ دوبارہ شروع نہیں کیا جاسکتا. بلنگ میں اس کی حیثیت کو دیکھیں.",

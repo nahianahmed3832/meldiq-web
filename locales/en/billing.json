@@ -4,6 +4,8 @@
   "checkout": "Checkout",
   "monthly": "Monthly",
   "yearly": "Yearly",
+  "expressCheckout": "Express checkout",
+  "reviewWithPayPal": "Review and pay with PayPal",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "Secure checkout could not load. Try again.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "This checkout could not be resumed. Review its status in Billing.",

@@ -4,6 +4,8 @@
   "checkout": "Оформление покупки",
   "monthly": "Ежемесячно",
   "yearly": "Ежегодно",
+  "expressCheckout": "Быстрая оплата",
+  "reviewWithPayPal": "Проверить заказ и оплатить через PayPal",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "Безопасный вывод не удалось загрузить. Попробуй еще раз.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "Этот вывод не может быть возобновлен. Просмотрите его состояние в разделе «Финансовые расчеты».",

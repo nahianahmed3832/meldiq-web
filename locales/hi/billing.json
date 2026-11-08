@@ -4,6 +4,8 @@
   "checkout": "चेकआउट",
   "monthly": "मासिक",
   "yearly": "वार्षिक",
+  "expressCheckout": "तेज़ चेकआउट",
+  "reviewWithPayPal": "ऑर्डर की समीक्षा करें और PayPal से भुगतान करें",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "सुरक्षित चेकआउट लोड नहीं कर सका. फिर कोशिश करें.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "यह चेकआउट जारी नहीं रखा जा सका.  इसकी स्थिति को बिल में जाँचें।",

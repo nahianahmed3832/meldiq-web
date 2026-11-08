@@ -4,6 +4,8 @@
   "checkout": "إتمام الشراء",
   "monthly": "شهريًا",
   "yearly": "سنويًا",
+  "expressCheckout": "الدفع السريع",
+  "reviewWithPayPal": "راجع طلبك وادفع عبر PayPal",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "لم يتم تحميل الدفع الآمن. حاول مرة أخرى",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "ولم يتسن استئناف عملية الدفع هذه. استعراض حالته في الفواتير.",

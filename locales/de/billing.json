@@ -4,6 +4,8 @@
   "checkout": "Zur Kasse",
   "monthly": "Monatlich",
   "yearly": "Jährlich",
+  "expressCheckout": "Schnell bezahlen",
+  "reviewWithPayPal": "Bestellung prüfen und mit PayPal bezahlen",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "Die Seite konnte nicht geladen werden. Versuchen Sie es noch einmal.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "Dieser Checkout konnte nicht fortgesetzt werden. Überprüfen Sie den Status in Billing.",

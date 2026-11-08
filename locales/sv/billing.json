@@ -4,6 +4,8 @@
   "checkout": "Till kassan",
   "monthly": "Månadsvis",
   "yearly": "Årsvis",
+  "expressCheckout": "Snabbkassa",
+  "reviewWithPayPal": "Granska beställningen och betala med PayPal",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "Det gick inte att läsa in Secure Checkout. Försök igen.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "Denna checkout kunde inte återupptas. Granska dess status i Fakturering.",

@@ -88,6 +88,12 @@ test("branded review, official payment control, backend-only confirmation and re
   await expect(page.getByText("Sandbox", { exact: true })).toHaveCount(0);
   await expect(page.getByText("No real money is taken.", { exact: false })).toHaveCount(0);
   await expect(page.locator("paypal-button")).toHaveCount(0);
+  await page.getByRole("radio", { name: /Debit or credit card/ }).check();
+  await page.getByRole("button", { name: "Review and pay with PayPal" }).click();
+  await expect(page.getByRole("radio", { name: /^PayPal/ })).toBeChecked();
+  await expect(page.getByRole("checkbox")).toBeFocused();
+  await expect(page.getByRole("checkbox")).not.toBeChecked();
+  await expect(page.locator("paypal-button")).toHaveCount(0);
   await page.getByRole("checkbox").check();
   await expect(page.locator("paypal-button")).toBeVisible();
   await page.screenshot({ path: info.outputPath("checkout-review.png"), fullPage: true });
@@ -100,6 +106,33 @@ test("branded review, official payment control, backend-only confirmation and re
   await page.getByRole("button", { name: "Check purchase status" }).click();
   await expect(page.getByRole("heading", { name: "Welcome to Plus." })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("gift checkout reviews the recipient and starts a one-time PayPal purchase", async ({ page }) => {
+  const { purchase, userId } = await checkout(page);
+  const gift = { product: "gift", recipient: { kind: "email", email: "recipient@example.test" }, months: 1, note: "" };
+  await page.evaluate(
+    ({ userId, draft }) => {
+      sessionStorage.setItem(`meldiq.paypal.sandbox.${userId}`, JSON.stringify({ draft, requestKey: crypto.randomUUID(), purchaseId: null, completed: false }));
+    },
+    { userId, draft: gift },
+  );
+  await page.route("**/v2/billing/paypal/checkouts", async (route) => {
+    expect(route.request().postDataJSON()).toMatchObject(gift);
+    await route.fulfill({ json: { ...purchase, product: "gift", providerRef: "GIFT-ORDER", interval: "one_time" } });
+  });
+  await page.route("**/v2/billing/paypal/checkouts/chk_test/confirm", (route) =>
+    route.fulfill({ json: { ...purchase, product: "gift", providerRef: "GIFT-ORDER", interval: "one_time", confirmed: true } }),
+  );
+  await page.reload();
+  await expect(page.getByRole("complementary", { name: "Order summary" })).toContainText(gift.recipient.email);
+  await page.getByRole("button", { name: "Review and pay with PayPal" }).click();
+  await expect(page.getByRole("checkbox")).toBeFocused();
+  await expect(page.locator("paypal-button")).toHaveCount(0);
+  await page.getByRole("checkbox").check();
+  await expect(page.locator("paypal-button")).toHaveAttribute("type", "pay");
+  await page.locator("paypal-button").click();
+  await expect(page.getByRole("heading", { name: "A little more Meldiq Plus, gifted." })).toBeVisible();
 });
 
 test("PayPal cancellation and interrupted verification keep the purchase pending", async ({ page }) => {
@@ -259,6 +292,9 @@ for (const product of ["spark", "bots_plus"] as const) {
     const p = await addonCheckout(page, product);
     await expect(page.locator(".meldiq-checkout")).toContainText(product === "spark" ? "1.98" : "3.99");
     await expect(page.getByText(/No Meldiq Plus subscription is required|purchased separately from Meldiq Plus/).first()).toBeVisible();
+    await page.getByRole("button", { name: "Review and pay with PayPal" }).click();
+    await expect(page.getByRole("checkbox")).toBeFocused();
+    await expect(page.locator("paypal-button")).toHaveCount(0);
     await page.getByRole("checkbox").check();
     await expect(page.locator("paypal-button")).toBeVisible();
     await expect(page.locator("paypal-button")).toHaveAttribute("type", product === "spark" ? "pay" : "subscribe");

@@ -4,6 +4,8 @@
   "checkout": "Thanh toán",
   "monthly": "Hằng tháng",
   "yearly": "Hằng năm",
+  "expressCheckout": "Thanh toán nhanh",
+  "reviewWithPayPal": "Kiểm tra đơn hàng và thanh toán bằng PayPal",
   "interface": {
     "secure_checkout_could_not_load_try_again_9832920": "Không thể tải phần kiểm tra an toàn. Thử lại đi.",
     "this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668": "Không thể tiếp tục việc kiểm tra này. Kiểm tra tình trạng của nó trong Billing.",
