@@ -44,6 +44,7 @@
     "MELDIQ SPARK",
     "PLUS",
     "Plus",
+    "Supercharge",
     "MongoDB",
     "JavaScript",
     "GriipBuddy",
@@ -1967,6 +1968,11 @@
       "file": "src/ui/lobby/cardsPeople.tsx",
       "text": "`${count.toLocaleString(interfaceLocale())} XP`",
       "reason": "XP is the fixed experience-point unit; the count uses the interface locale."
+    },
+    {
+      "file": "src/ui/workspace/ThemePage.tsx",
+      "text": "#rrggbb",
+      "reason": "CSS hexadecimal color notation with a localized accessible label."
     }
   ],
   "identicalReasons": {

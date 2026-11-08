@@ -119,6 +119,10 @@
     },
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/partner-eligibility"
+    },
+    {
+      "method": "GET",
       "path": "/v1/orgs/{orgId}/partner-application"
     },
     {
@@ -132,6 +136,18 @@
     {
       "method": "PUT",
       "path": "/admin/v1/partner-applications/{orgId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ping-roles"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/ping-roles"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/ping-roles/me"
     },
     {
       "method": "GET",
@@ -516,6 +532,10 @@
     {
       "method": "GET",
       "path": "/v1/server-info"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/site/presence"
     },
     {
       "method": "GET",

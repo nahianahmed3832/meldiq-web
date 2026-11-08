@@ -124,7 +124,7 @@ export const zBadges = z
   .array(z.string())
   .nullish()
   .catch(null)
-  .transform((v) => (v ?? []).filter((b): b is "bug-hunter" => b === "bug-hunter"));
+  .transform((v) => (v ?? []).filter((b): b is "bug-hunter" | "partner" => b === "bug-hunter" || b === "partner"));
 
 /** API 0.64.0: pins on a profile (server docs/PROFILE_PINS.md), Meldiq's for milestones, then communities' own. */
 export const zProfilePins = z

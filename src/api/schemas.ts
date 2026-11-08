@@ -195,6 +195,8 @@ const communityParityOrgFields = {
   links: z.array(zCommunityLink).max(10).optional().catch(undefined),
   inviteSlug: z.string().nullish().catch(undefined),
   onboardingRequired: z.boolean().optional().catch(undefined),
+  voiceClips: z.boolean().optional().catch(undefined),
+  partner: z.boolean().optional().catch(undefined),
   onboardingDone: z.boolean().optional().catch(undefined),
   startChannelId: z.string().nullish().catch(undefined),
   mustFinishOnboarding: z.boolean().optional().catch(undefined),

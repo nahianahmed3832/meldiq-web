@@ -39,6 +39,7 @@ import { Menu, useMenu } from "../components/Overlay";
 import { screenShareSupport, INVITE_EVENT } from "./callShared";
 import { useNow } from "./useNow";
 import { callStatus, SECURITY_LABEL } from "./callText";
+import { VoiceClipButton } from "./VoiceClipControls";
 import { HandButton, PeopleButton, RoomPeople, roomRows } from "./RoomControls";
 /**
  * The call screen: who's in it, where it stands, what's proven about its encryption, and the controls. On a desktop
@@ -326,6 +327,7 @@ function Controls({
           {call.screenSharing ? <MonitorOff size={22} /> : <MonitorUp size={22} />}
         </button>
         {call.voiceRoom && <HandButton call={call} />}
+        <VoiceClipButton call={call} />
         {people && <PeopleButton open={people.open} onToggle={people.toggle} count={roomRows(call).length} />}
         <DeviceMenu disabled={!media} />
         <button className="call-btn end" onClick={() => engine.calls.hangup()} aria-label={l10n("calls.hangUp")} disabled={!live}>

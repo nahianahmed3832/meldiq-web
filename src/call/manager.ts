@@ -714,6 +714,16 @@ export class CallManager {
       this.patch({ notice: uiText("calls.interface.a_room_manager_lowered_your_hand_a080bfe") });
     }
   }
+  async setClipConsent(allowed: boolean): Promise<void> {
+    if (allowed && (!this.state.voiceRoom || this.state.phase !== "connected")) return;
+    await this.session?.setClipConsent?.(allowed);
+  }
+
+  clipSources() {
+    if (!this.state.voiceRoom || this.state.phase !== "connected") return { revision: 0, tracks: [] };
+    return this.session?.clipSources?.() ?? { revision: 0, tracks: [] };
+  }
+
   attachVideo(identity: string, el: HTMLVideoElement): () => void {
     return this.session?.attachVideo(identity, el) ?? (() => undefined);
   }

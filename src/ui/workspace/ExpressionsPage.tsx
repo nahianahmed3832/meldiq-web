@@ -5,7 +5,7 @@ import { useT as useLocalization } from "../../i18n";
 import { Pencil, Trash2 } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { EXPRESSION_NAME, type Expression, expressions, removeExpression, renameExpression, suggestName, uploadExpression } from "../../sync/expressions";
 import { prepareExpression, type PreparedExpression } from "../../sync/prepareExpression";
 import { CustomEmojiImage } from "../community/CustomEmoji";
@@ -23,6 +23,7 @@ export function ExpressionsPage({ detail, category }: { detail: OrgAdminDetail; 
   const engine = useEngine();
   const orgId = detail.org.id;
   const [rev, setRev] = useState(0);
+  const largeStickers = useOrbit((state) => state.server?.features.includes("stickers-512") ?? false);
   const list = useLoad(() => expressions(engine, orgId, true), [engine, orgId, rev]);
   const canManage = detail.permissions.isOwner || detail.permissions.effective.includes("expressions.manage");
   const [uploading, setUploading] = useState<{
@@ -43,7 +44,7 @@ export function ExpressionsPage({ detail, category }: { detail: OrgAdminDetail; 
   const group = (
     <>
       <p className="muted">
-        {k === "emoji" ? uiText("workspace.interface.members_use_them_in_this_community_s_channels_in_messages_and_as_f18720c") : uiText("workspace.interface.sent_on_their_own_shown_large_3a50ed7")}
+        {k === "emoji" ? uiText("workspace.interface.members_use_them_in_this_community_s_channels_in_messages_and_as_f18720c") : uiText(largeStickers ? "workspace.reference.stickerHelp" : "workspace.interface.sent_on_their_own_shown_large_3a50ed7")}
       </p>
       <div className="ws-expression-actions">
         {upload}
@@ -211,6 +212,7 @@ export function UploadDialog({
   onClose: () => void;
 }) {
   useLocaleRender();
+  const largeStickers = useOrbit((state) => state.server?.features.includes("stickers-512") ?? false);
   const [prepared, setPrepared] = useState<
     | (PreparedExpression & {
         url: string;
@@ -221,7 +223,7 @@ export function UploadDialog({
   useEffect(() => {
     let live = true;
     let url: string | null = null;
-    void prepareExpression(file, kind)
+    void prepareExpression(file, kind, largeStickers)
       .then((p) => {
         if (!live) return;
         url = URL.createObjectURL(new Blob([p.bytes], { type: p.mime }));
@@ -234,7 +236,7 @@ export function UploadDialog({
       live = false;
       if (url) URL.revokeObjectURL(url);
     };
-  }, [file, kind]);
+  }, [file, kind, largeStickers]);
   return (
     <NameDialog
       {...props}
@@ -250,7 +252,7 @@ export function UploadDialog({
             />
           )}
           <p className="hint">
-            <Localized k="workspace.interface.256_kb_maximum_8751644" slots={[file.name, bytes(prepared?.bytes.length ?? file.size)]} />
+            <Localized k={kind === "sticker" && largeStickers ? "workspace.reference.stickerMax" : "workspace.interface.256_kb_maximum_8751644"} slots={[file.name, bytes(prepared?.bytes.length ?? file.size)]} />
           </p>
           {prepared && (
             <p className="hint">

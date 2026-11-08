@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useEngine, useOrbit } from "../../application/orbit";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useT } from "../../i18n";
 import offers from "../../sync/discovery/communityOffers.json";
@@ -15,7 +16,12 @@ const amount = (quantity: number) => price(quantity * offer.unitCents, offers.cu
 export function CommunitySparksPage({ detail }: { detail: OrgAdminDetail }) {
   const t = useT();
   const { id, name, photoRev } = detail.org;
-  const [quantity, setQuantity] = useState(offer.levels[0]);
+  const engine = useEngine();
+  const active = useOrbit((s) => s.mojo.orgs[id]?.active ?? 0);
+  useEffect(() => { void engine.mojo.loadOrg(id); }, [engine, id]);
+  const next = offer.levels.findIndex((count) => count > active);
+  const [selection, setQuantity] = useState<number | null>(null);
+  const quantity = selection ?? (next < 0 ? 1 : offer.levels[next]! - active);
   const [manage, setManage] = useState(false);
   const levelLabel = (level: number) => t("billing.interface.level_value0_6095a3d", { value0: level });
   return (
@@ -26,12 +32,13 @@ export function CommunitySparksPage({ detail }: { detail: OrgAdminDetail }) {
         <p>{t("workspace.reference.superchargeHelp")}</p>
         <ol className="supercharge-track">
           {offer.levels.map((level, index) => (
-            <li key={level}>
+            <li key={level} className={active >= level ? "reached" : undefined}>
               <Icon name="settings.spark" size={24} />
               {levelLabel(index + 1)}
             </li>
           ))}
         </ol>
+        <p><strong>{t("workspace.reference.activeContributions", { count: active })}</strong>{next >= 0 && <> · {t("billing.interface.value0_more_for_level_value1_3a01894", { value0: offer.levels[next]! - active, value1: next + 1 })}</>}</p>
       </header>
       <section className="supercharge-order" aria-labelledby="supercharge-level">
         <div className="supercharge-summary">
@@ -39,19 +46,24 @@ export function CommunitySparksPage({ detail }: { detail: OrgAdminDetail }) {
           <span>{t("workspace.reference.perSpark", { amount: amount(1) })}</span>
         </div>
         <div className="supercharge-options">
-          {offer.levels.map((count, index) => (
-            <button key={count} type="button" className="supercharge-option" aria-pressed={quantity === count} onClick={() => setQuantity(count)}>
-              <Icon name="settings.spark" size={24} />
-              <strong>{levelLabel(index + 1)}</strong>
-              <small>{t("workspace.reference.units", { count })}</small>
-              <strong>{t("workspace.reference.monthlyShort", { amount: amount(count) })}</strong>
-            </button>
-          ))}
+          {offer.levels.map((count, index) => {
+            const needed = Math.max(0, count - active);
+            return (
+              <button key={count} type="button" className="supercharge-option" aria-pressed={quantity === needed} disabled={!needed} onClick={() => setQuantity(needed)}>
+                <Icon name="settings.spark" size={24} />
+                <strong>{levelLabel(index + 1)}</strong>
+                {needed > 0 ? <>
+                  <small>{t("workspace.reference.units", { count: needed })}</small>
+                  <strong>{t("workspace.reference.monthlyShort", { amount: amount(needed) })}</strong>
+                </> : <small>{t("billing.interface.unlocked_531c7b2")}</small>}
+              </button>
+            );
+          })}
         </div>
         <div className="supercharge-summary supercharge-quantity">
           <span>{t("workspace.reference.quantity")}</span>
           <div className="supercharge-stepper">
-            <button className="btn btn-secondary" type="button" disabled={quantity <= 1} aria-label={t("workspace.reference.decrease")} onClick={() => setQuantity((n) => Math.max(1, n - 1))}>
+            <button className="btn btn-secondary" type="button" disabled={quantity <= 1} aria-label={t("workspace.reference.decrease")} onClick={() => setQuantity(Math.max(1, quantity - 1))}>
               −
             </button>
             <output aria-live="polite">{quantity}</output>
@@ -60,7 +72,7 @@ export function CommunitySparksPage({ detail }: { detail: OrgAdminDetail }) {
               type="button"
               disabled={quantity >= maxQuantity}
               aria-label={t("workspace.reference.increase")}
-              onClick={() => setQuantity((n) => Math.min(maxQuantity, n + 1))}
+              onClick={() => setQuantity(Math.min(maxQuantity, quantity + 1))}
             >
               +
             </button>

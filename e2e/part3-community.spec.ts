@@ -169,6 +169,13 @@ test("the private partner application validates its checklist and retains its dr
   await link(page, owner);
   await page.goto("/workspace/partner");
   const card = page.getByRole("region", { name: "Partner application", exact: true });
+  if ((await owner.req("GET", "/v1/server-info")).features.includes("partner-eligibility")) {
+    const requirements = page.getByRole("region", { name: "Requirements", exact: true });
+    await expect(requirements.getByRole("listitem")).toHaveCount(7);
+    await expect(requirements).toContainText("Meet every requirement to apply for Meldiq Partner.");
+    await expect(card).toHaveCount(0);
+    return;
+  }
   await expect(card).toContainText("approval grants no badge");
   const statement = card.getByRole("textbox", { name: "Tell us about your community", exact: true });
   await statement.fill("A private application with <b>literal markup</b>");

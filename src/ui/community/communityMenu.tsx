@@ -28,6 +28,7 @@ import { setPrefs, usePrefs } from "../../application/prefs";
 import { requestNavigation } from "../../application/navigationGuard";
 import { navigate, type WorkspacePage } from "../../application/router";
 import { MUTE_CHOICES } from "../../sync/communityRules";
+import { PING_ROLES_FEATURE } from "../../sync/pingRoles";
 import { OFFICIAL_BOTS_FEATURE } from "../../sync/officialBots";
 import { communityMutedUntil, MUTE_FOREVER } from "../../sync/navPrefs";
 import type { MenuEntry } from "../components/Overlay";
@@ -199,6 +200,11 @@ export function useCommunityMenu(
       icon: <RotateCcw size={16} />,
       onSelect: () => setDialog("onboarding"),
     });
+  if (features.includes(PING_ROLES_FEATURE)) entries.push({
+    label: uiText("workspace.reference.pingRoles"),
+    icon: <Icon name="settings.notifications" size={18} />,
+    onSelect: () => openSettings("ping-roles"),
+  });
   if (preferences) entries.push(muteEntry(muted, change));
   entries.push("separator", {
     label: l10n("notifications.markRead"),

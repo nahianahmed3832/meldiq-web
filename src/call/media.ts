@@ -1,3 +1,4 @@
+import type { ClipSources } from "./clipBuffer";
 import type { ShareQuality } from "./shareQuality";
 import type { CallShareView } from "./shares";
 import type { CallParticipantView, DeviceIssues, DeviceKind, MediaDeviceChoice, MediaFactory, MediaGrant, MediaSession, OutputOptions, PrepareOptions, ShareOptions } from "./types";
@@ -80,6 +81,14 @@ class DeferredSession implements MediaSession {
 
   async useDevice(kind: DeviceKind, deviceId: string): Promise<void> {
     return (await this.inner).useDevice(kind, deviceId);
+  }
+
+  async setClipConsent(allowed: boolean): Promise<void> {
+    await (await this.inner).setClipConsent?.(allowed);
+  }
+
+  clipSources(): ClipSources {
+    return this.ready?.clipSources?.() ?? { revision: 0, tracks: [] };
   }
 
   async startAudio(): Promise<void> {

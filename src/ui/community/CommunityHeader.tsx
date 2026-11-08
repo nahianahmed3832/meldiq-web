@@ -1,3 +1,4 @@
+import { Icon } from "../icons/Icon";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -57,6 +58,7 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
         }
       >
         <strong className="ellipsis grow">{org?.name ?? "Meldiq"}</strong>
+        {org?.partner && <Icon name="settings.membership" size={16} label={uiText("workspace.reference.partnerBadge")} />}
         <ChevronDown size={18} className="faint" aria-hidden="true" />
       </button>
       {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={org?.name ?? l10n("organization.community")} onClose={menu.close} entries={entries} />}

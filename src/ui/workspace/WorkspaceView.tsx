@@ -29,6 +29,7 @@ import { InvitationsPage } from "./InvitationsPage";
 import { BotsPage } from "./BotsPage";
 import { PartnerApplicationCard } from "./PartnerApplicationCard";
 import { OverviewPage } from "./OverviewPage";
+import { PingRolesPage } from "./PingRolesPage";
 import { PeoplePage } from "./PeoplePage";
 import { useLoad } from "./useLoad";
 import { RolesPage } from "./RolesPage";
@@ -135,6 +136,8 @@ export function WorkspaceView({ orgId, page: requestedPage, onDialog }: { orgId:
               <div className="ws-page workspace-bots-page">
                 <BotsPage detail={d} />
               </div>
+            ) : page === "ping-roles" ? (
+              <PingRolesPage orgId={orgId} />
             ) : page === "partner" ? (
               <div className="ws-page">
                 <PartnerApplicationCard orgId={orgId} />

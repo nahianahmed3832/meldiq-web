@@ -30,6 +30,7 @@ import { ReportDialog } from "../chat/ReportDialog";
 import { DiscoveryCard } from "./discovery/DiscoveryCard";
 import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
 import { usePhoto } from "../components/photos";
+import { VoiceClipsSetting } from "./VoiceClipsSetting";
 import { BannerCard } from "./BannerCard";
 import { RulesPage } from "./RulesPage";
 import { TicketsSection } from "../community/tickets/TicketsCard";
@@ -96,11 +97,12 @@ export function OverviewPage({ detail, onChanged }: OverviewPageProps) {
         {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
         {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}
         {features.includes("communities") && !features.includes("community-channels") && <KindCard detail={detail} onChanged={onChanged} />}
-        {canEditProfile && (features.includes("rules-channel") || features.includes("community-tickets")) && (
+        {canEditProfile && (features.includes("rules-channel") || features.includes("community-tickets") || features.includes("community-voice-clips")) && (
           <section className="ws-overview-features">
             <h2>{uiText("workspace.reference.featureGroup")}</h2>
             {features.includes("rules-channel") && <RulesPage detail={detail} />}
             <TicketsSection detail={detail} />
+            {features.includes("community-voice-clips") && <VoiceClipsSetting detail={detail} onChanged={onChanged} />}
           </section>
         )}
         <TransferOwnership detail={detail} onChanged={onChanged} />

@@ -38,6 +38,12 @@ export function BoostCards({ orgId, view, buyer }: BoostCardsProps) {
               )}
               <span className={`discover-label discover-label-${t.tier === "mega" ? "gold" : "plain"}`}>{text.label}</span>
               <strong className="promote-tier-name">{text.name}</strong>
+              {t.estimatedRank !== null && (
+                <>
+                  <strong className="promote-estimate">#{t.estimatedRank}</strong>
+                  <small className="muted">{uiText("workspace.reference.estimatedRank")}</small>
+                </>
+              )}
               <span className="promote-price">
                 {price(t.weeklyCents, view.currency)}
                 <small>

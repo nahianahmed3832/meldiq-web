@@ -16,6 +16,10 @@ const TOKEN = /:([a-z0-9_]{2,32}):/g;
 const REACTION = /^:[a-z0-9_]{2,32}:$/;
 export const MAX_REFS = 20;
 export const EXPRESSION_MAX_BYTES = 256 * 1024;
+export const STICKER_MAX_BYTES = 512 * 1024;
+export function expressionByteLimit(kind: "emoji" | "sticker", largeStickers: boolean): number {
+  return kind === "sticker" && largeStickers ? STICKER_MAX_BYTES : EXPRESSION_MAX_BYTES;
+}
 /** Static pictures that need conversion are shrunk to a PNG this wide. Animated originals are preserved. */
 export const SHRINK_TO = { emoji: 128, sticker: 320 } as const;
 

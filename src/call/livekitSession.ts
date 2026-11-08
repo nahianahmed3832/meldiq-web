@@ -1,3 +1,4 @@
+import type { ClipSources } from "./clipBuffer";
 import { text as uiText } from "../i18n";
 import { screenShareSupport, ScreenShareUnavailable } from "./screenShareSupport";
 import { DEV } from "../application/env";
@@ -46,6 +47,8 @@ setLogLevel(LogLevel.warn);
 /** Camera capture and sending, as the Android app does (CallMediaPolicy: 720p, simulcast, VP8). */
 const CAMERA = { resolution: VideoPresets.h720.resolution };
 const FLOW_SAMPLE_MS = 2000;
+const CLIP_TOPIC = "meldiq.clip-consent.v1";
+const CLIP_LEASE_MS = 5_000;
 const SCREEN_SOURCES: readonly Track.Source[] = [Track.Source.ScreenShare, Track.Source.ScreenShareAudio];
 /**
  * One connection to a call's LiveKit room with end-to-end frame encryption (docs/ORBIT_WEB_CALLS.md). The call key is
@@ -73,6 +76,10 @@ export class LiveKitSession implements MediaSession {
   /** Batch B10: nobody's sound plays while deafened, including people who join later. */
   private deafened = false;
   private audioOptions: MediaTrackConstraints | undefined;
+  private localClipConsent = false;
+  private readonly clipConsents = new Map<string, number>();
+  private clipRevision = 0;
+
   /** The share this browser watches: the only screen share received (2026-10-24). */
   private watched: string | null = null;
   private readonly share = new ShareSender(
@@ -158,6 +165,48 @@ export class LiveKitSession implements MediaSession {
     this.events.audioBlocked(!room.canPlaybackAudio);
     this.flowTimer = setInterval(() => void this.sampleFlow(), FLOW_SAMPLE_MS);
   }
+  async setClipConsent(allowed: boolean): Promise<void> {
+    if (allowed === this.localClipConsent) return;
+    this.localClipConsent = allowed;
+    this.clipRevision++;
+    try {
+      await this.publishClipConsent();
+    } catch (error) {
+      if (allowed) {
+        this.localClipConsent = false;
+        this.clipRevision++;
+      }
+      throw error;
+    }
+  }
+
+  private async publishClipConsent(): Promise<void> {
+    await this.room?.localParticipant.publishData(Uint8Array.of(Number(this.localClipConsent)), { reliable: true, topic: CLIP_TOPIC });
+  }
+
+  clipSources(): ClipSources {
+    const room = this.room;
+    const tracks: MediaStreamTrack[] = [];
+    if (!room || this.deafened) return { revision: this.clipRevision, tracks };
+    const local = room.localParticipant;
+    const now = performance.now();
+    const participants = [local, ...room.remoteParticipants.values()].filter((p) =>
+      p === local ? this.localClipConsent : (this.clipConsents.get(p.identity) ?? -Infinity) + CLIP_LEASE_MS > now,
+    );
+    const screen = this.shares().find((share) => share.key === this.watched && share.ready) ??
+      this.shares().find((share) => share.isLocal && share.ready);
+    for (const p of participants) {
+      for (const pub of p.trackPublications.values()) {
+        const track = pub.track;
+        if (!track || pub.isMuted || track.mediaStreamTrack.readyState !== "live") continue;
+        if (pub.source !== Track.Source.Microphone && !(screen?.identity === p.identity && SCREEN_SOURCES.includes(pub.source))) continue;
+        if (p !== local && !this.tracker.proven(MediaSecurityTracker.key(p.identity, track.mediaStreamID))) continue;
+        tracks.push(track.mediaStreamTrack);
+      }
+    }
+    return { revision: this.clipRevision, tracks };
+  }
+
   async setMicrophone(on: boolean): Promise<void> {
     try {
       await this.room?.localParticipant.setMicrophoneEnabled(on, this.audioOptions);
@@ -340,7 +389,19 @@ export class LiveKitSession implements MediaSession {
         this.syncSubscriptions();
         changed();
       })
+      .on(RoomEvent.DataReceived, (payload, participant, _kind, topic) => {
+        if (topic !== CLIP_TOPIC || !participant || payload.length !== 1 || (payload[0] !== 0 && payload[0] !== 1)) return;
+        const prior = this.clipConsents.get(participant.identity);
+        if (payload[0] === 1) {
+          const now = performance.now();
+          if (prior === undefined || prior + CLIP_LEASE_MS <= now) this.clipRevision++;
+          this.clipConsents.set(participant.identity, now);
+        } else if (this.clipConsents.delete(participant.identity)) {
+          this.clipRevision++;
+        }
+      })
       .on(RoomEvent.ParticipantDisconnected, (p) => {
+        if (this.clipConsents.delete(p.identity)) this.clipRevision++;
         this.tracker.participantLeft(p.identity);
         this.publishSecurity();
         this.events.remoteLeft(room.remoteParticipants.size);
@@ -378,7 +439,11 @@ export class LiveKitSession implements MediaSession {
       })
       .on(RoomEvent.ActiveSpeakersChanged, changed)
       .on(RoomEvent.ConnectionQualityChanged, changed)
-      .on(RoomEvent.Reconnecting, () => this.events.reconnecting())
+      .on(RoomEvent.Reconnecting, () => {
+        this.clipConsents.clear();
+        this.clipRevision++;
+        this.events.reconnecting();
+      })
       .on(RoomEvent.SignalReconnecting, () => this.events.reconnecting())
       .on(RoomEvent.Reconnected, () => {
         this.syncSubscriptions();
@@ -435,6 +500,7 @@ export class LiveKitSession implements MediaSession {
   private async sampleFlow(): Promise<void> {
     const room = this.room;
     if (!room) return;
+    if (this.localClipConsent) void this.publishClipConsent().catch(() => undefined);
     let bytes: number | null = null;
     let path: string | null = null;
     let latency: number | null = null;

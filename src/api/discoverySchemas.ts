@@ -29,6 +29,7 @@ export const zDiscoverCard = zDiscovered.extend({
     .nullish()
     .transform((v) => v ?? null),
   official: z.boolean().default(false),
+  partner: z.boolean().optional(),
 });
 export type DiscoverCard = z.infer<typeof zDiscoverCard>;
 export type CardLabel = DiscoverCard["label"];
@@ -83,7 +84,7 @@ export type PromotedBooking = z.infer<typeof zPromotedBooking>;
 export const zPromoteView = z.object({
   billing: z.object({ available: z.boolean(), reason: nullableString }),
   currency: z.string().default("usd"),
-  tiers: z.array(z.object({ tier: openEnum(BOOST_TIERS), weeklyCents: z.number().int(), guaranteedTop: nullableNumber })),
+  tiers: z.array(z.object({ tier: openEnum(BOOST_TIERS), weeklyCents: z.number().int(), estimatedRank: nullableNumber, guaranteedTop: nullableNumber })),
   boost: zBoostRecord.nullish().transform((v) => v ?? null),
   boosts: z.array(zBoostRecord).default([]),
   rank: nullableNumber,

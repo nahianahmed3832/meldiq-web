@@ -1,3 +1,4 @@
+import type { ClipSources } from "./clipBuffer";
 import type { VerificationCode } from "./callKeys";
 import type { ShareQuality, ShareStats } from "./shareQuality";
 import type { CallShareView } from "./shares";
@@ -246,6 +247,8 @@ export interface MediaSession {
   setMicrophone(on: boolean): Promise<void>;
   setCamera(on: boolean): Promise<void>;
   participants(): CallParticipantView[];
+  setClipConsent?(allowed: boolean): Promise<void>;
+  clipSources?(): ClipSources;
   remoteCount(): number;
   /** Shows [identity]'s camera in [el]; returns a function that stops. */
   attachVideo(identity: string, el: HTMLVideoElement): () => void;

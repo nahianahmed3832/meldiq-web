@@ -14,7 +14,17 @@ Run `node deploy/community-payments/paypal-plans.mjs PROD-...` with the intended
 
 Check an existing Sandbox plan response with `node deploy/community-payments/paypal-plans.mjs PROD-... community-supercharge-monthly plan-receipt.json`. The verifier checks the product, active status, quantity support, regular cadence, price, currency, setup fee and tax. It does not make provider requests.
 
-Before enabling checkout, the API needs an authenticated quote that binds the buyer, community, SKU, unit quantity, currency, interval and quoted amount to a provider agreement. Validate the plan ID and terms against PayPal before creating the agreement. Use a stable request ID per purchase attempt. Grant or extend only the paid entitlement after verification and reconciliation of the provider event. Keep cancellations, failed renewals, and refunds tied to the same agreement. Preserve access through the actual paid-through date on ordinary cancellation.
+The API's Sandbox adapter validates the configured plan before preparing an approval URL. It uses a stable request ID and verifies the returned agreement against the offer, quantity and purchase reference. From the API's `server` directory, run `npx tsx scripts/qualify-community-paypal.ts` with these Sandbox environment variables set. This command reads the five active plans without creating agreements.
+
+- `PAYPAL_SANDBOX_CLIENT_ID` and `PAYPAL_SANDBOX_CLIENT_SECRET`
+- `PAYPAL_SANDBOX_COMMUNITY_PRODUCT_ID`
+- `PAYPAL_SANDBOX_COMMUNITY_SUPERCHARGE_PLAN_ID`
+- `PAYPAL_SANDBOX_COMMUNITY_BOOST_PLAN_ID`
+- `PAYPAL_SANDBOX_COMMUNITY_SUPER_PLAN_ID`
+- `PAYPAL_SANDBOX_COMMUNITY_MEGA_PLAN_ID`
+- `PAYPAL_SANDBOX_COMMUNITY_PROMOTED_PLAN_ID`
+
+Before enabling checkout, persist an authenticated quote that binds the buyer, community, SKU, unit quantity, currency, interval and quoted amount to the purchase reference and provider agreement. Grant or extend only the paid entitlement after verification and reconciliation of the provider event. Keep cancellations, failed renewals, and refunds tied to the same agreement. Preserve access through the actual paid-through date on ordinary cancellation.
 
 Promoted spots also require an atomic reservation and an expiry for abandoned checkouts. A weekly renewal needs an available slot for its next service week before charging. Keep the last paid interval independently from any pending renewal. A fixed PayPal plan alone does not implement the reservation or renewal policy.
 

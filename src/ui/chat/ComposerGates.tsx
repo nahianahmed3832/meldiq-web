@@ -10,6 +10,7 @@ import { PARITY_FEATURES } from "../../sync/communityParity";
 import { clearComposerNote, type ComposerNote, useComposerNote } from "../../sync/composerNotes";
 import type { Engine } from "../../sync/engine";
 import type { MentionRole } from "../../sync/roleMentions";
+import { pingRoles, PING_ROLES_FEATURE } from "../../sync/pingRoles";
 import { rolesOverview } from "../../sync/roles";
 import { useCommunityAccess, useFeature } from "../community/useCommunityAccess";
 import { OnboardingFlow } from "../community/OnboardingFinish";
@@ -39,6 +40,7 @@ export function useComposerGates(c: Conversation): ComposerGates {
   const orgId = c.type === "CHANNEL" ? c.orgId : null;
   const access = useCommunityAccess(orgId);
   const permissionsOn = useFeature(PARITY_FEATURES.permissions);
+  const pingOn = useFeature(PING_ROLES_FEATURE);
   const org = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId) ?? null) : null));
   const note = useComposerNote(c.id);
   const [roles, setRoles] = useState<MentionRole[]>([]);
@@ -50,9 +52,18 @@ export function useComposerGates(c: Conversation): ComposerGates {
       alive = false;
     };
   }, [engine, orgId, permissionsOn]);
+  const [pings, setPings] = useState<MentionRole[]>([]);
+  useEffect(() => {
+    if (!orgId || !pingOn) return setPings([]);
+    let alive = true;
+    void pingRoles(engine, orgId)
+      .then(({ roles }) => alive && setPings(roles.map((role) => ({ ...role, color: null, mentionable: true }))))
+      .catch(() => alive && setPings([]));
+    return () => { alive = false; };
+  }, [engine, orgId, org, pingOn]);
   const abilities = channelAbilities(c, access, permissionsOn);
   const hold = orgId ? communityHold(org, abilities) : null;
-  return { abilities, hold, note, roles: roles.filter((r) => abilities.mentionAnyRole || r.mentionable) };
+  return { abilities, hold, note, roles: [...pings, ...roles.filter((r) => abilities.mentionAnyRole || r.mentionable)] };
 }
 /** In place of the composer: finish onboarding, the community is locked, or the channel is read-only. */
 export function ComposerHoldBar({ hold, org }: { hold: ComposerHold; org: Pick<Org, "id"> }) {

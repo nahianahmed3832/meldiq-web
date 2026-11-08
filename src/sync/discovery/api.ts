@@ -29,18 +29,25 @@ import { DISCOVERY_LIMITS } from "./rules";
 
 const enc = encodeURIComponent;
 
+export type DiscoverSort = "recommended" | "members" | "newest" | "name";
+export type DiscoverSize = "any" | "small" | "medium" | "large";
+
 export interface DiscoverQuery {
   q?: string;
   tag?: string | null;
   cursor?: number;
+  size?: DiscoverSize;
+  sort?: DiscoverSort;
 }
 
 /** The query string for a Discover page: only what's set, trimmed to the server's limits. */
-export function discoverParams({ q = "", tag = null, cursor = 0 }: DiscoverQuery): string {
+export function discoverParams({ q = "", tag = null, cursor = 0, size, sort }: DiscoverQuery): string {
   const params = new URLSearchParams();
   if (q.trim()) params.set("q", q.trim().slice(0, DISCOVERY_LIMITS.query));
   if (tag?.trim()) params.set("tag", tag.trim().slice(0, DISCOVERY_LIMITS.tag));
   if (cursor) params.set("cursor", String(cursor));
+  if (size && size !== "any") params.set("size", size);
+  if (sort && sort !== "recommended") params.set("sort", sort);
   const qs = params.toString();
   return qs ? `?${qs}` : "";
 }

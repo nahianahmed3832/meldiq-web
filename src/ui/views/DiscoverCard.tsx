@@ -14,6 +14,7 @@ import { cardLabelTone } from "../../sync/discovery/rules";
 import { accentBand } from "../community/accent";
 import { colorIndexOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
+import { Icon } from "../icons/Icon";
 import { usePhoto } from "../components/photos";
 import { ReportDialog } from "../chat/ReportDialog";
 import { members } from "../format";
@@ -77,6 +78,7 @@ export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: Discove
         </span>
         <strong id={`dc-${c.id}`} className="ellipsis discover-name">
           {c.name}
+          {c.partner && <Icon name="settings.membership" size={16} className="discover-partner" label={t("workspace.reference.partnerBadge")} />}
           {c.official && <BadgeCheck size={16} className="discover-official" aria-label={t("discover_official")} />}
         </strong>
         {c.description && <span className="discover-desc">{c.description}</span>}

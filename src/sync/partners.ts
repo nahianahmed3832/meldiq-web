@@ -20,3 +20,19 @@ export async function partnerApplication(engine: Engine, orgId: string) {
 export async function submitPartnerApplication(engine: Engine, orgId: string, baseRev: number, statement: string, checklist: PartnerChecklist) {
   return (await engine.api.json("PUT", `/v1/orgs/${encodeURIComponent(orgId)}/partner-application`, response, { body: { baseRev, statement, checklist } })).application;
 }
+
+export const PARTNER_ELIGIBILITY_FEATURE = "partner-eligibility";
+const eligibility = z.object({
+  eligible: z.boolean(),
+  activeSparks: z.number(),
+  members: z.number(),
+  hasRules: z.boolean(),
+  activeMods: z.number(),
+  verification: z.string(),
+  ageDays: z.number(),
+  cleanStanding: z.boolean(),
+});
+export type PartnerEligibility = z.infer<typeof eligibility>;
+export function partnerEligibility(engine: Engine, orgId: string) {
+  return engine.api.json("GET", `/v1/orgs/${encodeURIComponent(orgId)}/partner-eligibility`, eligibility);
+}

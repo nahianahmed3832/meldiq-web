@@ -1,3 +1,4 @@
+import { Icon } from "../icons/Icon";
 import { ProfileContent } from "./ProfileContent";
 import { useLocaleRender } from "../../i18n/Localized";
 import { CustomEmojiImage } from "../community/CustomEmoji";
@@ -353,6 +354,9 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
             {(profile.statusEmoji || profile.statusText) && <p className="profile-pop-status">{[profile.statusEmoji, profile.statusText].filter(Boolean).join(" ")}</p>}
             {/* API 0.64.0: pins replace the Bug Hunter and Artist pills (both are Meldiq pins now). */}
             <CollectibleBadge style={profile?.profileStyle} />
+            {profile.badges.includes("partner") && (
+              <span className="badge-pill"><Icon name="settings.membership" size={16} /> {uiText("workspace.reference.partnerBadge")}</span>
+            )}
             {pinsOn ? (
               <>
                 <ProfilePins pins={profile.pins} />

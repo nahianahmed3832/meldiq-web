@@ -22,6 +22,7 @@ export const zCommunitySettings = z.object({
   inviteSlugMinMembers: z.number().int().default(5),
   memberCount: z.number().int().default(0),
   onboardingRequired: z.boolean().default(false),
+  voiceClips: z.boolean().default(false),
   onboardingRequiredSince: z
     .number()
     .nullish()
@@ -39,6 +40,7 @@ export interface CommunitySettingsChange {
   }[];
   inviteSlug?: string | null;
   onboardingRequired?: boolean;
+  voiceClips?: boolean;
   startChannelId?: string | null;
 }
 export function communitySettings(engine: Engine, orgId: string): Promise<CommunitySettings> {

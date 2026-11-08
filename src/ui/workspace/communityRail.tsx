@@ -28,6 +28,7 @@ import type { OrgAdminDetail, OrgPermissions } from "../../api/workspaceSchemas"
 import type { WorkspacePage } from "../../application/router";
 import { isTicketStaff } from "../../sync/posting/tickets";
 import { PARITY_FEATURES } from "../../sync/communityParity";
+import { PING_ROLES_FEATURE } from "../../sync/pingRoles";
 import { LOBBY_FEATURE } from "../../sync/lobby";
 import { OFFICIAL_BOTS_FEATURE } from "../../sync/officialBots";
 /**
@@ -162,6 +163,15 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
     icon: <HelpCircle size={17} />,
     group: "community",
     feature: "onboarding",
+  },
+  {
+    key: "ping-roles",
+    get label() {
+      return uiText("workspace.reference.pingRoles");
+    },
+    icon: <Icon name="settings.notifications" size={18} />,
+    group: "community",
+    feature: PING_ROLES_FEATURE,
   },
   {
     key: "guide",

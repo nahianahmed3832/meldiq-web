@@ -6,7 +6,7 @@ import type { DiscoverCard } from "../../api/discoverySchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { useT } from "../../i18n";
 import { discover } from "../../sync/community";
-import { discoverListing, recordDiscoverClick } from "../../sync/discovery/api";
+import { discoverListing, recordDiscoverClick, type DiscoverQuery, type DiscoverSize, type DiscoverSort } from "../../sync/discovery/api";
 import { appendPage, DISCOVERY_FEATURES } from "../../sync/discovery/rules";
 import type { Engine } from "../../sync/engine";
 import { Icon } from "../icons/Icon";
@@ -17,9 +17,9 @@ import { DiscoverCommunityCard } from "./DiscoverCard";
 const SEARCH_DELAY_MS = 300;
 const FEATURED_TAGS = ["gaming", "roblox", "art", "music", "minecraft", "anime", "bot", "vc"];
 const EXTRA_TAGS = ["community", "design", "education", "technology"];
-type CommunitySize = "any" | "small" | "medium" | "large";
 
-function matchesSize(memberCount: number, size: CommunitySize): boolean {
+
+function matchesSize(memberCount: number, size: DiscoverSize): boolean {
   if (size === "small") return memberCount < 100;
   if (size === "medium") return memberCount >= 100 && memberCount < 1000;
   if (size === "large") return memberCount >= 1000;
@@ -36,9 +36,9 @@ interface Page {
 const asCard = (c: Discovered): DiscoverCard => ({ ...c, tags: [], onlineCount: 0, label: null, official: false });
 
 /** One page of Discover: the server's listing with discovery-listing, else the older list (no Promoted row). */
-async function loadPage(engine: Engine, v2: boolean, q: string, tag: string | null, cursor: number): Promise<Page> {
-  if (v2) return discoverListing(engine, { q, tag, cursor });
-  const p = await discover(engine, q, cursor);
+async function loadPage(engine: Engine, v2: boolean, query: DiscoverQuery): Promise<Page> {
+  if (v2) return discoverListing(engine, query);
+  const p = await discover(engine, query.q ?? "", query.cursor ?? 0);
   return { promoted: [], communities: p.communities.map(asCard), nextCursor: p.nextCursor };
 }
 
@@ -52,10 +52,12 @@ export function DiscoverView() {
   const engine = useEngine();
   const t = useT();
   const v2 = useOrbit((s) => s.server?.features.includes(DISCOVERY_FEATURES.listing) ?? false);
+  const sortable = useOrbit((s) => s.server?.features.includes("discovery-sort") ?? false);
+  const [sort, setSort] = useState<DiscoverSort>("recommended");
   const [q, setQ] = useState("");
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState<string | null>(null);
-  const [size, setSize] = useState<CommunitySize>("any");
+  const [size, setSize] = useState<DiscoverSize>("any");
   const [loadingMore, setLoadingMore] = useState(false);
   const generation = useRef(0);
   const [page, setPage] = useState<Page | null>(null);
@@ -74,21 +76,21 @@ export function DiscoverView() {
     setLoadingMore(false);
     setPage(null);
     setError(null);
-    loadPage(engine, v2, query, tag, 0)
+    loadPage(engine, v2, { q: query, tag, ...(sortable ? { size, sort } : {}) })
       .then((p) => live && setPage(p))
       // The server's own message, or "" for the generic one (worded at render: t isn't a stable dependency).
       .catch((e: unknown) => live && setError(errorText(e)));
     return () => {
       live = false;
     };
-  }, [engine, v2, query, tag, attempt]);
+  }, [engine, v2, query, tag, size, sort, sortable, attempt]);
 
   const more = async () => {
     if (page?.nextCursor == null || loadingMore) return;
     const active = generation.current;
     setLoadingMore(true);
     try {
-      const p = await loadPage(engine, v2, query, tag, page.nextCursor);
+      const p = await loadPage(engine, v2, { q: query, tag, cursor: page.nextCursor, ...(sortable ? { size, sort } : {}) });
       if (active !== generation.current) return;
       setPage((cur) => (cur ? { ...cur, communities: appendPage(cur.communities, p.communities), nextCursor: p.nextCursor } : cur));
     } catch (e) {
@@ -104,8 +106,8 @@ export function DiscoverView() {
   };
   const joined = (id: string) => setPage((p) => (p ? { ...p, promoted: markJoined(p.promoted, id), communities: markJoined(p.communities, id) } : p));
   const filtered = !!query || !!tag || size !== "any";
-  const list = page?.communities.filter((c) => matchesSize(c.memberCount, size)) ?? null;
-  const promoted = page?.promoted.filter((c) => matchesSize(c.memberCount, size)) ?? [];
+  const list = page?.communities.filter((c) => sortable || matchesSize(c.memberCount, size)) ?? null;
+  const promoted = page?.promoted.filter((c) => sortable || matchesSize(c.memberCount, size)) ?? [];
   const card = (c: DiscoverCard) => <DiscoverCommunityCard c={c} onPreview={() => openPreview(c.id)} onJoined={joined} onTag={v2 ? setTag : undefined} />;
 
   return (
@@ -154,7 +156,15 @@ export function DiscoverView() {
                   ))}
                 </select>
               </div>
-              <select className="input" aria-label={t("workspace.reference.findSize")} value={size} onChange={(event) => setSize(event.target.value as CommunitySize)}>
+              {sortable && (
+                <select className="input" aria-label={t("workspace.reference.discoverySort")} value={sort} onChange={(event) => setSort(event.target.value as DiscoverSort)}>
+                  <option value="recommended">{t("workspace.reference.recommended")}</option>
+                  <option value="members">{t("workspace.reference.mostMembers")}</option>
+                  <option value="newest">{t("workspace.reference.newest")}</option>
+                  <option value="name">{t("workspace.reference.alphabetical")}</option>
+                </select>
+              )}
+              <select className="input" aria-label={t("workspace.reference.findSize")} value={size} onChange={(event) => setSize(event.target.value as DiscoverSize)}>
                 <option value="any">{t("workspace.reference.anySize")}</option>
                 <option value="small">{t("workspace.reference.smallSize")}</option>
                 <option value="medium">{t("workspace.reference.mediumSize")}</option>

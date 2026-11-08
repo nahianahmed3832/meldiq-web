@@ -22,6 +22,15 @@ test("community settings save through the existing API and show the quoted offer
   await expect(settings.getByRole("complementary", { name: "Server profile preview" })).toContainText("Reference Room");
   await screenshot("overview");
 
+  const { features } = await owner.req("GET", "/v1/server-info");
+  if (features.includes("community-voice-clips")) {
+    const clips = settings.getByRole("switch", { name: "Allow clips in voice channels" });
+    await expect(clips).not.toBeChecked();
+    await clips.click();
+    await expect(clips).toBeChecked();
+    await expect.poll(() => owner.req("GET", `/v1/orgs/${org.id}/settings`)).toMatchObject({ voiceClips: true });
+  }
+
   await rail.getByRole("button", { name: "Theme", exact: true }).click();
   await settings.getByRole("textbox", { name: "Accent color as hexadecimal" }).fill("#8458e8");
   await settings.getByRole("textbox", { name: "Background tint as hexadecimal" }).fill("#14b8a6");
@@ -55,6 +64,21 @@ test("community settings save through the existing API and show the quoted offer
   await rail.getByRole("button", { name: "Stickers", exact: true }).click();
   await expect(settings.getByRole("heading", { name: "No stickers yet" })).toBeVisible();
 
+  if (features.includes("community-ping-roles")) {
+    await rail.getByRole("button", { name: "Ping roles", exact: true }).click();
+    const editor = settings.getByRole("region", { name: "Manage ping roles", exact: true });
+    await editor.getByRole("button", { name: "Add a ping role" }).click();
+    await editor.getByRole("textbox", { name: "Name for ping role 1" }).fill("Release news");
+    await editor.getByRole("button", { name: "Save", exact: true }).click();
+    const choices = settings.getByRole("region", { name: "Your ping roles", exact: true });
+    await choices.getByRole("checkbox", { name: "Release news" }).check();
+    await choices.getByRole("button", { name: "Save", exact: true }).click();
+    await expect.poll(async () => (await owner.req("GET", `/v1/orgs/${org.id}/ping-roles`)).subscribed.length).toBe(1);
+    await page.reload();
+    await expect(choices.getByRole("checkbox", { name: "Release news" })).toBeChecked();
+    await screenshot("ping-roles");
+  }
+
   await rail.getByRole("button", { name: "Supercharge", exact: true }).click();
   await expect(settings.getByText("$5.98/month", { exact: true })).toBeVisible();
   await settings.getByRole("button", { name: /Level 2/ }).click();
@@ -76,4 +100,64 @@ test("community settings save through the existing API and show the quoted offer
   const dimensions = await page.locator(".community-supercharge").evaluate((node) => ({ client: node.clientWidth, content: node.scrollWidth }));
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.client);
   await screenshot("supercharge-phone");
+});
+
+test("voice clips require participant consent and reach the associated room chat", async ({ page, browser, baseURL, browserName, isMobile }) => {
+  test.skip(browserName !== "chromium" || isMobile || !process.env.ORBIT_E2E_LIVEKIT, "desktop Chromium with LiveKit and synthetic audio");
+  const owner = await newPhone("clipowner", "Clip Owner");
+  const member = await newPhone("clipmember", "Clip Member");
+  const { features } = await owner.req("GET", "/v1/server-info");
+  test.skip(!features.includes("community-voice-clips"), "the clip API is not available");
+  const { org } = await owner.req("POST", "/v1/orgs", { name: "Voice clip fixture" });
+  const { invite } = await owner.req("POST", `/v1/orgs/${org.id}/invites`, { role: "MEMBER" });
+  await member.req("POST", "/v1/invites/accept", { code: invite.code });
+  await owner.req("PUT", `/v1/orgs/${org.id}/settings`, { voiceClips: true });
+  const { channel } = await owner.req("POST", `/v1/orgs/${org.id}/channels`, { name: "clips-qa", voice: true, scope: "ORG" });
+  const guest = await browser.newContext({
+    baseURL,
+    permissions: ["microphone"],
+    serviceWorkers: "block",
+    extraHTTPHeaders: { "x-orbit-test-ip": testAddress() },
+  });
+  try {
+    const remote = await guest.newPage();
+    await remote.addInitScript(() => localStorage.setItem("meldiq.introSeen", "1"));
+    await link(page, owner);
+    await link(remote, member);
+    for (const client of [page, remote]) {
+      await client.goto(`/home/c/${channel.id}`);
+      await client.getByRole("button", { name: "Join voice", exact: true }).click();
+      await client.getByRole("button", { name: "Voice clips", exact: true }).click();
+    }
+    const dialog = page.getByRole("dialog", { name: "Voice clips", exact: true });
+    const remoteDialog = remote.getByRole("dialog", { name: "Voice clips", exact: true });
+    const capture = dialog.getByRole("button", { name: "Capture recent clip", exact: true });
+    const consent = remoteDialog.getByRole("switch", { name: "Let people clip my audio and screen share", exact: true });
+    await dialog.getByRole("button", { name: "Start buffering", exact: true }).click();
+    await expect(capture).toBeDisabled();
+    await consent.click();
+    await expect(consent).toBeChecked();
+    await expect(capture).toBeEnabled({ timeout: 20_000 });
+    await consent.click();
+    await expect(capture).toBeDisabled();
+    await consent.click();
+    await expect(capture).toBeEnabled();
+    await capture.click();
+    const audio = dialog.locator("audio");
+    await expect(audio).toBeVisible();
+    await expect.poll(() => audio.evaluate((element: HTMLAudioElement) => element.readyState)).toBeGreaterThanOrEqual(1);
+    await consent.click();
+    await expect(audio).toHaveCount(0);
+    await consent.click();
+    await expect(capture).toBeEnabled();
+    await capture.click();
+    await dialog.getByRole("button", { name: "Post to room chat", exact: true }).click();
+    await expect(dialog).toBeHidden();
+    await page.getByRole("button", { name: "Minimise the call", exact: true }).click();
+    const modes = page.getByRole("group", { name: "Room chat", exact: true });
+    await modes.getByRole("button", { name: "Room chat", exact: true }).click();
+    await expect(page.locator(".msg").filter({ hasText: "meldiq-clip." })).toBeVisible();
+  } finally {
+    await guest.close();
+  }
 });
