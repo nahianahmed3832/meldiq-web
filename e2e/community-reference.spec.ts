@@ -28,9 +28,11 @@ test("community settings save through the existing API and show the quoted offer
   await screenshot("theme");
   await settings.getByRole("button", { name: "Save", exact: true }).click();
   await expect.poll(() => owner.req("GET", `/v1/orgs/${org.id}/settings`)).toMatchObject({ accent: "#8458e8", background: "#14b8a6" });
+  await expect(settings.getByRole("button", { name: "Save", exact: true })).toBeDisabled();
 
   await rail.getByRole("button", { name: "Channels", exact: true }).click();
   const arranger = settings.getByRole("region", { name: "Arrange channels" });
+  await expect(arranger).toBeVisible();
   for (const name of ["First category", "Second category"]) {
     await arranger.getByRole("button", { name: "Create category" }).click();
     const create = page.getByRole("dialog", { name: "Create category" });
