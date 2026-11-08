@@ -2,24 +2,24 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { Pencil, Trash2, Upload } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine } from "../../application/orbit";
 import { EXPRESSION_NAME, type Expression, expressions, removeExpression, renameExpression, suggestName, uploadExpression } from "../../sync/expressions";
 import { prepareExpression, type PreparedExpression } from "../../sync/prepareExpression";
 import { CustomEmojiImage } from "../community/CustomEmoji";
+import { Icon } from "../icons/Icon";
 import { Dialog } from "../components/Overlay";
 import { bytes, shortWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
-import { Card, ErrorLine } from "../components/SettingsCard";
+import { ErrorLine } from "../components/SettingsCard";
 /**
  * Emoji & stickers (batch B9, android ExpressionsScreen): Emoji · n/50 and Stickers · n/20, each with Upload (a picture
  * named `:like_this:`), rename and remove. For people who can manage emoji and stickers; every member can use them.
  */
-export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
+export function ExpressionsPage({ detail, category }: { detail: OrgAdminDetail; category: "emoji" | "sticker" }) {
   useLocaleRender();
-  const l10n = useLocalization();
   const engine = useEngine();
   const orgId = detail.org.id;
   const [rev, setRev] = useState(0);
@@ -32,35 +32,33 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
   const [renaming, setRenaming] = useState<Expression | null>(null);
   const act = useAction();
   const file = useRef<HTMLInputElement>(null);
-  const [kind, setKind] = useState<"emoji" | "sticker">("emoji");
-  const group = (k: "emoji" | "sticker") => {
-    const items = (list.data?.expressions ?? []).filter((e) => e.kind === k);
-    const limit = list.data?.limits[k] ?? (k === "emoji" ? 50 : 20);
-    return (
-      <Card
-        title={uiText("workspace.interface.value0_value1_value2_1518b4b", {
-          value0: k === "emoji" ? uiText("messaging.interface.emoji_61ad897") : uiText("messaging.interface.stickers_dbf9cbb"),
-          value1: items.length,
-          value2: limit,
-        })}
-        sub={
-          k === "emoji" ? uiText("workspace.interface.members_use_them_in_this_community_s_channels_in_messages_and_as_f18720c") : uiText("workspace.interface.sent_on_their_own_shown_large_3a50ed7")
-        }
-        actions={
-          canManage && (
-            <button
-              className="btn btn-secondary btn-sm"
-              disabled={items.length >= limit}
-              onClick={() => {
-                setKind(k);
-                file.current?.click();
-              }}
-            >
-              <Upload size={14} /> {l10n("common.actions.upload")}
-            </button>
-          )
-        }
-      >
+  const k = category;
+  const items = (list.data?.expressions ?? []).filter((e) => e.kind === k);
+  const limit = list.data?.limits[k];
+  const upload = canManage && limit !== undefined && (
+    <button className="btn btn-primary" disabled={items.length >= limit} onClick={() => file.current?.click()}>
+      <Icon name="files.upload" size={16} /> {uiText(k === "emoji" ? "workspace.reference.uploadEmoji" : "workspace.reference.uploadSticker")}
+    </button>
+  );
+  const group = (
+    <>
+      <p className="muted">
+        {k === "emoji" ? uiText("workspace.interface.members_use_them_in_this_community_s_channels_in_messages_and_as_f18720c") : uiText("workspace.interface.sent_on_their_own_shown_large_3a50ed7")}
+      </p>
+      <div className="ws-expression-actions">
+        {upload}
+        {limit !== undefined && <span className="muted">{uiText("workspace.reference.slotsUsed", { count: items.length, limit })}</span>}
+      </div>
+      {list.loading && <div className="skeleton" style={{ height: 72 }} aria-busy="true" />}
+      {list.data && items.length === 0 && (
+        <div className="ws-expression-empty">
+          <img src="/meldling-192.webp" width="76" height="76" alt="" />
+          <h2>{uiText(k === "emoji" ? "workspace.reference.noEmoji" : "workspace.reference.noStickers")}</h2>
+          <p className="muted">{uiText(k === "emoji" ? "workspace.reference.emptyEmoji" : "workspace.reference.emptyStickers")}</p>
+          {upload}
+        </div>
+      )}
+      {items.length > 0 && (
         <ul className="ws-list">
           {items.map((e) => (
             <li key={e.id} className="ws-row">
@@ -95,15 +93,10 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
               )}
             </li>
           ))}
-          {list.data && items.length === 0 && (
-            <li className="faint">
-              <Localized k="workspace.interface.none_yet_bd3ce63" />
-            </li>
-          )}
         </ul>
-      </Card>
-    );
-  };
+      )}
+    </>
+  );
   return (
     <div className="ws-page">
       <ErrorLine text={list.error ?? act.error} />
@@ -114,12 +107,11 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
         hidden
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) setUploading({ kind, file: f });
+          if (f) setUploading({ kind: category, file: f });
           e.target.value = "";
         }}
       />
-      {group("emoji")}
-      {group("sticker")}
+      {group}
       {uploading && (
         <UploadDialog
           file={uploading.file}

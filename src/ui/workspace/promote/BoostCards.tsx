@@ -52,12 +52,11 @@ export function BoostCards({ orgId, view, buyer }: BoostCardsProps) {
                 </small>
               )}
               <button
-                className={`btn btn-sm ${t.tier === POPULAR_TIER ? "btn-primary" : "btn-secondary"}`}
-                disabled={buyer.busy !== null}
+                className={`btn btn-sm ${t.tier === POPULAR_TIER ? "btn-primary promote-gold-btn" : "btn-primary"}`}
+                disabled={!view.billing.available || buyer.comingSoon || buyer.busy !== null}
                 onClick={() => void buyer.buy(key, () => buyBoost(engine, orgId, t.tier))}
               >
-                <Rocket size={14} aria-hidden="true" />{" "}
-                {buyer.busy === key ? uiText("organization.interface.opening_c926c2c") : uiText("workspace.interface.value0_for_a_week_6301e75", { value0: text.name })}
+                <Rocket size={14} aria-hidden="true" /> {buyer.busy === key ? uiText("organization.interface.opening_c926c2c") : uiText("workspace.reference.boostButton", { name: text.name })}
               </button>
             </li>
           );

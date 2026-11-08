@@ -11,7 +11,7 @@ import { promoteView } from "../../../sync/discovery/api";
 import { dayText, rankText, TIER_TEXT } from "../../../sync/discovery/promote";
 import { DISCOVERY_LIMITS, unlistedText } from "../../../sync/discovery/rules";
 import { useLoad } from "../useLoad";
-import { Card, ErrorLine } from "../../components/SettingsCard";
+import { ErrorLine } from "../../components/SettingsCard";
 import { BoostCards } from "./BoostCards";
 import { PromotedRowCard } from "./PromotedRowCard";
 import { type PromoteBuy, usePromoteBuy } from "./usePromoteBuy";
@@ -33,19 +33,20 @@ export function PromotePage({ detail }: { detail: OrgAdminDetail }) {
   const v = view.data;
   return (
     <div className="ws-page promote-page">
-      <RankCard view={v} memberCount={detail.stats.members} />
-      <BuyNotes buyer={buyer} billingReason={v.billing.available ? null : v.billing.reason} />
+      <RankCard view={v} name={detail.org.name} memberCount={detail.stats.members} />
+      <BuyNotes buyer={buyer} available={v.billing.available} />
       <BoostCards orgId={orgId} view={v} buyer={buyer} />
-      <PromotedRowCard orgId={orgId} name={detail.org.name} photoRev={detail.org.photoRev} view={v} buyer={buyer} />
+      <PromotedRowCard orgId={orgId} view={v} buyer={buyer} />
     </div>
   );
 }
-function RankCard({ view, memberCount }: { view: PromoteView; memberCount: number }) {
+function RankCard({ view, name, memberCount }: { view: PromoteView; name: string; memberCount: number }) {
   useLocaleRender();
   const why = view.listed ? null : unlistedText(view.reason, memberCount, DISCOVERY_LIMITS.minMembers);
   const boost = view.boost;
   return (
-    <Card title={uiText("workspace.interface.discovery_rank_cee844a")} sub={uiText("workspace.interface.where_this_community_shows_in_discover_s_list_boosted_communities_3729cad")}>
+    <section className="promote-rank-card" aria-label={uiText("workspace.interface.discovery_rank_cee844a")}>
+      <p className="muted">{uiText("workspace.reference.boostIntro", { name })}</p>
       <div className="promote-rank">
         <div className="promote-rank-number" aria-label={uiText("workspace.interface.discovery_rank_value0_7a76444", { value0: rankText(view.rank, view.listed) })}>
           <TrendingUp size={18} aria-hidden="true" />
@@ -71,24 +72,14 @@ function RankCard({ view, memberCount }: { view: PromoteView; memberCount: numbe
           </button>
         )}
       </div>
-    </Card>
+    </section>
   );
 }
-/** "Coming soon" once the server says it takes no payments yet; other refusals as errors. */
-function BuyNotes({ buyer, billingReason }: { buyer: PromoteBuy; billingReason: string | null }) {
-  useLocaleRender();
-  if (buyer.comingSoon) {
+function BuyNotes({ buyer, available }: { buyer: PromoteBuy; available: boolean }) {
+  if (!available || buyer.comingSoon) {
     return (
       <div className="banner info promote-soon" role="status">
-        <Localized
-          k="workspace.interface.payments_are_being_set_up_boosts_and_promoted_spots_can_be_bought_6ceca16"
-          slots={[
-            <strong>
-              <Localized k="workspace.interface.coming_soon_4f7d640" />
-            </strong>,
-            billingReason && <small className="faint"> {billingReason}</small>,
-          ]}
-        />
+        {uiText("workspace.reference.promotePending")}
       </div>
     );
   }

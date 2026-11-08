@@ -167,7 +167,7 @@ test("the private partner application validates its checklist and retains its dr
   const owner = await newPhone("partnerowner", "Partner Owner");
   const org = (await owner.req("POST", "/v1/orgs", { name: "Partner fixture" })).org.id;
   await link(page, owner);
-  await page.goto("/workspace/overview");
+  await page.goto("/workspace/partner");
   const card = page.getByRole("region", { name: "Partner application", exact: true });
   await expect(card).toContainText("approval grants no badge");
   const statement = card.getByRole("textbox", { name: "Tell us about your community", exact: true });

@@ -9,13 +9,11 @@ import {
   CalendarDays,
   Flag,
   Gauge,
-  Gem,
   Hash,
   HelpCircle,
   House,
   LayoutGrid,
   Megaphone,
-  Palette,
   Pin,
   ScrollText,
   ShieldCheck,
@@ -24,6 +22,7 @@ import {
   UserCheck,
   UsersRound,
 } from "lucide-react";
+import { Icon } from "../icons/Icon";
 import type { ReactNode } from "react";
 import type { OrgAdminDetail, OrgPermissions } from "../../api/workspaceSchemas";
 import type { WorkspacePage } from "../../application/router";
@@ -36,7 +35,7 @@ import { OFFICIAL_BOTS_FEATURE } from "../../sync/officialBots";
  * order, in Meldiq's words. The first group is titled with the community's name. Meldiq's extra pages sit where they
  * fit (Rules with the community, Applications, Invitations and Pins with people) and Events and Usage close the list.
  */
-export type CommunityRailGroup = "community" | "expression" | "apps" | "people" | "moderation" | "more";
+export type CommunityRailGroup = "overview" | "community" | "apps" | "people" | "moderation" | "plus" | "more";
 export interface CommunityRailPage {
   key: WorkspacePage;
   label: string;
@@ -55,11 +54,28 @@ export const COMMUNITY_RAIL_GROUPS: readonly {
   key: CommunityRailGroup;
   label: string | null;
 }[] = [
-  { key: "community", label: null },
   {
-    key: "expression",
+    key: "overview",
     get label() {
-      return uiText("organization.interface.expression_c67415b");
+      return uiText("workspace.interface.overview_d4b1ea5");
+    },
+  },
+  {
+    key: "community",
+    get label() {
+      return uiText("organization.community");
+    },
+  },
+  {
+    key: "moderation",
+    get label() {
+      return uiText("workspace.reference.safety");
+    },
+  },
+  {
+    key: "people",
+    get label() {
+      return uiText("workspace.members");
     },
   },
   {
@@ -69,15 +85,9 @@ export const COMMUNITY_RAIL_GROUPS: readonly {
     },
   },
   {
-    key: "people",
+    key: "plus",
     get label() {
-      return uiText("calls.interface.people_7db2089");
-    },
-  },
-  {
-    key: "moderation",
-    get label() {
-      return uiText("organization.interface.moderation_126d441");
+      return uiText("workspace.reference.plus");
     },
   },
   {
@@ -94,11 +104,26 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
     get label() {
       return uiText("workspace.interface.overview_d4b1ea5");
     },
-    icon: <LayoutGrid size={17} />,
-    group: "community",
+    icon: <Icon name="settings.general" size={18} />,
+    group: "overview",
   },
-  // Community parity B: the reference's lobby. Without it, Meldiq's community guide stands in as Home; with it the guide
-  // keeps its own page, and shows as a card in the lobby.
+  {
+    key: "theme",
+    get label() {
+      return uiText("settings.ap_theme");
+    },
+    icon: <Icon name="settings.appearance" size={18} />,
+    group: "overview",
+    feature: "community-branding",
+  },
+  {
+    key: "channels",
+    get label() {
+      return uiText("organization.channels");
+    },
+    icon: <Hash size={17} />,
+    group: "overview",
+  },
   {
     key: "lobby",
     get label() {
@@ -108,6 +133,35 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
     group: "community",
     feature: LOBBY_FEATURE,
     shown: (p) => p.canManageOrg,
+  },
+  {
+    key: "expressions",
+    get label() {
+      return uiText("messaging.interface.emoji_61ad897");
+    },
+    icon: <Smile size={17} />,
+    group: "community",
+    feature: "community-expressions",
+    shown: (p) => can(p, "expressions.manage"),
+  },
+  {
+    key: "stickers",
+    get label() {
+      return uiText("messaging.interface.stickers_dbf9cbb");
+    },
+    icon: <Smile size={17} />,
+    group: "community",
+    feature: "community-expressions",
+    shown: (p) => can(p, "expressions.manage"),
+  },
+  {
+    key: "onboarding",
+    get label() {
+      return uiText("organization.interface.onboarding_a2198f4");
+    },
+    icon: <HelpCircle size={17} />,
+    group: "community",
+    feature: "onboarding",
   },
   {
     key: "guide",
@@ -131,13 +185,14 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
     shown: (p) => p.canManageOrg,
   },
   {
-    key: "theme",
+    key: "rules",
     get label() {
-      return uiText("settings.ap_theme");
+      return uiText("organization.rules_title");
     },
-    icon: <Palette size={17} />,
+    icon: <BookText size={17} />,
     group: "community",
-    feature: "community-branding",
+    feature: "rules-channel",
+    shown: (p) => p.canManageOrg,
   },
   {
     key: "discovery",
@@ -160,7 +215,7 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
   {
     key: "security",
     get label() {
-      return uiText("settings.navigation.moderation");
+      return uiText("workspace.reference.safety");
     },
     icon: <ShieldCheck size={17} />,
     group: "moderation",
@@ -168,62 +223,23 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
     shown: (p) => p.canManageOrg || p.canBan,
   },
   {
-    key: "channels",
+    key: "reports",
     get label() {
-      return uiText("organization.channels");
+      return uiText("workspace.interface.reports_dacca3c");
     },
-    icon: <Hash size={17} />,
-    group: "community",
-  },
-  // API 0.65.0: the rules channel and the community's rules (Edit community).
-  {
-    key: "rules",
-    get label() {
-      return uiText("organization.rules_title");
-    },
-    icon: <BookText size={17} />,
-    group: "community",
-    feature: "rules-channel",
-    shown: (p) => p.canManageOrg,
+    icon: <Flag size={17} />,
+    group: "moderation",
+    feature: "reports",
+    shown: (p) => can(p, "reports.view"),
   },
   {
-    key: "sparks",
+    key: "audit",
     get label() {
-      return uiText("organization.interface.sparks_6905661");
+      return uiText("workspace.interface.audit_log_e4d36f9");
     },
-    icon: <Gem size={17} />,
-    group: "community",
-    feature: "mojo",
-  },
-  {
-    key: "promote",
-    get label() {
-      return uiText("organization.interface.promote_5834dab");
-    },
-    icon: <Megaphone size={17} />,
-    group: "community",
-    feature: PARITY_FEATURES.promote,
-    shown: (p) => p.canManageOrg,
-  },
-  {
-    key: "expressions",
-    get label() {
-      return uiText("organization.interface.emoji_stickers_e1e12f3");
-    },
-    icon: <Smile size={17} />,
-    group: "expression",
-    feature: "community-expressions",
-    shown: (p) => can(p, "expressions.manage"),
-  },
-  {
-    key: "integrations",
-    get label() {
-      return uiText("settings.navigation.integrations");
-    },
-    icon: <Plug size={17} />,
-    group: "apps",
-    featuresAny: ["bots", OFFICIAL_BOTS_FEATURE, "community-tickets"],
-    shown: (p) => isTicketStaff(p),
+    icon: <ScrollText size={17} />,
+    group: "moderation",
+    shown: (p) => p.canViewAudit,
   },
   {
     key: "people",
@@ -242,15 +258,6 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
     icon: <ShieldCheck size={17} />,
     group: "people",
     shown: (p) => p.canViewRoles,
-  },
-  {
-    key: "onboarding",
-    get label() {
-      return uiText("organization.interface.onboarding_a2198f4");
-    },
-    icon: <HelpCircle size={17} />,
-    group: "people",
-    feature: "onboarding",
   },
   {
     key: "bans",
@@ -291,23 +298,53 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
     feature: "profile-pins",
   },
   {
-    key: "reports",
+    key: "bots",
     get label() {
-      return uiText("workspace.interface.reports_dacca3c");
+      return uiText("messaging.people_bots");
     },
-    icon: <Flag size={17} />,
-    group: "moderation",
-    feature: "reports",
-    shown: (p) => can(p, "reports.view"),
+    icon: <Icon name="settings.developer" size={18} />,
+    group: "apps",
+    featuresAny: ["bots", OFFICIAL_BOTS_FEATURE],
+    shown: (p) => p.canManageOrg,
   },
   {
-    key: "audit",
+    key: "integrations",
     get label() {
-      return uiText("workspace.interface.audit_log_e4d36f9");
+      return uiText("settings.navigation.integrations");
     },
-    icon: <ScrollText size={17} />,
-    group: "moderation",
-    shown: (p) => p.canViewAudit,
+    icon: <Plug size={17} />,
+    group: "apps",
+    featuresAny: ["bots", OFFICIAL_BOTS_FEATURE, "community-tickets"],
+    shown: (p) => isTicketStaff(p),
+  },
+  {
+    key: "sparks",
+    get label() {
+      return uiText("workspace.reference.supercharge");
+    },
+    icon: <Icon name="settings.spark" size={18} />,
+    group: "plus",
+    feature: "mojo",
+  },
+  {
+    key: "promote",
+    get label() {
+      return uiText("organization.interface.promote_5834dab");
+    },
+    icon: <Megaphone size={17} />,
+    group: "plus",
+    feature: PARITY_FEATURES.promote,
+    shown: (p) => p.canManageOrg,
+  },
+  {
+    key: "partner",
+    get label() {
+      return uiText("workspace.partners.label");
+    },
+    icon: <Icon name="settings.membership" size={18} />,
+    group: "plus",
+    feature: "partner-applications",
+    shown: (p) => p.isOwner,
   },
   {
     key: "meetings",
@@ -339,16 +376,9 @@ function railForFeatures(features: readonly string[]): CommunityRailPage[] {
   );
   return fits.filter((p, i) => fits.findIndex((q) => q.key === p.key) === i);
 }
-/**
- * The rail item a page belongs to. Security actions became a section of Profile; their old links open it there.
- */
-export function communityRailKey(page: WorkspacePage): WorkspacePage {
-  return page === "bots" ? "integrations" : page;
-}
 /** The title at the top of a community settings page. */
 export function communityPageTitle(page: WorkspacePage, features: readonly string[] = []): string {
-  const key = communityRailKey(page);
-  return (railForFeatures(features).find((p) => p.key === key) ?? COMMUNITY_RAIL.find((p) => p.key === key))?.label ?? uiText("workspace.interface.overview_d4b1ea5");
+  return (railForFeatures(features).find((p) => p.key === page) ?? COMMUNITY_RAIL.find((p) => p.key === page))?.label ?? uiText("workspace.interface.overview_d4b1ea5");
 }
 
 /** Pages, with the permission flag that shows them (the server decides; older servers don't send the newer flags). */
@@ -460,7 +490,7 @@ export function visibleWorkspaceRail(features: readonly string[], detail: OrgAdm
   const basic = LEGACY_PAGES.filter((p) => (!p.shown || (detail && p.shown(detail.permissions, detail))) && (!p.feature || features.includes(p.feature)));
   // Older scoped workspaces can still advertise individual tools. Preserve those routes with the same feature and
   // permission checks as communities, without repeating branding already edited on their Overview page.
-  const groups: Record<CommunityRailGroup, LegacyGroup> = { community: "workspace", expression: "workspace", apps: "tools", people: "workspace", moderation: "admin", more: "tools" };
+  const groups: Record<CommunityRailGroup, LegacyGroup> = { overview: "workspace", community: "workspace", apps: "tools", people: "workspace", moderation: "admin", plus: "tools", more: "tools" };
   const tools = visibleCommunityRail(features, detail?.permissions ?? null)
     .filter((p) => p.key !== "theme" && (p.feature || p.featuresAny) && !basic.some((b) => b.key === p.key))
     .map((p) => ({ ...p, group: groups[p.group] }));

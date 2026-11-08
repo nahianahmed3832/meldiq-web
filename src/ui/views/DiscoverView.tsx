@@ -1,5 +1,5 @@
 import { Compass, Search, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Discovered } from "../../api/communitySchemas";
 import type { DiscoverCard } from "../../api/discoverySchemas";
@@ -9,11 +9,22 @@ import { discover } from "../../sync/community";
 import { discoverListing, recordDiscoverClick } from "../../sync/discovery/api";
 import { appendPage, DISCOVERY_FEATURES } from "../../sync/discovery/rules";
 import type { Engine } from "../../sync/engine";
+import { Icon } from "../icons/Icon";
 import { CommunityPreviewDialog } from "../community/CommunityPreviewDialog";
 import { DiscoverCommunityCard } from "./DiscoverCard";
 
 /** How long typing pauses before the search runs. */
 const SEARCH_DELAY_MS = 300;
+const FEATURED_TAGS = ["gaming", "roblox", "art", "music", "minecraft", "anime", "bot", "vc"];
+const EXTRA_TAGS = ["community", "design", "education", "technology"];
+type CommunitySize = "any" | "small" | "medium" | "large";
+
+function matchesSize(memberCount: number, size: CommunitySize): boolean {
+  if (size === "small") return memberCount < 100;
+  if (size === "medium") return memberCount >= 100 && memberCount < 1000;
+  if (size === "large") return memberCount >= 1000;
+  return true;
+}
 
 interface Page {
   promoted: DiscoverCard[];
@@ -44,6 +55,9 @@ export function DiscoverView() {
   const [q, setQ] = useState("");
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState<string | null>(null);
+  const [size, setSize] = useState<CommunitySize>("any");
+  const [loadingMore, setLoadingMore] = useState(false);
+  const generation = useRef(0);
   const [page, setPage] = useState<Page | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -56,6 +70,8 @@ export function DiscoverView() {
 
   useEffect(() => {
     let live = true;
+    generation.current++;
+    setLoadingMore(false);
     setPage(null);
     setError(null);
     loadPage(engine, v2, query, tag, 0)
@@ -68,12 +84,17 @@ export function DiscoverView() {
   }, [engine, v2, query, tag, attempt]);
 
   const more = async () => {
-    if (page?.nextCursor == null) return;
+    if (page?.nextCursor == null || loadingMore) return;
+    const active = generation.current;
+    setLoadingMore(true);
     try {
       const p = await loadPage(engine, v2, query, tag, page.nextCursor);
+      if (active !== generation.current) return;
       setPage((cur) => (cur ? { ...cur, communities: appendPage(cur.communities, p.communities), nextCursor: p.nextCursor } : cur));
     } catch (e) {
-      setError(errorText(e));
+      if (active === generation.current) setError(errorText(e));
+    } finally {
+      if (active === generation.current) setLoadingMore(false);
     }
   };
 
@@ -82,18 +103,19 @@ export function DiscoverView() {
     setPreview(id);
   };
   const joined = (id: string) => setPage((p) => (p ? { ...p, promoted: markJoined(p.promoted, id), communities: markJoined(p.communities, id) } : p));
-  const filtered = !!query || !!tag;
-  const list = page?.communities ?? null;
+  const filtered = !!query || !!tag || size !== "any";
+  const list = page?.communities.filter((c) => matchesSize(c.memberCount, size)) ?? null;
+  const promoted = page?.promoted.filter((c) => matchesSize(c.memberCount, size)) ?? [];
   const card = (c: DiscoverCard) => <DiscoverCommunityCard c={c} onPreview={() => openPreview(c.id)} onJoined={joined} onTag={v2 ? setTag : undefined} />;
 
   return (
     <section className="main" aria-label={t("discover_title")}>
       <header className="conv-head discover-head">
-        <Compass size={18} aria-hidden="true" />
+        <Icon name="navigation.discover" size={18} />
         <h1 className="grow">{t("discover_title")}</h1>
       </header>
       <div className="view scroll">
-        <div className="discover">
+        <div className="discover discover-reference">
           <div className="discover-hero">
             <h2>{t("discover_heading")}</h2>
             <p className="view-sub">{v2 ? t("discover_sub_tags") : t("discover_sub")}</p>
@@ -110,6 +132,36 @@ export function DiscoverView() {
               </span>
             )}
           </div>
+          {v2 && (
+            <div className="discover-filterbar">
+              <div className="discover-filter-tags" role="group" aria-label={t("workspace.reference.discoverTags")}>
+                {FEATURED_TAGS.map((item) => (
+                  <button key={item} type="button" className="discover-filter-tag" aria-pressed={tag === item} onClick={() => setTag(tag === item ? null : item)}>
+                    #{item}
+                  </button>
+                ))}
+                <select
+                  className="input discover-filter-more"
+                  aria-label={t("workspace.reference.moreTags")}
+                  value={tag && EXTRA_TAGS.includes(tag) ? tag : ""}
+                  onChange={(event) => setTag(event.target.value || null)}
+                >
+                  <option value="">{t("workspace.reference.moreTags")}</option>
+                  {EXTRA_TAGS.map((item) => (
+                    <option key={item} value={item}>
+                      #{item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <select className="input" aria-label={t("workspace.reference.findSize")} value={size} onChange={(event) => setSize(event.target.value as CommunitySize)}>
+                <option value="any">{t("workspace.reference.anySize")}</option>
+                <option value="small">{t("workspace.reference.smallSize")}</option>
+                <option value="medium">{t("workspace.reference.mediumSize")}</option>
+                <option value="large">{t("workspace.reference.largeSize")}</option>
+              </select>
+            </div>
+          )}
           {error !== null && (
             <div className="banner danger" role="alert">
               <span className="grow">{error || t("discover_error")}</span>
@@ -125,17 +177,17 @@ export function DiscoverView() {
               ))}
             </div>
           )}
-          {page && page.promoted.length > 0 && (
+          {promoted.length > 0 && (
             <>
               <h3 className="discover-section discover-section-promoted">{t("discover_promoted")}</h3>
               <ul className="discover-grid discover-promoted" aria-label={t("discover_promoted")}>
-                {page.promoted.map((c) => (
+                {promoted.map((c) => (
                   <li key={c.id}>{card(c)}</li>
                 ))}
               </ul>
             </>
           )}
-          {list && list.length === 0 && page?.promoted.length === 0 && (
+          {list && list.length === 0 && promoted.length === 0 && page?.nextCursor == null && (
             <div className="empty" style={{ padding: 24 }}>
               <div className="discover-empty-art" aria-hidden="true">
                 <Compass size={160} strokeWidth={0.6} />
@@ -149,6 +201,7 @@ export function DiscoverView() {
                     setQ("");
                     setQuery("");
                     setTag(null);
+                    setSize("any");
                   }}
                 >
                   {t("discover_all")}
@@ -165,7 +218,7 @@ export function DiscoverView() {
             </ul>
           )}
           {page?.nextCursor != null && (
-            <button className="btn btn-secondary discover-more" onClick={() => void more()}>
+            <button className="btn btn-secondary discover-more" disabled={loadingMore} onClick={() => void more()}>
               {t("discover_more")}
             </button>
           )}

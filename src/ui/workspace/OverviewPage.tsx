@@ -27,7 +27,12 @@ import { PARITY_FEATURES } from "../../sync/communityParity";
 import { SETTINGS_LIMITS } from "../../sync/communitySettings";
 import { DeleteCommunityDialog } from "../community/DeleteCommunityDialog";
 import { ReportDialog } from "../chat/ReportDialog";
-import { PartnerApplicationCard } from "./PartnerApplicationCard";
+import { DiscoveryCard } from "./discovery/DiscoveryCard";
+import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
+import { usePhoto } from "../components/photos";
+import { BannerCard } from "./BannerCard";
+import { RulesPage } from "./RulesPage";
+import { TicketsSection } from "../community/tickets/TicketsCard";
 interface OverviewPageProps {
   detail: OrgAdminDetail;
   onChanged: () => void;
@@ -42,47 +47,70 @@ export function OverviewPage({ detail, onChanged }: OverviewPageProps) {
   const features = useOrbit((s) => s.server?.features ?? []);
   const community = features.includes("community-channels");
   const [reporting, setReporting] = useState(false);
+  const banner = usePhoto("banner", org.id, org.bannerRev);
+  const canEditProfile = community && can.canManageOrg;
   return (
-    <div className="ws-page">
-      {features.includes("community-reports") && (
-        <button className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }} onClick={() => setReporting(true)}>
-          {uiText("messaging.interface.report_value0_acf3105", { value0: org.name })}
-        </button>
+    <div className={canEditProfile ? "ws-page ws-profile-overview" : "ws-page"}>
+      {canEditProfile && (
+        <aside className="ws-profile-preview" aria-label={uiText("workspace.reference.preview")}>
+          <div className="ws-profile-preview-banner" style={banner ? { backgroundImage: `url("${banner}")` } : undefined} />
+          <div className="ws-profile-preview-info">
+            <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={64} />
+            <strong>{org.name}</strong>
+            <span className="muted">{countLabel(stats.members, "members")}</span>
+          </div>
+        </aside>
       )}
-      {reporting && <ReportDialog target={{ kind: "community", orgId: org.id, name: org.name }} onClose={() => setReporting(false)} />}
-      <header className="ws-hero">
-        <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={64} />
-        <div className="grow">
-          <h2>{org.name}</h2>
-          <p className="muted">
-            {org.kind === "community"
-              ? uiText("workspace.interface.native_count_43804b0a2", {
-                  value0: roleName(org.myRole),
-                  value1: countLabel(stats.members, "members"),
-                  value2: "",
-                  value3: stats.channels,
-                })
-              : uiText("workspace.interface.native_count_ad19e3d4a", {
-                  value0: roleName(org.myRole),
-                  value1: countLabel(stats.members, "members"),
-                  value2: "",
-                  value3: stats.channels,
-                  value4: stats.branches,
-                  value5: stats.teams,
-                })}
-          </p>
-        </div>
-      </header>
-      {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
-      {!community && features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
-      {features.includes("community-tags") && <TagCard detail={detail} onChanged={onChanged} />}
-      {features.includes("partner-applications") && org.myRole === "OWNER" && <PartnerApplicationCard orgId={org.id} />}
-      {community && can.canManageOrg && features.includes(PARITY_FEATURES.settings) && <ProfileExtrasCards detail={detail} onChanged={onChanged} />}
-      {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
-      {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}
-      {features.includes("communities") && !features.includes("community-channels") && <KindCard detail={detail} onChanged={onChanged} />}
-      <TransferOwnership detail={detail} onChanged={onChanged} />
-      <Membership detail={detail} />
+      <div className="ws-profile-forms">
+        {reporting && <ReportDialog target={{ kind: "community", orgId: org.id, name: org.name }} onClose={() => setReporting(false)} />}
+        {!canEditProfile && (
+          <header className="ws-hero">
+            <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={64} />
+            <div className="grow">
+              <h2>{org.name}</h2>
+              <p className="muted">
+                {org.kind === "community"
+                  ? uiText("workspace.interface.native_count_43804b0a2", {
+                      value0: roleName(org.myRole),
+                      value1: countLabel(stats.members, "members"),
+                      value2: "",
+                      value3: stats.channels,
+                    })
+                  : uiText("workspace.interface.native_count_ad19e3d4a", {
+                      value0: roleName(org.myRole),
+                      value1: countLabel(stats.members, "members"),
+                      value2: "",
+                      value3: stats.channels,
+                      value4: stats.branches,
+                      value5: stats.teams,
+                    })}
+              </p>
+            </div>
+          </header>
+        )}
+        {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
+        {!community && features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
+        {features.includes("community-tags") && <TagCard detail={detail} onChanged={onChanged} />}
+        {canEditProfile && features.includes(DISCOVERY_FEATURES.listing) && <DiscoveryCard orgId={org.id} />}
+        {community && can.canManageOrg && features.includes(PARITY_FEATURES.settings) && <ProfileExtrasCards detail={detail} onChanged={onChanged} />}
+        {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
+        {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}
+        {features.includes("communities") && !features.includes("community-channels") && <KindCard detail={detail} onChanged={onChanged} />}
+        {canEditProfile && (features.includes("rules-channel") || features.includes("community-tickets")) && (
+          <section className="ws-overview-features">
+            <h2>{uiText("workspace.reference.featureGroup")}</h2>
+            {features.includes("rules-channel") && <RulesPage detail={detail} />}
+            <TicketsSection detail={detail} />
+          </section>
+        )}
+        <TransferOwnership detail={detail} onChanged={onChanged} />
+        <Membership detail={detail} />
+        {features.includes("community-reports") && (
+          <button className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }} onClick={() => setReporting(true)}>
+            {uiText("messaging.interface.report_value0_acf3105", { value0: org.name })}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -147,6 +175,7 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
   const save = useAction();
   const photo = useAction();
   const file = useRef<HTMLInputElement>(null);
+  const branding = useOrbit((s) => s.server?.features.includes("community-branding") ?? false);
   const animatedImages = useOrbit((s) => s.server?.features.includes("animated-community-images") ?? false);
   // Community parity A3: names up to 100 characters (80 before).
   const nameMax = useOrbit((s) => (s.server?.features.includes(PARITY_FEATURES.settings) ? SETTINGS_LIMITS.name : 80));
@@ -171,13 +200,14 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
   };
   return (
     <Card
-      title={community ? uiText("workspace.interface.community_details_680a98c") : uiText("workspace.interface.community_details_680a98c")}
-      sub={uiText("workspace.interface.members_see_the_name_description_and_photo_they_aren_t_end_to_end_575bbdf")}
+      title={uiText(community ? "workspace.reference.profile" : "workspace.interface.community_details_680a98c")}
+      sub={uiText(community ? "workspace.reference.profileHelp" : "workspace.interface.members_see_the_name_description_and_photo_they_aren_t_end_to_end_575bbdf")}
     >
       <div className="row" style={{ gap: 16, alignItems: "center", flexWrap: "wrap" }}>
         <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={56} />
         <input ref={file} type="file" accept="image/*" hidden onChange={(e) => pick(e.target.files?.[0])} />
-        <button className="btn btn-secondary btn-sm" disabled={photo.busy} onClick={() => file.current?.click()}>
+        {community && <strong>{uiText("workspace.reference.serverIcon")}</strong>}
+        <button className={community ? "btn btn-primary btn-sm" : "btn btn-secondary btn-sm"} disabled={photo.busy} onClick={() => file.current?.click()}>
           <Camera size={14} /> {org.photoRev ? uiText("settings.interface.change_photo_c5fbcb8") : uiText("settings.interface.add_photo_c0660be")}
         </button>
         {animatedImages && (
@@ -192,10 +222,11 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
         )}
       </div>
       <ErrorLine text={photo.error} />
+      {community && branding && <BannerCard detail={detail} onChanged={onChanged} />}
       <form onSubmit={submit} style={{ display: "grid", gap: 12 }}>
         <div className="field">
           <label htmlFor="ws-name">
-            <Localized k="messaging.interface.name_dcd1d52" />
+            <Localized k={community ? "workspace.reference.serverName" : "messaging.interface.name_dcd1d52"} />
           </label>
           <input id="ws-name" className="input" value={name} maxLength={nameMax} onChange={(e) => setName(e.target.value)} />
         </div>

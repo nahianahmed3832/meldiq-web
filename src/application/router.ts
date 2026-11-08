@@ -62,6 +62,8 @@ export type WorkspacePage =
   | "guide"
   | "onboarding"
   | "expressions"
+  | "stickers"
+  | "partner"
   // API 0.65.0 batch B: bots added to the community.
   | "bots"
   // API 0.65.0: the rules channel and the community's rules.
@@ -135,6 +137,8 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "guide",
   "onboarding",
   "expressions",
+  "stickers",
+  "partner",
   "bots",
   "rules",
   "theme",

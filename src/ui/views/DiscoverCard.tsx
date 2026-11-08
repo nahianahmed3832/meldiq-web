@@ -1,19 +1,21 @@
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
-import { BadgeCheck, Users } from "lucide-react";
-import { useState } from "react";
+import { BadgeCheck, Flag, Users } from "lucide-react";
+import { useId, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { CardLabel, DiscoverCard } from "../../api/discoverySchemas";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
 import { type StringKey, useT } from "../../i18n";
 import { joinCommunity } from "../../sync/community";
+import { recordDiscoverClick } from "../../sync/discovery/api";
 import { cardLabelTone } from "../../sync/discovery/rules";
 import { accentBand } from "../community/accent";
 import { colorIndexOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { usePhoto } from "../components/photos";
+import { ReportDialog } from "../chat/ReportDialog";
 import { members } from "../format";
 const LABEL_KEYS: Record<NonNullable<Exclude<CardLabel, "unknown">>, StringKey> = {
   promoted: "discover_label_promoted",
@@ -37,6 +39,9 @@ export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: Discove
   useLocaleRender();
   const engine = useEngine();
   const t = useT();
+  const [reporting, setReporting] = useState(false);
+  const canReport = useOrbit((state) => state.server?.features.includes("community-reports") ?? false);
+  const howId = useId();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const how = c.joined ? t("discover_joined") : c.applications ? t("discover_apply") : c.joinPolicy === "open" ? t("discover_open") : t("discover_invite_only");
@@ -48,6 +53,7 @@ export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: Discove
     setBusy(true);
     setError(null);
     try {
+      if (c.label === "promoted") await recordDiscoverClick(engine, c.id);
       await joinCommunity(engine, c.id);
       onJoined(c.id);
       open();
@@ -63,7 +69,7 @@ export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: Discove
   const labelKey = c.label && c.label !== "unknown" ? LABEL_KEYS[c.label] : null;
   return (
     <article className="discover-card" aria-labelledby={`dc-${c.id}`} data-label={c.label ?? undefined}>
-      <button className="discover-card-body" onClick={onPreview} aria-describedby={`dc-${c.id}-how`}>
+      <button className="discover-card-body" onClick={onPreview} aria-describedby={howId}>
         <span className="discover-card-band" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: c.accent ? accentBand(c.accent) : bandOf(c.id) }} aria-hidden="true" />
         {labelKey && <span className={`discover-label discover-label-${cardLabelTone(c.label)}`}>{t(labelKey)}</span>}
         <span className="discover-card-icon">
@@ -100,8 +106,13 @@ export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: Discove
             </>
           )}
           {" · "}
-          <span id={`dc-${c.id}-how`}>{how}</span>
+          <span id={howId}>{how}</span>
         </span>
+        {canReport && (
+          <button type="button" className="icon-btn discover-report" aria-label={t("workspace.reference.reportCommunity", { name: c.name })} onClick={() => setReporting(true)}>
+            <Flag size={18} aria-hidden />
+          </button>
+        )}
         {c.joined ? (
           <button className="btn btn-secondary btn-sm" onClick={open}>
             {t("discover_open_btn")}
@@ -116,6 +127,7 @@ export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: Discove
           </button>
         )}
       </footer>
+      {reporting && <ReportDialog target={{ kind: "community", orgId: c.id, name: c.name }} onClose={() => setReporting(false)} />}
       {error && (
         <p className="discover-error" role="alert">
           {error}

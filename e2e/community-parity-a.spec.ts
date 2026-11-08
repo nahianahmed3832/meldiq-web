@@ -25,7 +25,7 @@ test("community menu order, Lock popover, and the settings window's rail", async
   const menu = page.getByRole("menu", { name: "Parity Lab" });
   await expect(menu).toBeVisible();
   const labels = (await menu.getByRole("menuitem").allInnerTexts()).map((t) => t.split("\n")[0].trim());
-  const order = ["Invite people", "Community settings", "Create channel", "Create category", "Lock community", "Mute community", "Notification settings", "Delete community"];
+  const order = ["Invite people", "Community settings", "Create channel", "Create category", "Lock community", "Notification settings", "Mute community", "Delete community"];
   const seen = labels.filter((l) => order.includes(l));
   expect(seen).toEqual(order.filter((o) => labels.includes(o)));
   expect(labels.at(-1)).toBe("Delete community");
@@ -44,9 +44,9 @@ test("community menu order, Lock popover, and the settings window's rail", async
   await expect(window).toBeVisible();
   await expect(window.getByRole("heading", { level: 1, name: "Overview" })).toBeVisible();
   const rail = window.getByRole("navigation", { name: "Community settings" });
-  await expect(rail.getByRole("group", { name: "Parity Lab" })).toBeVisible();
-  await expect(rail.getByRole("group", { name: "People" }).getByRole("button", { name: "Members" })).toBeVisible();
-  await expect(rail.getByRole("group", { name: "Moderation" }).getByRole("button", { name: "Audit log" })).toBeVisible();
+  await expect(rail.getByRole("group", { name: "Overview" })).toBeVisible();
+  await expect(rail.getByRole("group", { name: "Members" }).getByRole("button", { name: "Members" })).toBeVisible();
+  await expect(rail.getByRole("group", { name: "Safety" }).getByRole("button", { name: "Audit log" })).toBeVisible();
   await shot(page, "window-profile");
 
   await rail.getByRole("button", { name: "Roles" }).click();
@@ -57,7 +57,7 @@ test("community menu order, Lock popover, and the settings window's rail", async
 
   // An old Security actions link opens the window on Profile, at its safety section.
   await page.goto("/workspace/security");
-  await expect(page.getByRole("dialog", { name: "Parity Lab settings" }).getByRole("heading", { level: 1, name: "Moderation" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Parity Lab settings" }).getByRole("heading", { level: 1, name: "Safety" })).toBeVisible();
   await shot(page, "window-security-link");
 
   // Phones: full screen, the rail a row of pages.

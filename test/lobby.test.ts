@@ -250,10 +250,11 @@ describe("landing, the channel list's row and the feed URL", () => {
 
 describe("community settings with the lobby", () => {
   const owner = zOrgPermissions.parse({ canManageOrg: true, canInvite: true, canCreateChannels: true, canViewDirectory: true, isOwner: true });
-  it("puts Lobby where Home was and keeps the guide reachable", () => {
-    const keys = visibleCommunityRail(["community-guide", LOBBY_FEATURE], owner).map((p) => [p.key, p.label]);
-    expect(keys.slice(0, 3)).toEqual([
-      ["overview", "Overview"],
+  it("puts Lobby first in the community group and keeps the guide reachable", () => {
+    const keys = visibleCommunityRail(["community-guide", LOBBY_FEATURE], owner)
+      .filter((p) => p.group === "community")
+      .map((p) => [p.key, p.label]);
+    expect(keys.slice(0, 2)).toEqual([
       ["lobby", "Lobby"],
       ["guide", "Community guide"],
     ]);

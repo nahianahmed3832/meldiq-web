@@ -15,15 +15,13 @@ import {
   Megaphone,
   PenSquare,
   RotateCcw,
-  Settings2,
   ShieldCheck,
-  Sparkles,
   Ticket,
   Trash2,
   UserPen,
   UserPlus,
 } from "lucide-react";
-import { SparkDialog } from "../mojo/SparkDialog";
+import { Icon } from "../icons/Icon";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -49,7 +47,7 @@ import type { Engine } from "../../sync/engine";
 import { ArrangeRailDialog } from "./NotifyDialogs";
 import { categoriesOf, orderedOrgs } from "./panelData";
 import type { CommunityPermissions } from "./useCommunityPermissions";
-type MenuDialog = "channel" | "category" | "arrange" | "leave" | "delete" | "nickname" | "sparks" | "ticket" | "onboarding" | null;
+type MenuDialog = "channel" | "category" | "arrange" | "leave" | "delete" | "nickname" | "ticket" | "onboarding" | null;
 type NavChange = (op: Parameters<Engine["nav"]["change"]>[1]) => void;
 /** The per-browser "Hide muted channels" switch for a community (android CommunityViewPrefs: this device only). */
 export const hideMutedKey = (orgId: string) => `::hide-muted:${orgId}`;
@@ -111,35 +109,40 @@ export function useCommunityMenu(
   const lock = (choice: LockChoice) =>
     void lockCommunity(engine, orgId, choice, realLock).catch(() => engine.notice("error", uiText("organization.interface.couldn_t_lock_the_community_try_again_678dfbe")));
   const unlock = () => void lockCommunity(engine, orgId, null, realLock).catch(() => engine.notice("error", uiText("organization.interface.couldn_t_unlock_the_community_try_again_55a45ac")));
-  const entries: MenuEntry[] = [
-    { label: l10n("notifications.markRead"), icon: <CheckCheck size={16} />, disabled: readTargets.length === 0, onSelect: () => void Promise.all(readTargets.map((c) => engine.markRead(c))) },
-    "separator",
-  ];
-  // The reference's order (docs/MELDIQ_COMMUNITY_PARITY.md §1, server menu): invite, Sparks, settings, promote, bots,
-  // create, lock, nickname, mute, notifications; then Meldiq's own items; leaving or deleting last.
+  const entries: MenuEntry[] = [];
   if (perms.canInvite)
     entries.push({
       get label() {
         return uiText("calls.interface.invite_people_27bf0f2");
       },
-      icon: <UserPlus size={16} />,
+      className: "community-menu-invite",
+      icon: <UserPlus size={18} />,
       onSelect: () => onDialog({ kind: "addMembers", orgId }),
     });
   // Meldiq Spark (server docs/MOJO.md): any member may give one; no permission needed.
   if (features.includes("mojo"))
     entries.push({
       get label() {
-        return uiText("organization.interface.sparks_6905661");
+        return uiText("workspace.reference.supercharge");
       },
-      icon: <Sparkles size={16} />,
+      className: "community-menu-supercharge",
+      icon: <Icon name="settings.spark" size={18} />,
       hint: sparkLevel ? uiText("billing.interface.level_value0_6095a3d", { value0: sparkLevel }) : undefined,
-      onSelect: () => setDialog("sparks"),
+      onSelect: () => openSettings("sparks"),
+    });
+  if (features.includes("meetings"))
+    entries.push({
+      get label() {
+        return uiText("workspace.interface.events_8d14f6e");
+      },
+      icon: <CalendarPlus size={16} />,
+      onSelect: () => openSettings("meetings"),
     });
   entries.push({
     get label() {
       return uiText("organization.interface.community_settings_7a81b1f");
     },
-    icon: <Settings2 size={16} />,
+    icon: <Icon name="settings.general" size={18} />,
     onSelect: () => openSettings("overview"),
   });
   if (features.includes(PARITY_FEATURES.promote) && perms.canManageOrg)
@@ -169,6 +172,7 @@ export function useCommunityMenu(
       onSelect: () => setDialog("category"),
     });
   if (canLock) entries.push(lockEntry({ lockedUntil, realLock, onLock: lock, onUnlock: unlock }));
+  if (preferences) entries.push({ label: l10n("notifications.bell_label"), icon: <Icon name="settings.notifications" size={18} />, onSelect: () => openSettings("notifications") });
   if (features.includes(PARITY_FEATURES.permissions))
     entries.push({
       get label() {
@@ -195,7 +199,13 @@ export function useCommunityMenu(
       icon: <RotateCcw size={16} />,
       onSelect: () => setDialog("onboarding"),
     });
-  if (preferences) entries.push(muteEntry(muted, change), { label: l10n("notifications.bell_label"), icon: <Bell size={16} />, onSelect: () => openSettings("notifications") });
+  if (preferences) entries.push(muteEntry(muted, change));
+  entries.push("separator", {
+    label: l10n("notifications.markRead"),
+    icon: <CheckCheck size={16} />,
+    disabled: readTargets.length === 0,
+    onSelect: () => void Promise.all(readTargets.map((c) => engine.markRead(c))),
+  });
   entries.push(
     "separator",
     {
@@ -229,14 +239,6 @@ export function useCommunityMenu(
       },
       icon: <ArrowUpDown size={16} />,
       onSelect: () => setDialog("arrange"),
-    });
-  if (features.includes("meetings"))
-    entries.push({
-      get label() {
-        return uiText("organization.interface.create_event_946cbe2");
-      },
-      icon: <CalendarPlus size={16} />,
-      onSelect: () => openSettings("meetings"),
     });
   entries.push({
     get label() {
@@ -287,7 +289,6 @@ export function useCommunityMenu(
       {dialog === "category" && <CategoryNameDialog orgId={org.id} category={null} onClose={close} />}
       {dialog === "arrange" && <ArrangeRailDialog onClose={close} />}
       {dialog === "leave" && <LeaveDialog orgId={org.id} name={org.name} onClose={close} />}
-      {dialog === "sparks" && <SparkDialog orgId={org.id} name={org.name} onClose={close} />}
       {dialog === "delete" && <DeleteCommunityDialog orgId={org.id} name={org.name} onClose={close} />}
       {dialog === "ticket" && <OpenTicketDialog orgId={org.id} panelId={null} onClose={close} />}
       {dialog === "nickname" && <NicknameDialog orgId={org.id} userId={engine.device.userId} onClose={close} />}

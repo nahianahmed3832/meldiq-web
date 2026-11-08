@@ -5,7 +5,7 @@ import { Localized } from "../../../i18n/Localized";
 import { interfaceLocale } from "../../../i18n/format";
 import { BotTag } from "../../components/BotTag";
 import { ChevronRight, Code2, SmilePlus, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import type { OrgAdminDetail } from "../../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../../application/orbit";
 import { navigate } from "../../../application/router";
@@ -77,7 +77,7 @@ export function OfficialBotsSection({ detail }: { detail: OrgAdminDetail }) {
               const bot = stateOf(c);
               const available = c.available && bot?.available !== false;
               return (
-                <li key={c.key} className="ws-row obot-row">
+                <li key={c.key} className="ws-row obot-row" style={{ "--bot-color": c.color } as CSSProperties}>
                   <button type="button" className="obot-row-open" onClick={() => setOpen(c.key)} aria-label={uiText("messaging.interface.value0_details_ffe0248", { value0: c.name })}>
                     <BotIcon bot={bot} catalog={c} size={40} />
                     <span className="lines grow">

@@ -5,7 +5,7 @@ import { useT as useLocalization } from "../../i18n";
 import { MeldlingArt } from "../components/MeldlingArt";
 import { ArrowLeft, Laptop } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
-import { COMMUNITY_RAIL_GROUPS, LEGACY_GROUPS, communityPageTitle, communityRailKey, visibleWorkspaceRail } from "./communityRail";
+import { COMMUNITY_RAIL_GROUPS, LEGACY_GROUPS, communityPageTitle, visibleWorkspaceRail } from "./communityRail";
 import { ThemePage } from "./ThemePage";
 import { CommunitySparksPage } from "./SparksPromotePages";
 import { PromotePage } from "./promote/PromotePage";
@@ -26,6 +26,8 @@ import { workspaceDetail } from "../../sync/workspaces";
 import type { ShellDialog } from "../shell/Shell";
 import { ChannelsPage } from "./ChannelsPage";
 import { InvitationsPage } from "./InvitationsPage";
+import { BotsPage } from "./BotsPage";
+import { PartnerApplicationCard } from "./PartnerApplicationCard";
 import { OverviewPage } from "./OverviewPage";
 import { PeoplePage } from "./PeoplePage";
 import { useLoad } from "./useLoad";
@@ -43,7 +45,7 @@ export function WorkspaceView({ orgId, page: requestedPage, onDialog }: { orgId:
   const engine = useEngine();
   const [query, setQuery] = useState("");
   const features = useOrbit((s) => s.server?.features ?? []);
-  const page = requestedPage === "theme" && !features.includes("community-channels") ? "overview" : communityRailKey(requestedPage);
+  const page = requestedPage === "theme" && !features.includes("community-channels") ? "overview" : requestedPage;
   // Any change to the workspace (here, on another device, by an admin) refreshes the org list; that reloads the detail.
   const org = useOrbit((s) => s.orgs.find((o) => o.id === orgId) ?? null);
   const detail = useLoad(() => (orgId ? workspaceDetail(engine, orgId) : Promise.resolve(null)), [engine, orgId, org]);
@@ -107,11 +109,15 @@ export function WorkspaceView({ orgId, page: requestedPage, onDialog }: { orgId:
         </nav>
         <div className="settings-page scroll">
           <div key={`${orgId}:${page}`} className="inner">
-            <h1>{title}</h1>
-            <p className="settings-scope">
-              {uiText(page === "notifications" ? "settings.interface.your_account_dbb5f63" : "settings.navigation.workspaceScope")}
-              <span>{uiText(page === "notifications" ? "settings.navigation.communityNotificationsDescription" : "settings.navigation.workspaceDescription")}</span>
-            </p>
+            <header className="workspace-settings-heading">
+              <h1>{title}</h1>
+            </header>
+            {(!community || page === "notifications") && (
+              <p className="settings-scope">
+                {uiText(page === "notifications" ? "settings.interface.your_account_dbb5f63" : "settings.navigation.workspaceScope")}
+                <span>{uiText(page === "notifications" ? "settings.navigation.communityNotificationsDescription" : "settings.navigation.workspaceDescription")}</span>
+              </p>
+            )}
             {detail.error && !d ? (
               <div className="banner danger" role="alert">
                 <span className="grow">{detail.error}</span>
@@ -125,6 +131,14 @@ export function WorkspaceView({ orgId, page: requestedPage, onDialog }: { orgId:
               <SettingsUnavailable />
             ) : page === "discovery" ? (
               <DiscoverySettingsPage detail={d} />
+            ) : page === "bots" ? (
+              <div className="ws-page workspace-bots-page">
+                <BotsPage detail={d} />
+              </div>
+            ) : page === "partner" ? (
+              <div className="ws-page">
+                <PartnerApplicationCard orgId={orgId} />
+              </div>
             ) : page === "integrations" ? (
               <IntegrationsSettingsPage detail={d} />
             ) : page === "notifications" ? (
@@ -145,8 +159,8 @@ export function WorkspaceView({ orgId, page: requestedPage, onDialog }: { orgId:
               <MeetingsPage detail={d} />
             ) : page === "pins" ? (
               <PinsPage detail={d} />
-            ) : page === "expressions" ? (
-              <ExpressionsPage detail={d} />
+            ) : page === "expressions" || page === "stickers" ? (
+              <ExpressionsPage detail={d} category={page === "stickers" ? "sticker" : "emoji"} />
             ) : page === "guide" ? (
               <GuidePage detail={d} />
             ) : page === "lobby" ? (

@@ -11,6 +11,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { joinChannel } from "../../sync/account";
 import { type ChannelKind, type ChannelScope, createChannel, updateConversation, workspaceChannels } from "../../sync/workspaces";
+import { ChannelOrder } from "./ChannelOrder";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { useAction, useLoad } from "./useLoad";
 import { CreateChannelDialog } from "../community/CreateChannelDialog";
@@ -66,6 +67,7 @@ export function ChannelsPage({ detail }: { detail: OrgAdminDetail }) {
   const manager = detail.permissions.canCreateChannels || detail.permissions.canManageOrg;
   const community = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
   const categories = useOrbit((s) => categoriesOf(s, orgId));
+  const arrange = detail.permissions.isOwner || detail.permissions.canManageChannels;
   const [creating, setCreating] = useState(false);
   // Scope-based workspaces retain their branch/team channel workflow on older deployments.
   const scoped = detail.branches.length > 0 || detail.teams.length > 0;
@@ -76,6 +78,7 @@ export function ChannelsPage({ detail }: { detail: OrgAdminDetail }) {
   const archived = (list.data ?? []).filter((c) => c.archived && c.canManage);
   return (
     <div className="ws-page">
+      {sharedEditor && arrange && list.data && <ChannelOrder orgId={orgId} channels={live} categories={categories} canCreate={permissionsOf(detail).canCreateTop} reload={reload} />}
       {detail.permissions.canCreateChannels && !sharedEditor && <NewChannel detail={detail} onCreated={reload} />}
       <Card
         title={l10n("organization.channels")}

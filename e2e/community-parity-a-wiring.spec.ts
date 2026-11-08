@@ -25,7 +25,7 @@ test("owner: safety and lock, roles with @everyone, theme tint, create channel o
   await link(page, alice);
   await page.goto("/workspace/security");
   const window = page.getByRole("dialog", { name: "Wiring Lab settings" });
-  await expect(window.getByRole("heading", { level: 1, name: "Moderation" })).toBeVisible();
+  await expect(window.getByRole("heading", { level: 1, name: "Safety" })).toBeVisible();
 
   // Safety: lock for 15 minutes, then unlock; the verification level and the new-account gate.
   const raid = window.getByRole("region", { name: "Raid protection" });
@@ -67,10 +67,10 @@ test("owner: safety and lock, roles with @everyone, theme tint, create channel o
 
   // Theme: the background tint, saved to the community's settings.
   await window.getByRole("navigation", { name: "Community settings" }).getByRole("button", { name: "Theme" }).click();
-  const tint = window.getByRole("region", { name: "Background tint" });
-  await tint.getByRole("button", { name: "Teal" }).click();
+  const tint = window.getByRole("group", { name: "Background tint" });
+  await tint.getByRole("button", { name: "Background tint · Teal" }).click();
   await shot(page, "a-theme-tint");
-  await tint.getByRole("button", { name: "Save tint" }).click();
+  await window.getByRole("button", { name: "Save", exact: true }).click();
   await expect.poll(async () => (await alice.req("GET", `/v1/orgs/${org.id}/settings`)).background).toBe("#14b8a6");
   await page.keyboard.press("Escape");
 

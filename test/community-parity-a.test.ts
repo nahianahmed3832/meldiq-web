@@ -4,7 +4,7 @@ import { parseRoute, routeHref } from "../src/application/router";
 import { cleanNickname, LOCK_CHOICES, NICKNAME_MAX, nicknameProblem, PARITY_FEATURES } from "../src/sync/communityParity";
 import { lockEntry } from "../src/ui/community/lockMenu";
 import type { MenuEntry, MenuItem } from "../src/ui/components/Overlay";
-import { communityPageTitle, communityRailKey, visibleCommunityRail } from "../src/ui/workspace/communityRail";
+import { communityPageTitle, visibleCommunityRail } from "../src/ui/workspace/communityRail";
 
 /** Community parity, batch A (docs/MELDIQ_COMMUNITY_PARITY.md): the settings window's rail and the community menu. */
 
@@ -40,31 +40,33 @@ describe("community settings rail", () => {
   it("lists an owner's pages in the reference's order, Meldiq's extras where they fit", () => {
     expect(keys(ALL_FEATURES, owner)).toEqual([
       "overview",
-      "guide",
       "theme",
-      "discovery",
       "channels",
-      "rules",
-      "sparks",
       "expressions",
-      "integrations",
+      "stickers",
+      "onboarding",
+      "guide",
+      "rules",
+      "discovery",
+      "reports",
+      "audit",
       "people",
       "roles",
-      "onboarding",
       "bans",
       "applications",
       "invitations",
       "pins",
-      "reports",
-      "audit",
+      "bots",
+      "integrations",
+      "sparks",
       "meetings",
       "usage",
     ]);
   });
 
   it("keeps pages from people who can't use them and servers without the feature", () => {
-    expect(keys(ALL_FEATURES, member)).toEqual(["overview", "theme", "channels", "sparks", "people", "onboarding", "pins", "meetings"]);
-    expect(keys([], owner)).toEqual(["overview", "discovery", "channels", "people", "roles", "invitations", "audit", "usage"]);
+    expect(keys(ALL_FEATURES, member)).toEqual(["overview", "theme", "channels", "onboarding", "people", "pins", "sparks", "meetings"]);
+    expect(keys([], owner)).toEqual(["overview", "channels", "discovery", "audit", "people", "roles", "invitations", "usage"]);
   });
 
   it("shows only the open pages while permissions load", () => {
@@ -77,16 +79,16 @@ describe("community settings rail", () => {
     expect(keys([...ALL_FEATURES, PARITY_FEATURES.promote], member)).not.toContain("promote");
   });
 
-  it("keeps safety links on Moderation and bot links on Integrations", () => {
-    expect(communityRailKey("security")).toBe("security");
-    expect(communityRailKey("bots")).toBe("integrations");
-    expect(communityPageTitle("security")).toBe("Moderation");
+  it("names the dedicated Safety, Bots and expression destinations", () => {
+    expect(communityPageTitle("security")).toBe("Safety");
+    expect(communityPageTitle("bots")).toBe("Bots");
     expect(communityPageTitle("guide")).toBe("Home");
-    expect(communityPageTitle("expressions")).toBe("Emoji & stickers");
+    expect(communityPageTitle("expressions")).toBe("Emoji");
+    expect(communityPageTitle("stickers")).toBe("Stickers");
   });
 
   it("routes the new pages and keeps the old ones", () => {
-    for (const page of ["theme", "sparks", "promote", "security", "guide"] as const) {
+    for (const page of ["theme", "sparks", "promote", "security", "guide", "stickers", "partner", "bots", "integrations"] as const) {
       expect(parseRoute(routeHref({ section: "workspace", workspacePage: page })).workspacePage).toBe(page);
     }
     expect(parseRoute("/workspace/nope").workspacePage).toBe("overview");

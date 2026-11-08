@@ -35,6 +35,7 @@ import "../styles/localization.css";
 import "../styles/standardization.css";
 import "../styles/foundation.css";
 import "../styles/compact-navigation.css";
+import "../styles/community-reference.css";
 
 export default function MeldiqApp({ Component, pageProps }: AppProps) {
   return (

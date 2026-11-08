@@ -1,0 +1,30 @@
+{
+  "currency": "USD",
+  "supercharge": {
+    "sku": "community-supercharge-monthly",
+    "unitCents": 299,
+    "interval": "MONTH",
+    "levels": [2, 7, 14]
+  },
+  "boost": {
+    "sku": "community-boost-weekly",
+    "unitCents": 399,
+    "interval": "WEEK"
+  },
+  "super": {
+    "sku": "community-super-boost-weekly",
+    "unitCents": 799,
+    "interval": "WEEK"
+  },
+  "mega": {
+    "sku": "community-mega-boost-weekly",
+    "unitCents": 1299,
+    "interval": "WEEK"
+  },
+  "promoted": {
+    "sku": "community-promoted-spot-weekly",
+    "unitCents": 2999,
+    "interval": "WEEK",
+    "capacity": 4
+  }
+}

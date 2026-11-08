@@ -66,8 +66,8 @@ test("Discover, Profile's Discovery and template, template links, Promote and th
   await page.goto("/workspace/promote");
   await expect(page.getByRole("region", { name: "Discovery rank" })).toBeVisible();
   await expect(page.getByText("Most popular")).toBeVisible();
-  await page.getByRole("button", { name: "Mega Boost for a week" }).click();
-  await expect(page.getByText("Coming soon")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Get Mega Boost" })).toBeDisabled();
+  await expect(page.getByText("Checkout for boosts and promoted spots is coming soon.")).toBeVisible();
   await shot(page, "promote");
   await page.getByRole("region", { name: "Promoted row" }).scrollIntoViewIfNeeded();
   await shot(page, "promote-row");
