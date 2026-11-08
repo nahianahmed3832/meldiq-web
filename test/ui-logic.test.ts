@@ -78,10 +78,29 @@ describe("routes", () => {
     expect(parseRoute("/dms/c/%E0%A4%A")).toMatchObject({ section: "dms", conversationId: null });
   });
 
+  it("uses stable numeric channel, community and thread segments", () => {
+    const origin = "https://web.meldiq.app";
+    const conversationId = "c_jv7PeWWlEpJaFqy4OLGJGA";
+    const threadRoot = "m-1";
+    const r = { section: "home", communityId: "o_1", conversationId, panel: "thread", threadRoot } as const;
+    const href = "/channels/430069/32403367023574162802196616703023524087370112/thread/421813";
+    expect(routeHref(r)).toBe(href);
+    expect(parseRoute(href)).toMatchObject(r);
+    expect(appHref(href, origin)).toBe(href);
+    expect(appHref("/channels/1/421813", origin)).toBeNull();
+    expect(appHref("/dms/000421813", origin)).toBeNull();
+    expect(parseRoute("/dms/c/421813").conversationId).toBe("421813");
+
+    const longest = "A" + "_".repeat(127);
+    const long = routeHref({ ...r, communityId: longest, conversationId: longest, threadRoot: longest });
+    expect(appHref(long, origin)).toBe(long);
+    expect(parseRoute(long)).toMatchObject({ communityId: longest, conversationId: longest, threadRoot: longest });
+  });
+
   it("old hash links and this app's own paths open in the app; nothing else does", () => {
     const origin = "https://web.meldiq.app";
-    expect(appHref("/dms/c/c_abc/details", origin)).toBe("/dms/c/c_abc/details");
-    expect(appHref("https://web.meldiq.app/#/home/c/c_abc", origin)).toBe("/home/c/c_abc");
+    expect(appHref("/dms/c/c_abc/details", origin)).toBe("/dms/1560127196/details");
+    expect(appHref("https://web.meldiq.app/#/home/c/c_abc", origin)).toBe("/channels/1560127196");
     expect(appHref("#/settings/devices", origin)).toBe("/settings/devices");
     expect(appHref("/settings/nope", origin)).toBe("/settings/profile");
     for (const other of ["https://evil.example/dms", "/invite/abc", "/meldiq-og.png", "/v1/queue", "javascript:alert(1)", "//evil.example/home"]) expect(appHref(other, origin)).toBeNull();

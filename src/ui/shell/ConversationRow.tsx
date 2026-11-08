@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { memo, type MouseEvent, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { navigate, useRoute } from "../../application/router";
+import { navigate, routeHref, useRoute } from "../../application/router";
 import type { ConversationLocal } from "../../model/types";
 import { newSectionId, placeOf, workspaceOf } from "../../sync/navPrefs";
 import { GroupAvatar } from "../components/OrgAvatar";
@@ -120,7 +120,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const label = `${c.type === "CHANNEL" ? uiText("workspace.interface.channel_af0e6a9") : ""}${title}${unreadLabel(unread, mentions, muted, { unread: (n) => uiText("organization.interface.value0_unread_f307d99", { value0: n }), mentions: (n) => uiText("organization.interface.value0_mentions_939b7f1", { value0: n }), muted: uiText("common.states.muted") })}`;
   const count = <UnreadBadge marker={marker} />;
   const highlight = isHighlighted(marker) ? " unread" : "";
-  const href = `/${section}/c/${encodeURIComponent(id)}`;
+  const href = routeHref({ section, communityId: c.orgId, conversationId: id });
   const openMenu = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();

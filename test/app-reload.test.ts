@@ -32,7 +32,7 @@ describe("the app shell from the service worker", () => {
     expect(strategyFor(nav("/settings/billing"), ORIGIN)).toBe("payment");
   });
   it("answers opening the app's own routes with the kept page", () => {
-    for (const p of ["/", "/lobby", "/home", "/home/c/c_abc", "/dms/c/c_1/thread/m_2", "/friends", "/settings/appearance", "/workspace/roles", "/discover"])
+    for (const p of ["/", "/lobby", "/home", "/home/c/c_abc", "/dms/c/c_1/thread/m_2", "/channels/430069/1560127196", "/dms/1560127196/thread/421813", "/friends", "/settings/appearance", "/workspace/roles", "/discover"])
       expect(strategyFor(nav(p), ORIGIN)).toBe("shell");
   });
 
@@ -204,7 +204,7 @@ describe("where the person left off", () => {
     vi.stubGlobal("location", new URL(`${ORIGIN}/`));
     const { forgetPlace, placeToRestore, rememberPlace } = await import("../src/application/lastPlace");
     rememberPlace("u_a", "/home/c/c_123");
-    expect(placeToRestore("u_a", at("/"))).toBe("/home/c/c_123");
+    expect(placeToRestore("u_a", at("/"))).toBe("/channels/1560239543");
     expect(placeToRestore("u_b", at("/"))).toBeNull(); // another account signed in since
     expect(placeToRestore("u_a", at("/dms"))).toBeNull(); // a link or a reload keeps its own address
     expect(placeToRestore("u_a", at("/", "?discord=1"))).toBeNull();

@@ -1,3 +1,4 @@
+import { numericConversationPath } from "../src/application/conversationPaths";
 import { expect, test } from "@playwright/test";
 import { newPhone, testAddress } from "./phone";
 import { link } from "./link";
@@ -49,7 +50,7 @@ test("personal bot approval, messaging, revocation and fresh consent use the rea
     await page.screenshot({ path: `docs/yapin-parity/part4/screenshots/bot-dm-consent-${info.project.name}.png`, fullPage: true });
     expect((await bot("POST", `/v2/bot/users/${person.userId}/dm`, { content: "Personal bot response after approval." })).status).toBe(200);
     await personal.getByRole("button", { name: "Message", exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`/dms/c/${firstConversation}$`));
+    await expect(page).toHaveURL(numericConversationPath("dms", firstConversation));
     const messages = page.getByRole("log", { name: "Messages", exact: true });
     await expect(messages.getByText("Personal bot response after approval.", { exact: true })).toBeVisible();
     const composer = page.getByLabel("Message Consent Helper", { exact: true });
@@ -75,7 +76,7 @@ test("personal bot approval, messaging, revocation and fresh consent use the rea
     const renewed = await person.req("GET", `/v2/bots/${made.bot.id}/direct-messages`);
     expect(renewed.conversationId).not.toBe(firstConversation);
     await personal.getByRole("button", { name: "Message", exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`/dms/c/${renewed.conversationId}$`));
+    await expect(page).toHaveURL(numericConversationPath("dms", renewed.conversationId));
     await expect(messages.getByText("Personal bot response after approval.", { exact: true })).toHaveCount(0);
     await expect(messages.getByRole("article")).toHaveCount(0);
     expect((await bot("GET", `/v2/bot/conversations/${renewed.conversationId}/messages`)).body.messages).toEqual([]);

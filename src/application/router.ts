@@ -1,12 +1,14 @@
 import Router from "next/router";
 import { hasUnsavedChanges, requestNavigation } from "./navigationGuard";
 import { useSyncExternalStore } from "react";
+import { numericConversationPath, parseNumericConversationPath, type ConversationPanel, type ConversationSection } from "./conversationPaths";
+import { encodeLinkId, LEGACY_LINK_ID } from "./linkIds";
 
 /**
  * The app's routes, as paths (Next.js serves the one client-side page for every path; docs/MELDIQ_WEB_NEXTJS.md):
  *   /home  /dms  /activity  /later  /discover    the sections (Later: saved messages and reminders; Discover: public communities)
  *   /lobby                                     the selected community's lobby (community parity B)
- *   /<section>/c/<id>[/details|/search|/pinned|/members|/thread/<root>]   a conversation (and its side panel)
+ *   /channels/<community>/<channel>, /dms/<id>  a conversation, optionally followed by a panel or thread
  *   /settings/<page>
  *   /workspace/<page>                          the current workspace's settings and administration
  *   /oauth/authorize?client_id=…               "Log in with Meldiq": an app asks to know who you are (API 0.65.0 batch B)
@@ -15,7 +17,7 @@ import { useSyncExternalStore } from "react";
  */
 /** "friends" (2026-10-28): the Friends page, the Messages home on its own route (phones open it from the list). */
 /** "lobby" (community parity B): the selected community's lobby, its front page. */
-export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace" | "oauth" | "lobby";
+export type Section = ConversationSection | "settings" | "workspace" | "oauth";
 /** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
 export type SettingsPage =
   | "you"
@@ -81,8 +83,9 @@ export type WorkspacePage =
 
 export interface Route {
   section: Section;
+  communityId: string | null;
   conversationId: string | null;
-  panel: "details" | "thread" | "search" | "pinned" | "threads" | "members" | null;
+  panel: ConversationPanel | null;
   threadRoot: string | null;
   settingsPage: SettingsPage;
   workspacePage: WorkspacePage;
@@ -151,18 +154,19 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "integrations",
   "notifications",
 ];
-const ID = /^[A-Za-z0-9_-]{1,128}$/;
+const ID = new RegExp(`^${LEGACY_LINK_ID}$`);
 
-/** The route in a path ("/dms/c/<id>") or an old hash route ("#/dms/c/<id>"); anything else is Home. */
+/** Route IDs always use the values understood by the API and local store. */
 export function parseRoute(where: string): Route {
-  const parts = where
-    .replace(/^#?\/?/, "")
-    .split(/[?#]/)[0]
+  const path = where.replace(/^#/, "").split(/[?#]/)[0];
+  const parts = path
     .split("/")
     .filter(Boolean)
     .map(safeDecode);
   const section = SECTIONS.includes(parts[0] as Section) ? (parts[0] as Section) : "home";
-  const route: Route = { section, conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
+  const route: Route = { section, communityId: null, conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
+  const numeric = parseNumericConversationPath(path);
+  if (numeric) return { ...route, ...numeric };
   if (section === "settings") return { ...route, settingsPage: PAGES.includes(parts[1] as SettingsPage) ? (parts[1] as SettingsPage) : "profile" };
   if (section === "workspace") return { ...route, workspacePage: WORKSPACE_PAGES.includes(parts[1] as WorkspacePage) ? (parts[1] as WorkspacePage) : "overview" };
   if (parts[1] === "c" && parts[2] && ID.test(parts[2])) {
@@ -187,13 +191,10 @@ export function routeHref(r: Partial<Route> & { section: Section }): string {
   if (r.section === "oauth") return "/oauth/authorize";
   let h = `/${r.section}`;
   if (r.conversationId) {
-    h += `/c/${encodeURIComponent(r.conversationId)}`;
-    if (r.panel === "details") h += "/details";
-    if (r.panel === "search") h += "/search";
-    if (r.panel === "pinned") h += "/pinned";
-    if (r.panel === "threads") h += "/threads";
-    if (r.panel === "members") h += "/members";
-    if (r.panel === "thread" && r.threadRoot) h += `/thread/${encodeURIComponent(r.threadRoot)}`;
+    h = numericConversationPath(r.section, r.conversationId, r.communityId);
+    if (r.panel === "thread") {
+      if (r.threadRoot) h += `/thread/${encodeLinkId(r.threadRoot)}`;
+    } else if (r.panel) h += `/${r.panel}`;
   }
   return h;
 }
@@ -204,7 +205,10 @@ const STATE = { meldiq: 1 };
 let historyIndex = 0;
 
 export function navigate(r: Partial<Route> & { section: Section }, replace = false): void {
-  go(routeHref(r), replace);
+  // Opening or closing a panel in the same channel keeps its community in the URL.
+  const current = snapshot();
+  const communityId = r.communityId ?? (r.conversationId === current.conversationId ? current.communityId : null);
+  go(routeHref({ ...r, communityId }), replace);
 }
 
 /** Goes to a path of this app (a link, a notification): history, then the screens follow. */
@@ -219,6 +223,13 @@ export function go(href: string, replace = false): void {
   });
 }
 
+/** Rewrites an equivalent route without adding history or interrupting an open draft. */
+export function replaceRoutePath(href: string): void {
+  if (location.pathname === href) return;
+  history.replaceState(history.state, "", `${href}${location.search}${location.hash}`);
+  window.dispatchEvent(new Event(ROUTE_EVENT));
+}
+
 /** A path of this app from a link or notification, or null for anything else (another site, a file, a malformed one). */
 export function appHref(raw: string, origin = location.origin): string | null {
   let u: URL;
@@ -230,12 +241,16 @@ export function appHref(raw: string, origin = location.origin): string | null {
   if (u.origin !== origin) return null;
   const legacy = /^#\/[A-Za-z0-9/_%-]{0,300}$/.test(u.hash) && (u.pathname === "/" || u.pathname === "/index.html");
   const where = legacy ? u.hash.slice(1) : u.pathname;
+  const numeric = parseNumericConversationPath(where);
+  if (numeric) return where.replace(/\/$/, "");
   if (!/^\/[A-Za-z0-9/_%-]{0,300}$/.test(where)) return null;
   const section = where.split("/")[1];
   // The consent page carries its request in the query, which an in-page move would drop: the browser loads it.
   if (section === "oauth") return null;
   if (where === "/settings/gifts" && /^#gift=[A-Za-z0-9_-]{43}$/.test(u.hash)) return where + u.hash;
-  return SECTIONS.includes(section as Section) ? routeHref(parseRoute(where)) : null;
+  if (!SECTIONS.includes(section as Section)) return null;
+  if (/^\/(dms|activity|later|friends|discover|lobby)\/\d/.test(where)) return null;
+  return routeHref(parseRoute(where));
 }
 
 /**
@@ -281,6 +296,10 @@ export function startRouting(): () => void {
   history.scrollRestoration = "manual";
   const legacy = () => {
     if (location.hash.startsWith("#/")) go(appHref(location.hash) ?? "/home", true);
+    else if (/^\/[a-z]+\/c\//.test(location.pathname)) {
+      const route = parseRoute(location.pathname);
+      if (route.conversationId) replaceRoutePath(routeHref(route));
+    }
   };
   legacy();
   const onClick = (e: MouseEvent) => {

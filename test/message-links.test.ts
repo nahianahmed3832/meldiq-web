@@ -4,7 +4,9 @@ import { canLink, messageLink, parseMessageLink } from "../src/sync/messageLinks
 /** android ChatInterfaceRulesTest's link cases (batch B5). */
 describe("message links", () => {
   it("carry only the conversation and message ids, both ways", () => {
-    expect(messageLink("c_abc", "m-1")).toBe("https://web.meldiq.app/m/c_abc/m-1");
+    const url = messageLink("c_abc", "m-1");
+    expect(url).toBe("https://web.meldiq.app/messages/1560127196/421813");
+    expect(parseMessageLink(url)).toEqual({ conversationId: "c_abc", messageId: "m-1" });
     expect(parseMessageLink("https://meldiq.app/m/c_abc/m-1")).toEqual({ conversationId: "c_abc", messageId: "m-1" });
     expect(parseMessageLink(" meldiq://m/c_abc/m-1/ ")).toEqual({ conversationId: "c_abc", messageId: "m-1" });
     expect(parseMessageLink("https://www.MELDIQ.app/m/c/x")).toEqual({ conversationId: "c", messageId: "x" });
@@ -15,6 +17,8 @@ describe("message links", () => {
     expect(parseMessageLink("https://evil.example/m/c/x")).toBeNull();
     expect(parseMessageLink("https://meldiq.app/m/c/x?y=1")).toBeNull();
     expect(parseMessageLink("https://meldiq.app/m/c")).toBeNull();
+    expect(parseMessageLink("https://meldiq.app/messages/1/421813")).toBeNull();
+    expect(parseMessageLink("https://evil.example/messages/1560127196/421813")).toBeNull();
   });
 
   it("are offered for sent messages that still exist", () => {

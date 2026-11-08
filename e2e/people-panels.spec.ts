@@ -1,3 +1,4 @@
+import { numericConversationPath } from "../src/application/conversationPaths";
 import fs from "node:fs";
 import path from "node:path";
 import { expect, type Page, test } from "@playwright/test";
@@ -123,6 +124,6 @@ test("community photos in the rail, a member list in channels and a profile in D
   await expect(list).toHaveCount(0);
   await page.getByRole("button", { name: "Show the member list" }).click();
   await expect(list).toBeVisible();
-  await expect(page).toHaveURL(new RegExp(`/home/c/${channel.id}/members$`));
+  await expect(page).toHaveURL(`${numericConversationPath("home", channel.id, org.id)}/members`);
   await shot(page, "narrow-members");
 });

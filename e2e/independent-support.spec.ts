@@ -1,3 +1,4 @@
+import { numericConversationPath } from "../src/application/conversationPaths";
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { zMojoCatalog, zMojoMe } from "../src/api/mojoSchemas";
@@ -90,17 +91,23 @@ test("community entry opens its last text channel and removes the old dashboard"
   const { conversations } = await alice.req("GET", "/v1/conversations");
   const channels = conversations.filter((c: { orgId: string; type: string; voice: boolean }) => c.orgId === org.id && c.type === "CHANNEL" && !c.voice);
   expect(channels.length).toBeGreaterThan(0);
+  const { org: other } = await alice.req("POST", "/v1/orgs", { name: "Other Landing Community" });
   await link(page, alice);
   const selected = channels.at(-1);
+  const canonical = numericConversationPath("home", selected.id, org.id);
+  await page.locator('.rail-org[title="Other Landing Community"]').click();
+  await expect(page.locator('.rail-org[title="Other Landing Community"]')).toHaveAttribute("aria-current", "true");
   await page.goto(`/home/c/${selected.id}`);
   await expect(page.locator(".conversation .conv-head h1")).toBeVisible();
+  await expect(page).toHaveURL(canonical);
+  await expect(page.locator('.rail-org[title="Channel Landing Community"]')).toHaveAttribute("aria-current", "true");
   await page.goto("/home");
   if (isMobile) {
     // Back to the channel list remains possible on a phone.
     await expect(page).toHaveURL(/\/home$/);
     await expect(page.getByRole("complementary", { name: "Conversations", exact: true })).toBeVisible();
   } else {
-    await expect(page).toHaveURL(new RegExp(`/home/c/${selected.id}$`));
+    await expect(page).toHaveURL(canonical);
     await expect(page.locator(".conversation .conv-head h1")).toContainText(selected.name);
   }
   await expect(page.getByText("Drafts & sent", { exact: true })).toHaveCount(0);
@@ -108,7 +115,13 @@ test("community entry opens its last text channel and removes the old dashboard"
   await page.screenshot({ path: `/tmp/meldiq-channel-landing-${info.project.name}.png` });
   await page.goto(`/home/c/${selected.id}`);
   await page.goto("/");
-  await expect(page).toHaveURL(new RegExp(`/home/c/${selected.id}$`));
+  await expect(page).toHaveURL(canonical);
+  await page.reload();
+  await expect(page.locator(".conversation .conv-head h1")).toContainText(selected.name);
+  await expect(page).toHaveURL(canonical);
+  const mismatched = numericConversationPath("home", selected.id, other.id);
+  await page.goto(mismatched);
+  await expect(page).not.toHaveURL(mismatched);
 });
 
 test("paid Plus users see one billing reminder with their agreed amount and never an upgrade popup", async ({ page }) => {

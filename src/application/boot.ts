@@ -11,6 +11,7 @@ import { getPrefs } from "./prefs";
 import { refreshPush, startServiceWorker, systemNotify } from "./webPush";
 import { armChimeOnInteraction, chimeState, playChime } from "./messageChime";
 import { transfersOf } from "../sync/transfers";
+import { conversationPath, numericConversationPath } from "./conversationPaths";
 /**
  * What this browser needs: a secure context, WebCrypto with Ed25519 and X25519 (natively, or the fallback that main.tsx
  * installs for Safari before 17), IndexedDB and WebSockets. Colours no longer need light-dark(): older browsers get the
@@ -37,13 +38,12 @@ export async function missingCapabilities(): Promise<string[]> {
 }
 const allowed = (): boolean => getPrefs().notifications && typeof Notification !== "undefined" && Notification.permission === "granted";
 const lookedAt = (): boolean => document.visibilityState === "visible" && document.hasFocus();
-const room = (id: string | null): string | null => (id ? `/home/c/${encodeURIComponent(id)}` : null);
 /**
  * A message the notification pipeline let through (engine.notifyIncoming): a system notification while this tab isn't
  * looked at (src/application/webPush.ts shows it), and otherwise the in-app chime. Never both: a system notification
  * with sound already makes one.
  */
-function notify(title: string, body: string, conversationId: string, database: string): void {
+function notify(title: string, body: string, conversationId: string, database: string, href: string | null): void {
   const p = getPrefs();
   const system = allowed() && !lookedAt();
   // Meldiq's own chime when it can play (the browser's notification is then silent, so there's one sound, and one
@@ -55,7 +55,7 @@ function notify(title: string, body: string, conversationId: string, database: s
       title: p.notificationText ? title : "Meldiq",
       body: p.notificationText ? body : uiText("workspace.side_new_message"),
       tag: conversationId,
-      href: room(conversationId),
+      href,
       silent: chime || !p.messageSound,
     });
   if (!p.inAppSound) return;
@@ -74,7 +74,7 @@ export function onChimeBlocked(fn: () => void): void {
   onSoundBlocked = fn;
 }
 /** A reminder that went off (Later): a system notification (when allowed) that opens Later or the saved message. */
-function notifyReminder(title: string, body: string, conversationId: string | null, database: string): void {
+function notifyReminder(title: string, body: string, database: string, href: string | null): void {
   if (!allowed()) return;
   const p = getPrefs();
   // Reminders are private by default: with message text hidden, the notification doesn't say what it's about.
@@ -83,11 +83,11 @@ function notifyReminder(title: string, body: string, conversationId: string | nu
     title: p.notificationText ? title : uiText("workspace.interface.meldiq_reminder_08cb2c9"),
     body: p.notificationText ? body : uiText("workspace.interface.you_have_a_reminder_ac22261"),
     tag: `reminder:${title}`,
-    href: room(conversationId) ?? "/later",
+    href: href ?? "/later",
   });
 }
 /** A scheduled meeting starting in ten minutes (round 7): opens its voice room. */
-function notifyMeeting(title: string, body: string, roomId: string | null, database: string): void {
+function notifyMeeting(title: string, body: string, database: string, href: string | null): void {
   if (!allowed()) return;
   const p = getPrefs();
   systemNotify({
@@ -95,12 +95,12 @@ function notifyMeeting(title: string, body: string, roomId: string | null, datab
     title: p.notificationText ? title : uiText("workspace.interface.meldiq_meeting_930f345"),
     body: p.notificationText ? body : uiText("workspace.interface.a_meeting_starts_soon_834f70f"),
     tag: `meeting:${title}`,
-    href: room(roomId),
+    href,
     silent: !p.messageSound,
   });
 }
 /** A ringing call while this tab isn't looked at: a system notification that brings the tab forward to its conversation. */
-function ringAlert(title: string, video: boolean, conversationId: string, database: string): void {
+function ringAlert(title: string, video: boolean, conversationId: string, database: string, href: string | null): void {
   if (!allowed() || lookedAt()) return;
   const p = getPrefs();
   systemNotify({
@@ -108,19 +108,24 @@ function ringAlert(title: string, video: boolean, conversationId: string, databa
     title: p.notificationText ? title : "Meldiq",
     body: video ? uiText("calls.incomingVideo") : uiText("calls.incomingVoice"),
     tag: `call-${conversationId}`,
-    href: room(conversationId),
+    href,
     requireInteraction: true,
   });
 }
 export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
   // Sound is prepared on the person's first click or key press here, as browsers require; never at load.
   armChimeOnInteraction();
+  const destination = (id: string | null): string | null => {
+    if (!id) return null;
+    const conversation = engine.state.get().conversations[id];
+    return conversation ? conversationPath(conversation) : numericConversationPath("home", id);
+  };
   const engine = new Engine(device, store, {
     base: apiBase(),
     wsUrl: wsUrl(),
-    notify: (title, body, id) => notify(title, body, id, store.name),
-    notifyReminder: (title, body, id) => notifyReminder(title, body, id, store.name),
-    notifyMeeting: (title, body, id) => notifyMeeting(title, body, id, store.name),
+    notify: (title, body, id) => notify(title, body, id, store.name, destination(id)),
+    notifyReminder: (title, body, id) => notifyReminder(title, body, store.name, destination(id)),
+    notifyMeeting: (title, body, id) => notifyMeeting(title, body, store.name, destination(id)),
     media: liveKitMedia,
     ringtone: new Ringtone(() => getPrefs().callRingtone),
     callPrefs: () => {
@@ -139,7 +144,7 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
         pushToTalk: p.pushToTalk && !!p.pttKey,
       };
     },
-    ringAlert: (title, video, id) => ringAlert(title, video, id, store.name),
+    ringAlert: (title, video, id) => ringAlert(title, video, id, store.name, destination(id)),
     prefs: () => {
       const p = getPrefs();
       return { readReceipts: p.readReceipts, typing: p.typing, groupNotifications: p.groupNotifications };

@@ -1,3 +1,4 @@
+import { numericConversationPath } from "../src/application/conversationPaths";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
 import { link } from "./link";
@@ -58,7 +59,7 @@ test("forward to two chats with a note, a call card, the viewer's caption and Re
   const forwardedLine = page.locator(".msg-forwarded").filter({ hasText: "Fwd Lab" });
   await expect(forwardedLine).toContainText("Forwarded · Fwd Lab •");
   await forwardedLine.getByRole("button", { name: "Open the original in Fwd Lab" }).click();
-  await expect(page).toHaveURL(new RegExp(`/home/c/${channel.id}$`));
+  await expect(page).toHaveURL(numericConversationPath("home", channel.id, org.id));
 
   // The photo viewer: sender, time and the message's text under the picture, and React without leaving.
   await page.goto(`/dms/c/${dmBob}`);

@@ -1,3 +1,5 @@
+import { numericConversationPath } from "../src/application/conversationPaths";
+import { encodeLinkId } from "../src/application/linkIds";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -110,7 +112,10 @@ test("a community's invitation link opens in a fresh browser, and a message link
   const sent = await bob.send(dm, { type: "text", text: "link to me" }, "message", "m-link-1");
   void sent;
   await page.goto(`/m/${dm}/m-link-1`);
-  await expect(page).toHaveURL(new RegExp(`/dms/c/${dm}`));
+  await expect(page).toHaveURL(numericConversationPath("dms", dm));
+  await expect(page.getByRole("log", { name: "Messages" }).getByText("link to me")).toBeVisible();
+  await page.goto(`/messages/${encodeLinkId(dm)}/${encodeLinkId("m-link-1")}`);
+  await expect(page).toHaveURL(numericConversationPath("dms", dm));
   await expect(page.getByRole("log", { name: "Messages" }).getByText("link to me")).toBeVisible();
 });
 

@@ -8,7 +8,7 @@ import { type FormEvent, useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { navigate } from "../../application/router";
+import { navigate, routeHref } from "../../application/router";
 import { joinChannel } from "../../sync/account";
 import { type ChannelKind, type ChannelScope, createChannel, updateConversation, workspaceChannels } from "../../sync/workspaces";
 import { ChannelOrder } from "./ChannelOrder";
@@ -144,7 +144,7 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
       </span>
       <span className="lines grow">
         {c.joined && !c.archived ? (
-          <a className="ellipsis" href={`/home/c/${encodeURIComponent(c.id)}`} onClick={() => navigate({ section: "home", conversationId: c.id })}>
+          <a className="ellipsis" href={routeHref({ section: "home", communityId: c.orgId, conversationId: c.id })}>
             {c.name}
           </a>
         ) : !c.archived ? (
@@ -155,7 +155,7 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
             onClick={() =>
               void act.act(async () => {
                 await joinChannel(engine, c.id);
-                navigate({ section: "home", conversationId: c.id });
+                navigate({ section: "home", communityId: c.orgId, conversationId: c.id });
               })
             }
             title={uiText("organization.interface.join_and_open_0d62a08")}

@@ -14,7 +14,7 @@ import { useDragSort } from "../components/dragSort";
 import type { Category } from "../../api/communitySchemas";
 import type { Conversation } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
-import { navigate, useRoute } from "../../application/router";
+import { navigate, routeHref, useRoute } from "../../application/router";
 import { joinCommunityChannel, saveLayout, updateChannel } from "../../sync/community";
 import {
   allMuted,
@@ -455,7 +455,7 @@ const ChannelItem = memo(function ChannelItem({
     setJoining(true);
     try {
       await joinCommunityChannel(engine, orgId, ch.id);
-      navigate({ section: "home", conversationId: ch.id });
+      navigate({ section: "home", communityId: orgId, conversationId: ch.id });
     } catch (err) {
       engine.notice("error", err instanceof Error ? err.message : uiText("organization.interface.couldn_t_open_that_channel_943d8de"));
     } finally {
@@ -468,7 +468,7 @@ const ChannelItem = memo(function ChannelItem({
     <div className="side-row" {...(draggable ? { "data-drag": ch.id, "data-drag-kind": "channel", "data-drag-group": ch.categoryId ?? "" } : {})}>
       <a
         className={`side-item channel-item${isHighlighted(marker) ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
-        href={`/home/c/${encodeURIComponent(ch.id)}`}
+        href={routeHref({ section: "home", communityId: orgId, conversationId: ch.id })}
         aria-current={current ? "page" : undefined}
         aria-label={label}
         aria-busy={joining || undefined}

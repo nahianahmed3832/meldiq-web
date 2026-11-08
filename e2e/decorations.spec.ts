@@ -1,3 +1,4 @@
+import { numericConversationPath } from "../src/application/conversationPaths";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
 import { link } from "./link";
@@ -81,7 +82,7 @@ test("classic avatar frames fill their overlay in desktop DM rows", async ({ pag
   await link(page, alice);
   await page.goto("/dms");
 
-  const row = page.locator(`.sidebar .side-item[href="/dms/c/${dm}"]`);
+  const row = page.locator(`.sidebar .side-item[href="${numericConversationPath("dms", dm)}"]`);
   const frame = row.locator(".deco-ember > .avatar-frame-art");
   await expect(frame).toBeVisible();
   const { artwork, overlay } = await frame.evaluate((svg) => ({

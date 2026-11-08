@@ -1,5 +1,5 @@
 import { text as uiText } from "../../i18n";
-import { navigate } from "../../application/router";
+import { appHref, go, navigate, parseRoute } from "../../application/router";
 import type { Engine } from "../../sync/engine";
 import { TEMPLATE_PATH } from "../../sync/discovery/rules";
 import { inviteFromScan } from "../../sync/inviteCodes";
@@ -12,7 +12,7 @@ export const OPEN_TEMPLATE_EVENT = "meldiq:open-template";
 export const JOIN_INVITE_EVENT = "meldiq:join-invite";
 /**
  * Meldiq's own links clicked in a message open here instead of a new tab (android MessageLinkOpener, InviteScan):
- * a message link opens the conversation at that message, an invite link opens Join. True when the link was handled.
+ * a message link jumps to the message, a conversation link opens the conversation, and an invite link opens Join.
  */
 export function openInApp(engine: Engine, href: string): boolean {
   const target = parseMessageLink(href);
@@ -22,7 +22,7 @@ export function openInApp(engine: Engine, href: string): boolean {
       engine.notice("info", uiText("messaging.interface.you_can_t_open_this_message_you_re_not_in_that_conversation_f918804"));
       return true;
     }
-    navigate({ section: c.type === "CHANNEL" ? "home" : "dms", conversationId: c.id });
+    navigate({ section: c.type === "CHANNEL" ? "home" : "dms", communityId: c.orgId, conversationId: c.id });
     // The list mounts after navigation; then the message is found (older pages load if needed) and highlighted.
     setTimeout(() => {
       void jumpTo(engine, c.id, target.messageId).then((found) => {
@@ -42,6 +42,11 @@ export function openInApp(engine: Engine, href: string): boolean {
       window.dispatchEvent(new CustomEvent(JOIN_INVITE_EVENT, { detail: code }));
       return true;
     }
+  }
+  const path = appHref(href);
+  if (path && parseRoute(path).conversationId) {
+    go(path);
+    return true;
   }
   return false;
 }

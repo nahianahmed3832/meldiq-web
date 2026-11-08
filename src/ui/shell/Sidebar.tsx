@@ -8,6 +8,7 @@ import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { markAllReadTargets } from "../selectors";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
+import { requestNavigation } from "../../application/navigationGuard";
 import { Avatar } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { keepsNativeMenu, Menu, type MenuEntry, useMenu } from "../components/Overlay";
@@ -173,7 +174,11 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
               label: o.name,
               icon: <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={22} />,
               checked: o.id === orgId,
-              onSelect: () => setPrefs({ orgId: o.id }),
+              onSelect: () =>
+                requestNavigation(() => {
+                  setPrefs({ orgId: o.id });
+                  navigate({ section: "home" });
+                }),
             })),
             ...(orgs.length === 0
               ? [

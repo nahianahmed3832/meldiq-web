@@ -73,8 +73,8 @@ describe("what a background wake-up shows (service worker, no Meldiq tab open)",
   it("one notification per conversation with new messages from others, titled like the app's own", () => {
     const notices = wakeNotices(input({ items: [item("c_dm"), item("c_dm"), item("c_ch"), item("c_dm", { senderUserId: ME })] }));
     expect(notices).toEqual([
-      { tag: "c_dm", title: "Bob Chen", body: "New messages: 2", url: "/dms/c/c_dm", call: false },
-      { tag: "c_ch", title: "#general", body: "New message", url: "/home/c/c_ch", call: false },
+      { tag: "c_dm", title: "Bob Chen", body: "New messages: 2", url: "/dms/24377190", call: false },
+      { tag: "c_ch", title: "#general", body: "New message", url: "/channels/430069/24377121", call: false },
     ]);
   });
 
@@ -100,7 +100,7 @@ describe("what a background wake-up shows (service worker, no Meldiq tab open)",
         },
       };
     };
-    expect(wakeNotices(input({ items: [stored("c_dm", "  see you at   6 ")] }))).toEqual([{ tag: "c_dm", title: "Bob Chen", body: "see you at 6", url: "/dms/c/c_dm", call: false }]);
+    expect(wakeNotices(input({ items: [stored("c_dm", "  see you at   6 ")] }))).toEqual([{ tag: "c_dm", title: "Bob Chen", body: "see you at 6", url: "/dms/24377190", call: false }]);
     expect(wakeNotices(input({ items: [stored("c_dm", "one"), stored("c_dm", "two")] }))[0]?.body).toBe("New messages: 2: two");
     // A change (a reaction) wakes nobody; with message text off, nothing of it shows.
     expect(wakeNotices(input({ items: [stored("c_dm", "x", "control")] }))).toEqual([]);
@@ -162,14 +162,14 @@ describe("what a background wake-up shows (service worker, no Meldiq tab open)",
 
   it("hides who and how many when message text is hidden in notifications", () => {
     expect(wakeNotices(input({ items: [item("c_dm"), item("c_dm")], prefs: { notifications: true, groupNotifications: true, notificationText: false } }))).toEqual([
-      { tag: "c_dm", title: "Meldiq", body: "New message", url: "/dms/c/c_dm", call: false },
+      { tag: "c_dm", title: "Meldiq", body: "New message", url: "/dms/24377190", call: false },
     ]);
   });
 
   it("shows an incoming call ringing from someone else, not a call this person started elsewhere", () => {
     const ringing = conv("c_dm", { activeCall: { id: "k1", video: true, state: "RINGING", startedAt: NOW - 5000 } });
     const invite = item("c_dm", { cls: "control", createdAt: NOW - 4000 });
-    expect(wakeNotices(input({ items: [invite], conversations: { c_dm: ringing } }))).toEqual([{ tag: "call-c_dm", title: "Bob Chen", body: "Incoming video call", url: "/dms/c/c_dm", call: true }]);
+    expect(wakeNotices(input({ items: [invite], conversations: { c_dm: ringing } }))).toEqual([{ tag: "call-c_dm", title: "Bob Chen", body: "Incoming video call", url: "/dms/24377190", call: true }]);
     // Started from this person's own phone: their own invite reaches this browser, and nothing rings here.
     expect(wakeNotices(input({ items: [{ ...invite, senderUserId: ME }], conversations: { c_dm: ringing } }))).toEqual([]);
     // Answered, ended or long past: no call notification.
@@ -190,6 +190,8 @@ describe("the page a notification opens", () => {
     const origin = "https://web.meldiq.app";
     const at = (u: string) => notificationPath(new URL(u, origin), origin);
     expect(at("/dms/c/c_dm")).toBe("/dms/c/c_dm");
+    expect(at("/channels/430069/24377121")).toBe("/channels/430069/24377121");
+    expect(at("/dms/24377190")).toBe("/dms/24377190");
     expect(at("/#/home/c/c_ch")).toBe("/home/c/c_ch");
     expect(at("/settings/notifications")).toBe("/settings/notifications");
     for (const bad of ["https://evil.example/dms/c/x", "/", "/invite/abc", "/v1/queue", "/dms/c/a/b/c/d/e"]) expect(at(bad)).toBeNull();

@@ -2,7 +2,7 @@ import { text as uiText } from "../i18n";
 import { z } from "zod";
 import type { Engine } from "../sync/engine";
 import { isAppPath, SW_OPEN, SW_WAKE } from "../sw/messages";
-import { go } from "./router";
+import { appHref, go } from "./router";
 import { saveWakePrefs } from "../sw/swPrefs";
 import { config, type FirebaseWebConfig } from "./config";
 import { getPrefs, subscribePrefs } from "./prefs";
@@ -44,7 +44,7 @@ export async function startServiceWorker(engine: Engine): Promise<void> {
         void import("./accountSwitch")
           .then(({ switchSavedAccount }) => switchSavedAccount(engine, d.database as string, d.href as string))
           .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : uiText("workspace.interface.switch_accounts_to_open_this_notification_139954a")));
-      } else go(d.href);
+      } else go(appHref(d.href) ?? d.href);
     }
   });
   let mirrorGeneration = 0;
@@ -90,7 +90,7 @@ export interface SystemNotice {
   body: string;
   /** Same tag: the newer notification replaces the older, and still alerts (renotify). */
   tag: string;
-  /** A path of this app opened on click ("/home/c/…"). */
+  /** A path of this app opened on click. */
   href: string | null;
   silent?: boolean;
   requireInteraction?: boolean;

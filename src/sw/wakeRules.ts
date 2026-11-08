@@ -2,6 +2,7 @@ import type { Conversation, QueueItem } from "../api/schemas";
 import { countsEveryone, levelOf, type NavPrefs, shouldNotify, workspaceOf } from "../sync/navPrefs";
 import { paused } from "../sync/status";
 import notifications from "../../locales/en/notifications.json";
+import { conversationPath } from "../application/conversationPaths";
 
 export type WakeCopy = typeof notifications.background;
 export const DEFAULT_WAKE_COPY: WakeCopy = notifications.background;
@@ -44,7 +45,6 @@ export interface WakeNotice {
   call: boolean;
 }
 
-const urlOf = (c: Conversation): string => `/${c.type === "CHANNEL" ? "home" : "dms"}/c/${encodeURIComponent(c.id)}`;
 const titleOf = (c: Conversation, me: string, copy: WakeCopy): string => {
   const t = c.type === "CHANNEL" ? (c.name ?? copy.channel) : c.type === "GROUP" ? (c.name ?? copy.group) : (c.members?.find((m) => m.id !== me)?.displayName ?? copy.directMessage);
   return c.type === "CHANNEL" ? `#${t}` : t;
@@ -100,10 +100,10 @@ export function wakeBatch(i: WakeInput): { notices: WakeNotice[]; identities: Re
             n === 1
               ? (latest.get(id) ?? copy.newMessage)
               : `${copy.newMessages.replace("{count}", new Intl.NumberFormat(i.prefs.locale ?? "en").format(n))}${latest.has(id) ? `: ${latest.get(id)}` : ""}`,
-          url: urlOf(c),
+          url: conversationPath(c),
           call: false,
         }
-      : { tag: id, title: "Meldiq", body: copy.newMessage, url: urlOf(c), call: false };
+      : { tag: id, title: "Meldiq", body: copy.newMessage, url: conversationPath(c), call: false };
   });
   const notices = [...calls, ...messages];
   const identities = Object.fromEntries(
@@ -127,7 +127,7 @@ function incomingCalls(i: WakeInput): WakeNotice[] {
       (it) => it.kind !== "receipt" && it.conversationId === c.id && it.senderUserId !== i.me && clsOf(it) === "control" && it.createdAt >= call.startedAt - INVITE_SLACK_MS,
     );
     if (!invited) continue;
-    out.push({ tag: `call-${c.id}`, title: i.prefs.notificationText ? titleOf(c, i.me, copy) : "Meldiq", body: call.video ? copy.incomingVideo : copy.incomingVoice, url: urlOf(c), call: true });
+    out.push({ tag: `call-${c.id}`, title: i.prefs.notificationText ? titleOf(c, i.me, copy) : "Meldiq", body: call.video ? copy.incomingVideo : copy.incomingVoice, url: conversationPath(c), call: true });
   }
   return out;
 }

@@ -1,3 +1,4 @@
+import { numericConversationPath } from "../src/application/conversationPaths";
 import { type BrowserContext, expect, type Page, test } from "@playwright/test";
 import { link } from "./link";
 import { newPhone, type Phone, testAddress } from "./phone";
@@ -70,7 +71,7 @@ test("with Meldiq closed, a wake-up shows who wrote and their newest message, an
   await expect(viewer.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await viewer.waitForTimeout(500);
   await viewer.evaluate((href) => navigator.serviceWorker.dispatchEvent(new MessageEvent("message", { data: { type: "meldiq-open", href } })), `/dms/c/${dm}`);
-  await expect(viewer).toHaveURL(new RegExp(`/dms/c/${dm}$`));
+  await expect(viewer).toHaveURL(numericConversationPath("dms", dm));
 });
 
 test("a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself", async ({ page, context }) => {

@@ -1,3 +1,5 @@
+import { parseNumericConversationPath } from "../application/conversationPaths";
+
 /**
  * The app shell from the service worker (2026-10-29, the owner: "ours refreshes like a website"). A reload or a return
  * gets the page and its build files from this browser at once, as an installed app opens, and the page is fetched again
@@ -33,7 +35,7 @@ export function strategyFor(req: { method: string; mode: string; url: string }, 
   if (req.mode === "navigate") {
     if (u.search) return null;
     if (/^\/settings\/(checkout|billing)\/?$/.test(u.pathname)) return "payment";
-    return SHELL_PATH.test(u.pathname) ? "shell" : null;
+    return SHELL_PATH.test(u.pathname) || parseNumericConversationPath(u.pathname) ? "shell" : null;
   }
   if (u.pathname.startsWith("/_next/static/") && !u.search) return "asset";
   if (FRESHENED.has(u.pathname) && !u.search) return "fresh";

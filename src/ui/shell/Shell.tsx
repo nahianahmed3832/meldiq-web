@@ -11,7 +11,7 @@ import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState }
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
 import { ConsentPage } from "../oauth/ConsentPage";
-import { isFullPage, navigate, type Route, routeHref, useRoute } from "../../application/router";
+import { isFullPage, navigate, replaceRoutePath, type Route, routeHref, useRoute } from "../../application/router";
 import { rememberPlace } from "../../application/lastPlace";
 import { rememberReturning } from "../../application/splash";
 import { ConversationView, MessagesSkeleton } from "../chat/ConversationView";
@@ -66,7 +66,7 @@ const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => (
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
 const LobbyPage = lazy(() => import("../lobby/LobbyPage").then((m) => ({ default: m.LobbyPage })));
 /** What shows behind settings opened straight from a link: Home. */
-const HOME_ROUTE: Route = { section: "home", conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
+const HOME_ROUTE: Route = { section: "home", communityId: null, conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
 /** Whether the phone layout applies (one screen at a time), following the window as it's resized. */
 function usePhoneLayout(): boolean {
   const [phone, setPhone] = useState(() => typeof window !== "undefined" && window.matchMedia(PHONE_LAYOUT).matches);
@@ -135,7 +135,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const welcome = useWelcomeStage(engine.device.account?.id);
   const orgIds = useOrbit((s) => s.orgs.map((o) => o.id), shallowEqual);
   const communities = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
-  const known = useOrbit((s) => (route.conversationId ? !!s.conversations[route.conversationId] : true));
+  const activeConversation = useOrbit((s) => (route.conversationId ? s.conversations[route.conversationId] : undefined));
+  const channelCommunity = activeConversation?.type === "CHANNEL" && route.section === "home" ? activeConversation.orgId : null;
+  const known = !!activeConversation && (!route.communityId || route.communityId === channelCommunity);
   const phone = usePhoneLayout();
   const windowed = isFullPage(route.section) && !phone;
   // The last ordinary view, kept behind the settings window.
@@ -144,18 +146,25 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (!isFullPage(route.section)) setBehind(route);
   }, [route]);
   const backdrop = windowed ? (behind ?? HOME_ROUTE) : route;
-  const knownView = useOrbit((s) => (backdrop.conversationId ? !!s.conversations[backdrop.conversationId] : true));
+  const knownView = useOrbit((s) => {
+    const c = backdrop.conversationId ? s.conversations[backdrop.conversationId] : undefined;
+    return !!c && (!backdrop.communityId || (c.type === "CHANNEL" && c.orgId === backdrop.communityId));
+  });
   const synced = useOrbit((s) => s.synced);
   const lobbies = useOrbit((s) => s.server?.features.includes(LOBBY_FEATURE) ?? false);
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog>(null);
   usePushToTalk();
-  const orgId = prefs.orgId && orgIds.includes(prefs.orgId) ? prefs.orgId : (orgIds[0] ?? null);
+  const linkedOrg = known && channelCommunity && orgIds.includes(channelCommunity) ? channelCommunity : null;
+  const orgId = linkedOrg ?? (prefs.orgId && orgIds.includes(prefs.orgId) ? prefs.orgId : (orgIds[0] ?? null));
   const orgName = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.name ?? "");
   const orgs = useOrbit((s) => s.orgs, shallowEqual);
   useEffect(() => {
     if (orgId !== prefs.orgId && synced) setPrefs({ orgId });
   }, [orgId, prefs.orgId, synced]);
+  useEffect(() => {
+    if (synced && linkedOrg && !route.communityId) replaceRoutePath(routeHref({ ...route, communityId: linkedOrg }));
+  }, [synced, linkedOrg, route]);
   useLobbyLanding(orgId, route, phone);
   // The account's selected workspace, shared with the phone (PUT /v2/account/preferences): adopted once when the app
   // opens, then every switch made here is saved for the other devices. Best effort: if either call fails, this browser
@@ -165,12 +174,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     if (!synced || adopted.current) return;
     adopted.current = true;
+    if (linkedOrg) return;
     accountSelection(engine)
       .then((id) => {
         if (id && orgIds.includes(id) && id !== getPrefs().orgId) setPrefs({ orgId: id });
       })
       .catch(() => undefined);
-  }, [synced, engine, orgIds]);
+  }, [synced, engine, orgIds, linkedOrg]);
   useEffect(() => {
     if (!synced || !adopted.current) return;
     if (saved.current === undefined || saved.current === orgId) {
@@ -181,8 +191,8 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     rememberSelection(engine, orgId).catch(() => undefined);
   }, [orgId, synced, engine]);
   // Invalidate the previous window before paint; position only after the new page renders.
+  const selected = isFullPage(route.section) || (route.communityId && !known) ? null : route.conversationId;
   useLayoutEffect(() => {
-    const selected = isFullPage(route.section) ? null : route.conversationId;
     void engine.openConversation(selected);
     const restored = (event: PageTransitionEvent) => {
       if (event.persisted) void engine.openConversation(selected);
@@ -190,15 +200,17 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     window.addEventListener("pageshow", restored);
     setDrawer(false);
     // Batch B8b: opening a channel ticks the community guide's tasks that point to it (kept on this browser).
-    const c = route.conversationId ? engine.state.get().conversations[route.conversationId] : null;
+    const c = selected ? engine.state.get().conversations[selected] : null;
     const guide = c?.orgId ? (engine.state.get().orgs.find((o) => o.id === c.orgId)?.guide ?? null) : null;
     if (c?.orgId && guide) void noteGuideVisit(engine.store, c.orgId, guide, c.id).then((changed) => changed && window.dispatchEvent(new Event(GUIDE_EVENT)));
     return () => window.removeEventListener("pageshow", restored);
-  }, [engine, route.conversationId, route.section]);
+  }, [engine, selected, route.section]);
   // Where the person is, for the next time Meldiq opens (application/lastPlace.ts); settings windows aren't places.
   useEffect(() => {
-    if (!isFullPage(route.section) && route.section !== "oauth" && (route.conversationId || route.section === "lobby")) rememberPlace(engine.device.userId, routeHref(route));
-  }, [engine, route]);
+    if (!isFullPage(route.section) && route.section !== "oauth" && ((route.conversationId && known) || route.section === "lobby")) {
+      rememberPlace(engine.device.userId, routeHref({ ...route, communityId: linkedOrg ?? route.communityId }));
+    }
+  }, [engine, route, known, linkedOrg]);
   // From now on this browser opens straight into the app's frame, not the launch screen (application/splash.ts).
   useEffect(() => rememberReturning(true), []);
   // A conversation this account can no longer see (removed, or another workspace's link) closes.
@@ -229,7 +241,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     // A template link opened in this tab (/template/<code>): its preview, once.
     const template = takePendingTemplate();
     if (template) return setDialog({ kind: "template", code: template });
-    // A message link opened in this tab (/m/<conversation>/<message>): that conversation, at that message.
+    // A message link opened in this tab: that conversation, at that message.
     const message = takePendingMessage();
     if (message) openInApp(engine, `${location.origin}${message}`);
     // Back from Discord after adding Meldiq's bot (or cancelling): the import picks up where it left off.

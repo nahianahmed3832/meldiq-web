@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Activity } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
-import { navigate } from "../../application/router";
+import { navigate, routeHref } from "../../application/router";
 import { orgActivity } from "../../sync/account";
 import type { ThreadActivity } from "../../sync/threads";
 import { Avatar, colorIndexOf } from "../components/Avatar";
@@ -498,7 +498,7 @@ function ActivityRow({ a }: { a: Activity }) {
           {target ? (
             <>
               {" "}
-              <a href={`/activity/c/${encodeURIComponent(a.target!)}`}>#{target}</a>
+              <a href={routeHref({ section: "activity", conversationId: a.target })}>#{target}</a>
             </>
           ) : null}
         </span>

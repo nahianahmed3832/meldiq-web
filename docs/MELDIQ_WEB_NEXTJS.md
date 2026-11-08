@@ -9,7 +9,7 @@ The owner's decision is ADR 0008 in the meldiq_android repository (`docs/archite
 | Part | Before (Vite 7) | Now (Next.js 16.3.8) |
 |---|---|---|
 | Entry | `index.html` + `src/main.tsx` | `src/pages/_document.tsx` (page shell, launch screen), `src/pages/_app.tsx` (CSS, viewport), `src/pages/index.tsx` (the app, client-only), `src/client/Root.tsx` (start-up, formerly `main.tsx`) |
-| Router | Hash routes (`/#/dms/c/<id>`) | Paths (`/dms/c/<id>`) on the History API (`src/application/router.ts`); old hash links still work |
+| Router | Hash routes (`/#/dms/c/<id>`) | Paths such as `/channels/<community>/<channel>` on the History API (`src/application/router.ts`). Old hash links still work. |
 | Rendering | Client only | Client only. The build renders the empty shell and the launch screen; never a message, key or account data |
 | Build | `vite build` → `dist/` | `next build` (static export, Turbopack) → `out/` → `dist/` (`scripts/finish-export.mjs`) |
 | Service worker | `vite build --config vite.sw.config.ts` → `dist/sw.js` | Unchanged (Vite library build), after the Next.js build; `npm run dev` builds it into `public/` |
@@ -49,15 +49,16 @@ The owner's decision is ADR 0008 in the meldiq_android repository (`docs/archite
    announcements). Its route announcer is therefore hidden (`next-route-announcer { display: none }` in base.css):
    it only speaks on its own page changes, which never happen. In development (where Next.js has rewrites) it may
    rewrite the address once while the page starts; the router listens for that and reads the address again.
-3. **Old links keep working.** A hash route (`/#/dms/c/<id>`, from bookmarks, older notifications, links people
-   shared) becomes its path at load and when one is opened later. The service worker accepts both forms when a
-   notification is clicked (`src/sw/messages.ts › notificationPath`).
+3. **Old links keep working.** The router resolves old paths and hash routes such as `/#/dms/c/<id>` and replaces
+   them with numeric paths. It uses the channel's community from the signed-in account to form
+   `/channels/<community>/<channel>`. Shared web messages use `/messages/<conversation>/<message>` and older
+   `/m/<conversation>/<message>` links still open. Each decimal ID encodes the existing ID losslessly and the
+   client decodes it before looking up the resource. The service worker accepts old and new conversation links.
 4. **The encryption trust boundary doesn't move.** No server rendering of app content, no API calls from a server,
    the same CSP. The engine (`src/sync/engine.ts`), crypto, IndexedDB schemas and key storage are unchanged.
 5. **Vite stays for two things:** the service worker (one classic script at `/sw.js`, which Next.js doesn't build)
    and Vitest.
-6. **`next dev` writes `AGENTS.md` and `CLAUDE.md`** when it detects an AI coding agent. They aren't part of the
-   project and are never committed.
+6. **`next dev` manages the Next.js instructions in `AGENTS.md`.** Keep the generated rules block in version control.
 
 ## 4. Commands
 

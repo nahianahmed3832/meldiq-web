@@ -12,7 +12,7 @@ import { CommunityButton, type RailOrg, useRailOrgs } from "./RailCommunity";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { usePrefs } from "../../application/prefs";
-import { navigate, type Section } from "../../application/router";
+import { navigate, routeHref, type Section } from "../../application/router";
 import { useIncomingRequestCount } from "../people/connectionRequests";
 import { isMuted, isPeople, people, unreadOf, unreadPeopleCount } from "../selectors";
 import { conversationTitle, dmPeer } from "../format";
@@ -192,7 +192,7 @@ function RailDmBubbles() {
         <a
           key={it.id}
           className="rail-dm"
-          href={`/dms/c/${encodeURIComponent(it.id)}`}
+          href={routeHref({ section: "dms", conversationId: it.id })}
           title={it.title}
           aria-label={uiText("workspace.interface.value0_value1_unread_ff8b523", { value0: it.title, value1: it.unread })}
         >

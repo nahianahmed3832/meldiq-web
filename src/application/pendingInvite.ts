@@ -1,3 +1,5 @@
+import { parseMessagePath } from "../sync/messageLinks";
+
 /**
  * An invitation opened from a link (community-first brief §F): /join/<code> (from meldiq.app/invite/<code>'s "Use Meldiq
  * Web") or ?invite=<code>. The code is kept for this tab until someone is signed in, so signing in or setting the browser up
@@ -50,16 +52,14 @@ function safeDecode(s: string): string {
 }
 
 /**
- * A message link opened in a fresh tab (/m/<conversation>/<message>): kept for this tab like an invitation, then opened
+ * A message link opened in a fresh tab: kept for this tab like an invitation, then opened
  * at that message once someone is signed in (the conversation must be theirs; ids only, never content).
  */
 const MESSAGE_KEY = "meldiq.pendingMessage";
-const MESSAGE_PATH = /^\/m\/([A-Za-z0-9_-]{1,128})\/([A-Za-z0-9_-]{1,128})\/?$/;
 
 export function capturePendingMessage(): void {
-  const m = MESSAGE_PATH.exec(location.pathname);
-  if (!m) return;
-  const path = `/m/${m[1]}/${m[2]}`;
+  const path = location.pathname.replace(/\/$/, "");
+  if (!parseMessagePath(path)) return;
   try {
     sessionStorage.setItem(MESSAGE_KEY, path);
   } catch {
@@ -70,7 +70,7 @@ export function capturePendingMessage(): void {
 
 let pendingMessage: string | null = null;
 
-/** The kept message link's path (/m/C/M), once (null if none). */
+/** The kept message link's path, once (null if none). */
 export function takePendingMessage(): string | null {
   let path = pendingMessage;
   pendingMessage = null;
@@ -80,7 +80,7 @@ export function takePendingMessage(): string | null {
   } catch {
     /* in memory only */
   }
-  return path && MESSAGE_PATH.test(path) ? path : null;
+  return path && parseMessagePath(path) ? path : null;
 }
 
 /**
