@@ -112,13 +112,17 @@ test("change the email with a code, report a bug, and see standing", async ({ pa
   await expect(page.locator(".account-card")).toContainText(next);
 
   await page.goto("/settings/about");
-  await page.getByRole("button", { name: "Report a bug" }).click();
-  const bug = page.getByRole("dialog", { name: "Report a bug" });
-  await bug.getByLabel("What's wrong, in a few words").fill("Menu stays open");
-  await bug.getByLabel("What happened, and how to make it happen again").fill("Right-click a channel, press Escape: it stays.");
-  await bug.getByRole("button", { name: "Send report" }).click();
-  await expect(page.getByRole("list", { name: "Your bug reports" })).toContainText("Menu stays open");
-  await expect(page.getByRole("list", { name: "Your bug reports" })).toContainText("Open");
+  const action = page.getByRole("button", { name: /^(Report a bug|Send feedback)$/ });
+  await expect(action).toBeVisible();
+  const categorized = (await action.textContent())?.includes("Send feedback");
+  await action.click();
+  const bug = page.getByRole("dialog", { name: categorized ? "Send feedback" : "Report a bug" });
+  await bug.getByLabel(categorized ? "Short title" : "What's wrong, in a few words").fill("Menu stays open");
+  await bug.getByLabel(categorized ? "What would you like us to know?" : "What happened, and how to make it happen again").fill("Right-click a channel, press Escape: it stays.");
+  await bug.getByRole("button", { name: categorized ? "Send feedback" : "Send report" }).click();
+  const history = page.getByRole("list", { name: categorized ? "Your feedback history" : "Your bug reports" });
+  await expect(history).toContainText("Menu stays open");
+  await expect(history).toContainText("Open");
 });
 
 test("shortcuts can be changed, and colour themes tint the app", async ({ page }) => {
@@ -141,4 +145,31 @@ test("shortcuts can be changed, and colour themes tint the app", async ({ page }
   await expect(page.locator("html")).toHaveAttribute("data-vibe", "on");
   await page.getByRole("radio", { name: "None" }).click();
   await expect(page.locator("html")).not.toHaveAttribute("data-vibe", "on");
+});
+
+test("downloads account data and confirms deletion with the password", async ({ page, request }) => {
+  const { features } = await (await request.get("/v1/server-info")).json();
+  test.skip(!features.includes("saved-collections"), "Run with the web experience API patch");
+  const email = await newAccount(page, "Data Test");
+  await page.goto("/settings/security");
+  await page.getByRole("link", { name: "Export data or delete account" }).click();
+  await expect(page).toHaveURL("/settings/account");
+  const downloading = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download", exact: true }).click();
+  const file = await (await downloading).createReadStream();
+  expect(file).not.toBeNull();
+  const bytes: Buffer[] = [];
+  for await (const chunk of file!) bytes.push(Buffer.from(chunk));
+  const text = Buffer.concat(bytes).toString("utf8");
+  expect(JSON.parse(text)).toMatchObject({
+    account: { account: { email } }, browserHistory: { visits: [], searches: [] }, savedCollections: [], feedback: [], sparkConversations: [],
+  });
+  expect(text).not.toContain(PASSWORD);
+  expect(text).not.toContain("accessToken");
+  await page.getByRole("button", { name: "Delete my account…", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Delete my account", exact: true })).toBeDisabled();
+  await page.getByLabel("Type your email to confirm").fill(email);
+  await page.getByLabel("Current password", { exact: true }).fill(PASSWORD);
+  await page.getByRole("button", { name: "Delete my account", exact: true }).click();
+  await expectSignedOut(page);
 });

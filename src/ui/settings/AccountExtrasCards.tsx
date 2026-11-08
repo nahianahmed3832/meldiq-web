@@ -8,7 +8,7 @@ import { ApiError } from "../../api/client";
 import { AccountApi } from "../../auth/accountApi";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { useRoute } from "../../application/router";
-import { AccountSafetyApi, BUG_STATUS_LABEL } from "../../sync/accountSafety";
+import { AccountSafetyApi, BUG_STATUS_LABEL, FEEDBACK_CATEGORIES, type FeedbackCategory } from "../../sync/accountSafety";
 import { signOut } from "../../sync/account";
 import { buildDataExport } from "../../sync/dataExport";
 import { relative } from "../format";
@@ -21,11 +21,15 @@ import { APP_VERSION } from "../../application/env";
  */
 export function BugReportsCard() {
   useLocaleRender();
+  const t = useLocalization();
   const engine = useEngine();
+  const categorized = useOrbit((s) => s.server?.features.includes("categorized-feedback") ?? false);
   const offered = useOrbit((s) => s.server?.features.includes("bug-reports") ?? false);
   const [version, setVersion] = useState(0);
   const mine = useLoad(() => (offered ? new AccountSafetyApi(engine.api).bugReports() : Promise.resolve(null)), [engine, offered, version]);
   const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(10);
+  const [sent, setSent] = useState(false);
   if (!offered) return null;
   const reports = mine.data?.reports ?? [];
   return (
@@ -33,33 +37,36 @@ export function BugReportsCard() {
       <div className="setting-card-head">
         <span className="lines grow">
           <strong>
-            <Localized k="settings.interface.bug_hunting_a9dcb3b" />
+            {t(categorized ? "workspace.experience.feedback" : "settings.interface.bug_hunting_a9dcb3b")}
           </strong>
           <small>
-            <Localized k="settings.interface.found_something_broken_or_a_way_to_do_something_you_shouldn_t_rep_7a6de6c" />
+            {t(categorized ? "workspace.experience.feedbackHelp" : "settings.interface.found_something_broken_or_a_way_to_do_something_you_shouldn_t_rep_7a6de6c")}
           </small>
         </span>
-        <button className="btn btn-primary btn-sm" onClick={() => setOpen(true)}>
-          <Localized k="settings.interface.report_a_bug_65acdd9" slots={[<Bug size={14} />]} />
+        <button className="btn btn-primary btn-sm" onClick={() => { setSent(false); setOpen(true); }}>
+          {categorized ? t("workspace.experience.feedbackSend") : <Localized k="settings.interface.report_a_bug_65acdd9" slots={[<Bug size={14} />]} />}
         </button>
       </div>
+      {sent && <p role="status">{t("workspace.experience.feedbackSent")}</p>}
+      {mine.loading && !mine.data && <div className="experience-skeleton" role="status" aria-label={t("workspace.experience.loading")} />}
+      {mine.error && <p className="banner danger" role="alert">{mine.error} <button className="btn btn-ghost btn-sm" onClick={mine.reload}>{t("workspace.experience.retry")}</button></p>}
       {mine.data?.bugHunter && (
         <span className="badge-pill">
           <Localized k="settings.interface.bug_hunter_215db5b" />
         </span>
       )}
-      {reports.length === 0 ? (
+      {!mine.data ? null : reports.length === 0 ? (
         <small className="faint">
-          <Localized k="settings.interface.no_bug_reports_yet_5570ae6" />
+          {t(categorized ? "workspace.experience.feedbackEmpty" : "settings.interface.no_bug_reports_yet_5570ae6")}
         </small>
       ) : (
-        <ul className="ws-list" aria-label={uiText("settings.interface.your_bug_reports_a6fff4d")}>
-          {reports.map((r) => (
+        <ul className="ws-list" aria-label={t(categorized ? "workspace.experience.feedbackHistory" : "settings.interface.your_bug_reports_a6fff4d")}>
+          {reports.slice(0, visible).map((r) => (
             <li key={r.id} className="ws-row">
               <span className="lines grow">
                 <span className="ellipsis">{r.summary}</span>
                 <small>
-                  {relative(r.createdAt)}
+                  {categorized ? `${t(`workspace.experience.feedback_${r.category}`)} · ` : ""}{relative(r.createdAt)}
                   {r.staffNote ? uiText("calls.interface.value0_9402340", { value0: r.staffNote }) : ""}
                 </small>
               </span>
@@ -68,58 +75,67 @@ export function BugReportsCard() {
           ))}
         </ul>
       )}
+      {reports.length > visible && <button className="btn btn-secondary btn-sm" onClick={() => setVisible(visible + 10)}>{t("workspace.discover_more")}</button>}
       {open && (
-        <BugReportDialog
+        <BugReportDialog categorized={categorized}
           onClose={() => setOpen(false)}
           onSent={() => {
             setOpen(false);
             setVersion((v) => v + 1);
-            engine.notice("info", uiText("settings.interface.thanks_your_bug_report_was_sent_9d857e8"));
+            if (categorized) setSent(true);
+            else engine.notice("info", uiText("settings.interface.thanks_your_bug_report_was_sent_9d857e8"));
           }}
         />
       )}
     </div>
   );
 }
-function BugReportDialog({ onClose, onSent }: { onClose: () => void; onSent: () => void }) {
+function BugReportDialog({ categorized, onClose, onSent }: { categorized: boolean; onClose: () => void; onSent: () => void }) {
   useLocaleRender();
   const l10n = useLocalization();
   const engine = useEngine();
   const route = useRoute();
+  const [category, setCategory] = useState<FeedbackCategory>("bug");
   const [summary, setSummary] = useState("");
   const [details, setDetails] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    if (summary.trim().length < 4 || details.trim().length < 10) return setError(uiText("settings.interface.give_it_a_short_title_and_say_what_happened_at_least_a_sentence_6e3d7c6"));
+    if (busy) return;
+    if (summary.trim().length < 4 || details.trim().length < 10) return setError(l10n(categorized ? "workspace.experience.feedbackValidation" : "settings.interface.give_it_a_short_title_and_say_what_happened_at_least_a_sentence_6e3d7c6"));
     setBusy(true);
     setError(null);
     // The page is the section and settings page only, never a conversation id.
     const page = `/${route.section}${route.section === "settings" ? `/${route.settingsPage}` : ""}`;
     new AccountSafetyApi(engine.api)
-      .reportBug(summary.trim(), details.trim(), page, `Meldiq Web ${APP_VERSION}; ${navigator.userAgent}`.slice(0, 200))
+      .reportBug(summary.trim(), details.trim(), page, categorized ? `Meldiq Web ${APP_VERSION}` : `Meldiq Web ${APP_VERSION}; ${navigator.userAgent}`.slice(0, 200), categorized ? category : undefined)
       .then(onSent)
       .catch((err: unknown) => setError(err instanceof ApiError ? err.message : uiText("settings.interface.couldn_t_send_it_try_again_77ae9b5")))
       .finally(() => setBusy(false));
   };
   return (
-    <Dialog title={uiText("settings.interface.report_a_bug_f75e0bd")} onClose={onClose}>
+    <Dialog title={l10n(categorized ? "workspace.experience.feedbackSend" : "settings.interface.report_a_bug_f75e0bd")} onClose={onClose}>
       <form className="dialog-body" onSubmit={submit} noValidate>
+        {categorized && <label className="field">{l10n("workspace.experience.feedbackCategory")}
+          <select className="input" value={category} disabled={busy} onChange={(e) => setCategory(e.target.value as FeedbackCategory)}>
+            {FEEDBACK_CATEGORIES.map((value) => <option key={value} value={value}>{l10n(`workspace.experience.feedback_${value}`)}</option>)}
+          </select>
+        </label>}
         <label className="field">
           <span>
-            <Localized k="settings.interface.what_s_wrong_in_a_few_words_e4df9ab" />
+            {l10n(categorized ? "workspace.experience.feedbackSummary" : "settings.interface.what_s_wrong_in_a_few_words_e4df9ab")}
           </span>
           <input className="input" maxLength={120} value={summary} onChange={(e) => setSummary(e.target.value)} disabled={busy} data-autofocus />
         </label>
         <label className="field">
           <span>
-            <Localized k="settings.interface.what_happened_and_how_to_make_it_happen_again_df59ae5" />
+            {l10n(categorized ? "workspace.experience.feedbackDetails" : "settings.interface.what_happened_and_how_to_make_it_happen_again_df59ae5")}
           </span>
           <textarea className="input" rows={6} maxLength={4000} value={details} onChange={(e) => setDetails(e.target.value)} disabled={busy} />
         </label>
         <small className="faint">
-          <Localized k="settings.interface.we_get_what_you_type_here_this_page_s_name_and_your_browser_s_ver_057210a" />
+          {l10n(categorized ? "workspace.experience.feedbackPrivacy" : "settings.interface.we_get_what_you_type_here_this_page_s_name_and_your_browser_s_ver_057210a")}
         </small>
         {error && (
           <div className="banner danger" role="alert">
@@ -131,7 +147,7 @@ function BugReportDialog({ onClose, onSent }: { onClose: () => void; onSent: () 
             {l10n("common.actions.cancel")}
           </button>
           <button className="btn btn-primary" disabled={busy}>
-            {busy ? l10n("common.common_sending") : uiText("messaging.interface.send_report_a44d353")}
+            {busy ? l10n("common.common_sending") : l10n(categorized ? "workspace.experience.feedbackSend" : "messaging.interface.send_report_a44d353")}
           </button>
         </div>
       </form>
@@ -168,7 +184,7 @@ export function DataExportCard() {
             <Localized k="settings.interface.download_your_data_fdbb4b3" />
           </strong>
           <small>
-            <Localized k="settings.interface.your_account_profile_communities_conversations_and_the_messages_l_ee0b5e9" />
+            {l10n("workspace.experience.exportHelp")}
           </small>
         </span>
         <button className="btn btn-primary btn-sm" disabled={busy} onClick={download}>

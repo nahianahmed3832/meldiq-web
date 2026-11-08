@@ -1,0 +1,38 @@
+[
+  {
+    "method": "GET",
+    "path": "/v2/me/saved-collections"
+  },
+  {
+    "method": "POST",
+    "path": "/v2/me/saved-collections"
+  },
+  {
+    "method": "POST",
+    "path": "/v2/search"
+  },
+  {
+    "method": "GET",
+    "path": "/v2/me/spark"
+  },
+  {
+    "method": "POST",
+    "path": "/v2/me/spark/threads"
+  },
+  {
+    "method": "GET",
+    "path": "/v2/me/spark/threads/{id}"
+  },
+  {
+    "method": "PATCH",
+    "path": "/v2/me/spark/threads/{id}"
+  },
+  {
+    "method": "DELETE",
+    "path": "/v2/me/spark/threads/{id}"
+  },
+  {
+    "method": "POST",
+    "path": "/v2/me/spark/threads/{id}/turns"
+  }
+]

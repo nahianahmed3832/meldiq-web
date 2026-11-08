@@ -1,3 +1,8 @@
+import { readPersonalHistory } from "../application/personalHistory";
+import { AccountSafetyApi } from "./accountSafety";
+import { PERSONAL, zNavDoc } from "./navPrefs";
+import { getSavedCollections } from "./savedCollections";
+import { sparkInfo, sparkOpen, type SparkThread } from "./sparkAssistant";
 import { AccountApi } from "../auth/accountApi";
 import type { Engine } from "./engine";
 import { myProfile } from "./profile";
@@ -14,6 +19,39 @@ const MESSAGES_PER_CONVERSATION = 20_000;
 export async function buildDataExport(engine: Engine, now: number = Date.now()): Promise<Blob> {
   const st = engine.state.get();
   const [account, profile] = await Promise.all([engine.device.account ? new AccountApi(engine.api).me().catch(() => null) : null, myProfile(engine).catch(() => null)]);
+  const features = new Set(st.server?.features);
+  const unavailable: string[] = [];
+  const included = async <T>(field: string, read: () => Promise<T>): Promise<T | null> => {
+    try {
+      return await read();
+    } catch {
+      unavailable.push(field);
+      return null;
+    }
+  };
+  const [browserHistory, savedMessages, savedCollections, feedback, sparkConversations] = await Promise.all([
+    included("browserHistory", () => readPersonalHistory(engine.store)),
+    features.has("saved-items") ? included("savedMessages", async () => {
+      const doc = await engine.api.json("GET", "/v1/me/preferences/personal", zNavDoc);
+      return (doc.prefs.saved ?? []).filter((item) => !!st.conversations[item.conversationId]);
+    }) : (st.nav[PERSONAL]?.saved ?? null),
+    features.has("saved-collections") ? included("savedCollections", () => getSavedCollections(engine.api)) : null,
+    features.has("bug-reports") ? included("feedback", async () => (await new AccountSafetyApi(engine.api).bugReports()).reports) : null,
+    features.has("spark-assistant") ? included("sparkConversations", async () => {
+      const info = await sparkInfo(engine.api);
+      if (!info.historyAvailable) {
+        unavailable.push("sparkConversations");
+        return null;
+      }
+      const threads: SparkThread[] = [];
+      for (let i = 0; i < info.threads.length; i += 3) {
+        threads.push(...await Promise.all(info.threads.slice(i, i + 3).map((row) => sparkOpen(engine.api, row.id))));
+      }
+      return threads;
+    }) : null,
+  ]);
+  if (engine.device.account && !account) unavailable.push("account");
+  if (!profile) unavailable.push("profile");
   const name = (userId: string) => (userId === st.me?.userId ? "you" : (st.users[userId]?.username ?? userId));
   const conversations = [];
   for (const c of Object.values(st.conversations)) {
@@ -41,6 +79,12 @@ export async function buildDataExport(engine: Engine, now: number = Date.now()):
       "Your Meldiq data as this browser has it. Messages are end-to-end encrypted, so they come from this browser's own copy: messages from before this browser was set up, or never synced to it, aren't included.",
     account,
     profile,
+    unavailable,
+    browserHistory,
+    savedMessages,
+    savedCollections,
+    feedback,
+    sparkConversations,
     communities: st.orgs.map((o) => ({ id: o.id, name: o.name, role: o.myRole })),
     people: Object.values(st.users).map((u) => ({ id: u.id, username: u.username, displayName: u.displayName })),
     conversations,

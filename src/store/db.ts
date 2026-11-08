@@ -125,6 +125,17 @@ export class LocalStore {
     });
   }
 
+  /** One account database; IndexedDB serializes history changes across this account's open tabs. */
+  async updatePersonalHistory<T>(apply: (value: unknown) => T): Promise<T> {
+    const tx = this.db.transaction("kv", "readwrite");
+    const key = "personalHistory";
+    const current = await tx.store.get(key);
+    const next = apply(current);
+    if (JSON.stringify(current) !== JSON.stringify(next)) await tx.store.put(next, key);
+    await tx.done;
+    return next;
+  }
+
   // ───── device ─────
   async device(): Promise<DeviceRecord | null> {
     const d = (await this.db.get("kv", "device")) as DeviceRecord | undefined;

@@ -1,3 +1,8 @@
+import { openSpark } from "../../application/experienceNavigation";
+import { recordSearch, updateHistory } from "../../application/personalHistory";
+import { useLanguage } from "../../i18n";
+import { useFocusTrap } from "../components/Overlay";
+import { usePersonalHistory } from "../experience/usePersonalHistory";
 import { roleName } from "../../sync/workspaceRules";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
@@ -13,7 +18,7 @@ import { navigate } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import type { AttachmentRef } from "../../protocol/payload";
 import { joinChannel, searchPeople, startDirect } from "../../sync/account";
-import { type Filter, FILTERS, PREVIEW_COUNT, remember, type SearchResults, type Section, sections, serverSearch, serverTypes, usable, DEBOUNCE_MS } from "../../sync/universalSearch";
+import { type Filter, FILTERS, PREVIEW_COUNT, type SearchResults, type Section, sections, serverSearch, serverTypes, usable, DEBOUNCE_MS } from "../../sync/universalSearch";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { jumpTo } from "../chat/jump";
 import { conversationTitle, members, shortWhen } from "../format";
@@ -28,6 +33,7 @@ interface Result {
   go: () => void;
 }
 const LABEL: Record<Section, string> = {
+  get tools() { return uiText("workspace.experience.tools"); },
   get conversations() {
     return uiText("settings.nt_conversations");
   },
@@ -54,6 +60,7 @@ const LABEL: Record<Section, string> = {
   },
 };
 const FILTER_LABEL: Record<Filter, string> = {
+  get tools() { return uiText("workspace.experience.tools"); },
   get all() {
     return uiText("settings.ap_all");
   },
@@ -80,27 +87,12 @@ const FILTER_LABEL: Record<Filter, string> = {
 const PAGE = 20;
 const LOCAL_LIMIT = 100;
 const RECENT_KEY = "meldiq.recentSearches";
-function loadRecent(): string[] {
-  try {
-    const v: unknown = JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]");
-    return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
-  } catch {
-    return [];
-  }
-}
 /** Signing out forgets them: what someone searched for isn't left for the next person on this browser. */
 export function forgetRecentSearches(): void {
   try {
     localStorage.removeItem(RECENT_KEY);
   } catch {
     /* nothing stored */
-  }
-}
-function saveRecent(list: string[]): void {
-  try {
-    localStorage.setItem(RECENT_KEY, JSON.stringify(list));
-  } catch {
-    /* kept for this page only */
   }
 }
 interface Local {
@@ -125,88 +117,98 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
   const users = useOrbit((s) => s.users);
   const orgs = useOrbit((s) => s.orgs);
   const me = useOrbit((s) => s.me);
+  const feedback = useOrbit((s) => s.server?.features.includes("bug-reports") ?? false);
   const universal = useOrbit((s) => s.server?.features.includes("search") ?? false);
-  const [loading, setLoading] = useState(false),
-    [error, setError] = useState<string | null>(null),
-    [retry, setRetry] = useState(0);
-  const generation = useRef(0);
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [server, setServer] = useState<SearchResults>({});
   const [legacyPeople, setLegacyPeople] = useState<Member[]>([]);
   const [local, setLocal] = useState<Local>(NO_LOCAL);
   const [shown, setShown] = useState(PAGE);
-  const [recent, setRecent] = useState(loadRecent);
+  const history = usePersonalHistory(engine.store);
+  const recent = history.data?.searches ?? [];
+  const language = useLanguage();
+  const [sort, setSort] = useState("relevance");
+  const [loading, setLoading] = useState(false);
+  const [paging, setPaging] = useState(false);
+  const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
+  const epoch = useRef(0);
+  const modal = useRef<HTMLDivElement>(null);
+  useFocusTrap(modal, true);
   const [index, setIndex] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const term = usable(q);
   useEffect(() => {
-    input.current?.focus();
     const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", k);
     return () => document.removeEventListener("keydown", k);
   }, [onClose]);
   useEffect(() => {
-    generation.current++;
-    let alive = true;
+    const request = ++epoch.current;
+    const controller = new AbortController();
     setShown(PAGE);
     setServer({});
     setLegacyPeople([]);
     setLocal(NO_LOCAL);
-    setError(null);
-    setLoading(!!term);
-    if (!term) return;
+    setError(false);
+    setPaging(false);
+    setLoading(!!term && filter !== "tools");
+    if (!term || filter === "tools") return;
     const words = parseSearchQuery(term).text;
-    const timer = setTimeout(() => {
+    const live = () => request === epoch.current && !controller.signal.aborted;
+    const t = setTimeout(() => {
       const types = serverTypes(filter);
-      void Promise.all([
-        words && types && universal ? serverSearch(engine, words, { types, limit: filter === "all" ? PREVIEW_COUNT : PAGE }) : Promise.resolve({}),
-        words && !universal && (filter === "all" || filter === "people") ? searchPeople(engine, words) : Promise.resolve([]),
+      const remote = !words ? Promise.resolve()
+        : types && universal
+          ? serverSearch(engine, words, { types, limit: filter === "all" ? PREVIEW_COUNT : PAGE, signal: controller.signal })
+              .then((result) => { if (live()) setServer(result); })
+          : !universal && (filter === "all" || filter === "people")
+            ? searchPeople(engine, words).then((result) => { if (live()) setLegacyPeople(result); })
+            : Promise.resolve();
+      void Promise.allSettled([
+        remote,
         Promise.all([
           filter === "all" || filter === "messages" ? engine.searchMessages(term) : [],
           words && (filter === "all" || filter === "files") ? engine.searchFiles(words, LOCAL_LIMIT) : [],
           words && (filter === "all" || filter === "pinned") ? engine.searchPinned(words, LOCAL_LIMIT) : [],
-        ]),
-      ])
-        .then(([server, people, [messages, files, pinned]]) => {
-          if (alive) {
-            setServer(server);
-            setLegacyPeople(people);
-            setLocal({ messages, files, pinned });
-          }
-        })
-        .catch((e) => {
-          if (alive) setError(e instanceof Error ? e.message : uiText("workspace.interface.search_failed_01ee45e"));
-        })
-        .finally(() => {
-          if (alive) setLoading(false);
-        });
+        ]).then(([messages, files, pinned]) => { if (live()) setLocal({ messages, files, pinned }); }),
+      ]).then((outcomes) => {
+        if (live()) {
+          setError(outcomes.some((r) => r.status === "rejected"));
+          setLoading(false);
+        }
+      });
     }, DEBOUNCE_MS);
     return () => {
-      alive = false;
-      clearTimeout(timer);
+      clearTimeout(t);
+      controller.abort();
     };
   }, [term, filter, universal, engine, retry]);
   const more = async (section: Section) => {
-    const mine = generation.current,
-      pageOf = server[section as keyof SearchResults];
-    setShown((n) => n + PAGE);
-    if (!term || !pageOf?.next) return;
+    if (paging) return;
+    const pageOf = server[section as keyof SearchResults];
+    if (!term || !pageOf?.next) {
+      setShown((n) => n + PAGE);
+      return;
+    }
+    const request = epoch.current;
+    setPaging(true);
     try {
       const next = await serverSearch(engine, parseSearchQuery(term).text, { types: section, limit: PAGE, cursor: pageOf.next });
-      if (generation.current !== mine) return;
       const add = next[section as keyof SearchResults];
-      if (add) setServer((cur) => ({ ...cur, [section]: { items: [...(cur[section as keyof SearchResults]?.items ?? []), ...add.items], next: add.next } }));
-    } catch (e) {
-      if (generation.current === mine) setError(e instanceof Error ? e.message : uiText("workspace.interface.search_failed_01ee45e"));
+      if (add && request === epoch.current) {
+        setServer((cur) => ({ ...cur, [section]: { items: [...(cur[section as keyof SearchResults]?.items ?? []), ...add.items], next: add.next } }));
+        setShown((n) => n + PAGE);
+      }
+    } catch {
+      if (request === epoch.current) setError(true);
+    } finally {
+      if (request === epoch.current) setPaging(false);
     }
   };
   const open = (r: Result) => {
-    if (term) {
-      const list = remember(recent, term);
-      setRecent(list);
-      saveRecent(list);
-    }
+    if (term) void recordSearch(engine.store, term).catch(() => undefined);
     onClose();
     r.go();
   };
@@ -219,7 +221,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
     me && conversations[m.conversationId] ? conversationTitle(conversations[m.conversationId], me.userId, users) : uiText("workspace.interface.a_conversation_3e95da5");
   const who = (m: StoredMessage) => (m.outgoing ? uiText("workspace.nav_you") : (users[m.senderUserId]?.displayName ?? uiText("messaging.react_someone")));
   const all = useMemo<Record<Section, Result[]>>(() => {
-    const out: Record<Section, Result[]> = { conversations: [], channels: [], workspaces: [], groups: [], people: [], messages: [], files: [], pinned: [] };
+    const out: Record<Section, Result[]> = { tools: [], conversations: [], channels: [], workspaces: [], groups: [], people: [], messages: [], files: [], pinned: [] };
     if (!me) return out;
     const t = term?.toLowerCase() ?? "";
     const convRow = (c: Conversation, section: Section, orgName?: string | null): Result => {
@@ -247,6 +249,18 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       .filter((c) => !t || conversationTitle(c, me.userId, users).toLowerCase().includes(t))
       .slice(0, t ? LOCAL_LIMIT : 6)
       .map((c) => convRow(c, "conversations"));
+    const tools = [
+      ...(feedback ? [["feedback", l10n("workspace.experience.feedback"), () => navigate({ section: "settings", settingsPage: "about" })] as const] : []),
+      ["spark", l10n("workspace.experience.spark"), openSpark],
+      ["discover", l10n("workspace.rail_discover"), () => navigate({ section: "discover" })],
+      ["later", l10n("top_saved"), () => navigate({ section: "later" })],
+      ["activity", l10n("workspace.activity"), () => navigate({ section: "activity" })],
+      ["language", l10n("common.language.label"), () => navigate({ section: "settings", settingsPage: "language" })],
+      ["security", l10n("settings.settings_security"), () => navigate({ section: "settings", settingsPage: "security" })],
+    ] as const;
+    out.tools = tools.filter(([key, title]) => !t || title.toLocaleLowerCase().includes(t) || key.includes(t)).map(([key, title, go]) => ({
+      key: `tools:${key}`, section: "tools", title, sub: "", icon: null, go,
+    }));
     if (!t) return out;
     const peopleList: Member[] = universal ? (server.people?.items ?? []) : legacyPeople;
     out.people = peopleList.map((p) => ({
@@ -305,29 +319,36 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       }));
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps -- recomputed from what was found
-  }, [term, conversations, users, me, server, legacyPeople, local, orgs, universal, engine, l10n]);
+  }, [term, conversations, users, me, server, legacyPeople, local, orgs, universal, feedback, engine, l10n]);
   /** What's listed: under All a preview of each kind; under a filter its page so far. */
   const groups = useMemo(() => {
     const wanted = sections(filter).filter((s) => s !== "conversations" || filter === "all");
     const list = filter === "all" ? ["conversations" as Section, ...wanted.filter((s) => s !== "conversations")] : wanted;
     return list
       .map((s) => {
-        const items = all[s];
+        const items = sort === "title" ? [...all[s]].sort((a, b) => a.title.localeCompare(b.title, language, { sensitivity: "base" })) : all[s];
         const limit = filter === "all" ? (term ? PREVIEW_COUNT : 6) : shown;
         const hasMore = items.length > limit || !!server[s as keyof SearchResults]?.next;
         return { section: s, items: items.slice(0, limit), hasMore: filter !== "all" && hasMore };
       })
       .filter((g) => g.items.length > 0);
-  }, [all, filter, shown, term, server]);
+  }, [all, filter, shown, term, server, sort, language]);
   const flat = groups.flatMap((g) => g.items);
-  useEffect(() => setIndex(0), [q, filter]);
+  useEffect(() => setIndex(0), [q, filter, sort]);
+  useEffect(() => {
+    if (flat[index]) document.getElementById(`sr-${flat[index].key}`)?.scrollIntoView({ block: "nearest" });
+    // Scroll only for the input's keyboard selection, not for background result updates.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
   return createPortal(
     <div className="scrim" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="dialog" role="dialog" aria-modal="true" aria-label={l10n("common.actions.search")} style={{ width: "min(680px, 100%)" }}>
+      <div ref={modal} className="dialog" role="dialog" aria-modal="true" aria-label={l10n("common.actions.search")} style={{ width: "min(680px, 100%)" }}>
         <div className="search-input">
           <Search size={18} className="faint" />
           <input
             ref={input}
+            data-autofocus
+            maxLength={60}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder={universal ? uiText("workspace.interface.search_people_channels_and_messages_4c7d430") : l10n("messaging.search_placeholder")}
@@ -339,7 +360,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
             onKeyDown={(e) => {
               if (e.key === "ArrowDown") {
                 e.preventDefault();
-                setIndex((i) => Math.min(flat.length - 1, i + 1));
+                setIndex((i) => Math.max(0, Math.min(flat.length - 1, i + 1)));
               } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 setIndex((i) => Math.max(0, i - 1));
@@ -360,31 +381,33 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
             </button>
           ))}
         </div>
-        <div id="search-results" role="listbox" className="scroll" style={{ minHeight: 0, paddingBottom: 8 }}>
+        <div className="experience-controls" style={{ padding: "0 12px 8px" }}>
+          <label>{l10n("workspace.experience.sort")}
+            <select className="input input-sm" value={sort} onChange={(e) => setSort(e.target.value)}>
+              <option value="relevance">{l10n("workspace.experience.relevance")}</option>
+              <option value="title">{l10n("workspace.experience.titleSort")}</option>
+            </select>
+          </label>
+        </div>
+        <div id="search-results" role="listbox" aria-busy={loading || paging} className="scroll" style={{ minHeight: 0, paddingBottom: 8 }}>
           {!term && recent.length > 0 && (
             <div className="result-group">
               <h3>
                 <Localized k="workspace.interface.recent_searches_228c84b" />
               </h3>
               <div className="recent-searches">
-                {recent.map((r) => (
-                  <button key={r} className="chip" onClick={() => setQ(r)}>
-                    {r}
+                {recent.map(({ query }) => (
+                  <button key={query} className="chip" onClick={() => { setQ(query); input.current?.focus(); }}>
+                    {query}
                   </button>
                 ))}
+                <button className="btn btn-ghost btn-sm" onClick={() => void updateHistory(engine.store, { type: "clearSearch" }).catch(() => setError(true))}>{l10n("workspace.experience.clearSearch")}</button>
               </div>
             </div>
           )}
-          {error && (
-            <div className="banner danger" role="alert">
-              {error}
-              <button className="btn btn-secondary btn-sm" onClick={() => setRetry((n) => n + 1)}>
-                {l10n("common.actions.retry")}
-              </button>
-            </div>
-          )}
-          {loading && <p role="status">{l10n("common.status.loading")}</p>}
-          {flat.length === 0 && term && !error && !loading && (
+          {loading && <div className="experience-skeleton" role="status" aria-label={l10n("workspace.experience.loading")} />}
+          {error && <p className="banner danger" role="alert">{l10n("workspace.experience.searchError")} <button className="btn btn-ghost btn-sm" onClick={() => setRetry((n) => n + 1)}>{l10n("workspace.experience.retry")}</button></p>}
+          {!loading && !error && flat.length === 0 && term && (
             <div className="empty" style={{ padding: 32 }}>
               <Localized k="workspace.interface.nothing_found_eb1fa11" />
             </div>
@@ -407,7 +430,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
                 );
               })}
               {g.hasMore && (
-                <button className="btn btn-ghost btn-sm" style={{ margin: "2px 8px" }} onClick={() => void more(g.section)}>
+                <button className="btn btn-ghost btn-sm" style={{ margin: "2px 8px" }} disabled={paging} onClick={() => void more(g.section)}>
                   {l10n("workspace.discover_more")}
                 </button>
               )}

@@ -1,3 +1,4 @@
+import { openSpark } from "../../application/experienceNavigation";
 import { text as uiText } from "../../i18n";
 import { useAccountActions } from "./AccountActions";
 import { ArrowRightLeft, BellOff, Bookmark, CircleDot, Languages, LogOut, Palette, Settings, Smile, UserRound } from "lucide-react";
@@ -27,6 +28,7 @@ export function useProfileMenu(): {
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const menu = useMenu();
   const statusOffered = useOrbit((s) => s.server?.features.includes("status-expiry") ?? false);
+  const feedbackOffered = useOrbit((s) => s.server?.features.includes("bug-reports") ?? false);
   const presenceOffered = useOrbit((s) => s.server?.features.includes("presence-modes") ?? false);
   const [dialog, setDialog] = useState<"status" | "pause" | "presence" | null>(null);
   const now = Date.now();
@@ -95,6 +97,8 @@ export function useProfileMenu(): {
                   "separator" as const,
                 ]
               : []),
+            ...(feedbackOffered ? [{ label: t("workspace.experience.feedback"), onSelect: () => navigate({ section: "settings", settingsPage: "about" }) }] : []),
+            { label: t("workspace.experience.spark"), onSelect: openSpark },
             { label: t("top_saved"), icon: <Bookmark size={16} />, onSelect: () => navigate({ section: "later" }) },
             "separator",
             { label: t("settings.profile"), icon: <UserRound size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },

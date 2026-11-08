@@ -1,0 +1,129 @@
+.experience-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  min-inline-size: 0;
+}
+.experience-panel :is(h2, h3, p) {
+  margin: 0;
+}
+.experience-panel > .btn {
+  justify-self: start;
+}
+.experience-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  min-inline-size: 0;
+}
+.experience-controls > label {
+  display: grid;
+  gap: 4px;
+  min-inline-size: 0;
+}
+.experience-controls :is(input, select) {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+.experience-list-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-inline-size: 0;
+}
+.experience-list-row .list-row {
+  flex: 1;
+  min-inline-size: 0;
+  text-align: start;
+}
+.experience-list-row .lines {
+  min-inline-size: 0;
+}
+.experience-skeleton {
+  block-size: 44px;
+  border-radius: 8px;
+  background: var(--hover);
+  opacity: 0.6;
+}
+.experience-break {
+  overflow-wrap: anywhere;
+  min-inline-size: 0;
+}
+.experience-list-row time {
+  color: var(--muted);
+  font-size: 0.85em;
+}
+.spark-layout {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.35fr) minmax(0, 1fr);
+  gap: 16px;
+  min-block-size: 0;
+}
+.spark-history,
+.spark-conversation,
+.spark-composer {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-inline-size: 0;
+}
+.spark-history .input,
+.spark-composer textarea {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+.spark-messages {
+  max-block-size: min(38dvh, 420px);
+  min-inline-size: 0;
+  display: grid;
+  gap: 12px;
+  overscroll-behavior: contain;
+}
+.spark-turn {
+  display: grid;
+  gap: 8px;
+  min-inline-size: 0;
+}
+.spark-user {
+  justify-self: end;
+  max-inline-size: 90%;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--hover);
+  white-space: pre-wrap;
+}
+.spark-turn .md-pre {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+.spark-consent {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+}
+.spark-consent input {
+  flex: none;
+  margin-block-start: 4px;
+}
+.experience-controls :is(button, a.btn),
+.spark-history button {
+  min-block-size: 44px;
+  white-space: normal;
+}
+@media (max-width: 660px) {
+  .spark-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .spark-messages {
+    max-block-size: 32dvh;
+  }
+}
+.experience-panel > .btn,
+.experience-list-row > .btn,
+.discover-head > .btn,
+.spark-composer .btn {
+  min-block-size: 44px;
+}

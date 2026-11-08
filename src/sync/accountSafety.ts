@@ -31,7 +31,10 @@ export const BUG_STATUS_LABEL: Record<string, string> = {
     return uiText("workspace.interface.duplicate_02cdaab");
   },
 };
+export const FEEDBACK_CATEGORIES = ["bug", "feature", "general"] as const;
+export type FeedbackCategory = (typeof FEEDBACK_CATEGORIES)[number];
 export const zBugReport = z.object({
+  category: z.enum(FEEDBACK_CATEGORIES).default("bug"),
   id: z.string(),
   summary: z.string(),
   details: z.string(),
@@ -89,10 +92,11 @@ export class AccountSafetyApi {
     details: string,
     page: string,
     client: string,
+    category?: FeedbackCategory,
   ): Promise<{
     report: BugReport;
   }> {
-    return this.api.json("POST", "/v1/bug-reports", z.object({ report: zBugReport }), { body: { summary, details, page, client } });
+    return this.api.json("POST", "/v1/bug-reports", z.object({ report: zBugReport }), { body: { summary, details, page, client, category } });
   }
 }
 /** "n***@gmail.com": the first letter and the domain, as the reference's email row shows it until Reveal. */

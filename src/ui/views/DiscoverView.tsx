@@ -48,7 +48,7 @@ async function loadPage(engine: Engine, v2: boolean, query: DiscoverQuery): Prom
  * first, then every listed community (boosted ones first, with their labels), tags that filter the list, and who's
  * online; opening a card is counted for its Promoted week. Nothing is invented: every card is what the server says.
  */
-export function DiscoverView() {
+export function DiscoverView({ onSearch }: { onSearch: () => void }) {
   const engine = useEngine();
   const t = useT();
   const v2 = useOrbit((s) => s.server?.features.includes(DISCOVERY_FEATURES.listing) ?? false);
@@ -115,6 +115,7 @@ export function DiscoverView() {
       <header className="conv-head discover-head">
         <Icon name="navigation.discover" size={18} />
         <h1 className="grow">{t("discover_title")}</h1>
+        <button className="btn btn-secondary btn-sm" onClick={onSearch}>{t("workspace.interface.search_meldiq_7c5a6e1")}</button>
       </header>
       <div className="view scroll">
         <div className="discover discover-reference">

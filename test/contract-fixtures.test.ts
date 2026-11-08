@@ -32,13 +32,17 @@ const DELEGATED: Record<string, { method: string; path: string; schema: string; 
 };
 
 const table = readCopy<RouteTable>("routes.json");
-const fixtures = new Set(listCopy("http"));
+const forwardHttp = path.join(WEB_ROOT, "test/forward-contract-fixtures/http");
+const pendingRoutes: Route[] = JSON.parse(fs.readFileSync(path.join(forwardHttp, "routes.json"), "utf8"));
+const routes = [...table.routes, ...pendingRoutes.filter((r) => !table.routes.some((p) => p.path === r.path && p.method === r.method))];
+const forwardAnswers = new Set(fs.readdirSync(forwardHttp).filter((f) => f.endsWith(".json") && f !== "routes.json").map((f) => f.slice(0, -5)));
+const fixtures = new Set([...listCopy("http"), ...forwardAnswers]);
 
 /** The server route a web path template ("/v1/calls/{}/join") calls: literal segments must match, preferring literals over parameters. */
 function routeFor(method: string, template: string): Route | null {
   const want = template.split("/");
   let best: { route: Route; score: number } | null = null;
-  for (const r of table.routes) {
+  for (const r of routes) {
     if (r.method !== method) continue;
     const have = r.path.split("/");
     if (have.length !== want.length) continue;
@@ -188,7 +192,9 @@ describe("server contract fixtures (meldiq_android shared/contracts, API " + tab
     const strict = new Set<string>();
 
     for (const d of list) {
-      const body = readCopy<unknown>(`http/${d.fixture}.json`);
+      const body: unknown = forwardAnswers.has(d.fixture)
+        ? JSON.parse(fs.readFileSync(path.join(forwardHttp, d.fixture + ".json"), "utf8"))
+        : readCopy<unknown>(`http/${d.fixture}.json`);
       let ok = true;
       const found = catches(d.schema, () => {
         const r = d.schema.safeParse(body);

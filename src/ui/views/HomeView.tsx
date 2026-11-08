@@ -1,3 +1,4 @@
+import { RecentActivity } from "../experience/RecentActivity";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -46,6 +47,7 @@ export function HomeView({ orgId, onDialog }: { orgId: string | null; section: S
             )}
           </div>
         )}
+        {synced && <RecentActivity compact />}
       </div>
     </section>
   );

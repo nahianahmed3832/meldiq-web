@@ -7,9 +7,9 @@ import { resultBucket } from "./signals";
  * groups from the server, which checks each one's own access rule; messages, files and pinned messages from
  * this browser's history (end-to-end encrypted, so the server can't search them).
  */
-export const FILTERS = ["all", "messages", "files", "pinned", "people", "channels", "workspaces"] as const;
+export const FILTERS = ["all", "messages", "files", "pinned", "people", "channels", "workspaces", "tools"] as const;
 export type Filter = (typeof FILTERS)[number];
-export const SECTIONS = ["conversations", "channels", "workspaces", "groups", "people", "messages", "files", "pinned"] as const;
+export const SECTIONS = ["conversations", "channels", "workspaces", "groups", "people", "messages", "files", "pinned", "tools"] as const;
 export type Section = (typeof SECTIONS)[number];
 export const DEBOUNCE_MS = 250;
 /** Results per kind under All; a single-kind filter shows a page and "Show more". */
@@ -61,12 +61,16 @@ export async function serverSearch(
     limit: number;
     cursor?: string | null;
     orgId?: string | null;
+    signal?: AbortSignal;
   },
 ): Promise<SearchResults> {
   const p = new URLSearchParams({ q, types: opts.types, limit: String(opts.limit) });
   if (opts.cursor) p.set("cursor", opts.cursor);
   if (opts.orgId) p.set("orgId", opts.orgId);
-  const results = (await engine.api.json("GET", `/v1/search?${p}`, zResults)).results;
+  const useBody = engine.state.get().server?.features.includes("search-body");
+  const results = (await (useBody
+    ? engine.api.json("POST", "/v2/search", zResults, { body: Object.fromEntries(p), signal: opts.signal })
+    : engine.api.json("GET", `/v1/search?${p}`, zResults, { signal: opts.signal }))).results;
   // Counted only (docs/product/EXPERIMENTS.md): the scope and a bucket of how many came back, never the words.
   if (!opts.cursor) {
     const found = Object.values(results).reduce(

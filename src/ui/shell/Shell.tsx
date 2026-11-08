@@ -1,3 +1,5 @@
+import { OPEN_SPARK } from "../../application/experienceNavigation";
+import { recordVisit } from "../../application/personalHistory";
 import { useLocaleRender } from "../../i18n/Localized";
 import { StatePanel } from "../components/StatePanel";
 import { text as uiText } from "../../i18n";
@@ -62,6 +64,7 @@ import { UserPanel } from "./UserPanel";
 import { useWelcomeStage } from "../../application/welcome";
 import { WelcomeFlow } from "../auth/WelcomeFlow";
 import { SkipToContent } from "./SkipToContent";
+const SparkAssistant = lazy(() => import("../experience/SparkAssistant").then((m) => ({ default: m.SparkAssistant })));
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
 const LobbyPage = lazy(() => import("../lobby/LobbyPage").then((m) => ({ default: m.LobbyPage })));
@@ -79,6 +82,7 @@ function usePhoneLayout(): boolean {
   return phone;
 }
 export type ShellDialog =
+  | { kind: "sparkAssistant" }
   | {
       kind: "search";
     }
@@ -154,6 +158,11 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const lobbies = useOrbit((s) => s.server?.features.includes(LOBBY_FEATURE) ?? false);
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog>(null);
+  useEffect(() => {
+    const open = () => setDialog({ kind: "sparkAssistant" });
+    window.addEventListener(OPEN_SPARK, open);
+    return () => window.removeEventListener(OPEN_SPARK, open);
+  }, []);
   usePushToTalk();
   const linkedOrg = known && channelCommunity && orgIds.includes(channelCommunity) ? channelCommunity : null;
   const orgId = linkedOrg ?? (prefs.orgId && orgIds.includes(prefs.orgId) ? prefs.orgId : (orgIds[0] ?? null));
@@ -205,6 +214,10 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (c?.orgId && guide) void noteGuideVisit(engine.store, c.orgId, guide, c.id).then((changed) => changed && window.dispatchEvent(new Event(GUIDE_EVENT)));
     return () => window.removeEventListener("pageshow", restored);
   }, [engine, selected, route.section]);
+  const visitId = !isFullPage(route.section) && route.section !== "oauth" && known ? route.conversationId : null;
+  useEffect(() => {
+    if (synced && visitId) void recordVisit(engine.store, visitId).catch(() => undefined);
+  }, [engine, synced, visitId]);
   // Where the person is, for the next time Meldiq opens (application/lastPlace.ts); settings windows aren't places.
   useEffect(() => {
     if (!isFullPage(route.section) && route.section !== "oauth" && ((route.conversationId && known) || route.section === "lobby")) {
@@ -362,7 +375,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     );
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else if (section === "later") main = <LaterView />;
-  else if (section === "discover") main = <DiscoverView />;
+  else if (section === "discover") main = <DiscoverView onSearch={() => setDialog({ kind: "search" })} />;
   else if (section === "lobby" && orgId && lobbies)
     main = (
       <Suspense
@@ -416,6 +429,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       <TabIndicators />
       <ConnectionRequestWatcher />
       <CallLayer />
+      {dialog?.kind === "sparkAssistant" && <Suspense fallback={null}><SparkAssistant onClose={() => setDialog(null)} /></Suspense>}
       {dialog?.kind === "search" && <SearchDialog orgId={orgId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "shortcuts" && <ShortcutsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "new" && <NewMessageDialog onClose={() => setDialog(null)} onNewGroup={() => setDialog({ kind: "newGroup" })} />}

@@ -74,6 +74,10 @@ export class ApiClient {
     if (!res.body) throw new ApiError(res.status, "decode", uiText("workspace.interface.the_server_s_answer_had_no_body_4ba2ac8"));
     return res.body;
   }
+  /** An authenticated POST returning incremental frames. */
+  async postStream(path: string, opts: RequestOptions): Promise<Response> {
+    return this.send("POST", path, opts);
+  }
   /** The answer itself, for callers that need its headers or body as they choose (a failed status still throws). */
   async response(path: string, opts: RequestOptions = {}): Promise<Response> {
     return this.send("GET", path, opts);
@@ -84,7 +88,7 @@ export class ApiClient {
   }
   private async send(method: string, path: string, opts: RequestOptions, retried = false): Promise<Response> {
     const auth = opts.auth ?? true;
-    const headers: Record<string, string> = { ...opts.headers, accept: "application/json" };
+    const headers: Record<string, string> = { accept: "application/json", ...opts.headers };
     let token = auth ? (this.credentials?.token() ?? null) : null;
     let noSession = false;
     if (auth && !token && !retried && this.credentials) {

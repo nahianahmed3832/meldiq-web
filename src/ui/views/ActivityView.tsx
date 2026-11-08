@@ -1,3 +1,4 @@
+import { RecentActivity } from "../experience/RecentActivity";
 import { conversationPreview } from "../../sync/rules";
 import { countLabel } from "../../i18n/counts";
 import { formatUiNumber } from "../../i18n/format";
@@ -79,6 +80,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
               <Localized k="workspace.interface.mentions_of_you_and_what_changed_in_ca03e80" slots={[org?.name ?? uiText("workspace.interface.your_community_77cfb84")]} />
             </p>
           </div>
+          <RecentActivity />
           <div className="search-filters" role="tablist" aria-label={uiText("messaging.interface.show_0df6f1c")}>
             {(["all", "mentions", "unreads", "threads", "calls"] as const).map((f) => (
               <button key={f} role="tab" aria-selected={filter === f} className="chip" onClick={() => setFilter(f)}>

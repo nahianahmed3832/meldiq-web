@@ -80,7 +80,7 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
 function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => void }) {
   useLocaleRender();
   const engine = useEngine();
-  const available = engine.state.get().server?.features.includes("account-delete") ?? false;
+  const available = useOrbit((s) => s.server?.features.includes("account-delete") ?? false);
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const [password, setPassword] = useState("");
@@ -93,6 +93,7 @@ function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => v
     setProblem(null);
     deleteAccount(engine, password, typed).then(onDeleted, (err: unknown) => {
       setBusy(false);
+      setPassword("");
       setProblem(deletionProblem(err));
     });
   };
@@ -139,7 +140,7 @@ function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => v
             </div>
           )}
           <div className="ws-form-actions">
-            <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => setOpen(false)}>
+            <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => { setOpen(false); setTyped(""); setPassword(""); setProblem(null); }}>
               <Localized k="settings.interface.keep_my_account_d62ce03" />
             </button>
             <button className="btn btn-danger btn-sm" disabled={busy || !canDeleteAccount(typed, email, password)}>

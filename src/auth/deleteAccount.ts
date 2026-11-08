@@ -23,6 +23,9 @@ export type DeletionProblem =
       workspaces: string[];
     }
   | {
+      kind: "subscription";
+    }
+  | {
       kind: "unavailable";
     }
   | {
@@ -35,6 +38,7 @@ export function deletionProblem(e: unknown): DeletionProblem {
   if (!(e instanceof ApiError)) return { kind: "other" };
   if (e.code === "confirm_mismatch") return { kind: "mismatch" };
   if (e.code === "invalid_credentials") return { kind: "password" };
+  if (e.code === "subscription_active") return { kind: "subscription" };
   if (e.code === "owns_workspaces") return { kind: "owner", workspaces: workspaceNames(e.details) };
   if (e.status === 404) return { kind: "unavailable" };
   if (e.status === 0) return { kind: "offline" };
@@ -70,6 +74,8 @@ export function deletionProblemText(p: DeletionProblem): string {
       return uiText("auth.interface.that_password_isn_t_right_nothing_was_deleted_d6c9e18");
     case "owner":
       return uiText("auth.interface.you_re_the_only_owner_of_value0_make_someone_else_an_owner_or_del_ff62067", { value0: p.workspaces.join(", ") || uiText("auth.interface.a_workspace_b7c8a44") });
+    case "subscription":
+      return uiText("errors.api.subscription_active");
     case "unavailable":
       return uiText("auth.interface.this_server_can_t_delete_accounts_yet_nothing_was_deleted_ad46068");
     case "offline":

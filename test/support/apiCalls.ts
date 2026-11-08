@@ -63,6 +63,10 @@ function helperBody(sf: ts.SourceFile, name: string): ts.Expression | null {
 
 function paths(sf: ts.SourceFile, e: ts.Expression): string[] {
   if (ts.isStringLiteral(e) || ts.isNoSubstitutionTemplateLiteral(e)) return [e.text];
+  if (ts.isIdentifier(e)) {
+    const node = topLevel(sf).get(e.text);
+    if (node && (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node))) return [node.text];
+  }
   if (ts.isParenthesizedExpression(e)) return paths(sf, e.expression);
   if (ts.isConditionalExpression(e)) return [...paths(sf, e.whenTrue), ...paths(sf, e.whenFalse)];
   if (ts.isCallExpression(e) && ts.isIdentifier(e.expression)) {
@@ -73,7 +77,7 @@ function paths(sf: ts.SourceFile, e: ts.Expression): string[] {
     let out = [e.head.text];
     for (const span of e.templateSpans) {
       const x = span.expression;
-      const expands = ts.isConditionalExpression(x) || ts.isStringLiteral(x) || (ts.isCallExpression(x) && ts.isIdentifier(x.expression) && !!helperBody(sf, x.expression.text));
+      const expands = ts.isIdentifier(x) || ts.isConditionalExpression(x) || ts.isStringLiteral(x) || (ts.isCallExpression(x) && ts.isIdentifier(x.expression) && !!helperBody(sf, x.expression.text));
       const parts = expands ? paths(sf, x) : ["{}"];
       out = out.flatMap((o) => parts.map((p) => o + p + span.literal.text));
     }
@@ -96,14 +100,17 @@ export function apiCalls(): ApiCall[] {
   for (const file of sourceFiles(SRC)) {
     const sf = parse(file);
     const visit = (n: ts.Node): void => {
-      if (ts.isCallExpression(n) && ts.isPropertyAccessExpression(n.expression) && ["json", "call"].includes(n.expression.name.text)) {
+      if (ts.isCallExpression(n) && ts.isPropertyAccessExpression(n.expression) && ["json", "call", "postStream"].includes(n.expression.name.text)) {
+        const streaming = n.expression.name.text === "postStream";
         const [m, p, schema] = n.arguments;
-        if (m && ts.isStringLiteral(m) && METHODS.has(m.text) && p) {
+        const routePath = streaming ? m : p;
+        const method = streaming ? "POST" : m && ts.isStringLiteral(m) ? m.text : "";
+        if (METHODS.has(method) && routePath) {
           const decodes = n.expression.name.text === "json";
-          const all = paths(sf, p).map(clean);
+          const all = paths(sf, routePath).map(clean);
           calls.push({
             at: `${path.relative(SRC, file)}:${sf.getLineAndCharacterOfPosition(n.getStart()).line + 1}`,
-            method: m.text,
+            method,
             paths: all.every((x) => x.startsWith("/")) ? all : [],
             schema: decodes && schema ? schema.getText(sf) : undefined,
             file,

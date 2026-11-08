@@ -1,3 +1,4 @@
+import { HistoryPrivacy } from "../experience/HistoryPrivacy";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -133,6 +134,7 @@ export function SecurityPage() {
   return (
     <>
       <h1>{t("settings.settings_security")}</h1>
+      <HistoryPrivacy />
       <AuthenticationSettings />
       <div className="card">
         <div className="setting">
