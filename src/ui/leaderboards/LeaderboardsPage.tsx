@@ -30,7 +30,7 @@ export const BOARD_INFO: Record<
       return uiText("workspace.interface.the_next_chapter_starts_with_you_meet_meldiq_s_highest_account_le_45943b2");
     },
     get empty() {
-      return uiText("workspace.interface.a_new_chapter_is_waiting_spend_earned_embers_on_your_first_level_030af31");
+      return uiText("workspace.interface.automatic_rank_level_empty");
     },
   },
   messages: {
@@ -41,7 +41,7 @@ export const BOARD_INFO: Record<
       return uiText("workspace.interface.keeping_the_conversation_going_one_message_at_a_time_4fd7f24");
     },
     get empty() {
-      return uiText("workspace.interface.no_messages_this_week_yet_start_a_conversation_in_one_of_your_com_2ae51ca");
+      return uiText("workspace.interface.rank_messages_empty");
     },
   },
   voice: {
@@ -49,10 +49,10 @@ export const BOARD_INFO: Record<
       return uiText("auth.interface.voice_87bf2bc");
     },
     get description() {
-      return uiText("workspace.interface.good_company_great_conversations_recorded_voice_room_time_this_we_8e698c7");
+      return uiText("workspace.interface.rank_voice_description");
     },
     get empty() {
-      return uiText("workspace.interface.it_s_quiet_around_the_campfire_spend_a_minute_in_a_community_voic_eb0b412");
+      return uiText("workspace.interface.rank_voice_empty");
     },
   },
   embers: {
@@ -110,7 +110,8 @@ export function LeaderboardsPage() {
   const self = useOrbit((s) => s.me?.userId);
   const [metric, setMetric] = useState<LeaderboardMetric>("level");
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const loaded = useLoad(() => loadLeaderboard(engine, metric), [engine, metric]);
+  const levelRev = useOrbit((s) => (metric === "level" ? s.profilesRev : 0));
+  const loaded = useLoad(() => loadLeaderboard(engine, metric), [engine, metric, levelRev]);
   // useLoad retains the previous answer: never label one category's scores as another.
   const board = loaded.data?.metric === metric ? loaded.data : null;
   const info = BOARD_INFO[metric];
@@ -275,14 +276,16 @@ export function LeaderboardsPage() {
               <footer className="rankings-footnote">
                 <p>
                   {weekly
-                    ? uiText("workspace.interface.only_community_channels_you_can_view_count_here_direct_messages_a_a8b0f5b")
+                    ? board.scope === "visible_communities"
+                      ? uiText("workspace.interface.only_community_channels_you_can_view_count_here_direct_messages_a_a8b0f5b")
+                      : uiText("workspace.interface.rank_visible_activity_scope")
                     : metric === "embers"
                       ? uiText("workspace.interface.lifetime_earnings_count_here_spending_embers_on_levels_never_lowe_a846e27")
                       : metric === "gifts"
                         ? uiText("workspace.interface.only_verified_paid_gifts_count_pending_refunded_and_disputed_gift_9d5dd99")
                         : metric === "invites"
                           ? uiText("workspace.interface.only_credited_invitations_count_a_friend_must_stay_for_seven_days_3cf1ecd")
-                          : uiText("workspace.interface.account_levels_start_ranking_at_level_2_earn_embers_through_quest_ff8e21c")}
+                          : uiText("workspace.interface.automatic_rank_level_hint")}
                 </p>
                 <p>
                   <Localized

@@ -4,8 +4,8 @@ import type { Engine } from "./engine";
 
 /**
  * Points, quests and account levels (API 0.65.0, server docs/SETTINGS_PARITY_API.md): earned for a daily visit,
- * chatting, a 7-day streak, invites that stay and quests, and spent on levels. The server decides every amount and
- * pays quest rewards by itself; the web only shows them, counts today's visit when it opens, and asks for a level.
+ * chatting, a 7-day streak, invites that stay and quests. The server applies rewards and level thresholds;
+ * the client displays the result and checks in once a UTC day.
  */
 
 const zQuest = z.object({
@@ -67,9 +67,4 @@ export function points(engine: Engine): Promise<Points> {
 /** Today's visit (5 points once a UTC day): the app calls it once when a signed-in session opens. */
 export async function pointsCheckin(engine: Engine): Promise<Points> {
   return (await engine.api.json("POST", "/v2/points/checkin", z.object({ counted: z.boolean(), points: zPoints }))).points;
-}
-
-/** Spends the next level's cost; a 409 not_enough_points says what it costs and what you have. */
-export function levelUp(engine: Engine): Promise<{ level: number; balance: number; nextLevelCost: number }> {
-  return engine.api.json("POST", "/v2/points/level-up", z.object({ level: z.number().int(), balance: z.number().int(), nextLevelCost: z.number().int() }));
 }

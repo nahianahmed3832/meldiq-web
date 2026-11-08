@@ -8,7 +8,6 @@ import { nameBadge } from "../src/ui/people/NameBadge";
 import { isPreset, THEME_PRESETS, themeBackground, themeColorsOf } from "../src/ui/people/profileTheme";
 import { leaveSummary } from "../src/ui/settings/LeaveManyDialog";
 import { lighten } from "../src/ui/settings/ProfileThemePicker";
-import { levelUpProblem } from "../src/ui/points/PointsPage";
 import { historyLabel, levelProgress, questLabel, signed, streakInWeek } from "../src/ui/points/pointsWords";
 
 /** Settings parity, batch A (API 0.65.0): the rules the web adds on top of the server's answers. */
@@ -72,12 +71,6 @@ describe("account levels", () => {
     const base = { id: "u", username: "a", displayName: "A", identityKey: "k", fingerprint: "f" };
     expect(zProfile.parse({ ...base, level: 4 }).level).toBe(4);
     expect(zProfile.parse(base).level).toBeNull();
-  });
-
-  it("says what a refused level-up costs", () => {
-    expect(levelUpProblem(new ApiError(409, "not_enough_points", "x", { cost: 100, balance: 30 }))).toBe("The next level costs 100 Embers and you have 30.");
-    expect(levelUpProblem(new ApiError(500, "internal", "Server trouble"))).toBe("Server trouble");
-    expect(levelUpProblem(new Error("boom"))).toBe("Couldn't level up. Try again.");
   });
 });
 

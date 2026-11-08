@@ -4,11 +4,10 @@ import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { interfaceLocale } from "../../i18n/format";
 import { useT as useLocalization } from "../../i18n";
-import { ArrowUpRight, Award, Flame, History, Map } from "lucide-react";
+import { Award, Flame, History, Map } from "lucide-react";
 import { useState } from "react";
-import { ApiError } from "../../api/client";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { levelUp, points as loadPoints } from "../../sync/points";
+import { points as loadPoints } from "../../sync/points";
 import { EmberIcon } from "../components/EmberIcon";
 import { LevelRing } from "../people/LevelRing";
 import { useLoad } from "../workspace/useLoad";
@@ -16,44 +15,15 @@ import { AchievementGallery } from "./AchievementGallery";
 import { PointsEarn } from "./PointsEarn";
 import { PointsQuests } from "./PointsQuests";
 import { levelProgress } from "./pointsWords";
-export function levelUpProblem(e: unknown): string {
-  if (!(e instanceof ApiError)) return uiText("workspace.interface.couldn_t_level_up_try_again_f127c03");
-  if (e.code !== "not_enough_points") return e.message;
-  const d = e.details as
-    | {
-        cost?: unknown;
-        balance?: unknown;
-      }
-    | null
-    | undefined;
-  return typeof d?.cost === "number" && typeof d.balance === "number"
-    ? uiText("workspace.interface.the_next_level_costs_value0_embers_and_you_have_value1_9973cee", { value0: d.cost, value1: d.balance })
-    : e.message;
-}
 /** The internal points API stays compatible; the earned currency people see is Embers. */
 export function PointsPage() {
   useLocaleRender();
   const l10n = useLocalization();
   const engine = useEngine();
   const offered = useOrbit((s) => s.server?.features.includes("points") ?? false);
-  const [version, setVersion] = useState(0);
-  const data = useLoad(() => (offered ? loadPoints(engine) : Promise.resolve(null)), [engine, offered, version]);
+  const profilesRev = useOrbit((s) => s.profilesRev);
+  const data = useLoad(() => (offered ? loadPoints(engine) : Promise.resolve(null)), [engine, offered, profilesRev]);
   const [tab, setTab] = useState<"quests" | "achievements" | "activity">("quests");
-  const [busy, setBusy] = useState(false);
-  const [problem, setProblem] = useState<string | null>(null);
-  const [reached, setReached] = useState<number | null>(null);
-  const buyLevel = async () => {
-    setBusy(true);
-    setProblem(null);
-    try {
-      setReached((await levelUp(engine)).level);
-    } catch (e) {
-      setProblem(levelUpProblem(e));
-    } finally {
-      setVersion((v) => v + 1);
-      setBusy(false);
-    }
-  };
   const p = data.data;
   return (
     <div className="points embers-page">
@@ -79,7 +49,7 @@ export function PointsPage() {
       {data.error && (
         <div className="banner danger" role="alert">
           {data.error}
-          <button className="btn btn-secondary btn-sm" onClick={() => setVersion((v) => v + 1)}>
+          <button className="btn btn-secondary btn-sm" onClick={data.reload}>
             {l10n("common.actions.retry")}
           </button>
         </div>
@@ -118,7 +88,7 @@ export function PointsPage() {
             </section>
             <section className="embers-level" aria-label={uiText("workspace.interface.account_level_b409135")}>
               <LevelRing level={p.level} size={68} progress={levelProgress(p.balance, p.nextLevelCost)} />
-              <div>
+              <div aria-live="polite">
                 <span className="ember-eyebrow">
                   <Localized k="workspace.interface.your_next_chapter_ce35f25" />
                 </span>
@@ -128,23 +98,10 @@ export function PointsPage() {
                 <p>
                   <Localized k="workspace.interface.embers_to_level_63c415b" slots={[Math.max(0, p.nextLevelCost - p.balance).toLocaleString(interfaceLocale()), p.level + 1]} />
                 </p>
+                <p><Localized k="workspace.interface.automatic_account_level_hint" /></p>
               </div>
-              <button className="btn btn-secondary btn-sm" disabled={busy || p.balance < p.nextLevelCost} onClick={() => void buyLevel()}>
-                {busy ? uiText("workspace.interface.levelling_up_540ce9f") : uiText("workspace.interface.level_up_46538b5")}
-                <ArrowUpRight size={14} />
-              </button>
             </section>
           </div>
-          {problem && (
-            <div className="banner danger" role="alert">
-              {problem}
-            </div>
-          )}
-          {reached !== null && !problem && (
-            <div className="banner ok" role="status">
-              <Localized k="workspace.interface.a_brighter_chapter_you_re_level_now_d03d730" slots={[reached]} />
-            </div>
-          )}
           <div className="embers-tabs" role="tablist" aria-label={uiText("workspace.interface.embers_sections_4c93070")}>
             {(
               [

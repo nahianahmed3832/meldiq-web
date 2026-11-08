@@ -106,8 +106,8 @@
   color: var(--text-3);
   font-size: 11px;
 }
-.embers-level .btn {
-  min-height: 36px;
+.embers-level p + p {
+  margin-top: 5px;
 }
 .embers-tabs {
   display: flex;

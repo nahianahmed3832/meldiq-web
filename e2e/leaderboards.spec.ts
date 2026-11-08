@@ -1,4 +1,3 @@
-import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import { expect, test } from "@playwright/test";
 import { emailedCode } from "./mail";
@@ -17,14 +16,12 @@ test("real ranking endpoint, all six boards, podium ties, category races and ret
   await page.getByLabel("Your name", { exact: true }).fill("Ranking Explorer");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill("a long enough password");
-  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));
   await page.getByRole("button", { name: "Confirm", exact: true }).click();
   await page.getByRole("button", { name: "Set up encryption", exact: true }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
-  await finishWelcome(page);
   await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
   await page.goto("/settings/leaderboards");
   await expect(page.getByRole("heading", { name: "Leaderboards", exact: true })).toBeVisible();
@@ -50,7 +47,7 @@ test("real ranking endpoint, all six boards, podium ties, category races and ret
       body: JSON.stringify({
         metric,
         period: metric === "messages" || metric === "voice" ? "week" : "all",
-        scope: metric === "messages" || metric === "voice" ? "visible_communities" : "meldiq",
+        scope: "meldiq",
         generatedAt: Date.now(),
         total: 101,
         entries,
@@ -70,6 +67,7 @@ test("real ranking endpoint, all six boards, podium ties, category races and ret
   await page.keyboard.press("ArrowRight");
   await expect(page.getByRole("tab", { name: "Voice", exact: true })).toHaveAttribute("aria-selected", "true");
   await expect(page.locator(".podium-value").first()).toContainText("minutes");
+  await expect(page.locator(".rankings-footnote")).toContainText("DMs, groups and community channels you can access");
   await page.waitForTimeout(650);
   await expect(page.locator(".podium-value").first()).toContainText("minutes");
   fail = true;
@@ -85,5 +83,9 @@ test("real ranking endpoint, all six boards, podium ties, category races and ret
     await expect(nav.getByRole("button", { name: /Leaderboards/ })).toBeVisible();
     await page.getByRole("searchbox", { name: "Search settings" }).press("Escape");
   }
+  await page.goto("/settings/points");
+  const level = page.getByRole("region", { name: "Account level" });
+  await expect(level).toContainText("Your account levels up automatically");
+  await expect(level.getByRole("button", { name: "Level up", exact: true })).toHaveCount(0);
   expect(errors).toEqual([]);
 });
