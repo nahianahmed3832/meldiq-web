@@ -7,7 +7,7 @@ const legacyId = new RegExp(`^${LEGACY_LINK_ID}$`);
 const decimalId = new RegExp(`^${DECIMAL_LINK_ID}$`);
 
 export function encodeLinkId(id: string): string {
-  if (!legacyId.test(id)) throw new Error("Invalid link ID");
+  if (!legacyId.test(id)) throw new Error("invalid_link_id");
   let value = 1n;
   for (const char of id) value = (value << 6n) | BigInt(ALPHABET.indexOf(char));
   return value.toString(10);
