@@ -71,7 +71,7 @@ const PITCH: Record<PlanKey, string> = {
     return uiText("billing.interface.a_little_more_room_a_spark_to_give_and_a_go_badge_dfd7901");
   },
   get plus() {
-    return uiText("billing.interface.the_biggest_files_the_sharpest_streams_and_two_sparks_8d46bd1");
+    return uiText("billing.interface.make_room_for_more_f35caed");
   },
 };
 export interface PlanAction {
@@ -174,7 +174,7 @@ export function PlusPerks({ catalog }: { catalog: MojoCatalog }) {
     },
     {
       icon: <Sparkles size={20} />,
-      title: uiText("billing.interface.value0_meldiq_sparks_3830b49", { value0: plus.sparks }),
+      title: countLabel(plus.sparks, "meldiqSparks"),
       body: uiText("billing.interface.give_a_spark_to_a_server_you_love_every_spark_helps_unlock_more_e_2063c49"),
     },
     {

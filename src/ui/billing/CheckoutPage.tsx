@@ -1,5 +1,6 @@
 import { LanguagePicker } from "../components/LanguagePicker";
 import { formatUnit } from "../../i18n/format";
+import { countLabel } from "../../i18n/counts";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -540,7 +541,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     <Localized k="billing.interface.files_up_to_ab9d8f4" slots={[<Check size={15} aria-hidden="true" />, size(plus.uploadBytes)]} />
                   </li>
                   <li>
-                    <Localized k="billing.interface.included_sparks_35c26fa" slots={[<Check size={15} aria-hidden="true" />, plus.sparks]} />
+                    <Localized k="billing.promotion.includedSparks" slots={[<Check size={15} aria-hidden="true" />, countLabel(plus.sparks, "meldiqSparks")]} />
                   </li>
                   <li>
                     <Localized k="billing.interface.plus_badge_and_customization_de3fbb2" slots={[<Check size={15} aria-hidden="true" />]} />

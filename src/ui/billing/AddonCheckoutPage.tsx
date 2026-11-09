@@ -46,8 +46,11 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   const spark = draft.product === "spark";
   const cards = usePayPalCardSdk(config, !spark, attempt);
   const quantity = spark ? draft.quantity : 1;
-  const price = spark ? catalog?.onSale.spark : catalog?.onSale.botsPlus;
-  const amount = (price?.amountMinor ?? (spark ? 99 : 399)) * quantity;
+  const offer = spark ? catalog?.onSale.spark : catalog?.onSale.botsPlus;
+  const waitingForQuote = spark && !!saved.current.purchaseId && !purchase;
+  const price = waitingForQuote ? undefined : spark && purchase ? { currency: purchase.currency, amountMinor: purchase.amountMinor / quantity } : offer;
+  const amount = (price?.amountMinor ?? 0) * quantity;
+  const botsAmount = spark ? undefined : (offer?.amountMinor ?? 399);
   const title = spark ? countLabel(quantity, "meldiqSparks") : "Meldiq Bots+";
   const product = draft.product;
   const orgId = draft.product === "bots_plus" ? draft.orgId : null;
@@ -65,15 +68,14 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
         p.product !== product ||
         p.currency !== "USD" ||
         p.interval !== (product === "spark" ? "one_time" : "month") ||
-        p.amountMinor !== amount ||
-        (product === "spark" && p.quantity !== quantity) ||
-        (product === "bots_plus" && p.orgId !== orgId)
+        (product === "spark" && (p.quantity !== quantity || p.amountMinor <= 0 || p.amountMinor % quantity !== 0)) ||
+        (product === "bots_plus" && (p.orgId !== orgId || p.amountMinor !== botsAmount))
       ) {
         throw new Error(uiText("billing.interface.the_order_changed_return_to_the_product_page_and_review_a_new_che_41eef4f"));
       }
       return p;
     },
-    [product, amount, quantity, orgId],
+    [product, quantity, orgId, botsAmount],
   );
   useEffect(() => {
     let active = true;
@@ -142,7 +144,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   }, [awaiting, purchase?.confirmed, check]);
   const create = async () => {
     setError(null);
-    if (!accepted || !online || !price || price.currency !== "USD") throw new Error(uiText("billing.interface.review_the_order_before_paying_1787d31"));
+    if (!accepted || !online || waitingForQuote || !price || price.currency !== "USD") throw new Error(uiText("billing.interface.review_the_order_before_paying_1787d31"));
     const current = saved.current;
     const result = validate(
       current.purchaseId
@@ -150,14 +152,18 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
         : await engine.api.json("POST", "/v2/billing/paypal/checkouts", zPayPalCheckout, { body: { ...draft, requestKey: current.requestKey } }),
     );
     remember(result);
+    if (spark && result.amountMinor !== amount) {
+      setAccepted(false);
+      throw new Error(uiText("billing.interface.review_the_order_before_paying_1787d31"));
+    }
     if (["expired", "failed", "refunded", "canceled", "incomplete_expired"].includes(result.status) && !result.confirmed)
       throw new Error(uiText("billing.interface.this_checkout_has_ended_start_a_new_checkout_to_continue_4331837"));
     if (result.confirmed) throw new Error(uiText("billing.interface.this_purchase_is_already_confirmed_open_billing_to_view_it_389c118"));
     return result;
   };
   const closed = purchase && !purchase.confirmed && ["expired", "failed", "refunded", "canceled", "incomplete_expired"].includes(purchase.status);
-  const enabled = config && (spark ? config.sparks : config.botsPlus) && price?.currency === "USD";
-  const canPay = enabled && online && !closed;
+  const enabled = config && (spark ? config.sparks : config.botsPlus) && offer?.currency === "USD";
+  const canPay = enabled && online && !closed && !waitingForQuote;
   const back = () => {
     if (draft.product === "bots_plus") {
       setPrefs({ orgId: draft.orgId });
@@ -267,7 +273,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                   </span>
                 </p>
                 <label className="checkout-agreement">
-                  <input ref={agreement} type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
+                  <input ref={agreement} type="checkbox" disabled={waitingForQuote} checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
                   <span>
                     <Localized
                       k="billing.interface.and_agree_to_the_and_and_have_read_the_ecba6c2"
@@ -298,7 +304,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                     <Localized k="billing.interface.reconnect_to_continue_checkout_54f308e" />
                   </p>
                 )}
-                {catalog && !price && (
+                {catalog && !offer && (
                   <p className="muted" role="status">
                     <Localized k="billing.interface.this_product_is_not_available_for_checkout_yet_446bcaa" />
                   </p>
@@ -421,7 +427,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
               </dl>
               <p className="checkout-renewal">
                 {spark
-                  ? uiText("billing.interface.0_99_per_spark_no_automatic_renewal_or_expiry_use_a_spark_in_one_0bfba21")
+                  ? uiText("billing.interface.choose_a_community_to_boost_your_purchased_sparks_do_not_renew_or_1c4d3fd")
                   : uiText("billing.interface.3_99_per_month_for_this_community_renews_until_canceled_manage_re_54c148f")}
               </p>
               <p className="checkout-fees">

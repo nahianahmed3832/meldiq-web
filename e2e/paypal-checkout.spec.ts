@@ -70,6 +70,7 @@ test("branded review, official payment control, backend-only confirmation and re
   const { purchase: p } = await checkout(page);
   await expect(page.getByRole("heading", { name: "Order summary" })).toBeVisible();
   await expect(page.locator(".checkout-total")).toContainText("4.99");
+  await expect(page.getByText("Included for communities: 1 Meldiq Spark")).toBeVisible();
   await expect(page.getByText("Sandbox", { exact: true })).toHaveCount(0);
   await expect(page.getByText("No real money is taken.", { exact: false })).toHaveCount(0);
   await expect(page.locator("paypal-button")).toHaveCount(0);
@@ -148,8 +149,12 @@ test("live approval schedules renewal after existing free time without claiming 
   await expect(page.getByText("PayPal has confirmed your approval.", { exact: false })).toBeVisible();
 });
 
-for (const product of ["spark", "bots_plus"] as const) {
-  test(`${product} is reviewed separately and only server-confirmed payment completes it`, async ({ page }, info) => {
+for (const { product, resumed, total } of [
+  { product: "spark", resumed: false, total: 598 },
+  { product: "spark", resumed: true, total: 198 },
+  { product: "bots_plus", resumed: false, total: 399 },
+] as const) {
+  test(`${product}${resumed ? " (resumed)" : ""} is reviewed separately and only server-confirmed payment completes it`, async ({ page }, info) => {
     const { userId } = await checkout(page);
     const catalog = await (await page.request.get("/v2/mojo/catalog")).json();
     await page.route("**/v2/mojo/catalog", async (route) => {
@@ -157,7 +162,7 @@ for (const product of ["spark", "bots_plus"] as const) {
         mode: "live",
         go: null,
         plus: { currency: "USD", amountMinor: 499 },
-        spark: { currency: "USD", amountMinor: 99 },
+        spark: { currency: "USD", amountMinor: 299 },
         botsPlus: { currency: "USD", amountMinor: 399 },
         gifts: false,
       };
@@ -175,30 +180,40 @@ for (const product of ["spark", "bots_plus"] as const) {
       status: "pending",
       confirmed: false,
       currency: "USD",
-      amountMinor: product === "spark" ? 198 : 399,
+      amountMinor: total,
       interval: product === "spark" ? "one_time" : "month",
       expiresAt: Date.now() + 3600000,
     };
     await page.route("**/v2/billing/paypal/checkouts", async (route) => {
-      expect(route.request().postDataJSON()).toMatchObject({ product });
+      expect(resumed).toBe(false);
+      expect(route.request().postDataJSON()).toMatchObject(product === "spark" ? { product, quantity: 2 } : { product });
       await route.fulfill({ json: p });
     });
     await page.route(`**/v2/billing/paypal/checkouts/${p.id}`, (route) => route.fulfill({ json: p }));
     await page.route(`**/v2/billing/paypal/checkouts/${p.id}/confirm`, (route) => route.fulfill({ json: p }));
-    await page.evaluate(
-      ({ kind, id }) => {
-        const draft = kind === "spark" ? { product: kind, quantity: 2 } : { product: kind, orgId: "org_owned" };
-        sessionStorage.setItem(`meldiq.paypal.sandbox.${id}`, JSON.stringify({ draft, requestKey: crypto.randomUUID(), purchaseId: null, completed: false }));
-      },
-      { kind: product, id: userId },
-    );
-    await page.reload();
-    await expect(page.locator(".meldiq-checkout")).toContainText(product === "spark" ? "1.98" : "3.99");
+    if (product === "spark" && !resumed) {
+      await page.goto("/settings/spark");
+      await page.getByRole("button", { name: "One more" }).click();
+      await page.getByRole("button", { name: "Buy for $5.98 once" }).click();
+    } else {
+      await page.evaluate(
+        ({ kind, id, purchaseId }) => {
+          const draft = kind === "spark" ? { product: kind, quantity: 2 } : { product: kind, orgId: "org_owned" };
+          sessionStorage.setItem(`meldiq.paypal.sandbox.${id}`, JSON.stringify({ draft, requestKey: crypto.randomUUID(), purchaseId, completed: false }));
+        },
+        { kind: product, id: userId, purchaseId: resumed ? p.id : null },
+      );
+      await page.reload();
+    }
+    await expect(page.locator(".checkout-total")).toContainText((total / 100).toFixed(2));
+    if (product === "spark") await expect(page.getByText(resumed ? "$0.99" : "$2.99", { exact: true })).toBeVisible();
     await expect(page.getByText(/No Meldiq Plus subscription is required|purchased separately from Meldiq Plus/).first()).toBeVisible();
     await page.getByRole("checkbox").check();
     await expect(page.locator("paypal-button")).toBeVisible();
-    await page.screenshot({ path: info.outputPath(`${product}-review.png`), fullPage: true });
+    await page.screenshot({ path: info.outputPath(`${product}${resumed ? "-resumed" : ""}-review.png`), fullPage: true });
+    const confirmation = page.waitForResponse((response) => response.url().endsWith(`/v2/billing/paypal/checkouts/${p.id}/confirm`) && response.request().method() === "POST");
     await page.locator("paypal-button").click();
+    expect(await (await confirmation).json()).toMatchObject({ confirmed: false });
     await expect(page.getByRole("button", { name: "Check payment status" })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Your Sparks are ready|Bots\+ is active/ })).toHaveCount(0);
     p.confirmed = true;

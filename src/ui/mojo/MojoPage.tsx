@@ -251,7 +251,7 @@ export function MojoPage() {
         <Localized k="billing.interface.meldiq_plus_renews_at_the_price_and_interval_chosen_at_checkout_u_49b3440" />
       </p>
 
-      <MojoBanner icon={<Crown size={26} />} title="Meldiq Plus" line={uiText("billing.interface.the_biggest_files_the_sharpest_streams_two_sparks_and_the_pl_4b92f5e")} />
+      <MojoBanner icon={<Crown size={26} />} title="Meldiq Plus" line={uiText("billing.interface.more_connection_more_meldiq_0b490cd")} />
       <h2 className="mojo-h2">
         <Localized k="billing.interface.what_meldiq_plus_adds_05cbaac" />
       </h2>
