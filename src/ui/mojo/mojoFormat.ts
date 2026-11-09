@@ -1,5 +1,5 @@
 import { text as uiText } from "../../i18n";
-import type { MojoCatalog, PlanKey, ScreenPresetId } from "../../api/mojoSchemas";
+import type { MojoCatalog, PlanKey, PlusTerm, ScreenPresetId } from "../../api/mojoSchemas";
 import { formatCurrency, formatNumber, interfaceLocale } from "../../i18n/format";
 /** Money in its currency's minor unit, as the person reads it ("$3.99"). */
 export function money(amountMinor: number, currency: string): string {
@@ -42,6 +42,10 @@ export function planPrice(
   if (sale) return { label: money(sale.amountMinor, sale.currency), onSale: true };
   const list = catalog?.plans.find((p) => p.key === key)?.listPriceMinor ?? 0;
   return { label: money(list, "USD"), onSale: false };
+}
+export function plusTermPrice(catalog: MojoCatalog | null, term: PlusTerm["key"]) {
+  if (!catalog) return null;
+  return term === "monthly" ? catalog.onSale.plus : (catalog.plusTerms.find((offer) => offer.key === term && offer.available) ?? null);
 }
 /** Characters as people count them (grapheme clusters: an emoji with its skin tone or a flag is one), as the plans do. */
 export function countChars(text: string): number {

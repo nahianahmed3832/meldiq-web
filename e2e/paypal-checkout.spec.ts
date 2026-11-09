@@ -13,7 +13,7 @@ window.paypal = { version:'6.0.0', createInstance: async () => ({
   createPayPalOneTimePaymentSession: (callbacks) => ({ start: async (_, purchase) => { await purchase; await callbacks.onApprove({ orderId: 'UNTRUSTED-BROWSER' }); }, destroy() {} })
 }) };
 `;
-async function checkout(page: Page, deferred = false) {
+async function checkout(page: Page, { deferred = false, longTermsAvailable = true, monthlyAmount = 499 }: { deferred?: boolean; longTermsAvailable?: boolean; monthlyAmount?: number | null } = {}) {
   const alice = await newPhone("paypalcheckout", "Checkout Tester");
   await alice.connect();
   await link(page, alice);
@@ -31,11 +31,28 @@ async function checkout(page: Page, deferred = false) {
         savingsMinor: 198,
         monthlyEquivalentMinor: 433,
         savingsPercent: 13.23,
-        available: true,
+        available: longTermsAvailable,
       },
-      { key: "yearly", months: 12, amountMinor: 4999, currency: "USD", interval: "year", billingFrequency: 1, savingsMinor: 989, monthlyEquivalentMinor: 417, savingsPercent: 16.52, available: true },
+      {
+        key: "yearly",
+        months: 12,
+        amountMinor: 4999,
+        currency: "USD",
+        interval: "year",
+        billingFrequency: 1,
+        savingsMinor: 989,
+        monthlyEquivalentMinor: 417,
+        savingsPercent: 16.52,
+        available: longTermsAvailable,
+      },
     ];
-    catalog.onSale = { mode: "live", go: null, plus: { currency: "USD", amountMinor: 499 }, spark: null, gifts: true };
+    catalog.onSale = {
+      mode: "live",
+      go: null,
+      plus: monthlyAmount === null ? null : { currency: "USD", amountMinor: monthlyAmount },
+      spark: { currency: "USD", amountMinor: 299 },
+      gifts: true,
+    };
     await route.fulfill({ json: catalog });
   });
   await page.route("**/v2/billing/account", (route) => route.fulfill({ json: { available: true, provider: "paypal", subscription: null, portal: false } }));
@@ -138,8 +155,43 @@ test("small-screen order review remains readable", async ({ page }, info) => {
   await page.screenshot({ path: info.outputPath("checkout-360.png"), fullPage: true });
 });
 
+test("Plus settings and checkout show the same prices and mark unavailable terms", async ({ page }) => {
+  await checkout(page, { longTermsAvailable: false, monthlyAmount: 599 });
+  await page.goto("/settings/mojo");
+  const terms = page.getByRole("region", { name: "Billing", exact: true });
+  await expect(terms.getByRole("listitem").filter({ has: page.getByText("Monthly", { exact: true }) })).toContainText("$5.99 billed every month");
+  for (const [term, price] of [
+    ["3 months", "$12.99"],
+    ["12 months", "$49.99"],
+  ]) {
+    const row = terms.getByRole("listitem").filter({ has: page.getByText(term, { exact: true }) });
+    await expect(row).toContainText(`${price} billed every ${term}`);
+    await expect(row).toContainText("Not available for purchase yet");
+  }
+  await expect(page.getByText("Included for communities: 1 Spark")).toBeVisible();
+  await expect(page.getByText("$2.99 per Spark", { exact: false })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page
+    .getByRole("button", { name: /Get Meldiq Plus for \$5\.99/ })
+    .first()
+    .click();
+  await expect(page.getByRole("radio", { name: /^Monthly/ })).toBeChecked();
+  await expect(page.locator(".plus-term-option.selected")).toContainText("$5.99 billed every month");
+  await expect(page.getByRole("radio", { name: /^3 months/ })).toBeDisabled();
+  await expect(page.getByRole("radio", { name: /^12 months/ })).toBeDisabled();
+});
+
+test("Plus settings open an available billing interval when monthly checkout is unavailable", async ({ page }) => {
+  await checkout(page, { monthlyAmount: null });
+  await page.goto("/settings/mojo");
+  await page.getByRole("button", { name: "Choose your billing interval" }).first().click();
+  await expect(page.getByRole("radio", { name: /^3 months/ })).toBeChecked();
+  await expect(page.getByRole("radio", { name: /^Monthly/ })).toBeDisabled();
+  await expect(page.locator(".checkout-total")).toContainText("$12.99");
+});
+
 test("live approval schedules renewal after existing free time without claiming payment", async ({ page }) => {
-  const { purchase: p } = await checkout(page, true);
+  const { purchase: p } = await checkout(page, { deferred: true });
   await expect(page.locator(".checkout-total")).toContainText("0.00");
   await page.route("**/v2/billing/paypal/checkouts/chk_test/confirm", (route) => route.fulfill({ json: { ...p, approved: true } }));
   await page.getByRole("checkbox").check();
@@ -229,10 +281,7 @@ for (const term of [
 ]) {
   test(`${term.months}-month checkout shows the whole charge, savings and recurring cadence`, async ({ page }) => {
     const { purchase: p } = await checkout(page);
-    await page
-      .getByRole("radio")
-      .nth(term.months === 3 ? 1 : 2)
-      .check();
+    await page.getByRole("radio", { name: new RegExp(`^${term.months} months`) }).check();
     await expect(page.locator(".checkout-total")).toContainText((term.amountMinor / 100).toFixed(2));
     await expect(page.locator(".checkout-total")).toContainText(`Renews every ${term.months} months`);
     await expect(page.locator(".plus-support-summary")).toContainText(term.saving);

@@ -1,4 +1,5 @@
 import { billingPlanName } from "../../i18n/billing";
+import { countLabel } from "../../i18n/counts";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -11,8 +12,9 @@ import type { PlanPerks } from "../../api/mojoSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { relative } from "../format";
 import { GiftDialog, GiftsReceived } from "./MojoGifts";
-import { money, planPrice, screenLabel, size } from "./mojoFormat";
+import { money, planPrice, plusTermPrice, screenLabel, size } from "./mojoFormat";
 import { CompareTable, type PlanAction, PlanCards, PlusPerks } from "./MojoPlans";
+import { PlusTermDetails } from "./PlusTermDetails";
 import { selectCheckout } from "../billing/checkoutDraft";
 import { navigate } from "../../application/router";
 import { MojoBadgeMark } from "./MojoBadge";
@@ -87,11 +89,19 @@ export function MojoPage() {
   const offline = !online;
   const plus = catalog.plans.find((p) => p.key === "plus");
   const free = catalog.plans.find((p) => p.key === "free");
-  const plusPrice = planPrice(catalog, "plus");
+  const paypal = billing?.provider === "paypal";
+  const longerTerm = paypal ? catalog.plusTerms.find((term) => term.key !== "monthly" && plusTermPrice(catalog, term.key)) : undefined;
+  const plusOnSale = Boolean(catalog.onSale.plus || longerTerm);
+  const openPlusCheckout = () => {
+    selectCheckout(engine.device.userId, { product: "plus", term: catalog.onSale.plus ? undefined : longerTerm?.key });
+    navigate({ section: "settings", settingsPage: "checkout" });
+  };
   /** The one button under a plan: buy it, manage it, or say why not. */
   const actionFor = (p: PlanPerks): PlanAction => {
     const price = planPrice(catalog, p.key);
     const current = me.plan === p.key;
+    const onSale = p.key === "plus" ? plusOnSale : price.onSale;
+    const chooseInterval = p.key === "plus" && longerTerm ? uiText("billing.interface.choose_your_billing_interval_ff6d4a2") : null;
     if (p.key === "free") return { label: current ? uiText("billing.interface.your_plan_d9ab76c") : uiText("billing.interface.always_free_0a635c3"), kind: "secondary", disabled: true };
     if (current && paid)
       return {
@@ -102,15 +112,12 @@ export function MojoPage() {
         disabled: false,
         onClick: () => navigate({ section: "settings", settingsPage: "billing" }),
       };
-    if (current && billing?.provider === "paypal" && price.onSale)
+    if (current && paypal && onSale)
       return {
-        label: uiText("billing.interface.subscribe_for_value0_month_9513673", { value0: price.label }),
+        label: chooseInterval ?? uiText("billing.interface.subscribe_for_value0_month_9513673", { value0: price.label }),
         kind: "mojo",
         disabled: offline || busy !== null,
-        onClick: () => {
-          selectCheckout(engine.device.userId, { product: "plus" });
-          navigate({ section: "settings", settingsPage: "checkout" });
-        },
+        onClick: openPlusCheckout,
       };
     if (current)
       return {
@@ -124,22 +131,20 @@ export function MojoPage() {
       label:
         busy === p.key
           ? uiText("organization.interface.opening_c926c2c")
-          : !price.onSale
+          : !onSale
             ? uiText("billing.interface.not_on_sale_yet_b2d293b")
             : paid
               ? uiText("billing.interface.switch_from_the_billing_page_048bfaf")
-              : uiText("billing.interface.get_value0_for_value1_month_1baf5cd", { value0: p.name, value1: price.label }),
+              : (chooseInterval ?? uiText("billing.interface.get_value0_for_value1_month_1baf5cd", { value0: p.name, value1: price.label })),
       kind: p.key === "plus" ? "mojo" : "primary",
-      disabled: !price.onSale || busy !== null || offline || (!!paid && me.plan !== "free"),
+      disabled: !onSale || busy !== null || offline || (!!paid && me.plan !== "free"),
       onClick: () => {
-        if (billing?.provider === "paypal") {
-          selectCheckout(engine.device.userId, { product: "plus" });
-          navigate({ section: "settings", settingsPage: "checkout" });
-        } else void open(p.key, () => engine.mojo.checkout(p.key as "go" | "plus"));
+        if (paypal) openPlusCheckout();
+        else void open(p.key, () => engine.mojo.checkout(p.key as "go" | "plus"));
       },
     };
   };
-  const heroAction = plus && me.plan !== "plus" && plusPrice.onSale ? actionFor(plus) : null;
+  const heroAction = plus && me.plan !== "plus" && plusOnSale ? actionFor(plus) : null;
   return (
     <div className="mojo">
       <h1>Meldiq Plus</h1>
@@ -164,7 +169,7 @@ export function MojoPage() {
           {error}
         </div>
       )}
-      {!catalog.onSale.go && !catalog.onSale.plus && (
+      {!plusOnSale && (
         <div className="banner info" role="note">
           <Localized k="billing.interface.meldiq_plus_isn_t_on_sale_yet_everything_below_is_what_each_plan_80e94c4" />
         </div>
@@ -233,7 +238,7 @@ export function MojoPage() {
           </strong>
           <small>
             {catalog.onSale.gifts
-              ? uiText("billing.interface.one_payment_for_1_3_or_12_months_straight_to_their_account_with_a_1b4c517")
+              ? uiText("billing.interface.give_plus_with_one_payment_gifts_never_renew_or_charge_the_recipi_006fea6")
               : uiText("billing.interface.gifts_open_when_meldiq_plus_goes_on_sale_19ff816")}
           </small>
         </span>
@@ -243,13 +248,26 @@ export function MojoPage() {
       <h2 className="mojo-h2">
         <Localized k="billing.interface.choose_your_plan_6029066" />
       </h2>
-      <p className="muted">
-        <Localized k="billing.interface.meldiq_free_and_meldiq_plus_choose_monthly_3_month_or_yearly_plus_591240b" />
-      </p>
       <PlanCards catalog={catalog} me={me} actionFor={actionFor} />
-      <p className="mojo-terms muted">
-        <Localized k="billing.interface.meldiq_plus_renews_at_the_price_and_interval_chosen_at_checkout_u_49b3440" />
-      </p>
+      {catalog.plusTerms.length > 0 && (
+        <section aria-labelledby="mojo-billing">
+          <h2 id="mojo-billing" className="mojo-h2">
+            <Localized k="billing.interface.billing_3ac8bbc" />
+          </h2>
+          <ul className="mojo-billing-terms">
+            {catalog.plusTerms.map((term) => (
+              <li className="plus-term-option" key={term.key}>
+                <PlusTermDetails term={term} price={plusTermPrice(catalog, term.key)} />
+              </li>
+            ))}
+          </ul>
+          {paypal && (
+            <p className="mojo-terms muted">
+              <Localized k="billing.interface.paypal_handles_your_payment_method_cancellation_stops_future_rene_8eb7b1c" slots={[""]} />
+            </p>
+          )}
+        </section>
+      )}
 
       <MojoBanner icon={<Crown size={26} />} title="Meldiq Plus" line={uiText("billing.interface.more_connection_more_meldiq_0b490cd")} />
       <h2 className="mojo-h2">
@@ -267,8 +285,20 @@ export function MojoPage() {
           <Gem size={20} aria-hidden="true" /> {l10n("settings.settings_spark")}
         </h2>
         <p>
-          <Localized k="billing.interface.boost_the_servers_you_love_every_spark_helps_a_community_unlock_m_ea6c212" />
+          <Localized k="billing.interface.give_a_spark_to_a_server_you_love_every_spark_helps_unlock_more_e_2063c49" />
         </p>
+        {plus && plus.sparks > 0 && (
+          <p>
+            <Localized k="billing.promotion.includedSparks" slots={["", countLabel(plus.sparks, "sparks")]} />
+          </p>
+        )}
+        {catalog.onSale.spark && (
+          <p>
+            {uiText("billing.interface.value0_per_spark_paid_once_no_meldiq_plus_subscription_or_automat_8804a34", {
+              value0: money(catalog.onSale.spark.amountMinor, catalog.onSale.spark.currency),
+            })}
+          </p>
+        )}
         <div>
           <button className="btn btn-mojo" onClick={() => navigate({ section: "settings", settingsPage: "spark" })}>
             <Localized k="billing.interface.open_meldiq_spark_1eb51b9" slots={[<Gem size={15} aria-hidden="true" />]} />
@@ -337,9 +367,6 @@ export function MojoPage() {
           busy={busy === "gift"}
         />
       )}
-      <p className="muted mojo-footnote">
-        <Localized k="billing.interface.meldiq_plus_per_month_sparks_each_paid_once_90b5f45" slots={[money(plus?.listPriceMinor ?? 0, "USD"), money(catalog.spark.listPriceMinor, "USD")]} />
-      </p>
     </div>
   );
 }

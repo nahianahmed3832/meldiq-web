@@ -47,7 +47,7 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
           {l10n("settings.settings_spark")}
         </h2>
         <p>
-          <Localized k="billing.interface.give_a_spark_to_a_server_you_love_every_spark_helps_unlock_more_e_fc1f630" slots={[money(catalog.spark.listPriceMinor, "USD")]} />
+          <Localized k="billing.interface.give_a_spark_to_a_server_you_love_every_spark_helps_unlock_more_e_2063c49" />
         </p>
         <SparkTrack levels={levels} level={null} active={null} />
       </div>

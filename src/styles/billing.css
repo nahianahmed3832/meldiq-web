@@ -635,9 +635,11 @@
   margin-bottom: 10px;
   border: 1px solid var(--border);
   border-radius: 12px;
+}
+label.plus-term-option {
   cursor: pointer;
 }
-.plus-term-option:has(input:disabled) {
+label.plus-term-option:has(input:disabled) {
   cursor: default;
 }
 .plus-term-option.selected {

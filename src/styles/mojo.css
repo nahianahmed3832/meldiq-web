@@ -283,6 +283,17 @@
 .mojo-plan > .btn {
   width: 100%;
 }
+.mojo-billing-terms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 10px;
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+}
+.mojo-billing-terms .plus-term-option {
+  margin: 0;
+}
 .mojo-terms {
   margin: 0;
   font-size: 13px;
@@ -605,11 +616,6 @@
   font-size: 13.5px;
   line-height: 1.55;
 }
-.mojo-footnote {
-  margin: 0;
-  font-size: 12px;
-}
-
 /* GO / PLUS next to a name. */
 .mojo-badge {
   display: inline-flex;

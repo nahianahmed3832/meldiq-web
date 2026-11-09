@@ -16,7 +16,8 @@ import { type PayPalConfig, type PayPalPurchase, zPayPalCheckout } from "../../a
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { BrandMark } from "../components/BrandMark";
-import { money, size } from "../mojo/mojoFormat";
+import { money, plusTermPrice, size } from "../mojo/mojoFormat";
+import { PlusTermDetails, plusTermLabel } from "../mojo/PlusTermDetails";
 import { readCheckout, writeCheckout, selectCheckout } from "./checkoutDraft";
 import { usePayPalCardSdk } from "./PayPalCardButton";
 import { CheckoutPaymentButton } from "./CheckoutPaymentButton";
@@ -56,11 +57,10 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   );
   const selectedTerm = draft.product === "plus" ? (draft.term ?? "monthly") : "monthly";
   const termOffer = catalog?.plusTerms.find((t) => (gift ? t.months === draft.months : t.key === selectedTerm));
-  const priceForTerm = (term: PlusTerm["key"]) => (term === "monthly" ? catalog?.onSale.plus : catalog?.plusTerms.find((offer) => offer.key === term && offer.available));
+  const priceForTerm = (term: PlusTerm["key"]) => plusTermPrice(catalog, term);
   const price = gift ? (catalog?.onSale.gifts ? catalog.onSale.plus : null) : priceForTerm(selectedTerm);
   const blockedTerm = !gift && !!catalog && !price && !saved.purchaseId;
   const fallbackTerm = priceForTerm("monthly") ? ({ key: "monthly", months: 1 } as const) : catalog?.plusTerms.find((term) => priceForTerm(term.key));
-  const termLabel = (months: number) => (months === 1 ? l10n("billing.monthly") : formatUnit(months, "month"));
   const chooseTerm = (term: PlusTerm["key"]) => {
     if (!priceForTerm(term)) return;
     setAccepted(false);
@@ -272,7 +272,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     </span>
                     {fallbackTerm && (
                       <button type="button" className="btn btn-secondary" onClick={() => chooseTerm(fallbackTerm.key)}>
-                        {l10n("common.actions.continue")} · {termLabel(fallbackTerm.months)}
+                        {l10n("common.actions.continue")} · {plusTermLabel(fallbackTerm.months)}
                       </button>
                     )}
                   </div>
@@ -282,33 +282,15 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     <legend>
                       <Localized k="billing.interface.choose_your_billing_interval_ff6d4a2" />
                     </legend>
-                    {catalog.plusTerms.map((t) => (
-                      <label className={`plus-term-option${selectedTerm === t.key ? " selected" : ""}`} key={t.key}>
-                        <input type="radio" name="plus-term" checked={selectedTerm === t.key} disabled={!priceForTerm(t.key)} onChange={() => chooseTerm(t.key)} />
-                        <span>
-                          <strong>{termLabel(t.months)}</strong>
-                          <small>
-                            <Localized
-                              k="billing.interface.billed_every_45e2ceb"
-                              slots={[money(t.amountMinor, t.currency), t.months === 1 ? uiText("billing.interface.month_a5c7d17") : formatUnit(t.months, "month")]}
-                            />
-                          </small>
-                          {t.savingsMinor > 0 && (
-                            <small className="plus-term-saving">
-                              <Localized
-                                k="billing.interface.vs_monthly_about_month_fc2ea2d"
-                                slots={[l10n("common.actions.save"), money(t.savingsMinor, t.currency), t.savingsPercent, money(t.monthlyEquivalentMinor, t.currency)]}
-                              />
-                            </small>
-                          )}
-                          {!priceForTerm(t.key) && (
-                            <small>
-                              <Localized k="billing.interface.not_available_for_purchase_yet_fda50e8" />
-                            </small>
-                          )}
-                        </span>
-                      </label>
-                    ))}
+                    {catalog.plusTerms.map((term) => {
+                      const offer = priceForTerm(term.key);
+                      return (
+                        <label className={`plus-term-option${selectedTerm === term.key ? " selected" : ""}`} key={term.key}>
+                          <input type="radio" name="plus-term" checked={selectedTerm === term.key} disabled={!offer} onChange={() => chooseTerm(term.key)} />
+                          <PlusTermDetails term={term} price={offer} />
+                        </label>
+                      );
+                    })}
                     {purchase && (
                       <small>
                         <Localized k="billing.interface.a_pending_purchase_keeps_its_billing_interval_review_or_cancel_it_69025f3" />
