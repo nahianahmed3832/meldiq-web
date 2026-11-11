@@ -1,6 +1,8 @@
 # Messages, Later and multiple tabs — release readiness, 11 November 2026
 
-The candidate is reproducible and locally verified against the intended API, but **is not ready for production**. Required full localization and formatting gates still fail on inherited debt. Physical iOS/Android keyboard qualification is unavailable. New translations are implemented and automatically checked; qualified language review remains pending. No production deployment, production-data write, backend upgrade or dependency upgrade was performed.
+**Publication follow-up:** After receiving this assessment, the user explicitly requested production publication and a GitHub push. The exact tested build was deployed on 11 November at 07:14 UTC; see the [publication record and rollback instructions](../../deploy/web-refresh-20261111/README.md). The qualification gaps below remain open. This publication does not represent a passing full release-workflow result.
+
+At the end of the qualification phase, the candidate was reproducible and locally verified against the intended API, but **was not fully qualified for production**. Required full localization and formatting gates failed on inherited debt. Physical iOS/Android keyboard qualification was unavailable. New translations were implemented and automatically checked; qualified language review remained pending. No production deployment, production-data write, backend upgrade or dependency upgrade was performed during that qualification phase. The remaining sections preserve that assessment and its original evidence.
 
 This report supersedes the release claims in the [historical refresh report](WEB_REFRESH_2026-11-11.md) and the earlier test counts in [Multiple browser tabs](../MULTI_TAB.md).
 
@@ -115,6 +117,6 @@ Rollback under the same locks by atomically restoring the recorded previous rele
 | F — New-string localization | Implemented but review pending | 18 refresh + 1 multi-tab key in all 28 locales; structural/render checks pass; qualified language review pending |
 | Required full formatting | Failed | 24 inherited failing files, independently reproduced at base; [baseline evidence](release-readiness-2026-11-11/format-baseline.json) |
 | Required full localization | Failed | 77 older missing keys × 26 locales; fallback/validation policy unchanged |
-| Production deployment | Not applicable to this task | Explicitly outside authorized scope; no production write performed |
+| Production deployment | Subsequently published by explicit user instruction | [Publication record](../../deploy/web-refresh-20261111/README.md); full workflow and manual qualification gaps above remain open |
 
 Returning-user research, field performance monitoring, wider onboarding/provider and notification qualification, and full product accessibility review remain follow-ups. No measured UX, retention, production performance or complete accessibility gains are claimed.

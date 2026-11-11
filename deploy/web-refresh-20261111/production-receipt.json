@@ -1,0 +1,49 @@
+{
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-11T07:14:34.673158+00:00",
+  "sourceCommit": "0a10869b0e5691588573205808cc400c7bf14bc7",
+  "sourceTreeSha256": "b2283603d9e043b03569c0d9226438c01722f2ab22b062b74bbebb9afd418e2a",
+  "previousWeb": "/opt/meldiq-phase6/staged/source/opt/meldiq-web/releases/0.5.0-beta-pricing-catalog-68108747",
+  "webRelease": "/opt/meldiq-phase6/staged/source/opt/meldiq-web/releases/0.5.0-beta-web-refresh-0a10869b",
+  "origin": "Frankfurt EC2",
+  "buildId": "kwy5JIg3ctDKrxSpSwP8t",
+  "archiveSha256": "160f653470384628a64b66f4f25654fe282ed43f44ecf763b31cea2e66db6132",
+  "apiPreserved": true,
+  "publicConfigPreserved": true,
+  "nginxPreserved": true,
+  "oauthCallbackPreserved": true,
+  "health": {
+    "ok": true,
+    "version": "0.76.1",
+    "time": 1794381274614,
+    "livekit": true,
+    "mongodb": null,
+    "postgres": true,
+    "databaseMode": "supabase",
+    "redis": true
+  },
+  "previousStaticAssetsRetained": true,
+  "verifiedFileCount": 480,
+  "validation": {
+    "scope": "Messages/Friends and Later refresh, concurrent browser tabs, scoped localization",
+    "productionBuild": true,
+    "testLinkingEnabled": false,
+    "independentForwardReconstruction": true,
+    "unitTestsPassed": 1023,
+    "unitTestsIntentionallySkipped": 1,
+    "browserCasesPassed": 74,
+    "browserCasesIntentionallySkipped": 8,
+    "browserCoverage": ["Chromium", "Firefox", "WebKit", "Pixel 7 emulation", "iPhone 13 emulation"],
+    "pwaUpgrade": "Actual preceding build; same origin, profile, storage and service worker; 2 Chromium PWA cases",
+    "requiredGatesPassed": false,
+    "knownQualificationGaps": {
+      "formatting": "24 inherited failing files; no new failing files",
+      "localization": "77 older missing keys in each of 26 locales; all 19 scoped keys complete in all 28 locales",
+      "physicalKeyboardReview": "Pending accessible physical iOS and Android devices",
+      "nativeLanguageReview": "Pending",
+      "runtime": "Verified on Node 25.8.0; repository CI pins 22.22.3; remote CI not invoked"
+    },
+    "publicationBasis": "User explicitly requested production and GitHub publication after disclosure of these qualification gaps; workflow gates were not changed or represented as passed",
+    "report": "docs/design/RELEASE_READINESS_2026-11-11.md"
+  }
+}

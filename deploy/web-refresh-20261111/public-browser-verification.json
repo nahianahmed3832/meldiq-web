@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-11T07:18:50.990844+00:00",
+  "origin": "https://web.meldiq.app/",
+  "method": "Read-only browser verification using an existing authenticated in-app browser session",
+  "initialCachedBuildId": "BfG5t4FRHsAar79YyZeGD",
+  "afterNormalReloadBuildId": "kwy5JIg3ctDKrxSpSwP8t",
+  "clearedBrowserStorage": false,
+  "unregisteredServiceWorker": false,
+  "simultaneousTabs": [
+    {
+      "route": "/later",
+      "buildId": "kwy5JIg3ctDKrxSpSwP8t",
+      "viewVisible": true
+    },
+    {
+      "route": "/friends",
+      "buildId": "kwy5JIg3ctDKrxSpSwP8t",
+      "viewVisible": true
+    }
+  ],
+  "exclusiveUseBlockingScreen": false,
+  "consoleErrorsOrWarningsObserved": [],
+  "productionContentActionsSubmitted": false,
+  "coverageLimits": [
+    "No production messaging, friend requests, collection mutations, payments or account actions were submitted.",
+    "Sending, delivery handoff, offline retry and account boundaries were exercised in the prior local qualification, not repeated against user production data.",
+    "No physical-device qualification or native-language review is implied."
+  ],
+  "privacy": "Only route, build and verification outcomes are recorded; no account identifiers, conversation content, browser storage or raw page snapshots are included."
+}
