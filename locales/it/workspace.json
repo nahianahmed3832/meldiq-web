@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Non riesco a pubblicare il video, prova di nuovo.",
     "estimatedRank": "Posizione stimata in Scopri",
     "activeContributions": "{count} Sparks attivi"
+  },
+  "experience": {
+    "messagesIntro": "Inizia una conversazione, riprendi da dove avevi lasciato o trova un amico.",
+    "laterIntro": "Conserva i messaggi utili e ritrovali qui quando vuoi riprendere il discorso.",
+    "savedTab": "Salvati",
+    "remindersTab": "Promemoria",
+    "savedSearchHint": "Testo del messaggio o nome della conversazione",
+    "clearFilters": "Cancella filtri",
+    "savedResults": "{count, plural, one {# messaggio salvato} other {# messaggi salvati}}",
+    "noSavedMatchesHelp": "Prova un’altra parola o cancella i filtri per vedere tutti i messaggi salvati.",
+    "unavailableCollection": "Collezione non disponibile",
+    "unavailableCollectionHelp": "Questa collezione potrebbe essere stata rimossa. Scegline un’altra o torna a tutti i messaggi salvati.",
+    "viewScope": "I filtri vengono conservati per questo account in questo browser.",
+    "rememberingView": "Salvataggio della vista…",
+    "viewNotRemembered": "Vista non salvata",
+    "viewLoadError": "Impossibile ripristinare la vista precedente. Puoi continuare a esplorare o riprovare.",
+    "viewSaveError": "Impossibile salvare i filtri in questo browser. Tieni aperta questa pagina e riprova.",
+    "savingCollection": "Salvataggio…",
+    "clearQuery": "Cancella ricerca",
+    "noPeopleMatches": "Nessuna persona corrisponde a questa ricerca. Prova un altro nome o cancella la ricerca.",
+    "draftNotSavedInTab": "Impossibile salvare la bozza in questa scheda. Tienila aperta e copia il testo prima di ricaricare."
   }
 }

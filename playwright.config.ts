@@ -16,6 +16,7 @@ const WEB_PORT = Number(process.env.ORBIT_E2E_WEB_PORT ?? 5181);
 const NEXT_DEV_PORT = Number(process.env.ORBIT_E2E_NEXT_PORT ?? WEB_PORT + 1);
 process.env.ORBIT_E2E_API ??= `http://127.0.0.1:${API_PORT}`;
 process.env.ORBIT_E2E_DATA ??= fs.mkdtempSync(path.join(os.tmpdir(), "orbit-e2e-"));
+if (process.env.ORBIT_E2E_RELEASE === "1") process.env.ORBIT_E2E_RELEASE_FIXTURE ??= fs.mkdtempSync(path.join(os.tmpdir(), "meldiq-pwa-release-"));
 
 /**
  * Calls (e2e/calls.spec.ts) need a LiveKit media server: started for the run when `livekit-server` is installed
@@ -115,7 +116,12 @@ export default defineConfig({
       ? [
           {
             // Reuse only an export just built from this checkout; useful when changing test interception alone.
-            command: process.env.ORBIT_E2E_PREBUILT === "1" ? `node scripts/web-server.ts dist ${WEB_PORT}` : `npm run -s build && node scripts/web-server.ts dist ${WEB_PORT}`,
+            command:
+              process.env.ORBIT_E2E_RELEASE === "1"
+                ? "node scripts/pwa-release-server.mjs"
+                : process.env.ORBIT_E2E_PREBUILT === "1"
+                  ? `node scripts/web-server.ts dist ${WEB_PORT}`
+                  : `npm run -s build && node scripts/web-server.ts dist ${WEB_PORT}`,
             url: `http://127.0.0.1:${WEB_PORT}`,
             reuseExistingServer: false,
             timeout: 300_000,

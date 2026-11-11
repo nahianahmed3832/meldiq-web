@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Jag kunde inte publicera klippet, försök igen.",
     "estimatedRank": "Uppskattad placering i Upptäck",
     "activeContributions": "{count} aktiva Sparks"
+  },
+  "experience": {
+    "messagesIntro": "Starta ett samtal, fortsätt där du slutade eller hitta en vän.",
+    "laterIntro": "Spara användbara meddelanden. Du hittar dem här när du vill följa upp dem.",
+    "savedTab": "Sparade",
+    "remindersTab": "Påminnelser",
+    "savedSearchHint": "Meddelandetext eller samtalsnamn",
+    "clearFilters": "Rensa filter",
+    "savedResults": "{count, plural, one {# sparat meddelande} other {# sparade meddelanden}}",
+    "noSavedMatchesHelp": "Prova ett annat ord eller rensa filtren för att se alla sparade meddelanden.",
+    "unavailableCollection": "Samlingen är inte tillgänglig",
+    "unavailableCollectionHelp": "Den här samlingen kan ha tagits bort. Välj en annan eller gå tillbaka till alla sparade meddelanden.",
+    "viewScope": "Filtren sparas för det här kontot i den här webbläsaren.",
+    "rememberingView": "Sparar vyn…",
+    "viewNotRemembered": "Vyn har inte sparats",
+    "viewLoadError": "Din tidigare vy kunde inte återställas. Du kan fortsätta bläddra eller försöka igen.",
+    "viewSaveError": "Dina filter kunde inte sparas i den här webbläsaren. Håll sidan öppen och försök igen.",
+    "savingCollection": "Sparar…",
+    "clearQuery": "Rensa sökning",
+    "noPeopleMatches": "Inga personer matchar sökningen. Prova ett annat namn eller rensa sökningen.",
+    "draftNotSavedInTab": "Ditt utkast kunde inte sparas i den här fliken. Håll den öppen och kopiera texten innan du laddar om."
   }
 }

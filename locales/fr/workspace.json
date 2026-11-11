@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Je ne pouvais pas publier le clip, essayez de nouveau.",
     "estimatedRank": "Classement estimé dans Découverte",
     "activeContributions": "{count} Sparks actifs"
+  },
+  "experience": {
+    "messagesIntro": "Commencez une conversation, reprenez là où vous en étiez ou retrouvez un ami.",
+    "laterIntro": "Gardez les messages utiles à portée de main. Retrouvez-les ici lorsque vous souhaitez y donner suite.",
+    "savedTab": "Enregistrés",
+    "remindersTab": "Rappels",
+    "savedSearchHint": "Texte du message ou nom de la conversation",
+    "clearFilters": "Effacer les filtres",
+    "savedResults": "{count, plural, one {# message enregistré} other {# messages enregistrés}}",
+    "noSavedMatchesHelp": "Essayez un autre mot ou effacez les filtres pour voir tous les messages enregistrés.",
+    "unavailableCollection": "Collection indisponible",
+    "unavailableCollectionHelp": "Cette collection a peut-être été supprimée. Choisissez-en une autre ou revenez à tous les messages enregistrés.",
+    "viewScope": "Les filtres sont conservés pour ce compte dans ce navigateur.",
+    "rememberingView": "Enregistrement de cette vue…",
+    "viewNotRemembered": "Vue non enregistrée",
+    "viewLoadError": "Impossible de restaurer votre vue précédente. Vous pouvez continuer à naviguer ou réessayer.",
+    "viewSaveError": "Impossible d’enregistrer vos filtres dans ce navigateur. Gardez cette page ouverte et réessayez.",
+    "savingCollection": "Enregistrement…",
+    "clearQuery": "Effacer la recherche",
+    "noPeopleMatches": "Aucune personne ne correspond à cette recherche. Essayez un autre nom ou effacez votre recherche.",
+    "draftNotSavedInTab": "Impossible d’enregistrer votre brouillon dans cet onglet. Gardez-le ouvert et copiez le texte avant de recharger la page."
   }
 }

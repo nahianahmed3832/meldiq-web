@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Nie mogłam opublikować tego klipu, spróbuj ponownie.",
     "estimatedRank": "Szacowana pozycja w Odkrywaniu",
     "activeContributions": "Aktywne Sparks: {count}"
+  },
+  "experience": {
+    "messagesIntro": "Rozpocznij rozmowę, wróć do poprzedniej lub znajdź znajomego.",
+    "laterIntro": "Zachowaj przydatne wiadomości. Znajdziesz je tutaj, gdy zechcesz do nich wrócić.",
+    "savedTab": "Zapisane",
+    "remindersTab": "Przypomnienia",
+    "savedSearchHint": "Treść wiadomości lub nazwa rozmowy",
+    "clearFilters": "Wyczyść filtry",
+    "savedResults": "{count, plural, one {# zapisana wiadomość} few {# zapisane wiadomości} many {# zapisanych wiadomości} other {# zapisanej wiadomości}}",
+    "noSavedMatchesHelp": "Wypróbuj inne słowo lub wyczyść filtry, aby zobaczyć wszystkie zapisane wiadomości.",
+    "unavailableCollection": "Kolekcja niedostępna",
+    "unavailableCollectionHelp": "Ta kolekcja mogła zostać usunięta. Wybierz inną lub wróć do wszystkich zapisanych wiadomości.",
+    "viewScope": "Filtry są zapisywane dla tego konta w tej przeglądarce.",
+    "rememberingView": "Zapisywanie widoku…",
+    "viewNotRemembered": "Widok nie został zapisany",
+    "viewLoadError": "Nie udało się przywrócić poprzedniego widoku. Możesz przeglądać dalej lub spróbować ponownie.",
+    "viewSaveError": "Nie udało się zapisać filtrów w tej przeglądarce. Pozostaw tę stronę otwartą i spróbuj ponownie.",
+    "savingCollection": "Zapisywanie…",
+    "clearQuery": "Wyczyść wyszukiwanie",
+    "noPeopleMatches": "Nie znaleziono pasujących osób. Wypróbuj inne imię lub wyczyść wyszukiwanie.",
+    "draftNotSavedInTab": "Nie udało się zapisać wersji roboczej w tej karcie. Pozostaw ją otwartą i skopiuj tekst przed ponownym załadowaniem."
   }
 }

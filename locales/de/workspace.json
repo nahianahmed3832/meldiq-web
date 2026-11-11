@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Der Clip konnte nicht gepostet werden. Versuche es noch einmal.",
     "estimatedRank": "Geschätzter Rang in Entdecken",
     "activeContributions": "{count} aktive Sparks"
+  },
+  "experience": {
+    "messagesIntro": "Beginne ein Gespräch, knüpfe an deine letzte Unterhaltung an oder finde Freunde.",
+    "laterIntro": "Bewahre nützliche Nachrichten auf. Hier findest du sie wieder, wenn du dich später darum kümmern möchtest.",
+    "savedTab": "Gespeichert",
+    "remindersTab": "Erinnerungen",
+    "savedSearchHint": "Nachrichtentext oder Gesprächsname",
+    "clearFilters": "Filter zurücksetzen",
+    "savedResults": "{count, plural, one {# gespeicherte Nachricht} other {# gespeicherte Nachrichten}}",
+    "noSavedMatchesHelp": "Versuche ein anderes Wort oder setze die Filter zurück, um alle gespeicherten Nachrichten zu sehen.",
+    "unavailableCollection": "Sammlung nicht verfügbar",
+    "unavailableCollectionHelp": "Diese Sammlung wurde möglicherweise entfernt. Wähle eine andere Sammlung oder gehe zurück zu allen gespeicherten Nachrichten.",
+    "viewScope": "Die Filter werden für dieses Konto in diesem Browser gespeichert.",
+    "rememberingView": "Ansicht wird gespeichert…",
+    "viewNotRemembered": "Ansicht nicht gespeichert",
+    "viewLoadError": "Deine vorherige Ansicht konnte nicht wiederhergestellt werden. Du kannst weiter stöbern oder es erneut versuchen.",
+    "viewSaveError": "Deine Filter konnten in diesem Browser nicht gespeichert werden. Lass diese Seite geöffnet und versuche es erneut.",
+    "savingCollection": "Wird gespeichert…",
+    "clearQuery": "Suche löschen",
+    "noPeopleMatches": "Keine Personen für diese Suche gefunden. Versuche einen anderen Namen oder lösche deine Suche.",
+    "draftNotSavedInTab": "Dein Entwurf konnte in diesem Tab nicht gespeichert werden. Lass ihn geöffnet und kopiere den Text vor dem Neuladen."
   }
 }

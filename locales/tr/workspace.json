@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Klip yazamazdım, tekrar deneyin.",
     "estimatedRank": "Keşfet sayfasındaki tahmini sıra",
     "activeContributions": "{count} etkin Sparks"
+  },
+  "experience": {
+    "messagesIntro": "Bir sohbet başlatın, kaldığınız yerden devam edin veya bir arkadaş bulun.",
+    "laterIntro": "Yararlı mesajları saklayın. Daha sonra ilgilenmeye hazır olduğunuzda onları burada bulabilirsiniz.",
+    "savedTab": "Kaydedilenler",
+    "remindersTab": "Hatırlatıcılar",
+    "savedSearchHint": "Mesaj metni veya sohbet adı",
+    "clearFilters": "Filtreleri temizle",
+    "savedResults": "{count, plural, other {# kayıtlı mesaj}}",
+    "noSavedMatchesHelp": "Başka bir sözcük deneyin veya tüm kayıtlı mesajları görmek için filtreleri temizleyin.",
+    "unavailableCollection": "Koleksiyon kullanılamıyor",
+    "unavailableCollectionHelp": "Bu koleksiyon kaldırılmış olabilir. Başka bir koleksiyon seçin veya tüm kayıtlı mesajlara dönün.",
+    "viewScope": "Filtreler bu tarayıcıda bu hesap için saklanır.",
+    "rememberingView": "Görünüm kaydediliyor…",
+    "viewNotRemembered": "Görünüm kaydedilmedi",
+    "viewLoadError": "Önceki görünümünüz geri yüklenemedi. Göz atmaya devam edebilir veya yeniden deneyebilirsiniz.",
+    "viewSaveError": "Filtreleriniz bu tarayıcıya kaydedilemedi. Bu sayfayı açık tutun ve yeniden deneyin.",
+    "savingCollection": "Kaydediliyor…",
+    "clearQuery": "Aramayı temizle",
+    "noPeopleMatches": "Bu aramayla eşleşen kimse yok. Başka bir ad deneyin veya aramayı temizleyin.",
+    "draftNotSavedInTab": "Taslağınız bu sekmeye kaydedilemedi. Sekmeyi açık tutun ve yeniden yüklemeden önce metni kopyalayın."
   }
 }

@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Tôi không thể đăng tải clip này, hãy thử lại.",
     "estimatedRank": "Thứ hạng dự kiến trong Khám phá",
     "activeContributions": "{count} Sparks đang hoạt động"
+  },
+  "experience": {
+    "messagesIntro": "Bắt đầu trò chuyện, tiếp tục cuộc trò chuyện trước hoặc tìm bạn bè.",
+    "laterIntro": "Lưu những tin nhắn hữu ích để dễ tìm lại tại đây khi bạn sẵn sàng xử lý tiếp.",
+    "savedTab": "Đã lưu",
+    "remindersTab": "Lời nhắc",
+    "savedSearchHint": "Nội dung tin nhắn hoặc tên cuộc trò chuyện",
+    "clearFilters": "Xóa bộ lọc",
+    "savedResults": "{count, plural, other {# tin nhắn đã lưu}}",
+    "noSavedMatchesHelp": "Thử từ khác hoặc xóa bộ lọc để xem tất cả tin nhắn đã lưu.",
+    "unavailableCollection": "Bộ sưu tập không khả dụng",
+    "unavailableCollectionHelp": "Bộ sưu tập này có thể đã bị xóa. Hãy chọn bộ sưu tập khác hoặc quay lại tất cả tin nhắn đã lưu.",
+    "viewScope": "Bộ lọc được lưu cho tài khoản này trên trình duyệt này.",
+    "rememberingView": "Đang lưu chế độ xem này…",
+    "viewNotRemembered": "Chưa lưu chế độ xem",
+    "viewLoadError": "Không thể khôi phục chế độ xem trước đó. Bạn có thể tiếp tục duyệt hoặc thử lại.",
+    "viewSaveError": "Không thể lưu bộ lọc trên trình duyệt này. Hãy giữ trang này mở và thử lại.",
+    "savingCollection": "Đang lưu…",
+    "clearQuery": "Xóa tìm kiếm",
+    "noPeopleMatches": "Không tìm thấy người phù hợp. Hãy thử tên khác hoặc xóa tìm kiếm.",
+    "draftNotSavedInTab": "Không thể lưu bản nháp trong thẻ này. Hãy giữ thẻ mở và sao chép nội dung trước khi tải lại."
   }
 }

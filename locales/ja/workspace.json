@@ -2220,5 +2220,26 @@
     "clipPostFailed": "クリップを投稿できなかったので、もう一度試してみてください。",
     "estimatedRank": "コミュニティ探索での予想順位",
     "activeContributions": "有効なSparksは{count}個"
+  },
+  "experience": {
+    "messagesIntro": "会話を始めたり、前回の続きから話したり、友達を探したりできます。",
+    "laterIntro": "大切なメッセージを保存して、後で対応するときにここから見つけられます。",
+    "savedTab": "保存済み",
+    "remindersTab": "リマインダー",
+    "savedSearchHint": "メッセージの本文または会話名",
+    "clearFilters": "フィルターをクリア",
+    "savedResults": "{count, plural, other {保存済みメッセージ # 件}}",
+    "noSavedMatchesHelp": "別の言葉で検索するか、フィルターをクリアして保存済みのメッセージをすべて表示してください。",
+    "unavailableCollection": "コレクションを利用できません",
+    "unavailableCollectionHelp": "このコレクションは削除された可能性があります。別のコレクションを選ぶか、保存済みのすべてのメッセージに戻ってください。",
+    "viewScope": "フィルターはこのブラウザーのこのアカウント用に保存されます。",
+    "rememberingView": "表示設定を保存中…",
+    "viewNotRemembered": "表示設定は保存されていません",
+    "viewLoadError": "前回の表示設定を復元できませんでした。このまま閲覧を続けるか、もう一度お試しください。",
+    "viewSaveError": "このブラウザーにフィルターを保存できませんでした。このページを開いたまま、もう一度お試しください。",
+    "savingCollection": "保存中…",
+    "clearQuery": "検索をクリア",
+    "noPeopleMatches": "検索に一致する人がいません。別の名前を試すか、検索をクリアしてください。",
+    "draftNotSavedInTab": "このタブに下書きを保存できませんでした。タブを開いたままにして、再読み込みする前にテキストをコピーしてください。"
   }
 }

@@ -2220,5 +2220,26 @@
     "clipPostFailed": "클립을 올리지 못했는데 다시 한번 시도해 보세요.",
     "estimatedRank": "탐색의 예상 순위",
     "activeContributions": "활성 Sparks {count}개"
+  },
+  "experience": {
+    "messagesIntro": "대화를 시작하거나, 지난 대화를 이어 가거나, 친구를 찾아보세요.",
+    "laterIntro": "유용한 메시지를 저장해 두세요. 나중에 다시 확인하거나 답할 때 여기서 찾을 수 있어요.",
+    "savedTab": "저장됨",
+    "remindersTab": "알림",
+    "savedSearchHint": "메시지 내용 또는 대화 이름",
+    "clearFilters": "필터 지우기",
+    "savedResults": "{count, plural, other {저장한 메시지 #개}}",
+    "noSavedMatchesHelp": "다른 단어를 검색하거나 필터를 지워 저장한 메시지를 모두 확인하세요.",
+    "unavailableCollection": "컬렉션을 사용할 수 없음",
+    "unavailableCollectionHelp": "이 컬렉션이 삭제되었을 수 있어요. 다른 컬렉션을 선택하거나 저장한 모든 메시지로 돌아가세요.",
+    "viewScope": "필터는 이 브라우저에서 이 계정에 저장돼요.",
+    "rememberingView": "보기 설정 저장 중…",
+    "viewNotRemembered": "보기 설정이 저장되지 않음",
+    "viewLoadError": "이전 보기 설정을 복원하지 못했어요. 계속 둘러보거나 다시 시도하세요.",
+    "viewSaveError": "이 브라우저에 필터를 저장하지 못했어요. 이 페이지를 열어 둔 채 다시 시도하세요.",
+    "savingCollection": "저장 중…",
+    "clearQuery": "검색 지우기",
+    "noPeopleMatches": "검색 결과에 해당하는 사람이 없어요. 다른 이름을 검색하거나 검색어를 지워보세요.",
+    "draftNotSavedInTab": "이 탭에 초안을 저장하지 못했어요. 탭을 열어 두고 새로고침하기 전에 내용을 복사하세요."
   }
 }

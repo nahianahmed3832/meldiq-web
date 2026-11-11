@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Nemohl jsem se zeptat, zkuste to znovu.",
     "estimatedRank": "Odhadované pořadí v Přehledu",
     "activeContributions": "{count} aktivních Sparks"
+  },
+  "experience": {
+    "messagesIntro": "Začněte konverzaci, pokračujte tam, kde jste skončili, nebo najděte přítele.",
+    "laterIntro": "Uložte si užitečné zprávy. Až se k nim budete chtít vrátit, najdete je tady.",
+    "savedTab": "Uložené",
+    "remindersTab": "Připomenutí",
+    "savedSearchHint": "Text zprávy nebo název konverzace",
+    "clearFilters": "Vymazat filtry",
+    "savedResults": "{count, plural, one {# uložená zpráva} few {# uložené zprávy} many {# uložené zprávy} other {# uložených zpráv}}",
+    "noSavedMatchesHelp": "Zkuste jiné slovo nebo vymažte filtry a zobrazte všechny uložené zprávy.",
+    "unavailableCollection": "Kolekce není dostupná",
+    "unavailableCollectionHelp": "Tato kolekce mohla být odstraněna. Vyberte jinou nebo se vraťte ke všem uloženým zprávám.",
+    "viewScope": "Filtry se ukládají pro tento účet v tomto prohlížeči.",
+    "rememberingView": "Ukládání zobrazení…",
+    "viewNotRemembered": "Zobrazení nebylo uloženo",
+    "viewLoadError": "Předchozí zobrazení se nepodařilo obnovit. Můžete pokračovat v prohlížení nebo to zkusit znovu.",
+    "viewSaveError": "Filtry se v tomto prohlížeči nepodařilo uložit. Nechte stránku otevřenou a zkuste to znovu.",
+    "savingCollection": "Ukládání…",
+    "clearQuery": "Vymazat hledání",
+    "noPeopleMatches": "Hledání neodpovídají žádní lidé. Zkuste jiné jméno nebo hledání vymažte.",
+    "draftNotSavedInTab": "Koncept se v této kartě nepodařilo uložit. Nechte ji otevřenou a před opětovným načtením zkopírujte text."
   }
 }

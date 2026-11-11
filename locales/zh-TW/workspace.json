@@ -2220,5 +2220,26 @@
     "clipPostFailed": "沒辦法播放,再試一次。",
     "estimatedRank": "探索頁預估排名",
     "activeContributions": "{count} 個有效 Sparks"
+  },
+  "experience": {
+    "messagesIntro": "開始聊天、繼續上次的對話，或尋找好友。",
+    "laterIntro": "儲存實用的訊息，方便日後在這裡查看和跟進。",
+    "savedTab": "已儲存",
+    "remindersTab": "提醒",
+    "savedSearchHint": "訊息內容或對話名稱",
+    "clearFilters": "清除篩選",
+    "savedResults": "{count, plural, other {# 則已儲存的訊息}}",
+    "noSavedMatchesHelp": "試試其他詞語，或清除篩選以查看所有已儲存的訊息。",
+    "unavailableCollection": "收藏集無法使用",
+    "unavailableCollectionHelp": "此收藏集可能已被刪除。請選擇其他收藏集，或返回所有已儲存的訊息。",
+    "viewScope": "篩選條件會為此帳號儲存在此瀏覽器中。",
+    "rememberingView": "正在儲存此檢視…",
+    "viewNotRemembered": "檢視未儲存",
+    "viewLoadError": "無法還原上次的檢視。你可以繼續瀏覽或重試。",
+    "viewSaveError": "無法在此瀏覽器中儲存篩選條件。請保持此頁面開啟並重試。",
+    "savingCollection": "正在儲存…",
+    "clearQuery": "清除搜尋",
+    "noPeopleMatches": "找不到符合搜尋條件的使用者。請嘗試其他名字或清除搜尋。",
+    "draftNotSavedInTab": "無法在此分頁中儲存草稿。請保持分頁開啟，並在重新載入前複製文字。"
   }
 }

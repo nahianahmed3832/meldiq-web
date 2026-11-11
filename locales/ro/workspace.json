@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Nu puteți publica clipul, încercați din nou.",
     "estimatedRank": "Poziție estimată în Descoperire",
     "activeContributions": "{count} Sparks active"
+  },
+  "experience": {
+    "messagesIntro": "Începe o conversație, continuă de unde ai rămas sau găsește un prieten.",
+    "laterIntro": "Păstrează mesajele utile și găsește-le aici când vrei să revii asupra lor.",
+    "savedTab": "Salvate",
+    "remindersTab": "Mementouri",
+    "savedSearchHint": "Textul mesajului sau numele conversației",
+    "clearFilters": "Șterge filtrele",
+    "savedResults": "{count, plural, one {# mesaj salvat} few {# mesaje salvate} other {# de mesaje salvate}}",
+    "noSavedMatchesHelp": "Încearcă un alt cuvânt sau șterge filtrele pentru a vedea toate mesajele salvate.",
+    "unavailableCollection": "Colecție indisponibilă",
+    "unavailableCollectionHelp": "Este posibil ca această colecție să fi fost ștearsă. Alege alta sau revino la toate mesajele salvate.",
+    "viewScope": "Filtrele sunt păstrate pentru acest cont în acest browser.",
+    "rememberingView": "Se salvează această vizualizare…",
+    "viewNotRemembered": "Vizualizare nesalvată",
+    "viewLoadError": "Vizualizarea anterioară nu a putut fi restaurată. Poți continua să navighezi sau să încerci din nou.",
+    "viewSaveError": "Filtrele nu au putut fi salvate în acest browser. Lasă această pagină deschisă și încearcă din nou.",
+    "savingCollection": "Se salvează…",
+    "clearQuery": "Șterge căutarea",
+    "noPeopleMatches": "Nicio persoană nu corespunde acestei căutări. Încearcă alt nume sau șterge căutarea.",
+    "draftNotSavedInTab": "Ciorna nu a putut fi salvată în această filă. Las-o deschisă și copiază textul înainte de a reîncărca."
   }
 }

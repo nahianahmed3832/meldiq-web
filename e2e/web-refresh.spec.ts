@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
 import { link } from "./link";
 import { newPhone, testAddress } from "./phone";
+import { numericConversationPath } from "../src/application/conversationPaths";
 
 // Network fault injection must reach page.route in WebKit as well as Chromium.
 test.use({ serviceWorkers: "block" });
@@ -26,7 +27,7 @@ async function fixture(page: Page) {
   const personal = await alice.req("GET", "/v1/me/preferences/personal");
   await alice.req("PUT", "/v1/me/preferences/personal", { baseRev: personal.rev, prefs: { saved: [{ conversationId, messageId, savedAt: Date.now() }] } });
   await link(page, alice);
-  await go(page, `/dms/c/${conversationId}`);
+  await go(page, numericConversationPath("dms", conversationId));
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Review the launch checklist");
   return { alice, bob, conversationId, messageId };
 }
@@ -98,7 +99,7 @@ test("starts a real message and returns to the same saved view after Back and re
   const { bob, conversationId } = await fixture(page);
   await go(page, "/activity");
   await page.getByRole("button", { name: "Turn on activity history" }).click();
-  await go(page, `/dms/c/${conversationId}`);
+  await go(page, numericConversationPath("dms", conversationId));
   await go(page, "/friends");
   await expect(page.getByRole("heading", { name: "Continue where you left off" })).toBeVisible();
   await noOverflow(page);
@@ -113,7 +114,7 @@ test("starts a real message and returns to the same saved view after Back and re
   await start.click();
   await newMessage.getByRole("textbox", { name: "Find people" }).fill(bob.username);
   await newMessage.getByRole("button", { name: /Nila Roy/ }).click();
-  await expect(page).toHaveURL(`/dms/c/${conversationId}`);
+  await expect(page).toHaveURL(numericConversationPath("dms", conversationId));
   await bob.connect();
   try {
     await page.locator(".composer textarea").fill("Ready to follow up from Meldiq.");
@@ -138,7 +139,7 @@ test("starts a real message and returns to the same saved view after Back and re
   await noOverflow(page);
   await page.screenshot({ path: `docs/design/web-refresh/after-later-${info.project.name}.png`, animations: "disabled" });
   await page.getByRole("button", { name: /Review the launch checklist/ }).click();
-  await expect(page).toHaveURL(`/dms/c/${conversationId}`);
+  await expect(page).toHaveURL(numericConversationPath("dms", conversationId));
   await page.goBack();
   await expect(page).toHaveURL("/later");
   await expect(query).toHaveValue("checklist");
@@ -268,7 +269,7 @@ test("shows honest first use and remains usable across themes and narrow keyboar
   await alice.send(cid, { type: "text", text: "A saved message ready for our next conversation." }, "message", mid);
   const prefs = await alice.req("GET", "/v1/me/preferences/personal");
   await alice.req("PUT", "/v1/me/preferences/personal", { baseRev: prefs.rev, prefs: { saved: [{ conversationId: cid, messageId: mid, savedAt: Date.now() }] } });
-  await go(page, `/dms/c/${cid}`);
+  await go(page, numericConversationPath("dms", cid));
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("A saved message ready");
   await go(page, "/later");
   await expect(page.getByRole("button", { name: /A saved message ready/ })).toBeVisible();
@@ -311,7 +312,7 @@ test("does not expose saved message content after conversation access is removed
   await alice.send(group.id, { type: "text", text: "Private content must disappear when access ends" }, "message", messageId);
   const prefs = await alice.req("GET", "/v1/me/preferences/personal");
   await alice.req("PUT", "/v1/me/preferences/personal", { baseRev: prefs.rev, prefs: { saved: [{ conversationId: group.id, messageId, savedAt: Date.now() }] } });
-  await go(page, `/dms/c/${group.id}`);
+  await go(page, numericConversationPath("dms", group.id));
   await expect(page.getByRole("log", { name: "Messages" })).toContainText("Private content must disappear");
   await go(page, "/later");
   await expect(page.getByRole("button", { name: /Private content must disappear/ })).toBeVisible();

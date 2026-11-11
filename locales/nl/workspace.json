@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Ik kan de clip niet posten, probeer het nog eens.",
     "estimatedRank": "Geschatte positie in Ontdekken",
     "activeContributions": "{count} actieve Sparks"
+  },
+  "experience": {
+    "messagesIntro": "Begin een gesprek, ga verder waar je gebleven was of zoek een vriend.",
+    "laterIntro": "Bewaar nuttige berichten. Je vindt ze hier terug wanneer je erop wilt terugkomen.",
+    "savedTab": "Opgeslagen",
+    "remindersTab": "Herinneringen",
+    "savedSearchHint": "Berichttekst of gespreksnaam",
+    "clearFilters": "Filters wissen",
+    "savedResults": "{count, plural, one {# opgeslagen bericht} other {# opgeslagen berichten}}",
+    "noSavedMatchesHelp": "Probeer een ander woord of wis de filters om alle opgeslagen berichten te zien.",
+    "unavailableCollection": "Verzameling niet beschikbaar",
+    "unavailableCollectionHelp": "Deze verzameling is mogelijk verwijderd. Kies een andere of ga terug naar alle opgeslagen berichten.",
+    "viewScope": "De filters blijven voor dit account in deze browser bewaard.",
+    "rememberingView": "Weergave opslaan…",
+    "viewNotRemembered": "Weergave niet opgeslagen",
+    "viewLoadError": "Je vorige weergave kon niet worden hersteld. Je kunt verder bladeren of het opnieuw proberen.",
+    "viewSaveError": "Je filters konden niet in deze browser worden opgeslagen. Houd deze pagina open en probeer het opnieuw.",
+    "savingCollection": "Opslaan…",
+    "clearQuery": "Zoekopdracht wissen",
+    "noPeopleMatches": "Geen personen gevonden voor deze zoekopdracht. Probeer een andere naam of wis je zoekopdracht.",
+    "draftNotSavedInTab": "Je concept kon niet in dit tabblad worden opgeslagen. Houd het open en kopieer de tekst voordat je opnieuw laadt."
   }
 }

@@ -2220,5 +2220,26 @@
     "clipPostFailed": "Saya tidak bisa menyiarkan klip ini. coba lagi.",
     "estimatedRank": "Perkiraan peringkat di Jelajahi",
     "activeContributions": "{count} Sparks aktif"
+  },
+  "experience": {
+    "messagesIntro": "Mulai percakapan, lanjutkan obrolan terakhir, atau cari teman.",
+    "laterIntro": "Simpan pesan penting agar mudah ditemukan di sini saat Anda siap menindaklanjutinya.",
+    "savedTab": "Tersimpan",
+    "remindersTab": "Pengingat",
+    "savedSearchHint": "Teks pesan atau nama percakapan",
+    "clearFilters": "Hapus filter",
+    "savedResults": "{count, plural, other {# pesan tersimpan}}",
+    "noSavedMatchesHelp": "Coba kata lain, atau hapus filter untuk melihat semua pesan tersimpan.",
+    "unavailableCollection": "Koleksi tidak tersedia",
+    "unavailableCollectionHelp": "Koleksi ini mungkin telah dihapus. Pilih koleksi lain atau kembali ke semua pesan tersimpan.",
+    "viewScope": "Filter disimpan untuk akun ini di peramban ini.",
+    "rememberingView": "Menyimpan tampilan ini…",
+    "viewNotRemembered": "Tampilan belum tersimpan",
+    "viewLoadError": "Tampilan sebelumnya tidak dapat dipulihkan. Anda dapat melanjutkan penelusuran atau mencoba lagi.",
+    "viewSaveError": "Filter Anda tidak dapat disimpan di peramban ini. Biarkan halaman ini terbuka dan coba lagi.",
+    "savingCollection": "Menyimpan…",
+    "clearQuery": "Hapus pencarian",
+    "noPeopleMatches": "Tidak ada orang yang cocok dengan pencarian ini. Coba nama lain atau hapus pencarian.",
+    "draftNotSavedInTab": "Draf Anda tidak dapat disimpan di tab ini. Biarkan tab terbuka dan salin teks sebelum memuat ulang."
   }
 }

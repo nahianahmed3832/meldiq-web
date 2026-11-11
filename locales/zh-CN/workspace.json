@@ -2220,5 +2220,26 @@
     "clipPostFailed": "没办法播放,再试一次。",
     "estimatedRank": "发现页预计排名",
     "activeContributions": "{count} 个有效 Sparks"
+  },
+  "experience": {
+    "messagesIntro": "开始聊天、继续上次的对话，或查找好友。",
+    "laterIntro": "保存有用的消息，方便日后在这里查看和跟进。",
+    "savedTab": "已保存",
+    "remindersTab": "提醒",
+    "savedSearchHint": "消息内容或会话名称",
+    "clearFilters": "清除筛选",
+    "savedResults": "{count, plural, other {# 条已保存的消息}}",
+    "noSavedMatchesHelp": "试试其他词语，或清除筛选以查看所有已保存的消息。",
+    "unavailableCollection": "收藏集不可用",
+    "unavailableCollectionHelp": "此收藏集可能已被删除。请选择其他收藏集，或返回所有已保存的消息。",
+    "viewScope": "筛选条件会为此账号保存在此浏览器中。",
+    "rememberingView": "正在保存此视图…",
+    "viewNotRemembered": "视图未保存",
+    "viewLoadError": "无法恢复上次的视图。你可以继续浏览或重试。",
+    "viewSaveError": "无法在此浏览器中保存筛选条件。请保持此页面打开并重试。",
+    "savingCollection": "正在保存…",
+    "clearQuery": "清除搜索",
+    "noPeopleMatches": "没有找到匹配的用户。请尝试其他名字或清除搜索。",
+    "draftNotSavedInTab": "无法在此标签页中保存草稿。请保持标签页打开，并在重新加载前复制文本。"
   }
 }
