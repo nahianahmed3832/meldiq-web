@@ -1,0 +1,34 @@
+{
+  "frontendBase": "68108747dbb57d193a2be242cf6148c275a7c717",
+  "intendedBackendCommit": "b4bb6cff391325737fe33a7a4149b28ffaff4bf6",
+  "backendVersion": "0.76.1",
+  "backendRevisionEvidence": "Retained spark-purchase API activation receipt; subsequent pricing web publisher preserved the API. Public server-info confirms version/capabilities, not a cryptographic attestation of its commit.",
+  "localConfiguration": {
+    "databaseMode": "supabase",
+    "postgresPort": 55419,
+    "appEnvironment": "development",
+    "mailTransport": "file",
+    "redis": "disabled",
+    "delivery": "legacy WebSocket",
+    "registration": "open for disposable accounts"
+  },
+  "differencesFromHosted": "Loopback HTTP and WS with production web headers adjusted for localhost; local PostgreSQL with bootstrap Supabase roles/auth/realtime SQL stubs, no hosted Auth/Realtime; no Redis, external push, OAuth providers or real email. No production data or migrations changed.",
+  "migrationCount": 39,
+  "migrationSetSha256": "6bdbd9ec1984e18a42dabea9a6449eb80586305fd70895abe94f2c2fcd50bcce",
+  "observedPublicServerInfo": {
+    "version": "0.76.1",
+    "relevantFeatures": [
+      "account-delete",
+      "accounts-v2",
+      "saved-items",
+      "saved-collections",
+      "account-standing",
+      "server-messages",
+      "connection-request-notes",
+      "community-lobby",
+      "history"
+    ]
+  },
+  "observedPublicBuildId": "ml6QfuxEmtaayIlYfbFdW",
+  "observedPublicHtmlSha256": "7126927670528b22fa79cb0ea9a30d622e9032bb343eb9895e4e34725715a3b9"
+}

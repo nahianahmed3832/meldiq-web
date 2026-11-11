@@ -1,0 +1,52 @@
+{
+  "base": "68108747dbb57d193a2be242cf6148c275a7c717",
+  "originalPatchSha256": "29ab743ed44cadf6b2411332ae359fc13b4460c6a72f00237689e626beee7edb",
+  "originalPatchForwardCheck": "passed against retained pre-edit files",
+  "cleanMerges": [
+    "locales/bn/workspace.json",
+    "locales/en/workspace.json",
+    "src/store/db.ts",
+    "src/styles/experience.css",
+    "src/ui/later/CollectionControls.tsx",
+    "src/ui/later/LaterView.tsx",
+    "src/ui/later/SavedList.tsx",
+    "src/ui/shell/Shell.tsx",
+    "src/ui/experience/ExperienceHeader.tsx",
+    "src/application/laterView.ts",
+    "src/ui/later/useLaterView.ts",
+    "src/ui/later/useSavedCollections.ts",
+    "e2e/web-refresh.spec.ts",
+    "test/later-view.test.ts"
+  ],
+  "manualMergeFiles": [
+    "src/ui/views/FriendsView.tsx"
+  ],
+  "multiTab": {
+    "originalPatchSha256": "f8213f29c73e65136a66332c78e852a2a5f465f4d267956f597088f8616c2b2c",
+    "forwardCheck": "passed against retained pre-edit files",
+    "cleanMerges": [
+      "e2e/cross-device.spec.ts",
+      "e2e/multiple-accounts.spec.ts",
+      "locales/bn/workspace.json",
+      "locales/en/workspace.json",
+      "src/application/boot.ts",
+      "src/auth/savedAccounts.ts",
+      "src/auth/tokenVault.ts",
+      "src/call/manager.ts",
+      "src/call/ringtone.ts",
+      "src/sync/context.ts",
+      "src/sync/engine.ts",
+      "src/sync/outbox.ts",
+      "src/sync/snapshot.ts",
+      "src/ui/App.tsx",
+      "src/realtime/tabClient.ts",
+      "src/store/tabDrafts.ts",
+      "src/application/browserResource.ts",
+      "test/multi-tab-storage.test.ts",
+      "docs/MULTI_TAB.md"
+    ],
+    "manualMergeFiles": [
+      "src/store/db.ts"
+    ]
+  }
+}

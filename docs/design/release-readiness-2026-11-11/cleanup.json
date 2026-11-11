@@ -1,0 +1,7 @@
+{
+  "postgres": "owned disposable cluster stopped",
+  "browserHarnesses": "completed and exited",
+  "androidDaemon": "stopped with no attached devices",
+  "productionChanged": false,
+  "originalCheckoutChangedByThisContinuation": false
+}

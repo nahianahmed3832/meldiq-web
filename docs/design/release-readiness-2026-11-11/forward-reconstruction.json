@@ -1,0 +1,11 @@
+{
+  "base": "68108747dbb57d193a2be242cf6148c275a7c717",
+  "codeCandidate": "daf70d5e3b41ddfc04e012519b39b8fc667e8f8a",
+  "reconstructedTree": "87ffadc50d307ab0c4d5b534e2404aeeb3cd8eeb",
+  "method": "git am of focused patch series in a fresh worktree at the documented base; resulting complete tree equals candidate tree",
+  "patches": {
+    "0001-Refresh-Messages-and-Later-on-the-production-web-bas.patch": "a5b7909774b6aba4bcf107b2acf81127368bf1fe99b203e43fa9211e3be78d26",
+    "0002-Integrate-simultaneous-tabs-without-replacing-newer-.patch": "0a1c8ed30ff76303566d603375cd8f9316918ae002185c812e237803334a1ee8",
+    "0003-Complete-refresh-localization-and-add-release-qualif.patch": "810587221045163ec43dd4cd267b8ece240d9c5ce18adfcee846e3a18ce62d32"
+  }
+}

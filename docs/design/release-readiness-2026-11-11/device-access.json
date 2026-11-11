@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-11",
+  "android": {
+    "connectedDevices": 0,
+    "physicalKeyboardResult": "unverified"
+  },
+  "ios": {
+    "knownModel": "iPhone 16",
+    "connectionState": "unavailable",
+    "osVersion": null,
+    "browserVersion": null,
+    "physicalKeyboardResult": "unverified"
+  },
+  "simulatorsCountAsPhysical": false
+}

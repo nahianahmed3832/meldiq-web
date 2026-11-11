@@ -1,0 +1,492 @@
+{
+  "sourceCommit": "daf70d5e3b41ddfc04e012519b39b8fc667e8f8a",
+  "passed": 72,
+  "failed": 0,
+  "expectedSkipped": 8,
+  "duration": "18.8 minutes",
+  "backendCommit": "b4bb6cff391325737fe33a7a4149b28ffaff4bf6",
+  "databaseMode": "supabase on disposable local PostgreSQL",
+  "cases": [
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "a linked browser and the phone stay in sync through the server, and signing out erases the browser"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "removing the browser from the phone signs it out and erases what it kept"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "several tabs share delivery, send from either tab, preserve drafts and hand off after closing"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the configured lobby"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the first available channel"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "two real account sessions survive switching, cancellation, reload and logout of only one account"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "tabs renew one session together and keep their own account through switching and logout"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: de"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ar"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ur"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "starts a real message and returns to the same saved view after Back and reload"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps collection edits after refusal, rejects deleted selection and recovers loading errors"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps filters usable when browser persistence fails and saves them after retry"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "shows honest first use and remains usable across themes and narrow keyboard space"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "does not expose saved message content after conversation access is removed"
+    },
+    {
+      "status": "passed",
+      "project": "chromium",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "recovers the Friends list without losing search and supports arrow-key tabs"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "a linked browser and the phone stay in sync through the server, and signing out erases the browser"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "removing the browser from the phone signs it out and erases what it kept"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "several tabs share delivery, send from either tab, preserve drafts and hand off after closing"
+    },
+    {
+      "status": "expected-skip",
+      "project": "firefox",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the configured lobby"
+    },
+    {
+      "status": "expected-skip",
+      "project": "firefox",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the first available channel"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "two real account sessions survive switching, cancellation, reload and logout of only one account"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "tabs renew one session together and keep their own account through switching and logout"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: de"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ar"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ur"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "starts a real message and returns to the same saved view after Back and reload"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps collection edits after refusal, rejects deleted selection and recovers loading errors"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps filters usable when browser persistence fails and saves them after retry"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "shows honest first use and remains usable across themes and narrow keyboard space"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "does not expose saved message content after conversation access is removed"
+    },
+    {
+      "status": "passed",
+      "project": "firefox",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "recovers the Friends list without losing search and supports arrow-key tabs"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "a linked browser and the phone stay in sync through the server, and signing out erases the browser"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "removing the browser from the phone signs it out and erases what it kept"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "several tabs share delivery, send from either tab, preserve drafts and hand off after closing"
+    },
+    {
+      "status": "expected-skip",
+      "project": "webkit",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the configured lobby"
+    },
+    {
+      "status": "expected-skip",
+      "project": "webkit",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the first available channel"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "two real account sessions survive switching, cancellation, reload and logout of only one account"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "tabs renew one session together and keep their own account through switching and logout"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: de"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ar"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ur"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "starts a real message and returns to the same saved view after Back and reload"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps collection edits after refusal, rejects deleted selection and recovers loading errors"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps filters usable when browser persistence fails and saves them after retry"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "shows honest first use and remains usable across themes and narrow keyboard space"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "does not expose saved message content after conversation access is removed"
+    },
+    {
+      "status": "passed",
+      "project": "webkit",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "recovers the Friends list without losing search and supports arrow-key tabs"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "a linked browser and the phone stay in sync through the server, and signing out erases the browser"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "removing the browser from the phone signs it out and erases what it kept"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "several tabs share delivery, send from either tab, preserve drafts and hand off after closing"
+    },
+    {
+      "status": "expected-skip",
+      "project": "phone-width",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the configured lobby"
+    },
+    {
+      "status": "expected-skip",
+      "project": "phone-width",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the first available channel"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "two real account sessions survive switching, cancellation, reload and logout of only one account"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "tabs renew one session together and keep their own account through switching and logout"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: de"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ar"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ur"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "starts a real message and returns to the same saved view after Back and reload"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps collection edits after refusal, rejects deleted selection and recovers loading errors"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps filters usable when browser persistence fails and saves them after retry"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "shows honest first use and remains usable across themes and narrow keyboard space"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "does not expose saved message content after conversation access is removed"
+    },
+    {
+      "status": "passed",
+      "project": "phone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "recovers the Friends list without losing search and supports arrow-key tabs"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "a linked browser and the phone stay in sync through the server, and signing out erases the browser"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "removing the browser from the phone signs it out and erases what it kept"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/cross-device.spec.ts",
+      "case": "several tabs share delivery, send from either tab, preserve drafts and hand off after closing"
+    },
+    {
+      "status": "expected-skip",
+      "project": "iphone-width",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the configured lobby"
+    },
+    {
+      "status": "expected-skip",
+      "project": "iphone-width",
+      "file": "e2e/dms-selection.spec.ts",
+      "case": "DMs clears community selection; the rail restores the first available channel"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "two real account sessions survive switching, cancellation, reload and logout of only one account"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/multiple-accounts.spec.ts",
+      "case": "tabs renew one session together and keep their own account through switching and logout"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: de"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ar"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh-localization.spec.ts",
+      "case": "Messages, Later and collection dialogs fit long and RTL copy: ur"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "starts a real message and returns to the same saved view after Back and reload"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps collection edits after refusal, rejects deleted selection and recovers loading errors"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "keeps filters usable when browser persistence fails and saves them after retry"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "shows honest first use and remains usable across themes and narrow keyboard space"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "does not expose saved message content after conversation access is removed"
+    },
+    {
+      "status": "passed",
+      "project": "iphone-width",
+      "file": "e2e/web-refresh.spec.ts",
+      "case": "recovers the Friends list without losing search and supports arrow-key tabs"
+    }
+  ],
+  "logSha256": "bb7df074086da9de5785878a32e230148da9f4b120b8663320cf6a696cb09696"
+}

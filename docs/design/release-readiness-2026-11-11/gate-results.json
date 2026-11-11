@@ -1,0 +1,48 @@
+{
+  "sourceCommit": "daf70d5e3b41ddfc04e012519b39b8fc667e8f8a",
+  "checks": {
+    "typecheck": {
+      "result": "Passed",
+      "logSha256": "02f361bbb61b2b6d8aad95b807da063aa0f7e261301757eb47eb0cfe1a768fee"
+    },
+    "lint": {
+      "result": "Passed",
+      "logSha256": "f633bd70e9ee978a25637695ea494d6c014114ce59dd61c4b13f6e912af726df"
+    },
+    "production-build": {
+      "result": "Passed",
+      "logSha256": "0ae1c0ef6b463f7a4b434140a09c38a716a426c09aa0e387bfc7b348ae4049ef"
+    },
+    "full-unit": {
+      "result": "Passed: 156 files; 1023 tests; 1 legacy-curves skip",
+      "logSha256": "a9d0c87a3d36dfca69c5514c9747c07e332502e3a791af835dfd9059ae937fda"
+    },
+    "i18n-structure": {
+      "result": "Passed",
+      "logSha256": "789a6ebd1e2c91fd02fc0954738d0a159519404b033c63a463ad60de4fd0bb1c"
+    },
+    "i18n-strict": {
+      "result": "Failed: 77 older keys per 26 locales",
+      "logSha256": "989a585e93bf4982f784cf7b5dba53e11f8c64d2800da921b3e788ec12484d4e"
+    },
+    "format-full": {
+      "result": "Failed: 24 inherited files",
+      "logSha256": "c07fc16f9cce8346b79186db582bde543ad641faa76888f49f573bc01a93d127"
+    },
+    "i18n-refresh": {
+      "result": "Passed: 18 refresh and 1 multi-tab key, all 28 locales",
+      "logSha256": "4abca7c19fbd32c702b42b3f9370c8c3607a6b5a3b4878acc014774be22fbe38"
+    }
+  },
+  "icons": {
+    "validatedSvg": 33,
+    "generatedFiles": 37,
+    "testsPassed": 14
+  },
+  "initialUnitRun": {
+    "failed": 1,
+    "passed": 1022,
+    "skipped": 1,
+    "reason": "Catalog-audit timeout during unbounded concurrent browser/unit load; full rerun with two workers passed unchanged tests"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "file": "docs/design/web-refresh/before-friends-chromium.png",
+      "origin": "original refresh evidence, captured before this release continuation",
+      "sha256": "1140438ff4b12d896589a0beddf0b2aab4de5953576ca0a40416c607d0fd7fb2"
+    },
+    {
+      "file": "docs/design/web-refresh/before-friends-phone-width.png",
+      "origin": "original refresh evidence, captured before this release continuation",
+      "sha256": "86361d4f797198dd4008512053a77f791df56ff4cbe54b5c5d3fc9af2642a0cc"
+    },
+    {
+      "file": "docs/design/web-refresh/before-later-chromium.png",
+      "origin": "original refresh evidence, captured before this release continuation",
+      "sha256": "71f3b253cf752eb75114ed45cddf7869fb6ce1fbfd5d9e2b2cc6dbfbb9f83524"
+    },
+    {
+      "file": "docs/design/web-refresh/before-later-phone-width.png",
+      "origin": "original refresh evidence, captured before this release continuation",
+      "sha256": "3c9a9d81ff0463ce5a9641985334ead55dce2d8022c2542a4b1596a9d75f0f8f"
+    }
+  ]
+}

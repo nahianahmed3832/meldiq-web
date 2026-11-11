@@ -1,0 +1,9 @@
+{
+  "checkedChangedFiles": 35,
+  "passedFiles": 33,
+  "inheritedFailures": [
+    "src/sync/engine.ts",
+    "src/ui/shell/Shell.tsx"
+  ],
+  "newFailures": []
+}

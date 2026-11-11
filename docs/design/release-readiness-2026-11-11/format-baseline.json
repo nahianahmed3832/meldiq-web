@@ -1,0 +1,101 @@
+{
+  "base": "68108747dbb57d193a2be242cf6148c275a7c717",
+  "files": [
+    {
+      "file": "src/application/router.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/call/livekitSession.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/sw/wakeRules.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/sync/dataExport.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/sync/engine.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/sync/universalSearch.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/chat/ComposerGates.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/chat/ConversationView.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/community/communityMenu.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/dialogs/SearchDialog.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/people/ProfileDialog.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/points/PointsPage.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/settings/AccountExtrasCards.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/settings/AccountSettingsPage.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/shell/Shell.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/views/DiscoverView.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/workspace/ExpressionsPage.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "src/ui/workspace/SparksPromotePages.tsx",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "test/app-reload.test.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "test/contract-fixtures.test.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "e2e/calls.spec.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "e2e/part4-bot-voice.spec.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "e2e/stage1-account.spec.ts",
+      "baseAlreadyFails": true
+    },
+    {
+      "file": "e2e/web-experience.spec.ts",
+      "baseAlreadyFails": true
+    }
+  ]
+}

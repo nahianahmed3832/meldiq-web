@@ -1,0 +1,41 @@
+{
+  "status": "Inspected",
+  "checks": [
+    "Long translated text wraps within the viewport",
+    "RTL direction and alignment apply to the changed screens",
+    "320 by 480 collection dialog field, Save and Close remain reachable",
+    "Older English fallback labels remain visible and are tracked separately"
+  ],
+  "physicalKeyboardTest": false,
+  "qualifiedLanguageReview": false,
+  "screenshots": [
+    {
+      "file": "dialog-de-chromium.png",
+      "sha256": "03935cd64438c7864415bf208a7e3415da30226e48765c0c4a1996652f60de99"
+    },
+    {
+      "file": "locale-ar-chromium.png",
+      "sha256": "7cc06e9bd41eedb2b773ac80234ec38b07c7b0de5490fdb4fcd618da08e18c1f"
+    },
+    {
+      "file": "dialog-ur-chromium.png",
+      "sha256": "24e847762eaa97a782e56fcc0fed4cd133609c8b7306c3c497986a7d0c447086"
+    },
+    {
+      "file": "locale-de-phone-width.png",
+      "sha256": "d6ac61b4f6f357cc07f6e328103b25aeb8224fc02631003244e6dc67d2f262b8"
+    },
+    {
+      "file": "dialog-ar-phone-width.png",
+      "sha256": "c693bdf7b636d493cacdcaba9de3dfb4ed3f633a644a84039d1bd8b61f3f8ab6"
+    },
+    {
+      "file": "dialog-ar-iphone-width.png",
+      "sha256": "6d76cebe07249805dfa9c0884a813940effc0b782210af973d5fd00d416cc574"
+    },
+    {
+      "file": "locale-ur-iphone-width.png",
+      "sha256": "f251f7ecb3f3a20f9a2366da692dac9358de32542ccb9593ecedcb85708de312"
+    }
+  ]
+}

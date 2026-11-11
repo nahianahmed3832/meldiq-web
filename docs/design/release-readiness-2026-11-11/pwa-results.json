@@ -1,0 +1,42 @@
+{
+  "status": "Verified",
+  "sourceCommit": "daf70d5e3b41ddfc04e012519b39b8fc667e8f8a",
+  "browser": "Desktop Chromium",
+  "testsPassed": 2,
+  "testsFailed": 0,
+  "durationSeconds": 54.2,
+  "previousBuildId": "ml6QfuxEmtaayIlYfbFdW",
+  "candidateBuildId": "kwy5JIg3ctDKrxSpSwP8t",
+  "testLinkingEnabled": false,
+  "serviceWorker": {
+    "registered": true,
+    "controlling": true,
+    "cacheClearedDuringUpgrade": false,
+    "workerUnregisteredDuringUpgrade": false,
+    "newContextDuringUpgrade": false,
+    "sameOrigin": true,
+    "immutablePreviousAssetsRetained": true
+  },
+  "verified": [
+    "Real email signup, verification, encryption setup and welcome",
+    "Fresh and cached returning Messages/Friends and Saved journeys",
+    "Save through the message menu; collection create, assign and rename",
+    "Search and collection view restore after Back and reload",
+    "Offline collection failure retains name; explicit retry succeeds",
+    "Offline message shows Sending, reconnect produces one peer receipt and one persisted row",
+    "Cached offline return displays the current account conversation",
+    "Second account starts with its own empty Saved view",
+    "Account switch restores separate filters and collection; no cross-account messages",
+    "Logout deletes the target account database and preserves the other account",
+    "Real predecessor upgrade through existing update notice and Reload",
+    "Same browser context, session marker, account databases and cache names retained",
+    "Candidate build ID and new refresh copy load; no page errors or failed immutable assets",
+    "API, config and query URLs absent from service-worker caches"
+  ],
+  "limits": [
+    "No physical device or installed-PWA run",
+    "No hosted Redis, Supabase Auth/Realtime, provider email, external OAuth or push qualification",
+    "Existing API 0.76.1 stored-message protocol; legacy envelope decryption is covered by unit vectors, not claimed as end-to-end encryption of server-stored messages"
+  ],
+  "logSha256": "87e8ac61cddfdc7dc37c71bea493de4f2fc3de8987d56bc97460855829f9d33d"
+}

@@ -1,0 +1,227 @@
+{
+  "passed": true,
+  "refreshKeys": [
+    "workspace.experience.messagesIntro",
+    "workspace.experience.laterIntro",
+    "workspace.experience.savedTab",
+    "workspace.experience.remindersTab",
+    "workspace.experience.savedSearchHint",
+    "workspace.experience.clearFilters",
+    "workspace.experience.savedResults",
+    "workspace.experience.noSavedMatchesHelp",
+    "workspace.experience.unavailableCollection",
+    "workspace.experience.unavailableCollectionHelp",
+    "workspace.experience.viewScope",
+    "workspace.experience.rememberingView",
+    "workspace.experience.viewNotRemembered",
+    "workspace.experience.viewLoadError",
+    "workspace.experience.viewSaveError",
+    "workspace.experience.savingCollection",
+    "workspace.experience.clearQuery",
+    "workspace.experience.noPeopleMatches"
+  ],
+  "multiTabKeys": [
+    "workspace.experience.draftNotSavedInTab"
+  ],
+  "englishKeys": 6531,
+  "locales": {
+    "en": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 0,
+      "nativeReview": "source"
+    },
+    "bn": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 0,
+      "nativeReview": "awaiting-native-review"
+    },
+    "hi": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "ur": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "zh-CN": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "zh-TW": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "ja": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "ko": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "id": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "vi": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "th": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "ar": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "tr": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "pt-BR": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "es-419": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "es-ES": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "fr": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "de": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "it": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "nl": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "pl": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "ru": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "uk": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "ro": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "sv": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "cs": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "el": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    },
+    "pt-PT": {
+      "missingRefresh": [],
+      "missingMultiTab": [],
+      "untranslatedScope": [],
+      "olderMissing": 77,
+      "nativeReview": "awaiting-native-review"
+    }
+  },
+  "errors": [],
+  "policy": "This scoped check supplements i18n:check; it does not waive the full release gate or native-language review."
+}
