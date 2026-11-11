@@ -117,3 +117,51 @@ test("two real account sessions survive switching, cancellation, reload and logo
   await openAccounts(page, isMobile);
   await expect(page.getByRole(isMobile ? "button" : "menuitemradio", { name: /Alice Saved/ })).toHaveCount(0);
 });
+
+test("tabs renew one session together and keep their own account through switching and logout", async ({ page, context, isMobile }) => {
+  test.setTimeout(240000);
+  await page.goto("/");
+  await createAccount(page, "Alice Tabs");
+  const second = await context.newPage();
+  await second.goto("/");
+  await expect(second.locator(".app[data-connection=online]").first()).toBeVisible();
+  const identity = (tab: Page) => tab.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
+  const aliceId = await identity(page);
+  expect(await identity(second)).toBe(aliceId);
+  let rotations = 0;
+  context.on("request", (request) => {
+    if (new URL(request.url()).pathname === "/v2/auth/refresh") rotations++;
+  });
+  const renew = (tab: Page) => tab.evaluate(() => (window as unknown as { __orbit: { session: { reauthenticate(): Promise<boolean> } } }).__orbit.session.reauthenticate());
+  expect(await Promise.all([renew(page), renew(second)])).toEqual([true, true]);
+  expect(rotations).toBe(1);
+  for (const tab of [page, second]) await expect(tab.locator(".app[data-connection=online]").first()).toBeVisible();
+
+  const peer = await newPhone("tabpeer", "Tab Friend");
+  const aliceDm = (await peer.req("POST", "/v1/conversations/dm", { userId: aliceId })).conversation.id;
+  await peer.send(aliceDm, { type: "text", text: "Only Alice should see this" });
+  await second.goto(`/dms/c/${aliceDm}`);
+  await expect(second.getByRole("log", { name: "Messages" })).toContainText("Only Alice should see this");
+  await openAccounts(page, isMobile);
+  await page.getByRole(isMobile ? "button" : "menuitem", { name: "Add account", exact: true }).click();
+  await createAccount(page, "Bob Tabs");
+  const bobId = await identity(page);
+  expect(bobId).not.toBe(aliceId);
+  await second.reload();
+  await expect(second.locator(".app[data-connection=online]").first()).toBeVisible();
+  expect(await identity(second)).toBe(aliceId);
+  await expect(second.getByRole("log", { name: "Messages" })).toContainText("Only Alice should see this");
+  const bobDm = (await peer.req("POST", "/v1/conversations/dm", { userId: bobId })).conversation.id;
+  await peer.send(bobDm, { type: "text", text: "Only Bob should see this" });
+  await page.goto(`/dms/c/${bobDm}`);
+  await expect(page.getByRole("log", { name: "Messages" })).toContainText("Only Bob should see this");
+  await expect(second.getByRole("log", { name: "Messages" })).not.toContainText("Only Bob should see this");
+  await page.goto("/settings/you");
+  await page.getByRole("button", { name: "Log out", exact: true }).click();
+  await page.getByRole("dialog", { name: "Log out of Meldiq?" }).getByRole("button", { name: "Log out", exact: true }).click();
+  await expect(page.locator(".app[data-connection=online]").first()).toBeVisible();
+  expect(await identity(page)).toBe(aliceId);
+  await second.reload();
+  await expect(second.getByRole("log", { name: "Messages" })).toContainText("Only Alice should see this");
+  expect(await identity(second)).toBe(aliceId);
+});

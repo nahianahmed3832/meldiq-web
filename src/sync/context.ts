@@ -1,5 +1,5 @@
 import type { ApiClient } from "../api/client";
-import type { Conversation } from "../api/schemas";
+import type { Conversation, StoredEvent } from "../api/schemas";
 import type { CallManager } from "../call/manager";
 import type { DeviceRecord, StoredMessage } from "../model/types";
 import type { Store } from "../state/store";
@@ -32,4 +32,6 @@ export interface EngineContext {
   notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void;
   refreshIdentityAlerts(): Promise<void>;
   kickOutbox(): void;
+  /** Publish an accepted event to this same browser device's other tabs (the server excludes the sending device). */
+  acceptedInTab?(event: StoredEvent): void;
 }

@@ -4,7 +4,7 @@ import { Localized } from "../i18n/Localized";
 import { accountStoreForBoot, accountDirectory, rememberAccount, forgetAccount, cancelAddingAccount, selectAccount, type AccountDirectory } from "../auth/savedAccounts";
 import { AccountActionsProvider } from "./shell/AccountActions";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { createEngine, holdDeviceLock, missingCapabilities, startNotifications } from "../application/boot";
+import { createEngine, missingCapabilities, startNotifications } from "../application/boot";
 import { hideSplash, rememberReturning } from "../application/splash";
 import { forgetReadingPositions } from "../application/readingPosition";
 import { forgetPlace, placeToRestore } from "../application/lastPlace";
@@ -25,7 +25,7 @@ import { AuthScreen } from "./auth/AuthScreen";
 import { ReauthScreen } from "./auth/ReauthScreen";
 import { TEST_DEVICE_LINKING } from "../auth/testLinking";
 import { watchInstall } from "../application/install";
-import { ElsewhereScreen, LoadingScreen, RevokedScreen, UnsupportedScreen } from "./StatusScreens";
+import { LoadingScreen, RevokedScreen, UnsupportedScreen } from "./StatusScreens";
 import { watchForUpdates } from "../application/updates";
 import { UpdateNotice } from "./UpdateNotice";
 import { voicePlayback } from "../application/voicePlayback";
@@ -36,9 +36,6 @@ type Boot =
   | {
       s: "unsupported";
       missing: string[];
-    }
-  | {
-      s: "elsewhere";
     }
   | {
       s: "signedOut";
@@ -63,7 +60,8 @@ type Boot =
       message: string;
     };
 /**
- * Boot: capability check, one tab per browser, then this browser's device record. No record: sign in (Orbit 2.0 account)
+ * Boot: capability check, then this browser's device record. Each tab can use the account; realtime is coordinated.
+ * No record: sign in (Orbit 2.0 account)
  * or link with the phone. A record: renew the session (account) or sign in with the device key (linked before 2.0), and
  * start syncing (local data shows at once, even offline).
  */
@@ -83,23 +81,17 @@ function reopenLastPlace(engine: Engine): void {
 }
 export function App() {
   useLocaleRender();
-  const activeEngineRef = useRef<Engine | null>(null);
   const [directory, setDirectory] = useState<AccountDirectory | null>(null);
   const [boot, setBoot] = useState<Boot>({ s: "loading" });
   // The launch screen goes as soon as there's something to show: sign-in, the app, or what went wrong.
   useEffect(() => {
     if (boot.s !== "loading") hideSplash();
   }, [boot.s]);
-  const begin = useCallback(async (steal = false) => {
+  const begin = useCallback(async () => {
     setBoot({ s: "loading" });
     try {
       const missing = await missingCapabilities();
       if (missing.length) return setBoot({ s: "unsupported", missing });
-      const held = await holdDeviceLock(steal, () => {
-        activeEngineRef.current?.stop();
-        setBoot({ s: "elsewhere" });
-      });
-      if (!held) return setBoot({ s: "elsewhere" });
       const { store, directory: saved } = await accountStoreForBoot();
       setDirectory(saved);
       const device = await store.device();
@@ -109,7 +101,6 @@ export function App() {
       }
       void loadShell().catch(() => undefined);
       const engine = createEngine(device, store);
-      activeEngineRef.current = engine;
       // The frame opens on what this browser holds (no network yet), where the person left off; then it syncs.
       await engine.open();
       reopenLastPlace(engine);
@@ -134,6 +125,15 @@ export function App() {
   const engine = boot.s === "ready" ? boot.engine : null;
   useEffect(() => {
     if (!engine) return;
+    return engine.store.onInvalidated(() => {
+      engine.stop();
+      engine.tabDrafts.clear();
+      voicePlayback.reset();
+      setBoot({ s: "revoked", reason: "device_revoked" });
+    });
+  }, [engine]);
+  useEffect(() => {
+    if (!engine) return;
     return bindLocaleAccount({
       id: engine.device.account?.id ?? engine.device.userId,
       read: () => engine.nav.localeState(),
@@ -149,6 +149,7 @@ export function App() {
       if (st.phase === "revoked" || st.phase === "reauth") voicePlayback.reset();
       if (st.phase === "revoked") {
         engine.stop();
+        engine.tabDrafts.clear();
         forgetPlace();
         forgetReadingPositions();
         rememberReturning(false);
@@ -166,7 +167,6 @@ export function App() {
     await rememberAccount(store.name, device);
     setDirectory(await accountDirectory());
     const engine = createEngine(device, store);
-    activeEngineRef.current = engine;
     setBoot({ s: "ready", engine, reauth: false });
     await engine.start(grant);
     startNotifications(engine);
@@ -178,6 +178,7 @@ export function App() {
     setDirectory(await accountDirectory());
   }, []);
   const signedOut = useCallback(async () => {
+    engine?.tabDrafts.clear();
     voicePlayback.reset();
     forgetPlace();
     forgetReadingPositions();
@@ -233,8 +234,6 @@ export function App() {
         return <LoadingScreen />;
       case "unsupported":
         return <UnsupportedScreen missing={boot.missing} />;
-      case "elsewhere":
-        return <ElsewhereScreen onUseHere={() => void begin(true)} />;
       case "revoked":
         return <RevokedScreen reason={boot.reason} onLinkAgain={() => void begin()} />;
       case "error":

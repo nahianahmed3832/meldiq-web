@@ -141,9 +141,7 @@ export class SnapshotVault {
     const existing = await this.store.getValue<CryptoKey>(SNAPSHOT_CRYPTO_KEY);
     if (existing instanceof CryptoKey) return existing;
     if (!create) return null;
-    const key = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
-    await this.store.setValue(SNAPSHOT_CRYPTO_KEY, key);
-    return key;
+    return this.store.localEncryptionKey(SNAPSHOT_CRYPTO_KEY);
   }
 
   /** The snapshot, or null; one that isn't this account's, this version's, or readable with this browser's key is erased. */

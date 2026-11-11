@@ -18,8 +18,6 @@ test.afterEach(async ({ context }, info) => {
   }
 });
 
-const isPhoneWidth = (page: Page) => (page.viewportSize()?.width ?? 1440) < 640;
-
 test("a linked browser and the phone stay in sync through the server, and signing out erases the browser", async ({ page }) => {
   const alice = await newPhone("alice", "Alice Rahman");
   const bob = await newPhone("bob", "Bob Chen");
@@ -84,24 +82,94 @@ test("removing the browser from the phone signs it out and erases what it kept",
   await expectSignedOut(page);
 });
 
-test("a second tab doesn't take the connection unless asked", async ({ page, context }) => {
-  test.skip(isPhoneWidth(page), "desktop behaviour");
-  const alice = await newPhone("alice", "Alice Rahman");
+test("several tabs share delivery, send from either tab, preserve drafts and hand off after closing", async ({ page, context }) => {
+  test.setTimeout(180000);
+  const alice = await newPhone("tabsalice", "Alice Rahman");
+  const bob = await newPhone("tabsbob", "Bob Chen");
+  const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id as string;
+  await bob.connect();
   await link(page, alice);
+  await page.goto(`/dms/c/${dm}`);
   const second = await context.newPage();
-  await second.goto("/");
-  await expect(second.getByRole("heading", { name: "Meldiq is open in another tab" })).toBeVisible();
-  await second.getByRole("button", { name: "Use Meldiq here" }).click();
-  await expect(
-    second.locator(":is(.app[data-connection=online])").first(),
-    await second
-      .locator("body")
-      .innerText()
-      .catch(() => ""),
-  )
-    .toBeVisible({ timeout: 15_000 })
-    .catch(async (e: Error) => {
-      throw new Error(`${e.message}\nSecond tab shows: ${(await second.locator("body").innerText()).slice(0, 400)}`);
-    });
-  await expect(page.getByRole("heading", { name: "Meldiq is open in another tab" })).toBeVisible();
+  await second.goto(`/dms/c/${dm}`);
+  for (const tab of [page, second]) await expect(tab.locator(".app[data-connection=online]").first()).toBeVisible();
+  await bob.send(dm, { type: "text", text: "Received in every tab" });
+  for (const tab of [page, second]) await expect(tab.getByRole("log", { name: "Messages" })).toContainText("Received in every tab");
+  await second.getByLabel("Message Bob Chen", { exact: true }).fill("Sent from the second tab");
+  await second.getByLabel("Message Bob Chen", { exact: true }).press("Enter");
+  for (const tab of [page, second]) await expect(tab.getByRole("log", { name: "Messages" })).toContainText("Sent from the second tab");
+  await expect.poll(() => bob.received.filter((m) => m.payload.text === "Sent from the second tab").length).toBe(1);
+  await page.getByLabel("Message Bob Chen", { exact: true }).fill("Sent from the first tab");
+  await page.getByLabel("Message Bob Chen", { exact: true }).press("Enter");
+  await expect(second.getByRole("log", { name: "Messages" })).toContainText("Sent from the first tab");
+
+  // More tabs than the API's per-device socket limit still use a single live connection.
+  const extra = await Promise.all(
+    Array.from({ length: 3 }, async () => {
+      const tab = await context.newPage();
+      await tab.goto(`/dms/c/${dm}`);
+      await expect(tab.locator(".app[data-connection=online]").first()).toBeVisible();
+      return tab;
+    }),
+  );
+  await expect.poll(() => second.evaluate(async () => (await navigator.locks.query()).held?.filter((l) => l.name?.startsWith("meldiq-realtime-v1:")).length)).toBe(1);
+  await bob.send(dm, { type: "text", text: "Five tabs stay synchronized" });
+  for (const tab of [page, second, ...extra]) await expect(tab.getByRole("log", { name: "Messages" })).toContainText("Five tabs stay synchronized");
+
+  await second.bringToFront();
+  await expect
+    .poll(
+      async () =>
+        (
+          await Promise.all(
+            [page, second, ...extra].map((tab) =>
+              tab.evaluate(() => (window as unknown as { __orbit: { realtime: { canNotify(id: string): boolean } } }).__orbit.realtime.canNotify("another-conversation")),
+            ),
+          )
+        ).filter(Boolean).length,
+    )
+    .toBe(1);
+  // The browser can freeze a background owner; another tab keeps delivery alive, then the resumed view catches up.
+  await page.evaluate(() => document.dispatchEvent(new Event("freeze")));
+  await bob.send(dm, { type: "text", text: "Arrived while one tab was suspended" });
+  await expect(second.getByRole("log", { name: "Messages" })).toContainText("Arrived while one tab was suspended");
+  await page.evaluate(() => document.dispatchEvent(new Event("resume")));
+  await expect(page.getByRole("log", { name: "Messages" })).toContainText("Arrived while one tab was suspended");
+
+  const draftBytes = (tab: Page) =>
+    tab.evaluate(() =>
+      Object.keys(sessionStorage)
+        .filter((k) => k.startsWith("meldiq.tab-drafts:"))
+        .map((k) => sessionStorage.getItem(k))
+        .join(""),
+    );
+  const firstBefore = await draftBytes(page);
+  await page.getByLabel("Message Bob Chen", { exact: true }).fill("First tab private draft");
+  await expect.poll(() => draftBytes(page)).not.toBe(firstBefore);
+  const secondBefore = await draftBytes(second);
+  await second.getByLabel("Message Bob Chen", { exact: true }).fill("Second tab private draft");
+  await expect.poll(() => draftBytes(second)).not.toBe(secondBefore);
+  await second.reload();
+  await expect(second.getByLabel("Message Bob Chen", { exact: true })).toHaveValue("Second tab private draft");
+  await page.reload();
+  await expect(page.getByLabel("Message Bob Chen", { exact: true })).toHaveValue("First tab private draft");
+  // Close all but one; ownership transfers without showing a takeover screen or losing the conversation.
+  await Promise.all([page.close(), ...extra.map((tab) => tab.close())]);
+  await expect(second.locator(".app[data-connection=online]").first()).toBeVisible();
+  await bob.send(dm, { type: "text", text: "Still receiving after other tabs close" });
+  await expect(second.getByRole("log", { name: "Messages" })).toContainText("Still receiving after other tabs close");
+
+  // Even a tab unable to reach the API must hide private content when this browser signs out.
+  const offline = await context.newPage();
+  await offline.goto(`/dms/c/${dm}`);
+  await expect(offline.getByRole("log", { name: "Messages" })).toContainText("Received in every tab");
+  await offline.route("**/v1/**", (route) => route.abort());
+  await offline.route("**/v2/**", (route) => route.abort());
+  await second.goto("/settings/you");
+  await second.getByRole("button", { name: "Log out", exact: true }).click();
+  await second.getByRole("dialog", { name: "Log out of Meldiq?" }).getByRole("button", { name: "Log out", exact: true }).click();
+  await expectSignedOut(second);
+  await expect(offline.getByRole("heading", { name: "Signed out" })).toBeVisible();
+  await expect(offline.getByRole("log", { name: "Messages" })).toHaveCount(0);
+  await bob.disconnect();
 });

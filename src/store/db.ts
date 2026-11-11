@@ -57,7 +57,7 @@ const VERSION = 3;
 /**
  * Values the generic getValue/setValue methods persist: device/session material, the sealed snapshot and support keys.
  * Account-local history and Later view preferences use the dedicated methods below; message contents stay in the
- * existing encrypted snapshot/outgoing storage paths.
+ * existing message/snapshot storage paths.
  */
 const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.imported", "snapshot", "snapshotKey", "plusSupport"]);
 
@@ -76,6 +76,8 @@ export class LocalStore {
   private readonly pins = new Map<string, PinnedIdentity>();
   private readonly held = new Map<number, HeldItem>();
   private readonly pendingControls = new Map<string, PendingControl>();
+  private invalidated = false;
+  private readonly invalidationListeners = new Set<() => void>();
 
   private constructor(
     private readonly db: IDBPDatabase<OrbitDB>,
@@ -83,11 +85,16 @@ export class LocalStore {
   ) {}
 
   static async open(name = DB_NAME): Promise<LocalStore> {
+    let invalidate = () => {};
     const db: IDBPDatabase<OrbitDB> = await openDB<OrbitDB>(name, VERSION, {
       // Sign-out (here or in another tab) deletes the database: an open connection must let go, or the deletion and
       // every later open wait behind it.
       blocking() {
         db.close();
+        invalidate();
+      },
+      terminated() {
+        invalidate();
       },
       upgrade(d, oldVersion, _newVersion, tx) {
         if (oldVersion < 1) {
@@ -102,7 +109,12 @@ export class LocalStore {
         if (oldVersion < 2) tx.objectStore("messages").createIndex("byThread", "threadRootId");
       },
     });
-    return new LocalStore(db, name);
+    const store = new LocalStore(db, name);
+    invalidate = () => {
+      store.invalidated = true;
+      for (const listener of store.invalidationListeners) listener();
+    };
+    return store;
   }
 
   /** The database itself, for the one-time upload of what earlier versions kept on this computer (legacyImport.ts). */
@@ -112,6 +124,27 @@ export class LocalStore {
 
   close(): void {
     this.db.close();
+  }
+
+  /** A logout in another tab must hide this tab's working copy even while its network is offline. */
+  onInvalidated(listener: () => void): () => void {
+    this.invalidationListeners.add(listener);
+    if (this.invalidated) listener();
+    return () => {
+      this.invalidationListeners.delete(listener);
+    };
+  }
+
+  /** One committed local encryption key, including when several tabs initialize it at once. */
+  async localEncryptionKey(key: "snapshotKey" | "accountTokenKey"): Promise<CryptoKey> {
+    const existing = await this.db.get("kv", key);
+    if (existing instanceof CryptoKey) return existing;
+    const candidate = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    const tx = this.db.transaction("kv", "readwrite");
+    const committed = (await tx.store.get(key)) as CryptoKey | undefined;
+    if (!committed) await tx.store.put(candidate, key);
+    await tx.done;
+    return committed ?? candidate;
   }
 
   /** Closes and deletes everything this browser stored, the kept media included. */

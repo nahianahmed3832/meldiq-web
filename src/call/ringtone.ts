@@ -1,4 +1,5 @@
 import { loadSound, playBuffer, RINGTONE_SOUND } from "../application/soundFiles";
+import { claimBrowserResource } from "../application/browserResource";
 
 /**
  * The incoming-call ring: Meldiq's classic phone ring (application/soundFiles.ts, 2026-10-28), looped until answered or
@@ -21,12 +22,29 @@ export class Ringtone {
   private ctx: AudioContext | null = null;
   private timer: ReturnType<typeof setInterval> | undefined;
   private loop: AudioBufferSourceNode | null = null;
+  private release: (() => void) | null = null;
+  private ringing = false;
+  private generation = 0;
 
   /** [enabled]: the person's Call ringtone setting (android Settings › Notifications); off, calls only show. */
   constructor(private readonly enabled: () => boolean = () => true) {}
 
   start(): void {
-    if (this.ctx || typeof AudioContext === "undefined" || !this.enabled()) return;
+    if (this.ringing || typeof AudioContext === "undefined" || !this.enabled()) return;
+    this.ringing = true;
+    const generation = ++this.generation;
+    void claimBrowserResource("meldiq-call-ringtone").then((release) => {
+      if (!this.ringing || generation !== this.generation) {
+        release?.();
+        return;
+      }
+      if (!release) return;
+      this.release = release;
+      this.startAudio();
+    });
+  }
+
+  private startAudio(): void {
     try {
       const ctx = new AudioContext();
       this.ctx = ctx;
@@ -46,6 +64,10 @@ export class Ringtone {
   }
 
   stop(): void {
+    this.ringing = false;
+    this.generation++;
+    this.release?.();
+    this.release = null;
     clearInterval(this.timer);
     this.timer = undefined;
     try {

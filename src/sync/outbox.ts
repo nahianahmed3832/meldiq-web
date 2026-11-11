@@ -46,6 +46,18 @@ export async function sealAndPost(ctx: EngineContext, o: Outgoing, _refresh = fa
       ...(audience ? { audience } : {}),
     },
   });
+  ctx.acceptedInTab?.({
+    id: o.messageId,
+    conversationId: o.conversationId,
+    senderUserId: ctx.device.userId,
+    senderDeviceId: ctx.device.deviceId,
+    cls: o.cls,
+    sentAt: o.sentAt,
+    serverTs: res.serverTs,
+    payload,
+    mentionAll,
+    importedBy: null,
+  });
   return res.serverTs;
 }
 /**

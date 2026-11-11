@@ -21,6 +21,23 @@ export interface AccountDirectory {
 }
 const DIRECTORY_DB = "meldiq-accounts";
 const EMPTY: AccountDirectory = { active: null, accounts: [], pending: null };
+const TAB_ACCOUNT = "meldiq.tab-account";
+function tabAccount(): string | null {
+  try {
+    return typeof sessionStorage === "undefined" ? null : sessionStorage.getItem(TAB_ACCOUNT);
+  } catch {
+    return null;
+  }
+}
+function rememberTabAccount(database: string | null): void {
+  try {
+    if (typeof sessionStorage === "undefined") return;
+    if (database) sessionStorage.setItem(TAB_ACCOUNT, database);
+    else sessionStorage.removeItem(TAB_ACCOUNT);
+  } catch {
+    /* Browser storage may be unavailable. */
+  }
+}
 const open = () => openDB(DIRECTORY_DB, 1, { upgrade: (db) => db.createObjectStore("kv") });
 export async function accountDirectory(): Promise<AccountDirectory> {
   const db = await open();
@@ -49,7 +66,11 @@ export async function accountStoreForBoot(): Promise<{
   store: LocalStore;
 }> {
   const directory = await accountDirectory();
-  const store = await LocalStore.open(directory.pending?.database ?? directory.active ?? DB_NAME);
+  const selected = tabAccount();
+  const valid = selected && (directory.accounts.some((a) => a.database === selected) || directory.pending?.database === selected);
+  const database = valid ? selected : (directory.active ?? (typeof sessionStorage === "undefined" ? directory.pending?.database : null) ?? DB_NAME);
+  rememberTabAccount(database);
+  const store = await LocalStore.open(database);
   const device = await store.device();
   if (device && !directory.accounts.some((a) => a.database === store.name)) {
     return { directory: await rememberAccount(store.name, device), store };
@@ -89,12 +110,14 @@ export async function selectAccount(database: string): Promise<void> {
     d.active = database;
     d.pending = null;
   });
+  rememberTabAccount(database);
   if (before.pending && before.pending.database !== database) await LocalStore.erase(null, before.pending.database);
 }
 export async function startAddingAccount(): Promise<void> {
-  await change((d) => {
+  const directory = await change((d) => {
     if (!d.pending) d.pending = { database: `orbit-web-account-${crypto.randomUUID()}`, returnTo: d.active };
   });
+  rememberTabAccount(directory.pending!.database);
 }
 export async function cancelAddingAccount(): Promise<void> {
   const before = await accountDirectory();
@@ -102,9 +125,11 @@ export async function cancelAddingAccount(): Promise<void> {
     d.pending = null;
   });
   if (before.pending) await LocalStore.erase(null, before.pending.database);
+  rememberTabAccount(before.pending?.returnTo ?? before.active);
 }
 /** Removing one account never erases another account's database or tokens. */
 export async function forgetAccount(database: string): Promise<AccountDirectory> {
+  if (tabAccount() === database) rememberTabAccount(null);
   return change((d) => {
     d.accounts = d.accounts.filter((a) => a.database !== database);
     if (d.active === database) d.active = d.accounts[0]?.database ?? null;

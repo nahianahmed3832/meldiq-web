@@ -34,7 +34,8 @@ import type { MediaFactory } from "../call/types";
 import { fingerprint } from "../crypto/identity";
 import type { DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
-import { RealtimeClient } from "../realtime/socket";
+import { TabRealtimeClient } from "../realtime/tabClient";
+import { TabDrafts } from "../store/tabDrafts";
 import type { CallPrefs } from "../call/manager";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
 import { SnapshotKeeper, SnapshotVault, withSnapshot } from "./snapshot";
@@ -161,7 +162,9 @@ export class Engine implements EngineContext {
   readonly community: CommunitySync;
   private readonly compose: Compose;
   private readonly locals: ConversationLocals;
-  private readonly realtime: RealtimeClient;
+  private readonly realtime: TabRealtimeClient;
+  readonly tabDrafts: TabDrafts;
+  private draftSaveFailed = false;
   private readonly receiver: Receiver;
   private readonly outbox: Outbox;
   private viewingId: string | null = null;
@@ -204,6 +207,7 @@ export class Engine implements EngineContext {
     state?: Store,
   ) {
     this.record = device;
+    this.tabDrafts = new TabDrafts(store, device.userId, device.deviceId);
     this.state = state ?? new Store(initialState);
     this.session = device.account
       ? new AccountSession(opts.base, new TokenVault(store), (why) => this.accountSessionEnded(why))
@@ -226,12 +230,19 @@ export class Engine implements EngineContext {
         describe: (conversationId) => this.describeConversation(conversationId),
         displayName: (userId) => this.state.get().users[userId]?.displayName ?? null,
         recordCall: (callId, conversationId, video) => this.callLog.recordOwn(callId, conversationId, video),
-        ringAlert: opts.ringAlert,
+        ringAlert: (title, video, id) => {
+          if (this.realtime.canNotify()) opts.ringAlert?.(title, video, id);
+        },
       },
       {
         media: opts.media ?? unavailableMedia,
         supported: opts.callSupported ?? (() => !!opts.media && callSupport().ok),
-        ringtone: opts.ringtone,
+        ringtone: {
+          start: () => {
+            if (this.realtime.canNotify()) opts.ringtone?.start();
+          },
+          stop: () => opts.ringtone?.stop(),
+        },
         callPrefs: opts.callPrefs,
         ...opts.callTiming,
       },
@@ -304,7 +315,7 @@ export class Engine implements EngineContext {
         await this.api.json("POST", "/v1/analytics/events", z.unknown(), { body: { platform: "web", events } });
       },
     });
-    this.realtime = new RealtimeClient({
+    this.realtime = new TabRealtimeClient(JSON.stringify([opts.base, store.name, device.userId, device.deviceId]), {
       url: opts.wsUrl,
       token: () => this.session.token(),
       onFrame: (f) => this.onFrame(f),
@@ -339,10 +350,12 @@ export class Engine implements EngineContext {
     const opened = this.opened;
     this.opened = null;
     await (opened ?? this.openLocal());
+    if (this.stopped) return;
     if (!grant && !(await this.session.reauthenticate())) {
       const phase = this.state.get().phase;
       if (phase === "revoked" || phase === "reauth") return;
     }
+    if (this.stopped) return;
     this.realtime.start();
     this.snapshots.start();
     void this.refreshAll().then(async () => {
@@ -372,6 +385,9 @@ export class Engine implements EngineContext {
     await this.loadLocal();
     this.unfollowed = await unfollowedThreads(this.store);
     await this.drawSnapshot();
+    if (!(this.session instanceof AccountSession) || (await this.session.restorable())) {
+      for (const [id, draft] of Object.entries(await this.tabDrafts.load())) await this.locals.saveDraft(id, draft);
+    }
     // Pending work is recovered independently of the bounded app snapshot, before any network wait.
     for (const id of await this.store.messageIds()) {
       const m = await this.store.message(id);
@@ -828,13 +844,34 @@ export class Engine implements EngineContext {
     await this.startBackup();
   }
   // ───────────────────────── realtime frames ─────────────────────────
+  acceptedInTab(event: z.infer<typeof zStoredEvent>): void {
+    this.realtime.publish({ t: "tab.accepted", event });
+  }
   private async onFrame(raw: Frame): Promise<void> {
     if (this.stopped) return;
+    if (raw.t === "tab.accepted") {
+      const result = zStoredEvent.safeParse(raw.event);
+      if (!result.success || result.data.senderUserId !== this.device.userId || result.data.senderDeviceId !== this.device.deviceId) return;
+      const event = result.data;
+      await this.receiver.ingest(event);
+      if (event.cls === "message") {
+        await this.markSent(event.id, event.serverTs);
+        await this.store.removeOutbox(event.id);
+      }
+      return;
+    }
     const f = parseFrame(raw);
     if (!f) return;
     switch (f.t) {
       case "hello":
-        void this.refreshAll();
+        void this.refreshAll()
+          .then(() => {
+            // A tab may have slept while another tab acknowledged delivery. Refresh the visible newest window from
+            // server history as well as metadata; preserve a deliberately detached search/older window.
+            const id = this.viewingId;
+            if (!this.stopped && id && this.viewReady && this.readingLatest && !this.state.get().messages[id]?.detached) return this.loadLatest(id);
+          })
+          .catch(() => undefined);
         this.outbox.kick();
         return;
       case "queue": {
@@ -1077,6 +1114,13 @@ export class Engine implements EngineContext {
   /** A conversation's unsent text, kept with this browser's other local data (never in localStorage). */
   async saveDraft(conversationId: string, text: string): Promise<void> {
     await this.locals.saveDraft(conversationId, text);
+    try {
+      await this.tabDrafts.save(conversationId, text);
+      this.draftSaveFailed = false;
+    } catch {
+      if (!this.stopped && !this.draftSaveFailed) this.notice("error", uiText("workspace.experience.draftNotSavedInTab"));
+      this.draftSaveFailed = true;
+    }
     // Locals are an in-memory working set. Drafts must reach the existing sealed snapshot before a reload.
     await this.snapshots.flush();
   }
@@ -1096,7 +1140,7 @@ export class Engine implements EngineContext {
    * "none" (muted) only a mention of them by name.
    */
   notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void {
-    if (!this.opts.notify || (this.focused && this.viewingId === m.conversationId)) return;
+    if (!this.opts.notify || (this.focused && this.viewingId === m.conversationId) || !this.realtime.canNotify(m.conversationId)) return;
     // Batch B6: a message request arrives without a notification (it waits under DMs › Message requests).
     if (conversation?.request?.incoming) return;
     if (m.threadRootId && this.unfollowed.has(m.threadRootId) && mention !== "me") return;
@@ -1204,6 +1248,7 @@ export class Engine implements EngineContext {
   async openConversation(id: string | null): Promise<void> {
     const opening = ++this.openVersion;
     this.viewingId = id;
+    this.realtime.attention(this.focused, id);
     this.readingLatest = false;
     this.viewReady = false;
     if (!id) return;
@@ -1330,6 +1375,7 @@ export class Engine implements EngineContext {
   }
   setFocused(focused: boolean): void {
     this.focused = focused;
+    this.realtime.attention(focused, this.viewingId);
     if (focused && this.viewing()) this.markReadSoon(this.viewingId!);
   }
   loadOlder(id: string): Promise<void> {

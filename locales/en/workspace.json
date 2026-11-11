@@ -2316,6 +2316,7 @@
     "viewSaveError": "Your filters couldn’t be saved on this browser. Keep this page open and retry.",
     "savingCollection": "Saving…",
     "clearQuery": "Clear search",
-    "noPeopleMatches": "No people match this search. Try another name or clear your search."
+    "noPeopleMatches": "No people match this search. Try another name or clear your search.",
+    "draftNotSavedInTab": "Your draft couldn’t be saved in this tab. Keep it open and copy the text before reloading."
   }
 }

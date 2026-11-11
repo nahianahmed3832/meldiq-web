@@ -30,9 +30,7 @@ export class TokenVault {
   private async key(): Promise<CryptoKey> {
     const existing = await this.store.getValue<CryptoKey>(KEY);
     if (existing instanceof CryptoKey) return existing;
-    const key = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
-    await this.store.setValue(KEY, key);
-    return key;
+    return this.store.localEncryptionKey(KEY);
   }
 
   async save(tokens: AccountTokens): Promise<void> {

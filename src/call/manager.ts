@@ -1,4 +1,5 @@
 import { text as uiText } from "../i18n";
+import { claimBrowserResource } from "../application/browserResource";
 import { ScreenShareUnavailable } from "./screenShareSupport";
 import { type ApiClient, ApiError } from "../api/client";
 import { type Call, zCallGrant, zCallList, zCallRes } from "../api/schemas";
@@ -94,6 +95,7 @@ export class CallManager {
   /** Calls declined here (the server tells only the caller about a group-call decline; the history line needs it). */
   private readonly declined = new Set<string>();
   private session: MediaSession | null = null;
+  private releaseMedia: (() => void) | null = null;
   /** Bumped when an attempt starts or ends: work for an older attempt stops at its next check. */
   private gen = 0;
   /** This browser created the current call (so it ends it on the server if it fails). */
@@ -202,6 +204,13 @@ export class CallManager {
   }
   /** Capture follows the selected join policy before any track can be published. */
   private async prepare(gen: number, session: MediaSession, video: boolean, needMicrophone: boolean): Promise<void> {
+    const release = await claimBrowserResource(`meldiq-call:${this.host.me.userId}:${this.host.me.deviceId}`);
+    if (gen !== this.gen) {
+      release?.();
+      throw new Superseded();
+    }
+    if (!release) throw new CallError(uiText("calls.call_why_busy"));
+    this.releaseMedia = release;
     const listenOnly = this.state.listenOnly;
     this.patch({ askingPermission: true });
     const prefs = this.opts.callPrefs?.();
@@ -441,7 +450,7 @@ export class CallManager {
         return;
       case "updated":
         if (!current || this.state.phase !== "incoming") return;
-        if (call.participants?.some((p) => p.userId === this.host.me.userId && p.deviceId !== this.host.me.deviceId)) this.finish("answered elsewhere", false);
+        if (call.participants?.some((p) => p.userId === this.host.me.userId)) this.finish("answered elsewhere", false);
         else if (call.state === "ACTIVE" && this.state.isGroup) this.opts.ringtone?.stop(); // a group call already running: keep the card, stop ringing
         return;
       default:
@@ -796,7 +805,14 @@ export class CallManager {
     this.opts.ringtone?.stop();
     const session = this.session;
     this.session = null;
-    void session?.disconnect().catch(() => undefined);
+    const release = this.releaseMedia;
+    this.releaseMedia = null;
+    if (session)
+      void session
+        .disconnect()
+        .catch(() => undefined)
+        .finally(() => release?.());
+    else release?.();
   }
   private scheduleReset(gen: number, ms: number): void {
     clearTimeout(this.resetTimer);
