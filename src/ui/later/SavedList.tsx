@@ -1,6 +1,7 @@
 import { useT } from "../../i18n";
 import { formatDate } from "../../i18n/format";
-import { getSavedCollections, updateSavedCollection, type CollectionOp, type SavedCollection } from "../../sync/savedCollections";
+import type { CollectionOp, SavedCollection } from "../../sync/savedCollections";
+import type { LaterViewState } from "../../application/laterView";
 import { useAction, useLoad } from "../workspace/useLoad";
 import { CollectionEditor } from "./CollectionControls";
 import { Dialog } from "../components/Overlay";
@@ -8,11 +9,10 @@ import { openInApp } from "../chat/inAppLinks";
 import { messageLink } from "../../sync/messageLinks";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
-import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
 import { MeldlingArt } from "../components/MeldlingArt";
 import { AlarmClock, Check, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { PERSONAL, type SavedItem, savedDone, savedOpen } from "../../sync/navPrefs";
@@ -20,105 +20,268 @@ import { preview } from "../../sync/rules";
 import { conversationTitle } from "../format";
 import { RemindMeDialog } from "./RemindMeDialog";
 import { whenLabel } from "./when";
-/**
- * Saved for later (android Home › Later): the messages the person saved, synced across their devices (ids and times
- * only; each message is read from this browser's encrypted copy). Open ones first, then done.
- */
-export function SavedList() {
-  useLocaleRender();
+import { useSavedCollections } from "./useSavedCollections";
+
+/** Saved references sync across devices; content is read only from an accessible conversation in this browser. */
+export function SavedList({ view, onViewChange, onSearch }: { view: LaterViewState; onViewChange: (patch: Partial<LaterViewState>) => void; onSearch: () => void }) {
   const t = useT();
   const engine = useEngine();
   const prefs = useOrbit((s) => s.nav[PERSONAL]);
+  const synced = useOrbit((s) => s.synced);
   const supported = useOrbit((s) => s.server?.features.includes("saved-items") ?? false);
   const collectionsOn = useOrbit((s) => s.server?.features.includes("saved-collections") ?? false);
   const conversations = useOrbit((s) => s.conversations);
   const users = useOrbit((s) => s.users);
   const me = useOrbit((s) => s.me);
-  const [filter, setFilter] = useState("open");
-  const [query, setQuery] = useState("");
-  const [collectionId, setCollectionId] = useState("");
+  const { filter, query, collectionId } = view;
   const [editor, setEditor] = useState<"new" | SavedCollection | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [limit, setLimit] = useState(20);
-  const collections = useLoad(() => collectionsOn ? getSavedCollections(engine.api) : Promise.resolve([]), [engine, collectionsOn, prefs?.saved]);
+  const input = useRef<HTMLInputElement>(null);
+  const mutationLock = useRef(false);
+  const collections = useSavedCollections(engine.api, collectionsOn, prefs?.saved);
   const act = useAction();
-  const mutate = (op: CollectionOp) => act.act(async () => {
-    await updateSavedCollection(engine.api, op);
-    collections.reload();
-  });
+  const mutate = (op: CollectionOp) => {
+    if (mutationLock.current) return Promise.resolve(false);
+    mutationLock.current = true;
+    return act
+      .act(() => collections.mutate(op))
+      .finally(() => {
+        mutationLock.current = false;
+      });
+  };
+  const change = (patch: Partial<LaterViewState>) => {
+    onViewChange(patch);
+    setLimit(20);
+  };
+  const clear = () => {
+    change({ query: "", filter: "all", collectionId: "" });
+    input.current?.focus();
+  };
   const saved = prefs?.saved;
   const word = query.trim().toLocaleLowerCase();
   const previews = useLoad(async () => {
-    if (!word) return new Set<string>();
-    const found = await Promise.all((saved ?? []).filter((i) => !!conversations[i.conversationId]).map(async (i) => {
-      const m = await engine.store.message(i.messageId);
-      return m && !m.deleted && m.conversationId === i.conversationId && preview(m).toLocaleLowerCase().includes(word) ? i.messageId : null;
-    }));
-    return new Set(found);
+    if (!word) return { word, ids: new Set<string>() };
+    const found = await Promise.all(
+      (saved ?? [])
+        .filter((i) => !!conversations[i.conversationId])
+        .map(async (i) => {
+          const m = await engine.store.message(i.messageId);
+          return m && !m.deleted && m.conversationId === i.conversationId && preview(m).toLocaleLowerCase().includes(word) ? i.messageId : null;
+        }),
+    );
+    return { word, ids: new Set(found) };
   }, [engine, saved, conversations, word]);
   const collection = collections.data?.find((c) => c.id === collectionId);
+  const collectionUnavailable = !!collectionId && (!collectionsOn || (!!collections.data && !collections.loading && !collections.error && !collection));
   const ids = collection && new Set(collection.messageIds);
   const all = [...savedOpen(prefs), ...savedDone(prefs)];
   const visible = all.filter((i) => {
-    if (ids && !ids.has(i.messageId)) return false;
+    if (collectionId && (!ids || !ids.has(i.messageId))) return false;
     if ((filter === "open" && i.done) || (filter === "done" && !i.done)) return false;
     if (!word) return true;
     const c = conversations[i.conversationId];
-    return !!(c && me && conversationTitle(c, me.userId, users).toLocaleLowerCase().includes(word)) || !!previews.data?.has(i.messageId);
+    return !!(c && me && conversationTitle(c, me.userId, users).toLocaleLowerCase().includes(word)) || !!(c && previews.data?.word === word && previews.data.ids.has(i.messageId));
   });
-  if (!supported)
-    return <p className="faint"><Localized k="workspace.interface.this_meldiq_server_doesn_t_keep_saved_messages_yet_bd4799e" /></p>;
+  const waiting = (!synced && !prefs) || (collectionsOn && collections.loading && !collections.data) || !!(word && (previews.loading || (!previews.error && previews.data?.word !== word)));
+  const failed = !!(word && previews.error) || !!(collectionId && collections.error);
+  const filtered = !!word || !!collectionId || filter !== "all";
+  if (synced && !supported) return <p className="muted">{t("workspace.interface.this_meldiq_server_doesn_t_keep_saved_messages_yet_bd4799e")}</p>;
   return (
-    <div className="experience-panel" style={{ padding: 0 }}>
-      <div className="experience-controls">
-        <label>{t("workspace.experience.findSaved")}<input className="input input-sm" value={query} onChange={(e) => { setQuery(e.target.value); setLimit(20); }} maxLength={100} /></label>
-        <label>{t("messaging.interface.show_0df6f1c")}
-          <select className="input input-sm" value={filter} onChange={(e) => { setFilter(e.target.value); setLimit(20); }}>
-            <option value="open">{t("workspace.experience.openSaved")}</option>
-            <option value="done">{t("common.actions.done")}</option>
-            <option value="all">{t("settings.ap_all")}</option>
-          </select>
-        </label>
-        {collectionsOn && <>
-          <label>{t("workspace.experience.collections")}
-            <select className="input input-sm" value={collectionId} onChange={(e) => { setCollectionId(e.target.value); setLimit(20); }}>
-              <option value="">{t("workspace.experience.allSaved")}</option>
-              {(collections.data ?? []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+    <div className="experience-panel saved-panel">
+      <div className="saved-toolbar">
+        <div className="saved-filters" role="search" aria-label={t("workspace.experience.findSaved")}>
+          <label className="saved-query">
+            {t("workspace.experience.findSaved")}
+            <input
+              ref={input}
+              className="input"
+              type="search"
+              value={query}
+              onChange={(e) => change({ query: e.target.value })}
+              maxLength={100}
+              placeholder={t("workspace.experience.savedSearchHint")}
+            />
+          </label>
+          <label>
+            {t("messaging.interface.show_0df6f1c")}
+            <select className="input" value={filter} onChange={(e) => change({ filter: e.target.value as LaterViewState["filter"] })}>
+              <option value="open">{t("workspace.experience.openSaved")}</option>
+              <option value="done">{t("common.actions.done")}</option>
+              <option value="all">{t("settings.ap_all")}</option>
             </select>
           </label>
-          <button className="btn btn-secondary btn-sm" disabled={act.busy || !collections.data || collections.data.length >= 20} onClick={() => { act.clear(); setEditor("new"); }}>{t("workspace.experience.newCollection")}</button>
-          {collection && <>
-            <button className="btn btn-ghost btn-sm" disabled={act.busy} onClick={() => { act.clear(); setEditor(collection); }}>{t("workspace.experience.renameCollection")}</button>
-            <button className="btn btn-danger-quiet btn-sm" disabled={act.busy} onClick={() => { act.clear(); setDeleting(true); }}>{t("workspace.experience.deleteCollection")}</button>
-          </>}
-        </>}
+          {collectionsOn && (
+            <label>
+              {t("workspace.experience.collections")}
+              <select className="input" value={collectionId} onChange={(e) => change({ collectionId: e.target.value })} disabled={!collections.data}>
+                <option value="">{t("workspace.experience.allSaved")}</option>
+                {collectionId && !collection && <option value={collectionId}>{t(collections.loading ? "workspace.experience.loading" : "workspace.experience.unavailableCollection")}</option>}
+                {(collections.data ?? []).map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+        </div>
+        <div className="saved-tools">
+          {collectionsOn && (
+            <button
+              className="btn btn-secondary btn-sm"
+              disabled={act.busy || !collections.data || collections.data.length >= 20}
+              onClick={(event) => {
+                event.currentTarget.focus();
+                act.clear();
+                setEditor("new");
+              }}
+            >
+              {t("workspace.experience.newCollection")}
+            </button>
+          )}
+          <span className="grow" />
+          <button className="btn btn-ghost btn-sm" disabled={!filtered} onClick={clear}>
+            {t("workspace.experience.clearFilters")}
+          </button>
+        </div>
       </div>
-      {!editor && !deleting && (collections.error || previews.error || act.error) && <div className="banner danger" role="alert">
-        {collections.error ?? previews.error ?? act.error} <button className="btn btn-ghost btn-sm" onClick={() => { act.clear(); collections.reload(); previews.reload(); }}>{t("workspace.experience.retry")}</button>
-      </div>}
-      {((collectionsOn && collections.loading && !collections.data) || (word && previews.loading)) && <div className="experience-skeleton" role="status" aria-label={t("workspace.experience.loading")} />}
-      {!(word && previews.loading) && visible.length === 0 && <div className="empty">
-        <MeldlingArt pose="love" />
-        <h2>{all.length ? t("workspace.experience.noSavedMatches") : uiText("workspace.interface.nothing_saved_e620849")}</h2>
-        {!all.length && <p><Localized k="workspace.interface.save_a_message_for_later_from_its_menu_save_for_later_it_shows_up_bc76302" /></p>}
-      </div>}
-      {!(word && previews.loading) && visible.slice(0, limit).map((i) => (
-        <SavedRow key={i.messageId} item={i} collections={collections.data ?? []} busy={act.busy} mutate={mutate} />
-      ))}
-      {visible.length > limit && <button className="btn btn-secondary btn-sm" onClick={() => setLimit(limit + 20)}>{t("workspace.discover_more")}</button>}
-      {editor && <CollectionEditor collection={editor === "new" ? undefined : editor} busy={act.busy} error={act.error} save={mutate} close={() => setEditor(null)} />}
-      {deleting && collection && <Dialog title={t("workspace.experience.deleteCollection")} onClose={() => setDeleting(false)} footer={
+      {collection && (
+        <div className="saved-collection-heading">
+          <h2>{collection.name}</h2>
+          <div className="experience-heading-actions">
+            <button
+              className="btn btn-ghost btn-sm"
+              disabled={act.busy}
+              onClick={(event) => {
+                event.currentTarget.focus();
+                act.clear();
+                setEditor(collection);
+              }}
+            >
+              {t("workspace.experience.renameCollection")}
+            </button>
+            <button
+              className="btn btn-danger-quiet btn-sm"
+              disabled={act.busy}
+              onClick={(event) => {
+                event.currentTarget.focus();
+                act.clear();
+                setDeleting(true);
+              }}
+            >
+              {t("workspace.experience.deleteCollection")}
+            </button>
+          </div>
+        </div>
+      )}
+      {!editor && !deleting && (collections.error || previews.error || act.error) && (
+        <div className="banner danger" role="alert">
+          {collections.error ?? previews.error ?? act.error}{" "}
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => {
+              act.clear();
+              collections.reload();
+              previews.reload();
+            }}
+          >
+            {t("workspace.experience.retry")}
+          </button>
+        </div>
+      )}
+      {collectionUnavailable && (
+        <div className="saved-empty" role="status">
+          <h2>{t("workspace.experience.unavailableCollection")}</h2>
+          <p>{t("workspace.experience.unavailableCollectionHelp")}</p>
+          <button className="btn btn-secondary" onClick={() => change({ collectionId: "" })}>
+            {t("workspace.experience.allSaved")}
+          </button>
+        </div>
+      )}
+      {waiting && (
+        <div className="saved-loading" role="status" aria-label={t("workspace.experience.loading")}>
+          <div className="experience-skeleton" />
+          <div className="experience-skeleton" />
+          <div className="experience-skeleton" />
+        </div>
+      )}
+      {!waiting && !failed && !collectionUnavailable && (
         <>
-          <button className="btn btn-secondary" onClick={() => setDeleting(false)}>{t("common.actions.cancel")}</button>
-          <button className="btn btn-danger" disabled={act.busy} onClick={() => void mutate({ op: "delete", id: collection.id }).then((ok) => {
-            if (ok) { setCollectionId(""); setDeleting(false); }
-          })}>{t("workspace.experience.deleteCollection")}</button>
+          <p className="saved-result-count" role="status">
+            {t("workspace.experience.savedResults", { count: visible.length })}
+          </p>
+          {visible.length === 0 ? (
+            <div className="saved-empty">
+              <MeldlingArt pose="love" />
+              <h2>{all.length ? t("workspace.experience.noSavedMatches") : t("workspace.interface.nothing_saved_e620849")}</h2>
+              <p>{t(all.length ? "workspace.experience.noSavedMatchesHelp" : "workspace.interface.save_a_message_for_later_from_its_menu_save_for_later_it_shows_up_bc76302")}</p>
+              <button
+                className="btn btn-primary"
+                onClick={(event) => {
+                  event.currentTarget.focus();
+                  if (all.length) clear();
+                  else onSearch();
+                }}
+              >
+                {t(all.length ? "workspace.experience.clearFilters" : "workspace.interface.search_meldiq_7c5a6e1")}
+              </button>
+            </div>
+          ) : (
+            <div className="saved-results">
+              {visible.slice(0, limit).map((i) => (
+                <SavedRow key={i.messageId} item={i} collections={collections.data ?? []} busy={act.busy} mutate={mutate} />
+              ))}
+            </div>
+          )}
+          {visible.length > limit && (
+            <button className="btn btn-secondary btn-sm" onClick={() => setLimit(limit + 20)}>
+              {t("workspace.discover_more")}
+            </button>
+          )}
         </>
-      }><div className="dialog-body"><p>{t("workspace.experience.deleteCollectionHelp")}</p>{act.error && <p className="banner danger" role="alert">{act.error}</p>}</div></Dialog>}
-      <p className="faint" style={{ fontSize: 12, margin: 0 }}>
+      )}
+      {editor && <CollectionEditor collection={editor === "new" ? undefined : editor} busy={act.busy} error={act.error} save={mutate} close={() => setEditor(null)} />}
+      {deleting && collection && (
+        <Dialog
+          title={t("workspace.experience.deleteCollection")}
+          onClose={() => setDeleting(false)}
+          footer={
+            <>
+              <button className="btn btn-secondary" onClick={() => setDeleting(false)}>
+                {t("common.actions.cancel")}
+              </button>
+              <button
+                className="btn btn-danger"
+                disabled={act.busy}
+                onClick={() =>
+                  void mutate({ op: "delete", id: collection.id }).then((ok) => {
+                    if (ok) {
+                      change({ collectionId: "" });
+                      setDeleting(false);
+                    }
+                  })
+                }
+              >
+                {t("workspace.experience.deleteCollection")}
+              </button>
+            </>
+          }
+        >
+          <div className="dialog-body">
+            <p>{t("workspace.experience.deleteCollectionHelp")}</p>
+            {act.error && (
+              <p className="banner danger" role="alert">
+                {act.error}
+              </p>
+            )}
+          </div>
+        </Dialog>
+      )}
+      <p className="saved-footnote">
         {engine.state.get().reminders.available
-          ? uiText("workspace.interface.reminders_on_saved_messages_go_off_on_all_your_devices_even_with_18652e8")
-          : uiText("workspace.interface.reminders_on_saved_messages_show_while_meldiq_is_open_on_a_device_9da64ef")}
+          ? t("workspace.interface.reminders_on_saved_messages_go_off_on_all_your_devices_even_with_18652e8")
+          : t("workspace.interface.reminders_on_saved_messages_show_while_meldiq_is_open_on_a_device_9da64ef")}
       </p>
     </div>
   );
@@ -157,7 +320,11 @@ function SavedRow({ item, collections, busy, mutate }: { item: SavedItem; collec
             {sender ? uiText("calls.interface.value0_9402340", { value0: sender }) : ""}
           </small>
           <span className="later-text">
-            {conversation && message === undefined ? "…" : accessible && !accessible.deleted ? preview(accessible) || l10n("messaging.message") : uiText("workspace.interface.open_the_conversation_to_see_this_message_3a90a91")}
+            {conversation && message === undefined
+              ? "…"
+              : accessible && !accessible.deleted
+                ? preview(accessible) || l10n("messaging.message")
+                : uiText("workspace.interface.open_the_conversation_to_see_this_message_3a90a91")}
           </span>
           <small>{formatDate(item.savedAt, { dateStyle: "medium" })}</small>
         </span>
@@ -179,16 +346,27 @@ function SavedRow({ item, collections, busy, mutate }: { item: SavedItem; collec
           <Trash2 size={14} />
         </button>
       </div>
-      {conversation && collections.length > 0 && <label className="field">
-        {l10n("workspace.experience.collectionMembership")}
-        <select className="input input-sm" value="" disabled={busy} onChange={(e) => {
-          const c = collections.find((entry) => entry.id === e.target.value);
-          if (c) void mutate({ op: c.messageIds.includes(item.messageId) ? "remove" : "add", id: c.id, messageId: item.messageId });
-        }}>
-          <option value="">{l10n("workspace.experience.chooseCollection")}</option>
-          {collections.map((c) => <option key={c.id} value={c.id}>{l10n(c.messageIds.includes(item.messageId) ? "workspace.experience.removeFrom" : "workspace.experience.addTo", { name: c.name })}</option>)}
-        </select>
-      </label>}
+      {conversation && collections.length > 0 && (
+        <label className="field">
+          {l10n("workspace.experience.collectionMembership")}
+          <select
+            className="input input-sm"
+            value=""
+            disabled={busy}
+            onChange={(e) => {
+              const c = collections.find((entry) => entry.id === e.target.value);
+              if (c) void mutate({ op: c.messageIds.includes(item.messageId) ? "remove" : "add", id: c.id, messageId: item.messageId });
+            }}
+          >
+            <option value="">{l10n("workspace.experience.chooseCollection")}</option>
+            {collections.map((c) => (
+              <option key={c.id} value={c.id}>
+                {l10n(c.messageIds.includes(item.messageId) ? "workspace.experience.removeFrom" : "workspace.experience.addTo", { name: c.name })}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       {reminding && (
         <RemindMeDialog
           title={uiText("messaging.interface.remind_me_about_this_message_e8c7aaa")}

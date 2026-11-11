@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useT } from "../../i18n";
 import type { CollectionOp, SavedCollection } from "../../sync/savedCollections";
 import { Dialog } from "../components/Overlay";
@@ -19,10 +19,11 @@ export function CollectionEditor({
   const t = useT();
   const [name, setName] = useState(collection?.name ?? "");
   const [id] = useState(() => collection?.id ?? crypto.randomUUID());
+  const errorId = useId();
   return (
     <Dialog title={t(collection ? "workspace.experience.renameCollection" : "workspace.experience.newCollection")} onClose={close}>
       <form
-        className="dialog-body experience-panel"
+        className="dialog-body experience-panel collection-editor"
         onSubmit={(event) => {
           event.preventDefault();
           if (!busy && name.trim())
@@ -33,15 +34,15 @@ export function CollectionEditor({
       >
         <label className="field">
           {t("workspace.experience.collectionName")}
-          <input className="input" data-autofocus required maxLength={60} value={name} onChange={(event) => setName(event.target.value)} />
+          <input className="input" data-autofocus required maxLength={60} value={name} aria-describedby={error ? errorId : undefined} onChange={(event) => setName(event.target.value)} />
         </label>
         {error && (
-          <p className="banner danger" role="alert">
+          <p id={errorId} className="banner danger" role="alert">
             {error}
           </p>
         )}
         <button className="btn btn-primary" disabled={busy || !name.trim()}>
-          {t("common.actions.save")}
+          {t(busy ? "workspace.experience.savingCollection" : "common.actions.save")}
         </button>
       </form>
     </Dialog>

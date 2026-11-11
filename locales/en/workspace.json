@@ -2298,6 +2298,24 @@
     "feedbackSummary": "Short title",
     "feedbackDetails": "What would you like us to know?",
     "feedbackPrivacy": "Staff receive what you type, the app section, and the app version. Leave out passwords and private messages.",
-    "feedbackValidation": "Enter a title of at least four characters and details of at least ten characters."
+    "feedbackValidation": "Enter a title of at least four characters and details of at least ten characters.",
+    "messagesIntro": "Start a conversation, pick up where you left off, or find a friend.",
+    "laterIntro": "Keep useful messages close. Find them here when you’re ready to follow up.",
+    "savedTab": "Saved",
+    "remindersTab": "Reminders",
+    "savedSearchHint": "Message text or conversation name",
+    "clearFilters": "Clear filters",
+    "savedResults": "{count, plural, one {# saved message} other {# saved messages}}",
+    "noSavedMatchesHelp": "Try a different word, or clear the filters to see all your saved messages.",
+    "unavailableCollection": "Collection unavailable",
+    "unavailableCollectionHelp": "This collection may have been removed. Choose another collection or return to all saved messages.",
+    "viewScope": "Filters stay with this account on this browser.",
+    "rememberingView": "Remembering this view…",
+    "viewNotRemembered": "View not remembered",
+    "viewLoadError": "Your previous view couldn’t be restored. You can keep browsing or retry.",
+    "viewSaveError": "Your filters couldn’t be saved on this browser. Keep this page open and retry.",
+    "savingCollection": "Saving…",
+    "clearQuery": "Clear search",
+    "noPeopleMatches": "No people match this search. Try another name or clear your search."
   }
 }

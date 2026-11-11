@@ -55,8 +55,9 @@ export const DB_NAME = "orbit-web";
 const VERSION = 3;
 
 /**
- * The only values written to disk: this browser's device (its sign-in keys), the account session's sealed tokens, and
- * the sealed snapshot with its key (sync/snapshot.ts SNAPSHOT_KEY, SNAPSHOT_CRYPTO_KEY).
+ * Values the generic getValue/setValue methods persist: device/session material, the sealed snapshot and support keys.
+ * Account-local history and Later view preferences use the dedicated methods below; message contents stay in the
+ * existing encrypted snapshot/outgoing storage paths.
  */
 const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.imported", "snapshot", "snapshotKey", "plusSupport"]);
 
@@ -134,6 +135,15 @@ export class LocalStore {
     if (JSON.stringify(current) !== JSON.stringify(next)) await tx.store.put(next, key);
     await tx.done;
     return next;
+  }
+
+  /** Later's view belongs to this account on this browser and is erased with its database on sign-out. */
+  async laterView(): Promise<unknown> {
+    return this.db.get("kv", "laterView");
+  }
+
+  async saveLaterView(value: unknown): Promise<void> {
+    await this.db.put("kv", value, "laterView");
   }
 
   // ───── device ─────

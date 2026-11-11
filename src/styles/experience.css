@@ -127,3 +127,295 @@
 .spark-composer .btn {
   min-block-size: 44px;
 }
+
+/* Shared hierarchy for the existing Messages entry and Later workflow. */
+.experience-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+  min-inline-size: 0;
+}
+.experience-heading > div:first-child {
+  min-inline-size: 0;
+}
+.experience-heading h1 {
+  margin: 0;
+  font-size: var(--fs-3xl);
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+.experience-heading p {
+  margin: var(--s-2) 0 0;
+  color: var(--text-2);
+  line-height: 1.6;
+  max-inline-size: 56ch;
+}
+.experience-heading-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  flex-shrink: 0;
+}
+.experience-heading-actions .btn {
+  min-block-size: 44px;
+  text-decoration: none;
+}
+.friends-refresh .friends-body {
+  padding: var(--s-8);
+  gap: var(--s-6);
+}
+.friends-refresh .friends-head {
+  padding: 0 0 var(--s-3);
+  flex-wrap: wrap;
+  overflow: visible;
+}
+.friends-refresh .friends-tabs {
+  flex-wrap: wrap;
+}
+.friends-refresh .friends-tab {
+  min-block-size: 44px;
+}
+.friends-refresh .friends-tab.add:not([aria-selected="true"]) {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.friends-refresh .friends-search {
+  min-block-size: 44px;
+}
+.friends-refresh .friends-search:not(:focus-within),
+.saved-panel .input:not(:focus-within),
+.collection-editor .input:not(:focus-within) {
+  border-color: var(--outline);
+}
+.collection-editor :is(.input, .btn) {
+  min-block-size: 44px;
+}
+.friends-refresh .friends-search input {
+  min-inline-size: 0;
+}
+.saved-filters input::placeholder,
+.friends-refresh .friends-search input::placeholder {
+  color: var(--text-2);
+  opacity: 1;
+}
+.friends-refresh .experience-panel {
+  gap: var(--s-2);
+  border-radius: var(--r-lg);
+}
+.friends-refresh .experience-panel h2 {
+  font-size: var(--fs-lg);
+}
+.later-view .view-inner {
+  max-inline-size: 960px;
+  gap: var(--s-6);
+}
+.later-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-block-end: var(--s-4);
+  border-block-end: 1px solid var(--hairline);
+}
+.later-navigation .segmented {
+  max-inline-size: 100%;
+}
+.later-navigation [role="tab"] {
+  min-block-size: 44px;
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  justify-content: center;
+}
+.later-view-status,
+.saved-result-count,
+.saved-footnote {
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  margin: 0;
+}
+.later-view-status {
+  min-block-size: 1.6em;
+}
+.saved-panel {
+  padding: 0;
+  gap: var(--s-4);
+}
+.saved-toolbar {
+  padding: var(--s-4);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  display: grid;
+  gap: var(--s-3);
+}
+.saved-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: end;
+}
+.saved-filters > label {
+  display: grid;
+  gap: var(--s-2);
+  min-inline-size: 0;
+  flex: 1 1 140px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.saved-filters > .saved-query {
+  flex: 2 1 240px;
+}
+.saved-filters .input,
+.saved-panel .field .input {
+  min-inline-size: 0;
+  inline-size: 100%;
+  min-block-size: 44px;
+}
+.saved-tools,
+.saved-collection-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  align-items: center;
+  min-inline-size: 0;
+}
+.saved-collection-heading {
+  justify-content: space-between;
+}
+.saved-collection-heading h2 {
+  font-size: var(--fs-xl);
+  overflow-wrap: anywhere;
+  min-inline-size: 0;
+}
+.saved-panel :is(.btn, .later-open) {
+  min-block-size: 44px;
+}
+.saved-panel .btn[aria-label] {
+  min-inline-size: 44px;
+}
+.saved-results {
+  display: grid;
+  gap: var(--s-3);
+  min-inline-size: 0;
+}
+.saved-results .later-row {
+  padding: var(--s-4);
+  gap: var(--s-3);
+  min-inline-size: 0;
+}
+.saved-results .later-open {
+  gap: var(--s-3);
+}
+.saved-results .later-open .lines {
+  gap: var(--s-2);
+}
+.saved-results .later-open small {
+  color: var(--text-2);
+}
+.saved-results .later-text {
+  font-size: var(--fs-lg);
+  line-height: 1.6;
+  color: var(--text);
+}
+.saved-results .later-row > .row {
+  padding-block-start: var(--s-2);
+  border-block-start: 1px solid var(--hairline);
+}
+.saved-empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-3);
+  padding: var(--s-8);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+}
+.saved-empty h2 {
+  font-size: var(--fs-xl);
+}
+.saved-empty p {
+  color: var(--text-2);
+  max-inline-size: 56ch;
+  line-height: 1.6;
+}
+.saved-loading {
+  display: grid;
+  gap: var(--s-3);
+}
+.saved-loading .experience-skeleton {
+  block-size: 112px;
+  border-radius: var(--r-lg);
+}
+.saved-footnote {
+  padding-block-start: var(--s-2);
+}
+.later-view .banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+@media (max-width: 960px) {
+  .experience-heading {
+    flex-wrap: wrap;
+    gap: var(--s-4);
+  }
+}
+@media (max-width: 600px) {
+  .friends-refresh .friends-body,
+  .later-view .view {
+    padding: var(--s-5) var(--s-4) var(--s-6);
+  }
+  .friends-refresh .friends-sep {
+    display: none;
+  }
+  .friends-refresh .friends-title {
+    inline-size: 100%;
+  }
+  .saved-filters > .saved-query {
+    flex-basis: 100%;
+  }
+  .saved-filters > label {
+    flex-basis: 180px;
+  }
+  .saved-empty {
+    padding: var(--s-5);
+  }
+  .saved-results .later-row {
+    padding: var(--s-3);
+  }
+  .experience-heading-actions {
+    flex-shrink: 1;
+  }
+}
+.friends-content {
+  display: grid;
+  gap: var(--s-4);
+  min-inline-size: 0;
+}
+.friends-search-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.friends-search-area .friends-search {
+  flex: 1 1 200px;
+  min-inline-size: 0;
+}
+.friends-refresh .saved-loading .experience-skeleton {
+  block-size: 56px;
+}
+.friends-content .banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+}
+.friends-content .btn {
+  min-block-size: 44px;
+}

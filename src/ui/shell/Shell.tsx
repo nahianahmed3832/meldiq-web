@@ -374,7 +374,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       </section>
     );
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
-  else if (section === "later") main = <LaterView />;
+  else if (section === "later") main = <LaterView key={engine.store.name} onSearch={() => setDialog({ kind: "search" })} />;
   else if (section === "discover") main = <DiscoverView onSearch={() => setDialog({ kind: "search" })} />;
   else if (section === "lobby" && orgId && lobbies)
     main = (
@@ -389,7 +389,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       </Suspense>
     );
   // The Messages home is Friends (2026-10-28, after the owner's reference), as is /friends.
-  else if (section === "friends" || section === "dms") main = <FriendsView />;
+  else if (section === "friends" || section === "dms") main = <FriendsView onNewMessage={() => setDialog({ kind: "new" })} />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
   return (
     <div className={`app${phoneFrame}`} data-section={section} data-connection={connection} onContextMenu={quietContextMenu}>
