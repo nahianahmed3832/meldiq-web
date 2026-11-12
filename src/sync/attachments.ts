@@ -484,10 +484,11 @@ export async function saveAttachment(
     }
   ).showSaveFilePicker;
   if (ref.chunk !== undefined && ref.size > CACHE_LIMIT && picker) {
-    const handle = await picker({ suggestedName: attachmentName(ref.name) });
+    const handle = await picker.call(window, { suggestedName: attachmentName(ref.name) });
     const out = await handle.createWritable();
     try {
       await streamAttachment(engine, ref, (plain) => out.write(new Uint8Array(plain)), opts.signal, opts.onProgress);
+      opts.signal?.throwIfAborted();
       await out.close();
     } catch (e) {
       await out.abort().catch(() => undefined);

@@ -1,3 +1,4 @@
+import { formatUiNumber } from "../../i18n/format";
 import { UNSUPPORTED_TEXT } from "../../sync/rules";
 import { countLabel } from "../../i18n/counts";
 import { useLocaleRender } from "../../i18n/Localized";
@@ -36,7 +37,7 @@ import {
   Video,
   IdCard,
 } from "lucide-react";
-import { memo, useRef, useState } from "react";
+import { useContext, memo, useRef, useState } from "react";
 import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
 import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -60,6 +61,8 @@ import { useT } from "../../i18n";
 import { LookAvatar, LookName } from "../people/NameStyle";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
+import { ChatFileSelection } from "./ChatFileSelection";
+import { saveKey } from "../../sync/bulkSave";
 import { isEmojiOnly } from "./RichText";
 import { MessageBody } from "./MessageBody";
 import { SafeLink } from "./SafeLink";
@@ -115,6 +118,11 @@ export interface MessageItemProps {
 }
 export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const engine = useEngine();
+  const fileSelection = useContext(ChatFileSelection);
+  const [attachmentTarget, setAttachmentTarget] = useState<string | undefined>();
+  const trackAttachment = (target: EventTarget | null) => {
+    setAttachmentTarget(target instanceof Element ? target.closest<HTMLElement>("[data-attachment-id]")?.dataset.attachmentId : undefined);
+  };
   const canReact = p.canReact ?? p.canPost;
   const canAddReaction = canReact && (p.newReactions ?? true);
   const canPin = p.moderate ?? p.canPost;
@@ -307,9 +315,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const reactions = Object.entries(m.reactions);
   // What the menu was opened on (a photo, a link, selected text): its own items come first (chat/contextTarget.tsx).
   const [target, setTarget] = useState<ContextTarget | null>(null);
+  const attachment = m.attachments.find((r) => r.id === attachmentTarget);
   const pressedOn = useRef<EventTarget | null>(null);
   const press = useLongPress(
     (el) => {
+      trackAttachment(pressedOn.current);
       setPressed(true);
       setTarget(contextTarget(pressedOn.current));
       more.open(el);
@@ -369,6 +379,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         e.preventDefault();
         if (m.kind === "call") return;
         setPressed(true);
+        trackAttachment(e.target);
         setTarget(contextTarget(e.target));
         more.openAt(e.currentTarget, e);
       }}
@@ -376,6 +387,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         if (editing || !(e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) || keepsNativeMenu(e.target)) return;
         e.preventDefault();
         setPressed(true);
+        trackAttachment(e.target);
         more.openAt(e.currentTarget, null);
       }}
       style={gestures.offset ? { transform: `translateX(${gestures.offset}px)` } : undefined}
@@ -496,6 +508,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             more.close();
             setPressed(false);
             setTarget(null);
+            setAttachmentTarget(undefined);
           }}
           entries={[
             ...contextEntries(target, (text) => engine.notice("info", text)),
@@ -564,6 +577,30 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...(!mine && live && reportable && conv ? ["separator" as const, { label: t("msg_report"), icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
             ...((mine && p.canPost) || (!mine && live && p.moderate === true && !!inCommunity)
               ? ["separator" as const, { label: t("msg_delete_all"), icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }]
+              : []),
+            ...(live && m.attachments.length && fileSelection
+              ? [
+                  "separator" as const,
+                  ...(attachment
+                    ? [
+                        {
+                          label: uiText("messaging.interface.select_value0_b4b262a", { value0: attachment.name }),
+                          onSelect: () => fileSelection.include([saveKey(m.id, attachment.id)]),
+                        },
+                      ]
+                    : []),
+                  ...(!attachment || m.attachments.length > 1
+                    ? [
+                        {
+                          label:
+                            m.attachments.length === 1
+                              ? uiText("messaging.interface.select_files_to_save_eb50da0")
+                              : uiText("messaging.interface.select_all_1fc9a38") + " · " + formatUiNumber(m.attachments.length),
+                          onSelect: () => fileSelection.include(m.attachments.map((r) => saveKey(m.id, r.id))),
+                        },
+                      ]
+                    : []),
+                ]
               : []),
           ]}
         />

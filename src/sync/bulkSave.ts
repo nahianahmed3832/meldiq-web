@@ -8,6 +8,7 @@ import { type AttachmentRef, safeFileName } from "../protocol/payload";
  */
 export const MAX_ITEMS = 200;
 export const MAX_BYTES = 4 * 1024 * 1024 * 1024;
+export const MAX_ARCHIVE_BYTES = 256 * 1024 * 1024;
 
 export interface SaveItem {
   key: string;
@@ -26,7 +27,7 @@ export const saveKey = (messageId: string, refId: string): string => `${messageI
  * A batch: each picked file once, without the excluded ones; refused (not cut) over the limits; names that would clash
  * in one folder get " (1)", " (2)" before the extension.
  */
-export function planSave(picked: readonly { messageId: string; ref: AttachmentRef }[], excluded: ReadonlySet<string> = new Set()): SavePlan {
+export function planSave(picked: readonly { messageId: string; ref: AttachmentRef }[], excluded: ReadonlySet<string> = new Set(), folderAvailable = true): SavePlan {
   const seen = new Set<string>();
   const unique = picked.filter((p) => {
     const k = saveKey(p.messageId, p.ref.id);
@@ -37,7 +38,8 @@ export function planSave(picked: readonly { messageId: string; ref: AttachmentRe
   if (unique.length === 0) return { kind: "empty" };
   if (unique.length > MAX_ITEMS) return { kind: "tooMany", count: unique.length, limit: MAX_ITEMS };
   const bytes = unique.reduce((n, p) => n + Math.max(0, p.ref.size), 0);
-  if (bytes > MAX_BYTES) return { kind: "tooLarge", bytes, limit: MAX_BYTES };
+  const limit = unique.length > 1 && !folderAvailable ? MAX_ARCHIVE_BYTES : MAX_BYTES;
+  if (bytes > limit) return { kind: "tooLarge", bytes, limit };
   const names = uniqueNames(unique.map((p) => safeFileName(p.ref.name)));
   return { kind: "ready", items: unique.map((p, i) => ({ key: saveKey(p.messageId, p.ref.id), messageId: p.messageId, ref: p.ref, fileName: names[i] })) };
 }

@@ -202,13 +202,7 @@ describe("bulk save (android round 7)", () => {
       },
     };
     const status: Record<string, string> = {};
-    await runBulkSave(
-      web,
-      plan.items,
-      dir,
-      (key, s) => void (status[key] = s),
-      () => false,
-    );
+    await runBulkSave(web, plan.items, dir, (key, s) => void (status[key] = s), undefined);
     const text = (n: string) => new TextDecoder().decode(folder.get(n));
     expect(text("report.txt")).toBe("mine, keep it");
     expect([text("report (1).txt"), text("report (1) (1).txt")].sort()).toEqual(["first report", "second report"].sort());

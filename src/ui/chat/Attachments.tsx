@@ -3,7 +3,7 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { Download, X, FileText, Film, Image as ImageIcon, Mic, Pause, Play, TriangleAlert } from "lucide-react";
+import { X, Film, Image as ImageIcon, Pause, Play, TriangleAlert } from "lucide-react";
 import { useContext, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
@@ -15,6 +15,9 @@ import { type DownloadProgress, isInlineImage, safeMime, saveAttachment } from "
 import { clock, isVoice, shownDuration } from "../../sync/voice";
 import { attachmentName, riskyAttachment } from "../../sync/attachmentPolicy";
 import { bytes } from "../format";
+import { Icon } from "../icons/Icon";
+import { ChatFileSelection } from "./ChatFileSelection";
+import { saveKey } from "../../sync/bulkSave";
 import { albumOverflow, albumRows } from "./album";
 import { useNearScreen } from "./useNearScreen";
 import { useBlobUrl } from "./blobUrl";
@@ -27,6 +30,7 @@ export type { ViewerInfo };
 export function Attachments({ refs, viewer, message }: { refs: AttachmentRef[]; viewer?: ViewerInfo; message?: StoredMessage }) {
   useLocaleRender();
   const engine = useEngine();
+  const selection = useContext(ChatFileSelection);
   const [viewing, setViewing] = useState<string | null>(null);
   // Only subscribe to conversation history while open. Keep the selected attachment stable as new messages arrive.
   const messages = useOrbit((s) => (viewing && message ? s.messages[message.conversationId]?.items : undefined));
@@ -53,6 +57,26 @@ export function Attachments({ refs, viewer, message }: { refs: AttachmentRef[]; 
         }
       : (viewer ?? null);
   if (!refs.length) return null;
+  if (selection?.selecting && message) {
+    return (
+      <div className="attachments chat-file-choices">
+        {refs.map((r) => {
+          const name = attachmentName(r.name);
+          const key = saveKey(message.id, r.id);
+          const checked = selection.selected.has(key);
+          return (
+            <label className="att-file chat-file-choice" key={r.id} data-attachment-id={r.id}>
+              <input type="checkbox" checked={checked} onChange={() => selection.toggle(key)} aria-label={uiText("messaging.interface.select_value0_b4b262a", { value0: name })} />
+              <span className="grow">
+                <strong className="ellipsis">{name}</strong>
+                <small>{bytes(r.size)}</small>
+              </span>
+            </label>
+          );
+        })}
+      </div>
+    );
+  }
   // Several photos sent together are an album (android AlbumGrid); everything else is listed under it.
   const images = refs.filter((r) => !isVoice(r) && isInlineImage(r));
   const album = images.length >= 2 ? images : [];
@@ -63,17 +87,12 @@ export function Attachments({ refs, viewer, message }: { refs: AttachmentRef[]; 
       <OpenViewerContext.Provider value={open}>
         <div className="attachments">
           {album.length > 0 && <AlbumGrid items={album} />}
-          {rest.map((r) =>
-            isVoice(r) ? (
-              <VoiceAttachment key={r.id} r={r} />
-            ) : isInlineImage(r) ? (
-              <ImageAttachment key={r.id} r={r} />
-            ) : isPlayable(r) ? (
-              <MediaAttachment key={r.id} r={r} />
-            ) : (
-              <FileAttachment key={r.id} r={r} />
-            ),
-          )}
+          {rest.map((r) => (
+            <div key={r.id} data-attachment-id={r.id} className="chat-attachment">
+              {isVoice(r) ? <VoiceAttachment r={r} /> : isInlineImage(r) ? <ImageAttachment r={r} /> : isPlayable(r) ? <MediaAttachment r={r} /> : <FileAttachment r={r} />}
+              {(isVoice(r) || isInlineImage(r) || isPlayable(r)) && <InlineDownload r={r} />}
+            </div>
+          ))}
         </div>
         {viewing !== null && at >= 0 && <MediaViewer items={media} at={at} onMove={(i) => setViewing(media[i].id)} onClose={() => setViewing(null)} />}
       </OpenViewerContext.Provider>
@@ -299,7 +318,10 @@ function AlbumGrid({ items }: { items: AttachmentRef[] }) {
       {albumRows(items.length).map((row, i) => (
         <div key={i} className="album-row">
           {row.map((at) => (
-            <AlbumTile key={items[at].id} r={items[at]} more={at === 3 ? more : 0} onOpen={() => (shared ? shared(items[at]) : setOpen(at))} />
+            <div key={items[at].id} data-attachment-id={items[at].id} className="chat-attachment album-item">
+              <AlbumTile r={items[at]} more={at === 3 ? more : 0} onOpen={() => (shared ? shared(items[at]) : setOpen(at))} />
+              <InlineDownload r={items[at]} />
+            </div>
           ))}
         </div>
       ))}
@@ -335,13 +357,12 @@ function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen
     </button>
   );
 }
-export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; error?: string }) {
-  useLocaleRender();
+function useDownload(r: AttachmentRef) {
   const engine = useEngine();
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<DownloadProgress | null>(null);
   const abort = useRef<AbortController | null>(null);
-  const [error, setError] = useState<string | null>(initialError ?? null);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => () => abort.current?.abort(), []);
   const download = async () => {
     if (abort.current) return;
@@ -360,18 +381,54 @@ export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; e
       setBusy(false);
     }
   };
+  const pct = progress?.total ? Math.min(100, Math.floor((100 * progress.done) / progress.total)) : 0;
+  return { busy, progress, pct, error, download, cancel: () => abort.current?.abort() };
+}
+
+function DownloadControl({ r, transfer }: { r: AttachmentRef; transfer: ReturnType<typeof useDownload> }) {
+  const name = attachmentName(r.name);
+  return (
+    <button
+      type="button"
+      className="chat-file-download"
+      aria-label={
+        transfer.busy
+          ? uiText("messaging.interface.cancel_downloading_value0_aa1d110", { value0: name })
+          : uiText("messaging.interface.download_value0_value1_68feb19", { value0: name, value1: bytes(r.size) })
+      }
+      onClick={(e) => {
+        e.stopPropagation();
+        if (transfer.busy) transfer.cancel();
+        else void transfer.download();
+      }}
+    >
+      {transfer.busy ? <X size={20} aria-hidden="true" /> : <Icon name="files.download" size={20} />}
+    </button>
+  );
+}
+
+function InlineDownload({ r }: { r: AttachmentRef }) {
+  const transfer = useDownload(r);
+  return (
+    <div className="chat-inline-download">
+      <DownloadControl r={r} transfer={transfer} />
+      {transfer.busy && <progress max={100} value={transfer.pct} aria-label={uiText("messaging.interface.download_value0_value1_9f8bb49", { value0: r.name, value1: transfer.pct })} />}
+      {transfer.error && <small role="alert">{transfer.error}</small>}
+    </div>
+  );
+}
+
+export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; error?: string }) {
+  useLocaleRender();
+  const transfer = useDownload(r);
+  const { busy, progress, pct, download } = transfer;
+  const error = transfer.error ?? initialError;
   const name = attachmentName(r.name);
   const extension = name.includes(".") ? name.split(".").pop()!.toUpperCase() : uiText("messaging.interface.file_b4915d3");
-  const pct = progress?.total ? Math.min(100, Math.floor((100 * progress.done) / progress.total)) : 0;
   return (
     <div className="att-file">
-      <span className="file-icon">{error ? <TriangleAlert size={18} /> : r.voice ? <Mic size={18} /> : <FileText size={18} />}</span>
-      <button
-        className="file-download-name grow"
-        onClick={() => void download()}
-        disabled={busy}
-        aria-label={uiText("messaging.interface.download_value0_value1_68feb19", { value0: name, value1: bytes(r.size) })}
-      >
+      <DownloadControl r={r} transfer={transfer} />
+      <button className="file-download-name grow" onClick={() => void download()} disabled={busy}>
         <strong className="ellipsis">{r.voice ? uiText("messaging.interface.voice_message_f6933da") : name}</strong>
         <small role={error ? "alert" : undefined}>
           {error ??
@@ -391,13 +448,6 @@ export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; e
           </small>
         )}
       </button>
-      {busy ? (
-        <button className="icon-btn" onClick={() => abort.current?.abort()} aria-label={uiText("messaging.interface.cancel_downloading_value0_aa1d110", { value0: name })}>
-          <X size={16} />
-        </button>
-      ) : (
-        <Download size={16} className="faint" aria-hidden="true" />
-      )}
     </div>
   );
 }

@@ -3554,3 +3554,98 @@ button.media-card {
     display: none;
   }
 }
+
+/* The download action stays separate from the preview and easy to reach on touch screens. */
+.chat-attachment {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
+}
+.chat-file-download {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.chat-file-download:hover {
+  background: var(--surface-raised);
+}
+.chat-inline-download {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 4px;
+  z-index: 1;
+  display: grid;
+  justify-items: end;
+  max-width: 100%;
+}
+.chat-inline-download .chat-file-download {
+  background: rgb(0 0 0 / 0.76);
+  color: white;
+}
+.chat-inline-download :is(progress, small) {
+  width: min(150px, 100%);
+}
+.chat-inline-download small {
+  padding: 4px;
+  border-radius: var(--r-sm);
+  background: var(--surface-raised);
+  color: var(--text);
+}
+.chat-attachment:has(> .att-file + .chat-inline-download) .att-file {
+  padding-inline-end: 50px;
+}
+.chat-attachment:has(> .att-file > .chat-file-download) > .chat-inline-download {
+  display: none;
+}
+.album-item,
+.album-item .album-tile {
+  width: 100%;
+}
+.chat-file-choice {
+  cursor: pointer;
+  min-height: 48px;
+}
+.chat-file-choice input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+.chat-file-choice:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.chat-file-choice .grow {
+  min-width: 0;
+}
+.chat-file-choice strong {
+  display: block;
+}
+.chat-download-bar {
+  flex: 0 0 auto;
+  padding: 4px 12px;
+  border-block-start: 1px solid var(--border);
+}
+.chat-download-bar button {
+  min-height: 44px;
+}
+/* The selection bar takes the place of the composer without clearing its draft. */
+:is(.conversation, .panel):has(> .chat-download-bar) > .composer-wrap,
+:is(.conversation, .panel):has(> .chat-download-bar) > div > .messages .msg-actions {
+  display: none;
+}
+.chat-file-choices {
+  flex-direction: column;
+  align-items: flex-start;
+}
+[data-message-layout="bubbles"] .msg.mine .chat-file-choices {
+  align-items: flex-end;
+}

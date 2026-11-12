@@ -251,3 +251,68 @@ test("mobile restores four tabs and desktop keeps its compact sidebars", async (
     for (const name of ["Home", "Activity"]) await expect(sidebar.getByRole("link", { name, exact: true })).toHaveCount(0);
   }
 });
+
+test("chat downloads one original and lets you select files across messages", async ({ page, isMobile }, info) => {
+  // Force the portable path on Chromium too; browsers without folder access must get one download.
+  await page.addInitScript(() => Object.defineProperty(window, "showDirectoryPicker", { value: undefined, configurable: true }));
+  await conversation(page);
+  const image = fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg"));
+  const send = async (caption: string, files: { name: string; mimeType: string; buffer: Buffer }[]) => {
+    await page.locator(".composer input[type=file]").setInputFiles(files);
+    await expect(page.locator(".attachment-draft")).toHaveCount(files.length);
+    await page.getByRole("textbox", { name: /^Message / }).fill(caption);
+    await page.getByRole("button", { name: "Send", exact: true }).click();
+    const message = page.locator(".msg").filter({ hasText: caption });
+    await expect(message.locator("[data-attachment-id]")).toHaveCount(files.length);
+    return message;
+  };
+  const album = await send("First group", [
+    { name: "original.jpg", mimeType: "image/jpeg", buffer: image },
+    { name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("Skip this file") },
+  ]);
+  const other = await send("Second group", [{ name: "report.txt", mimeType: "text/plain", buffer: Buffer.from("Keep this file") }]);
+
+  const direct = page.waitForEvent("download");
+  await album.getByRole("button", { name: /^Download original.jpg/ }).click();
+  const original = await direct;
+  expect(original.suggestedFilename()).toBe("original.jpg");
+  expect(fs.readFileSync((await original.path())!)).toEqual(image);
+
+  const openFileMenu = async () => {
+    const file = album.locator("[data-attachment-id]").first();
+    if (isMobile) {
+      await file.dispatchEvent("pointerdown", { pointerType: "touch", button: 0, isPrimary: true });
+      await expect(page.getByRole("menuitem", { name: "Select original.jpg", exact: true })).toBeVisible();
+      await file.dispatchEvent("pointerup", { pointerType: "touch", button: 0, isPrimary: true });
+    } else {
+      await file.dispatchEvent("contextmenu");
+    }
+  };
+  await openFileMenu();
+  await page.getByRole("menuitem", { name: "Select original.jpg", exact: true }).click();
+  await expect(album.getByRole("checkbox", { name: "Select original.jpg" })).toBeChecked();
+  await expect(album.getByRole("checkbox", { name: "Select notes.txt" })).not.toBeChecked();
+  await page.getByRole("button", { name: "Stop selecting" }).click();
+
+  await openFileMenu();
+  await page.getByRole("menuitem", { name: "Select all · 2", exact: true }).click();
+  await expect(album.getByRole("checkbox", { name: "Select notes.txt" })).toBeChecked();
+  await album.getByRole("checkbox", { name: "Select notes.txt" }).uncheck();
+  await other.getByRole("checkbox", { name: "Select report.txt" }).check();
+  await expect(page.getByText("2 files selected", { exact: true })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: /^Message / })).toBeHidden();
+  await page.screenshot({ path: info.outputPath("chat-selection.png"), animations: "disabled" });
+  const batch = page.waitForEvent("download");
+  await page.locator(".chat-download-bar").getByRole("button", { name: "Download", exact: true }).click();
+  const zip = await batch;
+  expect(zip.suggestedFilename()).toBe("Meldiq.zip");
+  const { execFileSync } = await import("node:child_process");
+  const archive = (await zip.path())!;
+  expect(execFileSync("unzip", ["-Z1", archive], { encoding: "utf8" }).trim().split("\n")).toEqual(["original.jpg", "report.txt"]);
+  expect(execFileSync("unzip", ["-p", archive, "original.jpg"])).toEqual(image);
+  expect(execFileSync("unzip", ["-p", archive, "report.txt"], { encoding: "utf8" })).toBe("Keep this file");
+  await expect(page.getByText("Saved 2 of 2", { exact: true })).toBeVisible();
+  await page.locator(".chat-download-bar").getByRole("button", { name: "Done" }).click();
+  await expect(page.getByRole("checkbox", { name: "Select original.jpg" })).toHaveCount(0);
+  await expect(page.getByRole("textbox", { name: /^Message / })).toBeVisible();
+});

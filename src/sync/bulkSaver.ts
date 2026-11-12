@@ -1,11 +1,12 @@
 import { text as uiText } from "../i18n";
-import { openAttachment, streamAttachment } from "./attachments";
+import { openAttachment, saveAttachment, streamAttachment } from "./attachments";
 import type { SaveItem, SaveStatus } from "./bulkSave";
+import { AttachmentZip } from "./attachmentZip";
 import type { Engine } from "./engine";
 /**
  * Runs a bulk save (android round 7 BulkSaver): one file at a time, each downloaded through the membership-checked
  * endpoint, verified and decrypted here, then written. Where the browser lets a page write into a folder the person
- * picks (Chromium's File System Access), files go there; elsewhere each one is handed to the browser's downloads.
+ * picks (Chromium's File System Access), files go there; elsewhere a batch is handed to the browser as one ZIP so it does not require permission for repeated downloads.
  */
 interface DirHandle {
   getFileHandle(
@@ -37,7 +38,7 @@ export async function pickFolder(): Promise<DirHandle | null> {
     }
   ).showDirectoryPicker;
   try {
-    return await picker({ mode: "readwrite" });
+    return await picker.call(window, { mode: "readwrite" });
   } catch (e) {
     if (e instanceof DOMException && e.name === "AbortError") return null;
     throw e;
@@ -50,58 +51,69 @@ async function freeName(dir: DirHandle, name: string): Promise<string> {
     const candidate = n === 0 ? name : `${name.slice(0, dot)} (${n})${name.slice(dot)}`;
     try {
       await dir.getFileHandle(candidate);
-    } catch {
-      return candidate; // NotFoundError: free
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "NotFoundError") return candidate;
+      throw error;
     }
   }
   throw new Error(uiText("workspace.interface.too_many_files_with_this_name_in_that_folder_3229f0e"));
 }
-async function writeInto(engine: Engine, dir: DirHandle, item: SaveItem): Promise<void> {
+async function writeInto(engine: Engine, dir: DirHandle, item: SaveItem, signal?: AbortSignal): Promise<void> {
   const file = await dir.getFileHandle(await freeName(dir, item.fileName), { create: true });
   const out = await file.createWritable();
   try {
-    if (item.ref.chunk !== undefined) await streamAttachment(engine, item.ref, (plain) => out.write(new Uint8Array(plain)));
-    else await out.write(await openAttachment(engine, item.ref));
+    if (item.ref.chunk !== undefined) await streamAttachment(engine, item.ref, (plain) => out.write(new Uint8Array(plain)), signal);
+    else await out.write(await openAttachment(engine, item.ref, undefined, signal));
+    signal?.throwIfAborted();
     await out.close();
   } catch (e) {
     await out.abort().catch(() => undefined);
     throw e;
   }
 }
-async function download(engine: Engine, item: SaveItem): Promise<void> {
-  const url = URL.createObjectURL(await openAttachment(engine, item.ref));
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = item.fileName;
-  a.rel = "noopener";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 30000);
-}
-/**
- * Saves [items] into [dir] (or as downloads when null), reporting each file's status; [stopped] ends the batch before
- * the next file, leaving the rest "cancelled" for Retry.
- */
+/** A folder saves each verified file in turn. Browsers without folder access get one archive. */
 export async function runBulkSave(
   engine: Engine,
   items: readonly SaveItem[],
   dir: DirHandle | null,
   report: (key: string, status: SaveStatus, error?: string) => void,
-  stopped: () => boolean,
+  signal?: AbortSignal,
 ): Promise<void> {
+  const zip = !dir && items.length > 1 ? new AttachmentZip() : null;
+  const archived: string[] = [];
   for (const item of items) {
-    if (stopped()) {
+    if (signal?.aborted) {
       report(item.key, "cancelled");
       continue;
     }
     report(item.key, "saving");
     try {
-      await (dir ? writeInto(engine, dir, item) : download(engine, item));
+      if (dir) await writeInto(engine, dir, item, signal);
+      else if (zip) {
+        await zip.add(item.fileName, await openAttachment(engine, item.ref, undefined, signal), signal);
+        archived.push(item.key);
+      } else {
+        await saveAttachment(engine, { ...item.ref, name: item.fileName }, { signal });
+      }
       report(item.key, "saved");
     } catch (e) {
-      report(item.key, "failed", e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_save_this_file_fc73a64"));
+      const cancelled = signal?.aborted || (e instanceof DOMException && e.name === "AbortError");
+      report(item.key, cancelled ? "cancelled" : "failed", cancelled ? undefined : e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_save_this_file_fc73a64"));
     }
   }
+  if (!zip || !archived.length) return;
+  if (signal?.aborted) {
+    for (const key of archived) report(key, "cancelled");
+    return;
+  }
+  const url = URL.createObjectURL(zip.finish());
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Meldiq.zip";
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 export type { DirHandle };

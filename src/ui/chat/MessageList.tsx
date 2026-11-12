@@ -9,6 +9,8 @@ import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
 import { dayLabel, sameDay } from "../format";
 import { MessageItem } from "./MessageItem";
+import { BulkSaveBar, useBulkSave } from "./BulkSaveBar";
+import { ChatFileSelection } from "./ChatFileSelection";
 import { TypingIndicator } from "./TypingIndicator";
 import { JUMP_EVENT } from "./jump";
 import { useT } from "../../i18n";
@@ -92,6 +94,8 @@ export function MessageList(props: MessageListProps) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [, tick] = useState(0);
   const visible = useMemo(() => (threadRoot ? items.filter((m) => m.id === threadRoot || m.threadRootId === threadRoot) : items.filter((m) => !m.threadRootId)), [items, threadRoot]);
+  const fileSelection = useBulkSave();
+  const downloadable = useMemo(() => visible.flatMap((m) => (m.deleted ? [] : m.attachments.map((ref) => ({ messageId: m.id, ref })))), [visible]);
   const threadCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const m of items) if (m.threadRootId && !m.deleted) counts.set(m.threadRootId, (counts.get(m.threadRootId) ?? 0) + 1);
@@ -171,7 +175,7 @@ export function MessageList(props: MessageListProps) {
   const typers = Object.entries(typing ?? {})
     .filter(([u, until]) => until > Date.now() && u !== me.userId)
     .map(([u]) => users[u]?.displayName ?? uiText("messaging.react_someone"));
-  return (
+  const content = (
     <div style={{ position: "relative", flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
       <div
         ref={scroller}
@@ -288,6 +292,16 @@ export function MessageList(props: MessageListProps) {
         </button>
       )}
     </div>
+  );
+  return (
+    <ChatFileSelection.Provider value={fileSelection}>
+      {content}
+      {fileSelection.selecting && (
+        <div className="chat-download-bar">
+          <BulkSaveBar all={downloadable} bulk={fileSelection} chat />
+        </div>
+      )}
+    </ChatFileSelection.Provider>
   );
 }
 /** "This is the beginning of …": shown above the oldest message once there's nothing earlier. */
