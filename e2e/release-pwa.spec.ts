@@ -1,3 +1,4 @@
+import { acceptSignupTerms } from "./privacy";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -33,7 +34,7 @@ async function createAccount(page: Page, name: string) {
   await page.getByLabel("Your name", { exact: true }).fill(name);
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill("Disposable release check password");
-  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  await acceptSignupTerms(page);
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));
   await page.getByRole("button", { name: "Confirm", exact: true }).click();

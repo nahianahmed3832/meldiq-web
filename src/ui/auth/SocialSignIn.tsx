@@ -209,7 +209,7 @@ export function SocialSignIn({
         <div
           style={{ display: "grid", gap: 8 }}
           onKeyDown={(event) => {
-            if (event.key === "Enter") {
+            if (event.key === "Enter" && event.target instanceof HTMLInputElement && event.target.type === "text") {
               event.preventDefault();
               continuePending();
             }

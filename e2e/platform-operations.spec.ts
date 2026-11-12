@@ -1,3 +1,4 @@
+import { acceptSignupTerms } from "./privacy";
 import { finishWelcome } from "./welcome";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -17,7 +18,7 @@ test("service inbox delivers notices, submits a real warning appeal and redeems 
   await page.getByLabel("Your name", { exact: true }).fill("Operations client");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill("a long enough password for local verification");
-  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  await acceptSignupTerms(page);
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
   await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));

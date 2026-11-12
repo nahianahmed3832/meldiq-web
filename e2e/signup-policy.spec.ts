@@ -1,3 +1,4 @@
+import { openPrivacyPolicy } from "./privacy";
 import crypto from "node:crypto";
 import { expect, test } from "@playwright/test";
 import { emailedCode } from "./mail";
@@ -31,6 +32,8 @@ test("signup shows the exact policy revision and requires a new review after a s
   await create.click();
   await expect(page.getByRole("alert")).toContainText(/Terms and Privacy/);
   expect(posts).toBe(0);
+  await expect(checkbox).toBeDisabled();
+  await openPrivacyPolicy(page);
   await checkbox.check();
   await create.click();
   await expect(page.getByRole("alert")).toContainText(/Review the current Terms/);
@@ -70,6 +73,8 @@ test("an operator-provisioned account reviews the advertised policy before first
   const consent = page.getByRole("checkbox", { name: /I am 13 or older/ });
   await expect(consent).not.toBeChecked();
   await expect(setup).toBeDisabled();
+  await expect(consent).toBeDisabled();
+  await openPrivacyPolicy(page);
   await consent.check();
   const accepted = page.waitForResponse((r) => r.url().endsWith("/v2/account/devices") && r.ok());
   await setup.click();

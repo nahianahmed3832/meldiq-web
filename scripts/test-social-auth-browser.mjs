@@ -1,9 +1,12 @@
 /** Source-level browser integration tests with a local provider/API double. Never contacts live accounts. */
 import { createServer } from "node:http";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { createHash, randomBytes } from "node:crypto";
 import { build } from "esbuild";
 import { chromium, webkit, devices, expect } from "@playwright/test";
+import { writePublicLocaleAssets } from "./i18n/public-assets.mjs";
 
 const bundled = await build({
   stdin: {
@@ -15,11 +18,35 @@ const bundled = await build({
   jsx: "automatic",
   write: false,
   platform: "browser",
+  plugins: [
+    {
+      name: "standalone-auth-router",
+      setup(build) {
+        // This harness mounts auth components without a Next.js router.
+        build.onResolve({ filter: /^next\/router$/ }, () => ({ path: "next/router", namespace: "standalone-auth-router" }));
+        build.onLoad({ filter: /.*/, namespace: "standalone-auth-router" }, () => ({ contents: "export default {}" }));
+      },
+    },
+  ],
   format: "esm",
   define: { "process.env.NODE_ENV": '"production"' },
 });
 const bundle = bundled.outputFiles[0].text;
+const localeAssets = await mkdtemp(join(tmpdir(), "meldiq-social-locale-"));
+writePublicLocaleAssets(localeAssets);
 const hash = (s) => createHash("sha256").update(s).digest("base64url");
+const signupPolicy = {
+  minimumAge: 13,
+  terms: { revision: "terms.1", url: "https://meldiq.app/legal/terms/terms.1" },
+  privacy: { revision: "privacy.1", url: "https://meldiq.app/legal/privacy/privacy.1" },
+};
+const policyAcceptance = {
+  termsRevision: signupPolicy.terms.revision,
+  privacyRevision: signupPolicy.privacy.revision,
+  ageAtLeast13: true,
+  termsAccepted: true,
+  privacyAcknowledged: true,
+};
 let scenario = "login";
 const flows = new Map();
 const grant = {
@@ -66,6 +93,9 @@ const server = createServer(async (req, res) => {
   } else if (url.pathname === "/social-auth-callback.html" || url.pathname === "/social-auth-callback.js") {
     res.setHeader("content-type", url.pathname.endsWith(".js") ? "text/javascript" : "text/html");
     res.end(await readFile(`public${url.pathname}`));
+  } else if (url.pathname === "/public-locale.js") {
+    res.setHeader("content-type", "text/javascript");
+    res.end(await readFile(join(localeAssets, "public-locale.js")));
   } else if (url.pathname.startsWith("/auth-provider-icons/")) {
     res.setHeader("content-type", "image/svg+xml");
     res.end(await readFile(`public${url.pathname}`));
@@ -101,6 +131,9 @@ const server = createServer(async (req, res) => {
     if (f.scenario === "invite" && data.inviteCode !== "valid-invite")
       return json({ error: { code: data.inviteCode ? "invalid_invite" : "invite_required", message: data.inviteCode ? "Invalid invitation code." : "Invitation required." } }, 400);
     if (f.scenario === "totp" && data.totpCode !== "123456") return json({ error: { code: "totp_required", message: "Enter authenticator code." } }, 401);
+    if (f.scenario === "signup-policy" && !data.policyAcceptance)
+      return json({ error: { code: "conflict", message: "Review the current Terms and Privacy notice.", details: { requirement: "signup_policy", policy: signupPolicy } } }, 409);
+    if (f.scenario === "signup-policy") expect(data.policyAcceptance).toEqual(policyAcceptance);
     flows.delete(data.id);
     json(f.mode === "link" ? { linked: true } : { grant });
   } else {
@@ -128,7 +161,7 @@ try {
       browser = await browserType.launch({ headless: true });
       const context = await browser.newContext(device ?? {});
       const page = await context.newPage();
-      for (const testCase of ["options", "email", "email-totp", "email-back", "login", "discord", "profile", "invite", "totp", "link", "isolated", "cancel", "fallback"]) {
+      for (const testCase of ["options", "email", "email-totp", "email-back", "login", "discord", "profile", "signup-policy", "invite", "totp", "link", "isolated", "cancel", "fallback"]) {
         scenario = testCase;
         if (testCase === "fallback")
           await page.addInitScript(() => {
@@ -210,6 +243,20 @@ try {
             await page.getByLabel("Authenticator or backup code").fill("123456");
             await page.getByRole("button", { name: "Continue", exact: true }).click();
           }
+          if (testCase === "signup-policy") {
+            const checkbox = page.getByRole("checkbox", { name: /I am 13 or older/ });
+            const continueButton = page.getByRole("button", { name: "Continue", exact: true });
+            const privacyLink = page.getByRole("link", { name: "Privacy (privacy.1)", exact: true });
+            await expect(checkbox).toBeDisabled();
+            await expect(continueButton).toBeDisabled();
+            await context.route(signupPolicy.privacy.url, (route) => route.fulfill({ body: "<h1>Privacy Policy fixture</h1>", contentType: "text/html" }));
+            const [privacy] = await Promise.all([page.waitForEvent("popup"), privacyLink.press("Enter")]);
+            await expect(privacy).toHaveURL(signupPolicy.privacy.url);
+            await privacy.close();
+            await expect(continueButton).toBeDisabled();
+            await checkbox.check();
+            await continueButton.click();
+          }
           await expect(page.locator("output")).toHaveText(testCase === "link" ? "linked" : "same-meldiq-account");
         }
         results.push({ platform: name, flow: testCase, result: "passed", provider: "local test double" });
@@ -232,6 +279,7 @@ try {
   await new Promise((resolve) => server.close(resolve));
   isolatedProvider.closeAllConnections();
   await new Promise((resolve) => isolatedProvider.close(resolve));
+  await rm(localeAssets, { recursive: true, force: true });
 }
 await writeFile("/tmp/meldiq-social-browser-results.json", JSON.stringify(results, null, 2));
 console.log(JSON.stringify(results, null, 2));

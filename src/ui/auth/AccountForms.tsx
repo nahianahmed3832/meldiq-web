@@ -284,7 +284,8 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; v
     const problem = nameProblem(name) ?? emailProblem(email) ?? passwordProblem(password, email) ?? (props.inviteRequired && !invite.trim() ? t("signup_invite_missing") : null);
     if (problem) return setError(problem);
     if (!accepted) {
-      document.getElementById("su-terms")?.focus();
+      const consent = document.querySelector<HTMLInputElement>("#su-terms");
+      (consent?.disabled ? document.getElementById("su-terms-privacy") : consent)?.focus();
       return setError(t("auth.foundation.termsRequired"));
     }
     void run(async () => {

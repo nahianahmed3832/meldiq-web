@@ -1,3 +1,4 @@
+import { acceptSignupTerms } from "./privacy";
 import crypto from "node:crypto";
 import { expect, type Page, test } from "@playwright/test";
 import { emailedCode } from "./mail";
@@ -14,7 +15,7 @@ async function signUpModerator(page: Page) {
   await page.getByLabel("Your name", { exact: true }).fill("Ticket Moderator");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill("a long enough password for ticket qualification");
-  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  await acceptSignupTerms(page);
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
   await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));

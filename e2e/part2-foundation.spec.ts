@@ -1,3 +1,4 @@
+import { openPrivacyPolicy } from "./privacy";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -30,7 +31,16 @@ test("fresh registration enforces consent, verifies email, and resumes real prof
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("Read and accept");
   expect(registrations).toBe(0);
-  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  const consent = page.getByRole("checkbox", { name: /I am 13 or older/ });
+  const privacy = page.locator(".auth-consent").getByRole("link", { name: "Privacy", exact: true });
+  await expect(consent).toBeDisabled();
+  await expect(privacy).toBeFocused();
+  await openPrivacyPolicy(page, true);
+  await expect(consent).toBeEnabled();
+  await expect(consent).not.toBeChecked();
+  await page.getByRole("button", { name: "Create account", exact: true }).click();
+  expect(registrations).toBe(0);
+  await consent.check();
   await page.getByRole("button", { name: "Create account", exact: true }).dblclick();
   await expect(page.getByRole("heading", { name: "Check your email", exact: true })).toBeVisible();
   expect(registrations).toBe(1);

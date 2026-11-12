@@ -1,3 +1,4 @@
+import { acceptSignupTerms } from "./privacy";
 import crypto from "node:crypto";
 import { expect, type BrowserContext, type Page } from "@playwright/test";
 import { emailedCode } from "./mail";
@@ -18,7 +19,7 @@ export async function onboardNormalAccount(page: Page, context: BrowserContext, 
   await page.getByLabel("Your name", { exact: true }).fill(name);
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill("a long enough password for identity verification");
-  await page.getByRole("checkbox", { name: /I am 13 or older/ }).check();
+  await acceptSignupTerms(page);
   await page.getByRole("button", { name: "Create account", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
   await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));

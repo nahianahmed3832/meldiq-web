@@ -1,3 +1,4 @@
+import { acceptSignupTerms } from "./privacy";
 import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import path from "node:path";
@@ -21,7 +22,7 @@ test("authenticator sign-in unlocks the real encrypted backup without another em
   await page.getByLabel("Your name").fill("Linear Sign In");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill(password);
-  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  await acceptSignupTerms(page);
   await page.getByRole("button", { name: "Create account" }).click();
   await page.getByRole("heading", { name: "Check your email" }).waitFor();
   await page.getByLabel("Code").fill(await emailedCode(email, "verify"));

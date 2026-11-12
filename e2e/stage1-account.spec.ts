@@ -1,3 +1,4 @@
+import { acceptSignupTerms } from "./privacy";
 import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import { expect, type Page, test } from "@playwright/test";
@@ -45,7 +46,7 @@ async function newAccount(page: Page, name: string): Promise<string> {
   await page.getByLabel("Your name").fill(name);
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
-  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  await acceptSignupTerms(page);
   await page.getByRole("button", { name: "Create account" }).click();
   await page.getByLabel("Code").fill(await emailedCode(email, "verify"));
   await page.getByRole("button", { name: "Confirm" }).click();

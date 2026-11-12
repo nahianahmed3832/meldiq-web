@@ -1,3 +1,4 @@
+import { acceptSignupTerms } from "./privacy";
 import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import { type BrowserContext, type CDPSession, expect, type Page, test } from "@playwright/test";
@@ -51,7 +52,7 @@ test("add a passkey in Settings, sign in with it in another browser, then remove
   await first.getByLabel("Your name").fill("Passkey Person");
   await first.getByLabel("Email", { exact: true }).fill(email);
   await first.getByLabel("Password", { exact: true }).fill(PASSWORD);
-  await first.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  await acceptSignupTerms(first);
   await first.getByRole("button", { name: "Create account" }).click();
   await first.getByLabel("Code").fill(await emailedCode(email, "verify"));
   await first.getByRole("button", { name: "Confirm" }).click();

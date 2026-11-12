@@ -1,3 +1,4 @@
+import { acceptSignupTerms } from "./privacy";
 import { finishWelcome } from "./welcome";
 import crypto from "node:crypto";
 import { expect, type Page, test } from "@playwright/test";
@@ -49,7 +50,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await page.getByLabel("Your name").fill("Nadia Rahman");
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
-  await page.getByLabel("I am 13 or older. I agree to the Terms and acknowledge the Privacy.", { exact: true }).check();
+  await acceptSignupTerms(page);
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
   await page.getByLabel("Code").fill(await emailedCode(email, "verify"));
