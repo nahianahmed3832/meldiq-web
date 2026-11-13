@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "ভিউয়ারে খুলুন",
+  "download_voice_message": "ভয়েস বার্তা ডাউনলোড করুন",
+  "reconnect_catching_up": "বার্তা সিঙ্ক হচ্ছে…",
+  "reconnect_caught_up": "আবার অনলাইনে · সিঙ্ক সম্পন্ন",
+  "reconnect_refresh_failed": "অনলাইনে আছেন। বার্তা আপডেট করা যায়নি।",
   "message": "বার্তা",
   "send": "পাঠান",
   "reply": "উত্তর দিন",

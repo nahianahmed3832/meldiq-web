@@ -3,7 +3,7 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { X, Film, Image as ImageIcon, Pause, Play, TriangleAlert } from "lucide-react";
+import { X, Image as ImageIcon, Pause, Play, TriangleAlert } from "lucide-react";
 import { useContext, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
@@ -21,6 +21,7 @@ import { saveKey } from "../../sync/bulkSave";
 import { albumOverflow, albumRows } from "./album";
 import { useNearScreen } from "./useNearScreen";
 import { useBlobUrl } from "./blobUrl";
+import { useVideoDownload } from "./useVideoDownload";
 import { isVideo, isViewable, MediaViewer, OpenViewerContext, type ViewerInfo, ViewerInfoContext } from "./MediaViewer";
 export type { ViewerInfo };
 /**
@@ -90,7 +91,7 @@ export function Attachments({ refs, viewer, message }: { refs: AttachmentRef[]; 
           {rest.map((r) => (
             <div key={r.id} data-attachment-id={r.id} className="chat-attachment">
               {isVoice(r) ? <VoiceAttachment r={r} /> : isInlineImage(r) ? <ImageAttachment r={r} /> : isPlayable(r) ? <MediaAttachment r={r} /> : <FileAttachment r={r} />}
-              {(isVoice(r) || isInlineImage(r) || isPlayable(r)) && <InlineDownload r={r} />}
+              {!isVoice(r) && !isVideo(r) && (isInlineImage(r) || isPlayable(r)) && <InlineDownload r={r} />}
             </div>
           ))}
         </div>
@@ -122,17 +123,16 @@ function VoiceAttachment({ r }: { r: AttachmentRef }) {
   const key = `${r.id}${useId()}`;
   const playback = useVoicePlayback();
   const [wanted, setWanted] = useState(false);
-  const { url, error, loading } = useBlobUrl(r, wanted);
+  const { url, error, loading, retry } = useBlobUrl(r, wanted);
   useEffect(() => {
     if (url) voicePlayback.provide(key, url);
   }, [key, url]);
   // Leaving the conversation or closing the panel stops it.
   useEffect(() => () => voicePlayback.release(key), [key]);
   const total = shownDuration(r.durationMs);
-  if (error) return <FileAttachment r={r} error={error} />;
   const mine = playback.key === key;
   const playing = mine && playback.status === "playing";
-  const busy = mine && playback.status === "loading" && (loading || !url);
+  const busy = !error && mine && playback.status === "loading" && (loading || !url);
   const pos = mine ? playback.positionMs : voicePlayback.positionOf(key);
   const seconds = Math.round(total / 1000);
   return (
@@ -147,6 +147,11 @@ function VoiceAttachment({ r }: { r: AttachmentRef }) {
         aria-label={playing || busy ? uiText("messaging.interface.pause_voice_message_bc36903") : uiText("messaging.interface.play_voice_message_value0_seconds_d8be711", { value0: seconds })}
         aria-pressed={playing}
         onClick={() => {
+          if (error) {
+            retry();
+            voicePlayback.play(key, null);
+            return;
+          }
           if (!url) setWanted(true);
           voicePlayback.toggle(key, url);
         }}
@@ -170,66 +175,38 @@ function VoiceAttachment({ r }: { r: AttachmentRef }) {
           {formatUiNumber(playback.rate)}×
         </button>
       )}
-      {mine && playback.failed && (
+      {(error || (mine && playback.failed)) && (
         <span className="voice-failed" role="alert">
-          {playback.failed}
+          {error ?? playback.failed}
         </span>
       )}
     </div>
   );
 }
-/**
- * A video: a tile with a play button that opens the viewer, where it decrypts and plays with Meldiq's controls; audio
- * files: a card until opened, then a player in place (decrypted in memory, never a page).
- */
-export function MediaAttachment({ r }: { r: AttachmentRef }) {
+function VideoAttachment({ r }: { r: AttachmentRef }) {
   useLocaleRender();
   const l10n = useLocalization();
   const viewer = useViewer(r);
+  const downloaded = useVideoDownload(r.id);
+  const transfer = useDownload(r);
   const [open, setOpen] = useState(false);
+  const [unsupported, setUnsupported] = useState(false);
   const inline = useRef<HTMLVideoElement>(null);
-  const { url, error, loading, retry, progress } = useBlobUrl(r, open, isVideo(r));
-  const [tile, tileNear] = useNearScreen<HTMLButtonElement>();
+  const { url, error, loading, retry, progress } = useBlobUrl(r, open, true);
+  const [stage, near] = useNearScreen<HTMLDivElement>();
   const { autoLoadPhotos } = usePrefs();
-  const { url: poster } = useBlobUrl(r.thumbnail ?? r, !!r.thumbnail && autoLoadPhotos && tileNear);
-  if (error && !isVideo(r)) return <FileAttachment r={r} error={error} />;
-  if (isVideo(r))
-    return (
-      <>
-        <button
-          ref={tile}
-          className="att-video-tile"
-          onClick={(e) => {
-            e.currentTarget.focus();
-            inline.current?.pause();
-            viewer.open();
-          }}
-          aria-label={uiText("messaging.interface.play_video_value0_value1_c5f96eb", { value0: r.name, value1: bytes(r.size) })}
-        >
-          {poster && <img className="att-video-poster" src={poster} alt="" loading="lazy" />}
-          <span className="att-video-play" aria-hidden="true">
-            <Play size={22} />
-          </span>
-          <span className="att-video-name">
-            <Film size={14} aria-hidden="true" /> <span className="ellipsis">{r.name}</span>
-            <small>{bytes(r.size)}</small>
-          </span>
-        </button>
-        {error ? (
-          <>
-            <FileAttachment r={r} error={error} />
-            <button className="btn btn-ghost btn-sm" onClick={retry}>
-              {l10n("common.actions.retry")}
-            </button>
-          </>
-        ) : (
-          <button className="btn btn-ghost btn-sm" disabled={open && loading} onClick={() => setOpen(true)} aria-label={uiText("messaging.interface.play_value0_inline_b4960a2", { value0: r.name })}>
-            {open && loading
-              ? `${uiText("messaging.interface.loading_video_bbef69c")}${progress?.total ? ` · ${formatUiNumber(Math.floor((progress.done * 100) / progress.total))}%` : ""}`
-              : uiText("messaging.interface.play_inline_1c9883a")}
-          </button>
-        )}
-        {open && url && (
+  const { url: poster } = useBlobUrl(r.thumbnail ?? r, !!r.thumbnail && autoLoadPhotos && near);
+  const name = attachmentName(r.name);
+  const titleId = useId();
+  const size = bytes(r.size);
+  const pct = progress?.total ? Math.min(100, Math.floor((progress.done * 100) / progress.total)) : null;
+  const waiting = open && loading;
+  const portrait = r.w && r.h && r.h > r.w;
+  const ratio = r.w && r.h ? r.w / r.h : 16 / 10;
+  return (
+    <div className={portrait ? "att-video-card portrait" : "att-video-card"}>
+      <div className="att-video-stage" ref={stage} style={{ aspectRatio: ratio, maxWidth: `min(100%, ${Math.round(360 * ratio)}px, ${54 * ratio}dvh)` }}>
+        {url && !unsupported ? (
           <video
             ref={inline}
             className="att-inline-video"
@@ -239,12 +216,75 @@ export function MediaAttachment({ r }: { r: AttachmentRef }) {
             playsInline
             autoPlay
             preload="metadata"
-            aria-label={uiText("messaging.interface.inline_video_value0_9f6acf0", { value0: r.name })}
+            aria-label={uiText("messaging.interface.inline_video_value0_9f6acf0", { value0: name })}
+            onError={() => setUnsupported(true)}
           />
+        ) : (
+          <button
+            className="att-video-tile"
+            disabled={waiting}
+            onClick={() => {
+              setUnsupported(false);
+              if (error || unsupported) retry();
+              setOpen(true);
+            }}
+            aria-label={uiText("messaging.interface.play_value0_inline_b4960a2", { value0: name })}
+          >
+            {poster && <img className="att-video-poster" src={poster} alt="" loading="lazy" />}
+            <span className="att-video-play" aria-hidden="true">
+              {waiting ? <span className="spinner" /> : <Play size={22} />}
+            </span>
+          </button>
         )}
-        {viewer.own}
-      </>
-    );
+      </div>
+      <div className="att-video-footer">
+        <div className="att-video-summary">
+          <strong className="ellipsis" id={titleId} title={name} dir="auto">
+            {name}
+          </strong>
+          <small className="att-video-size">{size}</small>
+          <button
+            className="att-video-view"
+            onClick={() => {
+              inline.current?.pause();
+              viewer.open();
+            }}
+            aria-describedby={titleId}
+          >
+            {l10n("messaging.open_video_viewer")}
+          </button>
+        </div>
+        {(!downloaded || transfer.busy) && <DownloadControl r={r} transfer={transfer} />}
+      </div>
+      {waiting && (
+        <small className="att-video-status" role="status">
+          {uiText("messaging.interface.loading_video_bbef69c")}
+          {pct !== null && ` · ${formatUiNumber(pct)}%`}
+        </small>
+      )}
+      {transfer.busy && (
+        <progress className="att-video-status" max={100} value={transfer.pct} aria-label={uiText("messaging.interface.download_value0_value1_9f8bb49", { value0: name, value1: transfer.pct })} />
+      )}
+      {(error || unsupported || transfer.error) && (
+        <small className="att-video-status" role="alert">
+          {transfer.error ?? error ?? uiText("messaging.interface.this_browser_cannot_play_this_video_s_codec_download_the_original_a46c399")}
+        </small>
+      )}
+      {viewer.own}
+    </div>
+  );
+}
+
+export function MediaAttachment({ r }: { r: AttachmentRef }) {
+  return isVideo(r) ? <VideoAttachment key={r.id} r={r} /> : <AudioAttachment key={r.id} r={r} />;
+}
+
+function AudioAttachment({ r }: { r: AttachmentRef }) {
+  useLocaleRender();
+  const l10n = useLocalization();
+  const [open, setOpen] = useState(false);
+  const { url, error, loading } = useBlobUrl(r, open);
+  if (error) return <FileAttachment r={r} error={error} />;
   if (!open || loading || !url) {
     return (
       <button className="att-file" onClick={() => setOpen(true)} aria-label={uiText("messaging.interface.play_value0_value1_43d5a87", { value0: r.name, value1: bytes(r.size) })} disabled={open}>
@@ -391,6 +431,7 @@ function DownloadControl({ r, transfer }: { r: AttachmentRef; transfer: ReturnTy
     <button
       type="button"
       className="chat-file-download"
+      title={transfer.busy ? undefined : uiText("common.actions.download")}
       aria-label={
         transfer.busy
           ? uiText("messaging.interface.cancel_downloading_value0_aa1d110", { value0: name })

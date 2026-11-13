@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Abrir no visualizador",
+  "download_voice_message": "Baixar mensagem de voz",
+  "reconnect_catching_up": "Sincronizando mensagens…",
+  "reconnect_caught_up": "De volta online · Sincronização concluída",
+  "reconnect_refresh_failed": "Online. Não foi possível atualizar as mensagens.",
   "message": "Mensagem",
   "send": "Enviar",
   "reply": "Responder",

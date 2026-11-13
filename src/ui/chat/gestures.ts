@@ -102,30 +102,44 @@ export function useMessageGestures(onReply: (() => void) | null, onReact: (() =>
   const swipe = useRef(new SwipeReply());
   const taps = useRef(new DoubleTap());
   const lastTouch = useRef(Number.NEGATIVE_INFINITY);
+  const activePointer = useRef<number | null>(null);
   const [offset, setOffset] = useState(0);
   const at = (e: ReactPointerEvent) => ({ pointerType: e.pointerType, x: e.clientX, y: e.clientY });
   const handlers = {
     onPointerDown: (e: ReactPointerEvent<HTMLElement>) => {
-      if (onReply) swipe.current.down(at(e));
+      const target = e.target as HTMLElement;
+      if (!e.currentTarget.contains(target) || !e.isPrimary || e.button !== 0) return;
+      if (onReply && !target.closest(OWN_MEANING)) {
+        activePointer.current = e.pointerId;
+        swipe.current.down(at(e));
+      }
     },
     onPointerMove: (e: ReactPointerEvent<HTMLElement>) => {
-      if (!onReply) return;
+      if (!onReply || activePointer.current !== e.pointerId) return;
       const next = swipe.current.move(at(e));
       if (next !== offset) setOffset(next);
     },
     onPointerUp: (e: ReactPointerEvent<HTMLElement>) => {
-      const moved = swipe.current.moved;
-      if (onReply && swipe.current.up()) {
-        (navigator as Navigator & { vibrate?: (ms: number) => boolean }).vibrate?.(8);
-        onReply();
+      const target = e.target as HTMLElement;
+      if (!e.currentTarget.contains(target) || !e.isPrimary) return;
+      let moved = false;
+      if (activePointer.current === e.pointerId) {
+        activePointer.current = null;
+        moved = swipe.current.moved;
+        const triggered = swipe.current.up();
+        if (onReply && triggered) {
+          (navigator as Navigator & { vibrate?: (ms: number) => boolean }).vibrate?.(8);
+          onReply();
+        }
+        setOffset(0);
       }
-      setOffset(0);
       if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
       lastTouch.current = performance.now();
-      if (moved || !onReact || (e.target as HTMLElement).closest(OWN_MEANING)) return taps.current.reset();
+      if (moved || !onReact || target.closest(OWN_MEANING)) return taps.current.reset();
       if (taps.current.tap({ x: e.clientX, y: e.clientY }, performance.now())) onReact();
     },
     onPointerCancel: () => {
+      activePointer.current = null;
       swipe.current.cancel();
       taps.current.reset();
       setOffset(0);
@@ -135,7 +149,7 @@ export function useMessageGestures(onReply: (() => void) | null, onReact: (() =>
       // browsers send dblclick for it too.
       if (!onReact || performance.now() - lastTouch.current < 600) return;
       const target = e.target as HTMLElement;
-      if (target.closest(OWN_MEANING) || target.closest(MESSAGE_TEXT)) return;
+      if (!e.currentTarget.contains(target) || target.closest(OWN_MEANING) || target.closest(MESSAGE_TEXT)) return;
       globalThis.getSelection?.()?.removeAllRanges(); // what the double-click selected beside the text isn't wanted
       onReact();
     },

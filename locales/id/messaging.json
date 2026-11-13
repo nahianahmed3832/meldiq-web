@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Buka di penampil",
+  "download_voice_message": "Unduh pesan suara",
+  "reconnect_catching_up": "Menyinkronkan pesan…",
+  "reconnect_caught_up": "Kembali online · Sinkronisasi selesai",
+  "reconnect_refresh_failed": "Online. Pesan tidak dapat diperbarui.",
   "message": "Pesan",
   "send": "Kirim",
   "reply": "Balas",

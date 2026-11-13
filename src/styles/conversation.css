@@ -56,6 +56,7 @@
   min-height: 0;
   padding: 12px 0 8px;
   overflow-anchor: none;
+  overflow-x: hidden;
 }
 /* Date separators: a centred label chip on a hairline. */
 .day {
@@ -105,6 +106,24 @@
 }
 .msg.swiping {
   transition: background var(--t-fast);
+}
+.msg-swipe-cue {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 6px);
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  pointer-events: none;
+}
+.msg-swipe-cue.armed {
+  background: var(--accent);
+  color: var(--on-accent);
 }
 @media (pointer: coarse) {
   /* Vertical moves scroll the list; horizontal ones (and double taps, without zooming) reach the message's gestures. */
@@ -396,6 +415,63 @@
   width: 36px;
   height: 36px;
 }
+@media (hover: none) and (pointer: coarse) {
+  .msg.has-actions {
+    padding-inline-end: 48px;
+  }
+  .msg .msg-actions {
+    display: flex;
+    top: 0;
+    inset-inline-end: 2px;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .msg .msg-actions > :not(.msg-more) {
+    display: none;
+  }
+  .msg .msg-actions .msg-more {
+    width: 44px;
+    height: 44px;
+    color: var(--text-2);
+  }
+}
+.msg-edit {
+  display: grid;
+  gap: 6px;
+  width: min(100%, 640px);
+  margin-block-start: 4px;
+}
+.msg-edit textarea {
+  width: 100%;
+  min-height: 44px;
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
+}
+.msg-edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.msg-edit-hint {
+  flex: 1 1 160px;
+  font-size: 12px;
+}
+@media (hover: none) and (pointer: coarse) {
+  .msg-edit textarea {
+    font-size: 16px;
+  }
+  .msg-edit-hint {
+    display: none;
+  }
+  .msg-edit-actions > button {
+    min-height: 44px;
+  }
+}
 .quick-emoji {
   font-size: 20px;
 }
@@ -673,6 +749,14 @@
   font-size: 12.5px;
   color: var(--text-2);
 }
+.composer-context .icon-btn {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+.composer.replying {
+  border-color: var(--accent);
+}
 .composer-files {
   display: flex;
   flex-wrap: wrap;
@@ -866,10 +950,11 @@
   background: var(--surface-sunken);
   border: 1px solid var(--border);
   width: min(320px, 100%);
+  min-width: 0;
 }
 .voice-play {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -892,8 +977,8 @@
   flex-wrap: wrap;
 }
 .voice-rate {
-  min-width: 34px;
-  height: 24px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 6px;
   border-radius: var(--r-pill);
   background: var(--surface);
@@ -3009,8 +3094,12 @@ button.media-card {
 }
 
 .unread-divider {
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 700;
+}
+.unread-divider::before,
+.unread-divider::after {
+  background: var(--accent);
 }
 
 .xp-library {
@@ -3403,17 +3492,16 @@ button.media-card {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  opacity: 0.7;
+  object-fit: contain;
 }
-.att-video-play,
-.att-video-name {
+.att-video-play {
   z-index: 1;
 }
 .att-inline-video {
-  max-width: 100%;
-  max-height: 400px;
-  border-radius: 12px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .attachment-draft-preview {
   overflow: hidden;
@@ -3561,6 +3649,15 @@ button.media-card {
   width: fit-content;
   max-width: 100%;
   min-width: 0;
+}
+.chat-attachment:has(> .att-video-card) {
+  width: min(360px, 100%);
+}
+.chat-attachment:has(> .att-video-card.portrait) {
+  width: min(248px, 100%);
+}
+.chat-attachment:has(> .voice-msg) {
+  width: min(320px, 100%);
 }
 .chat-file-download {
   flex: 0 0 auto;

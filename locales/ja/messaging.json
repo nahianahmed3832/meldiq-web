@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "ビューアーで開く",
+  "download_voice_message": "音声メッセージをダウンロード",
+  "reconnect_catching_up": "メッセージを同期中…",
+  "reconnect_caught_up": "オンラインに復帰・同期完了",
+  "reconnect_refresh_failed": "オンラインです。メッセージを更新できませんでした。",
   "message": "メッセージ",
   "send": "送信",
   "reply": "返信",

@@ -37,7 +37,8 @@ import {
   Video,
   IdCard,
 } from "lucide-react";
-import { useContext, memo, useRef, useState } from "react";
+import { useContext, memo, useRef, useState, type RefObject } from "react";
+import { flushSync } from "react-dom";
 import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
 import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -54,8 +55,8 @@ import { ReactionList, ReactionsDialog } from "./Reactions";
 import { useLongPress } from "./longPress";
 import { type ContextTarget, contextEntries, contextTarget } from "./contextTarget";
 import { GifView } from "./GifView";
-import { mergeHandlers, useMessageGestures } from "./gestures";
-import { clock, dayLabel, fullTime } from "../format";
+import { mergeHandlers, SWIPE_REPLY_PX, useMessageGestures } from "./gestures";
+import { bytes, clock, dayLabel, fullTime } from "../format";
 import { openInApp } from "./inAppLinks";
 import { useT } from "../../i18n";
 import { LookAvatar, LookName } from "../people/NameStyle";
@@ -83,6 +84,11 @@ import { canLink, messageLink } from "../../sync/messageLinks";
 import { PostedContent } from "./PostedContent";
 import { WebhookAvatar, WebhookName } from "./WebhookSender";
 import { useReactionRolesItem } from "../community/reactionRoles/useReactionRolesItem";
+import { isInlineImage, saveAttachment } from "../../sync/attachments";
+import { attachmentName } from "../../sync/attachmentPolicy";
+import { isVoice } from "../../sync/voice";
+import type { AttachmentRef } from "../../protocol/payload";
+import { Icon } from "../icons/Icon";
 export const QUICK_EMOJI = DEFAULT_QUICK_REACTIONS;
 /** The hover toolbar's icon size, as large as Discord's so each action is easy to hit. */
 const TOOL_ICON = 20;
@@ -129,6 +135,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const t = useT();
   const { m } = p;
   const [editing, setEditing] = useState(false);
+  const editInput = useRef<HTMLTextAreaElement>(null);
+  const row = useRef<HTMLDivElement>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteBusy, setDeleteBusy] = useState(false),
     [deleteError, setDeleteError] = useState<string | null>(null);
@@ -167,6 +175,19 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   // Community parity C: a webhook's post shows the webhook, and text made from its boxes only where there are none.
   const webhook = m.rich?.webhook ?? null;
   const posted = !!(m.rich?.embeds?.length || m.rich?.buttons?.length || m.rich?.giveaway || m.rich?.botComponents);
+  const structured = !!(m.rich?.managedPoll || m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker || m.rich?.gif);
+  const canEdit = live && mine && p.canPost && m.serverTs !== null && !structured && !posted;
+  const editLabel = t("messaging.interface.edit_message_9757ccd");
+  const startEdit = () => {
+    // Focus during the tap, after the phone menu's focus trap has released the conversation.
+    flushSync(() => setEditing(true));
+    editInput.current?.focus({ preventScroll: true });
+    editInput.current?.scrollIntoView({ block: "nearest" });
+  };
+  const finishEdit = () => {
+    setEditing(false);
+    row.current?.focus({ preventScroll: true });
+  };
   const shownText = m.rich?.textFromEmbeds ? "" : m.text;
   const reactionRoles = useReactionRolesItem(m, inCommunity, !!more.anchor);
   const body = () => {
@@ -195,9 +216,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         </span>
       );
     if (m.deleted) return <span className="msg-deleted">{t("msg_deleted")}</span>;
-    if (editing) return <EditBox m={m} onDone={() => setEditing(false)} />;
     // A poll, contact, location, sticker or animated emoji is the message itself: no card under it (android MessageBubble).
-    const structured = !!(m.rich?.managedPoll || m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker || m.rich?.gif);
     const mediaLink = mediaCards && !structured ? findMediaLink(m.text) : null;
     return (
       <>
@@ -212,7 +231,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </button>
         )}
         {m.forwarded && <ForwardedLine origin={m.rich?.origin} />}
-        {m.rich?.managedPoll ? (
+        {editing ? (
+          <EditBox m={m} input={editInput} onDone={finishEdit} />
+        ) : m.rich?.managedPoll ? (
           <div>
             <ManagedPollView m={m} myUserId={p.myUserId} canPost={!!conv?.canPost} />
             {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
@@ -294,7 +315,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             onReact: live && canAddReaction ? (e) => void engine.react(m, e) : null,
           }}
         />
-        {mediaLink ? (
+        {editing ? null : mediaLink ? (
           <MediaLinkCard link={mediaLink} preview={m.rich?.link?.url === mediaLink.url ? m.rich.link : null} />
         ) : (
           m.rich?.link &&
@@ -316,6 +337,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   // What the menu was opened on (a photo, a link, selected text): its own items come first (chat/contextTarget.tsx).
   const [target, setTarget] = useState<ContextTarget | null>(null);
   const attachment = m.attachments.find((r) => r.id === attachmentTarget);
+  const menuAttachment = attachment ?? (m.attachments.length === 1 ? m.attachments[0] : undefined);
+  const showActions = live && !editing && !fileSelection?.selecting;
+  const downloadOriginal = (ref: AttachmentRef) => {
+    void saveAttachment(engine, ref).catch((e: unknown) => {
+      if (!(e instanceof DOMException && e.name === "AbortError")) engine.notice("error", e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_save_this_file_try_again_d658776"));
+    });
+  };
   const pressedOn = useRef<EventTarget | null>(null);
   const press = useLongPress(
     (el) => {
@@ -324,11 +352,15 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       setTarget(contextTarget(pressedOn.current));
       more.open(el);
     },
-    !editing && m.kind !== "call",
+    !editing && !fileSelection?.selecting && m.kind !== "call",
   );
   // Swipe left to reply (touch), double-tap or double-click to react (Settings › Appearance › Gestures).
-  const canAct = live && p.canPost && !editing;
-  const gestures = useMessageGestures(canAct && swipeToReply ? () => p.onReply(m) : null, live && canAddReaction && !editing && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
+  const canAct = showActions && p.canPost;
+  const reply = () => {
+    if (more.anchor) flushSync(() => more.close());
+    p.onReply(m);
+  };
+  const gestures = useMessageGestures(canAct && swipeToReply ? reply : null, showActions && canAddReaction && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
   const quickRow: MenuEntry[] =
     pressed && live && canAddReaction
       ? [
@@ -362,20 +394,20 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
               </div>
             ),
           },
-          { label: t("msg_reply"), icon: <MessageSquareReply size={16} />, onSelect: () => p.onReply(m) },
-          ...(p.onThread && !m.threadRootId ? [{ label: t("msg_reply_thread"), icon: <MessagesSquare size={16} />, onSelect: () => p.onThread?.(m) }] : []),
-          "separator",
         ]
       : [];
   return (
     <div
+      ref={row}
       {...mergeHandlers(press, gestures.handlers)}
-      onPointerDownCapture={(e) => (pressedOn.current = e.target)}
+      onPointerDownCapture={(e) => {
+        if (e.currentTarget.contains(e.target as Node)) pressedOn.current = e.target;
+      }}
       // A right-click or two-finger click: the message's menu at the pointer (the quick reactions on top, as a long
       // press shows them), with what was clicked first (a photo: open, download, copy; a link; selected text); the Menu
       // key or Shift+F10 opens it from the keyboard. Only the edit box keeps the browser's menu.
       onContextMenu={(e) => {
-        if (editing || keepsNativeMenu(e.target)) return;
+        if (editing || !e.currentTarget.contains(e.target as Node) || keepsNativeMenu(e.target)) return;
         e.preventDefault();
         if (m.kind === "call") return;
         setPressed(true);
@@ -384,19 +416,25 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         more.openAt(e.currentTarget, e);
       }}
       onKeyDown={(e) => {
-        if (editing || !(e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) || keepsNativeMenu(e.target)) return;
+        if (editing || !e.currentTarget.contains(e.target as Node) || !(e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) || keepsNativeMenu(e.target)) return;
         e.preventDefault();
         setPressed(true);
         trackAttachment(e.target);
+        setTarget(contextTarget(e.target));
         more.openAt(e.currentTarget, null);
       }}
       style={gestures.offset ? { transform: `translateX(${gestures.offset}px)` } : undefined}
-      className={`msg${waiting ? " waiting" : ""}${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
+      className={`msg${waiting ? " waiting" : ""}${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}${showActions ? " has-actions" : ""}`}
       id={`msg-${m.id}`}
       role="article"
       aria-label={uiText("messaging.interface.value0_value1_c55f6a8", { value0: webhook?.name ?? p.senderName, value1: fullTime(m.sortTs) })}
       tabIndex={-1}
     >
+      {gestures.offset < -16 && (
+        <span className={`msg-swipe-cue${gestures.offset <= -SWIPE_REPLY_PX ? " armed" : ""}`} aria-hidden="true">
+          <Icon name="communication.reply" size={20} />
+        </span>
+      )}
       <div className="msg-gutter">
         {p.first && webhook ? (
           <WebhookAvatar id={webhook.id} name={webhook.name} avatarRev={webhook.avatarRev} />
@@ -442,7 +480,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         )}
       </div>
 
-      {live && !editing && (
+      {showActions && (
         <div className="msg-actions" role="toolbar" aria-label={t("msg_actions")}>
           {canAddReaction &&
             quickEmoji.slice(0, 3).map((e) => (
@@ -456,7 +494,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             </button>
           )}
           {p.canPost && (
-            <button className="icon-btn" onClick={() => p.onReply(m)} aria-label={t("msg_reply")} title={t("msg_reply")}>
+            <button className="icon-btn" onClick={reply} aria-label={t("msg_reply")} title={t("msg_reply")}>
               <MessageSquareReply size={TOOL_ICON} />
             </button>
           )}
@@ -465,15 +503,27 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
               <MessagesSquare size={TOOL_ICON} />
             </button>
           )}
-          {mine && p.canPost && (
-            <button className="icon-btn" onClick={() => setEditing(true)} aria-label={t("msg_edit")} title={t("msg_edit")}>
+          {canEdit && (
+            <button className="icon-btn" onClick={startEdit} aria-label={editLabel} title={editLabel}>
               <Pencil size={TOOL_ICON} />
             </button>
           )}
           <button className="icon-btn" onClick={() => setForwarding(true)} aria-label={t("msg_forward")} title={t("msg_forward")}>
             <Forward size={TOOL_ICON} />
           </button>
-          <button className="icon-btn" onClick={(e) => more.open(e.currentTarget)} aria-label={t("msg_more")} title={t("msg_more")} aria-haspopup="menu">
+          <button
+            className="icon-btn msg-more"
+            onClick={(e) => {
+              setPressed(true);
+              setTarget(null);
+              setAttachmentTarget(undefined);
+              more.open(e.currentTarget);
+            }}
+            aria-label={t("msg_more")}
+            title={t("msg_more")}
+            aria-haspopup="menu"
+            aria-expanded={!!more.anchor}
+          >
             <MoreHorizontal size={TOOL_ICON} />
           </button>
         </div>
@@ -511,10 +561,23 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             setAttachmentTarget(undefined);
           }}
           entries={[
-            ...contextEntries(target, (text) => engine.notice("info", text)),
             ...quickRow,
+            ...(canEdit ? [{ label: editLabel, icon: <Pencil size={16} />, onSelect: startEdit }] : []),
+            ...(live && p.canPost && !fileSelection?.selecting ? [{ label: t("msg_reply"), icon: <MessageSquareReply size={16} />, onSelect: reply }] : []),
+            ...(live && p.onThread && !m.threadRootId ? [{ label: t("msg_reply_thread"), icon: <MessagesSquare size={16} />, onSelect: () => p.onThread?.(m) }] : []),
+            ...contextEntries(target?.kind === "media" && attachment && !isInlineImage(attachment) ? null : target, (text) => engine.notice("info", text)),
+            ...(live && menuAttachment && !isInlineImage(menuAttachment)
+              ? [
+                  {
+                    label: isVoice(menuAttachment)
+                      ? uiText("messaging.download_voice_message")
+                      : uiText("messaging.interface.download_value0_value1_68feb19", { value0: attachmentName(menuAttachment.name), value1: bytes(menuAttachment.size) }),
+                    icon: <Icon name="files.download" size={16} />,
+                    onSelect: () => downloadOriginal(menuAttachment),
+                  },
+                ]
+              : []),
             ...(reactions.length > 0 ? [{ label: t("react_dialog_title"), icon: <SmilePlus size={16} />, onSelect: () => setShowReactions(true) }] : []),
-            ...(mine && p.canPost ? [{ label: t("msg_edit"), icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
             ...reactionRoles.entries,
             ...(canPin
               ? [
@@ -730,7 +793,7 @@ function Status({ m, onRetry, onReview, receipts }: { m: StoredMessage; onRetry:
       return null;
   }
 }
-function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
+function EditBox({ m, input, onDone }: { m: StoredMessage; input: RefObject<HTMLTextAreaElement | null>; onDone: () => void }) {
   useLocaleRender();
   const l10n = useLocalization();
   const engine = useEngine();
@@ -738,13 +801,14 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
   // Edits get the same room as new messages (server docs/MOJO.md).
   const limit = useMojoLimits()?.messageChars ?? null;
   const tooLong = overCharLimit(text, limit);
+  const allowEmpty = m.attachments.length > 0;
   const [busy, setBusy] = useState(false),
     [error, setError] = useState<string | null>(null);
   const attempt = useRef<{ body: string; id: string } | null>(null);
   const save = async () => {
     if (tooLong || busy) return;
     const body = text.trim();
-    if (!body) return;
+    if (!body && !allowEmpty) return;
     if (body === m.text) {
       onDone();
       return;
@@ -762,37 +826,46 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
     }
   };
   return (
-    <div style={{ display: "grid", gap: 6, marginTop: 4 }}>
+    <form
+      className="msg-edit"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void save();
+      }}
+    >
       {error && <p role="alert">{error}</p>}
       <textarea
+        ref={input}
         disabled={busy}
         className="textarea"
         value={text}
-        autoFocus
         rows={Math.min(8, text.split("\n").length + 1)}
         aria-label={uiText("messaging.interface.edit_message_9757ccd")}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => {
+          if (e.nativeEvent.isComposing) return;
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             void save();
-          } else if (e.key === "Escape") onDone();
+          } else if (e.key === "Escape" && !busy) {
+            e.preventDefault();
+            onDone();
+          }
         }}
       />
       <CharLimitNote text={text} limit={limit} />
-      <div className="row">
-        <span className="faint" style={{ fontSize: 12 }}>
+      <div className="msg-edit-actions">
+        <span className="msg-edit-hint faint">
           <Localized k="messaging.interface.enter_to_save_esc_to_cancel_f9ddecc" />
         </span>
-        <span className="grow" />
-        <button className="btn btn-secondary btn-sm" onClick={onDone}>
+        <button type="button" className="btn btn-secondary btn-sm" onClick={onDone} disabled={busy}>
           {l10n("common.actions.cancel")}
         </button>
-        <button className="btn btn-primary btn-sm" onClick={() => void save()} disabled={!text.trim() || tooLong || busy}>
+        <button type="submit" className="btn btn-primary btn-sm" disabled={(!text.trim() && !allowEmpty) || tooLong || busy}>
           {l10n("common.actions.save")}
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 /**

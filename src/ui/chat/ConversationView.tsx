@@ -15,7 +15,7 @@ import { ConnectionRequestBanner } from "../people/ConnectionRequestViews";
 import { useConnectionLists } from "../people/connectionRequests";
 import { VoiceRoomView } from "./VoiceRoomView";
 import { Archive, ArrowLeft, BellOff, MonitorUp, Phone, Pin, Search, ShieldAlert, Video } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { markStartup } from "../../application/splash";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Route } from "../../application/router";
@@ -79,6 +79,12 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
     (a, b) => a.length === b.length && a.every((x, i) => x === b[i]),
   );
   const [replyTo, setReplyTo] = useState<StoredMessage | null>(null);
+  const composerInput = useRef<HTMLTextAreaElement>(null);
+  const reply = (message: StoredMessage) => {
+    setReplyTo(message);
+    // On iOS the native keyboard only opens when focus is part of the swipe or menu tap.
+    composerInput.current?.focus({ preventScroll: true });
+  };
   const voiceChat = useFeature("voice-channel-chat");
   const [chatRoom, setChatRoom] = useState<string | null>(null);
   const drop = useFileDrop(!!c?.canPost && (!c.voice || (voiceChat && chatRoom === c.id)));
@@ -160,7 +166,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           );
         })()}
         {/* Calls in a community happen in its voice rooms; a text channel has none to start (android round 7). */}
-        {c.type !== "CHANNEL" && !c.request && !c.members?.some((member) => member.bot) && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
+        {c.type !== "CHANNEL" && !c.request && !c.members?.some((member) => member.bot) && (
+          <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />
+        )}
         {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
         {c.type === "CHANNEL" && !showVoice && <ChannelBell c={c} />}
         {/* Community parity C: a ticket's Close (and a moderator's Join). */}
@@ -265,7 +273,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           canReact={posting.react}
           newReactions={abilities.newReactions}
           moderate={abilities.moderate}
-          onReply={setReplyTo}
+          onReply={reply}
           onThread={onThread}
           onReview={onReview}
           start={
@@ -307,6 +315,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           <Composer
             conversation={c}
             title={title}
+            inputRef={composerInput}
             replyTo={replyTo}
             replyName={
               replyTo ? (replyTo.outgoing ? uiText("messaging.interface.yourself_2077055") : (users[replyTo.senderUserId]?.displayName ?? uiText("messaging.interface.unknown_b764cdc"))) : null

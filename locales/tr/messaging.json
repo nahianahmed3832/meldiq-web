@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Görüntüleyicide aç",
+  "download_voice_message": "Sesli mesajı indir",
+  "reconnect_catching_up": "Mesajlar eşitleniyor…",
+  "reconnect_caught_up": "Yeniden çevrimiçi · Eşitleme tamamlandı",
+  "reconnect_refresh_failed": "Çevrimiçi. Mesajlar yenilenemedi.",
   "message": "Mesaj",
   "send": "Gönder",
   "reply": "Yanıtla",

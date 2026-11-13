@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Im Player öffnen",
+  "download_voice_message": "Sprachnachricht herunterladen",
+  "reconnect_catching_up": "Nachrichten werden synchronisiert…",
+  "reconnect_caught_up": "Wieder online · Auf dem neuesten Stand",
+  "reconnect_refresh_failed": "Online. Nachrichten konnten nicht aktualisiert werden.",
   "message": "Nachricht",
   "send": "Senden",
   "reply": "Antworten",

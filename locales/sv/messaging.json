@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Öppna i visaren",
+  "download_voice_message": "Ladda ner röstmeddelandet",
+  "reconnect_catching_up": "Synkroniserar meddelanden…",
+  "reconnect_caught_up": "Online igen · Synkroniserat",
+  "reconnect_refresh_failed": "Online. Det gick inte att uppdatera meddelandena.",
   "message": "Meddelande",
   "send": "Skicka",
   "reply": "Svara",

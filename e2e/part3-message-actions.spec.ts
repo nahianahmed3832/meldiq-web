@@ -46,7 +46,7 @@ test("Markdown stays escaped, masked links show their destination, and failed ed
     await route.continue();
   });
   await m.click({ button: "right" });
-  await page.getByRole("menuitem", { name: "Edit", exact: true }).click();
+  await page.getByRole("menuitem", { name: "Edit message", exact: true }).click();
   const edit = m.getByRole("textbox", { name: "Edit message", exact: true });
   await edit.fill("**Confirmed edit**");
   await m.getByRole("button", { name: "Save", exact: true }).click();

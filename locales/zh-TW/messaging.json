@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "在播放器中開啟",
+  "download_voice_message": "下載語音訊息",
+  "reconnect_catching_up": "正在同步訊息…",
+  "reconnect_caught_up": "已恢復連線 · 同步完成",
+  "reconnect_refresh_failed": "已連線，但無法重新整理訊息。",
   "message": "訊息",
   "send": "傳送",
   "reply": "回覆",

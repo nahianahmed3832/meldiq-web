@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "เปิดในตัวเล่น",
+  "download_voice_message": "ดาวน์โหลดข้อความเสียง",
+  "reconnect_catching_up": "กำลังซิงค์ข้อความ…",
+  "reconnect_caught_up": "กลับมาออนไลน์ · ซิงค์เสร็จแล้ว",
+  "reconnect_refresh_failed": "ออนไลน์แล้ว แต่รีเฟรชข้อความไม่ได้",
   "message": "ข้อความ",
   "send": "ส่ง",
   "reply": "ตอบกลับ",

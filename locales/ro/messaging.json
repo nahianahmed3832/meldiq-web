@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Deschide în player",
+  "download_voice_message": "Descarcă mesajul vocal",
+  "reconnect_catching_up": "Se sincronizează mesajele…",
+  "reconnect_caught_up": "Din nou online · Sincronizare finalizată",
+  "reconnect_refresh_failed": "Online. Mesajele nu au putut fi actualizate.",
   "message": "Mesaj",
   "send": "Trimite",
   "reply": "Răspunde",

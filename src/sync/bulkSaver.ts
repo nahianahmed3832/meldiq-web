@@ -1,5 +1,5 @@
 import { text as uiText } from "../i18n";
-import { openAttachment, saveAttachment, streamAttachment } from "./attachments";
+import { openAttachment, recordAttachmentDownload, saveAttachment, streamAttachment } from "./attachments";
 import type { SaveItem, SaveStatus } from "./bulkSave";
 import { AttachmentZip } from "./attachmentZip";
 import type { Engine } from "./engine";
@@ -80,7 +80,7 @@ export async function runBulkSave(
   signal?: AbortSignal,
 ): Promise<void> {
   const zip = !dir && items.length > 1 ? new AttachmentZip() : null;
-  const archived: string[] = [];
+  const archived: SaveItem[] = [];
   for (const item of items) {
     if (signal?.aborted) {
       report(item.key, "cancelled");
@@ -88,10 +88,12 @@ export async function runBulkSave(
     }
     report(item.key, "saving");
     try {
-      if (dir) await writeInto(engine, dir, item, signal);
-      else if (zip) {
+      if (dir) {
+        await writeInto(engine, dir, item, signal);
+        await recordAttachmentDownload(engine, item.ref);
+      } else if (zip) {
         await zip.add(item.fileName, await openAttachment(engine, item.ref, undefined, signal), signal);
-        archived.push(item.key);
+        archived.push(item);
       } else {
         await saveAttachment(engine, { ...item.ref, name: item.fileName }, { signal });
       }
@@ -103,7 +105,7 @@ export async function runBulkSave(
   }
   if (!zip || !archived.length) return;
   if (signal?.aborted) {
-    for (const key of archived) report(key, "cancelled");
+    for (const { key } of archived) report(key, "cancelled");
     return;
   }
   const url = URL.createObjectURL(zip.finish());
@@ -115,5 +117,6 @@ export async function runBulkSave(
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 30000);
+  await Promise.all(archived.map(({ ref }) => recordAttachmentDownload(engine, ref)));
 }
 export type { DirHandle };

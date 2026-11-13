@@ -24,6 +24,7 @@ export class LongPress {
 
   down(p: PointerLike, now: number): void {
     this.fired = false;
+    this.releasedAt = null;
     this.start = p.pointerType === "touch" || p.pointerType === "pen" ? { x: p.x, y: p.y, at: now } : null;
   }
 
@@ -67,6 +68,7 @@ export function useLongPress(onPress: (el: HTMLElement) => void, enabled: boolea
   const at = (e: ReactPointerEvent) => ({ pointerType: e.pointerType, x: e.clientX, y: e.clientY });
   return {
     onPointerDown: (e: ReactPointerEvent<HTMLElement>) => {
+      if (!e.currentTarget.contains(e.target as Node) || !e.isPrimary || e.button !== 0 || (e.target as Element).closest("input, textarea, select, [contenteditable], .msg-more")) return;
       lp.current.down(at(e), performance.now());
       clearTimeout(timer.current);
       const el = e.currentTarget;
@@ -86,7 +88,7 @@ export function useLongPress(onPress: (el: HTMLElement) => void, enabled: boolea
       clearTimeout(timer.current);
     },
     onClickCapture: (e: ReactMouseEvent) => {
-      if (!lp.current.swallowClick(performance.now())) return;
+      if (!e.currentTarget.contains(e.target as Node) || !lp.current.swallowClick(performance.now())) return;
       e.preventDefault();
       e.stopPropagation();
     },

@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "ویوئر میں کھولیں",
+  "download_voice_message": "صوتی پیغام ڈاؤن لوڈ کریں",
+  "reconnect_catching_up": "پیغامات کی مطابقت پذیری جاری ہے…",
+  "reconnect_caught_up": "دوبارہ آن لائن · مطابقت پذیری مکمل",
+  "reconnect_refresh_failed": "آن لائن۔ پیغامات تازہ نہیں ہو سکے۔",
   "message": "پیغام",
   "send": "بھیجیں",
   "reply": "جواب دیں",

@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "뷰어에서 열기",
+  "download_voice_message": "음성 메시지 다운로드",
+  "reconnect_catching_up": "메시지 동기화 중…",
+  "reconnect_caught_up": "다시 온라인 · 동기화 완료",
+  "reconnect_refresh_failed": "온라인 상태입니다. 메시지를 새로 고치지 못했습니다.",
   "message": "메시지",
   "send": "보내기",
   "reply": "답장",

@@ -494,6 +494,7 @@ export async function saveAttachment(
       await out.abort().catch(() => undefined);
       throw e;
     }
+    await recordAttachmentDownload(engine, ref);
     return;
   }
   const blob = await openAttachment(engine, ref, opts.onProgress, opts.signal);
@@ -507,6 +508,12 @@ export async function saveAttachment(
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 30000);
+  await recordAttachmentDownload(engine, ref);
+}
+
+/** Keep the timeline's video shortcut in sync with saves from chat, the viewer, and selection. */
+export async function recordAttachmentDownload(engine: Engine, ref: AttachmentRef): Promise<void> {
+  if (safeMime(ref.mime).startsWith("video/")) await engine.store.recordVideoDownload(ref.id).catch(() => undefined);
 }
 /** Only inert types are shown inline; anything else is a download, never rendered as a page (no HTML or SVG). */
 export function safeMime(mime: string): string {

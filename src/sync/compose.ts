@@ -216,7 +216,7 @@ export class Compose {
   async edit(m: StoredMessage, text: string, messageId = crypto.randomUUID()): Promise<void> {
     if (!m.outgoing || m.deleted || !this.canPost(m.conversationId)) throw new ApiError(403, "forbidden", uiText("workspace.interface.you_can_t_post_in_this_conversation_343c10f"));
     const body = text.trim();
-    if (!body) return;
+    if (!body && !m.attachments.length) return;
     const conv = this.host.state().conversations[m.conversationId];
     const ids = conv && conv.type !== "DM" ? resolveMentions(body, await this.host.membersOf(m.conversationId).catch(() => []), false, this.host.device.userId).ids : [];
     const serverTs = await this.host.confirmControl(m.conversationId, { type: "edit", target: m.id, text: body, mentions: ids }, messageId);

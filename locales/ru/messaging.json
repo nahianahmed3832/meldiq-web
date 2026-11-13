@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Открыть в проигрывателе",
+  "download_voice_message": "Скачать голосовое сообщение",
+  "reconnect_catching_up": "Синхронизация сообщений…",
+  "reconnect_caught_up": "Снова в сети · Синхронизация завершена",
+  "reconnect_refresh_failed": "В сети. Не удалось обновить сообщения.",
   "message": "Сообщение",
   "send": "Отправить",
   "reply": "Ответить",

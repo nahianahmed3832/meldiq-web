@@ -13,6 +13,7 @@ enum class MeldiqIcon(val semanticId: String, @get:DrawableRes val drawable: Int
     NavigationDiscover("navigation.discover", R.drawable.mi_navigation_discover),
     NavigationProfile("navigation.profile", R.drawable.mi_navigation_profile),
     CommunicationSend("communication.send", R.drawable.mi_communication_send),
+    CommunicationReply("communication.reply", R.drawable.mi_communication_reply),
     CommunicationVoice("communication.voice", R.drawable.mi_communication_voice),
     CommunicationVideo("communication.video", R.drawable.mi_communication_video),
     CommunityMembers("community.members", R.drawable.mi_community_members),

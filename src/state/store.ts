@@ -121,6 +121,8 @@ export interface AppState {
   me: Me | null;
   server: ServerInfo | null;
   connection: ConnectionState;
+  /** Result of the metadata and active history refresh after reconnecting. */
+  reconnectSync: "idle" | "syncing" | "done" | "failed";
   /** Conversations, workspaces and people have loaded at least once since start. */
   synced: boolean;
   orgs: Org[];
@@ -173,6 +175,7 @@ export const initialState: AppState = {
   me: null,
   server: null,
   connection: "offline",
+  reconnectSync: "idle",
   synced: false,
   orgs: [],
   conversations: {},

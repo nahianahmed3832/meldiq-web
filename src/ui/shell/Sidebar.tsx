@@ -2,12 +2,12 @@ import { roleName } from "../../sync/workspaceRules";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
-import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Search, Settings2, Ticket, UsersRound } from "lucide-react";
-import { type MouseEvent, useLayoutEffect, useRef } from "react";
+import { BookText, CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Search, Settings2, Ticket, UsersRound, X } from "lucide-react";
+import { type MouseEvent, useLayoutEffect, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { markAllReadTargets } from "../selectors";
 import { setPrefs, usePrefs } from "../../application/prefs";
-import { navigate, type Section } from "../../application/router";
+import { navigate, useRoute, type Section } from "../../application/router";
 import { requestNavigation } from "../../application/navigationGuard";
 import { Avatar } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
@@ -27,6 +27,7 @@ import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { useT } from "../../i18n";
 import { ConnectedCallPanel } from "../call/ConnectedCallPanel";
 import { LobbyRow } from "../lobby/LobbyRow";
+import { RulesDialog } from "../community/RulesViews";
 interface SidebarProps {
   orgId: string | null;
   section: Section;
@@ -154,13 +155,14 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         />
       )}
       {communities && !messages && !discover && org && <LobbyRow orgId={org.id} canEdit={perms.canManageOrg} current={section === "lobby"} />}
-      {branded && !messages && perms.canInvite && (
+      {communities && !messages && !discover && org && (
         <div className="community-top">
           {perms.canInvite && (
             <button className="community-invite" onClick={() => onDialog({ kind: "addMembers" })}>
               <Localized k="workspace.interface.invite_people_9e39ec6" slots={[<Link2 size={17} aria-hidden="true" />]} />
             </button>
           )}
+          <SidebarRulesPrompt key={org.id} orgId={org.id} channelId={org.rulesChannel?.channelId ?? null} mustAgree={org.rulesChannel?.mustAgree ?? false} />
         </div>
       )}
       {!communities && section !== "dms" && switcher.anchor && (
@@ -286,6 +288,36 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
       {blankMenu.anchor && <Menu anchor={blankMenu.anchor} point={blankMenu.point} label={org && !messages ? org.name : t("side_direct_messages")} onClose={blankMenu.close} entries={blankEntries} />}
       {community.dialogs}
     </aside>
+  );
+}
+
+/** Give new members a visible path to the rules before they enter a chat. */
+function SidebarRulesPrompt({ orgId, channelId, mustAgree }: { orgId: string; channelId: string | null; mustAgree: boolean }) {
+  const t = useT();
+  const route = useRoute();
+  const prefs = usePrefs();
+  const knownChannel = useOrbit((s) => !!(channelId && s.conversations[channelId]));
+  const [rulesOpen, setRulesOpen] = useState(false);
+  const key = `::rules-prompt:${orgId}:${channelId ?? "rules"}`;
+  if ((!channelId && !mustAgree) || (channelId && route.conversationId === channelId) || prefs.collapsed.includes(key)) return null;
+  return (
+    <div className="sidebar-rules-prompt">
+      <button
+        className="sidebar-rules-link"
+        type="button"
+        onClick={() => {
+          if (channelId && knownChannel) navigate({ section: "home", communityId: orgId, conversationId: channelId });
+          else setRulesOpen(true);
+        }}
+      >
+        <BookText size={18} aria-hidden="true" />
+        <span>{t("organization.rules_read")}</span>
+      </button>
+      {rulesOpen && <RulesDialog orgId={orgId} onClose={() => setRulesOpen(false)} />}
+      <button className="icon-btn" type="button" aria-label={t("common.actions.close")} onClick={() => setPrefs({ collapsed: [...prefs.collapsed, key] })}>
+        <X size={16} aria-hidden="true" />
+      </button>
+    </div>
   );
 }
 /** Discover's side list: where you are, and the other ways into a community. */

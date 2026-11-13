@@ -4,7 +4,7 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { ChevronLeft, ChevronRight, Download, ExternalLink, Film, ImageDown, Maximize, MoreHorizontal, Pause, Play, Volume2, VolumeX, X, Share2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Film, ImageDown, Maximize, MoreHorizontal, Pause, Play, Volume2, VolumeX, X, Share2 } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useEngine } from "../../application/orbit";
@@ -17,6 +17,8 @@ import { attachmentName } from "../../sync/attachmentPolicy";
 import { copyImage } from "./contextTarget";
 import { ZoomableImage } from "./ZoomableImage";
 import { usePrefs } from "../../application/prefs";
+import { Icon } from "../icons/Icon";
+import { useVideoDownload } from "./useVideoDownload";
 /**
  * The media viewer (2026-10-28, after the reference the owner sent): photos and videos of a message, full screen. Who
  * sent it and when at the top left; Download, open in a new tab and More at the top right; arrows and a strip of the
@@ -63,6 +65,12 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
   }, []);
   const { url, error, retry, progress } = useBlobUrl(r, true, true);
   const video = isVideo(r);
+  const downloaded = useVideoDownload(video ? r.id : null);
+  const download = () => {
+    void saveAttachment(engine, r).catch((e: unknown) => {
+      if (!(e instanceof DOMException && e.name === "AbortError")) engine.notice("error", uiText("messaging.interface.couldn_t_save_this_file_try_again_d658776"));
+    });
+  };
   const { url: poster } = useBlobUrl(r.thumbnail ?? r, video && !!r.thumbnail && !error);
   const loadingLabel =
     progress?.phase === "decrypting" ? uiText("messaging.interface.decrypting_value0_b77ff2c", { value0: r.name }) : uiText("messaging.interface.loading_value0_e87d0f1", { value0: r.name });
@@ -86,8 +94,8 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
     ? [
         {
           label: uiText("messaging.interface.download_value0_0f5a93c", { value0: what }),
-          icon: <Download size={16} />,
-          onSelect: () => void saveAttachment(engine, r).catch(() => engine.notice("error", uiText("messaging.interface.couldn_t_save_this_file_try_again_d658776"))),
+          icon: <Icon name="files.download" size={16} />,
+          onSelect: download,
         },
         ...(video
           ? []
@@ -164,15 +172,17 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
       )}
       <div className="viewer-actions" role="toolbar" aria-label={uiText("messaging.interface.value0_actions_d814e85", { value0: what })}>
         <div className="viewer-group">
-          <button
-            className="icon-btn"
-            disabled={!url}
-            onClick={() => url && void saveAttachment(engine, r).catch(() => engine.notice("error", uiText("messaging.interface.couldn_t_save_this_file_try_again_d658776")))}
-            aria-label={uiText("messaging.interface.download_value0_0f5a93c", { value0: what })}
-            title={l10n("common.actions.download")}
-          >
-            <Download size={18} />
-          </button>
+          {!downloaded && (
+            <button
+              className="icon-btn"
+              disabled={!url}
+              onClick={download}
+              aria-label={uiText("messaging.interface.download_value0_0f5a93c", { value0: what })}
+              title={l10n("common.actions.download")}
+            >
+              <Icon name="files.download" size={18} />
+            </button>
+          )}
           <button
             className="icon-btn"
             disabled={!url}

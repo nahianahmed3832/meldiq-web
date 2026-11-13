@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "व्यूअर में खोलें",
+  "download_voice_message": "वॉइस मैसेज डाउनलोड करें",
+  "reconnect_catching_up": "मैसेज सिंक हो रहे हैं…",
+  "reconnect_caught_up": "फिर से ऑनलाइन · सिंक पूरा",
+  "reconnect_refresh_failed": "ऑनलाइन हैं। मैसेज रीफ़्रेश नहीं हो सके।",
   "message": "संदेश",
   "send": "भेजें",
   "reply": "जवाब दें",

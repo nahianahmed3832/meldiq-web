@@ -19,10 +19,10 @@ class CatalogueTests(unittest.TestCase):
                 read_catalogue(base)
     def test_real_catalogue_and_all_android_paths(self):
         data,entries=read_catalogue()
-        self.assertEqual(len(entries),33)
+        self.assertEqual(len(entries),34)
         for entry,nodes in entries:
             for tag,attrs in nodes:self.assertTrue(android_path(tag,attrs).startswith(('M','m')))
-        self.assertEqual(len(outputs()),37)
+        self.assertEqual(len(outputs()),38)
     def test_duplicate_identifier(self):self.mutate(lambda d,b:d['icons'].append(copy.deepcopy(d['icons'][0])))
     def test_duplicate_geometry(self):self.mutate(lambda d,b:d['icons'][1].update(svg=d['icons'][0]['svg']))
     def test_missing_identifier(self):self.mutate(lambda d,b:d['icons'][0].pop('id'))

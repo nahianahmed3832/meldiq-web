@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "在播放器中打开",
+  "download_voice_message": "下载语音消息",
+  "reconnect_catching_up": "正在同步消息…",
+  "reconnect_caught_up": "已恢复连接 · 同步完成",
+  "reconnect_refresh_failed": "已连接，但无法刷新消息。",
   "message": "消息",
   "send": "发送",
   "reply": "回复",

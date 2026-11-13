@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Mở trong trình phát",
+  "download_voice_message": "Tải tin nhắn thoại xuống",
+  "reconnect_catching_up": "Đang đồng bộ tin nhắn…",
+  "reconnect_caught_up": "Đã kết nối lại · Đồng bộ xong",
+  "reconnect_refresh_failed": "Đã kết nối. Không thể làm mới tin nhắn.",
   "message": "Tin nhắn",
   "send": "Gửi",
   "reply": "Trả lời",

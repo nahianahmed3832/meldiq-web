@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Ouvrir dans la visionneuse",
+  "download_voice_message": "Télécharger le message vocal",
+  "reconnect_catching_up": "Synchronisation des messages…",
+  "reconnect_caught_up": "De nouveau en ligne · À jour",
+  "reconnect_refresh_failed": "En ligne. Impossible d’actualiser les messages.",
   "message": "Message",
   "send": "Envoyer",
   "reply": "Répondre",

@@ -9,7 +9,7 @@ import { AtSign, BarChart3, FileUp, Paperclip, Lock, MapPin, Mic, SendHorizontal
 import { useExpressions } from "../community/CustomEmoji";
 import { forSending, refOf } from "../../sync/expressions";
 import type { CustomEmojiRef } from "../../protocol/payload";
-import { type ClipboardEvent, type DragEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type ClipboardEvent, type DragEvent, type RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
@@ -53,6 +53,7 @@ interface ComposerProps {
   title: string;
   replyTo: StoredMessage | null;
   replyName: string | null;
+  inputRef?: RefObject<HTMLTextAreaElement | null>;
   onCancelReply: () => void;
   threadRoot?: string;
   /** Files dropped on the conversation. */
@@ -87,7 +88,8 @@ export function Composer(props: ComposerProps) {
     items: Member[];
     index: number;
   } | null>(null);
-  const input = useRef<HTMLTextAreaElement>(null);
+  const localInput = useRef<HTMLTextAreaElement>(null);
+  const input = props.inputRef ?? localInput;
   const fileInput = useRef<HTMLInputElement>(null);
   const emoji = useMenu();
   const [pickerTab, setPickerTab] = useState<PickerTab>("emoji");
@@ -164,7 +166,7 @@ export function Composer(props: ComposerProps) {
       window.removeEventListener("popstate", flushDraft);
       document.removeEventListener("visibilitychange", hidden);
     };
-  }, [c.id, engine, props.threadRoot, flushDraft]);
+  }, [c.id, engine, props.threadRoot, flushDraft, input]);
   useEffect(() => {
     if (c.type === "DM") return;
     engine
@@ -179,16 +181,13 @@ export function Composer(props: ComposerProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dropped]);
-  useEffect(() => {
-    if (props.replyTo) input.current?.focus();
-  }, [props.replyTo]);
   const autosize = useCallback(() => {
     const el = input.current;
     if (!el) return;
     el.style.height = "auto";
     const limit = parseFloat(getComputedStyle(el).maxHeight) || 220;
     el.style.height = `${Math.min(el.scrollHeight, limit)}px`;
-  }, []);
+  }, [input]);
   useLayoutEffect(autosize, [text, autosize]);
   useEffect(() => {
     // Reflow wrapped lines on rotation and keyboard resizing, even when the draft hasn't changed.
@@ -431,13 +430,13 @@ export function Composer(props: ComposerProps) {
             : uiText("messaging.interface.slowmode_is_on_one_message_every_value0_c53f473", { value0: slowmodeLabel(c.slowmodeSec) })}
         </div>
       )}
-      <div className="composer">
+      <div className={props.replyTo ? "composer replying" : "composer"}>
         {props.replyTo && (
           <div className="composer-context">
             <span className="grow ellipsis">
               {t("composer_replying")} <b>{props.replyName}</b>: {props.replyTo.text || t("composer_attachment")}
             </span>
-            <button className="icon-btn" style={{ width: 26, height: 26 }} onClick={props.onCancelReply} aria-label={uiText("messaging.interface.cancel_reply_2355f73")}>
+            <button className="icon-btn" onClick={props.onCancelReply} aria-label={uiText("messaging.interface.cancel_reply_2355f73")}>
               <X size={14} />
             </button>
           </div>

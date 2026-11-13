@@ -60,6 +60,8 @@ const VERSION = 3;
  * existing message/snapshot storage paths.
  */
 const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.imported", "snapshot", "snapshotKey", "plusSupport"]);
+const VIDEO_DOWNLOADS_KEY = "videoDownloadHandoffs";
+const VIDEO_DOWNLOADS_LIMIT = 500;
 
 /** The repository the sync engine reads and writes. */
 export type MessageWriteListener = (ids: string[]) => void;
@@ -69,6 +71,9 @@ const newestFirst = (a: StoredMessage, b: StoredMessage) => oldestFirst(b, a);
 
 export class LocalStore {
   private readonly writeListeners = new Set<MessageWriteListener>();
+  private readonly videoDownloadListeners = new Set<() => void>();
+  private readonly downloadedVideos = new Set<string>();
+  private loadingVideoDownloads: Promise<void> | undefined;
   private readonly memory = new Map<string, unknown>();
   private readonly messages = new Map<string, StoredMessage>();
   private readonly convs = new Map<string, ConversationLocal>();
@@ -213,6 +218,37 @@ export class LocalStore {
   async deleteValue(key: string): Promise<void> {
     if (ON_DISK.has(key)) await this.db.delete("kv", key);
     else this.memory.delete(key);
+  }
+
+  /** Remembers originals handed to this browser's download manager or written to a file it picked. */
+  readonly hasVideoDownload = (id: string): boolean => this.downloadedVideos.has(id);
+
+  readonly subscribeVideoDownloads = (listener: () => void): (() => void) => {
+    this.videoDownloadListeners.add(listener);
+    this.loadingVideoDownloads ??= this.db
+      .get("kv", VIDEO_DOWNLOADS_KEY)
+      .then((ids) => {
+        if (Array.isArray(ids)) for (const id of ids) if (typeof id === "string") this.downloadedVideos.add(id);
+        this.publishVideoDownloads();
+      })
+      .catch(() => undefined);
+    return () => this.videoDownloadListeners.delete(listener);
+  };
+
+  async recordVideoDownload(id: string): Promise<void> {
+    this.downloadedVideos.delete(id);
+    this.downloadedVideos.add(id);
+    this.publishVideoDownloads();
+    // A transaction preserves records from another tab that saved a different video at the same time.
+    const tx = this.db.transaction("kv", "readwrite");
+    const existing = ((await tx.store.get(VIDEO_DOWNLOADS_KEY)) as string[] | undefined) ?? [];
+    await tx.store.put([...existing.filter((value) => value !== id), id].slice(-VIDEO_DOWNLOADS_LIMIT), VIDEO_DOWNLOADS_KEY);
+    await tx.done;
+  }
+
+  private publishVideoDownloads(): void {
+    while (this.downloadedVideos.size > VIDEO_DOWNLOADS_LIMIT) this.downloadedVideos.delete(this.downloadedVideos.values().next().value!);
+    for (const listener of this.videoDownloadListeners) listener();
   }
 
   /** Every value whose key starts with [prefix] (e.g. "transfer:"), with its key. */

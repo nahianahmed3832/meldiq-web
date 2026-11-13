@@ -181,6 +181,32 @@
       }
     },
     {
+      "id": "communication.reply",
+      "collection": "Lucide",
+      "originalName": "reply",
+      "sourceVersion": "lucide-react@1.59.0",
+      "upstream": "https://lucide.dev/icons/reply",
+      "svg": "svg/reply.svg",
+      "license": "ISC AND MIT",
+      "licenseFile": "LICENSE-lucide.txt",
+      "defaultDimensions": [
+        24,
+        24
+      ],
+      "strokeWidth": 2,
+      "variants": [
+        "outline"
+      ],
+      "platforms": {
+        "web": "communication.reply",
+        "desktop": {
+          "renderer": "communication.reply",
+          "native": "platform-conventions"
+        },
+        "android": "mi_communication_reply"
+      }
+    },
+    {
       "id": "communication.voice",
       "collection": "Lucide",
       "originalName": "mic",

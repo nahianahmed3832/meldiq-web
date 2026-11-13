@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Openen in de viewer",
+  "download_voice_message": "Spraakbericht downloaden",
+  "reconnect_catching_up": "Berichten synchroniseren…",
+  "reconnect_caught_up": "Weer online · Bijgewerkt",
+  "reconnect_refresh_failed": "Online. Berichten konden niet worden bijgewerkt.",
   "message": "Bericht",
   "send": "Verzenden",
   "reply": "Beantwoorden",

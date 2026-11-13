@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Open in viewer",
+  "download_voice_message": "Download voice message",
+  "reconnect_catching_up": "Catching up…",
+  "reconnect_caught_up": "Back online · Caught up",
+  "reconnect_refresh_failed": "Online. Couldn’t refresh messages.",
   "message": "Message",
   "send": "Send",
   "reply": "Reply",

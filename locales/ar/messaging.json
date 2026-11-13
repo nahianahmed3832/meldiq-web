@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "فتح في العارض",
+  "download_voice_message": "تنزيل الرسالة الصوتية",
+  "reconnect_catching_up": "جارٍ مزامنة الرسائل…",
+  "reconnect_caught_up": "تم الاتصال والمزامنة",
+  "reconnect_refresh_failed": "متصل. تعذّر تحديث الرسائل.",
   "message": "رسالة",
   "send": "إرسال",
   "reply": "رد",

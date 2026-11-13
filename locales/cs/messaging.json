@@ -1,4 +1,9 @@
 {
+  "open_video_viewer": "Otevřít v prohlížeči médií",
+  "download_voice_message": "Stáhnout hlasovou zprávu",
+  "reconnect_catching_up": "Synchronizace zpráv…",
+  "reconnect_caught_up": "Zpět online · Synchronizováno",
+  "reconnect_refresh_failed": "Online. Zprávy se nepodařilo obnovit.",
   "message": "Zpráva",
   "send": "Odeslat",
   "reply": "Odpovědět",

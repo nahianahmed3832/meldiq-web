@@ -1,5 +1,5 @@
 {
-  "catalogue.json": "6872e81b75577f9754945136188de0e95d8367e851ecfde95d11a738e9e11dee",
+  "catalogue.json": "485eddd480be17b1e1c5fd824779befe5be9b02ec323a34102e184781e82fb9a",
   "LICENSE-lucide.txt": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
   "svg/house.svg": "f5b72ba61cdc9ab54740a6c5e421e9cef4ec2c629a3fdd3bbbaf47b6b666e784",
   "svg/messages-square.svg": "3fd4510efa2da4c7d62948ded812ab01f1e137dada627fdea1e2fa57653ea2d1",
@@ -7,6 +7,7 @@
   "svg/compass.svg": "45d6c199fdac484c6dfdc0ff864b4aaa64d52fc38c1bc60439c3451ec043985e",
   "svg/circle-user-round.svg": "f48551ba0083c513e94a828ca643d38c209736f3998fab87153c1bcf9610cb28",
   "svg/send.svg": "53827bffc578b6d9257bd123b8baf3eda8c16f1f8c192ef8ff50ae8b26838b3c",
+  "svg/reply.svg": "9f7110d110eeb134bc7e3d2b04aed881c4235abcc0afc4d4691afdf36d9eb2cf",
   "svg/mic.svg": "b42bfaeb7df7c2f67645b69caba0e56bbc219727a90dca5b35e227c5caaa6fea",
   "svg/video.svg": "a5db37e34075300a477814865476ba3a0600e101eb5f428aec96c6bd4f9bbb4b",
   "svg/users-round.svg": "0ac6fee27ef7830f6f9b65ba057eae8fb7e6c15d174b834be74027b3a0f487fc",
@@ -34,5 +35,5 @@
   "svg/message-circle.svg": "45437959a5151fb161a354efe7382c3bfe619d8d1f8b9da6424bc385735d0b9d",
   "svg/gift.svg": "984ec9763fc94fd125957fcadebb4d0edbcc66055f4176f85f7df03fb69e9cc7",
   "svg/user-round-plus.svg": "5358e9acb8beeda7779d358f09503754869ea4d8e2a2c035272f4ee2bcf129fc",
-  "../../src/ui/icons/Icon.tsx": "a7ccd3ebdf91931327d6e90bb581f8ad50cb44d15db7af028d4313ecac0284f1"
+  "../../src/ui/icons/Icon.tsx": "2f5562f4795ed2b6910e652b70891980a188bcbbf3fa83db4a9788713214172b"
 }

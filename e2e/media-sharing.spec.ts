@@ -6,6 +6,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { newPhone, testAddress } from "./phone";
 import crypto from "node:crypto";
 import { emailedCode } from "./mail";
+import { encryptFile } from "../src/crypto/attachment";
 
 test.describe.configure({ timeout: 180_000 });
 test.use({ serviceWorkers: "block" });
@@ -110,17 +111,190 @@ test("a selected video previews, uploads and plays inline and in the viewer", as
   await page.getByRole("textbox", { name: /^Message / }).fill("Video sharing");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   const message = page.locator(".msg").filter({ hasText: "Video sharing" });
+  const direct = message.getByRole("button", { name: /^Download media-synthetic.mp4/ });
+  await expect(message.locator(".att-video-size")).toHaveText("2.2 KB");
+  await expect(message.locator(".att-video-size")).toBeInViewport();
+  await expect(direct).toBeVisible();
   await message.getByRole("button", { name: /^Play .* inline$/ }).click();
   const inline = message.locator("video");
   await expect(inline).toBeVisible();
   await expect.poll(() => inline.evaluate((v) => (v as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
-  await message.getByRole("button", { name: /^Play video / }).click();
+  await expect(direct).toBeVisible(); // Playing fetches the file but doesn't save it to the user's downloads.
+  await message.getByRole("button", { name: "Open in viewer" }).click();
   await expect(page.locator(".lightbox video")).toBeVisible();
   await expect.poll(() => page.locator(".lightbox video").evaluate((v) => (v as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
   await page.screenshot({ path: info.outputPath("media-video.png"), fullPage: true });
   const downloading = page.waitForEvent("download");
   await page.locator(".lightbox").getByRole("button", { name: "Download video", exact: true }).click();
   expect(fs.readFileSync((await (await downloading).path())!)).toEqual(originalBytes);
+  await expect(page.locator(".lightbox").getByRole("button", { name: "Download video", exact: true })).toHaveCount(0);
+  await page.locator(".lightbox").getByRole("button", { name: "Close", exact: true }).click();
+  await expect(direct).toHaveCount(0);
+  await expect(message.locator(".att-video-size")).toHaveText("2.2 KB");
+  await page.reload();
+  await expect(message.locator(".att-video-size")).toBeVisible();
+  await expect(direct).toHaveCount(0);
+});
+
+test("message controls edit a video caption and swipe to reply on a phone", async ({ page, isMobile }, info) => {
+  const { b, id } = await conversation(page);
+  const title = "portrait-screen-recording-with-a-long-filename.mp4";
+  const original = fs.readFileSync(path.join(import.meta.dirname, "fixtures/media-portrait.mp4"));
+  await page.locator(".composer input[type=file]").setInputFiles([{ name: title, mimeType: "video/mp4", buffer: original }]);
+  const input = page.getByRole("textbox", { name: /^Message / });
+  await input.fill("My video caption");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  const own = page
+    .locator(".msg")
+    .filter({ has: page.getByText(title, { exact: true }) })
+    .first();
+  await expect(own.locator(".att-video-card")).toHaveClass(/\bportrait\b/);
+  const preview = own.locator(".att-video-stage");
+  const previewBox = (await preview.boundingBox())!;
+  expect(previewBox.height).toBeGreaterThan(previewBox.width);
+  const size = own.locator(".att-video-size");
+  const sizeBox = (await size.boundingBox())!;
+  const cardBox = (await own.locator(".att-video-card").boundingBox())!;
+  expect(sizeBox.x + sizeBox.width).toBeLessThanOrEqual(cardBox.x + cardBox.width);
+  expect(sizeBox.y).toBeGreaterThanOrEqual(previewBox.y + previewBox.height);
+
+  const downloadButton = own.getByRole("button", { name: new RegExp(`^Download ${title}`) });
+  const fileId = await own.locator("[data-attachment-id]").getAttribute("data-attachment-id");
+  const fileRoute = `**/v1/attachments/${fileId}`;
+  let releaseTransfer!: () => void;
+  const transferHeld = new Promise<void>((resolve) => (releaseTransfer = resolve));
+  await page.route(
+    fileRoute,
+    async (route) => {
+      await transferHeld;
+      await route.abort().catch(() => undefined);
+    },
+    { times: 1 },
+  );
+  try {
+    const request = page.waitForRequest((r) => r.url().endsWith(`/v1/attachments/${fileId}`));
+    await downloadButton.click();
+    await request;
+    await own.getByRole("button", { name: /^Cancel downloading/ }).click();
+    await expect(downloadButton).toBeVisible();
+  } finally {
+    releaseTransfer();
+  }
+  const saving = page.waitForEvent("download");
+  await downloadButton.click();
+  expect(fs.readFileSync((await (await saving).path())!)).toEqual(original);
+  await expect(downloadButton).toHaveCount(0);
+  await expect(size).toBeVisible();
+  await page.screenshot({ path: info.outputPath("portrait-media.png"), animations: "disabled" });
+
+  if (!isMobile) await own.hover();
+  await own.getByRole("button", { name: "More actions", exact: true }).click();
+  const menu = page.getByRole("menu", { name: "Message", exact: true });
+  await menu.getByRole("menuitem", { name: "Edit message", exact: true }).click();
+  const editor = own.getByRole("textbox", { name: "Edit message" });
+  await expect(editor).toBeFocused();
+  await expect(editor).toHaveValue("My video caption");
+  await expect(size).toBeVisible();
+  await editor.fill("Changed video caption");
+  await page.screenshot({ path: info.outputPath("edit-caption.png"), animations: "disabled" });
+  await own.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(own.locator(".msg-text")).toContainText("Changed video caption");
+  await expect(own.locator(".att-video-size")).toBeVisible();
+  expect(await b.req("GET", `/v2/conversations/${id}/messages`).then((r) => JSON.stringify(r.changes))).toContain("Changed video caption");
+  if (!isMobile) {
+    await own.locator(".msg-text").hover();
+    await own.getByRole("button", { name: "More actions", exact: true }).click();
+    await menu.getByRole("menuitem", { name: "Edit message", exact: true }).click();
+    await editor.fill("");
+    await own.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(editor).toHaveCount(0);
+    await expect(own.locator(".msg-text")).toHaveCount(0);
+    await expect(size).toBeVisible();
+  }
+
+  const replyId = `media_reply_${Date.now()}`;
+  await b.send(id, { type: "text", text: "Reply to this incoming message" }, "message", replyId);
+  const incoming = page.locator(`#msg-${replyId}`);
+  await expect(incoming).toBeVisible();
+  if (isMobile) await incoming.getByRole("button", { name: "More actions", exact: true }).tap();
+  else await incoming.locator(".msg-text").click({ button: "right" });
+  await expect(menu.getByRole("menuitem", { name: "Edit message" })).toHaveCount(0);
+  await menu.getByRole("menuitem", { name: "Reply", exact: true }).click();
+  await expect(input).toBeFocused();
+  await expect(page.locator(".composer-context")).toContainText("Reply to this incoming message");
+  await page.getByRole("button", { name: "Cancel reply", exact: true }).click();
+
+  if (isMobile) {
+    const body = incoming.locator(".msg-text");
+    const opts = { pointerId: 5, pointerType: "touch", isPrimary: true, button: 0, clientY: 250 };
+    await body.dispatchEvent("pointerdown", { ...opts, clientX: 210 });
+    await body.dispatchEvent("pointermove", { ...opts, clientX: 132 });
+    await expect(incoming.locator(".msg-swipe-cue.armed")).toBeInViewport();
+    await body.dispatchEvent("pointerup", { ...opts, clientX: 132 });
+    await expect(input).toBeFocused();
+    await expect(page.locator(".composer-context")).toContainText("Reply to this incoming message");
+    await expect(incoming.locator(".msg-swipe-cue")).toHaveCount(0);
+  }
+});
+
+test("voice notes keep the duration clear and offer the original from message actions", async ({ page, isMobile }, info) => {
+  const { b, id } = await conversation(page);
+  const bytes = fs.readFileSync(path.join(import.meta.dirname, "fixtures/voice-note.m4a"));
+  const encrypted = await encryptFile(bytes);
+  const name = "voice-fixture.m4a";
+  const uploaded = await b.req("POST", `/v1/attachments?conversationId=${encodeURIComponent(id)}`, undefined, Buffer.from(encrypted.ciphertext));
+  const messageId = `voice_${Date.now()}`;
+  await b.send(
+    id,
+    {
+      type: "text",
+      attachments: [{ id: uploaded.id, name, mime: "audio/mp4", size: bytes.length, key: encrypted.key, nonce: encrypted.nonce, sha256: encrypted.sha256, voice: true, durationMs: 4000 }],
+    },
+    "message",
+    messageId,
+  );
+  const message = page.locator(`#msg-${messageId}`);
+  const voice = message.getByRole("group", { name: "Voice message, 4 seconds" });
+  await expect(voice).toBeVisible();
+  await expect(message.getByRole("button", { name: /download/i })).toHaveCount(0);
+  await expect(voice.locator(".voice-len")).toHaveText("0:04");
+  await page.screenshot({ path: info.outputPath("voice-player.png"), animations: "disabled" });
+  if (isMobile) await message.getByRole("button", { name: "More actions", exact: true }).tap();
+  else await voice.click({ button: "right", position: { x: 60, y: 10 } });
+  const saving = page.waitForEvent("download");
+  await page.getByRole("menuitem", { name: "Download voice message", exact: true }).click();
+  const saved = await saving;
+  expect(saved.suggestedFilename()).toBe(name);
+  expect(fs.readFileSync((await saved.path())!)).toEqual(bytes);
+  await voice.getByRole("button", { name: /^Play voice message/ }).click();
+  await expect(voice).toHaveAttribute("data-voice-state", "playing");
+  await expect(voice.getByRole("slider")).toBeEnabled();
+  await expect(message.getByRole("button", { name: /download/i })).toHaveCount(0);
+});
+
+test("reconnecting shows real catch-up and restores messages missed while offline", async ({ page, context, browserName }) => {
+  test.skip(browserName !== "chromium", "Chromium exposes reliable offline WebSocket simulation");
+  const { b, id } = await conversation(page);
+  await context.setOffline(true);
+  const status = page.locator(".conn-banner");
+  await expect(status).toContainText(/You.re offline/, { timeout: 20_000 });
+  await b.send(id, { type: "text", text: "Arrived while offline" });
+  let finishRefresh!: () => void;
+  const refreshing = new Promise<void>((resolve) => (finishRefresh = resolve));
+  await page.route("**/v1/conversations", async (route) => {
+    await refreshing;
+    await route.continue();
+  });
+  try {
+    await context.setOffline(false);
+    await expect(status).toContainText("Catching up…");
+    finishRefresh();
+    await expect(page.getByRole("log", { name: "Messages" }).getByText("Arrived while offline", { exact: true })).toBeVisible();
+    await expect(status).toContainText("Back online");
+    await expect(status).toHaveCount(0);
+  } finally {
+    finishRefresh();
+  }
 });
 
 test("compression is opt-in and keeps MP4 video and audio", async ({ page }, info) => {
@@ -297,8 +471,17 @@ test("chat downloads one original and lets you select files across messages", as
   await openFileMenu();
   await page.getByRole("menuitem", { name: "Select all · 2", exact: true }).click();
   await expect(album.getByRole("checkbox", { name: "Select notes.txt" })).toBeChecked();
-  await album.getByRole("checkbox", { name: "Select notes.txt" }).uncheck();
-  await other.getByRole("checkbox", { name: "Select report.txt" }).check();
+  const skip = album.getByRole("checkbox", { name: "Select notes.txt" });
+  const keep = other.getByRole("checkbox", { name: "Select report.txt" });
+  if (isMobile) {
+    await skip.tap();
+    await keep.tap();
+    await expect(skip).not.toBeChecked();
+    await expect(keep).toBeChecked();
+  } else {
+    await skip.uncheck();
+    await keep.check();
+  }
   await expect(page.getByText("2 files selected", { exact: true })).toBeVisible();
   await expect(page.getByRole("textbox", { name: /^Message / })).toBeHidden();
   await page.screenshot({ path: info.outputPath("chat-selection.png"), animations: "disabled" });

@@ -35,6 +35,7 @@ import { fingerprint } from "../crypto/identity";
 import type { DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
 import { TabRealtimeClient } from "../realtime/tabClient";
+import type { ConnectionState } from "../realtime/socket";
 import { TabDrafts } from "../store/tabDrafts";
 import type { CallPrefs } from "../call/manager";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
@@ -170,6 +171,9 @@ export class Engine implements EngineContext {
   private viewingId: string | null = null;
   private focused = true;
   private stopped = false;
+  private connectedOnce = false;
+  private connectionEpoch = 0;
+  private onlineRefreshEpoch = -1;
   /** Backs this browser's chats up into the account's history, once the history is available and writable here. */
   private uploader: HistoryUploader | null = null;
   private readTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -319,7 +323,7 @@ export class Engine implements EngineContext {
       url: opts.wsUrl,
       token: () => this.session.token(),
       onFrame: (f) => this.onFrame(f),
-      onState: (connection) => this.set((s) => ({ ...s, connection })),
+      onState: (connection) => this.connectionChanged(connection),
       onUnauthorized: () => this.session.reauthenticate(),
       createSocket: opts.createSocket,
     });
@@ -433,7 +437,14 @@ export class Engine implements EngineContext {
             const items = await this.store.latestMessages(id, PAGE);
             if (version !== this.windowVersions.get(id)) return page;
             const confirmed = new Set(page.messages.map((m) => m.id));
-            this.set((s) => withMessages(s, id, items.map((m) => confirmed.has(m.id) ? m : hideCachedStarboard(m)), this.serverPages.get(id)?.more ?? items.length === PAGE));
+            this.set((s) =>
+              withMessages(
+                s,
+                id,
+                items.map((m) => (confirmed.has(m.id) ? m : hideCachedStarboard(m))),
+                this.serverPages.get(id)?.more ?? items.length === PAGE,
+              ),
+            );
             this.fromSnapshot.delete(id);
           }
           return page;
@@ -692,16 +703,16 @@ export class Engine implements EngineContext {
     }
     this.set((s) => ({ ...s, profilesRev: s.profilesRev + 1 }));
   }
-  private refreshLoad: Promise<void> | null = null;
+  private refreshLoad: Promise<boolean> | null = null;
   /** Startup and the socket's hello share one metadata refresh instead of fetching every list twice. */
-  refreshAll(): Promise<void> {
+  refreshAll(): Promise<boolean> {
     this.refreshLoad ??= this.refreshMetadata().finally(() => {
       this.refreshLoad = null;
     });
     return this.refreshLoad;
   }
   /** Server info, profile, workspaces and conversations: on start and after every reconnect (what changed while away). */
-  private async refreshMetadata(): Promise<void> {
+  private async refreshMetadata(): Promise<boolean> {
     try {
       const [server, meRes, orgs, convs] = await Promise.all([
         this.api.json("GET", "/v1/server-info", zServerInfo, { auth: false }),
@@ -781,8 +792,10 @@ export class Engine implements EngineContext {
         this.checkedIn = true;
         void pointsCheckin(this).catch(() => undefined);
       }
+      return true;
     } catch (e) {
       if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : uiText("workspace.interface.couldn_t_load_your_conversations_92bdd13"));
+      return false;
     }
   }
   /** Restores what the history has and this browser doesn't ([fromStart]: reads it all again), then backs up what it holds. */
@@ -844,6 +857,44 @@ export class Engine implements EngineContext {
     await this.startBackup();
   }
   // ───────────────────────── realtime frames ─────────────────────────
+  private connectionChanged(connection: ConnectionState): void {
+    const previous = this.state.get().connection;
+    if (previous === connection) return;
+    const reconnectSync = connection === "online" && this.connectedOnce ? "syncing" : "idle";
+    this.connectionEpoch++;
+    if (connection === "online") this.connectedOnce = true;
+    this.set((s) => ({ ...s, connection, reconnectSync }));
+  }
+
+  private async refreshAfterConnect(epoch: number): Promise<void> {
+    const current = () => !this.stopped && this.connectionEpoch === epoch && this.state.get().connection === "online";
+    let ok = false;
+    try {
+      ok = await this.refreshAll();
+      if (!current()) return;
+      // A tab may have missed deliveries while sleeping. Refresh the newest window without moving a reader out of
+      // older messages. A chat that couldn't open offline should retry its first page too.
+      const id = this.viewingId;
+      const window = id ? this.state.get().messages[id] : undefined;
+      if (id && !window?.detached) {
+        if (!this.viewReady && this.fromSnapshot.has(id)) {
+          const page = await this.firstPage(id);
+          if (current() && this.viewingId === id && page) {
+            this.viewReady = true;
+            this.set((s) => ({
+              ...s,
+              messages: { ...s.messages, [id]: { ...s.messages[id]!, preview: false, historyReady: true } },
+            }));
+          }
+          ok = ok && !!page;
+        } else if (this.viewReady && this.readingLatest) await this.loadLatest(id);
+      }
+    } catch {
+      ok = false;
+    }
+    if (current() && this.state.get().reconnectSync === "syncing") this.set((s) => ({ ...s, reconnectSync: ok ? "done" : "failed" }));
+  }
+
   acceptedInTab(event: z.infer<typeof zStoredEvent>): void {
     this.realtime.publish({ t: "tab.accepted", event });
   }
@@ -864,14 +915,10 @@ export class Engine implements EngineContext {
     if (!f) return;
     switch (f.t) {
       case "hello":
-        void this.refreshAll()
-          .then(() => {
-            // A tab may have slept while another tab acknowledged delivery. Refresh the visible newest window from
-            // server history as well as metadata; preserve a deliberately detached search/older window.
-            const id = this.viewingId;
-            if (!this.stopped && id && this.viewReady && this.readingLatest && !this.state.get().messages[id]?.detached) return this.loadLatest(id);
-          })
-          .catch(() => undefined);
+        if (this.state.get().connection === "online" && this.onlineRefreshEpoch !== this.connectionEpoch) {
+          this.onlineRefreshEpoch = this.connectionEpoch;
+          void this.refreshAfterConnect(this.connectionEpoch);
+        }
         this.outbox.kick();
         return;
       case "queue": {
@@ -1397,7 +1444,9 @@ export class Engine implements EngineContext {
         ? await this.fetchHistory(id, cursor.nextCursor?.serverTs ?? Math.min(cursor.oldest ?? Number.MAX_SAFE_INTEGER, first.serverTs ?? first.sortTs), undefined, cursor.nextCursor?.id)
         : null;
       if (version !== this.windowVersions.get(id)) return;
-      const older = page ? (await Promise.all(page.messages.map((m) => this.store.message(m.id)))).filter((m): m is StoredMessage => !!m) : (await this.store.latestMessages(id, PAGE, first)).map(hideCachedStarboard);
+      const older = page
+        ? (await Promise.all(page.messages.map((m) => this.store.message(m.id)))).filter((m): m is StoredMessage => !!m)
+        : (await this.store.latestMessages(id, PAGE, first)).map(hideCachedStarboard);
       if (version !== this.windowVersions.get(id)) return;
       this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], page ? page.more : older.length === PAGE));
     } catch (e) {
