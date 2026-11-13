@@ -141,14 +141,17 @@ test("message controls edit a video caption and swipe to reply on a phone", asyn
   const title = "portrait-screen-recording-with-a-long-filename.mp4";
   const original = fs.readFileSync(path.join(import.meta.dirname, "fixtures/media-portrait.mp4"));
   await page.locator(".composer input[type=file]").setInputFiles([{ name: title, mimeType: "video/mp4", buffer: original }]);
+  await expect(page.locator(".attachment-draft figcaption strong")).toHaveText(title);
   const input = page.getByRole("textbox", { name: /^Message / });
-  await input.fill("My video caption");
+  await input.pressSequentially("My video caption");
+  await expect(input).toHaveValue("My video caption");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   const own = page
     .locator(".msg")
     .filter({ has: page.getByText(title, { exact: true }) })
     .first();
   await expect(own.locator(".att-video-card")).toHaveClass(/\bportrait\b/);
+  await expect(own.locator(".msg-text")).toContainText("My video caption");
   const preview = own.locator(".att-video-stage");
   const previewBox = (await preview.boundingBox())!;
   expect(previewBox.height).toBeGreaterThan(previewBox.width);
@@ -187,8 +190,8 @@ test("message controls edit a video caption and swipe to reply on a phone", asyn
   await expect(size).toBeVisible();
   await page.screenshot({ path: info.outputPath("portrait-media.png"), animations: "disabled" });
 
-  if (!isMobile) await own.hover();
-  await own.getByRole("button", { name: "More actions", exact: true }).click();
+  if (isMobile) await own.getByRole("button", { name: "More actions", exact: true }).tap();
+  else await own.locator(".msg-text").click({ button: "right" });
   const menu = page.getByRole("menu", { name: "Message", exact: true });
   await menu.getByRole("menuitem", { name: "Edit message", exact: true }).click();
   const editor = own.getByRole("textbox", { name: "Edit message" });
