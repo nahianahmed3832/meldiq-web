@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# bericht} other {# berichten}}"
   },
+  "slash_commands": {
+    "load_failed": "Kan opdrachten niet laden.",
+    "no_commands": "Geen overeenkomende opdrachten.",
+    "unavailable": "Deze opdracht is hier niet beschikbaar.",
+    "finish_draft": "Verstuur of wis je concept voordat je een opdracht invoegt.",
+    "insert": "Opdracht invoegen",
+    "run": "Opdracht uitvoeren"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Geanimeerde emoji {value0}",
     "files_to_send_d302111": "Bestanden om te verzenden",

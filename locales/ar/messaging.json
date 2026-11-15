@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, zero {لا رسائل} one {رسالة واحدة} two {رسالتان} few {# رسائل} many {# رسالة} other {# رسالة}}"
   },
+  "slash_commands": {
+    "load_failed": "تعذّر تحميل الأوامر.",
+    "no_commands": "لا توجد أوامر مطابقة.",
+    "unavailable": "هذا الأمر غير متاح هنا.",
+    "finish_draft": "أرسل المسودة أو امسحها قبل إدراج أمر.",
+    "insert": "إدراج الأمر",
+    "run": "تشغيل الأمر"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "صورة عاطفية متحركة {value0}",
     "files_to_send_d302111": "الملفات التي سترسل",

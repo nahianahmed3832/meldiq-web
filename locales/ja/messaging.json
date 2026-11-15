@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, other {# 件のメッセージ}}"
   },
+  "slash_commands": {
+    "load_failed": "コマンドを読み込めませんでした。",
+    "no_commands": "一致するコマンドがありません。",
+    "unavailable": "このコマンドはここでは使用できません。",
+    "finish_draft": "コマンドを挿入する前に下書きを送信するか消去してください。",
+    "insert": "コマンドを挿入",
+    "run": "コマンドを実行"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "アニメーションイメージ {value0}",
     "files_to_send_d302111": "送信するファイル",

@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, other {# tin nhắn}}"
   },
+  "slash_commands": {
+    "load_failed": "Không thể tải các lệnh.",
+    "no_commands": "Không có lệnh phù hợp.",
+    "unavailable": "Lệnh này không dùng được ở đây.",
+    "finish_draft": "Hãy gửi hoặc xoá bản nháp trước khi chèn lệnh.",
+    "insert": "Chèn lệnh",
+    "run": "Chạy lệnh"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Emoji động {value0}",
     "files_to_send_d302111": "Tập tin cần gửi",

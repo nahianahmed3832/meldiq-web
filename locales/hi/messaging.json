@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# संदेश} other {# संदेश}}"
   },
+  "slash_commands": {
+    "load_failed": "कमांड लोड नहीं हो सके।",
+    "no_commands": "कोई मिलता-जुलता कमांड नहीं मिला।",
+    "unavailable": "यह कमांड यहाँ उपलब्ध नहीं है।",
+    "finish_draft": "कमांड जोड़ने से पहले अपना ड्राफ़्ट भेजें या मिटाएँ।",
+    "insert": "कमांड जोड़ें",
+    "run": "कमांड चलाएँ"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "एनिमेटेड इमॉजी {value0}",
     "files_to_send_d302111": "भेजने के लिए फ़ाइलें",

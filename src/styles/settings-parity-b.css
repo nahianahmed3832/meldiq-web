@@ -253,8 +253,64 @@
 }
 
 /* ── bots in conversations ── */
+.composer-command-button {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 8px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 600;
+}
+.composer-command-button:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
 .slash-list {
   width: min(460px, calc(100% - 36px));
+  max-height: min(300px, 36vh);
+  overflow: auto;
+}
+.slash-status {
+  margin: 0;
+  padding: 8px;
+}
+.slash-status p {
+  margin: 0 0 8px;
+}
+.slash-options button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--r-sm);
+  text-align: start;
+}
+.slash-options button:hover {
+  background: var(--surface-hover);
+}
+.slash-options button > .faint.ellipsis {
+  max-width: 40%;
+}
+.slash-form {
+  display: grid;
+  gap: 16px;
+}
+.slash-form p {
+  margin: 0;
+}
+.slash-form textarea {
+  resize: vertical;
+}
+.slash-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
 .bot-replies {
   list-style: none;

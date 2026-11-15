@@ -1,0 +1,84 @@
+import { expect, test } from "@playwright/test";
+import { numericConversationPath } from "../src/application/conversationPaths";
+import { link } from "./link";
+import { newPhone, testAddress } from "./phone";
+
+test.use({ serviceWorkers: "block" });
+
+test("a configured bot DM command prepares a draft and only sends after confirmation", async ({ page, context }) => {
+  const serverInfo = await fetch(process.env.ORBIT_E2E_API + "/v1/server-info");
+  expect(serverInfo.ok).toBe(true);
+  const { features } = await serverInfo.json();
+  test.skip(!features.includes("bot-direct-messages"), "Bot DMs need the PostgreSQL-backed test server.");
+
+  await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
+  const owner = await newPhone("dmcommandsowner", "DM Commands Owner");
+  const person = await newPhone("dmcommandsperson", "DM Commands Person");
+  try {
+    const { org } = await owner.req("POST", "/v1/orgs", { name: "DM Commands Test" });
+    const { invite } = await owner.req("POST", `/v1/orgs/${org.id}/invites`, { role: "MEMBER" });
+    await person.req("POST", "/v1/invites/accept", { code: invite.code });
+    const { bot, token } = await owner.req("POST", "/v2/developer/bots", { name: "DM Commands Manager", public: true });
+    await owner.req("POST", `/v1/orgs/${org.id}/bots`, { botId: bot.id });
+    await owner.req("PUT", `/v2/developer/bots/${bot.id}/permissions`, { rev: 0, permissions: ["direct_messages"] });
+
+    const registered = await fetch(process.env.ORBIT_E2E_API + "/v2/bot/commands", {
+      method: "PUT",
+      headers: { authorization: `Bot ${token}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        commands: [
+          {
+            name: "message",
+            description: "Send a private message",
+            options: [
+              { name: "username", type: "string", required: true, description: "Recipient username" },
+              { name: "text", type: "string", required: true, description: "Message text" },
+            ],
+          },
+        ],
+      }),
+    });
+    expect(registered.ok).toBe(true);
+
+    const consentPath = `/v2/bots/${bot.id}/direct-messages`;
+    const previous = await person.req("GET", consentPath);
+    const approved = await person.req("PUT", consentPath, {
+      enabled: true,
+      rev: previous.rev,
+      manifestRev: previous.manifestRev,
+      noticeVersion: previous.noticeVersion,
+    });
+    expect(approved.conversationId).toBeTruthy();
+    const readBotHistory = async () => {
+      const response = await fetch(process.env.ORBIT_E2E_API + `/v2/bot/conversations/${approved.conversationId}/messages`, {
+        headers: { authorization: `Bot ${token}` },
+      });
+      expect(response.ok).toBe(true);
+      const { messages } = await response.json();
+      return messages.map((message: { payload: { text: string } }) => message.payload.text) as string[];
+    };
+
+    await page.route("**/config.json", (route) => route.fulfill({ json: { directBotCommands: { botId: bot.id, communityId: org.id } } }));
+    await link(page, person);
+    await page.goto(numericConversationPath("dms", approved.conversationId));
+    const composer = page.getByRole("textbox", { name: "Message DM Commands Manager", exact: true });
+    await expect(composer).toBeVisible();
+    await page.getByRole("button", { name: "Commands", exact: true }).click();
+    const catalog = page.getByRole("dialog", { name: "Bot commands", exact: true });
+    await catalog.getByRole("button", { name: /\/message/ }).click();
+    const form = page.getByRole("dialog", { name: "/message", exact: true });
+    await form.getByRole("textbox", { name: "username", exact: true }).fill("@recipient");
+    const text = 'Say "hello"\nnext';
+    await form.getByRole("textbox", { name: "text", exact: true }).fill(text);
+    await form.getByRole("button", { name: "Insert command", exact: true }).click();
+
+    const draft = `/message username:"@recipient" text:${JSON.stringify(text)}`;
+    await expect(composer).toHaveValue(draft);
+    expect(await readBotHistory()).toEqual([]);
+    await composer.press("Enter");
+    await expect.poll(readBotHistory).toContain(draft);
+  } finally {
+    await owner.disconnect();
+    await person.disconnect();
+  }
+});

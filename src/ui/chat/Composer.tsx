@@ -38,7 +38,7 @@ import { slowmodeLabel, waitText } from "../../sync/communityRules";
 import { untilWhen } from "../format";
 import { useNow } from "../call/useNow";
 import { useT } from "../../i18n";
-import { SlashCommandList, useSlashCommands } from "./SlashCommands";
+import { SlashCommandButton, SlashCommandList, useSlashCommands } from "./SlashCommands";
 import { useWordyCommand } from "./wordyLaunch";
 import { RulesAgreeBar, useRulesSummary } from "../community/RulesViews";
 import { ComposerHoldBar, ComposerNoteLine, useComposerGates } from "./ComposerGates";
@@ -140,8 +140,7 @@ export function Composer(props: ComposerProps) {
   const [lastSent, setLastSent] = useState(0);
   const nextAt = slowed ? Math.max(c.nextPostAt ?? 0, lastSent + c.slowmodeSec * 1000) : 0;
   const now = useNow(slowed && nextAt > Date.now());
-  // API 0.65.0 batch B: "/" lists the commands of the bots in this channel; sending one runs it.
-  const slash = useSlashCommands(c, props.threadRoot ? "" : text, (t) => onChange(t), members);
+  const slash = useSlashCommands(c, text, (next) => onChange(next), members, !props.threadRoot && c.canPost);
   const wordy = useWordyCommand(c);
   // Draft: restored when the conversation opens, saved as you type (main composer only).
   useEffect(() => {
@@ -280,7 +279,14 @@ export function Composer(props: ComposerProps) {
     clearComposerNote(c.id);
     if (!files.length && !props.threadRoot && body.startsWith("/")) {
       // Community parity D: `/wordy` opens the private game panel, so guesses never show in the channel.
-      const ran = wordy(body) ? "sent" : await slash.run(body);
+      sendInProgress.current = true;
+      const ran = await (async () => {
+        try {
+          return wordy(body) ? "sent" : await slash.run(body);
+        } finally {
+          sendInProgress.current = false;
+        }
+      })();
       if (ran === "kept") return;
       if (ran === "sent") {
         clearTimeout(draftTimer.current);
@@ -398,8 +404,8 @@ export function Composer(props: ComposerProps) {
   return (
     <div className="composer-wrap">
       <SlashCommandList slash={slash} />
-      {completion.view}
-      {suggest && (
+      {!slash.inlineOpen && completion.view}
+      {!slash.inlineOpen && suggest && (
         <div className="suggest card" role="listbox" aria-label={uiText("messaging.interface.people_to_mention_5295509")}>
           {suggest.items.map((m, i) => (
             <button key={m.id} role="option" aria-selected={i === suggest.index} onMouseDown={(e) => e.preventDefault()} onClick={() => pick(m)}>
@@ -462,6 +468,7 @@ export function Composer(props: ComposerProps) {
           <VoiceBar onSend={sendVoice} onClose={() => setVoice(false)} />
         ) : (
           <>
+            <SlashCommandButton slash={slash} disabled={!!busy} />
             <label className="sr-only" htmlFor={`composer-${c.id}-${props.threadRoot ?? "main"}`}>
               {props.threadRoot ? t("messaging.msg_reply_thread") : uiText("messaging.interface.message_value0_ddd26fd", { value0: props.title })}
             </label>
@@ -513,12 +520,12 @@ export function Composer(props: ComposerProps) {
                   }
                 }}
                 aria-autocomplete="list"
-                aria-controls={completion.open ? completion.id : undefined}
-                aria-activedescendant={completion.activeId}
+                aria-controls={slash.inlineOpen ? (slash.activeId ? slash.id : undefined) : completion.open ? completion.id : undefined}
+                aria-activedescendant={slash.inlineOpen ? slash.activeId : completion.activeId}
                 onKeyDown={(e) => {
-                  if (e.nativeEvent.isComposing || completion.onKey(e)) return;
-                  if (slash.onKey(e)) return;
-                  if (suggest) {
+                  if (e.nativeEvent.isComposing || slash.onKey(e)) return;
+                  if (!slash.inlineOpen && completion.onKey(e)) return;
+                  if (!slash.inlineOpen && suggest) {
                     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
                       e.preventDefault();
                       const d = e.key === "ArrowDown" ? 1 : -1;

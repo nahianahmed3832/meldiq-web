@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# mesaj} other {# mesaj}}"
   },
+  "slash_commands": {
+    "load_failed": "Komutlar yüklenemedi.",
+    "no_commands": "Eşleşen komut yok.",
+    "unavailable": "Bu komut burada kullanılamıyor.",
+    "finish_draft": "Komut eklemeden önce taslağını gönder veya temizle.",
+    "insert": "Komutu ekle",
+    "run": "Komutu çalıştır"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Animasyonlu emoji {value0}",
     "files_to_send_d302111": "Gönderilecek dosyalar",

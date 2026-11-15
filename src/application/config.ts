@@ -52,6 +52,8 @@ const zFirebase = z.object({
 });
 export type FirebaseWebConfig = z.infer<typeof zFirebase>;
 
+const zPublicId = z.string().regex(/^[A-Za-z0-9_-]{1,128}$/);
+
 const zConfig = z
   .object({
     apiBase: zOrigin.default("").transform((v) => v.replace(/\/$/, "")),
@@ -59,6 +61,8 @@ const zConfig = z
     publicUrl: z.string().max(200).nullable().default(null),
     environment: z.enum(["development", "staging", "production"]).default("production"),
     firebase: zFirebase.nullable().default(null),
+    // One bot's registered commands can be used in its DMs by members of the specified community.
+    directBotCommands: z.object({ botId: zPublicId, communityId: zPublicId }).nullable().default(null),
     supabaseMigration: z.union([z.literal(false), zSupabasePreview]).default(false),
   })
   .superRefine((value, ctx) => {
@@ -93,7 +97,9 @@ const KEPT_KEY = "meldiq.config.v1";
 function keptConfig(): RuntimeConfig | null {
   try {
     const raw = localStorage.getItem(KEPT_KEY);
-    const parsed = raw ? zConfig.safeParse(JSON.parse(raw)) : null;
+    const cached = raw ? JSON.parse(raw) : null;
+    // Older cache entries predate the DM command configuration. Pick up the deployed config on the first reload.
+    const parsed = cached && Object.hasOwn(cached, "directBotCommands") ? zConfig.safeParse(cached) : null;
     return parsed?.success ? parsed.data : null;
   } catch {
     return null;

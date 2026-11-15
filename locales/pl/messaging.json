@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# wiadomość} other {# wiadomości} few {# wiadomości} many {# wiadomości}}"
   },
+  "slash_commands": {
+    "load_failed": "Nie udało się wczytać poleceń.",
+    "no_commands": "Brak pasujących poleceń.",
+    "unavailable": "To polecenie nie jest tutaj dostępne.",
+    "finish_draft": "Wyślij lub usuń wersję roboczą przed wstawieniem polecenia.",
+    "insert": "Wstaw polecenie",
+    "run": "Uruchom polecenie"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Animowany emotikon {value0}",
     "files_to_send_d302111": "Pliki do wysłania",

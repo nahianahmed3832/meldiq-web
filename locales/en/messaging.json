@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# message} other {# messages}}"
   },
+  "slash_commands": {
+    "load_failed": "Could not load commands.",
+    "no_commands": "No matching commands.",
+    "unavailable": "This command is unavailable here.",
+    "finish_draft": "Send or clear your draft before inserting a command.",
+    "insert": "Insert command",
+    "run": "Run command"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Animated emoji {value0}",
     "files_to_send_d302111": "Files to send",

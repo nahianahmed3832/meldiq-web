@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# mesaj} other {# de mesaje} few {# mesaje}}"
   },
+  "slash_commands": {
+    "load_failed": "Comenzile nu au putut fi încărcate.",
+    "no_commands": "Nu există comenzi care să corespundă.",
+    "unavailable": "Această comandă nu este disponibilă aici.",
+    "finish_draft": "Trimite sau șterge ciorna înainte de a insera o comandă.",
+    "insert": "Inserează comanda",
+    "run": "Execută comanda"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Emoji animat {value0}",
     "files_to_send_d302111": "Fișiere de trimis",

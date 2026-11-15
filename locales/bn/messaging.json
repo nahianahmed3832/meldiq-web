@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {#টি বার্তা} other {#টি বার্তা}}"
   },
+  "slash_commands": {
+    "load_failed": "কমান্ড লোড করা যায়নি।",
+    "no_commands": "মিলে যাওয়া কোনো কমান্ড নেই।",
+    "unavailable": "এই কমান্ডটি এখানে উপলভ্য নয়।",
+    "finish_draft": "কমান্ড যোগ করার আগে খসড়াটি পাঠান বা মুছুন।",
+    "insert": "কমান্ড যোগ করুন",
+    "run": "কমান্ড চালান"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "অ্যানিমেটেড ইমোজি {value0}",
     "files_to_send_d302111": "যে ফাইলগুলি পাঠানো হবে",

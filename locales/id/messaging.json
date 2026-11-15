@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, other {# pesan}}"
   },
+  "slash_commands": {
+    "load_failed": "Perintah tidak dapat dimuat.",
+    "no_commands": "Tidak ada perintah yang cocok.",
+    "unavailable": "Perintah ini tidak tersedia di sini.",
+    "finish_draft": "Kirim atau hapus draf sebelum menyisipkan perintah.",
+    "insert": "Sisipkan perintah",
+    "run": "Jalankan perintah"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Emoji animasi {value0}",
     "files_to_send_d302111": "Berkas untuk dikirim",

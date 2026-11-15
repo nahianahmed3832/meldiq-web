@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, other {# 則訊息}}"
   },
+  "slash_commands": {
+    "load_failed": "無法載入指令。",
+    "no_commands": "沒有相符的指令。",
+    "unavailable": "這裡無法使用此指令。",
+    "finish_draft": "請先傳送或清除草稿，再插入指令。",
+    "insert": "插入指令",
+    "run": "執行指令"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "動畫表情符號 {value0}",
     "files_to_send_d302111": "要傳送的檔案",

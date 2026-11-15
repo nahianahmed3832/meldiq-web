@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, other {메시지 #개}}"
   },
+  "slash_commands": {
+    "load_failed": "명령어를 불러오지 못했습니다.",
+    "no_commands": "일치하는 명령어가 없습니다.",
+    "unavailable": "여기서는 이 명령어를 사용할 수 없습니다.",
+    "finish_draft": "명령어를 삽입하기 전에 작성 중인 메시지를 보내거나 지워 주세요.",
+    "insert": "명령어 삽입",
+    "run": "명령어 실행"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "애니메이션 이모티콘 {value0}",
     "files_to_send_d302111": "보낼 파일",
