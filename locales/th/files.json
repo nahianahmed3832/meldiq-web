@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "แฟ้มที่ดาวน์โหลดมามีขนาดใหญ่กว่าที่ได้ตรวจสอบไว้",
     "the_download_stopped_early_ec088bb": "การดาวน์โหลดหยุดช้า",
     "the_download_was_interrupted_try_again_d07dbc1": "การดาวน์โหลดถูกหยุดชะงัก ลองอีกทีสิ"
+  },
+  "profileShowcase": {
+    "creations": "ผลงานของผู้ใช้",
+    "effect": "เอฟเฟกต์โปรไฟล์",
+    "full": "ดูโปรไฟล์ฉบับเต็ม"
   }
 }

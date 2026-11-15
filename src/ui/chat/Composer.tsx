@@ -17,14 +17,13 @@ import { ROUTE_EVENT } from "../../application/router";
 import { holdUpdates } from "../../application/updates";
 import type { StoredMessage } from "../../model/types";
 import type { RichContent } from "../../model/types";
-import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
+import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { AttachmentDrafts } from "./AttachmentDrafts";
 import { inspectFile } from "../../sync/attachmentPolicy";
 import { optimizeVideo } from "../../sync/videoQuality";
 import { preparePhoto } from "../../sync/photoQuality";
 import { UploadCancelled } from "../../sync/largeUpload";
 import { transfersOf } from "../../sync/transfers";
-import { TransferList } from "./TransferList";
 import { fallbackText } from "../../sync/rich";
 import { type Recording, voiceFileName, voiceMime } from "../../sync/voice";
 import { activeMentionQuery } from "../../sync/mentions";
@@ -320,7 +319,7 @@ export function Composer(props: ComposerProps) {
           }
           preparing.current = null;
         }
-        // The transfer belongs to the app (sync/transfers.ts): it keeps going, with its progress shown above this box,
+        // The transfer belongs to the app (sync/transfers.ts): it keeps going, with progress shown in the chat,
         // if this conversation is left; the same send while it runs joins it rather than starting another.
         await transfersOf(engine).start(
           c.id,
@@ -359,13 +358,7 @@ export function Composer(props: ComposerProps) {
   const sendVoice = async (rec: Recording) => {
     const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
     try {
-      await sendFiles(
-        engine,
-        c.id,
-        [{ name: voiceFileName(rec.mime), type: rec.mime, size: rec.blob.size, bytes: async () => new Uint8Array(await rec.blob.arrayBuffer()), voiceDurationMs: rec.durationMs }],
-        "",
-        opts,
-      );
+      await transfersOf(engine).start(c.id, [{ name: voiceFileName(rec.mime), type: rec.mime, size: rec.blob.size, source: rec.blob, voiceDurationMs: rec.durationMs }], "", opts);
       props.onCancelReply();
       setVoice(false);
     } catch (e) {
@@ -404,7 +397,6 @@ export function Composer(props: ComposerProps) {
   }
   return (
     <div className="composer-wrap">
-      <TransferList conversationId={c.id} />
       <SlashCommandList slash={slash} />
       {completion.view}
       {suggest && (

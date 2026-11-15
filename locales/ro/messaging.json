@@ -760,5 +760,9 @@
     "notice": "Acest bot și dezvoltatorul său pot citi mesajele din această conversație.",
     "allow": "Permite mesajele botului",
     "restart": "Dezactivarea accesului sau blocarea botului oprește mesajele. Reactivarea începe o conversație nouă."
+  },
+  "uploads": {
+    "preparing": "Se pregătesc fișierele…",
+    "progress": "{sent} din {total} · {percent}%"
   }
 }

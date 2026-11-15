@@ -6,7 +6,7 @@ import { BadgeCheck, FileUp, Gem, MonitorUp, Sparkles, X } from "lucide-react";
 import type { MojoCatalog } from "../../api/mojoSchemas";
 import type { Promotion } from "../../api/promotionSchemas";
 import { Dialog } from "../components/Overlay";
-import { money, screenLabel, size } from "./mojoFormat";
+import { money, planVideoLabel, size } from "./mojoFormat";
 /** Reference-inspired popup; benefits come from Meldiq's catalog, independent of the reference application's limits. */
 export function PlusPromotion({
   promotion: p,
@@ -44,7 +44,7 @@ export function PlusPromotion({
               <Localized k="billing.interface.files_up_to_ab9d8f4" slots={[<FileUp size={20} aria-hidden="true" />, size(plus.uploadBytes)]} />
             </li>
             <li>
-              <Localized k="billing.interface.screen_sharing_8c7a78b" slots={[<MonitorUp size={20} aria-hidden="true" />, screenLabel(catalog, plus.screen)]} />
+              <MonitorUp size={20} aria-hidden="true" /> {uiText("billing.videoQuality.benefit", { target: planVideoLabel(plus.key) })}
             </li>
             {plus.badge === "plus" && (
               <li>

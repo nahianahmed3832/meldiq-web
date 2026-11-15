@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Pobrany plik jest większy niż jego zweryfikowany odsyłacz.",
     "the_download_stopped_early_ec088bb": "Pobieranie zatrzymało się wcześniej.",
     "the_download_was_interrupted_try_again_d07dbc1": "Pobieranie zostało przerwane. Spróbuj jeszcze raz."
+  },
+  "profileShowcase": {
+    "creations": "Twórczość",
+    "effect": "Efekt profilu",
+    "full": "Wyświetl pełny profil"
   }
 }

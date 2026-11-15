@@ -177,7 +177,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         {c.type === "CHANNEL" && c.orgId && !showVoice && <WordyHeaderAction c={c} />}
         {/* The reference header: bell, pins, members, then a search box. Phones keep the name, calls and the menu (as the
             Android app); pins and members are in the details the name opens, and search is on the list's header. */}
-        {!showVoice && (
+        {c.type === "CHANNEL" && !showVoice && (
           <button
             className="icon-btn hide-sm"
             aria-pressed={route.panel === "pinned"}

@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Den hämtade filen är större än dess verifierade referens.",
     "the_download_stopped_early_ec088bb": "Nedladdningen stoppades tidigt.",
     "the_download_was_interrupted_try_again_d07dbc1": "Nedladdningen avbröts. Försök igen."
+  },
+  "profileShowcase": {
+    "creations": "Egna skapelser",
+    "effect": "Profileffekt",
+    "full": "Visa hela profilen"
   }
 }

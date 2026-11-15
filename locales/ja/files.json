@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "ダウンロードしたファイルは検証された参照より大きい。",
     "the_download_stopped_early_ec088bb": "ダウンロードが早く中断しました。",
     "the_download_was_interrupted_try_again_d07dbc1": "ダウンロードが中断しました。 もう一度"
+  },
+  "profileShowcase": {
+    "creations": "このユーザーの作品",
+    "effect": "プロフィールエフェクト",
+    "full": "プロフィール全体を表示"
   }
 }

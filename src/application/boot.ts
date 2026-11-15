@@ -132,7 +132,7 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
       const p = getPrefs();
       return {
         noiseReduction: p.noiseReduction,
-        shareQuality: p.shareQuality,
+        videoQuality: p.videoQuality,
         shareAudio: p.shareAudio,
         echoCancellation: p.echoCancellation,
         autoGain: p.autoGain,

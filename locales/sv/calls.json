@@ -308,5 +308,12 @@
     "right_415296c": "Höger ⌘",
     "video_call_89e4267": "Ett videosamtal",
     "this_browser_can_t_record_audio_245d6c1": "Din webbläsare kan inte spela in ljud."
+  },
+  "videoQuality": {
+    "label": "Videokvalitet",
+    "description": "Gäller kameran och skärmdelningen. Det automatiska läget anpassar kvaliteten efter din anslutning.",
+    "auto": "Automatiskt",
+    "format": "{height}p · {fps} bilder/s",
+    "sharing": "Skärmdelning · {detail}"
   }
 }

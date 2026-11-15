@@ -2,18 +2,17 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { ChevronDown, Maximize, MonitorUp, Play, Radio, Users } from "lucide-react";
+import { Maximize, MonitorUp, Play, Radio, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { screenShareSupport } from "../../call/screenShareSupport";
 import { frameShape } from "../../call/rules";
-import { clampShareQuality, SHARE_QUALITIES, SHARE_QUALITY_ORDER, type ShareQuality } from "../../call/shareQuality";
-import { navigate } from "../../application/router";
+import { videoTierLabel } from "../../call/shareQuality";
 import type { CallShareView } from "../../call/shares";
 import type { CallUiState } from "../../call/types";
 import { Avatar } from "../components/Avatar";
-import { Dialog, Menu, useMenu } from "../components/Overlay";
+import { Dialog } from "../components/Overlay";
 import { Toggle } from "../components/Toggle";
 interface ScreenViewProps {
   share: CallShareView;
@@ -146,73 +145,30 @@ export function StreamTray({ call }: { call: CallUiState }) {
     </section>
   );
 }
-/** "Sharing · High · 1920×1080 · 60 fps": what this browser sends now; it opens the quality choice. */
 export function SharePill({ call }: { call: CallUiState }) {
   useLocaleRender();
-  const engine = useEngine();
-  const menu = useMenu();
-  if (!call.screenSharing || !call.shareQuality) return null;
-  const q = SHARE_QUALITIES[call.shareQuality];
+  if (!call.screenSharing) return null;
   const sent = call.shareStats?.sent;
-  const choose = (quality: ShareQuality) => {
-    setPrefs({ shareQuality: quality });
-    void engine.calls.setShareQuality(quality);
-  };
+  const detail = sent ? uiText("calls.interface.value0_value1_value2_fps_774d206", { value0: sent.width, value1: sent.height, value2: sent.fps }) : videoTierLabel(call.videoTier);
   return (
-    <>
-      <button className="call-pill quiet" onClick={(e) => menu.open(e.currentTarget)} aria-haspopup="menu" data-testid="share-pill">
-        <Localized
-          k="calls.interface.sharing_ad8683a"
-          slots={[
-            q.label,
-            sent ? uiText("calls.interface.value0_value1_value2_fps_774d206", { value0: sent.width, value1: sent.height, value2: sent.fps }) : "",
-            call.shareAudio ? uiText("calls.interface.with_sound_aa5e00f") : "",
-            <ChevronDown size={13} aria-hidden="true" />,
-          ]}
-        />
-      </button>
-      {menu.anchor && (
-        <Menu
-          anchor={menu.anchor}
-          label={uiText("calls.interface.screen_share_quality_a5cfda1")}
-          onClose={menu.close}
-          entries={[
-            {
-              get heading() {
-                return uiText("calls.interface.quality_1b2c08a");
-              },
-            },
-            ...call.shareQualities.map((k) => ({
-              label: `${SHARE_QUALITIES[k].label} · ${SHARE_QUALITIES[k].height}p${SHARE_QUALITIES[k].frameRate}`,
-              checked: k === call.shareQuality,
-              onSelect: () => choose(k),
-            })),
-          ]}
-        />
-      )}
-    </>
+    <span className="call-pill quiet" data-testid="share-pill">
+      {uiText("calls.videoQuality.sharing", { detail })}
+    </span>
   );
 }
-/**
- * Share your screen: the warning, then Standard (720p30) or High (1080p60), and the shared tab's or screen's sound where
- * the browser offers it. The last choice is the default next time; then the browser asks which screen, window or tab.
- */
+
 export function ShareDialog({ onClose }: { onClose: () => void }) {
   useLocaleRender();
   const l10n = useLocalization();
   const engine = useEngine();
   const prefs = usePrefs();
-  // Only the qualities this person may share at here (Meldiq Plus: their plan and the community's Sparks).
-  const allowed = useOrbit((s) => s.call.shareQualities);
-  const [quality, setQuality] = useState<ShareQuality>(() => clampShareQuality(prefs.shareQuality, allowed));
-  const more = allowed.length < SHARE_QUALITY_ORDER.length && allowed[allowed.length - 1] !== "max60";
   const [audio, setAudio] = useState(prefs.shareAudio);
   const support = screenShareSupport();
   const share = () => {
     if (!screenShareSupport().ok) return;
-    setPrefs({ shareQuality: quality, shareAudio: audio });
+    setPrefs({ shareAudio: audio });
     onClose();
-    void engine.calls.toggleScreenShare({ quality, audio });
+    void engine.calls.toggleScreenShare({ audio });
   };
   if (!support.ok)
     return (
@@ -233,30 +189,6 @@ export function ShareDialog({ onClose }: { onClose: () => void }) {
         <div className="banner warn">
           <Localized k="calls.interface.everyone_in_the_call_sees_what_you_share_including_notifications_6cda4e2" />
         </div>
-        <div role="radiogroup" aria-label={uiText("calls.interface.quality_1b2c08a")} style={{ display: "grid", gap: 2 }}>
-          {allowed.map((k) => (
-            <button key={k} role="radio" aria-checked={quality === k} className="list-row" onClick={() => setQuality(k)}>
-              <span className="lines">
-                <span style={{ fontWeight: 600 }}>{SHARE_QUALITIES[k].label}</span>
-                <small>{SHARE_QUALITIES[k].hint}</small>
-              </span>
-            </button>
-          ))}
-        </div>
-        {more && (
-          <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-            <Localized k="calls.interface.higher_quality_comes_with_meldiq_plus_or_when_this_community_has_1105004" />
-            <button
-              className="char-limit-link"
-              onClick={() => {
-                onClose();
-                navigate({ section: "settings", settingsPage: "mojo" });
-              }}
-            >
-              <Localized k="calls.interface.see_meldiq_plus_408c6d5" />
-            </button>
-          </p>
-        )}
         <div className="setting">
           <span className="lines">
             <strong>

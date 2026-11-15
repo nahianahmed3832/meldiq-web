@@ -31,7 +31,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { CallFailure } from "../../call/rules";
-import { shareShortfall } from "../../call/shareQuality";
+import { CallQualitySelect } from "./CallQualitySelect";
 import { ScreenView, ShareDialog, SharePill, StreamTray } from "./ShareViews";
 import type { CallParticipantView, CallUiState, DeviceKind, MediaDeviceChoice } from "../../call/types";
 import { CallAvatar, CallTargetAvatar } from "./CallAvatar";
@@ -69,6 +69,7 @@ export function CallStage() {
             {callStatus(call, now)}
           </p>
         </div>
+        {!ended && <CallQualitySelect compact />}
         {call.verification && !ended && <SecurityBadge call={call} open={verifyOpen} onToggle={() => setVerifyOpen((o) => !o)} />}
       </header>
       <div className="call-notes">
@@ -151,9 +152,6 @@ function CallNotes({ call }: { call: CallUiState }) {
         return uiText("calls.interface.connected_over_tcp_this_network_may_block_udp_so_the_call_can_lag_27d75c5");
       },
     });
-  // Less than the presenter chose: the browser captures less, or the connection made the share step down.
-  const shortfall = call.shareStats && shareShortfall(call.shareStats);
-  if (shortfall && call.phase !== "ended") notes.push({ key: "share", icon: <Info size={16} />, text: shortfall });
   return (
     <>
       {call.notice && call.phase !== "ended" && (

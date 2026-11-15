@@ -308,5 +308,12 @@
     "right_415296c": "右键 ⌘",
     "video_call_89e4267": "视频通话",
     "this_browser_can_t_record_audio_245d6c1": "您的浏览器不支持视频播放。"
+  },
+  "videoQuality": {
+    "label": "视频画质",
+    "description": "适用于摄像头和屏幕共享。自动模式会根据网络连接调整画质。",
+    "auto": "自动",
+    "format": "{height}p · {fps} 帧/秒",
+    "sharing": "正在共享屏幕 · {detail}"
   }
 }

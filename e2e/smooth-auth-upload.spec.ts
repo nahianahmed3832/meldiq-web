@@ -83,9 +83,27 @@ test("original photo upload and exact download, with distinct owner rows", async
   await page.locator(".composer input[type=file]").setInputFiles(path.join(import.meta.dirname, "fixtures/photo.jpg"));
   await page.getByRole("checkbox", { name: "Original file", exact: true }).check();
   await page.getByPlaceholder(/^Message #/).fill("Automatic photo");
-  await page.getByRole("button", { name: "Send", exact: true }).click();
+  let releaseUpload!: () => void;
+  const holdUpload = new Promise<void>((resolve) => {
+    releaseUpload = resolve;
+  });
+  await page.route("**/v1/attachments?*", async (route) => {
+    if (route.request().method() === "POST") await holdUpload;
+    await route.continue();
+  });
+  try {
+    await page.getByRole("button", { name: "Send", exact: true }).click();
+    const pending = page.getByRole("log").locator(".transfer-row");
+    await expect(pending.getByRole("button", { name: "Cancel sending photo.jpg" })).toBeVisible();
+    await expect(pending).toContainText("Automatic photo");
+    await expect(pending.locator("img")).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath("upload-preview.png") });
+  } finally {
+    releaseUpload();
+  }
   const message = page.locator(".msg").filter({ hasText: "Automatic photo" });
   await message.getByRole("button", { name: /Open image/ }).click({ timeout: 20000 });
+  await expect(page.locator(".transfer-row")).toHaveCount(0);
   const download = page.waitForEvent("download");
   await page
     .locator(".lightbox")

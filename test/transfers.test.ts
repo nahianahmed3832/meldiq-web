@@ -140,7 +140,10 @@ describe("transfers", () => {
     expect((await settled(t, ids[0]))?.status).toBe("sent");
     expect(fetchStub).toHaveBeenCalledTimes(2);
     expect(sent).toHaveLength(1);
-    expect(sent[0].attachments.map(({ id }) => id)).toEqual(["size-17", "size-18"]);
+    expect(sent[0].attachments).toMatchObject([
+      { id: "size-17", chunk: CHUNK_BYTES },
+      { id: "size-18", chunk: CHUNK_BYTES },
+    ]);
   });
 
   it("keeps no plaintext and no raw key in the browser's database, only ciphertext and a sealed key", async () => {

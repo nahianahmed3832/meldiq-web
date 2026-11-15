@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "下载的文件大于其验证的参考。",
     "the_download_stopped_early_ec088bb": "下载提前停止。",
     "the_download_was_interrupted_try_again_d07dbc1": "下载中断。 再试一次"
+  },
+  "profileShowcase": {
+    "creations": "对方的作品",
+    "effect": "个人资料特效",
+    "full": "查看完整个人资料"
   }
 }

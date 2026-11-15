@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> Ingår för grupper: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "Videosamtal och skärmdelning på webben",
+    "benefit": "Videosamtal och skärmdelning på webben {target}",
+    "auto": "Använd automatiskt läge för att anpassa kvaliteten efter anslutningen under samtalet."
   }
 }

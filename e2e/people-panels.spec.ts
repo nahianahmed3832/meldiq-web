@@ -43,6 +43,7 @@ test("community photos in the rail, a member list in channels and a profile in D
   const channel = channels.find((c) => c.orgId === org.id && !c.voice)!;
   for (const p of [bob, carol]) await p.req("POST", `/v1/conversations/${channel.id}/join`).catch(() => undefined);
   const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id as string;
+  await bob.req("PUT", "/v1/users/me/profile-style", { decoration: "aurora", effect: "sparkles", accent: "#7540c5" });
   await alice.connect();
   await bob.connect(); // Bob is here; Carol never connects, so she's offline.
 
@@ -70,6 +71,19 @@ test("community photos in the rail, a member list in channels and a profile in D
   expect(await list.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
   await shot(page, "channel-members");
 
+  const bobRow = list.locator(".member-row").filter({ hasText: "Bob Chen" });
+  await expect(bobRow).toHaveCSS("background-image", /linear-gradient/);
+  await bobRow.click();
+  const showcase = page.getByRole("dialog", { name: "Bob Chen" });
+  const wearing = showcase.getByRole("region", { name: "Wearing" });
+  await expect(wearing).toContainText("Aurora");
+  await expect(wearing).toContainText("Sparkles");
+  await shot(page, "profile-showcase");
+  await showcase.getByRole("button", { name: "View full profile" }).click();
+  await expect(showcase).toHaveClass(/profile-full/);
+  await page.keyboard.press("Escape");
+  await expect(showcase).toHaveCount(0);
+
   // Hidden from the header, and it stays hidden (every channel) until shown again.
   await page.getByRole("button", { name: "Hide the member list" }).first().click();
   await expect(list).toHaveCount(0);
@@ -91,6 +105,15 @@ test("community photos in the rail, a member list in channels and a profile in D
   await expect(profile).toHaveCount(0);
   await page.getByRole("button", { name: "Show the profile" }).click();
   await expect(profile).toBeVisible();
+
+  const header = page.locator(".conv-head");
+  await expect(header.getByRole("button", { name: "Pinned messages" })).toHaveCount(0);
+  await header.getByRole("button", { name: "More", exact: true }).click();
+  const menu = page.getByRole("menu", { name: "Conversation" });
+  await expect(menu.getByRole("menuitem")).toHaveCount(2);
+  await expect(menu.getByRole("menuitem", { name: "Pinned messages" })).toBeVisible();
+  await expect(menu.getByRole("menuitem", { name: "Details, media and files" })).toBeVisible();
+  await page.keyboard.press("Escape");
 
   // Discord-sized message toolbar and reactions.
   const msg = page.locator(".msg").filter({ hasText: "Hi Alice, react to this" });

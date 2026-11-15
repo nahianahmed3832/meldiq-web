@@ -308,5 +308,12 @@
     "right_415296c": "Sağ ⌘",
     "video_call_89e4267": "video çağrısı",
     "this_browser_can_t_record_audio_245d6c1": "Bu tarayıcı ses kaydedemez."
+  },
+  "videoQuality": {
+    "label": "Video kalitesi",
+    "description": "Kamera ve ekran paylaşımı için geçerlidir. Otomatik mod kaliteyi bağlantına göre ayarlar.",
+    "auto": "Otomatik",
+    "format": "{height}p · {fps} kare/sn",
+    "sharing": "Ekran paylaşılıyor · {detail}"
   }
 }

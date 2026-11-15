@@ -760,5 +760,9 @@
     "notice": "Bot ini dan pengembangnya dapat membaca pesan dalam percakapan ini.",
     "allow": "Izinkan pesan bot",
     "restart": "Menonaktifkan akses atau memblokir bot akan menghentikan pesan. Mengaktifkannya lagi akan memulai percakapan baru."
+  },
+  "uploads": {
+    "preparing": "Menyiapkan berkas…",
+    "progress": "{sent} dari {total} · {percent}%"
   }
 }

@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> Topluluklar için dahil: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "Web’de görüntülü arama ve ekran paylaşımı",
+    "benefit": "Web’de görüntülü arama ve ekran paylaşımı {target}",
+    "auto": "Arama sırasında kaliteyi bağlantına göre ayarlamak için otomatik modu kullan."
   }
 }

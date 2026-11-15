@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> Incluído para comunidades: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "Chamadas de vídeo e compartilhamento de tela na web",
+    "benefit": "Chamadas de vídeo e compartilhamento de tela na web {target}",
+    "auto": "Use o modo automático para ajustar a qualidade à sua conexão durante a chamada."
   }
 }

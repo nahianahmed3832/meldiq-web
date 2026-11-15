@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Le fichier téléchargé est plus gros que sa référence vérifiée.",
     "the_download_stopped_early_ec088bb": "Le téléchargement s''est arrêté prématurément.",
     "the_download_was_interrupted_try_again_d07dbc1": "Le téléchargement a été interrompu. Essayez à nouveau."
+  },
+  "profileShowcase": {
+    "creations": "Ses créations",
+    "effect": "Effet de profil",
+    "full": "Voir le profil complet"
   }
 }

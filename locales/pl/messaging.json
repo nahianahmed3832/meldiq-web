@@ -760,5 +760,9 @@
     "notice": "Ten bot i jego twórca mogą czytać wiadomości w tym czacie.",
     "allow": "Zezwól na wiadomości bota",
     "restart": "Wyłączenie dostępu lub zablokowanie bota zatrzymuje wiadomości. Ponowne włączenie rozpoczyna nowy czat."
+  },
+  "uploads": {
+    "preparing": "Przygotowywanie plików…",
+    "progress": "{sent} z {total} · {percent}%"
   }
 }

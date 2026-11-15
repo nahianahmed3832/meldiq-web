@@ -11,6 +11,7 @@ import { dayLabel, sameDay } from "../format";
 import { MessageItem } from "./MessageItem";
 import { BulkSaveBar, useBulkSave } from "./BulkSaveBar";
 import { ChatFileSelection } from "./ChatFileSelection";
+import { TransferList } from "./TransferList";
 import { TypingIndicator } from "./TypingIndicator";
 import { JUMP_EVENT } from "./jump";
 import { useT } from "../../i18n";
@@ -271,6 +272,7 @@ export function MessageList(props: MessageListProps) {
             </Fragment>
           );
         })}
+        {!props.detached && <TransferList conversationId={props.conversationId} threadRoot={threadRoot} />}
       </div>
       <TypingIndicator names={typers} />
       {loadError && (

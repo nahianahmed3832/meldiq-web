@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Το αρχείο που κατεβάσατε είναι μεγαλύτερο από την επαληθευμένη αναφορά του.",
     "the_download_stopped_early_ec088bb": "Η λήψη σταμάτησε νωρίς.",
     "the_download_was_interrupted_try_again_d07dbc1": "Η λήψη διακόπηκε. Δοκιμάστε ξανά."
+  },
+  "profileShowcase": {
+    "creations": "Δημιουργίες",
+    "effect": "Εφέ προφίλ",
+    "full": "Προβολή πλήρους προφίλ"
   }
 }

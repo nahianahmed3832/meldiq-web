@@ -760,5 +760,9 @@
     "notice": "Bot này và nhà phát triển có thể đọc tin nhắn trong cuộc trò chuyện này.",
     "allow": "Cho phép tin nhắn từ bot",
     "restart": "Tắt quyền truy cập hoặc chặn bot sẽ dừng nhắn tin. Bật lại sẽ bắt đầu cuộc trò chuyện mới."
+  },
+  "uploads": {
+    "preparing": "Đang chuẩn bị tệp…",
+    "progress": "{sent} trên {total} · {percent}%"
   }
 }

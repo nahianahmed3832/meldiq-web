@@ -2,11 +2,10 @@ import { text as uiText } from "../i18n";
 import { mediaPreview } from "./mediaPreview";
 import { aesGcmDecrypt, aesGcmEncrypt } from "../crypto/aead";
 import { fromB64, randomBytes, sha256, toB64, utf8 } from "../crypto/bytes";
-import { encryptFile } from "../crypto/attachment";
 import type { AttachmentRef } from "../protocol/payload";
 import { holdUpdates } from "../application/updates";
 import { ApiError } from "../api/client";
-import { AttachmentError, fileLimit, MAX_FILES_PER_MESSAGE, SINGLE_FORMAT_BYTES } from "./attachments";
+import { AttachmentError, fileLimit, MAX_FILES_PER_MESSAGE } from "./attachments";
 import { CHUNK_BYTES } from "../crypto/fileStream";
 import { prepareLarge, type PreparedFile, checkUploadSignal, type UploadCheckpoint, UploadCancelled, uploadPrepared } from "./largeUpload";
 import type { Engine } from "./engine";
@@ -16,7 +15,7 @@ import type { Engine } from "./engine";
  *
  * - One transfer per operation: its id is a hash of the conversation, the files (name, size, last change), the caption
  *   and the reply, so sending the same thing again while it's running joins the running transfer.
- * - Checkpoints in this browser's database (erased with the rest on sign-out): each large file's ciphertext (as a Blob,
+ * - Checkpoints in this browser's database (erased with the rest on sign-out): each file's ciphertext (as a Blob,
  *   still encrypted), where its upload got to, and the stored attachment's id. A file's key is kept only
  *   sealed with a non-extractable AES-GCM key that never leaves this browser, never as bytes.
  * - After a reload the transfer comes back as interrupted: Resume continues from the stored ciphertext and the parts the
@@ -43,6 +42,7 @@ export interface TransferFile {
 export interface Transfer {
   id: string;
   conversationId: string;
+  threadRoot?: string;
   caption: string;
   status: TransferStatus;
   files: TransferFile[];
@@ -74,7 +74,7 @@ interface StoredFile {
   size: number;
   lastModified: number;
   voiceDurationMs?: number;
-  /** Large files once encrypted: the ciphertext and what decrypting it needs (the key sealed). */
+  /** Files once encrypted: the ciphertext and what decrypting it needs (the key sealed). */
   ciphertext?: Blob;
   sealedKey?: SealedKey;
   nonce?: string;
@@ -106,7 +106,7 @@ export class Transfers {
   private readonly stored = new Map<string, StoredTransfer>();
   /** The picked files of running transfers, only in memory. */
   private readonly sources = new Map<string, (Blob | null)[]>();
-  /** Large files encrypted in this session (with their raw key), only in memory. */
+  /** Files encrypted in this session (with their raw key), only in memory. */
   private readonly prepared = new Map<string, (PreparedFile | null)[]>();
   private readonly aborts = new Map<string, AbortController>();
   private readonly listeners = new Set<Listener>();
@@ -126,6 +126,10 @@ export class Transfers {
   list(conversationId?: string): Transfer[] {
     return [...this.jobs.values()].filter((j) => !conversationId || j.conversationId === conversationId).sort((a, b) => a.createdAt - b.createdAt);
   }
+  preview(id: string): Blob | null {
+    const file = this.sources.get(id)?.[0];
+    return file && /^image\/(?:jpeg|png|webp|avif)$/.test(file.type) ? file : null;
+  }
   /** Transfers kept from before a reload come back as interrupted (once per engine). */
   load(): Promise<void> {
     this.loaded ??= (async () => {
@@ -135,6 +139,7 @@ export class Transfers {
         this.jobs.set(value.id, {
           id: value.id,
           conversationId: value.conversationId,
+          threadRoot: value.threadRoot,
           caption: value.caption,
           status: "interrupted",
           error: null,
@@ -206,6 +211,7 @@ export class Transfers {
     this.jobs.set(id, {
       id,
       conversationId,
+      threadRoot: opts.threadRoot,
       caption,
       status: "running",
       error: null,
@@ -428,7 +434,7 @@ export class Transfers {
     checkUploadSignal(signal);
     const slot = 2 * i + (opts.preview ? 1 : 0);
     const source = opts.source ?? (opts.preview ? null : this.sources.get(id)?.[i]) ?? null;
-    // Large: encrypt once (unless a checkpoint has the ciphertext), then upload, continuing where it stopped.
+    // New files use the same authenticated chunk format at every size. Existing checkpoints keep their original format.
     let prepared = this.prepared.get(id)?.[slot] ?? null;
     const remember = (value: PreparedFile) => {
       this.prepared.set(id, Object.assign(this.prepared.get(id) ?? [], { [slot]: value }));
@@ -450,28 +456,11 @@ export class Transfers {
       checkUploadSignal(signal);
       view.phase = "encrypting";
       this.emit(true);
-      if (f.size <= SINGLE_FORMAT_BYTES) {
-        const bytes = new Uint8Array(await source.arrayBuffer());
-        checkUploadSignal(signal);
-        const enc = await encryptFile(bytes);
-        prepared = {
-          name: f.name,
-          type: f.type,
-          size: f.size,
-          ciphertext: new Blob([new Uint8Array(enc.ciphertext)]),
-          rawKey: fromB64(enc.key),
-          nonce: fromB64(enc.nonce),
-          sha256: enc.sha256,
-          voiceDurationMs: f.voiceDurationMs,
-        };
-      } else {
-        const encrypting = progress("encrypting");
-        prepared = await prepareLarge(
-          { name: f.name, type: f.type, size: f.size, source, slice: (a, b) => source.slice(a, b) },
-          { signal, voiceDurationMs: f.voiceDurationMs, onProgress: encrypting },
-        );
-        f.chunk = CHUNK_BYTES;
-      }
+      prepared = await prepareLarge(
+        { name: f.name, type: f.type, size: f.size, source, slice: (a, b) => source.slice(a, b) },
+        { signal, voiceDurationMs: f.voiceDurationMs, onProgress: progress("encrypting") },
+      );
+      f.chunk = CHUNK_BYTES;
       remember(prepared);
       checkUploadSignal(signal);
     }

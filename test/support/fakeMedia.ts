@@ -11,7 +11,7 @@ import {
   type PrepareOptions,
   type ShareOptions,
 } from "../../src/call/types";
-import type { ShareQuality } from "../../src/call/shareQuality";
+import type { VideoQualityMode, VideoTier } from "../../src/call/shareQuality";
 import type { CallShareView } from "../../src/call/shares";
 
 /**
@@ -33,7 +33,7 @@ export class FakeMedia implements MediaSession {
   remoteShares: CallShareView[] = [];
   watched: string | null = null;
   watchCalls: (string | null)[] = [];
-  qualityChanges: ShareQuality[] = [];
+  qualityChanges: { tier: VideoTier; mode: VideoQualityMode }[] = [];
 
   constructor(
     readonly events: MediaEvents,
@@ -99,8 +99,8 @@ export class FakeMedia implements MediaSession {
     this.deafened = on;
   }
 
-  async setShareQuality(quality: ShareQuality): Promise<void> {
-    this.qualityChanges.push(quality);
+  async configureVideo(tier: VideoTier, mode: VideoQualityMode): Promise<void> {
+    this.qualityChanges.push({ tier, mode });
   }
 
   /** Others' shares (set by a test), then this browser's own while it shares. */

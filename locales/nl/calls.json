@@ -308,5 +308,12 @@
     "right_415296c": "Rechts ⌘",
     "video_call_89e4267": "Videogesprekken",
     "this_browser_can_t_record_audio_245d6c1": "Deze browser kan geen audio opnemen."
+  },
+  "videoQuality": {
+    "label": "Videokwaliteit",
+    "description": "Geldt voor je camera en schermdeling. De automatische stand past de kwaliteit aan je verbinding aan.",
+    "auto": "Automatisch",
+    "format": "{height}p · {fps} fps",
+    "sharing": "Scherm delen · {detail}"
   }
 }

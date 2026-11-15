@@ -5,6 +5,7 @@ import { useT as useLocalization } from "../../i18n";
 import { GripVertical, Maximize2, Phone, PhoneOff, Video } from "lucide-react";
 import { type KeyboardEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
+import { CallQualitySelect } from "./CallQualitySelect";
 import { CallTargetAvatar } from "./CallAvatar";
 import { CallStage } from "./CallStage";
 import { callStatus } from "./callText";
@@ -49,6 +50,7 @@ function IncomingCall() {
           <p id="call-incoming-status">{callStatus(call, Date.now())}</p>
         </div>
       </div>
+      {call.video && !call.error && <CallQualitySelect compact />}
       {call.error ? (
         <p className="note" role="note">
           {call.error}

@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "The downloaded file is larger than its verified reference.",
     "the_download_stopped_early_ec088bb": "The download stopped early.",
     "the_download_was_interrupted_try_again_d07dbc1": "The download was interrupted. Try again."
+  },
+  "profileShowcase": {
+    "creations": "Their creations",
+    "effect": "Profile effect",
+    "full": "View full profile"
   }
 }

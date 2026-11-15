@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Stažený soubor je větší než jeho ověřený odkaz.",
     "the_download_stopped_early_ec088bb": "Stahování se zastavilo předčasně.",
     "the_download_was_interrupted_try_again_d07dbc1": "Stahování bylo přerušeno. Zkuste to znovu."
+  },
+  "profileShowcase": {
+    "creations": "Výtvory",
+    "effect": "Efekt profilu",
+    "full": "Zobrazit celý profil"
   }
 }

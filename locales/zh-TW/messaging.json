@@ -760,5 +760,9 @@
     "notice": "此機器人及其開發者可以讀取此聊天中的訊息。",
     "allow": "允許機器人訊息",
     "restart": "關閉存取權限或封鎖機器人會停止訊息往來。再次啟用後將開始新的聊天。"
+  },
+  "uploads": {
+    "preparing": "正在準備檔案…",
+    "progress": "{sent} / {total} · {percent}%"
   }
 }

@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> 커뮤니티에 포함됨: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "웹 영상 통화 및 화면 공유",
+    "benefit": "웹 영상 통화 및 화면 공유 {target}",
+    "auto": "통화 중 연결 상태에 따라 품질을 조절하려면 자동을 선택하세요."
   }
 }

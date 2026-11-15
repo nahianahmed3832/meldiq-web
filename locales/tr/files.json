@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "İndirilmiş dosya, onaylanmış referansından daha büyük.",
     "the_download_stopped_early_ec088bb": "İndirim erken durdu.",
     "the_download_was_interrupted_try_again_d07dbc1": "İndirim kesildi. Tekrar deneyelim."
+  },
+  "profileShowcase": {
+    "creations": "Tasarımları",
+    "effect": "Profil efekti",
+    "full": "Profilin tamamını gör"
   }
 }

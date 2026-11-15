@@ -2,7 +2,7 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { ArrowLeft, Bell, BellOff, ChevronRight, KeyRound, Search, Settings, ShieldCheck, UsersRound } from "lucide-react";
+import { ArrowLeft, Bell, BellOff, ChevronRight, KeyRound, Search, Settings, UsersRound } from "lucide-react";
 import { useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -17,7 +17,6 @@ import { type DetailsAction, DetailsActions, DetailsHero, DetailsTabBar, FilesTa
 import { type DetailsTab, detailsTabs } from "./detailsRules";
 import { PanelHead } from "./PanelHead";
 import { usePinned } from "./PinnedPanel";
-import { SecuritySheet } from "./SecuritySheet";
 import { ThreadList } from "./ThreadsPanel";
 /** What kind of channel this is, in words. */
 function kindOf(c: Conversation, rules: boolean): string {
@@ -37,8 +36,7 @@ function kindOf(c: Conversation, rules: boolean): string {
 /**
  * A channel's details (batch B14b, android DmDetails for channels): search, notifications and settings; the channel's
  * icon, name, kind and topic; tabs Members · Media · Pins · Threads · Links · Files (no Threads for a forum, whose posts are
- * its threads; members only for a voice channel). Members starts with "Manage channel access" for its managers. Security is
- * a row at the end; settings (about, access, notifications, edit) are behind the gear. There's no Leave: people leave
+ * its threads; members only for a voice channel). Members starts with "Manage channel access" for its managers. Channel settings are behind the gear. There's no Leave: people leave
  * the community, not one of its channels (the server refuses it, API 0.26.0).
  */
 export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () => void }) {
@@ -56,7 +54,7 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
   const tabs = detailsTabs("CHANNEL", c.format, c.voice);
   const [tab, setTab] = useState<DetailsTab>(tabs[0]);
   const [view, setView] = useState<"details" | "settings">("details");
-  const [sheet, setSheet] = useState<"security" | "access" | null>(null);
+  const [sheet, setSheet] = useState<"access" | null>(null);
   const name = `#${c.name ?? uiText("messaging.interface.channel_69e3656")}`;
   const muted = levelOf(nav, c.id, c.categoryId) === "none";
   const toggleMute = () =>
@@ -80,12 +78,7 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
       <ChevronRight size={16} className="faint" aria-hidden />
     </button>
   );
-  const sheets = (
-    <>
-      {sheet === "security" && <SecuritySheet conversationId={c.id} onClose={() => setSheet(null)} />}
-      {sheet === "access" && c.orgId && <PermissionsDialog orgId={c.orgId} target={{ type: "channel", id: c.id }} title={name} onClose={() => setSheet(null)} />}
-    </>
-  );
+  const sheets = <>{sheet === "access" && c.orgId && <PermissionsDialog orgId={c.orgId} target={{ type: "channel", id: c.id }} title={name} onClose={() => setSheet(null)} />}</>;
   if (view === "settings")
     return (
       <aside className="panel" aria-label={uiText("organization.interface.channel_settings_afc219f")}>
@@ -152,20 +145,6 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
           {tab === "threads" && <ThreadList conversationId={c.id} section={route.section} />}
           {tab === "links" && <LinksTab conversationId={c.id} links={links} nameOf={nameOf} />}
         </div>
-        <button className="panel-action-row" onClick={() => setSheet("security")}>
-          <span className="circle">
-            <ShieldCheck size={16} />
-          </span>
-          <span className="lines grow">
-            <span>
-              <Localized k="organization.interface.encryption_and_security_e75b9ce" />
-            </span>
-            <small>
-              <Localized k="organization.interface.messages_here_are_kept_on_meldiq_s_servers_e08d91b" />
-            </small>
-          </span>
-          <ChevronRight size={16} className="faint" aria-hidden />
-        </button>
       </div>
       {sheets}
     </aside>

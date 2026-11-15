@@ -308,5 +308,12 @@
     "right_415296c": "Pravá ⌘",
     "video_call_89e4267": "Video hovory zdarma",
     "this_browser_can_t_record_audio_245d6c1": "Váš prohlížeč nepodporuje nahrávání zvuku."
+  },
+  "videoQuality": {
+    "label": "Kvalita videa",
+    "description": "Platí pro kameru a sdílení obrazovky. Automatická volba se přizpůsobí připojení.",
+    "auto": "Automaticky",
+    "format": "{height}p · {fps} sn./s",
+    "sharing": "Sdílení obrazovky · {detail}"
   }
 }

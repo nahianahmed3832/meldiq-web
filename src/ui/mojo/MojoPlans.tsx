@@ -7,11 +7,11 @@ import { BadgeCheck, Check, FileUp, MessageSquareText, MonitorUp, Smile, Sparkle
 import type { ReactNode } from "react";
 import type { MojoCatalog, MojoMe, PlanKey, PlanPerks } from "../../api/mojoSchemas";
 import { MojoBadgeMark } from "./MojoBadge";
-import { planPrice, screenLabel, size } from "./mojoFormat";
+import { planPrice, planVideoLabel, size } from "./mojoFormat";
 /** Comparison rows: the table is the full overview; cards only pick out what matters most. */
 const ROWS: {
   label: string;
-  value: (p: PlanPerks, c: MojoCatalog) => string;
+  value: (p: PlanPerks) => string;
 }[] = [
   {
     get label() {
@@ -27,9 +27,9 @@ const ROWS: {
   },
   {
     get label() {
-      return uiText("billing.interface.screen_sharing_74dc20e");
+      return uiText("billing.videoQuality.label");
     },
-    value: (p, c) => screenLabel(c, p.screen),
+    value: (p) => planVideoLabel(p.key),
   },
   {
     get label() {
@@ -117,9 +117,7 @@ export function PlanCards({ catalog, me, actionFor }: PlanCardsProps) {
                 <PlanLine>
                   <Localized k="billing.interface.files_up_to_8438f86" slots={[size(p.uploadBytes)]} />
                 </PlanLine>
-                <PlanLine>
-                  <Localized k="billing.interface.screen_sharing_eb6e332" slots={[screenLabel(catalog, p.screen)]} />
-                </PlanLine>
+                <PlanLine>{uiText("billing.videoQuality.benefit", { target: planVideoLabel(p.key) })}</PlanLine>
                 <PlanLine>
                   {p.sparks === 0
                     ? uiText("billing.interface.sparks_buy_them_separately_5ad5332")
@@ -169,8 +167,8 @@ export function PlusPerks({ catalog }: { catalog: MojoCatalog }) {
     },
     {
       icon: <MonitorUp size={20} />,
-      title: uiText("billing.interface.value0_screen_sharing_a9988dc", { value0: screenLabel(catalog, plus.screen) }),
-      body: uiText("billing.interface.crisp_and_smooth_for_everyone_watching_8a758dc"),
+      title: uiText("billing.videoQuality.benefit", { target: planVideoLabel(plus.key) }),
+      body: uiText("billing.videoQuality.auto"),
     },
     {
       icon: <Sparkles size={20} />,
@@ -235,7 +233,7 @@ export function CompareTable({ catalog, me }: { catalog: MojoCatalog; me: MojoMe
                 .filter((p) => p.key !== "go")
                 .map((p) => (
                   <td key={p.key} className={cls(p.key)}>
-                    {r.value(p, catalog)}
+                    {r.value(p)}
                   </td>
                 ))}
             </tr>

@@ -1,5 +1,5 @@
 import type { ClipSources } from "./clipBuffer";
-import type { ShareQuality } from "./shareQuality";
+import type { VideoQualityMode, VideoTier } from "./shareQuality";
 import type { CallShareView } from "./shares";
 import type { CallParticipantView, DeviceIssues, DeviceKind, MediaDeviceChoice, MediaFactory, MediaGrant, MediaSession, OutputOptions, PrepareOptions, ShareOptions } from "./types";
 
@@ -59,8 +59,8 @@ class DeferredSession implements MediaSession {
     void this.inner.then((s) => s.setOutput?.(opts));
   }
 
-  async setShareQuality(quality: ShareQuality): Promise<void> {
-    return (await this.inner).setShareQuality(quality);
+  async configureVideo(tier: VideoTier, mode: VideoQualityMode): Promise<void> {
+    return (await this.inner).configureVideo(tier, mode);
   }
 
   shares(): CallShareView[] {

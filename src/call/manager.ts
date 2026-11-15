@@ -9,13 +9,13 @@ import type { AppState, Store } from "../state/store";
 import { IdentityChangedError } from "../sync/outbox";
 import { CallKeyRing, inRoomCall, judgeKey, type KeyVerdict, KeyRequestPacer, newCallKey, verificationCode } from "./callKeys";
 import { backoff, CallFailure, deafenChange, KEY_POLL_MS, KEY_WAIT_MS, PEER_WINDOW_MS, REJOIN_WINDOW_MS, retryable, shouldRing } from "./rules";
-import { allowedShareQualities, clampShareQuality, SHARE_QUALITIES, type ShareQuality } from "./shareQuality";
+import { type VideoQualityMode, videoTier } from "./shareQuality";
 import { type CallShareView, MAX_SCREEN_SHARES, mayShare, nextWatched } from "./shares";
 import { type CallUiState, DeviceError, type DeviceKind, idleCall, type MediaDeviceChoice, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
 /** This browser's call settings (Settings › Calls and Voice & Audio) as the manager reads them. */
 export interface CallPrefs {
   noiseReduction: boolean;
-  shareQuality: ShareQuality;
+  videoQuality: VideoQualityMode;
   shareAudio: boolean;
   echoCancellation?: boolean;
   autoGain?: boolean;
@@ -215,6 +215,8 @@ export class CallManager {
     this.patch({ askingPermission: true });
     const prefs = this.opts.callPrefs?.();
     const microphone = !listenOnly && !prefs?.joinMuted && !prefs?.joinDeafened && !prefs?.pushToTalk;
+    await session.configureVideo(this.state.videoTier, this.state.videoQuality);
+    this.check(gen);
     const devices = await session.prepare(video, {
       noiseReduction: prefs?.noiseReduction ?? true,
       // Only what Settings › Voice & Audio changed from the defaults.
@@ -255,8 +257,11 @@ export class CallManager {
     }
   }
   private async connect(gen: number, session: MediaSession, callId: string, grant: MediaGrant, key: string): Promise<void> {
-    // What the server allows this person to share at here (Meldiq Plus); older servers send nothing: as before.
-    this.patch({ verification: await verificationCode(key, callId), security: "verifying", shareQualities: allowedShareQualities(grant.limits?.screen) });
+    const verification = await verificationCode(key, callId);
+    this.check(gen);
+    const tier = videoTier(this.host.state.get().mojo.me?.plan);
+    this.patch({ verification, security: "verifying", videoTier: tier });
+    await session.configureVideo(tier, this.state.videoQuality);
     this.check(gen);
     try {
       await session.connect(grant, key);
@@ -275,7 +280,7 @@ export class CallManager {
       if (prefs?.joinDeafened && !this.state.deafened) await this.toggleDeafen().catch(() => undefined);
       else if ((prefs?.joinMuted || prefs?.pushToTalk) && this.state.micOn) await this.setDevice("microphone", false).catch(() => undefined);
     }
-    if (this.state.screenSharing) this.patch({ shareQuality: null, shareAudio: false, shareStats: null });
+    if (this.state.screenSharing) this.patch({ shareAudio: false, shareStats: null });
     void this.host.api.call("POST", `/v1/calls/${encodeURIComponent(callId)}/connected`).catch(() => undefined);
     const alone = session.remoteCount() === 0 && !this.state.isGroup;
     this.patch({ phase: alone ? (this.created ? "outgoing" : "connecting") : "connected", connectedAt: alone ? null : this.now(), mediaEpoch: this.state.mediaEpoch + 1 });
@@ -620,16 +625,11 @@ export class CallManager {
     if (this.session === session) this.refresh();
   }
   /** Shares this browser's screen, or stops (the browser's own "Stop sharing" also stops it; the state follows). */
-  async toggleScreenShare(opts?: { quality: ShareQuality; audio: boolean }): Promise<void> {
+  async toggleScreenShare(opts?: { audio: boolean }): Promise<void> {
     const session = this.session;
     if (!session) return;
-    const prefs = this.opts.callPrefs?.();
-    const wanted = opts ?? { quality: prefs?.shareQuality ?? "standard", audio: prefs?.shareAudio ?? false };
-    const share = { ...wanted, quality: clampShareQuality(wanted.quality, this.state.shareQualities) };
     const on = !this.state.screenSharing;
-    if (on && share.quality !== wanted.quality) {
-      this.patch({ notice: uiText("calls.interface.sharing_at_value0_higher_quality_comes_with_meldiq_plus_or_this_c_8a9bfc5", { value0: SHARE_QUALITIES[share.quality].label }) });
-    }
+    const share = opts ?? { audio: this.opts.callPrefs?.().shareAudio ?? false };
     const max = Math.max(2, this.opts.maxScreenShares ?? MAX_SCREEN_SHARES);
     if (on && !mayShare(session.shares(), max)) {
       this.patch({ notice: uiText("calls.interface.up_to_value0_screens_can_be_shared_at_once_ask_someone_to_stop_sh_5f529f8", { value0: max }) });
@@ -637,22 +637,22 @@ export class CallManager {
     }
     try {
       await session.setScreenShare(on, share);
-      this.patch({ error: null, shareQuality: on ? share.quality : null, shareAudio: on && share.audio, ...(on ? {} : { shareStats: null }) });
+      if (this.session !== session) return;
+      this.patch({ error: null, shareAudio: on && share.audio, ...(on ? {} : { shareStats: null }) });
     } catch (e) {
+      if (this.session !== session) return;
       // Closing the browser's screen picker isn't a failure to show.
       if (e instanceof ScreenShareUnavailable) this.patch({ error: e.message });
       else if (!(e instanceof DeviceError && e.issue === "denied")) this.patch({ error: uiText("calls.interface.your_screen_couldn_t_be_shared_16af5c4") });
     }
     if (this.session === session) this.refresh();
   }
-  /** Changes the quality of this browser's share while it runs (also remembered for next time by the caller). */
-  async setShareQuality(wanted: ShareQuality): Promise<void> {
+  async setVideoQuality(mode: VideoQualityMode): Promise<void> {
+    if (mode === this.state.videoQuality || this.state.phase === "idle" || this.state.phase === "ended") return;
+    this.patch({ videoQuality: mode });
     const session = this.session;
-    const quality = clampShareQuality(wanted, this.state.shareQualities);
-    if (!session || !this.state.screenSharing || this.state.shareQuality === quality) return;
     try {
-      await session.setShareQuality(quality);
-      if (this.session === session && this.state.screenSharing) this.patch({ shareQuality: quality });
+      await session?.configureVideo(this.state.videoTier, mode);
     } catch {
       if (this.session === session) this.patch({ notice: uiText("calls.interface.the_share_s_quality_couldn_t_be_changed_2ba5a37") });
     }
@@ -828,7 +828,11 @@ export class CallManager {
   private begin(next: CallUiState): number {
     this.teardown();
     this.gen++;
-    this.set(next);
+    this.set({
+      ...next,
+      videoTier: videoTier(this.host.state.get().mojo.me?.plan),
+      videoQuality: this.opts.callPrefs?.().videoQuality ?? "auto",
+    });
     return this.gen;
   }
   private check(gen: number): void {

@@ -760,5 +760,9 @@
     "notice": "Bu bot ve geliştiricisi bu sohbetteki mesajları okuyabilir.",
     "allow": "Bot mesajlarına izin ver",
     "restart": "Erişimi kapatmak veya botu engellemek mesajlaşmayı durdurur. Yeniden izin vermek yeni bir sohbet başlatır."
+  },
+  "uploads": {
+    "preparing": "Dosyalar hazırlanıyor…",
+    "progress": "{sent} / {total} · %{percent}"
   }
 }

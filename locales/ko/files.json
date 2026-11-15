@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "다운로드한 파일이 확인된 참조 파일보다 크습니다.",
     "the_download_stopped_early_ec088bb": "다운로드가 일찍 중단되었습니다.",
     "the_download_was_interrupted_try_again_d07dbc1": "다운로드가 중단되었습니다. 다시 시도해 보세요."
+  },
+  "profileShowcase": {
+    "creations": "이 사용자의 작품",
+    "effect": "프로필 효과",
+    "full": "전체 프로필 보기"
   }
 }

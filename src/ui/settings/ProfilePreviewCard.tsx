@@ -13,6 +13,7 @@ import { useLoad } from "../workspace/useLoad";
 import { NO_STYLE } from "./noStyle";
 import { useProfileDraft } from "./profileDraft";
 import { ProfilePins } from "../people/ProfilePins";
+import { ProfileShowcase } from "../people/ProfileShowcase";
 import { ProfileContent } from "../people/ProfileContent";
 /**
  * Settings › My Profile's right column (the reference, 2026-10-29): your profile card as others see it, following what
@@ -76,6 +77,7 @@ export function ProfilePreviewCard() {
           <ProfileContent profile={{ aboutMe: about || null, links: draft?.links ?? p?.links ?? [], connections: p?.connections ?? [], profileStyle: style }} />
           <CollectibleBadge style={style} />
           <ProfilePins pins={p?.pins ?? []} />
+          <ProfileShowcase style={style} banner={bannerUrl} />
         </div>
       </div>
       <p className="profile-preview-hint">

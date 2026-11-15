@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Tập tin đã tải về lớn hơn tham chiếu đã kiểm tra.",
     "the_download_stopped_early_ec088bb": "Tải xuống dừng sớm.",
     "the_download_was_interrupted_try_again_d07dbc1": "Việc tải xuống bị ngắt. Thử lại đi."
+  },
+  "profileShowcase": {
+    "creations": "Tác phẩm của họ",
+    "effect": "Hiệu ứng hồ sơ",
+    "full": "Xem hồ sơ đầy đủ"
   }
 }

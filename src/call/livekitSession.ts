@@ -18,13 +18,13 @@ import {
   setLogLevel,
   Track,
   type TrackPublication,
-  VideoPresets,
   VideoQuality,
 } from "livekit-client";
 import { isAuditMessage } from "./frameAudit";
 import { audioProcessing, describePath, roundTripMs, deviceIssueOf, MediaFlowMonitor, mirrorPreview } from "./rules";
 import { MediaSecurityTracker } from "./security";
-import { receivedVideo, type ShareQuality } from "./shareQuality";
+import { CALL_VIDEO, cameraResolution, receivedVideo, type VideoQualityMode, type VideoTier } from "./shareQuality";
+import { VideoSender } from "./videoSender";
 import { type CallShareView, shareKey } from "./shares";
 import { ShareSender } from "./shareSender";
 import {
@@ -44,8 +44,6 @@ import {
 } from "./types";
 // LiveKit's own logging stays at warnings: its signalling URL carries the call pass (android keeps SDK logging off).
 setLogLevel(LogLevel.warn);
-/** Camera capture and sending, as the Android app does (CallMediaPolicy: 720p, simulcast, VP8). */
-const CAMERA = { resolution: VideoPresets.h720.resolution };
 const FLOW_SAMPLE_MS = 2000;
 const CLIP_TOPIC = "meldiq.clip-consent.v1";
 const CLIP_LEASE_MS = 5_000;
@@ -82,6 +80,8 @@ export class LiveKitSession implements MediaSession {
 
   /** The share this browser watches: the only screen share received (2026-10-24). */
   private watched: string | null = null;
+  private videoTier: VideoTier = "720p60";
+  private readonly cameraSender = new VideoSender(this.videoTier, "auto");
   private readonly share = new ShareSender(
     () => this.room?.localParticipant ?? null,
     (stats) => this.events.shareStats?.(stats),
@@ -95,13 +95,14 @@ export class LiveKitSession implements MediaSession {
     this.audioOptions = audioProcessing(opts.noiseReduction !== false, opts);
     const audio = opts.microphone === false ? false : this.audioOptions;
     if (!audio && !video) return { microphone: null, camera: null };
-    const both = await open({ audio, video: video ? CAMERA : false });
+    const camera = { resolution: cameraResolution(this.videoTier) };
+    const both = await open({ audio, video: video ? camera : false });
     if (!both.issue) this.prepared = both.tracks;
     else if (!video) return this.settle({ microphone: both.issue, camera: null });
     else {
       // One of the two failed: open each alone to tell which (the browser remembers the answer, so no second prompt).
       const mic = await open({ audio, video: false });
-      const cam = await open({ audio: false, video: CAMERA });
+      const cam = await open({ audio: false, video: camera });
       this.prepared = [...mic.tracks, ...cam.tracks];
       return this.settle({ microphone: mic.issue, camera: cam.issue });
     }
@@ -126,12 +127,14 @@ export class LiveKitSession implements MediaSession {
       // Microphones go first when the connection is short (screen and camera video give way before speech does).
       // The voice bitrate ceiling comes from the community's Spark level (Meldiq Plus); LiveKit's music preset otherwise.
       publishDefaults: {
-        simulcast: true,
+        simulcast: false,
+        backupCodec: false,
+        videoEncoding: this.cameraEncoding(),
         videoCodec: "vp8",
         dtx: true,
         audioPreset: { ...AudioPresets.music, ...(grant.limits ? { maxBitrate: grant.limits.voiceKbps * 1000 } : {}), priority: "high" },
       },
-      videoCaptureDefaults: CAMERA,
+      videoCaptureDefaults: { resolution: cameraResolution(this.videoTier) },
     });
     this.room = room;
     this.wire(room);
@@ -160,7 +163,10 @@ export class LiveKitSession implements MediaSession {
     await room.connect(grant.url, grant.token, { autoSubscribe: false });
     if (this.closed) throw new Error("call closed while connecting");
     this.syncSubscriptions();
-    for (const t of this.prepared) await room.localParticipant.publishTrack(t, { simulcast: t.kind === Track.Kind.Video });
+    for (const track of this.prepared) {
+      const pub = await room.localParticipant.publishTrack(track);
+      if (pub.source === Track.Source.Camera) await this.cameraSender.attach(pub.videoTrack ?? null);
+    }
     this.prepared = [];
     this.events.audioBlocked(!room.canPlaybackAudio);
     this.flowTimer = setInterval(() => void this.sampleFlow(), FLOW_SAMPLE_MS);
@@ -190,11 +196,8 @@ export class LiveKitSession implements MediaSession {
     if (!room || this.deafened) return { revision: this.clipRevision, tracks };
     const local = room.localParticipant;
     const now = performance.now();
-    const participants = [local, ...room.remoteParticipants.values()].filter((p) =>
-      p === local ? this.localClipConsent : (this.clipConsents.get(p.identity) ?? -Infinity) + CLIP_LEASE_MS > now,
-    );
-    const screen = this.shares().find((share) => share.key === this.watched && share.ready) ??
-      this.shares().find((share) => share.isLocal && share.ready);
+    const participants = [local, ...room.remoteParticipants.values()].filter((p) => (p === local ? this.localClipConsent : (this.clipConsents.get(p.identity) ?? -Infinity) + CLIP_LEASE_MS > now));
+    const screen = this.shares().find((share) => share.key === this.watched && share.ready) ?? this.shares().find((share) => share.isLocal && share.ready);
     for (const p of participants) {
       for (const pub of p.trackPublications.values()) {
         const track = pub.track;
@@ -216,18 +219,19 @@ export class LiveKitSession implements MediaSession {
   }
   async setCamera(on: boolean): Promise<void> {
     try {
-      await this.room?.localParticipant.setCameraEnabled(on, CAMERA);
+      const pub = await this.room?.localParticipant.setCameraEnabled(on, { resolution: cameraResolution(this.videoTier) }, { videoEncoding: this.cameraEncoding() });
+      await this.cameraSender.attach(on ? (pub?.videoTrack ?? null) : null);
     } catch (e) {
       throw new DeviceError("camera", deviceIssueOf(e));
     }
   }
-  async setScreenShare(on: boolean, opts: ShareOptions = { quality: "standard", audio: false }): Promise<void> {
+  async setScreenShare(on: boolean, opts: ShareOptions = { audio: false }): Promise<void> {
     const support = screenShareSupport();
     if (on && !support.ok) throw new ScreenShareUnavailable(support.reason);
     try {
       // The shared tab's or system's sound comes along where the browser offers it (Chromium); frame encryption covers
       // every track.
-      if (on) await this.share.start(opts);
+      if (on) await this.share.start(opts.audio);
       else await this.share.stop();
     } catch (e) {
       // Closing the browser's picker isn't an error worth showing.
@@ -235,8 +239,24 @@ export class LiveKitSession implements MediaSession {
       throw new DeviceError("screen", deviceIssueOf(e));
     }
   }
-  async setShareQuality(quality: ShareQuality): Promise<void> {
-    await this.share.setQuality(quality);
+  async configureVideo(tier: VideoTier, mode: VideoQualityMode): Promise<void> {
+    const changedTier = this.videoTier !== tier;
+    this.videoTier = tier;
+    this.cameraSender.configure(tier, mode);
+    const camera = this.room?.localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack ?? null;
+    const prepared = this.prepared.find((track) => track.kind === Track.Kind.Video);
+    const capture = camera ?? prepared;
+    const share = this.share.configure(tier, mode);
+    if (capture && changedTier) {
+      const { width, height, frameRate } = cameraResolution(tier);
+      await capture.mediaStreamTrack.applyConstraints({ width: { ideal: width }, height: { ideal: height }, frameRate: { ideal: frameRate, max: frameRate } }).catch(() => undefined);
+    }
+    await Promise.all([this.cameraSender.attach(camera), share]);
+  }
+
+  private cameraEncoding() {
+    const { maxBitrate, frameRate } = CALL_VIDEO[this.videoTier];
+    return { maxBitrate, maxFramerate: frameRate, priority: "medium" as const };
   }
   shares(): CallShareView[] {
     const room = this.room;
@@ -537,7 +557,10 @@ export class LiveKitSession implements MediaSession {
     if (this.room !== room) return;
     this.events.latency?.(latency);
     this.events.flow(this.monitor.sample(bytes), path);
-    await this.share.sample(Date.now());
+    const now = Date.now();
+    const quality = room.localParticipant.connectionQuality;
+    const networkLimited = quality === ConnectionQuality.Poor || quality === ConnectionQuality.Lost;
+    await Promise.all([this.cameraSender.sample(now, networkLimited), this.share.sample(now, networkLimited)]);
   }
   private stopPrepared(): void {
     for (const t of this.prepared) t.stop();

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { ApiClient } from "../src/api/client";
 import { CallManager, type CallHost, type CallTarget, type CallPrefs } from "../src/call/manager";
 import { audioProcessing, deafenChange, frameShape, micLevel } from "../src/call/rules";
-import { SHARE_QUALITIES, shareQualityOf } from "../src/call/shareQuality";
+import { CALL_VIDEO, videoModeOf } from "../src/call/shareQuality";
 import type { CallShareView } from "../src/call/shares";
 import { Store } from "../src/state/store";
 import { MediaRig } from "./support/fakeMedia";
@@ -12,7 +12,7 @@ const call = (id: string) => ({ id, conversationId: "c1", createdBy: "me", video
 
 const posted: string[] = [];
 
-function setup(target: Partial<CallTarget> = {}, prefs: CallPrefs = { noiseReduction: true, shareQuality: "standard", shareAudio: false }, maxScreenShares?: number) {
+function setup(target: Partial<CallTarget> = {}, prefs: CallPrefs = { noiseReduction: true, videoQuality: "auto", shareAudio: false }, maxScreenShares?: number) {
   const rig = new MediaRig();
   const api = {
     json: async (method: string, path: string, schema: { parse(v: unknown): unknown }) => {
@@ -45,12 +45,12 @@ describe("call rules", () => {
     expect(deafenChange(true, false, false).micOn).toBe(false);
   });
 
-  it("share qualities: Standard is 1280×720 at 30 fps, High 1920×1080 at 60; anything else saved reads as Standard", () => {
-    expect(SHARE_QUALITIES.standard).toMatchObject({ width: 1280, height: 720, frameRate: 30 });
-    expect(SHARE_QUALITIES.high).toMatchObject({ width: 1920, height: 1080, frameRate: 60 });
-    expect(shareQualityOf("high")).toBe("high");
-    expect(shareQualityOf("motion")).toBe("standard");
-    expect(shareQualityOf(null)).toBe("standard");
+  it("gives both plans 60 fps and resets legacy saved selections to Auto", () => {
+    expect(CALL_VIDEO["720p60"]).toMatchObject({ width: 1280, height: 720, frameRate: 60 });
+    expect(CALL_VIDEO["1080p60"]).toMatchObject({ width: 1920, height: 1080, frameRate: 60 });
+    expect(videoModeOf("plan")).toBe("plan");
+    expect(videoModeOf("max60")).toBe("auto");
+    expect(videoModeOf(null)).toBe("auto");
   });
 
   it("noise reduction turns noise suppression and level on or off, echo cancellation stays; the meter is the root of the RMS", () => {
@@ -64,21 +64,19 @@ describe("call rules", () => {
 });
 
 describe("call controls", () => {
-  it("keeps the selected share quality when the media adapter rejects a change", async () => {
+  it("configures Plus capture before connecting and can change to plan quality in the same session", async () => {
     const { calls, rig, host } = setup();
-    await calls.startCall("c1", false);
-    await calls.toggleScreenShare({ quality: "standard", audio: false });
-    rig.last!.setShareQuality = async () => {
-      throw new Error("sender failed");
-    };
-    await calls.setShareQuality("high");
-    expect(host.state.get().call.shareQuality).toBe("standard");
-    expect(host.state.get().call.notice).toBeTruthy();
+    host.state.update((s) => ({ ...s, mojo: { ...s.mojo, me: { plan: "plus" } as NonNullable<typeof s.mojo.me> } }));
+    await calls.startCall("c1", true);
+    expect(rig.last?.qualityChanges[0]).toEqual({ tier: "1080p60", mode: "auto" });
+    await calls.setVideoQuality("plan");
+    expect(rig.last?.qualityChanges.at(-1)).toEqual({ tier: "1080p60", mode: "plan" });
+    expect(host.state.get().call.videoQuality).toBe("plan");
     calls.hangup();
   });
 
   it.each(["joinMuted", "joinDeafened", "pushToTalk"] as const)("%s prevents microphone capture before connecting", async (policy) => {
-    const { calls, rig, host } = setup({}, { noiseReduction: true, shareQuality: "standard", shareAudio: false, [policy]: true });
+    const { calls, rig, host } = setup({}, { noiseReduction: true, videoQuality: "auto", shareAudio: false, [policy]: true });
     // A missing microphone must not prevent an intentional silent join.
     rig.issues.microphone = "denied";
     await calls.startCall("c1", false);
@@ -90,7 +88,7 @@ describe("call controls", () => {
   });
 
   it("a PTT release while microphone access is opening mutes after the pending operation", async () => {
-    const { calls, rig, host } = setup({}, { noiseReduction: true, shareQuality: "standard", shareAudio: false, pushToTalk: true });
+    const { calls, rig, host } = setup({}, { noiseReduction: true, videoQuality: "auto", shareAudio: false, pushToTalk: true });
     await calls.startCall("c1", false);
     const media = rig.last!;
     let opened!: () => void;
@@ -118,7 +116,7 @@ describe("call controls", () => {
   });
 
   it("reconnecting releases PTT and requires a fresh press after reconnect", async () => {
-    const { calls, rig, host } = setup({}, { noiseReduction: true, shareQuality: "standard", shareAudio: false, pushToTalk: true });
+    const { calls, rig, host } = setup({}, { noiseReduction: true, videoQuality: "auto", shareAudio: false, pushToTalk: true });
     await calls.startCall("c1", false);
     await calls.pushToTalk(true);
     expect(rig.last?.mic).toBe(true);
@@ -147,7 +145,7 @@ describe("call controls", () => {
   });
 
   it("a listen-only voice channel opens no microphone and can't be unmuted", async () => {
-    const { calls, rig, host } = setup({ voiceRoom: true, isGroup: true, listenOnly: true }, { noiseReduction: false, shareQuality: "standard", shareAudio: false });
+    const { calls, rig, host } = setup({ voiceRoom: true, isGroup: true, listenOnly: true }, { noiseReduction: false, videoQuality: "auto", shareAudio: false });
     await calls.startCall("c1", false);
     expect(rig.last?.prepareOptions).toEqual({ noiseReduction: false, microphone: false });
     expect(host.state.get().call).toMatchObject({ listenOnly: true, micOn: false });
@@ -158,16 +156,16 @@ describe("call controls", () => {
   it("shares with the chosen quality and sound, changes it during the share, and says when someone else stops", async () => {
     const { calls, rig, host } = setup();
     await calls.startCall("c1", false);
-    await calls.toggleScreenShare({ quality: "high", audio: true });
-    expect(rig.last?.shareOptions).toEqual({ quality: "high", audio: true });
-    expect(host.state.get().call).toMatchObject({ shareQuality: "high", shareAudio: true, screenSharing: true });
-    await calls.setShareQuality("standard");
-    expect(rig.last?.qualityChanges).toEqual(["standard"]);
-    expect(host.state.get().call.shareQuality).toBe("standard");
-    rig.last?.events.shareStats?.({ quality: "standard", captured: { width: 1280, height: 720, frameRate: 30 }, sent: { width: 1280, height: 720, fps: 29 }, level: 0, limitation: "none" });
+    await calls.toggleScreenShare({ audio: true });
+    expect(rig.last?.shareOptions).toEqual({ audio: true });
+    expect(host.state.get().call).toMatchObject({ videoTier: "720p60", shareAudio: true, screenSharing: true });
+    await calls.setVideoQuality("plan");
+    expect(rig.last?.qualityChanges.at(-1)).toEqual({ tier: "720p60", mode: "plan" });
+    expect(host.state.get().call.videoQuality).toBe("plan");
+    rig.last?.events.shareStats?.({ tier: "720p60", sent: { width: 1280, height: 720, fps: 29 } });
     expect(host.state.get().call.shareStats?.sent).toEqual({ width: 1280, height: 720, fps: 29 });
     await calls.toggleScreenShare();
-    expect(host.state.get().call).toMatchObject({ shareQuality: null, shareAudio: false, shareStats: null });
+    expect(host.state.get().call).toMatchObject({ shareAudio: false, shareStats: null });
     rig.last?.events.shareEnded?.("Bo");
     expect(host.state.get().call.notice).toBe("Bo stopped sharing their screen");
   });
@@ -244,12 +242,12 @@ describe("several screens shared at once (2026-10-24)", () => {
     const media = rig.last!;
     media.remoteShares = [share("ann.d1", "TR_a"), share("bob.d2", "TR_b")];
     media.events.changed();
-    await calls.toggleScreenShare({ quality: "standard", audio: false });
+    await calls.toggleScreenShare({ audio: false });
     expect(media.screen).toBe(false);
     expect(host.state.get().call.notice).toMatch(/Up to 2 screens/);
     media.remoteShares = [share("ann.d1", "TR_a")];
     media.events.changed();
-    await calls.toggleScreenShare({ quality: "standard", audio: false });
+    await calls.toggleScreenShare({ audio: false });
     expect(media.screen).toBe(true);
     expect(host.state.get().call.shares.some((s) => s.isLocal)).toBe(true);
     calls.watchShare("me.dev#TR_local");

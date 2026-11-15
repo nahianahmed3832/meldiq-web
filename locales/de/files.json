@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Die heruntergeladene Datei ist größer als die verifizierte Referenz.",
     "the_download_stopped_early_ec088bb": "Der Download wurde vorzeitig gestoppt.",
     "the_download_was_interrupted_try_again_d07dbc1": "Der Download wurde unterbrochen. Versuchen Sie es noch einmal."
+  },
+  "profileShowcase": {
+    "creations": "Eigene Kreationen",
+    "effect": "Profileffekt",
+    "full": "Vollständiges Profil anzeigen"
   }
 }

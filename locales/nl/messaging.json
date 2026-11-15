@@ -760,5 +760,9 @@
     "notice": "Deze bot en de ontwikkelaar kunnen berichten in deze chat lezen.",
     "allow": "Botberichten toestaan",
     "restart": "Toegang uitschakelen of de bot blokkeren stopt de berichten. Opnieuw inschakelen start een nieuwe chat."
+  },
+  "uploads": {
+    "preparing": "Bestanden voorbereiden…",
+    "progress": "{sent} van {total} · {percent}%"
   }
 }

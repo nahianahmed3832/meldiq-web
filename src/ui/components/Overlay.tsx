@@ -99,10 +99,21 @@ export function Dialog({ title, onClose, children, footer, wide, width, header, 
   const anchored = !!near && typeof window !== "undefined" && window.innerWidth >= NEAR_MIN_WIDTH;
   useLayoutEffect(() => {
     if (!anchored || !near || !ref.current) return;
-    const { offsetWidth: w, offsetHeight: h } = ref.current;
-    const left = Math.max(8, Math.min(rtl ? near.x + NEAR_GAP : near.x - w - NEAR_GAP, window.innerWidth - w - 8));
-    const top = Math.max(8, Math.min(near.y - 24, window.innerHeight - h - 8));
-    setPlaced({ top, left });
+    const dialog = ref.current;
+    const place = () => {
+      const { offsetWidth: w, offsetHeight: h } = dialog;
+      const left = Math.max(8, Math.min(rtl ? near.x + NEAR_GAP : near.x - w - NEAR_GAP, window.innerWidth - w - 8));
+      const top = Math.max(8, Math.min(near.y - 24, window.innerHeight - h - 8));
+      setPlaced((previous) => (previous?.top === top && previous.left === left ? previous : { top, left }));
+    };
+    place();
+    const observer = new ResizeObserver(place);
+    observer.observe(dialog);
+    window.addEventListener("resize", place);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", place);
+    };
   }, [anchored, near, rtl]);
   useFocusTrap(ref, true);
   useEffect(() => {

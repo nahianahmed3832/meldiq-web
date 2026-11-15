@@ -1,14 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { zMojoCatalog, zMojoMe } from "../src/api/mojoSchemas";
-import { allowedShareQualities, clampShareQuality, SHARE_QUALITIES } from "../src/call/shareQuality";
 import { overCharLimit } from "../src/ui/mojo/CharLimit";
-import { countChars, money, planPrice, screenLabel, size } from "../src/ui/mojo/mojoFormat";
+import { countChars, money, planPrice, planVideoLabel, size } from "../src/ui/mojo/mojoFormat";
 
 /**
  * Meldiq Mojo on the web (server docs/MOJO.md): characters counted as people count them, sizes in the server's decimal
  * units, prices from what's on sale, and screen-share qualities within what the server allows.
  */
-const preset = (width: number, height: number, fps: number) => ({ width, height, fps });
 
 const catalog = zMojoCatalog.parse({
   version: "2026-10-28.1",
@@ -90,22 +88,6 @@ describe("Meldiq Plus on the web", () => {
     expect(planPrice(catalog, "plus")).toEqual({ label: expect.stringMatching(/4\.99/), onSale: false });
   });
 
-  it("offers only the screen-share qualities the server allows, and steps a choice down to them", () => {
-    expect(allowedShareQualities(null)).toEqual(["standard", "high"]);
-    expect(allowedShareQualities([preset(1280, 720, 30)])).toEqual(["standard"]);
-    expect(allowedShareQualities([preset(1280, 720, 60), preset(1920, 1080, 30)])).toEqual(["standard", "smooth", "sharp"]);
-    expect(allowedShareQualities([preset(1920, 1080, 60), preset(2560, 1440, 30)])).toEqual(["standard", "smooth", "sharp", "high", "max"]);
-    // The plans of 2026-10-30: one ceiling each, covering every smaller share.
-    expect(allowedShareQualities([preset(1280, 720, 60)])).toEqual(["standard", "smooth"]);
-    expect(allowedShareQualities([preset(1920, 1080, 60)])).toEqual(["standard", "smooth", "sharp", "high"]);
-    expect(allowedShareQualities([preset(2560, 1440, 60)])).toEqual(["standard", "smooth", "sharp", "high", "max", "max60"]);
-    expect(clampShareQuality("max60", ["standard", "smooth", "sharp", "high"])).toBe("high");
-    expect(SHARE_QUALITIES.max60).toMatchObject({ width: 2560, height: 1440, frameRate: 60 });
-    expect(clampShareQuality("high", ["standard", "smooth", "sharp"])).toBe("sharp");
-    expect(clampShareQuality("max", ["standard"])).toBe("standard");
-    expect(SHARE_QUALITIES.max).toMatchObject({ width: 2560, height: 1440, frameRate: 30 });
-  });
-
   it("reads a person's Meldiq Plus", () => {
     const me = zMojoMe.parse({
       plan: "go",
@@ -119,16 +101,9 @@ describe("Meldiq Plus on the web", () => {
 });
 
 describe("screen labels", () => {
-  it('says a single ceiling as "Up to", and several as alternatives', () => {
-    const catalog = {
-      screenPresets: [
-        { id: "1440p60", label: "2K (1440p) 60 fps" },
-        { id: "720p30", label: "720p 30 fps" },
-        { id: "1080p60", label: "1080p 60 fps" },
-      ],
-    };
-    expect(screenLabel(catalog as never, ["1440p60"])).toBe("Up to 2K (1440p) 60 fps");
-    expect(screenLabel(catalog as never, ["720p30", "1080p60"])).toBe("720p 30 fps or 1080p 60 fps");
-    expect(screenLabel(catalog as never, [])).toBe("Your own plan's");
+  it("lists the web plan targets independently of older server presets", () => {
+    expect(planVideoLabel("free")).toBe("Up to 720p · 60 fps");
+    expect(planVideoLabel("go")).toBe("Up to 720p · 60 fps");
+    expect(planVideoLabel("plus")).toBe("Up to 1080p · 60 fps");
   });
 });

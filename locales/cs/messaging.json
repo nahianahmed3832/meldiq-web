@@ -760,5 +760,9 @@
     "notice": "Tento bot a jeho vývojář mohou číst zprávy v tomto chatu.",
     "allow": "Povolit zprávy bota",
     "restart": "Vypnutí přístupu nebo zablokování bota zastaví zasílání zpráv. Opětovné povolení zahájí nový chat."
+  },
+  "uploads": {
+    "preparing": "Příprava souborů…",
+    "progress": "{sent} z {total} · {percent} %"
   }
 }

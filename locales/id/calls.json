@@ -308,5 +308,12 @@
     "right_415296c": "Kanan ⌘",
     "video_call_89e4267": "panggilan video",
     "this_browser_can_t_record_audio_245d6c1": "Peramban ini tidak dapat merekam audio."
+  },
+  "videoQuality": {
+    "label": "Kualitas video",
+    "description": "Berlaku untuk kamera dan berbagi layar. Mode otomatis menyesuaikan kualitas dengan koneksimu.",
+    "auto": "Otomatis",
+    "format": "{height}p · {fps} fps",
+    "sharing": "Berbagi layar · {detail}"
   }
 }

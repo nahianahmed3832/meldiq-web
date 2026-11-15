@@ -308,5 +308,12 @@
     "right_415296c": "Dreapta ⌘",
     "video_call_89e4267": "Apel video cu voce",
     "this_browser_can_t_record_audio_245d6c1": "Acest browser nu poate înregistra audio."
+  },
+  "videoQuality": {
+    "label": "Calitate video",
+    "description": "Se aplică pentru cameră și partajarea ecranului. Modul automat adaptează calitatea la conexiune.",
+    "auto": "Automată",
+    "format": "{height}p · {fps} cadre/s",
+    "sharing": "Partajare ecran · {detail}"
   }
 }

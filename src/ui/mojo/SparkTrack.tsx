@@ -2,9 +2,9 @@ import { countLabel } from "../../i18n/counts";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
-import { Gem, HardDriveUpload, Mic, MonitorUp, Smile } from "lucide-react";
-import type { MojoCatalog, SparkLevel } from "../../api/mojoSchemas";
-import { screenLabel, size } from "./mojoFormat";
+import { Gem, HardDriveUpload, Mic, Smile } from "lucide-react";
+import type { SparkLevel } from "../../api/mojoSchemas";
+import { size } from "./mojoFormat";
 interface SparkTrackProps {
   levels: readonly SparkLevel[];
   /** The community's level now; null on the Meldiq Plus page, where no community is in view. */
@@ -44,13 +44,12 @@ export function SparkTrack({ levels, level, active }: SparkTrackProps) {
   );
 }
 interface SparkLevelCardsProps {
-  catalog: MojoCatalog;
   levels: readonly SparkLevel[];
   /** The community's level, to mark which are unlocked; null on the Meldiq Plus page. */
   level: number | null;
 }
 /** What each level gives everyone in a community, one card per level. */
-export function SparkLevelCards({ catalog, levels, level }: SparkLevelCardsProps) {
+export function SparkLevelCards({ levels, level }: SparkLevelCardsProps) {
   useLocaleRender();
   return (
     <div className="spark-levels">
@@ -83,9 +82,6 @@ export function SparkLevelCards({ catalog, levels, level }: SparkLevelCardsProps
               </li>
               <li>
                 <Localized k="billing.interface.kbps_voice_85c6c0b" slots={[<Mic size={15} aria-hidden="true" />, l.voiceKbps]} />
-              </li>
-              <li>
-                <Localized k="billing.interface.screen_sharing_for_everyone_026fe47" slots={[<MonitorUp size={15} aria-hidden="true" />, screenLabel(catalog, l.screen)]} />
               </li>
             </ul>
           </article>

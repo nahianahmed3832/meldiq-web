@@ -2,7 +2,7 @@ import { text as uiText } from "../i18n";
 import { attachmentName, detectedMime } from "./attachmentPolicy";
 import { z } from "zod";
 import { ApiError } from "../api/client";
-import { decryptFile, encryptFile } from "../crypto/attachment";
+import { decryptFile } from "../crypto/attachment";
 import { EnvelopeError } from "../crypto/envelope";
 import { decryptStream } from "../crypto/fileStream";
 import { checkUploadSignal, uploadBackoff, type UploadProgress, uploadLarge } from "./largeUpload";
@@ -18,7 +18,7 @@ import { holdUpdates } from "../application/updates";
  * Current v2 server-stored messages carry the reference keys to the relay; this is not E2EE against that server.
  * Legacy encrypted envelopes protect the same reference under their original message security.
  */
-/** Up to this size a file uses the single-message format every Orbit app opens; larger ones are encrypted in chunks. */
+/** Default upload limit when a server has yet to advertise its own. */
 export const SINGLE_FORMAT_BYTES = 25 * 1024 * 1024;
 /** Absolute ceiling for new uploads; lower server and subscription limits still apply. */
 export const MAX_FILE_BYTES = 1000000000;
@@ -77,34 +77,28 @@ export async function uploadFiles(
   try {
     for (const [i, f] of files.entries()) {
       checkUploadSignal(large?.signal);
-      if (f.size > SINGLE_FORMAT_BYTES) {
-        if (!f.source) throw new AttachmentError(uiText("files.interface.value0_is_too_large_to_send_this_way_8d8e1ee", { value0: f.name }));
-        refs.push(
-          await uploadLarge(engine, conversationId, Object.assign({ name: f.name, type: f.type, size: f.size, slice: (a: number, b: number) => f.source!.slice(a, b) }, { source: f.source }), {
+      if (!f.source && f.size > SINGLE_FORMAT_BYTES) throw new AttachmentError(uiText("files.interface.value0_is_too_large_to_send_this_way_8d8e1ee", { value0: f.name }));
+      const source = f.source ?? new Blob([new Uint8Array(await f.bytes())]);
+      if (source.size !== f.size) throw new AttachmentError(uiText("files.interface.value0_changed_while_being_read_choose_it_again_f49e0a8", { value0: f.name }));
+      const head = new Uint8Array(await source.slice(0, 64).arrayBuffer());
+      refs.push(
+        await uploadLarge(
+          engine,
+          conversationId,
+          {
+            name: attachmentName(f.name),
+            type: detectedMime(head, f.type),
+            size: source.size,
+            slice: (start, end) => source.slice(start, end),
+            source,
+          },
+          {
             onProgress: (p) => large?.onProgress?.(f.name, p),
             signal: large?.signal,
             voiceDurationMs: f.voiceDurationMs,
-          }),
-        );
-        onProgress?.(i + 1, files.length);
-        continue;
-      }
-      const plain = await f.bytes();
-      if (plain.length !== f.size) throw new AttachmentError(uiText("files.interface.value0_changed_while_being_read_choose_it_again_f49e0a8", { value0: f.name }));
-      const enc = await encryptFile(plain);
-      checkUploadSignal(large?.signal);
-      const res = await engine.api.json("POST", `/v1/attachments?conversationId=${encodeURIComponent(conversationId)}`, zUploadRes, { raw: enc.ciphertext, signal: large?.signal });
-      checkUploadSignal(large?.signal);
-      refs.push({
-        id: res.id,
-        name: attachmentName(f.name),
-        mime: detectedMime(plain.subarray(0, 64), f.type),
-        size: f.size,
-        key: enc.key,
-        nonce: enc.nonce,
-        sha256: enc.sha256,
-        ...(f.voiceDurationMs !== undefined ? { voice: true, durationMs: Math.round(f.voiceDurationMs) } : {}),
-      });
+          },
+        ),
+      );
       onProgress?.(i + 1, files.length);
     }
   } finally {

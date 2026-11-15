@@ -1,4 +1,5 @@
 import { Icon } from "../icons/Icon";
+import { ProfileShowcase } from "./ProfileShowcase";
 import { ProfileContent } from "./ProfileContent";
 import { useLocaleRender } from "../../i18n/Localized";
 import { CustomEmojiImage } from "../community/CustomEmoji";
@@ -105,6 +106,7 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
   const hasConnections = features.includes("connections");
   const moreMenu = useMenu();
   const [draft, setDraft] = useState("");
+  const [full, setFull] = useState(false);
   // Their roles in the community it was opened from (the member directory; empty where this account can't see it).
   const [roles, setRoles] = useState<
     | {
@@ -279,9 +281,9 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
     <Dialog
       title={name}
       onClose={onClose}
-      className={`profile-pop${theme ? " themed" : ""}`}
+      className={`profile-pop profile-showcase-dialog${full ? " profile-full" : ""}${theme ? " themed" : ""}`}
       vars={{ ...themeVars(theme), ...collectibleCardVars(profile?.profileStyle, !reducedMotion) }}
-      near={near}
+      near={full ? null : near}
       header={
         <>
           <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : toneOf(profile?.avatarColor ?? 0) }}>
@@ -355,7 +357,9 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
             {/* API 0.64.0: pins replace the Bug Hunter and Artist pills (both are Meldiq pins now). */}
             <CollectibleBadge style={profile?.profileStyle} />
             {profile.badges.includes("partner") && (
-              <span className="badge-pill"><Icon name="settings.membership" size={16} /> {uiText("workspace.reference.partnerBadge")}</span>
+              <span className="badge-pill">
+                <Icon name="settings.membership" size={16} /> {uiText("workspace.reference.partnerBadge")}
+              </span>
             )}
             {pinsOn ? (
               <>
@@ -375,7 +379,9 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
                 )}
               </>
             )}
-            <ProfileContent profile={profile} connections={features.includes("connections-v2")} />
+            <ProfileContent profile={profile} connections={features.includes("connections-v2")} compact={!!near && !full} />
+            {profile.decorationArtist && <ArtistDecorations userId={profile.id} name={profile.displayName} />}
+            <ProfileShowcase style={profile.profileStyle} banner={bannerUrl} />
             {error && (
               <div className="banner danger" role="alert">
                 {error}
@@ -395,7 +401,6 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
               )}
             </section>
             <MemberSince profile={profile} orgId={orgId} />
-            {profile.decorationArtist && <ArtistDecorations userId={profile.id} name={profile.displayName} />}
             {roles && roles.length > 0 && (
               <section className="profile-box" aria-label={l10n("organization.roles")}>
                 <h3>{l10n("organization.roles")}</h3>
@@ -511,6 +516,11 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
                   <SendHorizontal size={16} />
                 </button>
               </form>
+            )}
+            {near && !full && (
+              <button className="btn btn-secondary profile-expand" onClick={() => setFull(true)}>
+                {l10n("files.profileShowcase.full")}
+              </button>
             )}
           </>
         )}

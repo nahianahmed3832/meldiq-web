@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { useEngine } from "../../application/orbit";
 import { audioProcessing, micLevel } from "../../call/rules";
-import { SHARE_QUALITIES } from "../../call/shareQuality";
+import { CallQualitySelect } from "../call/CallQualitySelect";
 import { Toggle } from "../components/Toggle";
 /**
  * Settings › Calls (batches B10, B11; android Settings › Calls): noise reduction for the next call, how a screen is shared
@@ -228,23 +228,7 @@ export function CallsPage() {
           <Toggle checked={prefs.joinMuted} onChange={(joinMuted) => setPrefs({ joinMuted })} label={uiText("calls.interface.join_muted_10b220f")} />
         </div>
         <div className="setting">
-          <span className="lines">
-            <strong>
-              <Localized k="billing.interface.screen_sharing_74dc20e" />
-            </strong>
-            <small>
-              <Localized
-                k="calls.interface.at_fps_you_choose_each_time_you_share_this_is_the_last_choice_2cbdeef"
-                slots={[
-                  SHARE_QUALITIES[prefs.shareQuality].label,
-                  SHARE_QUALITIES[prefs.shareQuality].width,
-                  SHARE_QUALITIES[prefs.shareQuality].height,
-                  SHARE_QUALITIES[prefs.shareQuality].frameRate,
-                  prefs.shareAudio ? uiText("calls.interface.with_sound_df75f29") : "",
-                ]}
-              />
-            </small>
-          </span>
+          <CallQualitySelect />
         </div>
       </div>
     </>

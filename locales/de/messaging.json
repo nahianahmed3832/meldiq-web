@@ -760,5 +760,9 @@
     "notice": "Dieser Bot und sein Entwickler können die Nachrichten in diesem Chat lesen.",
     "allow": "Bot-Nachrichten erlauben",
     "restart": "Wenn du den Zugriff deaktivierst oder den Bot blockierst, endet der Nachrichtenaustausch. Erneutes Aktivieren startet einen neuen Chat."
+  },
+  "uploads": {
+    "preparing": "Dateien werden vorbereitet…",
+    "progress": "{sent} von {total} · {percent} %"
   }
 }

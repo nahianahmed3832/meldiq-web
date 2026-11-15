@@ -760,5 +760,9 @@
     "notice": "Este bot e o seu programador podem ler as mensagens desta conversa.",
     "allow": "Permitir mensagens do bot",
     "restart": "Desativar o acesso ou bloquear o bot interrompe as mensagens. Ao ativar novamente, é iniciada uma nova conversa."
+  },
+  "uploads": {
+    "preparing": "A preparar ficheiros…",
+    "progress": "{sent} de {total} · {percent}%"
   }
 }

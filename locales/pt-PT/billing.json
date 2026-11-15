@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> Incluído para comunidades: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "Videochamadas e partilha de ecrã na web",
+    "benefit": "Videochamadas e partilha de ecrã na web {target}",
+    "auto": "Usa o modo automático para adaptar a qualidade à tua ligação durante a chamada."
   }
 }

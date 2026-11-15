@@ -9,7 +9,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { Dialog } from "../components/Overlay";
 import { OrgAvatar } from "../components/OrgAvatar";
-import { money, screenLabel, size } from "./mojoFormat";
+import { money, size } from "./mojoFormat";
 import { SparkLevelCards, SparkTrack } from "./SparkTrack";
 /**
  * "Meldiq Sparks" from a community's menu (server docs/MOJO.md › Meldiq Spark): the community's level and what it gives
@@ -105,11 +105,6 @@ export function SparkDialog({ orgId, name, onClose }: { orgId: string; name: str
               <li>
                 <Localized k="billing.interface.kbps_voice_cce4e30" slots={[here.perks.voiceKbps]} />
               </li>
-              <li>
-                {here.perks.screen.length
-                  ? uiText("billing.interface.value0_screen_sharing_for_everyone_183ee94", { value0: screenLabel(catalog, here.perks.screen) })
-                  : uiText("billing.interface.everyone_s_own_screen_sharing_5782643")}
-              </li>
             </ul>
             <p className="muted" style={{ margin: 0, fontSize: 13 }}>
               <Localized k="billing.interface.give_a_spark_to_a_server_you_love_every_spark_helps_unlock_more_e_e10d3b6" />
@@ -175,7 +170,7 @@ export function SparkDialog({ orgId, name, onClose }: { orgId: string; name: str
                 <Localized k="billing.interface.this_community_is_at_the_highest_level_a_spark_may_do_more_for_an_2556bbf" />
               </small>
             )}
-            <SparkLevelCards catalog={catalog} levels={levels} level={here.level} />
+            <SparkLevelCards levels={levels} level={here.level} />
           </>
         )}
       </div>

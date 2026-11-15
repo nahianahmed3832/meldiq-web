@@ -760,5 +760,9 @@
     "notice": "Den här boten och dess utvecklare kan läsa meddelanden i den här chatten.",
     "allow": "Tillåt botmeddelanden",
     "restart": "Om du stänger av åtkomst eller blockerar boten stoppas meddelandena. När du tillåter åtkomst igen startas en ny chatt."
+  },
+  "uploads": {
+    "preparing": "Förbereder filer…",
+    "progress": "{sent} av {total} · {percent} %"
   }
 }

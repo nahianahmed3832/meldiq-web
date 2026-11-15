@@ -308,5 +308,12 @@
     "right_415296c": "Right ⌘",
     "video_call_89e4267": "video call",
     "this_browser_can_t_record_audio_245d6c1": "This browser can''t record audio."
+  },
+  "videoQuality": {
+    "label": "Video quality",
+    "description": "Applies to your camera and screen sharing. Auto adjusts to your connection.",
+    "auto": "Auto",
+    "format": "{height}p · {fps} fps",
+    "sharing": "Sharing · {detail}"
   }
 }

@@ -4,7 +4,7 @@ import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
 import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
-import { Bell, BellOff, Hash, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
+import { Bell, BellOff, Hash, Lock, MessageSquare, Search, User, UserPlus, UsersRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -25,7 +25,6 @@ import { type DetailsTab, detailsTabs } from "./detailsRules";
 import { galleryOf, linksOf } from "./gallery";
 import { PanelHead } from "./PanelHead";
 import { usePinned } from "./PinnedPanel";
-import { SecuritySheet } from "./SecuritySheet";
 import { ChannelDetails } from "./ChannelDetails";
 /** A conversation's members, loaded again when someone joins or leaves (here or on another device). */
 export function useMembers(conversationId: string, memberCount: number | undefined) {
@@ -84,7 +83,7 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
   const paged = useOrbit((s) => s.server?.features.includes("message-collections") ?? false);
   const tabs = detailsTabs(c.type);
   const [tab, setTab] = useState<DetailsTab>(tabs[0]);
-  const [sheet, setSheet] = useState<"security" | "add" | "newGroup" | null>(null);
+  const [sheet, setSheet] = useState<"add" | "newGroup" | null>(null);
   const title = conversationTitle(c, me, users);
   const peer = c.type === "DM" ? dmPeer(c, me) : null;
   const peerMember = peer ? members?.find((m) => m.id === peer.id) : undefined;
@@ -104,7 +103,6 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
     },
     ...(peer ? [{ key: "profile", label: l10n("settings.profile"), icon: <User size={20} />, onClick: () => openProfile(peer.id, peer.displayName) }] : []),
     ...(c.type === "GROUP" && c.canManage ? [{ key: "add", label: l10n("common.actions.add"), icon: <UserPlus size={20} />, onClick: () => setSheet("add") }] : []),
-    { key: "security", label: l10n("settings.security"), icon: <Shield size={20} />, onClick: () => setSheet("security") },
   ];
   const avatar =
     c.type === "DM" && peer ? (
@@ -149,7 +147,6 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
         <AboutCards c={c} />
         <ConversationSettings conversationId={c.id} />
       </div>
-      {sheet === "security" && <SecuritySheet conversationId={c.id} onClose={() => setSheet(null)} />}
       {sheet === "add" && <AddMembersDialog c={c} memberIds={memberIds} onAdded={reload} onClose={() => setSheet(null)} />}
       {sheet === "newGroup" && peerMember && <NewGroupDialog initial={[peerMember]} onClose={() => setSheet(null)} />}
     </aside>
@@ -204,14 +201,6 @@ export function AboutCards({ c }: { c: Conversation }) {
               <Localized k="messaging.interface.created_d70b9e2" />
             </dt>
             <dd>{dayLabel(c.createdAt)}</dd>
-          </div>
-          <div>
-            <dt>
-              <Localized k="messaging.interface.encryption_82f4e71" />
-            </dt>
-            <dd className="row" style={{ gap: 6 }}>
-              <Localized k="messaging.interface.kept_on_meldiq_s_servers_on_all_your_devices_4d65162" slots={[<ShieldCheck size={14} />]} />
-            </dd>
           </div>
         </dl>
         {c.type !== "DM" && c.canManage && (

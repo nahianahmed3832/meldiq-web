@@ -25,6 +25,7 @@ const zParts = z.object({ parts: z.array(z.object({ n: z.number(), upload: zPres
 const zHave = z.object({ parts: z.array(z.object({ n: z.number().int().positive(), etag: z.string(), size: z.number().int().positive(), sha256: z.string().nullish() })) });
 const zDone = z.object({ id: z.string(), size: z.number(), expiresAt: z.number() });
 export interface LargeFile extends PlainSource {
+  source?: Blob;
   name: string;
   type: string;
 }
@@ -209,7 +210,7 @@ export async function uploadLarge(
   }
 }
 /**
- * Stores a prepared file's ciphertext and answers its attachment id. With a [checkpoint] from an earlier attempt, a
+ * Stores a prepared file's ciphertext and returns its attachment id. With a [checkpoint] from an earlier attempt, a
  * multipart upload continues: the server says which parts it already has (and their sizes), and only the rest go.
  */
 export async function uploadPrepared(

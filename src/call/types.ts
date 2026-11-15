@@ -1,6 +1,6 @@
 import type { ClipSources } from "./clipBuffer";
 import type { VerificationCode } from "./callKeys";
-import type { ShareQuality, ShareStats } from "./shareQuality";
+import type { ShareStats, VideoQualityMode, VideoTier } from "./shareQuality";
 import type { CallShareView } from "./shares";
 
 /** Where a call is, from this browser's point of view (android CallPhase). */
@@ -89,10 +89,8 @@ export interface CallUiState {
   notice: string | null;
   /** Batch B10: you hear nobody and your microphone is off. */
   deafened: boolean;
-  /** The quality this browser shares its screen at (2026-10-24: Standard 720p30 or High 1080p60), and whether with sound. */
-  shareQuality: ShareQuality | null;
-  /** The qualities this person may share at in this call (Meldiq Plus: their plan and the community's Sparks), lowest first. */
-  shareQualities: ShareQuality[];
+  videoQuality: VideoQualityMode;
+  videoTier: VideoTier;
   shareAudio: boolean;
   /** What this browser's share actually captures and sends (null when not sharing). */
   shareStats: ShareStats | null;
@@ -142,8 +140,8 @@ export const idleCall: CallUiState = {
   canModerate: false,
   notice: null,
   deafened: false,
-  shareQuality: null,
-  shareQualities: ["standard", "high"],
+  videoQuality: "auto",
+  videoTier: "720p60",
   shareAudio: false,
   shareStats: null,
   shares: [],
@@ -203,9 +201,8 @@ export interface OutputOptions {
   volume: number;
 }
 
-/** How a screen is shared: Standard or High, and the shared tab's or system's sound where the browser allows. */
+/** Includes the shared tab or system audio where supported. */
 export interface ShareOptions {
-  quality: ShareQuality;
   audio: boolean;
 }
 
@@ -259,7 +256,7 @@ export interface MediaSession {
   /** The speaker and volume for everyone's sound (people who join later too). Optional: older fakes leave it out. */
   setOutput?(opts: OutputOptions): void;
   /** Changes the quality of this browser's share while it runs. */
-  setShareQuality(quality: ShareQuality): Promise<void>;
+  configureVideo(tier: VideoTier, mode: VideoQualityMode): Promise<void>;
   /** Every screen shared in the call now, this browser's included. */
   shares(): CallShareView[];
   /** Receives only [key]'s share (at full quality) and none of the others' video or sound; null receives none. */

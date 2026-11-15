@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "डाउनलोड की गई फ़ाइल उसकी सत्यापित संदर्भ से बड़ी है.",
     "the_download_stopped_early_ec088bb": "डाउनलोड जल्दी ही बन्द हो गया.",
     "the_download_was_interrupted_try_again_d07dbc1": "डाउनलोड रोक दिया गया. फिर कोशिश करें."
+  },
+  "profileShowcase": {
+    "creations": "उनकी रचनाएँ",
+    "effect": "प्रोफ़ाइल इफ़ेक्ट",
+    "full": "पूरी प्रोफ़ाइल देखें"
   }
 }

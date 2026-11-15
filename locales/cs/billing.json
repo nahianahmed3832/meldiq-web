@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> Zahrnuto pro komunity: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "Videohovory a sdílení obrazovky na webu",
+    "benefit": "Videohovory a sdílení obrazovky na webu {target}",
+    "auto": "Automatická volba během hovoru přizpůsobí kvalitu připojení."
   }
 }

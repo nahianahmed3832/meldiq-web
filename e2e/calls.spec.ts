@@ -67,11 +67,16 @@ test("Part 4: joining muted captures nothing until explicit unmute", async ({ pa
     expect(call.media.received.audio.frames).toBe(0);
     await s.getByRole("button", { name: "Unmute", exact: true }).click();
     await heardBrowser(call.media);
-    await test.info().attach("capture-observer.json", { body: JSON.stringify(await page.evaluate(() => ({
-      audit: (window as unknown as { __part4Capture: { captures: number } }).__part4Capture,
-      currentMethod: navigator.mediaDevices.getUserMedia.toString(),
-      frames: window.frames.length,
-    }))), contentType: "application/json" });
+    await test.info().attach("capture-observer.json", {
+      body: JSON.stringify(
+        await page.evaluate(() => ({
+          audit: (window as unknown as { __part4Capture: { captures: number } }).__part4Capture,
+          currentMethod: navigator.mediaDevices.getUserMedia.toString(),
+          frames: window.frames.length,
+        })),
+      ),
+      contentType: "application/json",
+    });
     expect(await page.evaluate(() => (window as unknown as { __part4Capture: { captures: number } }).__part4Capture.captures)).toBeGreaterThan(0);
     await s.getByRole("button", { name: "Hang up" }).click();
   } finally {
@@ -155,11 +160,18 @@ test("a video call from the phone app rings here and connects with media verifie
   try {
     const ringing = page.getByRole("alertdialog", { name: "Incoming video call from Bob Chen" });
     await expect(ringing).toBeVisible({ timeout: 15_000 });
+    const beforeAnswer = ringing.getByRole("combobox", { name: "Video quality" });
+    await expect(beforeAnswer.locator("option")).toHaveText(["Auto", /^(720|1080)p · 60 fps$/]);
+    await beforeAnswer.selectOption("plan");
     await ringing.getByRole("button", { name: "Answer with video" }).click();
 
     const s = stage(page);
     await expect(s).toBeVisible();
     await expectEncrypted(page, s);
+    const inCall = s.getByRole("combobox", { name: "Video quality" });
+    await expect(inCall).toHaveValue("plan");
+    await inCall.selectOption("auto");
+    await expect(inCall).toHaveValue("auto");
     await expect(s.getByRole("status")).toHaveText(/^\d+:\d\d$/); // the call timer
     await remoteVideoPlays(page);
     await expect(page.locator("[data-orbit-call-audio] audio")).toHaveCount(1); // Bob's voice, once proven to decrypt
@@ -426,11 +438,16 @@ test("deafen silences the call both ways and undeafen puts it back as it was (ba
     await expect(s.getByRole("button", { name: "Unmute" })).toBeVisible();
     await expect.poll(() => page.evaluate(() => Array.from(document.querySelectorAll("[data-orbit-call-audio] audio")).map((a) => (a as HTMLAudioElement).muted))).not.toContain(false);
     // The receiver may drain audio already queued before the mute. Require sustained silence after that buffer.
-    await expect.poll(async () => {
-      const before = call.media.received.audio.audible;
-      await page.waitForTimeout(500);
-      return call.media.received.audio.audible - before;
-    }, { timeout: 10_000 }).toBe(0);
+    await expect
+      .poll(
+        async () => {
+          const before = call.media.received.audio.audible;
+          await page.waitForTimeout(500);
+          return call.media.received.audio.audible - before;
+        },
+        { timeout: 10_000 },
+      )
+      .toBe(0);
     const heardBefore = call.media.received.audio.audible;
     await page.waitForTimeout(2_000);
     expect(call.media.received.audio.audible - heardBefore).toBeLessThan(10);

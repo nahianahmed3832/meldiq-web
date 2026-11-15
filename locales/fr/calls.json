@@ -308,5 +308,12 @@
     "right_415296c": "Droite ⌘",
     "video_call_89e4267": "Appels vidéo gratuits",
     "this_browser_can_t_record_audio_245d6c1": "Ce navigateur ne peut pas enregistrer l''audio."
+  },
+  "videoQuality": {
+    "label": "Qualité vidéo",
+    "description": "Pour la caméra et le partage d’écran. Le mode automatique s’adapte à ta connexion.",
+    "auto": "Automatique",
+    "format": "{height}p · {fps} i/s",
+    "sharing": "Partage d’écran · {detail}"
   }
 }

@@ -760,5 +760,9 @@
     "notice": "This bot and its developer can read messages in this chat.",
     "allow": "Allow bot messages",
     "restart": "Turning access off or blocking the bot stops messaging. Enabling it again starts a new chat."
+  },
+  "uploads": {
+    "preparing": "Preparing files…",
+    "progress": "{sent} of {total} · {percent}%"
   }
 }

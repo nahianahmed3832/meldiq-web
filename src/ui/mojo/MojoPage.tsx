@@ -3,7 +3,6 @@ import { countLabel } from "../../i18n/counts";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
-import { interfaceLocale } from "../../i18n/format";
 import { useT as useLocalization } from "../../i18n";
 import { Crown, Gem, Gift, HeartHandshake, Loader2, Sparkles } from "lucide-react";
 import { MojoBanner } from "./MojoBanner";
@@ -12,7 +11,7 @@ import type { PlanPerks } from "../../api/mojoSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { relative } from "../format";
 import { GiftDialog, GiftsReceived } from "./MojoGifts";
-import { money, planPrice, plusTermPrice, screenLabel, size } from "./mojoFormat";
+import { money, planPrice, plusTermPrice } from "./mojoFormat";
 import { CompareTable, type PlanAction, PlanCards, PlusPerks } from "./MojoPlans";
 import { PlusTermDetails } from "./PlusTermDetails";
 import { selectCheckout } from "../billing/checkoutDraft";
@@ -88,7 +87,6 @@ export function MojoPage() {
   const paid = billing?.subscription ?? null;
   const offline = !online;
   const plus = catalog.plans.find((p) => p.key === "plus");
-  const free = catalog.plans.find((p) => p.key === "free");
   const paypal = billing?.provider === "paypal";
   const longerTerm = paypal ? catalog.plusTerms.find((term) => term.key !== "monthly" && plusTermPrice(catalog, term.key)) : undefined;
   const plusOnSale = Boolean(catalog.onSale.plus || longerTerm);
@@ -339,14 +337,6 @@ export function MojoPage() {
           </p>
         </div>
       </section>
-      {free && (
-        <p className="mojo-free-note muted">
-          <Localized
-            k="billing.interface.still_free_for_everyone_messages_up_to_characters_files_up_to_voi_a19dd47"
-            slots={[free.messageChars.toLocaleString(interfaceLocale()), size(free.uploadBytes), screenLabel(catalog, free.screen), free.customItems]}
-          />
-        </p>
-      )}
       {gifting && (
         <GiftDialog
           catalog={catalog}

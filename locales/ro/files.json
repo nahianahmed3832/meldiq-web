@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Fișierul descărcat este mai mare decât referința sa verificată.",
     "the_download_stopped_early_ec088bb": "Descărcarea s-a oprit mai devreme.",
     "the_download_was_interrupted_try_again_d07dbc1": "Descărcarea a fost întreruptă. Încearcă din nou."
+  },
+  "profileShowcase": {
+    "creations": "Creațiile sale",
+    "effect": "Efect de profil",
+    "full": "Vezi profilul complet"
   }
 }

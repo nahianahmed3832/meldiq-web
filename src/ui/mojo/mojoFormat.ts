@@ -1,6 +1,7 @@
 import { text as uiText } from "../../i18n";
-import type { MojoCatalog, PlanKey, PlusTerm, ScreenPresetId } from "../../api/mojoSchemas";
-import { formatCurrency, formatNumber, interfaceLocale } from "../../i18n/format";
+import type { MojoCatalog, PlanKey, PlusTerm } from "../../api/mojoSchemas";
+import { videoTier, videoTierLabel } from "../../call/shareQuality";
+import { formatCurrency, formatNumber } from "../../i18n/format";
 /** Money in its currency's minor unit, as the person reads it ("$3.99"). */
 export function money(amountMinor: number, currency: string): string {
   return formatCurrency(amountMinor / 100, currency);
@@ -11,16 +12,8 @@ export function size(bytes: number): string {
   if (bytes >= 1000000000) return uiText("files.interface.value0_gb_02d50f1", { value0: formatNumber(+(bytes / 1000000000).toFixed(1)) });
   return uiText("files.interface.value0_mb_36c07a7", { value0: formatNumber(Math.round(bytes / 1000000)) });
 }
-/**
- * "Up to 1080p 60 fps" from a plan's single ceiling (2026-10-30 plans), or "1080p 60 fps or 2K 30 fps" from several (a
- * Spark level's, or an older server's plans).
- */
-export function screenLabel(catalog: MojoCatalog | null, presets: readonly ScreenPresetId[]): string {
-  if (!presets.length) return uiText("billing.interface.your_own_plan_s_9bfb106");
-  const label = (id: ScreenPresetId) => catalog?.screenPresets.find((p) => p.id === id)?.label ?? id;
-  return presets.length === 1
-    ? uiText("billing.interface.up_to_value0_d22d804", { value0: label(presets[0]!) })
-    : new Intl.ListFormat(interfaceLocale(), { type: "disjunction" }).format(presets.map(label));
+export function planVideoLabel(plan: PlanKey): string {
+  return uiText("billing.interface.up_to_value0_d22d804", { value0: videoTierLabel(videoTier(plan)) });
 }
 /** The price a plan shows: what's on sale at the payment provider, else its list price ("not on sale yet"). */
 export function planPrice(

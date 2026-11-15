@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "O ficheiro baixado é maior do que sua referência verificada.",
     "the_download_stopped_early_ec088bb": "O download parou cedo.",
     "the_download_was_interrupted_try_again_d07dbc1": "O download foi interrompido. Tente novamente."
+  },
+  "profileShowcase": {
+    "creations": "Criações",
+    "effect": "Efeito de perfil",
+    "full": "Ver perfil completo"
   }
 }

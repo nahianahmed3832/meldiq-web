@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "الملف المنقول أكبر من المرجع الذي تم التحقق منه.",
     "the_download_stopped_early_ec088bb": "توقف التنزيل مبكراً",
     "the_download_was_interrupted_try_again_d07dbc1": "توقف التنزيل. حاول مرة أخرى"
+  },
+  "profileShowcase": {
+    "creations": "أعمالهم",
+    "effect": "تأثير الملف الشخصي",
+    "full": "عرض الملف الشخصي الكامل"
   }
 }

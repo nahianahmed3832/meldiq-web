@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> 包含的社群: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "網頁版視訊通話與螢幕分享",
+    "benefit": "網頁版視訊通話與螢幕分享{target}",
+    "auto": "通話時使用自動模式可依網路連線調整畫質。"
   }
 }

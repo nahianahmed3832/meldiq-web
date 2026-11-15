@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Berkas yang diunduh lebih besar dari referensi yang diverifikasi.",
     "the_download_stopped_early_ec088bb": "Unduh berhenti lebih awal.",
     "the_download_was_interrupted_try_again_d07dbc1": "Unduh terganggu. Coba lagi."
+  },
+  "profileShowcase": {
+    "creations": "Karyanya",
+    "effect": "Efek profil",
+    "full": "Lihat profil lengkap"
   }
 }

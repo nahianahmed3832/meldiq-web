@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> Termasuk untuk komunitas: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "Panggilan video dan berbagi layar di web",
+    "benefit": "Panggilan video dan berbagi layar di web {target}",
+    "auto": "Gunakan mode otomatis untuk menyesuaikan kualitas dengan koneksi selama panggilan."
   }
 }

@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "ডাউনলোড করা ফাইলটি তার পরীক্ষাকৃত রেফারেন্সের চেয়ে বড়।",
     "the_download_stopped_early_ec088bb": "ডাউনলোড শুরু করা যায়নি ।",
     "the_download_was_interrupted_try_again_d07dbc1": "ডাউনলোড বিঘ্নিত হয়েছে । আবার চেষ্টা করুন ।"
+  },
+  "profileShowcase": {
+    "creations": "তাঁর তৈরি",
+    "effect": "প্রোফাইল ইফেক্ট",
+    "full": "সম্পূর্ণ প্রোফাইল দেখুন"
   }
 }

@@ -13,6 +13,7 @@ import { shownName } from "../../sync/communityParity";
 import { useCommunityMembers } from "../community/useCommunityMembers";
 import { nameTone, toneOf } from "../components/Avatar";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { collectibleOf, CollectibleBanner, recipeBackground } from "../people/CollectibleLayers";
 import { BotProfileDialog } from "../people/BotProfileDialog";
 import { LookAvatar, LookName, StyledName } from "../people/NameStyle";
 import { StyledAvatar } from "../people/ProfileStyle";
@@ -24,6 +25,7 @@ import { isHere, memberListGroups, roleNameColors, withCommunityBots } from "./m
 import { useT } from "../../i18n";
 import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
 import { IdentityGlyph } from "../components/IdentityGlyph";
+import { usePhoto } from "../components/photos";
 import { ProfilePins } from "../people/ProfilePins";
 /** Wide enough to keep a member list or profile beside the messages; narrower screens open them over the messages. */
 const WIDE = "(min-width: 1241px)";
@@ -155,10 +157,14 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
         ]
       : []),
   ];
+  const banner = collectibleOf(m.profileStyle, "banner");
+  const theme = themeColorsOf(m.profileStyle);
+  const backdrop = banner ? recipeBackground(banner).background : theme ? `linear-gradient(135deg, ${theme[0]}, ${theme.at(-1)})` : null;
   return (
     <>
       <button
-        className={`member-row${away ? " away" : ""}`}
+        className={`member-row${away ? " away" : ""}${backdrop ? " decorated" : ""}`}
+        style={backdrop ? { backgroundImage: `linear-gradient(90deg, var(--surface) 14%, color-mix(in srgb, var(--surface) 70%, transparent)), ${backdrop}` } : undefined}
         onClick={(e) => (m.bot ? setBotOpen(true) : openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget }))}
         aria-label={uiText("messaging.interface.value0_value1_value2_value3_value4_d3f5947", {
           value0: m.displayName,
@@ -228,6 +234,8 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
       alive = false;
     };
   }, [engine, peerId, profilesRev]);
+  const bannerKind = profile?.profileBanner?.kind;
+  const banner = usePhoto("profileBanner", peerId ?? "", profile?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
   if (!peer) return null;
   const name = known?.displayName ?? profile?.displayName ?? peer.displayName;
   const presence = known?.presence ?? profile?.presence ?? null;
@@ -240,7 +248,8 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
   return (
     <aside className="panel profile-panel" aria-label={uiText("messaging.interface.value0_s_profile_facc1bc", { value0: name })}>
       <div className="profile-panel-scroll scroll">
-        <div className="profile-banner" style={{ background: theme ? themeBackground(theme) : toneOf(color) }}>
+        <div className="profile-banner" style={banner ? { backgroundImage: `url(${banner})` } : { background: theme ? themeBackground(theme) : toneOf(color) }}>
+          <CollectibleBanner style={known?.profileStyle ?? profile?.profileStyle} />
           <button className="icon-btn" onClick={onClose} aria-label={t("people_hide_profile")}>
             <X size={16} />
           </button>

@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Загруженный файл больше, чем его проверенная ссылка.",
     "the_download_stopped_early_ec088bb": "Загрузка остановилась рано.",
     "the_download_was_interrupted_try_again_d07dbc1": "Загрузка была прервана. Попробуй еще раз."
+  },
+  "profileShowcase": {
+    "creations": "Авторские работы",
+    "effect": "Эффект профиля",
+    "full": "Открыть полный профиль"
   }
 }

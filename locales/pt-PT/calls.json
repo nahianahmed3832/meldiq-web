@@ -308,5 +308,12 @@
     "right_415296c": "Direita ⌘",
     "video_call_89e4267": "chamada de vídeo",
     "this_browser_can_t_record_audio_245d6c1": "Este navegador não pode gravar áudio."
+  },
+  "videoQuality": {
+    "label": "Qualidade de vídeo",
+    "description": "Aplica-se à câmara e à partilha de ecrã. O modo automático ajusta-se à tua ligação.",
+    "auto": "Automática",
+    "format": "{height}p · {fps} fps",
+    "sharing": "Partilha de ecrã · {detail}"
   }
 }

@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> Inbegrepen voor gemeenschappen: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "Videobellen en scherm delen op het web",
+    "benefit": "Videobellen en scherm delen op het web {target}",
+    "auto": "Gebruik de automatische stand om de kwaliteit tijdens een gesprek aan je verbinding aan te passen."
   }
 }

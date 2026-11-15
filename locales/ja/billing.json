@@ -637,5 +637,10 @@
   },
   "promotion": {
     "includedSparks": "<slot0></slot0> コミュニティに含まれています: <slot1></slot1>"
+  },
+  "videoQuality": {
+    "label": "ウェブでのビデオ通話と画面共有",
+    "benefit": "ウェブでのビデオ通話と画面共有は{target}",
+    "auto": "通話中に「自動」を選ぶと、接続状況に合わせて品質が変わります。"
   }
 }

@@ -1,6 +1,5 @@
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
-import { Localized } from "../../i18n/Localized";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -32,9 +31,7 @@ export function ArtistDecorations({ userId, name }: { userId: string; name: stri
   };
   return (
     <section className="profile-box" aria-label={uiText("workspace.interface.decorations_by_value0_8f53c3b", { value0: name })}>
-      <h3>
-        <Localized k="workspace.interface.decorations_by_b99b99a" slots={[name]} />
-      </h3>
+      <h3>{uiText("files.profileShowcase.creations")}</h3>
       <div className="artist-decorations">
         {list.data.map((d) => (
           <div key={d.id} className="artist-decoration">

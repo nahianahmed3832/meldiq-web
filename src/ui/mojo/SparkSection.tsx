@@ -51,7 +51,7 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
         </p>
         <SparkTrack levels={levels} level={null} active={null} />
       </div>
-      <SparkLevelCards catalog={catalog} levels={levels} level={null} />
+      <SparkLevelCards levels={levels} level={null} />
       <p className="muted spark-note">
         <Localized k="billing.interface.a_server_s_benefits_never_lower_anyone_s_own_plan_level_1_takes_s_d659820" slots={[levels[0]?.sparks ?? 2, levels[1]?.sparks ?? 5, levels[2]?.sparks ?? 8]} />
       </p>

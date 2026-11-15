@@ -308,5 +308,12 @@
     "right_415296c": "Derecha ⌘",
     "video_call_89e4267": "Vídeo llamada",
     "this_browser_can_t_record_audio_245d6c1": "Este navegador no puede grabar audio."
+  },
+  "videoQuality": {
+    "label": "Calidad de vídeo",
+    "description": "Se aplica a la cámara y a la pantalla compartida. El modo automático se adapta a tu conexión.",
+    "auto": "Automática",
+    "format": "{height}p · {fps} fps",
+    "sharing": "Compartiendo pantalla · {detail}"
   }
 }

@@ -1,29 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { displayConstraints, encodingFor, receivedVideo, SHARE_LADDERS, ShareAdapter, sentVideo, shareShortfall } from "../src/call/shareQuality";
+import { displayConstraints, encodingFor, receivedVideo, VideoAdapter, sentVideo, videoLadder } from "../src/call/shareQuality";
 import { MAX_SCREEN_SHARES, mayShare, nextWatched, shareIdentity, shareKey, type CallShareView } from "../src/call/shares";
 
 /** Screen sharing quality and several shares at once (2026-10-24). */
 describe("screen share capture and encoding", () => {
   it("asks getDisplayMedia for the mode's size and rate, capped so a bigger screen is scaled, not cropped", () => {
-    expect(displayConstraints("high", false)).toEqual({ width: { ideal: 1920, max: 1920 }, height: { ideal: 1080, max: 1080 }, frameRate: { ideal: 60, max: 60 } });
-    expect(displayConstraints("standard", false)).toEqual({ width: { ideal: 1280, max: 1280 }, height: { ideal: 720, max: 720 }, frameRate: { ideal: 30, max: 30 } });
+    expect(displayConstraints("1080p60", false)).toEqual({ width: { ideal: 1920, max: 1920 }, height: { ideal: 1080, max: 1080 }, frameRate: { ideal: 60, max: 60 } });
+    expect(displayConstraints("720p60", false)).toEqual({ width: { ideal: 1280, max: 1280 }, height: { ideal: 720, max: 720 }, frameRate: { ideal: 60, max: 60 } });
     // Safari 17 captures at a low resolution when a size is asked for: only the rate is capped there.
-    expect(displayConstraints("high", true)).toEqual({ frameRate: { ideal: 60, max: 60 } });
+    expect(displayConstraints("1080p60", true)).toEqual({ frameRate: { ideal: 60, max: 60 } });
   });
 
   it("encodes each rung at its rate and bitrate, scaling the capture down to the rung's height", () => {
-    const [top, , third] = SHARE_LADDERS.high;
-    expect(encodingFor(top, 1080)).toEqual({ maxBitrate: 6_000_000, maxFramerate: 60, scaleResolutionDownBy: 1 });
-    expect(encodingFor(third, 1080)).toEqual({ maxBitrate: 2_500_000, maxFramerate: 30, scaleResolutionDownBy: 1.5 });
+    const [top, , third] = videoLadder("1080p60", "auto");
+    expect(encodingFor(top, 1920, 1080)).toEqual({ maxBitrate: 6_000_000, maxFramerate: 60, scaleResolutionDownBy: 1 });
+    expect(encodingFor(third, 1920, 1080)).toEqual({ maxBitrate: 2_500_000, maxFramerate: 30, scaleResolutionDownBy: 1.5 });
+    expect(encodingFor(top, 3840, 1080).scaleResolutionDownBy).toBe(2);
     // A smaller window is never scaled up; Safari's uncapped 1440p capture is scaled down to 1080.
-    expect(encodingFor(top, 600).scaleResolutionDownBy).toBe(1);
-    expect(encodingFor(top, 1440).scaleResolutionDownBy).toBe(1.33);
-    expect(encodingFor(top, 0).scaleResolutionDownBy).toBe(1);
+    expect(encodingFor(top, 600, 800).scaleResolutionDownBy).toBe(1);
+    expect(encodingFor(top, 2560, 1440).scaleResolutionDownBy).toBe(1.334);
+    expect(encodingFor(top, 0, 0).scaleResolutionDownBy).toBe(1);
   });
 });
 
 describe("adaptive fallback", () => {
-  const run = (adapter: ShareAdapter, pattern: ("none" | "bandwidth" | "cpu")[], start: number, step = 2_000) => {
+  const run = (adapter: VideoAdapter, pattern: ("none" | "bandwidth" | "cpu")[], start: number, step = 2_000) => {
     const changes: { at: number; level: number }[] = [];
     pattern.forEach((l, i) => {
       const at = start + i * step;
@@ -33,16 +34,22 @@ describe("adaptive fallback", () => {
     return changes;
   };
 
+  it("keeps the fixed plan target when sender stats report a limitation", () => {
+    const adapter = new VideoAdapter(videoLadder("720p60", "plan"));
+    expect(run(adapter, Array(12).fill("bandwidth"), 0)).toEqual([]);
+    expect(adapter.current).toMatchObject({ height: 720, frameRate: 60 });
+  });
+
   it("steps down after three limited samples in a row, one rung at a time, at most every 8 s", () => {
-    const a = new ShareAdapter(SHARE_LADDERS.high);
+    const a = new VideoAdapter(videoLadder("1080p60", "auto"));
     const changes = run(a, Array(12).fill("bandwidth"), 0);
     expect(changes.map((c) => c.level)).toEqual([1, 2, 3]);
     for (let i = 1; i < changes.length; i++) expect(changes[i].at - changes[i - 1].at).toBeGreaterThanOrEqual(8_000);
-    expect(a.current).toEqual(SHARE_LADDERS.high[3]);
+    expect(a.current).toEqual(videoLadder("1080p60", "auto")[3]);
   });
 
   it("ignores a short blip, and goes back up only after a long clean stretch", () => {
-    const a = new ShareAdapter(SHARE_LADDERS.standard);
+    const a = new VideoAdapter(videoLadder("720p60", "auto"));
     expect(run(a, ["bandwidth", "bandwidth", "none", "bandwidth", "none"], 0)).toEqual([]);
     run(a, ["cpu", "cpu", "cpu"], 100_000);
     expect(a.level).toBe(1);
@@ -52,7 +59,7 @@ describe("adaptive fallback", () => {
   });
 
   it("doesn't flap: an upgrade that fails again soon makes the next one wait twice as long", () => {
-    const a = new ShareAdapter(SHARE_LADDERS.high);
+    const a = new VideoAdapter(videoLadder("1080p60", "auto"));
     run(a, ["bandwidth", "bandwidth", "bandwidth"], 0); // → 1 at 4 s
     run(a, Array(10).fill("none"), 30_000); // → 0 at 48 s
     expect(a.level).toBe(0);
@@ -61,7 +68,7 @@ describe("adaptive fallback", () => {
     expect(run(a, Array(10).fill("none"), 70_000)).toEqual([]); // 18 s of clean samples, 30 s after the change: too soon
     expect(run(a, Array(10).fill("none"), 104_000).at(-1)?.level).toBe(0);
     // Over ten minutes of a connection going bad and good every 8 s, it changes far less often than that.
-    const b = new ShareAdapter(SHARE_LADDERS.high);
+    const b = new VideoAdapter(videoLadder("1080p60", "auto"));
     const pattern = Array.from({ length: 300 }, (_, i) => (Math.floor(i / 4) % 2 ? "none" : "bandwidth") as "none" | "bandwidth");
     expect(run(b, pattern, 0).length).toBeLessThan(8);
   });
@@ -79,17 +86,6 @@ describe("stats read back", () => {
     expect(receivedVideo(stats)).toEqual({ width: 1280, height: 720, fps: 30 });
     expect(sentVideo([])).toBeNull();
     expect(receivedVideo([{ type: "inbound-rtp", kind: "video" }])).toBeNull();
-  });
-
-  it("tells the presenter when the browser delivers less than the mode, and when the connection lowered it", () => {
-    const base = { quality: "high" as const, sent: null, level: 0, limitation: "none" as const };
-    expect(shareShortfall({ ...base, captured: { width: 1920, height: 1080, frameRate: 60 } })).toBeNull();
-    // An ultrawide screen fits the box at full width: not less.
-    expect(shareShortfall({ ...base, captured: { width: 1920, height: 800, frameRate: 60 } })).toBeNull();
-    expect(shareShortfall({ ...base, captured: { width: 1280, height: 720, frameRate: 30 } })).toBe("High asks for 1920×1080 at 60 fps: your browser captures 1280×720, at most 30 frames a second.");
-    expect(shareShortfall({ ...base, captured: { width: 1920, height: 1080, frameRate: 60 }, level: 2, limitation: "bandwidth" })).toBe(
-      "High asks for 1920×1080 at 60 fps: lowered to 720p at 30 fps for your connection.",
-    );
   });
 });
 

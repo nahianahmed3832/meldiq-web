@@ -1,6 +1,6 @@
 import { applyVibe, HEX } from "./vibes";
 import { useSyncExternalStore } from "react";
-import { type ShareQuality, shareQualityOf } from "../call/shareQuality";
+import { type VideoQualityMode, videoModeOf } from "../call/shareQuality";
 import { TRANSLATE_TARGETS, type TranslateTarget } from "../sync/translate";
 import { isLanguageChoice, type LanguageChoice, resolveLanguage, directionOf } from "../i18n/languages";
 
@@ -90,7 +90,7 @@ export interface Prefs {
   /** Batch B10 (android Settings › Calls › Noise reduction): background noise reduction and automatic level. */
   noiseReduction: boolean;
   /** The last screen share quality (2026-10-24: Standard 720p30 or High 1080p60) and sound, the default next time. */
-  shareQuality: ShareQuality;
+  videoQuality: VideoQualityMode;
   shareAudio: boolean;
   /** Channels and groups show their member list beside the messages, on screens wide enough for it. */
   memberList: boolean;
@@ -172,7 +172,7 @@ const defaults: Prefs = {
   translateConsent: false,
   translateTarget: "en",
   noiseReduction: true,
-  shareQuality: "standard",
+  videoQuality: "auto",
   shareAudio: false,
   memberList: true,
   dmProfile: true,
@@ -235,7 +235,7 @@ function load(): Prefs {
       translateTarget: TRANSLATE_TARGETS.some((t) => t.code === stored.translateTarget) ? stored.translateTarget : defaults.translateTarget,
       noiseReduction: typeof stored.noiseReduction === "boolean" ? stored.noiseReduction : defaults.noiseReduction,
       // Older saves had text or motion: either starts as Standard.
-      shareQuality: shareQualityOf(stored.shareQuality),
+      videoQuality: videoModeOf(stored.videoQuality),
       shareAudio: typeof stored.shareAudio === "boolean" ? stored.shareAudio : defaults.shareAudio,
       memberList: typeof stored.memberList === "boolean" ? stored.memberList : defaults.memberList,
       dmProfile: typeof stored.dmProfile === "boolean" ? stored.dmProfile : defaults.dmProfile,

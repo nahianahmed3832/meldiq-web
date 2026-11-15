@@ -308,5 +308,12 @@
     "right_415296c": "Rechts ⌘",
     "video_call_89e4267": "Videoanruf mit Skype",
     "this_browser_can_t_record_audio_245d6c1": "Ihr Browser kann keine Audiodateien aufnehmen."
+  },
+  "videoQuality": {
+    "label": "Videoqualität",
+    "description": "Gilt für Kamera und Bildschirmfreigabe. Die Automatik passt die Qualität an deine Verbindung an.",
+    "auto": "Automatisch",
+    "format": "{height}p · {fps} Bilder/s",
+    "sharing": "Bildschirmfreigabe · {detail}"
   }
 }

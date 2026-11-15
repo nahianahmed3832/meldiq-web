@@ -93,5 +93,10 @@
     "the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7": "Het gedownloade bestand is groter dan de geverifieerde referentie.",
     "the_download_stopped_early_ec088bb": "De download is vroegtijdig gestopt.",
     "the_download_was_interrupted_try_again_d07dbc1": "De download is onderbroken. Probeer het nogmaals."
+  },
+  "profileShowcase": {
+    "creations": "Gemaakte items",
+    "effect": "Profieleffect",
+    "full": "Volledig profiel bekijken"
   }
 }
