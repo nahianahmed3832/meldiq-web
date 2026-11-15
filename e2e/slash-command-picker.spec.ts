@@ -5,7 +5,7 @@ import { numericConversationPath } from "../src/application/conversationPaths";
 
 test.use({ serviceWorkers: "block" });
 
-test("a raw channel link opens the Commands picker and submits a native interaction", async ({ page, context }) => {
+test("typing a slash in a channel opens the command picker and submits a native interaction", async ({ page, context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
   const owner = await newPhone("pickerowner", "Picker Owner");
   try {
@@ -39,7 +39,7 @@ test("a raw channel link opens the Commands picker and submits a native interact
     await expect.poll(() => new URL(page.url()).pathname).toBe(canonical);
     const composer = page.getByRole("textbox", { name: /^Message/ });
     await expect(composer).toBeVisible();
-    await expect(page.getByRole("button", { name: "Commands", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Commands", exact: true })).toHaveCount(0);
 
     const catalog = "**/v1/orgs/" + org.id + "/commands?*";
     await page.route(catalog, (route) => route.abort());

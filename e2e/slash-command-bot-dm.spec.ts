@@ -63,9 +63,10 @@ test("a configured bot DM command prepares a draft and only sends after confirma
     await page.goto(numericConversationPath("dms", approved.conversationId));
     const composer = page.getByRole("textbox", { name: "Message DM Commands Manager", exact: true });
     await expect(composer).toBeVisible();
-    await page.getByRole("button", { name: "Commands", exact: true }).click();
-    const catalog = page.getByRole("dialog", { name: "Bot commands", exact: true });
-    await catalog.getByRole("button", { name: /\/message/ }).click();
+    await expect(page.getByRole("button", { name: "Commands", exact: true })).toHaveCount(0);
+    await composer.fill("/");
+    const catalog = page.getByRole("listbox", { name: "Bot commands", exact: true });
+    await catalog.getByRole("option", { name: /\/message/ }).click();
     const form = page.getByRole("dialog", { name: "/message", exact: true });
     await form.getByRole("textbox", { name: "username", exact: true }).fill("@recipient");
     const text = 'Say "hello"\nnext';

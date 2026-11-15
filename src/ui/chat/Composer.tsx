@@ -38,7 +38,7 @@ import { slowmodeLabel, waitText } from "../../sync/communityRules";
 import { untilWhen } from "../format";
 import { useNow } from "../call/useNow";
 import { useT } from "../../i18n";
-import { SlashCommandButton, SlashCommandList, useSlashCommands } from "./SlashCommands";
+import { SlashCommandList, useSlashCommands } from "./SlashCommands";
 import { useWordyCommand } from "./wordyLaunch";
 import { RulesAgreeBar, useRulesSummary } from "../community/RulesViews";
 import { ComposerHoldBar, ComposerNoteLine, useComposerGates } from "./ComposerGates";
@@ -468,7 +468,6 @@ export function Composer(props: ComposerProps) {
           <VoiceBar onSend={sendVoice} onClose={() => setVoice(false)} />
         ) : (
           <>
-            <SlashCommandButton slash={slash} disabled={!!busy} />
             <label className="sr-only" htmlFor={`composer-${c.id}-${props.threadRoot ?? "main"}`}>
               {props.threadRoot ? t("messaging.msg_reply_thread") : uiText("messaging.interface.message_value0_ddd26fd", { value0: props.title })}
             </label>

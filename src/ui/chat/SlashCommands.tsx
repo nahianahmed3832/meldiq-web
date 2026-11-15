@@ -1,6 +1,6 @@
 import { useLocaleRender, Localized } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
-import { Bot, Terminal, X } from "lucide-react";
+import { Bot, X } from "lucide-react";
 import { type FormEvent, type KeyboardEvent, useCallback, useEffect, useId, useRef, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { config } from "../../application/config";
@@ -16,7 +16,7 @@ const COMMAND_LINE = /^\/[a-z0-9-]{1,32}(?:\s|$)/i;
 const NAMED_OPTIONS = /^\/[a-z0-9-]{1,32}\s+[a-z0-9-]{1,32}:/i;
 
 type Catalog = { scope: string; commands: OrgCommand[] } | { scope: string; failed: true };
-type Picker = { scope: string; command?: OrgCommand };
+type Picker = { scope: string; command: OrgCommand };
 
 export function useSlashCommands(c: Conversation, text: string, setText: (text: string) => void, members: readonly Member[], enabled: boolean) {
   const engine = useEngine();
@@ -38,13 +38,11 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
   const [index, setIndex] = useState(0);
   const [attempt, setAttempt] = useState(0);
   const form = picker && picker.scope === scope ? picker.command : undefined;
-  const menuOpen = picker !== null && picker.scope === scope && !form;
-  const inlineOpen = !!scope && !menuOpen && !form && PREFIX.test(text) && closedAt !== text;
-  const open = inlineOpen || menuOpen;
+  const inlineOpen = !!scope && !form && PREFIX.test(text) && closedAt !== text;
   const scoped = catalog?.scope === scope ? catalog : null;
   const failed = scoped !== null && "failed" in scoped;
   const commands = scoped && "commands" in scoped ? scoped.commands : NO_COMMANDS;
-  const items = menuOpen ? matchingCommands(commands, "/", commands.length) : matchingCommands(commands, text);
+  const items = matchingCommands(commands, text);
   const at = Math.min(index, Math.max(items.length - 1, 0));
 
   // Escape dismisses one draft, and editing that draft allows the picker to open again.
@@ -53,7 +51,7 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
     setIndex(0);
   }, [c.id, text]);
   useEffect(() => {
-    if (!open || !orgId || !scope) return;
+    if (!inlineOpen || !orgId || !scope) return;
     let live = true;
     void communityCommands(engine, orgId, channelId ?? undefined).then(
       (list) => {
@@ -66,7 +64,7 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
     return () => {
       live = false;
     };
-  }, [engine, open, orgId, scope, channelId, botId, attempt]);
+  }, [engine, inlineOpen, orgId, scope, channelId, botId, attempt]);
 
   const retry = () => {
     setCatalog(null);
@@ -77,9 +75,6 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
     setClosedAt(text);
   };
   const close = useCallback(() => setPicker(null), []);
-  const showMenu = () => {
-    if (scope) setPicker({ scope });
-  };
   const onKey = (event: KeyboardEvent<HTMLTextAreaElement>): boolean => {
     if (!inlineOpen) return false;
     if (event.key === "Escape") {
@@ -107,8 +102,8 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
     await runCommand(engine, { channelId, botId: command.botId, command: command.name, options });
   };
   const run = async (body: string): Promise<"sent" | "kept" | "message"> => {
+    if (scope && body === "/") return "kept";
     if (!scope || !orgId || !channelId) return "message";
-    if (body === "/") return "kept";
     if (!COMMAND_LINE.test(body)) return "message";
     const unavailable = () => {
       engine.notice("error", uiText("messaging.slash_commands.load_failed"));
@@ -164,11 +159,9 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
     close();
   };
   return {
-    available: !!scope,
     direct: !channelId,
     id,
     inlineOpen,
-    menuOpen,
     form,
     loading: scoped === null,
     failed,
@@ -177,7 +170,6 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
     activeId: inlineOpen && items.length ? `${id}-${at}` : undefined,
     pick,
     retry,
-    showMenu,
     close,
     onKey,
     run,
@@ -192,17 +184,7 @@ function commandError(error: unknown, command: OrgCommand): string {
 
 type SlashCommands = ReturnType<typeof useSlashCommands>;
 
-export function SlashCommandButton({ slash, disabled }: { slash: SlashCommands; disabled: boolean }) {
-  if (!slash.available) return null;
-  return (
-    <button type="button" className="composer-command-button" onClick={slash.showMenu} aria-haspopup="dialog" disabled={disabled}>
-      <Terminal size={15} aria-hidden="true" />
-      {uiText("workspace.interface.commands_b269dc4")}
-    </button>
-  );
-}
-
-function CommandCatalog({ slash, inline = false }: { slash: SlashCommands; inline?: boolean }) {
+function CommandCatalog({ slash }: { slash: SlashCommands }) {
   if (slash.loading)
     return (
       <p className="slash-status" role="status">
@@ -225,15 +207,15 @@ function CommandCatalog({ slash, inline = false }: { slash: SlashCommands; inlin
       </p>
     );
   return (
-    <div className="slash-options" id={inline ? slash.id : undefined} role={inline ? "listbox" : undefined} aria-label={uiText("messaging.interface.bot_commands_cd2ff1d")}>
+    <div className="slash-options" id={slash.id} role="listbox" aria-label={uiText("messaging.interface.bot_commands_cd2ff1d")}>
       {slash.items.map((cmd, i) => (
         <button
           type="button"
           key={`${cmd.botId}/${cmd.name}`}
-          id={inline ? `${slash.id}-${i}` : undefined}
-          role={inline ? "option" : undefined}
-          aria-selected={inline ? i === slash.index : undefined}
-          onMouseDown={inline ? (e) => e.preventDefault() : undefined}
+          id={`${slash.id}-${i}`}
+          role="option"
+          aria-selected={i === slash.index}
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => slash.pick(cmd)}
         >
           <Bot size={18} className="faint" aria-hidden="true" />
@@ -347,17 +329,9 @@ function CommandForm({ slash, command }: { slash: SlashCommands; command: OrgCom
 export function SlashCommandList({ slash }: { slash: SlashCommands }) {
   useLocaleRender();
   if (slash.form) return <CommandForm key={`${slash.form.botId}/${slash.form.name}`} slash={slash} command={slash.form} />;
-  if (slash.menuOpen)
-    return (
-      <Dialog title={uiText("messaging.interface.bot_commands_cd2ff1d")} onClose={slash.close}>
-        <div className="dialog-body">
-          <CommandCatalog slash={slash} />
-        </div>
-      </Dialog>
-    );
   return slash.inlineOpen ? (
     <div className="suggest card slash-list">
-      <CommandCatalog slash={slash} inline />
+      <CommandCatalog slash={slash} />
     </div>
   ) : null;
 }

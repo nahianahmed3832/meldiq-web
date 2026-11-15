@@ -253,22 +253,6 @@
 }
 
 /* ── bots in conversations ── */
-.composer-command-button {
-  display: flex;
-  align-items: center;
-  align-self: flex-start;
-  gap: 6px;
-  min-height: 30px;
-  padding: 0 8px;
-  border-radius: var(--r-sm);
-  color: var(--text-2);
-  font-size: 12px;
-  font-weight: 600;
-}
-.composer-command-button:hover {
-  background: var(--surface-hover);
-  color: var(--text);
-}
 .slash-list {
   width: min(460px, calc(100% - 36px));
   max-height: min(300px, 36vh);
