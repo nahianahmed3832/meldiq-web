@@ -1,5 +1,5 @@
-import { type LocalParticipant, type ScreenShareCaptureOptions, Track } from "livekit-client";
-import { CALL_VIDEO, displayConstraints, type ShareStats, type VideoQualityMode, type VideoTier } from "./shareQuality";
+import { type LocalParticipant, Track } from "livekit-client";
+import { CALL_VIDEO, cameraResolution, displayConstraints, type ShareStats, type VideoQualityMode, type VideoTier } from "./shareQuality";
 import { VideoSender } from "./videoSender";
 
 export class ShareSender {
@@ -15,11 +15,13 @@ export class ShareSender {
     const local = this.participant();
     if (!local) return;
     const { maxBitrate, frameRate } = CALL_VIDEO[this.tier];
+    const safari = isSafari();
     await local.setScreenShareEnabled(
       true,
       {
         audio,
-        video: displayConstraints(this.tier, isSafari()) as ScreenShareCaptureOptions["video"],
+        // The SDK forwards dimensions and capture frame rate through resolution.
+        ...(safari ? {} : { resolution: cameraResolution(this.tier) }),
         contentHint: "motion",
         systemAudio: audio ? "include" : "exclude",
       },
@@ -30,7 +32,10 @@ export class ShareSender {
         simulcast: false,
       },
     );
-    await this.sender.attach(this.track());
+    const track = this.track();
+    // Apply the upper limit after selection, including on Safari builds with uncapped picker capture.
+    if (track) await track.mediaStreamTrack.applyConstraints(displayConstraints(this.tier, safari)).catch(() => undefined);
+    await this.sender.attach(track);
   }
 
   async stop(): Promise<void> {
