@@ -33,7 +33,7 @@ export function CollectionStudio() {
         </span>
         <span className="lines grow">
           <strong>
-            <Localized k="settings.interface.your_profile_your_universe_df6faaf" />
+            <Localized k="files.profileShowcase.collectibles" />
           </strong>
           <small>
             <Localized k="settings.interface.explore_the_nightwave_collection_frames_themes_more_bbffd2e" />

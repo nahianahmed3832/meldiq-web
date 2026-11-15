@@ -225,8 +225,6 @@
     "1920_1080_at_30_frames_a_second_for_text_and_detail_b6a2a80": "1920×1080, 30 çerçeve/s, metin ve detaylar için.",
     "high_c4ebc6d": "Yüksek",
     "1920_1080_at_60_frames_a_second_for_games_and_video_needs_a_fast_ca9fbbc": "1920×1080 saniyede 60 çerçeve, oyunlar ve videolar için. Hızlı bir bağlantı ve bilgisayar gerekiyor.",
-    "2560_1440_at_30_frames_a_second_needs_a_fast_connection_and_compu_03a5416": "2560×1440 saniyede 30 çerçeve. Hızlı bir bağlantı ve bilgisayar gerekiyor.",
-    "2560_1440_at_60_frames_a_second_for_fast_games_needs_a_very_fast_9cfda5d": "2560×1440 saniyede 60 çerçeve, hızlı oyunlar için. Çok hızlı bir bağlantı ve bilgisayar gerekiyor.",
     "your_browser_captures_value0_value1_a5dc89b": "tarayıcınız {value0} × {value1} yakaladı",
     "at_most_value0_frames_a_second_1ab9f7f": "en fazla {value0} çerçeve/s",
     "lowered_to_value0_p_at_value1_fps_for_your_value2_746b65b": "{value2} için {value1} fps''de {value0} p''ye düşürüldü",

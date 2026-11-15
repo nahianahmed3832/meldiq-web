@@ -44,9 +44,10 @@ test("profile editor previews drafts and account actions are available without s
     await page.getByRole("button", { name: "Switch account", exact: true }).click();
   } else {
     await page.getByRole("button", { name: "Close settings", exact: true }).click();
-    await page.getByRole("button", { name: "Account options", exact: true }).click();
+    await expect(page.getByRole("button", { name: "Account options", exact: true })).toHaveCount(0);
+    await page.getByRole("button", { name: /your profile and settings/i }).click();
     await expect(page.getByRole("menuitem", { name: "Log out", exact: true })).toBeVisible();
-    await page.screenshot({ path: path.join("/tmp", `meldiq-account-options-${info.project.name}.png`) });
+    await page.screenshot({ path: path.join("/tmp", `meldiq-profile-menu-${info.project.name}.png`) });
     await page.getByRole("menuitem", { name: "Switch account", exact: true }).click();
   }
   const switcher = page.getByRole("dialog", { name: "Switch account", exact: true });
@@ -56,7 +57,7 @@ test("profile editor previews drafts and account actions are available without s
   await expect(page.locator(".app[data-connection=online]").first()).toBeVisible();
   if (isMobile) await page.getByRole("button", { name: "Log out", exact: true }).click();
   else {
-    await page.getByRole("button", { name: "Account options", exact: true }).click();
+    await page.getByRole("button", { name: /your profile and settings/i }).click();
     await page.getByRole("menuitem", { name: "Log out", exact: true }).click();
   }
   await page.getByRole("dialog", { name: "Log out of Meldiq?" }).getByRole("button", { name: "Log out", exact: true }).click();
@@ -70,7 +71,7 @@ test("adding an account can be canceled without signing out", async ({ page, isM
     await page.goto("/settings/you");
     await page.getByRole("button", { name: "Switch account", exact: true }).click();
   } else {
-    await page.getByRole("button", { name: "Account options", exact: true }).click();
+    await page.getByRole("button", { name: /your profile and settings/i }).click();
     await page.getByRole("menuitem", { name: "Switch account", exact: true }).click();
   }
   await page.getByRole("dialog", { name: "Switch account", exact: true }).getByRole("button", { name: "Add account" }).click();

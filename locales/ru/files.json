@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Загрузка была прервана. Попробуй еще раз."
   },
   "profileShowcase": {
+    "title": "Витрина профиля",
+    "manage": "Добавить на витрину",
+    "collectibles": "Коллекции профиля",
     "creations": "Авторские работы",
     "effect": "Эффект профиля",
     "full": "Открыть полный профиль"

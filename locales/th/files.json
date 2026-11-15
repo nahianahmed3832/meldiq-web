@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "การดาวน์โหลดถูกหยุดชะงัก ลองอีกทีสิ"
   },
   "profileShowcase": {
+    "title": "พื้นที่จัดแสดงโปรไฟล์",
+    "manage": "เพิ่มไปยังพื้นที่จัดแสดง",
+    "collectibles": "ของสะสมโปรไฟล์",
     "creations": "ผลงานของผู้ใช้",
     "effect": "เอฟเฟกต์โปรไฟล์",
     "full": "ดูโปรไฟล์ฉบับเต็ม"

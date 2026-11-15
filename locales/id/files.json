@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Unduh terganggu. Coba lagi."
   },
   "profileShowcase": {
+    "title": "Etalase profil",
+    "manage": "Tambahkan ke etalase",
+    "collectibles": "Koleksi profil",
     "creations": "Karyanya",
     "effect": "Efek profil",
     "full": "Lihat profil lengkap"

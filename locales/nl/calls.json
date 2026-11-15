@@ -225,8 +225,6 @@
     "1920_1080_at_30_frames_a_second_for_text_and_detail_b6a2a80": "1920×1080 bij 30 frames per seconde, voor tekst en details.",
     "high_c4ebc6d": "Hoog",
     "1920_1080_at_60_frames_a_second_for_games_and_video_needs_a_fast_ca9fbbc": "1920×1080 bij 60 frames per seconde, voor games en video. Vereist een snelle verbinding en computer.",
-    "2560_1440_at_30_frames_a_second_needs_a_fast_connection_and_compu_03a5416": "2560×1440 bij 30 frames per seconde. Vereist een snelle verbinding en computer.",
-    "2560_1440_at_60_frames_a_second_for_fast_games_needs_a_very_fast_9cfda5d": "2560×1440 bij 60 frames per seconde, voor snelle spellen. Vereist een zeer snelle verbinding en computer.",
     "your_browser_captures_value0_value1_a5dc89b": "Uw browser legt {value0} × {value1} vast",
     "at_most_value0_frames_a_second_1ab9f7f": "op zijn hoogst {value0} frames per seconde",
     "lowered_to_value0_p_at_value1_fps_for_your_value2_746b65b": "verlaagd naar {value0} p op {value1} fps voor uw {value2}",

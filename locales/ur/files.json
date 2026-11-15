@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "ڈاؤن لوڈ روک دیا گیا. دوبارہ کوشش کرو."
   },
   "profileShowcase": {
+    "title": "پروفائل شوکیس",
+    "manage": "شوکیس میں شامل کریں",
+    "collectibles": "پروفائل کی کلیکشن",
     "creations": "ان کی تخلیقات",
     "effect": "پروفائل ایفیکٹ",
     "full": "مکمل پروفائل دیکھیں"

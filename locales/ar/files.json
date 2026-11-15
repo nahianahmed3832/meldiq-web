@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "توقف التنزيل. حاول مرة أخرى"
   },
   "profileShowcase": {
+    "title": "عرض الملف الشخصي",
+    "manage": "إضافة إلى العرض",
+    "collectibles": "مقتنيات الملف الشخصي",
     "creations": "أعمالهم",
     "effect": "تأثير الملف الشخصي",
     "full": "عرض الملف الشخصي الكامل"

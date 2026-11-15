@@ -225,8 +225,6 @@
     "1920_1080_at_30_frames_a_second_for_text_and_detail_b6a2a80": "1920×1080 a 30 fotogrammi al secondo, per testo e dettagli.",
     "high_c4ebc6d": "Alto",
     "1920_1080_at_60_frames_a_second_for_games_and_video_needs_a_fast_ca9fbbc": "1920×1080 a 60 fotogrammi al secondo, per giochi e video. Ha bisogno di una connessione veloce e computer.",
-    "2560_1440_at_30_frames_a_second_needs_a_fast_connection_and_compu_03a5416": "2560×1440 a 30 fotogrammi al secondo. Ha bisogno di una connessione veloce e computer.",
-    "2560_1440_at_60_frames_a_second_for_fast_games_needs_a_very_fast_9cfda5d": "2560×1440 a 60 fotogrammi al secondo, per partite veloci. Ha bisogno di una connessione molto veloce e computer.",
     "your_browser_captures_value0_value1_a5dc89b": "Il tuo browser cattura {value0} × {value1}",
     "at_most_value0_frames_a_second_1ab9f7f": "al massimo {value0} fotogrammi al secondo",
     "lowered_to_value0_p_at_value1_fps_for_your_value2_746b65b": "ridotto a {value0} p a {value1} fps per il tuo {value2}",

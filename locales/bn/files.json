@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "ডাউনলোড বিঘ্নিত হয়েছে । আবার চেষ্টা করুন ।"
   },
   "profileShowcase": {
+    "title": "প্রোফাইল শোকেস",
+    "manage": "শোকেসে যোগ করুন",
+    "collectibles": "প্রোফাইলের সংগ্রহযোগ্য আইটেম",
     "creations": "তাঁর তৈরি",
     "effect": "প্রোফাইল ইফেক্ট",
     "full": "সম্পূর্ণ প্রোফাইল দেখুন"

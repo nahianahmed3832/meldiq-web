@@ -225,8 +225,6 @@
     "1920_1080_at_30_frames_a_second_for_text_and_detail_b6a2a80": "1920×1080 at 30 frames a second, for text and detail.",
     "high_c4ebc6d": "High",
     "1920_1080_at_60_frames_a_second_for_games_and_video_needs_a_fast_ca9fbbc": "1920×1080 at 60 frames a second, for games and video. Needs a fast connection and computer.",
-    "2560_1440_at_30_frames_a_second_needs_a_fast_connection_and_compu_03a5416": "2560×1440 at 30 frames a second. Needs a fast connection and computer.",
-    "2560_1440_at_60_frames_a_second_for_fast_games_needs_a_very_fast_9cfda5d": "2560×1440 at 60 frames a second, for fast games. Needs a very fast connection and computer.",
     "your_browser_captures_value0_value1_a5dc89b": "your browser captures {value0}×{value1}",
     "at_most_value0_frames_a_second_1ab9f7f": "at most {value0} frames a second",
     "lowered_to_value0_p_at_value1_fps_for_your_value2_746b65b": "lowered to {value0}p at {value1} fps for your {value2}",

@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Nedladdningen avbröts. Försök igen."
   },
   "profileShowcase": {
+    "title": "Profilens skyltfönster",
+    "manage": "Lägg till i skyltfönstret",
+    "collectibles": "Samlarobjekt för profilen",
     "creations": "Egna skapelser",
     "effect": "Profileffekt",
     "full": "Visa hela profilen"

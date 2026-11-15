@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "다운로드가 중단되었습니다. 다시 시도해 보세요."
   },
   "profileShowcase": {
+    "title": "프로필 쇼케이스",
+    "manage": "쇼케이스에 추가",
+    "collectibles": "프로필 수집품",
     "creations": "이 사용자의 작품",
     "effect": "프로필 효과",
     "full": "전체 프로필 보기"

@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "İndirim kesildi. Tekrar deneyelim."
   },
   "profileShowcase": {
+    "title": "Profil vitrini",
+    "manage": "Vitrine ekle",
+    "collectibles": "Profil koleksiyon öğeleri",
     "creations": "Tasarımları",
     "effect": "Profil efekti",
     "full": "Profilin tamamını gör"

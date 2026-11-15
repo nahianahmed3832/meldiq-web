@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Der Download wurde unterbrochen. Versuchen Sie es noch einmal."
   },
   "profileShowcase": {
+    "title": "Profil-Showcase",
+    "manage": "Zum Showcase hinzufügen",
+    "collectibles": "Profil-Sammlerstücke",
     "creations": "Eigene Kreationen",
     "effect": "Profileffekt",
     "full": "Vollständiges Profil anzeigen"

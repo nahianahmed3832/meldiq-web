@@ -81,8 +81,9 @@ async function collection(page: Page, name: string) {
   await page.getByRole("combobox", { name: "Collections", exact: true }).selectOption({ label: name });
 }
 async function choose(page: Page, name: string) {
-  await page.getByRole("button", { name: "Account options", exact: true }).click();
-  await Promise.all([page.waitForEvent("domcontentloaded"), page.getByRole("menuitemradio", { name: new RegExp(name) }).click()]);
+  await page.getByRole("button", { name: /your profile and settings/i }).click();
+  await page.getByRole("menuitem", { name: "Switch account", exact: true }).click();
+  await Promise.all([page.waitForEvent("domcontentloaded"), page.getByRole("button", { name: new RegExp(`Switch to ${name}`) }).click()]);
   await online(page);
 }
 async function appDatabases(page: Page) {
@@ -175,8 +176,9 @@ test("production worker controls fresh and returning visits, retry, Saved views 
     await expect(page.getByRole("log", { name: "Messages" })).toContainText("Alice private checklist");
     await context.setOffline(false);
     await online(page);
-    await page.getByRole("button", { name: "Account options", exact: true }).click();
-    await page.getByRole("menuitem", { name: "Add account", exact: true }).click();
+    await page.getByRole("button", { name: /your profile and settings/i }).click();
+    await page.getByRole("menuitem", { name: "Switch account", exact: true }).click();
+    await page.getByRole("dialog", { name: "Switch account" }).getByRole("button", { name: "Add account", exact: true }).click();
     const bobId = await createAccount(page, "PWA Bob");
     await go(page, "/later");
     await expect(query).toHaveValue("");

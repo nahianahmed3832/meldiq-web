@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "De download is onderbroken. Probeer het nogmaals."
   },
   "profileShowcase": {
+    "title": "Profieletalage",
+    "manage": "Toevoegen aan etalage",
+    "collectibles": "Profielverzamelitems",
     "creations": "Gemaakte items",
     "effect": "Profieleffect",
     "full": "Volledig profiel bekijken"

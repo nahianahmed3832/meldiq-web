@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "下載中斷。 再試一次"
   },
   "profileShowcase": {
+    "title": "個人資料展示",
+    "manage": "新增至展示",
+    "collectibles": "個人資料收藏品",
     "creations": "對方的作品",
     "effect": "個人檔案特效",
     "full": "查看完整個人檔案"

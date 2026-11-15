@@ -25,11 +25,10 @@ export function cameraResolution(tier: VideoTier) {
   return { width, height, frameRate };
 }
 
-export function displayConstraints(tier: VideoTier, safari: boolean): MediaTrackConstraints {
-  const { width, height, frameRate: fps } = CALL_VIDEO[tier];
-  const frameRate = { ideal: fps, max: fps };
-  // Safari can capture at low resolution when size constraints are passed to the picker.
-  return safari ? { frameRate } : { width: { ideal: width, max: width }, height: { ideal: height, max: height }, frameRate };
+export function displayConstraints(tier: VideoTier, portrait = false): MediaTrackConstraints {
+  const { width, height, frameRate } = CALL_VIDEO[tier];
+  const dimension = (size: number) => ({ ideal: size, max: size });
+  return { width: dimension(portrait ? height : width), height: dimension(portrait ? width : height), frameRate: dimension(frameRate) };
 }
 
 export interface VideoLevel {

@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Descărcarea a fost întreruptă. Încearcă din nou."
   },
   "profileShowcase": {
+    "title": "Vitrina profilului",
+    "manage": "Adaugă în vitrină",
+    "collectibles": "Obiecte de colecție pentru profil",
     "creations": "Creațiile sale",
     "effect": "Efect de profil",
     "full": "Vezi profilul complet"

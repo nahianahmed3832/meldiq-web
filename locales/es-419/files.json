@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "La descarga se ha interrumpido. Intenta de nuevo."
   },
   "profileShowcase": {
+    "title": "Vitrina del perfil",
+    "manage": "Agregar a la vitrina",
+    "collectibles": "Coleccionables del perfil",
     "creations": "Sus creaciones",
     "effect": "Efecto de perfil",
     "full": "Ver perfil completo"

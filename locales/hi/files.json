@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "डाउनलोड रोक दिया गया. फिर कोशिश करें."
   },
   "profileShowcase": {
+    "title": "प्रोफ़ाइल शोकेस",
+    "manage": "शोकेस में जोड़ें",
+    "collectibles": "प्रोफ़ाइल के संग्रहणीय आइटम",
     "creations": "उनकी रचनाएँ",
     "effect": "प्रोफ़ाइल इफ़ेक्ट",
     "full": "पूरी प्रोफ़ाइल देखें"

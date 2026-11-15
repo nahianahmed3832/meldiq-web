@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "The download was interrupted. Try again."
   },
   "profileShowcase": {
+    "title": "Profile showcase",
+    "manage": "Add to showcase",
+    "collectibles": "Profile collectibles",
     "creations": "Their creations",
     "effect": "Profile effect",
     "full": "View full profile"

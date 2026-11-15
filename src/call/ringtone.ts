@@ -18,7 +18,16 @@ const VOLUME = 0.08;
 /** The ring file's level (it's mastered loud). */
 const FILE_VOLUME = 0.45;
 
-export class Ringtone {
+export interface Ringback {
+  start(): void;
+  stop(): void;
+}
+
+export interface CallRingtone extends Ringback {
+  prepareOutgoing?(): Ringback | null;
+}
+
+export class Ringtone implements CallRingtone {
   private ctx: AudioContext | null = null;
   private timer: ReturnType<typeof setInterval> | undefined;
   private loop: AudioBufferSourceNode | null = null;
@@ -28,6 +37,58 @@ export class Ringtone {
 
   /** [enabled]: the person's Call ringtone setting (android Settings › Notifications); off, calls only show. */
   constructor(private readonly enabled: () => boolean = () => true) {}
+
+  prepareOutgoing(): Ringback | null {
+    if (typeof AudioContext === "undefined" || !this.enabled()) return null;
+    try {
+      // The call button supplies the user gesture required to unlock audio.
+      const ctx = new AudioContext();
+      const ready = ctx.resume().catch(() => undefined);
+      let timer: ReturnType<typeof setInterval> | undefined;
+      let stopped = false;
+      const play = () => {
+        if (stopped || !this.enabled() || ctx.state !== "running") return;
+        const start = ctx.currentTime;
+        const end = start + 0.95;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0, start);
+        gain.gain.linearRampToValueAtTime(0.035, start + 0.03);
+        gain.gain.setValueAtTime(0.035, end - 0.05);
+        gain.gain.linearRampToValueAtTime(0, end);
+        gain.connect(ctx.destination);
+        for (const frequency of [440, 480]) {
+          const tone = ctx.createOscillator();
+          tone.frequency.value = frequency;
+          tone.connect(gain);
+          tone.start(start);
+          tone.stop(end);
+          tone.addEventListener(
+            "ended",
+            () => {
+              tone.disconnect();
+              if (frequency === 480) gain.disconnect();
+            },
+            { once: true },
+          );
+        }
+      };
+      return {
+        start: () => {
+          if (stopped || timer !== undefined) return;
+          void ready.then(play);
+          timer = setInterval(play, 3_000);
+        },
+        stop: () => {
+          if (stopped) return;
+          stopped = true;
+          clearInterval(timer);
+          if (ctx.state !== "closed") void ctx.close().catch(() => undefined);
+        },
+      };
+    } catch {
+      return null;
+    }
+  }
 
   start(): void {
     if (this.ringing || typeof AudioContext === "undefined" || !this.enabled()) return;

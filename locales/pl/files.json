@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Pobieranie zostało przerwane. Spróbuj jeszcze raz."
   },
   "profileShowcase": {
+    "title": "Wizytówka profilu",
+    "manage": "Dodaj do wizytówki",
+    "collectibles": "Przedmioty kolekcjonerskie profilu",
     "creations": "Twórczość",
     "effect": "Efekt profilu",
     "full": "Wyświetl pełny profil"

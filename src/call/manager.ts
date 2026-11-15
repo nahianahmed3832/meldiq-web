@@ -1,4 +1,5 @@
 import { text as uiText } from "../i18n";
+import type { CallRingtone, Ringback } from "./ringtone";
 import { claimBrowserResource } from "../application/browserResource";
 import { ScreenShareUnavailable } from "./screenShareSupport";
 import { type ApiClient, ApiError } from "../api/client";
@@ -59,10 +60,7 @@ export interface CallOptions {
   media: MediaFactory;
   /** This browser can encrypt call media (RTCRtpScriptTransform or encoded streams, and workers). */
   supported(): boolean;
-  ringtone?: {
-    start(): void;
-    stop(): void;
-  };
+  ringtone?: CallRingtone;
   now?(): number;
   sleep?(ms: number): Promise<void>;
   keyWaitMs?: number;
@@ -100,6 +98,7 @@ export class CallManager {
   private gen = 0;
   /** This browser created the current call (so it ends it on the server if it fails). */
   private created = false;
+  private ringback: Ringback | null = null;
   private rejoining = false;
   private peerTimer: ReturnType<typeof setTimeout> | undefined;
   private resetTimer: ReturnType<typeof setTimeout> | undefined;
@@ -118,10 +117,21 @@ export class CallManager {
   // ───────────────────────── starting and answering ─────────────────────────
   async startCall(conversationId: string, video: boolean): Promise<void> {
     if (!this.isFree()) return;
-    const about = await this.host.describe(conversationId);
+    const attempt = this.gen;
+    const ringback = this.opts.ringtone?.prepareOutgoing?.() ?? null;
+    const about = await this.host.describe(conversationId).catch((error: unknown) => {
+      ringback?.stop();
+      throw error;
+    });
+    if (attempt !== this.gen || !this.isFree()) {
+      ringback?.stop();
+      return;
+    }
     // Nobody is rung in a voice room: joining it just connects (android CallManager).
     const gen = this.begin({ ...idleCall, phase: about.voiceRoom ? "connecting" : "outgoing", conversationId, video, cameraOn: video, ...about });
     this.created = true;
+    if (about.voiceRoom) ringback?.stop();
+    else this.ringback = ringback;
     try {
       if (!this.opts.supported()) throw new CallError(CallFailure.UNSUPPORTED);
       const session = this.newSession(gen);
@@ -134,6 +144,8 @@ export class CallManager {
       }
       this.markHandled(res.call.id);
       this.created = !res.joinedExisting;
+      if (this.created && res.call.state === "RINGING") this.ringback?.start();
+      else this.stopRingback();
       this.patch({ callId: res.call.id, alerted: res.call.alertedAt != null, isGroup: about.isGroup || (res.call.conversationType ?? "DM") !== "DM" });
       const key = res.joinedExisting ? await this.waitForKey(gen, res.call.id) : this.distributeKey(gen, res.call.id, conversationId, video);
       await this.connect(gen, session, res.call.id, res.media, key);
@@ -259,7 +271,9 @@ export class CallManager {
   private async connect(gen: number, session: MediaSession, callId: string, grant: MediaGrant, key: string): Promise<void> {
     const verification = await verificationCode(key, callId);
     this.check(gen);
-    const tier = videoTier(this.host.state.get().mojo.me?.plan);
+    const granted = grant.limits?.screen;
+    const preset = granted?.length === 1 ? granted[0]?.id : null;
+    const tier = preset === "720p60" || preset === "1080p60" ? preset : videoTier(this.host.state.get().mojo.me?.plan);
     this.patch({ verification, security: "verifying", videoTier: tier });
     await session.configureVideo(tier, this.state.videoQuality);
     this.check(gen);
@@ -282,7 +296,9 @@ export class CallManager {
     }
     if (this.state.screenSharing) this.patch({ shareAudio: false, shareStats: null });
     void this.host.api.call("POST", `/v1/calls/${encodeURIComponent(callId)}/connected`).catch(() => undefined);
-    const alone = session.remoteCount() === 0 && !this.state.isGroup;
+    const remoteCount = session.remoteCount();
+    if (remoteCount > 0) this.stopRingback();
+    const alone = remoteCount === 0 && !this.state.isGroup;
     this.patch({ phase: alone ? (this.created ? "outgoing" : "connecting") : "connected", connectedAt: alone ? null : this.now(), mediaEpoch: this.state.mediaEpoch + 1 });
     this.refresh();
   }
@@ -324,6 +340,7 @@ export class CallManager {
     return this.created ? "outgoing" : "connecting";
   }
   private onRemoteJoined(): void {
+    this.stopRingback();
     clearTimeout(this.peerTimer);
     this.peerTimer = undefined;
     const s = this.state;
@@ -797,7 +814,12 @@ export class CallManager {
       await this.host.api.call("POST", `/v1/calls/${id}/leave`, { keepalive }).catch(() => undefined);
     }
   }
+  private stopRingback(): void {
+    this.ringback?.stop();
+    this.ringback = null;
+  }
   private teardown(): void {
+    this.stopRingback();
     this.pttRequested = false;
     clearTimeout(this.peerTimer);
     clearTimeout(this.resetTimer);

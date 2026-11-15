@@ -15,27 +15,34 @@ export class ShareSender {
     const local = this.participant();
     if (!local) return;
     const { maxBitrate, frameRate } = CALL_VIDEO[this.tier];
-    const safari = isSafari();
-    await local.setScreenShareEnabled(
-      true,
-      {
-        audio,
-        // The SDK forwards dimensions and capture frame rate through resolution.
-        ...(safari ? {} : { resolution: cameraResolution(this.tier) }),
-        contentHint: "motion",
-        systemAudio: audio ? "include" : "exclude",
-      },
-      {
-        screenShareEncoding: { maxBitrate, maxFramerate: frameRate, priority: "medium" },
-        videoCodec: "vp8",
-        backupCodec: false,
-        simulcast: false,
-      },
-    );
-    const track = this.track();
-    // Apply the upper limit after selection, including on Safari builds with uncapped picker capture.
-    if (track) await track.mediaStreamTrack.applyConstraints(displayConstraints(this.tier, safari)).catch(() => undefined);
-    await this.sender.attach(track);
+    const tracks = await local.createScreenTracks({
+      audio,
+      // Safari can capture at low resolution if the picker is passed size constraints.
+      ...(isSafari() ? {} : { resolution: cameraResolution(this.tier) }),
+      contentHint: "motion",
+      systemAudio: audio ? "include" : "exclude",
+    });
+    try {
+      const video = tracks.find((track) => track.source === Track.Source.ScreenShare);
+      if (video) await capCapture(video.mediaStreamTrack, this.tier);
+      if (local !== this.participant()) {
+        tracks.forEach((track) => track.stop());
+        return;
+      }
+      for (const track of tracks) {
+        await local.publishTrack(track, {
+          screenShareEncoding: { maxBitrate, maxFramerate: frameRate, priority: "medium" },
+          videoCodec: "vp8",
+          backupCodec: false,
+          simulcast: false,
+        });
+      }
+    } catch (error) {
+      tracks.forEach((track) => track.stop());
+      await Promise.allSettled(tracks.map((track) => local.unpublishTrack(track)));
+      throw error;
+    }
+    await this.sender.attach(this.track());
   }
 
   async stop(): Promise<void> {
@@ -49,7 +56,7 @@ export class ShareSender {
     const changedTier = this.tier !== tier;
     this.tier = tier;
     this.sender.configure(tier, mode);
-    if (track && changedTier) await track.mediaStreamTrack.applyConstraints(displayConstraints(tier, isSafari())).catch(() => undefined);
+    if (track && changedTier) await capCapture(track.mediaStreamTrack, tier);
     await this.sender.attach(track);
   }
 
@@ -63,6 +70,17 @@ export class ShareSender {
 
   private track() {
     return this.participant()?.getTrackPublication(Track.Source.ScreenShare)?.videoTrack ?? null;
+  }
+}
+
+async function capCapture(track: MediaStreamTrack, tier: VideoTier): Promise<void> {
+  const before = track.getSettings();
+  const portrait = (before.height ?? 0) > (before.width ?? 0);
+  await track.applyConstraints(displayConstraints(tier, portrait)).catch(() => undefined);
+  const { width = 0, height = 0, frameRate = 0 } = track.getSettings();
+  const cap = CALL_VIDEO[tier];
+  if (Math.max(width, height) > cap.width || Math.min(width, height) > cap.height || frameRate > cap.frameRate) {
+    throw new DOMException("The display capture exceeds the plan limit.", "OverconstrainedError");
   }
 }
 

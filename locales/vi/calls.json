@@ -225,8 +225,6 @@
     "1920_1080_at_30_frames_a_second_for_text_and_detail_b6a2a80": "1920×1080 tại 30 khung mỗi giây, cho văn bản và chi tiết.",
     "high_c4ebc6d": "Cao",
     "1920_1080_at_60_frames_a_second_for_games_and_video_needs_a_fast_ca9fbbc": "1920×1080 ở 60 khung mỗi giây, cho trò chơi và video. Cần kết nối nhanh và máy tính.",
-    "2560_1440_at_30_frames_a_second_needs_a_fast_connection_and_compu_03a5416": "2560×1440 tại 30 khung mỗi giây. Cần kết nối nhanh và máy tính.",
-    "2560_1440_at_60_frames_a_second_for_fast_games_needs_a_very_fast_9cfda5d": "2560×1440 ở 60 khung mỗi giây, cho trò chơi nhanh. Cần kết nối và máy tính rất nhanh.",
     "your_browser_captures_value0_value1_a5dc89b": "trình duyệt của bạn chụp được {value0} × {value1}",
     "at_most_value0_frames_a_second_1ab9f7f": "tối đa {value0} khung mỗi giây",
     "lowered_to_value0_p_at_value1_fps_for_your_value2_746b65b": "giảm xuống {value0} p tại {value1} fps cho {value2} của bạn",

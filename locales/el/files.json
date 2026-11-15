@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Η λήψη διακόπηκε. Δοκιμάστε ξανά."
   },
   "profileShowcase": {
+    "title": "Βιτρίνα προφίλ",
+    "manage": "Προσθήκη στη βιτρίνα",
+    "collectibles": "Συλλεκτικά προφίλ",
     "creations": "Δημιουργίες",
     "effect": "Εφέ προφίλ",
     "full": "Προβολή πλήρους προφίλ"

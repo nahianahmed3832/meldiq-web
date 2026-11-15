@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { ApiClient } from "../src/api/client";
-import { CallManager, type CallHost, type CallTarget, type CallPrefs } from "../src/call/manager";
+import { CallManager, type CallHost, type CallTarget, type CallPrefs, type CallOptions } from "../src/call/manager";
 import { audioProcessing, deafenChange, frameShape, micLevel } from "../src/call/rules";
 import { CALL_VIDEO, videoModeOf } from "../src/call/shareQuality";
 import type { CallShareView } from "../src/call/shares";
@@ -12,7 +12,7 @@ const call = (id: string) => ({ id, conversationId: "c1", createdBy: "me", video
 
 const posted: string[] = [];
 
-function setup(target: Partial<CallTarget> = {}, prefs: CallPrefs = { noiseReduction: true, videoQuality: "auto", shareAudio: false }, maxScreenShares?: number) {
+function setup(target: Partial<CallTarget> = {}, prefs: CallPrefs = { noiseReduction: true, videoQuality: "auto", shareAudio: false }, maxScreenShares?: number, ringtone?: CallOptions["ringtone"]) {
   const rig = new MediaRig();
   const api = {
     json: async (method: string, path: string, schema: { parse(v: unknown): unknown }) => {
@@ -33,7 +33,7 @@ function setup(target: Partial<CallTarget> = {}, prefs: CallPrefs = { noiseReduc
     displayName: () => null,
     recordCall: async () => undefined,
   };
-  const calls = new CallManager(host, { media: rig.factory, supported: () => true, keyWaitMs: 500, callPrefs: () => prefs, maxScreenShares });
+  const calls = new CallManager(host, { media: rig.factory, supported: () => true, keyWaitMs: 500, callPrefs: () => prefs, maxScreenShares, ringtone });
   return { calls, rig, host };
 }
 
@@ -64,6 +64,25 @@ describe("call rules", () => {
 });
 
 describe("call controls", () => {
+  it("plays caller ringback only while waiting for a person and releases it on hangup", async () => {
+    const start = vi.fn();
+    const stop = vi.fn();
+    const ringtone = { prepareOutgoing: vi.fn(() => ({ start, stop })), start: vi.fn(), stop: vi.fn() };
+    const direct = setup({}, undefined, undefined, ringtone);
+    await direct.calls.startCall("c1", false);
+    expect(start).toHaveBeenCalledTimes(1);
+    expect(stop).not.toHaveBeenCalled();
+    direct.calls.hangup();
+    expect(stop).toHaveBeenCalledTimes(1);
+    expect(ringtone.start).not.toHaveBeenCalled();
+
+    const room = setup({ voiceRoom: true }, undefined, undefined, ringtone);
+    await room.calls.startCall("c1", false);
+    expect(start).toHaveBeenCalledTimes(1);
+    expect(stop).toHaveBeenCalledTimes(2);
+    room.calls.hangup();
+  });
+
   it("configures Plus capture before connecting and can change to plan quality in the same session", async () => {
     const { calls, rig, host } = setup();
     host.state.update((s) => ({ ...s, mojo: { ...s.mojo, me: { plan: "plus" } as NonNullable<typeof s.mojo.me> } }));

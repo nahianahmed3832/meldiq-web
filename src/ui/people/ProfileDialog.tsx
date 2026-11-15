@@ -11,7 +11,7 @@ import { useT as useLocalization } from "../../i18n";
 import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "./CollectibleLayers";
 import { IdentityGlyph } from "../components/IdentityGlyph";
 import { BotProfileDialog } from "./BotProfileDialog";
-import { Check, Copy, Flag, MoreHorizontal, SendHorizontal, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX, X } from "lucide-react";
+import { Check, Copy, Flag, MoreHorizontal, Plus, SendHorizontal, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -353,6 +353,18 @@ function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, 
               @{profile.username}
               {profile.pronouns && <span className="tag">{profile.pronouns}</span>}
             </p>
+            {self && (features.includes("profile-links") || features.includes("profile-collectibles")) && (
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => {
+                  navigate({ section: "settings", settingsPage: "profile" });
+                  onClose();
+                }}
+              >
+                <Plus size={16} /> {l10n("files.profileShowcase.manage")}
+              </button>
+            )}
             {(profile.statusEmoji || profile.statusText) && <p className="profile-pop-status">{[profile.statusEmoji, profile.statusText].filter(Boolean).join(" ")}</p>}
             {/* API 0.64.0: pins replace the Bug Hunter and Artist pills (both are Meldiq pins now). */}
             <CollectibleBadge style={profile?.profileStyle} />

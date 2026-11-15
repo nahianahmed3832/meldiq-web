@@ -2,9 +2,7 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { Avatar } from "../components/Avatar";
-import { useAccountActions, useAccountSwitcher } from "./AccountActions";
-import { ArrowRightLeft, Plus, ChevronDown, Headphones, HeadphoneOff, Mic, MicOff, LogOut, RotateCw, Settings } from "lucide-react";
+import { ChevronDown, Headphones, HeadphoneOff, Mic, MicOff, RotateCw, Settings } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -42,9 +40,6 @@ export function UserPanel() {
   const look = useUserLook(me?.userId ?? "");
   const profile = useProfileMenu();
   const deviceMenu = useMenu();
-  const accounts = useMenu();
-  const accountAction = useAccountActions();
-  const switcher = useAccountSwitcher();
   const [which, setWhich] = useState<{
     kind: "audioinput" | "audiooutput";
     list: MediaDeviceChoice[];
@@ -199,64 +194,6 @@ export function UserPanel() {
       <button className="icon-btn user-panel-btn" onClick={() => navigate({ section: "settings", settingsPage: "account" })} aria-label={l10n("settings.title")} title={l10n("settings.title")}>
         <Settings size={19} />
       </button>
-      <button
-        className="icon-btn user-panel-btn user-panel-account"
-        aria-label={uiText("workspace.interface.account_options_fb15613")}
-        title={uiText("workspace.interface.switch_account_or_log_out_7558dd8")}
-        aria-haspopup="menu"
-        aria-expanded={!!accounts.anchor}
-        onClick={(e) => accounts.open(e.currentTarget)}
-      >
-        <ChevronDown size={17} />
-      </button>
-      {accounts.anchor && (
-        <Menu
-          anchor={accounts.anchor}
-          align="end"
-          label={uiText("workspace.interface.account_options_fb15613")}
-          onClose={accounts.close}
-          entries={[
-            {
-              get heading() {
-                return uiText("workspace.interface.your_accounts_fdd5abe");
-              },
-            },
-            ...switcher.accounts.map((a) => ({
-              label: a.displayName,
-              hint: `@${a.username}`,
-              icon: <Avatar name={a.displayName} colorIndex={a.avatarColor} size={24} decorative />,
-              checked: a.database === switcher.current,
-              disabled: switcher.busy,
-              onSelect: () => switcher.switchTo(a.database),
-            })),
-            "separator",
-            {
-              get label() {
-                return uiText("workspace.interface.add_account_ee7ee58");
-              },
-              icon: <Plus size={16} />,
-              disabled: switcher.busy,
-              onSelect: switcher.add,
-            },
-            {
-              get label() {
-                return uiText("settings.interface.switch_account_fedce01");
-              },
-              icon: <ArrowRightLeft size={16} />,
-              onSelect: () => accountAction("switch"),
-            },
-            "separator",
-            {
-              get label() {
-                return uiText("settings.interface.log_out_4961614");
-              },
-              icon: <LogOut size={16} />,
-              danger: true,
-              onSelect: () => accountAction("logout"),
-            },
-          ]}
-        />
-      )}
       {deviceMenu.anchor && which && (
         <Menu
           anchor={deviceMenu.anchor}

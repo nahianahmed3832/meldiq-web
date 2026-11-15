@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Stahování bylo přerušeno. Zkuste to znovu."
   },
   "profileShowcase": {
+    "title": "Výběr na profilu",
+    "manage": "Přidat do výběru",
+    "collectibles": "Sběratelské předměty profilu",
     "creations": "Výtvory",
     "effect": "Efekt profilu",
     "full": "Zobrazit celý profil"

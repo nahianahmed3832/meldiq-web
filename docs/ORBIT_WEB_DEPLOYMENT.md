@@ -90,7 +90,7 @@ adds a permanent redirect from each former address to the current one (each need
 The command that installed the current production release:
 
 ```bash
-MELDIQ_WEB_BASE_URL=https://web.meldiq.app MELDIQ_ENVIRONMENT=production MELDIQ_API_UPSTREAM=127.0.0.1:18080 MELDIQ_REDIRECT_HOSTS=web.griipbuddy.cloud MELDIQ_CONNECT_EXTRA="https://rtc.griipbuddy.cloud wss://rtc.griipbuddy.cloud https://griipbuddy-orbit-media-sg.s3.ap-southeast-1.amazonaws.com" bash install-release.sh
+MELDIQ_WEB_BASE_URL=https://web.meldiq.app MELDIQ_ENVIRONMENT=production MELDIQ_API_UPSTREAM=127.0.0.1:18080 MELDIQ_REDIRECT_HOSTS=web.griipbuddy.cloud MELDIQ_CONNECT_EXTRA="https://rtc.meldiq.app wss://rtc.meldiq.app https://meldiq-media-sg-914016532802.s3.ap-southeast-1.amazonaws.com https://griipbuddy-orbit-media-sg.s3.ap-southeast-1.amazonaws.com" bash install-release.sh
 ```
 
 `install-release.sh` copies the release to `/opt/meldiq-web/releases/<version>-<commit>`, writes its `config.json`,
@@ -126,6 +126,8 @@ the new site on a first install), so a refused install never blocks other sites'
 downloads); `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'none'`, `form-action 'none'`.
 Also HSTS, `nosniff`, `Referrer-Policy: no-referrer`, COOP and CORP `same-origin`, and `Permissions-Policy` allowing
 camera, microphone, screen capture and location for this site only (the browser still asks the person).
+
+When the active attachment bucket changes, add the exact origin returned by the upload signing API to `connect-src`. Keep origins needed by pending uploads and verify a signed PUT in a browser on the production web origin. A successful S3 CORS preflight alone does not exercise this policy.
 
 The CSP is the main defence against injected script, which could use this browser's keys while the page is open
 (`ORBIT_WEB_STATUS.md` › Security).

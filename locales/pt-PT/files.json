@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "O download foi interrompido. Tente novamente."
   },
   "profileShowcase": {
+    "title": "Montra do perfil",
+    "manage": "Adicionar à montra",
+    "collectibles": "Colecionáveis do perfil",
     "creations": "Criações",
     "effect": "Efeito de perfil",
     "full": "Ver perfil completo"

@@ -2,7 +2,6 @@ import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
-import { CollectionStudio } from "./CollectionStudio";
 import { ChevronRight, Clapperboard, ImagePlus, Sparkles, Trash2 } from "lucide-react";
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -102,7 +101,6 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: 
   if (!me) return null;
   return (
     <div className="profile-look" aria-label={uiText("workspace.interface.look_a0de571")}>
-      <CollectionStudio />
       <div className="profile-customize-banner">
         <div className="profile-customize-art" aria-hidden="true">
           <StyledAvatar

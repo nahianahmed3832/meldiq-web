@@ -31,11 +31,14 @@ async function openAccounts(page: Page, isMobile: boolean) {
   if (isMobile) {
     await page.goto("/settings/you");
     await page.getByRole("button", { name: "Switch account", exact: true }).click();
-  } else await page.getByRole("button", { name: "Account options", exact: true }).click();
+  } else {
+    await page.getByRole("button", { name: /your profile and settings/i }).click();
+    await page.getByRole("menuitem", { name: "Switch account", exact: true }).click();
+  }
 }
 async function choose(page: Page, name: string, isMobile: boolean) {
   await openAccounts(page, isMobile);
-  const target = isMobile ? page.getByRole("button", { name: new RegExp(`Switch to ${name} \\(@`) }) : page.getByRole("menuitemradio", { name: new RegExp(name) });
+  const target = page.getByRole("button", { name: new RegExp(`Switch to ${name} \\(@`) });
   await Promise.all([page.waitForEvent("domcontentloaded"), target.click()]);
   await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
 }
@@ -64,13 +67,13 @@ test("two real account sessions survive switching, cancellation, reload and logo
   await expect.poll(() => auth.has("Alice Saved")).toBe(true);
   const alice = auth.get("Alice Saved")!;
   await openAccounts(page, isMobile);
-  await page.getByRole(isMobile ? "button" : "menuitem", { name: "Add account", exact: true }).click();
+  await page.getByRole("button", { name: "Add account", exact: true }).click();
   await expect(page.getByRole("button", { name: "Cancel adding account" })).toBeVisible();
   await page.getByRole("button", { name: "Cancel adding account" }).click();
   await expect(page.locator(".app[data-connection=online]").first()).toBeVisible();
   expect(revoked).toHaveLength(0);
   await openAccounts(page, isMobile);
-  await page.getByRole(isMobile ? "button" : "menuitem", { name: "Add account", exact: true }).click();
+  await page.getByRole("button", { name: "Add account", exact: true }).click();
   await createAccount(page, "Bob Saved");
   await expect.poll(() => auth.has("Bob Saved")).toBe(true);
   const bob = auth.get("Bob Saved")!;
@@ -116,7 +119,7 @@ test("two real account sessions survive switching, cancellation, reload and logo
   await expect(page.locator('[data-section="recent"]').getByRole("menuitem", { name: "❤️", exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   await openAccounts(page, isMobile);
-  await expect(page.getByRole(isMobile ? "button" : "menuitemradio", { name: /Alice Saved/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Switch to Alice Saved/ })).toHaveCount(0);
 });
 
 test("tabs renew one session together and keep their own account through switching and logout", async ({ page, context, isMobile }) => {
@@ -144,7 +147,7 @@ test("tabs renew one session together and keep their own account through switchi
   await second.goto(`/dms/c/${aliceDm}`);
   await expect(second.getByRole("log", { name: "Messages" })).toContainText("Only Alice should see this");
   await openAccounts(page, isMobile);
-  await page.getByRole(isMobile ? "button" : "menuitem", { name: "Add account", exact: true }).click();
+  await page.getByRole("button", { name: "Add account", exact: true }).click();
   await createAccount(page, "Bob Tabs");
   const bobId = await identity(page);
   expect(bobId).not.toBe(aliceId);

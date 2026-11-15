@@ -16,6 +16,7 @@ import { birthdayProblem, myProfile, phoneProblem, removeMyPhoto, setMyPhoto, up
 import { UserAvatar } from "../components/OrgAvatar";
 import { squareJpeg } from "../workspace/photo";
 import { useAction, useLoad } from "../workspace/useLoad";
+import { CollectionStudio } from "./CollectionStudio";
 import { ProfileStyleCard } from "./ProfileStyleCard";
 import { ProfileSectionsCard } from "./ProfileSectionsCard";
 import { StatePanel } from "../components/StatePanel";
@@ -58,6 +59,7 @@ function ProfileEditor() {
   const photo = useAction();
   const file = useRef<HTMLInputElement>(null);
   const p = profile.data;
+  const collectionsOffered = useOrbit((s) => s.server?.features.includes("profile-collectibles") ?? false);
   // The values last loaded: a newer load replaces the form only while it still shows them (nothing edited here).
   const shown = useRef<typeof form | null>(null);
   const shownLinks = useRef<ProfileLink[]>([]);
@@ -195,21 +197,63 @@ function ProfileEditor() {
       )}
       <div className="profile-columns">
         <div className="profile-main">
-          {profileMedia ? <ProfileStyleCard nameStyles={nameStyles} pictureControls={photoControls} /> : photoControls}
-          {address.data && <NetworkAddress address={address.data} />}
           <section className="card profile-details" aria-label={uiText("settings.interface.profile_details_73949bb")}>
-            <div>
-              <h2>
-                <Localized k="settings.interface.about_you_428f4d0" />
-              </h2>
-              <p className="muted">
-                <Localized k="settings.interface.the_name_details_and_story_people_see_on_your_profile_7e78ec9" />
-              </p>
-            </div>
-            <p className="hint" style={{ margin: 0 }}>
-              <Localized k="settings.interface.profile_details_update_your_global_profile_when_you_choose_save_c_7f28923" />
-            </p>
+            {(linksOffered || collectionsOffered) && (
+              <div className="profile-showcase-settings">
+                <h2>{l10n("files.profileShowcase.title")}</h2>
+                <CollectionStudio />
+              </div>
+            )}
             <form onSubmit={submit} className="ws-form" noValidate>
+              {linksOffered && (
+                <div className="field ws-wide">
+                  <span>
+                    <Localized k="messaging.interface.links_9024c19" />
+                  </span>
+                  {links.map((l, i) => (
+                    <div key={i} className="row link-row" style={{ gap: 8 }}>
+                      <input
+                        className="input"
+                        style={{ maxWidth: 160 }}
+                        maxLength={40}
+                        placeholder={uiText("messaging.interface.name_dcd1d52")}
+                        aria-label={uiText("settings.interface.link_value0_name_0bf81ea", { value0: i + 1 })}
+                        value={l.label}
+                        onChange={(e) => setLinks((all) => all.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)))}
+                      />
+                      <input
+                        className="input grow"
+                        maxLength={300}
+                        placeholder="https://"
+                        aria-label={uiText("settings.interface.link_value0_address_d32166e", { value0: i + 1 })}
+                        value={l.url}
+                        onChange={(e) => setLinks((all) => all.map((x, j) => (j === i ? { ...x, url: e.target.value } : x)))}
+                      />
+                      <button
+                        type="button"
+                        className="icon-btn"
+                        aria-label={uiText("settings.interface.remove_link_value0_b78eb82", { value0: i + 1 })}
+                        onClick={() => setLinks((all) => all.filter((_, j) => j !== i))}
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                  {links.length < 5 && (
+                    <button type="button" className="btn btn-ghost btn-sm" style={{ justifySelf: "start" }} onClick={() => setLinks((all) => [...all, { label: "", url: "https://" }])}>
+                      <Localized k="settings.interface.add_link_fa1df0f" />
+                    </button>
+                  )}
+                </div>
+              )}
+              <div className="ws-wide">
+                <h2>
+                  <Localized k="settings.interface.about_you_428f4d0" />
+                </h2>
+                <p className="hint" style={{ margin: 0 }}>
+                  <Localized k="settings.interface.profile_details_update_your_global_profile_when_you_choose_save_c_7f28923" />
+                </p>
+              </div>
               <label className="field">
                 <span>
                   <Localized k="settings.interface.display_name_2b7f6a8" />
@@ -263,47 +307,6 @@ function ProfileEditor() {
                     <Localized k="settings.interface.left_084472e" slots={[300 - form.aboutMe.length]} />
                   </small>
                 </label>
-              )}
-              {linksOffered && (
-                <div className="field ws-wide">
-                  <span>
-                    <Localized k="messaging.interface.links_9024c19" />
-                  </span>
-                  {links.map((l, i) => (
-                    <div key={i} className="row link-row" style={{ gap: 8 }}>
-                      <input
-                        className="input"
-                        style={{ maxWidth: 160 }}
-                        maxLength={40}
-                        placeholder={uiText("messaging.interface.name_dcd1d52")}
-                        aria-label={uiText("settings.interface.link_value0_name_0bf81ea", { value0: i + 1 })}
-                        value={l.label}
-                        onChange={(e) => setLinks((all) => all.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)))}
-                      />
-                      <input
-                        className="input grow"
-                        maxLength={300}
-                        placeholder="https://"
-                        aria-label={uiText("settings.interface.link_value0_address_d32166e", { value0: i + 1 })}
-                        value={l.url}
-                        onChange={(e) => setLinks((all) => all.map((x, j) => (j === i ? { ...x, url: e.target.value } : x)))}
-                      />
-                      <button
-                        type="button"
-                        className="icon-btn"
-                        aria-label={uiText("settings.interface.remove_link_value0_b78eb82", { value0: i + 1 })}
-                        onClick={() => setLinks((all) => all.filter((_, j) => j !== i))}
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  ))}
-                  {links.length < 5 && (
-                    <button type="button" className="btn btn-ghost btn-sm" style={{ justifySelf: "start" }} onClick={() => setLinks((all) => [...all, { label: "", url: "https://" }])}>
-                      <Localized k="settings.interface.add_link_fa1df0f" />
-                    </button>
-                  )}
-                </div>
               )}
               <label className="field">
                 <span>
@@ -384,6 +387,8 @@ function ProfileEditor() {
               </div>
             </form>
           </section>
+          {profileMedia ? <ProfileStyleCard nameStyles={nameStyles} pictureControls={photoControls} /> : photoControls}
+          {address.data && <NetworkAddress address={address.data} />}
           <CommunityProfileCard aboutMe={form.aboutMe} pronouns={form.pronouns} />
           {layoutOffered && p && <ProfileSectionsCard profile={p} onSaved={() => setVersion((value) => value + 1)} />}
         </div>

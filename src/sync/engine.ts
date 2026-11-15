@@ -1,4 +1,5 @@
 import { zThreadPreferences, zThreadFollowResult } from "./threadLifecycle";
+import type { CallRingtone } from "../call/ringtone";
 import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { zMessageCollection, type CollectionCursor, type CollectionKind } from "../api/messageCollections";
@@ -91,10 +92,7 @@ export interface EngineOptions {
   media?: MediaFactory;
   /** Whether this browser can encrypt call media (default: checked in the browser, false elsewhere). */
   callSupported?: () => boolean;
-  ringtone?: {
-    start(): void;
-    stop(): void;
-  };
+  ringtone?: CallRingtone;
   /** A system notification for a ringing call while the tab isn't looked at. */
   ringAlert?: (title: string, video: boolean, conversationId: string) => void;
   /** How long an action on a snapshot message waits for the server's page (LIVE_WAIT_MS; shorter in tests). */
@@ -246,6 +244,7 @@ export class Engine implements EngineContext {
             if (this.realtime.canNotify()) opts.ringtone?.start();
           },
           stop: () => opts.ringtone?.stop(),
+          prepareOutgoing: () => opts.ringtone?.prepareOutgoing?.() ?? null,
         },
         callPrefs: opts.callPrefs,
         ...opts.callTiming,

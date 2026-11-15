@@ -225,8 +225,6 @@
     "1920_1080_at_30_frames_a_second_for_text_and_detail_b6a2a80": "1920×1080 σε 30 καρέ το δευτερόλεπτο, για κείμενο και λεπτομέρειες.",
     "high_c4ebc6d": "Υψηλή",
     "1920_1080_at_60_frames_a_second_for_games_and_video_needs_a_fast_ca9fbbc": "1920×1080 σε 60 καρέ το δευτερόλεπτο, για παιχνίδια και βίντεο. Χρειάζεται γρήγορη σύνδεση και υπολογιστή.",
-    "2560_1440_at_30_frames_a_second_needs_a_fast_connection_and_compu_03a5416": "2560×1440 σε 30 καρέ το δευτερόλεπτο. Χρειάζεται γρήγορη σύνδεση και υπολογιστή.",
-    "2560_1440_at_60_frames_a_second_for_fast_games_needs_a_very_fast_9cfda5d": "2560×1440 σε 60 καρέ το δευτερόλεπτο, για γρήγορα παιχνίδια. Χρειάζεται πολύ γρήγορη σύνδεση και υπολογιστή.",
     "your_browser_captures_value0_value1_a5dc89b": "Το πρόγραμμα περιήγησής σας καταγράφει {value0} × {value1}",
     "at_most_value0_frames_a_second_1ab9f7f": "το πολύ {value0} καρέ το δευτερόλεπτο",
     "lowered_to_value0_p_at_value1_fps_for_your_value2_746b65b": "υποβιβάστηκε σε {value0} p στις {value1} fps για το {value2} σας",

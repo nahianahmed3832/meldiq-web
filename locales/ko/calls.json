@@ -225,8 +225,6 @@
     "1920_1080_at_30_frames_a_second_for_text_and_detail_b6a2a80": "초당 30 프레임의 1920×1080, 텍스트와 세부 사항을 위해서.",
     "high_c4ebc6d": "높음",
     "1920_1080_at_60_frames_a_second_for_games_and_video_needs_a_fast_ca9fbbc": "1920×1080, 초당 60 프레임, 게임과 비디오용. 빠른 연결과 컴퓨터가 필요합니다.",
-    "2560_1440_at_30_frames_a_second_needs_a_fast_connection_and_compu_03a5416": "2560×1440, 초당 30 프레임. 빠른 연결과 컴퓨터가 필요합니다.",
-    "2560_1440_at_60_frames_a_second_for_fast_games_needs_a_very_fast_9cfda5d": "빠른 게임을 위해서 초당 60 프레임으로 2560×1440. 매우 빠른 연결과 컴퓨터가 필요합니다.",
     "your_browser_captures_value0_value1_a5dc89b": "브라우저가 {value0} × {value1}를 캡처했습니다",
     "at_most_value0_frames_a_second_1ab9f7f": "최대 초당 {value0} 프레임",
     "lowered_to_value0_p_at_value1_fps_for_your_value2_746b65b": "{value1} fps에서 {value0} p로 낮아졌습니다. {value2} 에 대해서",

@@ -249,10 +249,9 @@
   padding: 20px;
   border-radius: 12px;
 }
-.profile-details > div > p {
-  margin: 6px 0 0;
-  font-size: 12px;
-  line-height: 1.7;
+.profile-showcase-settings {
+  display: grid;
+  gap: 12px;
 }
 .user-settings .profile-preview {
   top: 0;
@@ -308,13 +307,7 @@
   flex-wrap: wrap;
 }
 .user-panel-me {
-  flex-basis: calc(100% - 44px);
-}
-.user-panel-account {
-  order: -1;
-  width: 28px;
-  min-width: 28px;
-  margin-inline-start: auto;
+  flex-basis: 100%;
 }
 .user-panel-me {
   order: -2;
@@ -496,10 +489,6 @@
     flex: 1 1 0;
     order: 0;
     min-width: 0;
-  }
-  .app > .user-panel .user-panel-account {
-    order: 0;
-    margin-inline-start: 0;
   }
   .app > .user-panel .user-panel-pair {
     margin-inline-start: 0;

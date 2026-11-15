@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Việc tải xuống bị ngắt. Thử lại đi."
   },
   "profileShowcase": {
+    "title": "Trưng bày trên hồ sơ",
+    "manage": "Thêm vào khu trưng bày",
+    "collectibles": "Vật phẩm sưu tầm của hồ sơ",
     "creations": "Tác phẩm của họ",
     "effect": "Hiệu ứng hồ sơ",
     "full": "Xem hồ sơ đầy đủ"

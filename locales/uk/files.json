@@ -95,6 +95,9 @@
     "the_download_was_interrupted_try_again_d07dbc1": "Звантаження було перервано. Спробуй ще раз."
   },
   "profileShowcase": {
+    "title": "Вітрина профілю",
+    "manage": "Додати до вітрини",
+    "collectibles": "Колекційні предмети профілю",
     "creations": "Власні роботи",
     "effect": "Ефект профілю",
     "full": "Переглянути повний профіль"

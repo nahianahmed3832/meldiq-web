@@ -4,11 +4,11 @@ import { MAX_SCREEN_SHARES, mayShare, nextWatched, shareIdentity, shareKey, type
 
 /** Screen sharing quality and several shares at once (2026-10-24). */
 describe("screen share capture and encoding", () => {
-  it("asks getDisplayMedia for the mode's size and rate, capped so a bigger screen is scaled, not cropped", () => {
+  it("caps the captured screen dimensions and frame rate before publication", () => {
     expect(displayConstraints("1080p60", false)).toEqual({ width: { ideal: 1920, max: 1920 }, height: { ideal: 1080, max: 1080 }, frameRate: { ideal: 60, max: 60 } });
     expect(displayConstraints("720p60", false)).toEqual({ width: { ideal: 1280, max: 1280 }, height: { ideal: 720, max: 720 }, frameRate: { ideal: 60, max: 60 } });
-    // Safari 17 captures at a low resolution when a size is asked for: only the rate is capped there.
-    expect(displayConstraints("1080p60", true)).toEqual({ frameRate: { ideal: 60, max: 60 } });
+    // Rotate the width and height constraints for a portrait display.
+    expect(displayConstraints("1080p60", true)).toEqual({ width: { ideal: 1080, max: 1080 }, height: { ideal: 1920, max: 1920 }, frameRate: { ideal: 60, max: 60 } });
   });
 
   it("encodes each rung at its rate and bitrate, scaling the capture down to the rung's height", () => {
@@ -16,7 +16,7 @@ describe("screen share capture and encoding", () => {
     expect(encodingFor(top, 1920, 1080)).toEqual({ maxBitrate: 6_000_000, maxFramerate: 60, scaleResolutionDownBy: 1 });
     expect(encodingFor(third, 1920, 1080)).toEqual({ maxBitrate: 2_500_000, maxFramerate: 30, scaleResolutionDownBy: 1.5 });
     expect(encodingFor(top, 3840, 1080).scaleResolutionDownBy).toBe(2);
-    // A smaller window is never scaled up; Safari's uncapped 1440p capture is scaled down to 1080.
+    // A smaller window is never scaled up; an uncapped 1440p capture is scaled down to 1080.
     expect(encodingFor(top, 600, 800).scaleResolutionDownBy).toBe(1);
     expect(encodingFor(top, 2560, 1440).scaleResolutionDownBy).toBe(1.334);
     expect(encodingFor(top, 0, 0).scaleResolutionDownBy).toBe(1);
