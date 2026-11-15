@@ -64,22 +64,32 @@ describe("call rules", () => {
 });
 
 describe("call controls", () => {
-  it("plays caller ringback only while waiting for a person and releases it on hangup", async () => {
+  it("plays caller ringback only while waiting for a person and releases it on answer or hangup", async () => {
     const start = vi.fn();
     const stop = vi.fn();
     const ringtone = { prepareOutgoing: vi.fn(() => ({ start, stop })), start: vi.fn(), stop: vi.fn() };
     const direct = setup({}, undefined, undefined, ringtone);
+    direct.rig.remoteOnConnect = 0;
     await direct.calls.startCall("c1", false);
     expect(start).toHaveBeenCalledTimes(1);
     expect(stop).not.toHaveBeenCalled();
+    direct.rig.last?.events.remoteJoined();
+    expect(stop).toHaveBeenCalledTimes(1);
     direct.calls.hangup();
     expect(stop).toHaveBeenCalledTimes(1);
     expect(ringtone.start).not.toHaveBeenCalled();
 
+    const cancelled = setup({}, undefined, undefined, ringtone);
+    cancelled.rig.remoteOnConnect = 0;
+    await cancelled.calls.startCall("c1", false);
+    expect(start).toHaveBeenCalledTimes(2);
+    cancelled.calls.hangup();
+    expect(stop).toHaveBeenCalledTimes(2);
+
     const room = setup({ voiceRoom: true }, undefined, undefined, ringtone);
     await room.calls.startCall("c1", false);
-    expect(start).toHaveBeenCalledTimes(1);
-    expect(stop).toHaveBeenCalledTimes(2);
+    expect(start).toHaveBeenCalledTimes(2);
+    expect(stop).toHaveBeenCalledTimes(3);
     room.calls.hangup();
   });
 
