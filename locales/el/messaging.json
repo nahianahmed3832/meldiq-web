@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# μήνυμα} other {# μηνύματα}}"
   },
+  "slash_commands": {
+    "load_failed": "Δεν ήταν δυνατή η φόρτωση των εντολών.",
+    "no_commands": "Δεν βρέθηκαν αντίστοιχες εντολές.",
+    "unavailable": "Αυτή η εντολή δεν είναι διαθέσιμη εδώ.",
+    "finish_draft": "Στείλτε ή διαγράψτε το πρόχειρό σας πριν εισαγάγετε μια εντολή.",
+    "insert": "Εισαγωγή εντολής",
+    "run": "Εκτέλεση εντολής"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Κινούμενο emoji {value0}",
     "files_to_send_d302111": "Αρχεία προς αποστολή",

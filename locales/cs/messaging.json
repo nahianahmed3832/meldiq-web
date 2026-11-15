@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# zpráva} other {# zpráv} few {# zprávy} many {# zprávy}}"
   },
+  "slash_commands": {
+    "load_failed": "Příkazy se nepodařilo načíst.",
+    "no_commands": "Žádné odpovídající příkazy.",
+    "unavailable": "Tento příkaz zde není dostupný.",
+    "finish_draft": "Před vložením příkazu koncept odešlete nebo smažte.",
+    "insert": "Vložit příkaz",
+    "run": "Spustit příkaz"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Animovaný emoji {value0}",
     "files_to_send_d302111": "Soubory k odeslání",

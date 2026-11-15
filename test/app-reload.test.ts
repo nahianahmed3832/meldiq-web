@@ -188,6 +188,14 @@ describe("the configuration kept from last time", () => {
     await expect(startConfig(serve({ apiBase: "http://insecure.example.test" }))).rejects.toThrow(/https/);
   });
 
+  it("picks up direct bot commands on the first reload from a pre-feature cache", async () => {
+    const directBotCommands = { botId: "u_manager", communityId: "o_griipbuddy" };
+    vi.stubGlobal("localStorage", storage({ "meldiq.config.v1": JSON.stringify({ apiBase: "" }) }));
+    const { startConfig } = await import("../src/application/config");
+    const started = await startConfig(serve({ directBotCommands }));
+    expect(started.directBotCommands).toEqual(directBotCommands);
+  });
+
   it("never trusts a tampered kept copy", async () => {
     vi.stubGlobal("localStorage", storage({ "meldiq.config.v1": JSON.stringify({ apiBase: "http://evil.example.test" }) }));
     const { apiBase, startConfig } = await import("../src/application/config");

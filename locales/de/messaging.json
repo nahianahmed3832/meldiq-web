@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# Nachricht} other {# Nachrichten}}"
   },
+  "slash_commands": {
+    "load_failed": "Befehle konnten nicht geladen werden.",
+    "no_commands": "Keine passenden Befehle gefunden.",
+    "unavailable": "Dieser Befehl ist hier nicht verfügbar.",
+    "finish_draft": "Sende oder lösche deinen Entwurf, bevor du einen Befehl einfügst.",
+    "insert": "Befehl einfügen",
+    "run": "Befehl ausführen"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Animiertes Emoji {value0}",
     "files_to_send_d302111": "Dateien zum Senden",

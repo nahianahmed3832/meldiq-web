@@ -97,6 +97,23 @@ describe("routes", () => {
     expect(parseRoute(long)).toMatchObject({ communityId: longest, conversationId: longest, threadRoot: longest });
   });
 
+  it("opens raw channel links and preserves panels on canonical decimal URLs", () => {
+    const origin = "https://web.meldiq.app";
+    const communityId = "o_YmFCZ4fHigBXOvkJNVMHqw";
+    const conversationId = "c_jv7PeWWlEpJaFqy4OLGJGA";
+    const raw = `/channels/${communityId}/${conversationId}`;
+    const canonical = "/channels/36583807882960148670855597564452770843490992/32403367023574162802196616703023524087370112";
+    expect(parseRoute(raw)).toMatchObject({ section: "home", communityId, conversationId });
+    expect(appHref(raw, origin)).toBe(canonical);
+    expect(appHref(raw + "/details/", origin)).toBe(canonical + "/details");
+    expect(parseRoute(raw + "/thread/421813")).toMatchObject({ panel: "thread", threadRoot: "m-1" });
+    expect(appHref(raw + "/thread/421813", origin)).toBe(canonical + "/thread/421813");
+    for (const invalid of [raw.replace("/o_", "/u_"), raw.slice(0, -1), raw + "/thread/1", raw + "/unexpected", raw + "//details"]) {
+      expect(parseRoute(invalid).conversationId).toBeNull();
+      expect(appHref(invalid, origin)).toBeNull();
+    }
+  });
+
   it("old hash links and this app's own paths open in the app; nothing else does", () => {
     const origin = "https://web.meldiq.app";
     expect(appHref("/dms/c/c_abc/details", origin)).toBe("/dms/1560127196/details");

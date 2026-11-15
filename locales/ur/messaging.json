@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# پیغام} other {# پیغامات}}"
   },
+  "slash_commands": {
+    "load_failed": "کمانڈز لوڈ نہیں ہو سکیں۔",
+    "no_commands": "کوئی مماثل کمانڈ نہیں ملی۔",
+    "unavailable": "یہ کمانڈ یہاں دستیاب نہیں ہے۔",
+    "finish_draft": "کمانڈ شامل کرنے سے پہلے اپنا مسودہ بھیجیں یا صاف کریں۔",
+    "insert": "کمانڈ شامل کریں",
+    "run": "کمانڈ چلائیں"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "متحرک ايموجي {value0}",
     "files_to_send_d302111": "فائلیں بھیجنے کے لیے",

@@ -48,9 +48,10 @@ export async function installBot(engine: Engine, orgId: string, botId: string): 
 export async function removeBot(engine: Engine, orgId: string, botId: string): Promise<void> {
   await engine.api.call("DELETE", `/v1/orgs/${enc(orgId)}/bots/${enc(botId)}`);
 }
-/** The commands of the bots that can post in [channelId]. */
-export async function channelCommands(engine: Engine, orgId: string, channelId: string): Promise<OrgCommand[]> {
-  return (await engine.api.json("GET", `/v1/orgs/${enc(orgId)}/commands?channelId=${enc(channelId)}`, z.object({ commands: z.array(zOrgCommand) }))).commands;
+/** The commands of installed bots, filtered to bots that can post when a channel is specified. */
+export async function communityCommands(engine: Engine, orgId: string, channelId?: string): Promise<OrgCommand[]> {
+  const channel = channelId ? `?channelId=${enc(channelId)}` : "";
+  return (await engine.api.json("GET", `/v1/orgs/${enc(orgId)}/commands${channel}`, z.object({ commands: z.array(zOrgCommand) }))).commands;
 }
 export async function runCommand(
   engine: Engine,
@@ -65,19 +66,18 @@ export async function runCommand(
 }
 // ───────────────────────── the composer's "/" ─────────────────────────
 /** The commands to list while "/name" is typed (before the first space): by name, then by bot. */
-export function matchingCommands(commands: readonly OrgCommand[], text: string): OrgCommand[] {
+export function matchingCommands(commands: readonly OrgCommand[], text: string, limit = 10): OrgCommand[] {
   const m = /^\/([a-z0-9-]{0,32})$/i.exec(text);
   if (!m) return [];
   const q = m[1].toLowerCase();
   return commands
     .filter((c) => c.name.startsWith(q))
     .sort((a, b) => a.name.localeCompare(b.name) || a.botDisplayName.localeCompare(b.botDisplayName))
-    .slice(0, 10);
+    .slice(0, limit);
 }
-/** What the composer puts in the box once a command is picked: its name, then each required option's "name:" to fill. */
-export function commandTemplate(c: OrgCommand): string {
-  const required = c.options.filter((o) => o.required).map((o) => `${o.name}:`);
-  return required.length ? `/${c.name} ${required.join(" ")}` : `/${c.name} `;
+/** The configured DM bot reads named argument text from a normal DM. */
+export function directCommandDraft(command: OrgCommand, fields: ReadonlyMap<string, string>): string {
+  return [`/${command.name}`, ...Array.from(fields, ([name, value]) => `${name}:${JSON.stringify(value)}`)].join(" ");
 }
 /** Splits "a:1 b:\"two words\" c:x" into option pairs; text outside a pair is an error. */
 function pairs(rest: string): Map<string, string> | null {
@@ -117,6 +117,10 @@ export function parseCommand(text: string, commands: readonly OrgCommand[], pref
   const given = pairs(m[2] ?? "");
   if (!given)
     return { problem: uiText("workspace.interface.options_go_as_name_value_like_value0_something_3d2d499", { value0: command.options[0]?.name ?? uiText("workspace.interface.option_14eb14e") }) };
+  return validateCommandOptions(command, given, userId);
+}
+
+export function validateCommandOptions(command: OrgCommand, given: ReadonlyMap<string, string>, userId: (username: string) => string | null): NonNullable<ParsedCommand> {
   const options: Record<string, string | number | boolean> = {};
   for (const [name, raw] of given) {
     const o = command.options.find((x) => x.name === name);
@@ -125,7 +129,7 @@ export function parseCommand(text: string, commands: readonly OrgCommand[], pref
     if (value === null) return { problem: uiText("workspace.interface.value0_should_be_value1_4c86424", { value0: name, value1: OPTION_WORDS[o.type] }) };
     options[name] = value;
   }
-  const missing = command.options.find((o) => o.required && !(o.name in options));
+  const missing = command.options.find((o) => o.required && !Object.hasOwn(options, o.name));
   if (missing) return { problem: `/${command.name} needs ${missing.name} (${missing.description}).` };
   return { command, options };
 }

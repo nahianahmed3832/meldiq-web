@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, other {# ข้อความ}}"
   },
+  "slash_commands": {
+    "load_failed": "โหลดคำสั่งไม่ได้",
+    "no_commands": "ไม่พบคำสั่งที่ตรงกัน",
+    "unavailable": "ใช้คำสั่งนี้ที่นี่ไม่ได้",
+    "finish_draft": "ส่งหรือล้างข้อความร่างก่อนแทรกคำสั่ง",
+    "insert": "แทรกคำสั่ง",
+    "run": "เรียกใช้คำสั่ง"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "แสดงภาพเคลื่อนไหว {value0}",
     "files_to_send_d302111": "แฟ้มที่จะส่ง",

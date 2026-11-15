@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# meddelande} other {# meddelanden}}"
   },
+  "slash_commands": {
+    "load_failed": "Det gick inte att läsa in kommandon.",
+    "no_commands": "Inga matchande kommandon.",
+    "unavailable": "Det här kommandot är inte tillgängligt här.",
+    "finish_draft": "Skicka eller rensa utkastet innan du infogar ett kommando.",
+    "insert": "Infoga kommando",
+    "run": "Kör kommando"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Animerad emoji {value0}",
     "files_to_send_d302111": "Filer att skicka",

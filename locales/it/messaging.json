@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, one {# messaggio} other {# messaggi}}"
   },
+  "slash_commands": {
+    "load_failed": "Impossibile caricare i comandi.",
+    "no_commands": "Nessun comando corrispondente.",
+    "unavailable": "Questo comando non è disponibile qui.",
+    "finish_draft": "Invia o cancella la bozza prima di inserire un comando.",
+    "insert": "Inserisci comando",
+    "run": "Esegui comando"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "Emoji animata {value0}",
     "files_to_send_d302111": "File da inviare",

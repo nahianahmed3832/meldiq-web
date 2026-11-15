@@ -1,7 +1,7 @@
 import Router from "next/router";
 import { hasUnsavedChanges, requestNavigation } from "./navigationGuard";
 import { useSyncExternalStore } from "react";
-import { numericConversationPath, parseNumericConversationPath, type ConversationPanel, type ConversationSection } from "./conversationPaths";
+import { numericConversationPath, parseNumericConversationPath, parseRawChannelPath, type ConversationPanel, type ConversationSection } from "./conversationPaths";
 import { encodeLinkId, LEGACY_LINK_ID } from "./linkIds";
 
 /**
@@ -159,14 +159,11 @@ const ID = new RegExp(`^${LEGACY_LINK_ID}$`);
 /** Route IDs always use the values understood by the API and local store. */
 export function parseRoute(where: string): Route {
   const path = where.replace(/^#/, "").split(/[?#]/)[0];
-  const parts = path
-    .split("/")
-    .filter(Boolean)
-    .map(safeDecode);
+  const parts = path.split("/").filter(Boolean).map(safeDecode);
   const section = SECTIONS.includes(parts[0] as Section) ? (parts[0] as Section) : "home";
   const route: Route = { section, communityId: null, conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
-  const numeric = parseNumericConversationPath(path);
-  if (numeric) return { ...route, ...numeric };
+  const conversation = parseNumericConversationPath(path) ?? parseRawChannelPath(path);
+  if (conversation) return { ...route, ...conversation };
   if (section === "settings") return { ...route, settingsPage: PAGES.includes(parts[1] as SettingsPage) ? (parts[1] as SettingsPage) : "profile" };
   if (section === "workspace") return { ...route, workspacePage: WORKSPACE_PAGES.includes(parts[1] as WorkspacePage) ? (parts[1] as WorkspacePage) : "overview" };
   if (parts[1] === "c" && parts[2] && ID.test(parts[2])) {
@@ -243,6 +240,8 @@ export function appHref(raw: string, origin = location.origin): string | null {
   const where = legacy ? u.hash.slice(1) : u.pathname;
   const numeric = parseNumericConversationPath(where);
   if (numeric) return where.replace(/\/$/, "");
+  const channel = parseRawChannelPath(where);
+  if (channel) return routeHref(channel);
   if (!/^\/[A-Za-z0-9/_%-]{0,300}$/.test(where)) return null;
   const section = where.split("/")[1];
   // The consent page carries its request in the query, which an in-page move would drop: the browser loads it.
@@ -296,7 +295,7 @@ export function startRouting(): () => void {
   history.scrollRestoration = "manual";
   const legacy = () => {
     if (location.hash.startsWith("#/")) go(appHref(location.hash) ?? "/home", true);
-    else if (/^\/[a-z]+\/c\//.test(location.pathname)) {
+    else if (/^\/(?:[a-z]+\/c\/|channels\/o_)/.test(location.pathname)) {
       const route = parseRoute(location.pathname);
       if (route.conversationId) replaceRoutePath(routeHref(route));
     }

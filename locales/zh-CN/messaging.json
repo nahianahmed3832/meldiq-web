@@ -130,6 +130,14 @@
   "counts": {
     "messages": "{count, plural, other {# 条消息}}"
   },
+  "slash_commands": {
+    "load_failed": "无法加载命令。",
+    "no_commands": "没有匹配的命令。",
+    "unavailable": "此处无法使用该命令。",
+    "finish_draft": "请先发送或清除草稿，再插入命令。",
+    "insert": "插入命令",
+    "run": "运行命令"
+  },
   "interface": {
     "animated_emoji_value0_bfd0a64": "动画表情符号 {value0}",
     "files_to_send_d302111": "要发送的文件",

@@ -4,7 +4,7 @@ import { zMember, zProfile } from "../src/api/schemas";
 import { appHref, parseRoute, routeHref } from "../src/application/router";
 import { parseFrame } from "../src/realtime/frames";
 import { initialState } from "../src/state/store";
-import { commandTemplate, matchingCommands, type OrgCommand, parseCommand } from "../src/sync/bots";
+import { directCommandDraft, matchingCommands, type OrgCommand, parseCommand, validateCommandOptions } from "../src/sync/bots";
 import { parseViews, proofProblem, verificationFormProblem, verificationQuery, type VerificationForm } from "../src/sync/creators";
 import { isAllowedRedirectUri, parseRedirectUris } from "../src/sync/developer";
 import { botReplyFrame, dismissBotReply } from "../src/sync/frameReducers";
@@ -166,9 +166,25 @@ describe("slash commands", () => {
     expect(matchingCommands(list, "hello /p")).toEqual([]);
   });
 
-  it("fills in the required options when one is picked", () => {
-    expect(commandTemplate(roll)).toBe("/roll sides:");
-    expect(commandTemplate(cmd("ping", "dice"))).toBe("/ping ");
+  it("inserts a sendable DM draft with named JSON-quoted fields", () => {
+    const message = cmd("message", "manager");
+    const draft = directCommandDraft(
+      message,
+      new Map([
+        ["username", "@ada"],
+        ["text", 'Say "hello"\nnext'],
+      ]),
+    );
+    const expected = String.raw`/message username:"@ada" text:"Say \"hello\"\nnext"`;
+    expect(draft).toBe(expected);
+    expect(directCommandDraft(cmd("ping", "dice"), new Map())).toBe("/ping");
+  });
+
+  it("validates native form values without treating literal quotes and newlines as syntax", () => {
+    const say = list.find((c) => c.name === "say")!;
+    const text = 'Say "hello"\nnext';
+    expect(validateCommandOptions(say, new Map([["text", text]]), users)).toEqual({ command: say, options: { text } });
+    expect(validateCommandOptions(say, new Map(), users)).toMatchObject({ problem: expect.stringMatching(/needs text/) });
   });
 
   it("reads options by type", () => {
