@@ -1,0 +1,33 @@
+name: Package Meldiq Web release
+on:
+  push:
+    branches:
+      - codex/build-profile-call-upload-20261115
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_MELDIQ_TEST_LINKING: "0"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 22.22.3
+          cache: npm
+      - run: npm ci
+      - run: npm run i18n:validate
+      - run: npm run icons:check && python3 scripts/icons/test_catalogue.py
+      - run: npm test -- --maxWorkers=4 --testTimeout=120000
+      - run: npm run build
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: meldiq-web-production
+          path: dist/
+          if-no-files-found: error
+          retention-days: 3
