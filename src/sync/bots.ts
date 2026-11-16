@@ -120,11 +120,25 @@ export function parseCommand(text: string, commands: readonly OrgCommand[], pref
   return validateCommandOptions(command, given, userId);
 }
 
-export function validateCommandOptions(command: OrgCommand, given: ReadonlyMap<string, string>, userId: (username: string) => string | null): NonNullable<ParsedCommand> {
+export function commandOptionTextLimit(command: string, option: string, direct = false): number {
+  if (direct && ((command === "assign" && option === "deliverable") || (command === "message" && option === "text"))) return 2_000;
+  return 1_000;
+}
+
+export function validateCommandOptions(
+  command: OrgCommand,
+  given: ReadonlyMap<string, string>,
+  userId: (username: string) => string | null,
+  direct = false,
+): NonNullable<ParsedCommand> {
   const options: Record<string, string | number | boolean> = {};
   for (const [name, raw] of given) {
     const o = command.options.find((x) => x.name === name);
     if (!o) return { problem: `/${command.name} has no option "${name}".` };
+    const limit = commandOptionTextLimit(command.name, name, direct);
+    if ((o.type === "string" || o.type === "unknown") && raw.length > limit) {
+      return { problem: `${name}: ${uiText("auth.interface.use_at_most_value0_characters_ae37340", { value0: limit })}` };
+    }
     const value = optionValue(o, raw, userId);
     if (value === null) return { problem: uiText("workspace.interface.value0_should_be_value1_4c86424", { value0: name, value1: OPTION_WORDS[o.type] }) };
     options[name] = value;
@@ -154,5 +168,5 @@ function optionValue(o: CommandOption, raw: string, userId: (username: string) =
   if (o.type === "number") return raw.trim() !== "" && Number.isFinite(Number(raw)) ? Number(raw) : null;
   if (o.type === "boolean") return /^(true|yes|on)$/i.test(raw) ? true : /^(false|no|off)$/i.test(raw) ? false : null;
   if (o.type === "user") return raw.startsWith("@") ? userId(raw.slice(1)) : raw || null;
-  return raw.length > 0 && raw.length <= 1000 ? raw : null;
+  return raw || null;
 }

@@ -1,12 +1,14 @@
 import { useLocaleRender, Localized } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
+import { interfaceLocale } from "../../i18n/format";
 import { Bot, X } from "lucide-react";
-import { type FormEvent, type KeyboardEvent, useCallback, useEffect, useId, useRef, useState } from "react";
+import { type FormEvent, type KeyboardEvent, useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import type { Conversation, Member } from "../../api/schemas";
-import { config } from "../../application/config";
+import { directBotCommandConfig, subscribeDirectBotCommandConfig } from "../../application/config";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { communityCommands, directCommandDraft, matchingCommands, type OrgCommand, parseCommand, runCommand, validateCommandOptions } from "../../sync/bots";
+import { commandOptionTextLimit, communityCommands, directCommandDraft, matchingCommands, type OrgCommand, parseCommand, runCommand, validateCommandOptions } from "../../sync/bots";
 import { Dialog } from "../components/Overlay";
+import { overCharLimit } from "../mojo/CharLimit";
 import { BotTag } from "../people/NameStyle";
 
 const NO_REPLIES: never[] = [];
@@ -18,15 +20,15 @@ const NAMED_OPTIONS = /^\/[a-z0-9-]{1,32}\s+[a-z0-9-]{1,32}:/i;
 type Catalog = { scope: string; commands: OrgCommand[] } | { scope: string; failed: true };
 type Picker = { scope: string; command: OrgCommand };
 
-export function useSlashCommands(c: Conversation, text: string, setText: (text: string) => void, members: readonly Member[], enabled: boolean) {
+export function useSlashCommands(c: Conversation, text: string, setText: (text: string) => void, members: readonly Member[], enabled: boolean, charLimit: number | null) {
   const engine = useEngine();
-  const direct = config().directBotCommands;
+  const direct = useSyncExternalStore(subscribeDirectBotCommandConfig, directBotCommandConfig, directBotCommandConfig);
   const orgId = useOrbit((s) => {
-    if (!enabled || !s.server?.features.includes("bots")) return null;
-    if (c.type === "CHANNEL") return c.orgId;
-    if (c.type !== "DM" || !direct || !s.server.features.includes("bot-direct-messages")) return null;
-    const botPeer = c.members?.some((member) => member.id === direct.botId && (member.bot || s.users[member.id]?.bot));
-    return botPeer && s.orgs.some((org) => org.id === direct.communityId) ? direct.communityId : null;
+    if (!enabled) return null;
+    if (c.type === "CHANNEL") return s.server?.features.includes("bots") ? c.orgId : null;
+    if (c.type !== "DM" || !direct) return null;
+    // The configured bot must be the DM's peer. The catalog endpoint verifies current community membership.
+    return c.members?.some((member) => member.id === direct.botId && member.id !== s.me?.userId) ? direct.communityId : null;
   });
   const channelId = c.type === "CHANNEL" ? c.id : null;
   const botId = c.type === "DM" ? direct?.botId : undefined;
@@ -42,7 +44,7 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
   const scoped = catalog?.scope === scope ? catalog : null;
   const failed = scoped !== null && "failed" in scoped;
   const commands = scoped && "commands" in scoped ? scoped.commands : NO_COMMANDS;
-  const items = matchingCommands(commands, text);
+  const items = matchingCommands(commands, text, botId ? commands.length : undefined);
   const at = Math.min(index, Math.max(items.length - 1, 0));
 
   // Escape dismisses one draft, and editing that draft allows the picker to open again.
@@ -140,7 +142,7 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
   const submit = async (command: OrgCommand, given: Map<string, string>): Promise<string | null> => {
     if (!scope) return uiText("messaging.slash_commands.unavailable");
     // DM commands are ordinary drafts. Preserve the recipient and message exactly as entered.
-    const parsed = validateCommandOptions(command, given, channelId ? userId : (username) => `@${username}`);
+    const parsed = validateCommandOptions(command, given, channelId ? userId : (username) => `@${username}`, !channelId);
     if ("problem" in parsed) return parsed.problem;
     if (channelId) {
       try {
@@ -150,7 +152,12 @@ export function useSlashCommands(c: Conversation, text: string, setText: (text: 
       }
     } else {
       if (text.trim() && !text.startsWith("/")) return uiText("messaging.slash_commands.finish_draft");
-      setText(directCommandDraft(command, given));
+      const draft = directCommandDraft(command, given);
+      if (charLimit !== null && overCharLimit(draft, charLimit)) {
+        const limit = uiText("auth.interface.use_at_most_value0_characters_ae37340", { value0: charLimit.toLocaleString(interfaceLocale()) });
+        return `${uiText("messaging.slash_commands.insert")}: ${limit}`;
+      }
+      setText(draft);
     }
     return null;
   };
@@ -235,6 +242,7 @@ function CommandCatalog({ slash }: { slash: SlashCommands }) {
 function CommandForm({ slash, command }: { slash: SlashCommands; command: OrgCommand }) {
   const [problem, setProblem] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
+  const [fieldLengths, setFieldLengths] = useState<Record<string, number>>({});
   const inFlight = useRef(false);
   const mounted = useRef(false);
   const id = useId();
@@ -270,12 +278,15 @@ function CommandForm({ slash, command }: { slash: SlashCommands; command: OrgCom
         <p>{command.description}</p>
         {command.options.map((option, i) => {
           const fieldId = `${id}-${option.name}`;
+          const limit = commandOptionTextLimit(command.name, option.name, slash.direct);
+          const showCount = option.type === "string" && limit > commandOptionTextLimit(command.name, option.name);
+          const length = fieldLengths[option.name] ?? 0;
           const shared = {
             id: fieldId,
             name: option.name,
             required: option.required,
             disabled: running,
-            "aria-describedby": `${fieldId}-hint`,
+            "aria-describedby": showCount ? `${fieldId}-hint ${fieldId}-count` : `${fieldId}-hint`,
             "data-autofocus": i === 0 ? true : undefined,
           };
           return (
@@ -288,7 +299,18 @@ function CommandForm({ slash, command }: { slash: SlashCommands; command: OrgCom
                 {option.description}
               </p>
               {option.type === "string" ? (
-                <textarea className="input" {...shared} rows={2} maxLength={1000} dir="auto" />
+                <textarea
+                  className="input"
+                  {...shared}
+                  rows={showCount ? 4 : 2}
+                  maxLength={showCount ? undefined : limit}
+                  aria-invalid={showCount && length > limit ? true : undefined}
+                  onChange={showCount ? (event) => {
+                    const length = event.currentTarget.value.length;
+                    setFieldLengths((current) => ({ ...current, [option.name]: length }));
+                  } : undefined}
+                  dir="auto"
+                />
               ) : option.type === "boolean" ? (
                 <select className="input" {...shared} defaultValue="">
                   <option value="">{uiText("workspace.interface.choose_c7f9378")}</option>
@@ -305,6 +327,9 @@ function CommandForm({ slash, command }: { slash: SlashCommands; command: OrgCom
                   dir="auto"
                 />
               )}
+              {showCount && <small className={length > limit ? "field-error" : "hint"} id={`${fieldId}-count`}>
+                {length.toLocaleString(interfaceLocale())} / {limit.toLocaleString(interfaceLocale())}
+              </small>}
             </div>
           );
         })}

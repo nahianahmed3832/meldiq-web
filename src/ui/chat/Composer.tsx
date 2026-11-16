@@ -140,7 +140,7 @@ export function Composer(props: ComposerProps) {
   const [lastSent, setLastSent] = useState(0);
   const nextAt = slowed ? Math.max(c.nextPostAt ?? 0, lastSent + c.slowmodeSec * 1000) : 0;
   const now = useNow(slowed && nextAt > Date.now());
-  const slash = useSlashCommands(c, text, (next) => onChange(next), members, !props.threadRoot && c.canPost);
+  const slash = useSlashCommands(c, text, (next) => onChange(next), members, !props.threadRoot && c.canPost, charLimit);
   const wordy = useWordyCommand(c);
   // Draft: restored when the conversation opens, saved as you type (main composer only).
   useEffect(() => {

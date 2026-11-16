@@ -196,6 +196,25 @@ describe("the configuration kept from last time", () => {
     expect(started.directBotCommands).toEqual(directBotCommands);
   });
 
+  it("refreshes the command picker in the open tab when the cached configuration lacks its setup", async () => {
+    const directBotCommands = { botId: "u_manager", communityId: "o_griipbuddy" };
+    vi.stubGlobal(
+      "localStorage",
+      storage({ "meldiq.config.v1": JSON.stringify({ apiBase: "https://api.example.test", directBotCommands: null }) }),
+    );
+    const { apiBase, directBotCommandConfig, startConfig, subscribeDirectBotCommandConfig } = await import("../src/application/config");
+    const updated = vi.fn();
+    const unsubscribe = subscribeDirectBotCommandConfig(updated);
+    try {
+      await startConfig(serve({ apiBase: "https://api2.example.test", directBotCommands }));
+      await vi.waitFor(() => expect(directBotCommandConfig()).toEqual(directBotCommands));
+      expect(updated).toHaveBeenCalled();
+      expect(apiBase()).toBe("https://api.example.test");
+    } finally {
+      unsubscribe();
+    }
+  });
+
   it("never trusts a tampered kept copy", async () => {
     vi.stubGlobal("localStorage", storage({ "meldiq.config.v1": JSON.stringify({ apiBase: "http://evil.example.test" }) }));
     const { apiBase, startConfig } = await import("../src/application/config");

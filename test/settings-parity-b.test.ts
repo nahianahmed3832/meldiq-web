@@ -187,6 +187,15 @@ describe("slash commands", () => {
     expect(validateCommandOptions(say, new Map(), users)).toMatchObject({ problem: expect.stringMatching(/needs text/) });
   });
 
+  it("accepts 2,000 characters in a manager DM deliverable and keeps the native channel limit", () => {
+    const assign = cmd("assign", "manager", [{ name: "deliverable", description: "Expected result", type: "string", required: true }]);
+    const deliverable = "x".repeat(2_000);
+    const fields = new Map([["deliverable", deliverable]]);
+    expect(validateCommandOptions(assign, fields, users, true)).toMatchObject({ options: { deliverable } });
+    expect(validateCommandOptions(assign, fields, users)).toMatchObject({ problem: expect.stringContaining("1,000") });
+    expect(validateCommandOptions(assign, new Map([["deliverable", deliverable + "x"]]), users, true)).toMatchObject({ problem: expect.stringContaining("2,000") });
+  });
+
   it("reads options by type", () => {
     expect(parseCommand("/roll sides:20 loud:yes", list, null, users)).toEqual({ command: roll, options: { sides: 20, loud: true } });
     expect(parseCommand("/greet who:@ada", list, null, users)).toEqual({ command: greet, options: { who: "u_ada" } });

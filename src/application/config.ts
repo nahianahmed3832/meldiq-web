@@ -71,23 +71,46 @@ const zConfig = z
 export type RuntimeConfig = z.infer<typeof zConfig>;
 
 let current: RuntimeConfig = zConfig.parse({});
+const directBotCommandListeners = new Set<() => void>();
+
+export function directBotCommandConfig(): RuntimeConfig["directBotCommands"] {
+  return current.directBotCommands;
+}
+
+export function subscribeDirectBotCommandConfig(listener: () => void): () => void {
+  directBotCommandListeners.add(listener);
+  return () => directBotCommandListeners.delete(listener);
+}
+
+function updateConfig(next: RuntimeConfig): void {
+  const previous = current.directBotCommands;
+  const direct = next.directBotCommands;
+  const changed = previous?.botId !== direct?.botId || previous?.communityId !== direct?.communityId;
+  current = changed ? next : { ...next, directBotCommands: previous };
+  if (changed) for (const listener of directBotCommandListeners) listener();
+}
 
 /** Loads /config.json once at start. A missing file keeps the defaults; a malformed one stops with a clear error. */
 export async function loadConfig(fetcher: typeof fetch = fetch): Promise<RuntimeConfig> {
-  current = await readConfig(fetcher);
+  updateConfig(await readConfig(fetcher));
   return current;
 }
 
-async function readConfig(fetcher: typeof fetch): Promise<RuntimeConfig> {
+async function readConfig(fetcher: typeof fetch, onFreshConfig?: (config: RuntimeConfig) => void): Promise<RuntimeConfig> {
   let raw: unknown = {};
+  let received = false;
   try {
     const res = await fetcher("/config.json", { cache: "no-store", credentials: "omit" });
-    if (res.ok && (res.headers.get("content-type") ?? "").includes("json")) raw = await res.json();
+    if (res.ok && (res.headers.get("content-type") ?? "").includes("json")) {
+      raw = await res.json();
+      received = true;
+    }
   } catch {
     /* no file: same-origin defaults */
   }
   const parsed = zConfig.safeParse(raw);
   if (!parsed.success) throw new Error(`config.json is invalid: ${parsed.error.issues[0]?.message ?? "unreadable"}`);
+  if (received) onFreshConfig?.(parsed.data);
   return parsed.data;
 }
 
@@ -117,9 +140,9 @@ function keepConfig(c: RuntimeConfig | null): void {
 
 /**
  * At start (src/client/Root.tsx), so a reload doesn't wait on the network before drawing anything: the configuration
- * this browser read last time, at once, while /config.json is read again behind it for the next start (a domain or API
- * change applies from the load after it's read). The first start, or one after a malformed file, waits for the file and
- * stops with its error, as loadConfig.
+ * this browser read last time, at once, while /config.json is read again in the background. Domain or API changes apply
+ * at the next start. The DM command picker setup can refresh in the current tab. The first start, or one after a
+ * malformed file, waits for the file and stops with its error, as loadConfig.
  */
 export async function startConfig(fetcher: typeof fetch = fetch): Promise<RuntimeConfig> {
   const kept = keptConfig();
@@ -134,8 +157,12 @@ export async function startConfig(fetcher: typeof fetch = fetch): Promise<Runtim
     keepConfig(c);
     return c;
   }
-  current = kept;
-  void readConfig(fetcher).then(keepConfig, () => keepConfig(null));
+  updateConfig(kept);
+  // Refresh this UI setting in the open tab while keeping its running API and realtime targets.
+  void readConfig(fetcher, (fresh) => {
+    keepConfig(fresh);
+    updateConfig({ ...current, directBotCommands: fresh.directBotCommands });
+  }).catch(() => keepConfig(null));
   return current;
 }
 
