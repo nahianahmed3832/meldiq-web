@@ -34,7 +34,7 @@ import { callSupport } from "../call/support";
 import type { MediaFactory } from "../call/types";
 import { fingerprint } from "../crypto/identity";
 import type { DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
-import { encodePayload, type Payload } from "../protocol/payload";
+import { encodePayload, withoutChunkedPreviews, type Payload } from "../protocol/payload";
 import { TabRealtimeClient } from "../realtime/tabClient";
 import type { ConnectionState } from "../realtime/socket";
 import { TabDrafts } from "../store/tabDrafts";
@@ -1219,7 +1219,14 @@ export class Engine implements EngineContext {
     const m = await this.store.message(messageId);
     if (!m) return;
     // Server time replaces the provisional local time; a receipt that arrived first keeps its newer status.
-    const next: StoredMessage = { ...m, serverTs, sortTs: serverTs, status: m.status === "SENDING" || m.status === "HELD" ? "SENT" : m.status, errorText: null };
+    const next: StoredMessage = {
+      ...m,
+      attachments: withoutChunkedPreviews(m.attachments),
+      serverTs,
+      sortTs: serverTs,
+      status: m.status === "SENDING" || m.status === "HELD" ? "SENT" : m.status,
+      errorText: null,
+    };
     await this.store.putMessage(next);
     this.show(next);
     await this.refreshPreview(m.conversationId);

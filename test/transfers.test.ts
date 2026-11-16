@@ -1,9 +1,14 @@
 import nodeCrypto from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
+import { decryptFile } from "../src/crypto/attachment";
 import { fromB64 } from "../src/crypto/bytes";
 import { decryptBlob, encryptOnce } from "../src/crypto/cipherJobs";
 import { CHUNK_BYTES, cipherSize, importChunkKey } from "../src/crypto/fileStream";
+import type { AttachmentRef } from "../src/protocol/payload";
+import type { EngineContext } from "../src/sync/context";
 import type { Engine } from "../src/sync/engine";
+import * as previews from "../src/sync/mediaPreview";
+import { sealAndPost } from "../src/sync/outbox";
 import { Transfers } from "../src/sync/transfers";
 import { nodeChunkedEncrypt } from "./support/reference";
 
@@ -30,7 +35,7 @@ function memoryStore() {
 function fakeEngine(store = memoryStore(), opts: { failUploads?: number } = {}) {
   let failures = opts.failUploads ?? 0;
   const uploads: number[] = [];
-  const sent: { conversationId: string; text: string; attachments: { id: string; key: string; size: number }[] }[] = [];
+  const sent: { conversationId: string; text: string; attachments: AttachmentRef[] }[] = [];
   const engine = {
     store,
     state: { get: () => ({ server: { attachmentMaxBytes: 2 * 1024 * MB, fileMaxBytes: 1024 * MB } }) },
@@ -47,7 +52,7 @@ function fakeEngine(store = memoryStore(), opts: { failUploads?: number } = {}) 
       }),
       call: vi.fn(async () => undefined),
     },
-    sendText: vi.fn(async (conversationId: string, text: string, o: { attachments: { id: string; key: string; size: number }[] }) => {
+    sendText: vi.fn(async (conversationId: string, text: string, o: { attachments: AttachmentRef[] }) => {
       sent.push({ conversationId, text, attachments: o.attachments });
       return "m1";
     }),
@@ -108,6 +113,43 @@ describe("one encryption pass", () => {
 });
 
 describe("transfers", () => {
+  it("uploads a chunked original and a separately decryptable single-message thumbnail", async () => {
+    const previewBytes = new Uint8Array([1, 2, 3]);
+    const preview = vi.spyOn(previews, "mediaPreview").mockResolvedValue({
+      file: new File([previewBytes], "shot-preview.webp", { type: "image/webp" }),
+      w: 1520,
+      h: 810,
+    });
+    try {
+      const { engine, sent, fetchStub } = fakeEngine();
+      const t = new Transfers(engine);
+      const source = new Blob([new Uint8Array(100)], { type: "image/png" });
+      const id = await t.start("c1", [{ name: "shot.png", type: source.type, size: source.size, source }], "Screenshot");
+      expect((await settled(t, id))?.status).toBe("sent");
+      const [original] = sent[0].attachments;
+      expect(original).toMatchObject({ chunk: CHUNK_BYTES, w: 1520, h: 810 });
+      expect(original.thumbnail).toMatchObject({ mime: "image/webp", size: previewBytes.length });
+      expect(original.thumbnail).not.toHaveProperty("chunk");
+      const ciphertext = new Uint8Array(await fetchStub.mock.calls[1][1].body.arrayBuffer());
+      expect(await decryptFile(ciphertext, original.thumbnail!)).toEqual(previewBytes);
+    } finally {
+      preview.mockRestore();
+    }
+  });
+
+  it("posts the original from an older outbox item whose thumbnail used chunk encryption", async () => {
+    const { engine } = fakeEngine();
+    const api = vi.spyOn(engine.api, "json").mockResolvedValue({ messageId: "m1", serverTs: 42 });
+    const descriptor = { id: "original", name: "shot.png", mime: "image/png", size: 100, key: "key", nonce: "nonce", sha256: "hash", chunk: CHUNK_BYTES };
+    const invalid = { ...descriptor, id: "preview", size: 3 };
+    const { chunk: _chunk, ...valid } = { ...invalid, id: "valid-preview" };
+    const second = { ...descriptor, id: "second", thumbnail: valid };
+    const payloadJson = JSON.stringify({ type: "text", text: "Screenshot", attachments: [{ ...descriptor, thumbnail: invalid }, second] });
+    await expect(sealAndPost(engine as unknown as EngineContext, { messageId: "m1", conversationId: "c1", cls: "message", payloadJson, sentAt: 1 })).resolves.toBe(42);
+    expect(api.mock.calls[0][3]?.body).toMatchObject({ messageId: "m1", payload: { text: "Screenshot", attachments: [descriptor, second] } });
+    expect(api.mock.calls[0][3]?.body).not.toHaveProperty("payload.attachments.0.thumbnail");
+  });
+
   it("send once, and the same send while it runs joins it", async () => {
     const { engine, sent, uploads } = fakeEngine();
     const t = new Transfers(engine);

@@ -1,7 +1,7 @@
 import { text as uiText } from "../i18n";
 import { ApiError } from "../api/client";
 import type { DeviceRecord, OutboxItem, RichContent, StoredMessage } from "../model/types";
-import { encodePayload, type ForwardOrigin, type Payload } from "../protocol/payload";
+import { encodePayload, withoutChunkedPreviews, type ForwardOrigin, type Payload } from "../protocol/payload";
 import type { AppState } from "../state/store";
 import type { LocalStore } from "../store/db";
 import type { Member } from "../api/schemas";
@@ -88,7 +88,7 @@ export class Compose {
       threadRootId: opts.threadRoot ?? null,
       mentions: mentions.ids,
       mentionAll: mentions.all,
-      attachments: opts.attachments ?? [],
+      attachments: withoutChunkedPreviews(opts.attachments ?? []),
       sentAt: existing?.sentAt ?? now,
       serverTs: null,
       sortTs: existing?.sortTs ?? now,
@@ -119,7 +119,7 @@ export class Compose {
         mentions: mentions.ids.length ? mentions.ids : undefined,
         mentionAll: mentions.all ? true : undefined,
         roleMentions: conv.type === "CHANNEL" && opts.roleMentions?.length ? opts.roleMentions : undefined,
-        attachments: opts.attachments?.length ? opts.attachments : undefined,
+        attachments: m.attachments.length ? m.attachments : undefined,
         contact: opts.rich?.contact ? contactWire(opts.rich.contact) : undefined,
         location: opts.rich?.location,
         animoji: opts.rich?.animoji,

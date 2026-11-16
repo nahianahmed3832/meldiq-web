@@ -28,6 +28,7 @@ const zAttachmentThumbnail = z.object({
   key: z.string().max(64),
   nonce: z.string().max(32),
   sha256: z.string().max(64),
+  chunk: z.undefined().optional(),
 });
 
 export const zAttachmentRef = z.object({
@@ -52,6 +53,16 @@ export const zAttachmentRef = z.object({
   thumbnail: opt(zAttachmentThumbnail).catch(undefined),
 });
 export type AttachmentRef = z.infer<typeof zAttachmentRef>;
+
+/** Older Web sends could store a chunk-encrypted preview locally. The original remains usable without it. */
+export function withoutChunkedPreviews(refs: AttachmentRef[]): AttachmentRef[] {
+  return refs.map((ref) => {
+    if (ref?.thumbnail?.chunk === undefined) return ref;
+    const original = { ...ref };
+    delete original.thumbnail;
+    return original;
+  });
+}
 
 /**
  * A shared contact. Since Android round 7 a card is a Meldiq profile (name, user id, username) and never carries numbers;

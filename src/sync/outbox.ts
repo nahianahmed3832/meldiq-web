@@ -2,7 +2,7 @@ import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { ApiError } from "../api/client";
 import type { OutboxItem } from "../model/types";
-import { parsePayload } from "../protocol/payload";
+import { parsePayload, withoutChunkedPreviews, type Payload } from "../protocol/payload";
 import type { EngineContext } from "./context";
 import { rulesRefusalOrg, withMustAgree } from "./rulesChannel";
 import { orgAfterRefusal, refusalNote } from "./channelGates";
@@ -33,7 +33,8 @@ export interface Outgoing {
  * with the same message id are answered as duplicates, so posting twice never sends twice.
  */
 export async function sealAndPost(ctx: EngineContext, o: Outgoing, _refresh = false, audience?: "self"): Promise<number> {
-  const payload = JSON.parse(o.payloadJson) as Record<string, unknown>;
+  const payload = JSON.parse(o.payloadJson) as Record<string, unknown> & Pick<Payload, "attachments">;
+  if (Array.isArray(payload.attachments)) payload.attachments = withoutChunkedPreviews(payload.attachments);
   const mentionAll = o.cls === "message" && parsePayload(o.payloadJson)?.mentionAll === true;
   const res = await ctx.api.json("POST", "/v2/messages", zSendRes, {
     body: {

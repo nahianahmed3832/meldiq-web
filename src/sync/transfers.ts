@@ -2,6 +2,7 @@ import { text as uiText } from "../i18n";
 import { mediaPreview } from "./mediaPreview";
 import { aesGcmDecrypt, aesGcmEncrypt } from "../crypto/aead";
 import { fromB64, randomBytes, sha256, toB64, utf8 } from "../crypto/bytes";
+import { encryptFile } from "../crypto/attachment";
 import type { AttachmentRef } from "../protocol/payload";
 import { holdUpdates } from "../application/updates";
 import { ApiError } from "../api/client";
@@ -336,6 +337,12 @@ export class Transfers {
   }
   private async sendWithPreview(id: string, index: number, f: StoredFile, view: TransferFile, signal: AbortSignal): Promise<AttachmentRef> {
     const source = this.sources.get(id)?.[index];
+    // Older transfer checkpoints may contain a preview encrypted as a chunked file.
+    if (f.thumbnail?.chunk !== undefined) {
+      await this.abandonUpload(f.thumbnail);
+      delete f.thumbnail;
+    }
+    checkUploadSignal(signal);
     const previewAbort = new AbortController();
     const cancelPreview = () => previewAbort.abort();
     signal.addEventListener("abort", cancelPreview, { once: true });
@@ -360,9 +367,9 @@ export class Transfers {
       if (!f.thumbnail || (!previewSource && !f.thumbnail.sealedKey)) return ref;
       const derivative = f.thumbnail;
       try {
-        const thumbnail = await this.sendFile(id, index, derivative, view, signal, { source: previewSource, preview: true });
+        const { chunk, ...thumbnail } = await this.sendFile(id, index, derivative, view, signal, { source: previewSource, preview: true });
         const mime = thumbnail.mime;
-        if (mime === "image/jpeg" || mime === "image/png" || mime === "image/webp")
+        if (chunk === undefined && (mime === "image/jpeg" || mime === "image/png" || mime === "image/webp"))
           ref = { ...ref, thumbnail: { ...thumbnail, mime }, w: f.w, h: f.h, ...(f.durationMs !== undefined ? { durationMs: f.durationMs } : {}) };
       } catch (e) {
         checkUploadSignal(signal);
@@ -434,7 +441,7 @@ export class Transfers {
     checkUploadSignal(signal);
     const slot = 2 * i + (opts.preview ? 1 : 0);
     const source = opts.source ?? (opts.preview ? null : this.sources.get(id)?.[i]) ?? null;
-    // New files use the same authenticated chunk format at every size. Existing checkpoints keep their original format.
+    // Originals are chunked. The API accepts thumbnails only in the single-message format.
     let prepared = this.prepared.get(id)?.[slot] ?? null;
     const remember = (value: PreparedFile) => {
       this.prepared.set(id, Object.assign(this.prepared.get(id) ?? [], { [slot]: value }));
@@ -456,11 +463,26 @@ export class Transfers {
       checkUploadSignal(signal);
       view.phase = "encrypting";
       this.emit(true);
-      prepared = await prepareLarge(
-        { name: f.name, type: f.type, size: f.size, source, slice: (a, b) => source.slice(a, b) },
-        { signal, voiceDurationMs: f.voiceDurationMs, onProgress: progress("encrypting") },
-      );
-      f.chunk = CHUNK_BYTES;
+      if (opts.preview) {
+        const bytes = new Uint8Array(await source.arrayBuffer());
+        checkUploadSignal(signal);
+        const enc = await encryptFile(bytes);
+        prepared = {
+          name: f.name,
+          type: f.type,
+          size: f.size,
+          ciphertext: new Blob([enc.ciphertext]),
+          rawKey: fromB64(enc.key),
+          nonce: fromB64(enc.nonce),
+          sha256: enc.sha256,
+        };
+      } else {
+        prepared = await prepareLarge(
+          { name: f.name, type: f.type, size: f.size, source, slice: (a, b) => source.slice(a, b) },
+          { signal, voiceDurationMs: f.voiceDurationMs, onProgress: progress("encrypting") },
+        );
+        f.chunk = CHUNK_BYTES;
+      }
       remember(prepared);
       checkUploadSignal(signal);
     }
